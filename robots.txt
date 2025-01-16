@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/*
+Disallow: /auth/*
+Disallow: /dashboard/*
+
+# Host
+Host: https://propertymanager.com
+
+# Sitemaps
+Sitemap: https://propertymanager.com/sitemap.xml
