@@ -2,83 +2,109 @@
 
 import { PropertyDialog } from "@/components/dialogs/property-dialog"
 import { Button } from "@/components/ui/button"
-import { Property } from "@/lib/types/properties"
-import { useState } from "react"
+import { Property } from "@/lib/supabase"
+import { useEffect, useState } from "react"
 import { Edit, Plus, Trash } from "react-feather"
-
-// Mock data for initial development
-const mockProperties: Property[] = [
-  {
-    id: "1",
-    name: "Sunset Apartments",
-    address: "123 Sunset Blvd",
-    city: "Los Angeles",
-    state: "CA",
-    zipCode: "90028",
-    type: "apartment",
-    status: "active",
-    units: [
-      {
-        id: "101",
-        number: "101",
-        bedrooms: 2,
-        bathrooms: 1,
-        sqft: 800,
-        rent: 2000,
-        status: "occupied"
-      },
-      {
-        id: "102",
-        number: "102",
-        bedrooms: 1,
-        bathrooms: 1,
-        sqft: 600,
-        rent: 1500,
-        status: "vacant"
-      }
-    ],
-    createdAt: new Date(),
-    updatedAt: new Date()
-  }
-]
+import { toast } from "sonner"
 
 export default function PropertiesPage() {
-  const [properties, setProperties] = useState<Property[]>(mockProperties)
+  const [properties, setProperties] = useState<Property[]>([])
   const [selectedProperty, setSelectedProperty] = useState<Property | undefined>()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
-  const handleAddProperty = async (propertyData: Omit<Property, 'id' | 'createdAt' | 'updatedAt'>) => {
-    // In a real app, this would be an API call
-    const newProperty: Property = {
-      ...propertyData,
-      id: Math.random().toString(),
-      createdAt: new Date(),
-      updatedAt: new Date()
+  useEffect(() => {
+    fetchProperties()
+  }, [])
+
+  const fetchProperties = async () => {
+    try {
+      const response = await fetch('/api/properties')
+      if (!response.ok) throw new Error('Failed to fetch properties')
+      const data = await response.json()
+      setProperties(data)
+    } catch (error) {
+      toast.error('Error loading properties')
+      console.error('Error:', error)
+    } finally {
+      setIsLoading(false)
     }
-    setProperties([...properties, newProperty])
   }
 
-  const handleEditProperty = async (propertyData: Omit<Property, 'id' | 'createdAt' | 'updatedAt'>) => {
+  const handleAddProperty = async (propertyData: Omit<Property, 'id' | 'created_at'>) => {
+    try {
+      const response = await fetch('/api/properties', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(propertyData),
+      })
+
+      if (!response.ok) throw new Error('Failed to create property')
+
+      const newProperty = await response.json()
+      setProperties([newProperty, ...properties])
+      toast.success('Property created successfully')
+    } catch (error) {
+      toast.error('Error creating property')
+      console.error('Error:', error)
+    }
+  }
+
+  const handleEditProperty = async (propertyData: Omit<Property, 'created_at'>) => {
     if (!selectedProperty) return
 
-    // In a real app, this would be an API call
-    const updatedProperty: Property = {
-      ...propertyData,
-      id: selectedProperty.id,
-      createdAt: selectedProperty.createdAt,
-      updatedAt: new Date()
-    }
+    try {
+      const response = await fetch(`/api/properties/${selectedProperty.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(propertyData),
+      })
 
-    setProperties(properties.map(p =>
-      p.id === selectedProperty.id ? updatedProperty : p
-    ))
+      if (!response.ok) throw new Error('Failed to update property')
+
+      const updatedProperty = await response.json()
+      setProperties(properties.map(p =>
+        p.id === selectedProperty.id ? updatedProperty : p
+      ))
+      toast.success('Property updated successfully')
+    } catch (error) {
+      toast.error('Error updating property')
+      console.error('Error:', error)
+    }
   }
 
   const handleDeleteProperty = async (propertyId: string) => {
-    // In a real app, this would be an API call
-    if (confirm('Are you sure you want to delete this property?')) {
+    if (!confirm('Are you sure you want to delete this property?')) return
+
+    try {
+      const response = await fetch(`/api/properties/${propertyId}`, {
+        method: 'DELETE',
+      })
+
+      if (!response.ok) throw new Error('Failed to delete property')
+
       setProperties(properties.filter(p => p.id !== propertyId))
+      toast.success('Property deleted successfully')
+    } catch (error) {
+      toast.error('Error deleting property')
+      console.error('Error:', error)
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-6">
+        <div className="animate-pulse space-y-4">
+          <div className="h-8 bg-gray-200 rounded w-1/4"></div>
+          <div className="h-4 bg-gray-200 rounded w-1/3"></div>
+          <div className="space-y-3">
+            <div className="h-20 bg-gray-200 rounded"></div>
+            <div className="h-20 bg-gray-200 rounded"></div>
+            <div className="h-20 bg-gray-200 rounded"></div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -97,56 +123,67 @@ export default function PropertiesPage() {
         </Button>
       </div>
 
-      <div className="bg-white rounded-lg shadow">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left">
-            <thead className="bg-gray-50 border-b">
-              <tr>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Name</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Address</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Type</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Units</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Status</th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y">
-              {properties.map(property => (
-                <tr key={property.id}>
-                  <td className="px-6 py-4">{property.name}</td>
-                  <td className="px-6 py-4">
-                    {property.address}, {property.city}, {property.state} {property.zipCode}
-                  </td>
-                  <td className="px-6 py-4 capitalize">{property.type}</td>
-                  <td className="px-6 py-4">{property.units.length} units</td>
-                  <td className="px-6 py-4 capitalize">{property.status}</td>
-                  <td className="px-6 py-4">
-                    <div className="flex gap-2">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedProperty(property)
-                          setIsDialogOpen(true)
-                        }}
-                      >
-                        <Edit className="w-4 h-4" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteProperty(property.id)}
-                      >
-                        <Trash className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+      {properties.length === 0 ? (
+        <div className="text-center py-12">
+          <h3 className="text-lg font-medium text-gray-900">No properties yet</h3>
+          <p className="mt-2 text-sm text-gray-500">Get started by adding your first property.</p>
+          <div className="mt-6">
+            <Button onClick={() => setIsDialogOpen(true)}>
+              <Plus className="w-4 h-4 mr-2" />
+              Add Property
+            </Button>
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="bg-white rounded-lg shadow">
+          <div className="overflow-x-auto">
+            <table className="w-full text-left">
+              <thead className="bg-gray-50 border-b">
+                <tr>
+                  <th className="px-6 py-3 text-sm font-medium text-gray-500">Name</th>
+                  <th className="px-6 py-3 text-sm font-medium text-gray-500">Address</th>
+                  <th className="px-6 py-3 text-sm font-medium text-gray-500">Type</th>
+                  <th className="px-6 py-3 text-sm font-medium text-gray-500">Status</th>
+                  <th className="px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {properties.map(property => (
+                  <tr key={property.id}>
+                    <td className="px-6 py-4">{property.name}</td>
+                    <td className="px-6 py-4">
+                      {property.address}, {property.city}, {property.state} {property.zip_code}
+                    </td>
+                    <td className="px-6 py-4 capitalize">{property.type}</td>
+                    <td className="px-6 py-4 capitalize">{property.status}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedProperty(property)
+                            setIsDialogOpen(true)
+                          }}
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteProperty(property.id)}
+                        >
+                          <Trash className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       <PropertyDialog
         open={isDialogOpen}
