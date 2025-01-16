@@ -5,14 +5,14 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { Property, PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/types/properties"
+import { Property, PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/supabase"
 import { useState } from "react"
 
 interface PropertyDialogProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   property?: Property
-  onSubmit: (property: Omit<Property, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>
+  onSubmit: (property: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>) => Promise<void>
 }
 
 export function PropertyDialog({ open, onOpenChange, property, onSubmit }: PropertyDialogProps) {
@@ -31,10 +31,9 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
         address: formData.get("address") as string,
         city: formData.get("city") as string,
         state: formData.get("state") as string,
-        zipCode: formData.get("zipCode") as string,
-        type: formData.get("type") as keyof typeof PROPERTY_TYPES,
-        status: formData.get("status") as keyof typeof PROPERTY_STATUS,
-        units: [] // Units will be managed separately
+        zip_code: formData.get("zip_code") as string,
+        type: formData.get("type") as string,
+        status: formData.get("status") as string,
       }
 
       await onSubmit(propertyData)
@@ -104,7 +103,7 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
             <Input
               id="zipCode"
               name="zipCode"
-              defaultValue={property?.zipCode}
+              defaultValue={property?.zip_code}
               required
               placeholder="Enter ZIP code"
             />

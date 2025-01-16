@@ -7,6 +7,8 @@ import { useEffect, useState } from "react"
 import { Edit, Plus, Trash } from "react-feather"
 import { toast } from "sonner"
 
+type PropertyFormData = Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>
+
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
   const [selectedProperty, setSelectedProperty] = useState<Property | undefined>()
@@ -31,7 +33,7 @@ export default function PropertiesPage() {
     }
   }
 
-  const handleAddProperty = async (propertyData: Omit<Property, 'id' | 'created_at'>) => {
+  const handleAddProperty = async (propertyData: PropertyFormData) => {
     try {
       const response = await fetch('/api/properties', {
         method: 'POST',
@@ -50,7 +52,7 @@ export default function PropertiesPage() {
     }
   }
 
-  const handleEditProperty = async (propertyData: Omit<Property, 'created_at'>) => {
+  const handleEditProperty = async (propertyData: PropertyFormData) => {
     if (!selectedProperty) return
 
     try {
