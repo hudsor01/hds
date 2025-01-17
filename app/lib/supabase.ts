@@ -1,7 +1,9 @@
-import { Database } from '@/types/supabase'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 
-export const createClient = () => createClientComponentClient<Database>()
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+
+export const supabase = createClient(supabaseUrl!, supabaseAnonKey!)
 
 export const PROPERTY_TYPES = {
   SINGLE_FAMILY: 'Single Family',
@@ -31,51 +33,4 @@ export type Property = {
   status: string
   owner_id: string
   organization_id: string
-}
-
-export type Unit = {
-  id: string
-  created_at: string
-  property_id: string
-  unit_number: string
-  bedrooms: number
-  bathrooms: number
-  square_feet: number
-  rent_amount: number
-  status: 'vacant' | 'occupied' | 'maintenance'
-}
-
-export type Tenant = {
-  id: string
-  created_at: string
-  first_name: string
-  last_name: string
-  email: string
-  phone: string
-  status: 'active' | 'inactive' | 'pending'
-}
-
-export type Lease = {
-  id: string
-  created_at: string
-  unit_id: string
-  tenant_id: string
-  start_date: string
-  end_date: string
-  rent_amount: number
-  security_deposit: number
-  status: 'active' | 'pending' | 'expired' | 'terminated'
-}
-
-export type MaintenanceRequest = {
-  id: string
-  created_at: string
-  unit_id: string
-  tenant_id: string
-  title: string
-  description: string
-  priority: 'low' | 'medium' | 'high' | 'urgent'
-  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
-  assigned_to?: string
-  completed_at?: string
 }

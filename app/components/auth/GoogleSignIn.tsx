@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { supabase } from '@/lib/supabase'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useState } from 'react'
 import { FcGoogle } from 'react-icons/fc'
 
@@ -11,20 +11,19 @@ export default function GoogleSignIn() {
   const handleGoogleSignIn = async () => {
     try {
       setIsLoading(true)
+      const supabase = createClientComponentClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/api/auth/callback`,
           queryParams: {
             access_type: 'offline',
-            prompt: 'consent',
-          },
-        },
+            prompt: 'consent'
+          }
+        }
       })
 
-      if (error) {
-        throw error
-      }
+      if (error) throw error
     } catch (error) {
       console.error('Error:', error)
     } finally {

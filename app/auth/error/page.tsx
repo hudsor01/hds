@@ -9,11 +9,9 @@ export default function AuthError() {
         <p className="mb-8 text-gray-600">
           There was an error during the authentication process. Please try again.
         </p>
-        <Button asChild>
-          <Link href="/login">
-            Return to Login
-          </Link>
-        </Button>
+        <Link href="/login">
+          <Button>Return to Login</Button>
+        </Link>
       </div>
     </div>
   )
