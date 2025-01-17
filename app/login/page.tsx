@@ -43,25 +43,18 @@ export default function LoginPage() {
   }
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true)
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          skipBrowserRedirect: false,
-          redirectTo: `${window.location.origin}/api/auth/callback`
+          redirectTo: 'http://localhost:3000/api/auth/callback'
         }
       })
 
-      if (error) {
-        console.error('Google sign in error:', error)
-        throw error
-      }
+      if (error) throw error
     } catch (err) {
       console.error('Sign in error:', err)
       setError("Google sign in failed")
-    } finally {
-      setIsLoading(false)
     }
   }
 

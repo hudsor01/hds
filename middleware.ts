@@ -2,40 +2,28 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next()
+  const supabase = createMiddlewareClient({ req: request, res: response })
+  const { data: { session } } = await supabase.auth.getSession()
 
-  try {
-    const {
-      data: { session },
-    } = await supabase.auth.getSession()
-
-    // If no session and trying to access protected routes
-    if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
-      const redirectUrl = req.nextUrl.clone()
-      redirectUrl.pathname = '/login'
-      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
-      return NextResponse.redirect(redirectUrl)
+  // Check auth condition
+  if (request.nextUrl.pathname.startsWith('/dashboard')) {
+    if (!session) {
+      return NextResponse.redirect(new URL('/auth/login', request.url))
     }
-
-    return res
-  } catch (error) {
-    console.error('Middleware error:', error)
-    return res
   }
+
+  // Auth pages should redirect to dashboard if user is already logged in
+  if (request.nextUrl.pathname.startsWith('/auth')) {
+    if (session) {
+      return NextResponse.redirect(new URL('/dashboard', request.url))
+    }
+  }
+
+  return response
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     * - api/auth/callback (auth callback)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public/|api/auth/callback).*)',
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|auth/callback).*)'],
 }

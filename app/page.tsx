@@ -60,7 +60,7 @@ export default function HomePage() {
             style={{ y, scale }}
           >
             <motion.h1
-              className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600"
+              className="text-4xl font-bold tracking-tight sm:text-6xl bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 flex flex-col gap-2 sm:gap-4"
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{
@@ -70,11 +70,11 @@ export default function HomePage() {
                 delay: 0.2
               }}
             >
-              <span className="inline-block">Simplify</span>{" "}
-              <span className="inline-block">Property Management</span>
+              <span>Simplify</span>
+              <span>Property Management</span>
             </motion.h1>
             <motion.p
-              className="mt-6 text-lg leading-8 text-gray-600"
+              className="mt-6 text-lg leading-8 text-gray-600 max-w-xl mx-auto px-4"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4 }}

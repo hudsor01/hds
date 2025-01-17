@@ -8,19 +8,11 @@ export async function GET(request: Request) {
     const code = requestUrl.searchParams.get('code')
 
     if (code) {
-      const cookieStore = cookies()
-      const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-      const { error } = await supabase.auth.exchangeCodeForSession(code)
-
-      if (error) {
-        console.error('Error exchanging code for session:', error)
-        return NextResponse.redirect(new URL('/login?error=auth', request.url))
-      }
-
-      return NextResponse.redirect(new URL('/dashboard', request.url))
+      const supabase = createRouteHandlerClient({ cookies })
+      await supabase.auth.exchangeCodeForSession(code)
     }
 
-    return NextResponse.redirect(new URL('/login?error=no_code', request.url))
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   } catch (error) {
     console.error('Auth callback error:', error)
     return NextResponse.redirect(new URL('/login?error=auth', request.url))
