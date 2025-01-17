@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 import { useState } from 'react'
@@ -24,7 +24,6 @@ export default function LoginPage() {
       const email = formData.get('email') as string
       const password = formData.get('password') as string
 
-      const supabase = createClient()
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password
@@ -43,7 +42,6 @@ export default function LoginPage() {
   const handleGoogleLogin = async () => {
     try {
       setIsGoogleLoading(true)
-      const supabase = createClient()
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
