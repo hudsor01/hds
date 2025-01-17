@@ -4,11 +4,17 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import Link from "next/link"
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from "react"
 import { Lock, Mail } from "react-feather"
 
 export default function LoginPage() {
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirectedFrom = searchParams.get('redirectedFrom') || '/dashboard'
+  const supabase = createClientComponentClient()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -18,18 +24,17 @@ export default function LoginPage() {
     setError("")
 
     const formData = new FormData(e.currentTarget)
-    const email = formData.get("email")
-    const password = formData.get("password")
+    const email = formData.get("email") as string
+    const password = formData.get("password") as string
 
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      })
 
-      // Add your authentication logic here
-      console.log("Login attempt:", { email, password })
-
-      // Redirect to dashboard on success
-      window.location.href = "/dashboard"
+      if (error) throw error
+      window.location.href = redirectedFrom
     } catch (err) {
       setError("Invalid email or password")
     } finally {
@@ -40,11 +45,22 @@ export default function LoginPage() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true)
     try {
-      // Simulate Google Sign In
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      // Add your Google authentication logic here
-      window.location.href = "/dashboard"
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback?redirectedFrom=${encodeURIComponent(redirectedFrom)}`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
+        }
+      })
+      if (error) {
+        console.error('Google sign in error:', error)
+        throw error
+      }
     } catch (err) {
+      console.error('Sign in error:', err)
       setError("Google sign in failed")
     } finally {
       setIsLoading(false)

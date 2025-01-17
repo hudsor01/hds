@@ -1,4 +1,4 @@
-import type { NextConfig } from "next"
+import type { NextConfig } from "next";
 
 const config: NextConfig = {
   reactStrictMode: true,
@@ -20,6 +20,15 @@ const config: NextConfig = {
     formats: ["image/avif", "image/webp"],
   },
   poweredByHeader: false,
+  async redirects() {
+    return [
+      {
+        source: '/auth/callback',
+        destination: '/api/auth/callback',
+        permanent: true,
+      },
+    ]
+  }
 };
 
 export default config;

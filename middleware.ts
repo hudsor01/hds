@@ -6,19 +6,24 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient({ req, res })
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
+  try {
+    const {
+      data: { session },
+    } = await supabase.auth.getSession()
 
-  // If no session and trying to access protected routes
-  if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
-    const redirectUrl = req.nextUrl.clone()
-    redirectUrl.pathname = '/login'
-    redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
+    // If no session and trying to access protected routes
+    if (!session && req.nextUrl.pathname.startsWith('/dashboard')) {
+      const redirectUrl = req.nextUrl.clone()
+      redirectUrl.pathname = '/login'
+      redirectUrl.searchParams.set('redirectedFrom', req.nextUrl.pathname)
+      return NextResponse.redirect(redirectUrl)
+    }
+
+    return res
+  } catch (error) {
+    console.error('Middleware error:', error)
+    return res
   }
-
-  return res
 }
 
 export const config = {
