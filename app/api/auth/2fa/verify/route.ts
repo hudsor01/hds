@@ -1,28 +1,32 @@
-import { authService, twoFactorSchema } from '@/lib/auth/service'
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const body = await req.json()
-    const { token } = twoFactorSchema.parse(body)
+    const { code } = await request.json()
 
-    // In a real app, you would get the secret from the database
-    // based on the user's session
-    const secret = 'temporary-secret'
-    const isValid = await authService.verifyTwoFactor(secret, token)
+    const cookieStore = cookies()
+    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
 
-    if (!isValid) {
+    const { data: { user }, error } = await supabase.auth.getUser()
+
+    if (error || !user) {
       return NextResponse.json(
-        { message: 'Invalid verification code' },
-        { status: 400 }
+        { error: 'Unauthorized' },
+        { status: 401 }
       )
     }
 
+    // TODO: Implement 2FA verification with Supabase
+    // For now, just return success
     return NextResponse.json({ success: true })
+
   } catch (error) {
+    console.error('2FA verification error:', error)
     return NextResponse.json(
-      { message: `Invalid request: ${error instanceof Error ? error.message : 'Unknown error'}` },
-      { status: 400 }
+      { error: 'Internal server error' },
+      { status: 500 }
     )
   }
 }

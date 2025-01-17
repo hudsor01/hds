@@ -1,22 +1,65 @@
-import type { Session } from 'next-auth'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { type Session, type User } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 
+// Hook to get the current session
+export function useSession() {
+  const [session, setSession] = useState<Session | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClientComponentClient()
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session)
+      setLoading(false)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return { session, loading }
+}
+
+// Hook to get the current user
+export function useUser() {
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClientComponentClient()
+
+  useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user)
+      setLoading(false)
+    })
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return { user, loading }
+}
+
+// Protected route configuration
+export const protectedRoutes = ['/dashboard', '/settings', '/properties', '/tenants']
+
+// Auth redirect configuration
 export const authConfig = {
-  pages: {
+  redirects: {
     signIn: '/login',
+    signUp: '/signup',
+    forgotPassword: '/forgot-password',
+    afterSignIn: '/dashboard',
+    afterSignUp: '/dashboard',
   },
-  callbacks: {
-    authorized({ auth, request: { nextUrl } }: { auth: { user?: Session['user'] } | null; request: { nextUrl: URL } }) {
-      const isLoggedIn = !!auth?.user
-      const isOnDashboard = nextUrl.pathname.startsWith('/dashboard')
-
-      if (isOnDashboard) {
-        if (isLoggedIn) return true
-        return false
-      } else if (isLoggedIn) {
-        return Response.redirect(new URL('/dashboard', nextUrl))
-      }
-      return true
-    },
-  },
-  providers: [],
 }

@@ -1,7 +1,7 @@
 'use client'
 
-import
-  {
+import { Card } from '@/components/ui/card'
+import {
     BarChart3,
     Building2,
     Calendar,
@@ -11,8 +11,7 @@ import
     Settings,
     Users,
     Wallet,
-  } from 'lucide-react'
-import { Card } from 'my-app/app/components/ui/card'
+} from 'lucide-react'
 
 const features = [
   {
