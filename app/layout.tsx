@@ -1,15 +1,19 @@
 'use client'
 
+import { ThemeSwitcher } from '@/components/theme-switcher'
+import { Button } from '@/components/ui/button'
 import { AnimatePresence, motion } from 'framer-motion'
 import { ThemeProvider } from 'next-themes'
-import { Inter } from 'next/font/google'
+import { Roboto } from 'next/font/google'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { ThemeSwitcher } from './components/theme-switcher'
-import { Button } from './components/ui/button'
 import './globals.css'
 
-const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap',
+})
 
 const navVariants = {
   hidden: { y: -20, opacity: 0 },
@@ -47,7 +51,7 @@ export default function RootLayout({
 
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={inter.className}>
+      <body className={roboto.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <div className="min-h-screen bg-background">
             {!pathname.startsWith('/dashboard') && (
