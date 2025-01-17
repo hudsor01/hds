@@ -44,39 +44,16 @@ export default function LoginPage() {
     try {
       setIsGoogleLoading(true)
       const supabase = createClient()
-
-      // Try the OAuth sign-in with retries
-      let retries = 3
-      let error = null
-
-      while (retries > 0) {
-        try {
-          const { error: signInError } = await supabase.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-              redirectTo: 'http://localhost:3000/api/auth/callback',
-              queryParams: {
-                access_type: 'offline',
-                prompt: 'consent'
-              }
-            }
-          })
-
-          if (!signInError) {
-            return // Success, exit the retry loop
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/api/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent'
           }
-
-          error = signInError
-        } catch (e) {
-          error = e
         }
-
-        retries--
-        if (retries > 0) {
-          await new Promise(resolve => setTimeout(resolve, 1000)) // Wait 1s between retries
-        }
-      }
-
+      })
       if (error) throw error
     } catch (error) {
       console.error('Error:', error)
