@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card"
 import { useState } from "react"
 
 export default function AnalyticsPage() {
-  const [selectedMonth] = useState("Mar 24")
+  const [_selectedMonth, setSelectedMonth] = useState(new Date())
 
   return (
     <div className="p-6 space-y-8">

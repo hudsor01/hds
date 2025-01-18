@@ -15,9 +15,16 @@ const config: NextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
     },
+    optimizePackageImports: ['@heroicons/react', '@/components/ui'],
   },
   images: {
     formats: ["image/avif", "image/webp"],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
   },
   poweredByHeader: false,
   async redirects() {
@@ -28,7 +35,10 @@ const config: NextConfig = {
         permanent: true,
       },
     ]
-  }
-};
+  },
+  compiler: {
+    removeConsole: process.env.NODE_ENV === "production",
+  },
+}
 
 export default config;

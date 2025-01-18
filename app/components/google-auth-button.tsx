@@ -1,14 +1,14 @@
 'use client'
 
-import { Button } from '@/app/components/ui/button'
-import { createClient } from '@/app/lib/supabase'
+import { Button } from '@/components/ui/button'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export function GoogleAuthButton() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClient()
+  const supabase = createClientComponentClient()
 
   const handleGoogleAuth = async () => {
     try {
@@ -24,9 +24,13 @@ export function GoogleAuthButton() {
         },
       })
 
-      if (error) throw error
+      if (error) {
+        console.error('Google auth error:', error.message)
+        throw error
+      }
     } catch (error) {
-      console.error('Google auth error:', error)
+      console.error('Failed to authenticate with Google:', error)
+      router.push('/auth/error')
     } finally {
       setIsLoading(false)
     }

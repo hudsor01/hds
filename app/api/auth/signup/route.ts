@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 
 export async function POST(request: Request) {
   try {
-    const { email, password, name } = await request.json()
+    const { email, _password } = await request.json()
 
     // TODO: Replace with your actual user creation logic
     // For now, just simulate a successful registration
@@ -10,9 +10,9 @@ export async function POST(request: Request) {
       success: true,
       user: { id: 1, email, name }
     })
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json(
-      { success: false, message: 'Internal server error' },
+      { error: 'Internal Server Error' },
       { status: 500 }
     )
   }

@@ -1,9 +1,13 @@
-import { PrismaClient } from '@prisma/client'
+import postgres from 'postgres'
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClient | undefined
-}
+const sql = postgres(process.env.DATABASE_URL!, {
+  host: 'aws-0-us-east-2.pooler.supabase.com',
+  port: 5432,
+  database: 'postgres',
+  username: 'postgres.bkgxtohtczfaznjioqer',
+  max: 10,
+  idle_timeout: 20,
+  connect_timeout: 10
+})
 
-export const db = globalForPrisma.prisma ?? new PrismaClient()
-
-if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = db
+export default sql

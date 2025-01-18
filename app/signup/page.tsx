@@ -41,8 +41,8 @@ export default function SignUpPage() {
 
       // Redirect to dashboard on success
       window.location.href = "/dashboard"
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Registration failed")
+    } catch (_err) {
+      setError('Failed to create account')
     } finally {
       setIsLoading(false)
     }

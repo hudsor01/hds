@@ -9,6 +9,26 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
 }
+
+// Define your models here based on your Supabase tables
+model Property {
+  id              String   @id @default(uuid())
+  created_at      DateTime @default(now())
+  name            String
+  address         String
+  city            String
+  state           String
+  zip_code        String
+  type            String
+  status          String
+  owner_id        String
+  organization_id String
+
+  @@map("properties")
+}
+
+// Add more models as needed

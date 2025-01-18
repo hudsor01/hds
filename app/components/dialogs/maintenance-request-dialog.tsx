@@ -1,25 +1,23 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import
-    {
-        Dialog,
-        DialogContent,
-        DialogDescription,
-        DialogFooter,
-        DialogHeader,
-        DialogTitle,
-    } from "@/components/ui/dialog"
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import
-    {
-        Select,
-        SelectContent,
-        SelectItem,
-        SelectTrigger,
-        SelectValue,
-    } from "@/components/ui/select"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { PRIORITY_LABELS, PRIORITY_LEVELS } from "@/lib/constants"
 import { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from "@/types/maintenance"
@@ -42,6 +40,8 @@ interface MaintenanceRequestEditDialogProps extends Omit<MaintenanceRequestDialo
 export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState(props.request?.propertyId || "")
+  const [open, setOpen] = useState(false)
+  const [_value, setValue] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
