@@ -1,9 +1,8 @@
-// src/middleware.ts
-import { withMiddlewareAuthRequired } from "@auth0/nextjs-auth0/edge"
+export const runtime = 'experimental-edge';
 
-export const runtime = 'edge'; // Add this line
+import { auth } from "@/auth"
 
-export default withMiddlewareAuthRequired();
+export default auth;
 
 export const config = {
   matcher: [

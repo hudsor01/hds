@@ -1,7 +1,5 @@
 'use client'
 
-import { UserProvider } from '@auth0/nextjs-auth0/client'
-
 export default function RootLayout({
   children,
 }: {
@@ -10,9 +8,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <UserProvider>
-          {children}
-        </UserProvider>
+        {children}
       </body>
     </html>
   )
