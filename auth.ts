@@ -1,36 +1,34 @@
-import { prisma } from "@/lib/prisma"
-import { PrismaAdapter } from "@auth/prisma-adapter"
+import type { Profile } from "next-auth"
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
-declare module "next-auth" {
-  interface Session {
-    user: {
-      id: string
-      name?: string | null
-      email?: string | null
-      image?: string | null
-    }
-  }
+interface GoogleProfile extends Profile {
+  email_verified?: boolean
 }
 
 const handler = NextAuth({
-  adapter: PrismaAdapter(prisma),
   providers: [
     Google({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
+      authorization: {
+        params: {
+          prompt: "consent",
+          access_type: "offline",
+          response_type: "code"
+        }
+      }
     })
   ],
   callbacks: {
-    async session({ session, user }) {
-      if (session.user) {
-        session.user.id = user.id
+    async signIn({ account, profile }) {
+      if (account?.provider === "google") {
+        return !!(profile as GoogleProfile).email_verified
       }
-      return session
+      return true
     }
   }
 })
 
-export const { auth, signIn, signOut } = handler
+export const { auth } = handler
 export const { GET, POST } = handler
