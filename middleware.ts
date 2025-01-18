@@ -1,25 +1,9 @@
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
-import type { NextRequest } from 'next/server'
-import { NextResponse } from 'next/server'
+import { withMiddlewareAuthRequired } from '@auth0/nextjs-auth0/edge'
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
-
-  await supabase.auth.getSession()
-
-  return res
-}
+export default withMiddlewareAuthRequired();
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
   ],
-}
+};
