@@ -2,29 +2,11 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 
-// List of public routes that don't require authentication
-const publicRoutes = ['/', '/login', '/auth/callback']
-
-export async function middleware(request: NextRequest) {
+export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req: request, res })
-  const { pathname } = request.nextUrl
+  const supabase = createMiddlewareClient({ req, res })
 
-  // Refresh session if expired
-  const { data: { session }, error } = await supabase.auth.getSession()
-
-  // Allow access to public routes
-  if (publicRoutes.includes(pathname) || pathname.startsWith('/auth/')) {
-    return res
-  }
-
-  // Check auth status for protected routes
-  if (!session) {
-    const redirectUrl = new URL('/login', request.url)
-    // Add ?next=/protected-route to redirect back after login
-    redirectUrl.searchParams.set('next', pathname)
-    return NextResponse.redirect(redirectUrl)
-  }
+  await supabase.auth.getSession()
 
   return res
 }
@@ -36,8 +18,8 @@ export const config = {
      * - _next/static (static files)
      * - _next/image (image optimization files)
      * - favicon.ico (favicon file)
-     * - public folder
+     * Feel free to modify this pattern to include more paths.
      */
-    '/((?!_next/static|_next/image|favicon.ico|public/).*)',
+    '/((?!_next/static|_next/image|favicon.ico).*)',
   ],
 }

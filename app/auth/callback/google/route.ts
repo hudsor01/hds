@@ -3,13 +3,12 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const requestUrl = new URL(request.url)
+  const code = requestUrl.searchParams.get('code')
 
   if (!code) {
     console.error('No code received in callback')
-    return NextResponse.redirect(`${origin}/auth/error`)
+    return NextResponse.redirect(`${requestUrl.origin}/auth/error`)
   }
 
   try {
@@ -24,11 +23,11 @@ export async function GET(request: Request) {
       throw error
     }
 
-    console.log('Successfully exchanged code for session:', !!data.session)
-    return NextResponse.redirect(`${origin}${next}`)
+    console.log('Successfully exchanged code for session')
+    return NextResponse.redirect(requestUrl.origin)
 
   } catch (error) {
     console.error('Auth callback error:', error instanceof Error ? error.message : error)
-    return NextResponse.redirect(`${origin}/auth/error`)
+    return NextResponse.redirect(`${requestUrl.origin}/auth/error`)
   }
 }
