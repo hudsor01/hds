@@ -1,35 +1,41 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createClient } from '@supabase/supabase-js'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 
 export function GoogleAuthButton() {
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-  const supabase = createClientComponentClient()
+
+  // Create direct client
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+      }
+    }
+  )
 
   const handleGoogleAuth = async () => {
     try {
       setIsLoading(true)
-      const { error } = await supabase.auth.signInWithOAuth({
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
-          queryParams: {
-            access_type: 'offline',
-            prompt: 'consent',
-          },
-        },
+          redirectTo: `${window.location.origin}/auth/callback`
+        }
       })
 
-      if (error) {
-        console.error('Google auth error:', error.message)
-        throw error
-      }
+      if (error) throw error
+      if (data?.url) window.location.href = data.url
+
     } catch (error) {
-      console.error('Failed to authenticate with Google:', error)
+      console.error('Google auth error:', error)
       router.push('/auth/error')
     } finally {
       setIsLoading(false)
