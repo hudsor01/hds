@@ -1,3 +1,5 @@
-import { auth } from '@auth0/nextjs-auth0/middleware';
+import { handleAuth } from '@auth0/nextjs-auth0';
 
-export const middleware = auth();
+export const runtime = 'nodejs';
+
+export const GET = handleAuth();

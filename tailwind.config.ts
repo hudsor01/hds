@@ -9,8 +9,10 @@ const config: Config = {
     "./pages/**/*.{ts,tsx,js,jsx,mdx}",
     "./components/**/*.{ts,tsx,js,jsx,mdx}",
     "./app/**/*.{ts,tsx,js,jsx,mdx}",
-    "./src/**/*.{ts,tsx,js,jsx,mdx}",
     "./lib/**/*.{ts,tsx,js,jsx,mdx}",
+    "./hds/**/*.{ts,tsx,js,jsx,mdx}",
+    "./app/pages.tsx",
+    "./app/layout.tsx"
   ],
   prefix: "",
   theme: {

@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Metadata } from 'next'
+import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
@@ -226,11 +226,12 @@ export default function AboutPage() {
                   size="lg"
                   variant="secondary"
                   className="bg-white text-blue-600 hover:bg-blue-50"
-                  asChild
                 >
                   <Link href="/dashboard">
-                    Get Started Now
-                    <ArrowRight className="ml-2 h-4 w-4" />
+                    <a className="flex items-center">
+                      Get Started Now
+                      <ArrowRight className="ml-2 h-4 w-4" />
+                    </a>
                   </Link>
                 </Button>
               </div>
