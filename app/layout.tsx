@@ -1,3 +1,5 @@
+import AuthProvider from "@/components/providers/auth-provider"
+
 export default function RootLayout({
   children,
 }: {
@@ -6,7 +8,7 @@ export default function RootLayout({
   return (
     <html>
       <body>
-        {children}
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   )

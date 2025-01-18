@@ -1,12 +1,19 @@
-import type { Profile } from "next-auth"
+import type { DefaultSession } from "next-auth"
 import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 
-interface GoogleProfile extends Profile {
-  email_verified?: boolean
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string
+      email: string
+      name: string
+      image: string
+    } & DefaultSession["user"]
+  }
 }
 
-const handler = NextAuth({
+export const { auth } = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -19,16 +26,5 @@ const handler = NextAuth({
         }
       }
     })
-  ],
-  callbacks: {
-    async signIn({ account, profile }) {
-      if (account?.provider === "google") {
-        return !!(profile as GoogleProfile).email_verified
-      }
-      return true
-    }
-  }
+  ]
 })
-
-export const { auth } = handler
-export const { GET, POST } = handler
