@@ -1,29 +1,25 @@
 import type { Config } from "tailwindcss"
 
-const typography = require("@tailwindcss/typography")
-const daisyui = require("daisyui")
-
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: 'class',
   content: [
-    "./pages/**/*.{ts,tsx,js,jsx,mdx}",
-    "./components/**/*.{ts,tsx,js,jsx,mdx}",
-    "./app/**/*.{ts,tsx,js,jsx,mdx}",
-    "./lib/**/*.{ts,tsx,js,jsx,mdx}",
-    "./hds/**/*.{ts,tsx,js,jsx,mdx}",
-    "./app/pages.tsx",
-    "./app/layout.tsx"
+    "./hds/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  prefix: "",
   theme: {
     container: {
       center: true,
-      padding: "2rem",
+      padding: '2rem',
       screens: {
-        "2xl": "1400px",
+        '2xl': '1400px',
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
+        inter: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -59,32 +55,19 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
-      fontFamily: {
-        sans: ["Inter", "system-ui", "sans-serif"],
-      },
-      spacing: {
-        18: "4.5rem",
-        88: "22rem",
-      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
       },
-      fontSize: {
-        "hero-title": ["3.75rem", { lineHeight: "1.2" }],
-      },
-      boxShadow: {
-        feature: "0 0 50px 0 rgba(0, 0, 0, 0.1)",
-      },
       keyframes: {
         "accordion-down": {
-          from: { height: "0" },
+          from: { height: "0px" },
           to: { height: "var(--radix-accordion-content-height)" },
         },
         "accordion-up": {
           from: { height: "var(--radix-accordion-content-height)" },
-          to: { height: "0" },
+          to: { height: "0px" },
         },
       },
       animation: {
@@ -93,32 +76,9 @@ const config: Config = {
       },
     },
   },
-  plugins: [
-    typography,
-    daisyui,
+  plugins: [require("tailwindcss-animate"),
+    require('@tailwindcss/typography'),
+    require('@tailwindcss/forms'),
+    require('@tailwindcss/aspect-ratio')
   ],
-  daisyui: {
-    themes: [
-      {
-        light: {
-          ...require("daisyui/src/theming/themes")["light"],
-          primary: "#3B82F6",
-          "primary-content": "#FFFFFF",
-          secondary: "#1D4ED8",
-          accent: "#37CDBE",
-          neutral: "#3D4451",
-          "base-100": "#FFFFFF",
-        },
-        dark: {
-          ...require("daisyui/src/theming/themes")["dark"],
-          primary: "#3B82F6",
-          "primary-content": "#FFFFFF",
-          secondary: "#1D4ED8",
-          "base-100": "#1A1B1E",
-        },
-      },
-    ],
-  },
-} satisfies Config
-
-export default config
+}
