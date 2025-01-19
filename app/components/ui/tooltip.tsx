@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
 import { Tooltip as MuiTooltip, styled } from '@mui/material'
 import * as React from 'react'

@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Box, Home, Settings, Tool, Users } from 'react-feather'

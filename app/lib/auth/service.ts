@@ -1,9 +1,14 @@
-import { db } from "@/lib/db"
-import { Session } from "@prisma/client"
+import db from "@/lib/db"
+import { PrismaClient } from "@prisma/client"
+import type { Session } from '@supabase/supabase-js'
 import { nanoid } from "nanoid"
-import { UAParser } from "ua-parser-js"
+import UAParser from 'ua-parser-js'
+
+
+const prisma = new PrismaClient()
 
 export class AuthService {
+  [x: string]: any
   private readonly SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 hours
 
   async createSession(
@@ -12,7 +17,7 @@ export class AuthService {
     ipAddress: string
   ): Promise<Session> {
     // Parse user agent for device info
-    const parser = new UAParser(userAgent)
+    const parser = UAParser(userAgent)
     const browser = `${parser.getBrowser().name || 'unknown'} ${parser.getBrowser().version || ''}`
     const os = parser.getOS().name || 'unknown'
     const device = parser.getDevice().type || 'desktop'

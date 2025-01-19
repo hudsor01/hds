@@ -1,8 +1,8 @@
 'use client'
 
+import { cn } from "@/app/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import { cn } from "@/lib/utils"
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Home, Menu, Tool, Users } from "react-feather"
@@ -59,7 +59,7 @@ export default function DashboardLayout({
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-64">
+        <SheetContent className="w-64 left-0">
           <nav className="flex flex-col gap-4 mt-8">
             {sidebarItems.map((item) => {
               const Icon = item.icon
@@ -79,7 +79,7 @@ export default function DashboardLayout({
             })}
             <div className="flex-1" />
             <Link
-              href="/dashboard/settings"
+              href={{ pathname: "/dashboard/settings" }}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                 pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
@@ -119,7 +119,7 @@ export default function DashboardLayout({
               })}
               <div className="flex-1" />
               <Link
-                href="/dashboard/settings"
+                href={{ pathname: "/dashboard/settings" }}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                   pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"

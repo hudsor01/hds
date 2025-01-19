@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { SliderProps as MuiSliderProps } from '@mui/material'
 import { Slider as MuiSlider, styled } from '@mui/material'
 import * as React from 'react'

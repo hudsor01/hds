@@ -1,13 +1,12 @@
-import { cn } from '@/lib/utils'
-import
-  {
+import { cn } from '@/app/lib/utils'
+import {
     BuildingOffice2Icon,
     Cog6ToothIcon,
     CurrencyDollarIcon,
     DocumentTextIcon,
     HomeIcon,
     UsersIcon,
-  } from '@heroicons/react/24/outline'
+} from '@heroicons/react/24/outline'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 

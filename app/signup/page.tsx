@@ -79,7 +79,6 @@ export default function SignUpPage() {
           {/* Google Sign Up */}
           <Button
             type="button"
-            variant="outline"
             className="w-full mb-6 relative"
             onClick={handleGoogleSignUp}
             disabled={isLoading}

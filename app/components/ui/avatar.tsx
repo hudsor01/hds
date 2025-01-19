@@ -1,11 +1,12 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { AvatarProps as MuiAvatarProps } from '@mui/material'
-import {
+import
+  {
     Avatar as MuiAvatar,
     styled,
-} from '@mui/material'
+  } from '@mui/material'
 import * as React from 'react'
 
 const StyledAvatar = styled(MuiAvatar)(({ theme }) => ({

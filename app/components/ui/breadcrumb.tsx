@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material'
 import
   {

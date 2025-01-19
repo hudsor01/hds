@@ -1,12 +1,13 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { TabProps as MuiTabProps, TabsProps as MuiTabsProps } from '@mui/material'
-import {
+import
+  {
     Tab as MuiTab,
     Tabs as MuiTabs,
     styled,
-} from '@mui/material'
+  } from '@mui/material'
 import * as React from 'react'
 
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({

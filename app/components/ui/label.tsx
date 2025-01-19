@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/app/lib/utils'
 import type { FormLabelProps } from '@mui/material'
 import { FormLabel as MuiFormLabel, styled } from '@mui/material'
 import * as React from 'react'
