@@ -1,6 +1,6 @@
 'use client'
 
-import Navbar from '@/components/layout/navbar'
+import { Navbar } from '@/components/layout/navbar'
 import { Providers } from '@/components/providers'
 import { NotificationProvider } from '@/components/ui/notification'
 import { cn } from '@/lib/utils'

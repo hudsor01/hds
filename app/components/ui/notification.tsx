@@ -1,8 +1,8 @@
 'use client'
 
+import type { Toast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { Alert, AlertTitle, Snackbar, Stack } from '@mui/material'
-import type { Toast } from '../../hooks/use-toast'
-import { useToast } from '../../hooks/use-toast'
 
 export function NotificationProvider() {
   const { toasts, removeToast } = useToast()

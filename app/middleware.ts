@@ -1,46 +1,43 @@
-import { createClient } from '@/utils/supabase/middleware'
-import { type NextRequest, NextResponse } from 'next/server'
+import { auth } from "@/auth"
+import type { NextRequest } from "next/server"
+import { NextResponse } from "next/server"
 
+export default auth((req: NextRequest & { nextauth?: { token: string | null } }) => {
+  const { nextUrl } = req
+  const isLoggedIn = req.nextauth?.token !== null
 
-export async function middleware(request: NextRequest) {
-  try {
-    // Skip auth check for public routes
-    if (request.nextUrl.pathname.startsWith('/login') ||
-        request.nextUrl.pathname.startsWith('/auth')) {
-      return NextResponse.next()
-    }
+  // Get the pathname safely
+  const pathname = nextUrl?.pathname || ''
 
-    const { supabase, response } = createClient(request)
+  // Protected routes that require authentication
+  const protectedPaths = ['/dashboard', '/properties', '/tenants', '/maintenance']
+  const isProtectedRoute = protectedPaths.some(path => pathname === path || pathname.startsWith(`${path}/`))
 
-    // Refresh session if expired - required for Server Components
-    const { data: { session }, error } = await supabase.auth.getSession()
+  // Auth routes that should redirect to dashboard if logged in
+  const authPaths = ['/login', '/signup']
+  const isAuthRoute = authPaths.some(path => pathname === path)
 
-    if (error || !session) {
-      console.error('Auth error:', error?.message || 'No session')
-      return NextResponse.redirect(new URL('/login', request.url))
-    }
-
-    return response
-  } catch (error) {
-    console.error('Middleware error:', error)
-    // Return the original request if there's an error
-    return NextResponse.next({
-      request: {
-        headers: request.headers,
-      },
-    })
+  if (isProtectedRoute && !isLoggedIn) {
+    const loginUrl = new URL('/login', req.url)
+    return NextResponse.redirect(loginUrl)
   }
-}
+
+  if (isAuthRoute && isLoggedIn) {
+    const dashboardUrl = new URL('/dashboard', req.url)
+    return NextResponse.redirect(dashboardUrl)
+  }
+
+  return NextResponse.next()
+})
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * Feel free to modify this pattern to include more paths.
-     */
-    '/((?!_next/static|_next/image|favicon.ico).*)',
+    '/dashboard/:path*',
+    '/properties/:path*',
+    '/tenants/:path*',
+    '/maintenance/:path*',
+    '/login',
+    '/signup'
   ],
+  runtime: 'nodejs'
 }

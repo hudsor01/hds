@@ -1,30 +1,10 @@
 'use client'
 
-import
-    {
-        Info as AboutIcon,
-        AccountCircle as AccountIcon,
-        Mail as ContactIcon,
-        Widgets as FeaturesIcon,
-        Home as HomeIcon,
-        Login as LoginIcon,
-        Menu as MenuIcon,
-        Paid as PricingIcon,
-        PersonAdd as SignUpIcon
-    } from '@mui/icons-material'
-import
-    {
-        AppBar,
-        Button,
-        Container,
-        IconButton,
-        Stack,
-        Toolbar,
-        Typography
-    } from '@mui/material'
+import { AppBar, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
 import type { Route } from 'next'
-import { useSession } from "next-auth/react"
-import Link from "next/link"
+import { useSession } from 'next-auth/react'
+import Link from 'next/link'
+import { Info as AboutIcon, Mail as ContactIcon, Settings as FeaturesIcon, DollarSign as PricingIcon } from 'react-feather'
 
 const COLORS = {
   primary: '#7EB6FF',
@@ -37,100 +17,65 @@ const COLORS = {
   border: 'rgba(0,0,0,0.08)'
 }
 
-export default function Navbar() {
+interface NavbarProps {
+  scrolled: boolean
+}
+
+export function Navbar({ scrolled }: NavbarProps) {
   const { data: session } = useSession()
 
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       elevation={0}
       sx={{
-        backgroundColor: COLORS.background,
-        borderBottom: '1px solid',
+        bgcolor: 'white',
+        borderBottom: 1,
         borderColor: COLORS.border,
-        backdropFilter: 'blur(8px)',
-        transition: 'all 0.3s ease'
+        transition: 'all 0.2s ease-in-out',
+        ...(scrolled && {
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
+          backdropFilter: 'blur(12px)',
+          bgcolor: 'rgba(255, 255, 255, 0.8)'
+        })
       }}
     >
       <Container maxWidth="xl">
-        <Toolbar
-          disableGutters
-          sx={{
-            minHeight: { xs: 64, md: 72 },
-            display: 'flex',
-            justifyContent: 'space-between',
-            px: { xs: 2, md: 4 }
-          }}
-        >
+        <Toolbar disableGutters>
           {/* Logo */}
-          <Stack
-            direction="row"
-            spacing={1.5}
-            alignItems="center"
-            component={Link}
-            href="/"
-            sx={{
-              textDecoration: 'none',
-              color: COLORS.text,
-              '&:hover': {
-                opacity: 0.9,
-                transform: 'translateY(-1px)',
-              },
-              transition: 'all 0.2s ease'
-            }}
-          >
-            <HomeIcon
-              sx={{
-                color: COLORS.primary,
-                fontSize: 28
-              }}
-            />
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                letterSpacing: '-0.02em',
-                background: `linear-gradient(120deg, ${COLORS.text} 0%, ${COLORS.textLight} 100%)`,
-                backgroundClip: 'text',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-              }}
-            >
-              Hudson Digital Solutions
-            </Typography>
-          </Stack>
+          <Link href={'/' as Route} style={{ textDecoration: 'none', color: 'inherit' }}>
+            <Stack direction="row" spacing={1} alignItems="center">
+              <Typography
+                variant="h5"
+                noWrap
+                sx={{
+                  fontWeight: 700,
+                  letterSpacing: '-0.02em',
+                  color: COLORS.text
+                }}
+              >
+                Hudson Digital Solutions
+              </Typography>
+            </Stack>
+          </Link>
 
-          {/* Desktop Navigation */}
+          {/* Navigation Links */}
           <Stack
             direction="row"
             spacing={1}
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              alignItems: 'center',
-              position: 'absolute',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              '& .MuiButton-root': {
-                px: 2,
-                py: 1,
-                borderRadius: 1.5,
-                fontSize: '0.95rem',
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-1px)'
-                }
-              }
-            }}
+            alignItems="center"
+            sx={{ flexGrow: 1, justifyContent: 'center' }}
           >
             <Button
               component={Link}
-              href="/about"
-              startIcon={<AboutIcon />}
+              href={'/about' as Route}
+              startIcon={<AboutIcon size={20} />}
               sx={{
-                color: COLORS.text,
+                color: COLORS.textLight,
+                px: 2,
                 '&:hover': {
-                  backgroundColor: COLORS.primaryLight,
-                  color: COLORS.primaryDark,
+                  bgcolor: COLORS.primaryLight,
+                  color: COLORS.primaryDark
                 }
               }}
             >
@@ -138,13 +83,14 @@ export default function Navbar() {
             </Button>
             <Button
               component={Link}
-              href="/features"
-              startIcon={<FeaturesIcon />}
+              href={'/features' as Route}
+              startIcon={<FeaturesIcon size={20} />}
               sx={{
-                color: COLORS.text,
+                color: COLORS.textLight,
+                px: 2,
                 '&:hover': {
-                  backgroundColor: COLORS.primaryLight,
-                  color: COLORS.primaryDark,
+                  bgcolor: COLORS.primaryLight,
+                  color: COLORS.primaryDark
                 }
               }}
             >
@@ -152,13 +98,14 @@ export default function Navbar() {
             </Button>
             <Button
               component={Link}
-              href="/pricing"
-              startIcon={<PricingIcon />}
+              href={'/pricing' as Route}
+              startIcon={<PricingIcon size={20} />}
               sx={{
-                color: COLORS.text,
+                color: COLORS.textLight,
+                px: 2,
                 '&:hover': {
-                  backgroundColor: COLORS.primaryLight,
-                  color: COLORS.primaryDark,
+                  bgcolor: COLORS.primaryLight,
+                  color: COLORS.primaryDark
                 }
               }}
             >
@@ -166,13 +113,14 @@ export default function Navbar() {
             </Button>
             <Button
               component={Link}
-              href="/contact"
-              startIcon={<ContactIcon />}
+              href={'/contact' as Route}
+              startIcon={<ContactIcon size={20} />}
               sx={{
-                color: COLORS.text,
+                color: COLORS.textLight,
+                px: 2,
                 '&:hover': {
-                  backgroundColor: COLORS.primaryLight,
-                  color: COLORS.primaryDark,
+                  bgcolor: COLORS.primaryLight,
+                  color: COLORS.primaryDark
                 }
               }}
             >
@@ -181,48 +129,32 @@ export default function Navbar() {
           </Stack>
 
           {/* Auth Buttons */}
-          <Stack
-            direction="row"
-            spacing={2}
-            sx={{
-              alignItems: 'center',
-              '& .MuiButton-root': {
-                borderRadius: 1.5,
-                px: 2.5,
-                py: 1,
-                transition: 'all 0.2s ease',
-                '&:hover': {
-                  transform: 'translateY(-1px)'
-                }
-              }
-            }}
-          >
-            {session ? (
+          <Stack direction="row" spacing={2}>
+            {session?.user ? (
               <Button
                 component={Link}
-                href="/account"
-                startIcon={<AccountIcon />}
+                href={'/dashboard' as Route}
+                variant="contained"
                 sx={{
-                  color: COLORS.text,
+                  bgcolor: COLORS.primary,
+                  color: 'white',
                   '&:hover': {
-                    backgroundColor: COLORS.primaryLight,
-                    color: COLORS.primaryDark,
+                    bgcolor: COLORS.primaryDark
                   }
                 }}
               >
-                Account
+                Dashboard
               </Button>
             ) : (
               <>
                 <Button
                   component={Link}
-                  href="/login"
-                  startIcon={<LoginIcon />}
+                  href={'/login' as Route}
                   sx={{
-                    color: COLORS.text,
+                    color: COLORS.textLight,
                     '&:hover': {
-                      backgroundColor: COLORS.primaryLight,
-                      color: COLORS.primaryDark,
+                      bgcolor: COLORS.primaryLight,
+                      color: COLORS.primaryDark
                     }
                   }}
                 >
@@ -230,17 +162,13 @@ export default function Navbar() {
                 </Button>
                 <Button
                   component={Link}
-                  href="/signup"
+                  href={'/signup' as Route}
                   variant="contained"
-                  startIcon={<SignUpIcon />}
                   sx={{
-                    backgroundColor: COLORS.primary,
-                    color: COLORS.background,
-                    fontWeight: 600,
-                    boxShadow: `0 4px 14px 0 ${COLORS.primary}40`,
+                    bgcolor: COLORS.primary,
+                    color: 'white',
                     '&:hover': {
-                      backgroundColor: COLORS.primaryDark,
-                      boxShadow: `0 6px 20px 0 ${COLORS.primary}60`,
+                      bgcolor: COLORS.primaryDark
                     }
                   }}
                 >
@@ -249,23 +177,6 @@ export default function Navbar() {
               </>
             )}
           </Stack>
-
-          {/* Mobile Navigation */}
-          <IconButton
-            component={Link}
-            href={'/menu' as Route}
-            size="large"
-            edge="end"
-            sx={{
-              display: { xs: 'flex', md: 'none' },
-              color: COLORS.text,
-              '&:hover': {
-                backgroundColor: COLORS.primaryLight,
-              }
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
         </Toolbar>
       </Container>
     </AppBar>
