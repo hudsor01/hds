@@ -1,8 +1,8 @@
-"use client"
+'use client'
 
-import type { Toast } from '@/hooks/use-toast'
 import { Alert, AlertTitle, Snackbar } from '@mui/material'
 import { useEffect, useState } from 'react'
+import type { Toast } from '../../hooks/use-toast'
 
 interface ToastProps extends Toast {
   onClose: () => void

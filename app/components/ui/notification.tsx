@@ -1,32 +1,28 @@
 'use client'
 
-import type { Notification } from '@/hooks/use-notification'
-import { useNotification } from '@/hooks/use-notification'
 import { Alert, AlertTitle, Snackbar, Stack } from '@mui/material'
+import type { Toast } from '../../hooks/use-toast'
+import { useToast } from '../../hooks/use-toast'
 
 export function NotificationProvider() {
-  const { notifications, removeNotification } = useNotification()
+  const { toasts, removeToast } = useToast()
 
   return (
-    <Stack spacing={2} sx={{ position: 'fixed', top: 24, right: 24, zIndex: 2000 }}>
-      {notifications.map((notification: Notification) => (
+    <Stack spacing={2} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 2000 }}>
+      {toasts.map((toast: Toast) => (
         <Snackbar
-          key={notification.id}
+          key={toast.id}
           open={true}
-          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-          sx={{ position: 'relative', mt: 0 }}
+          autoHideDuration={toast.duration || 5000}
+          onClose={() => removeToast(toast.id)}
         >
           <Alert
-            severity={notification.severity || 'info'}
-            onClose={() => removeNotification(notification.id)}
-            variant="filled"
-            elevation={6}
-            sx={{ width: '100%', minWidth: '300px' }}
+            onClose={() => removeToast(toast.id)}
+            severity={toast.severity || 'info'}
+            sx={{ width: '100%' }}
           >
-            {notification.title && (
-              <AlertTitle>{notification.title}</AlertTitle>
-            )}
-            {notification.message}
+            {toast.title && <AlertTitle>{toast.title}</AlertTitle>}
+            {toast.message}
           </Alert>
         </Snackbar>
       ))}

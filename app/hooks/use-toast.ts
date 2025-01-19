@@ -3,32 +3,31 @@
 import type { AlertColor } from '@mui/material'
 import { create } from 'zustand'
 
-export type Toast = {
+export interface Toast {
   id: string
   title?: string
-  description?: string
+  message: string
   severity?: AlertColor
-  action?: React.ReactNode
   duration?: number
 }
 
-type State = {
+interface ToastStore {
   toasts: Toast[]
   addToast: (toast: Omit<Toast, 'id'>) => void
   removeToast: (id: string) => void
 }
 
-export const useToast = create<State>((set) => ({
+export const useToast = create<ToastStore>((set) => ({
   toasts: [],
   addToast: (toast) =>
     set((state) => ({
       toasts: [
         ...state.toasts,
-        { ...toast, id: Math.random().toString() }
-      ]
+        { ...toast, id: Math.random().toString(36).slice(2) },
+      ],
     })),
   removeToast: (id) =>
     set((state) => ({
-      toasts: state.toasts.filter((toast) => toast.id !== id)
-    }))
+      toasts: state.toasts.filter((toast) => toast.id !== id),
+    })),
 }))

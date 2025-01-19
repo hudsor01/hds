@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { cn } from '@/lib/utils'
 import type { TabProps as MuiTabProps, TabsProps as MuiTabsProps } from '@mui/material'

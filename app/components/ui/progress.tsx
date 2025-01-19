@@ -1,28 +1,40 @@
-"use client"
+'use client'
 
-import * as ProgressPrimitive from "@radix-ui/react-progress"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { LinearProgressProps } from '@mui/material'
+import { LinearProgress as MuiLinearProgress, styled } from '@mui/material'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
+const StyledLinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
+  height: 8,
+  borderRadius: theme.shape.borderRadius,
+  [`&.MuiLinearProgress-root`]: {
+    backgroundColor: theme.palette.action.hover,
+  },
+  [`& .MuiLinearProgress-bar`]: {
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.primary.main,
+  },
+}))
 
-const Progress = React.forwardRef<
-  React.ElementRef<typeof ProgressPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof ProgressPrimitive.Root>
->(({ className, value, ...props }, ref) => (
-  <ProgressPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative h-2 w-full overflow-hidden rounded-full bg-primary/20",
-      className
-    )}
-    {...props}
-  >
-    <ProgressPrimitive.Indicator
-      className="h-full w-full flex-1 bg-primary transition-all"
-      style={{ transform: `translateX(-${100 - (value || 0)}%)` }}
-    />
-  </ProgressPrimitive.Root>
-))
-Progress.displayName = ProgressPrimitive.Root.displayName
+export interface ProgressProps extends Omit<LinearProgressProps, 'value'> {
+  value?: number
+  max?: number
+}
 
-export { Progress }
+export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
+  ({ className, value = 0, max = 100, ...props }, ref) => {
+    const normalizedValue = (value / max) * 100
+
+    return (
+      <StyledLinearProgress
+        ref={ref}
+        variant="determinate"
+        value={normalizedValue}
+        className={cn('w-full', className)}
+        {...props}
+      />
+    )
+  }
+)
+Progress.displayName = 'Progress'

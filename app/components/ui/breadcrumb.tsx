@@ -1,13 +1,14 @@
-"use client"
+'use client'
 
 import { cn } from '@/lib/utils'
 import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material'
-import {
+import
+  {
     Link,
     Breadcrumbs as MuiBreadcrumbs,
     Typography,
     styled,
-} from '@mui/material'
+  } from '@mui/material'
 import * as React from 'react'
 import { ChevronRight } from 'react-feather'
 
