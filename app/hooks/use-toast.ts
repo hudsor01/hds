@@ -6,7 +6,7 @@ import { create } from 'zustand'
 export interface Toast {
   id: string
   title?: string
-  message: string
+  description: string
   severity?: AlertColor
   duration?: number
 }

@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import type { Toast } from '../../hooks/use-toast'
 
 interface ToastProps extends Toast {
-  onClose: () => void
+  onCloseAction: () => void
 }
 
 export function Toast({
@@ -13,18 +13,19 @@ export function Toast({
   description,
   severity = 'info',
   duration = 5000,
-  onClose
+  onCloseAction
 }: ToastProps) {
   const [open, setOpen] = useState(true)
 
   useEffect(() => {
     if (!open) {
       const timer = setTimeout(() => {
-        onClose()
+        onCloseAction()
       }, 300) // Allow exit animation to complete
       return () => clearTimeout(timer)
     }
-  }, [open, onClose])
+    return () => {}  // Return empty cleanup function when open is true
+  }, [open, onCloseAction])
 
   return (
     <Snackbar

@@ -22,7 +22,7 @@ export function NotificationProvider() {
             sx={{ width: '100%' }}
           >
             {toast.title && <AlertTitle>{toast.title}</AlertTitle>}
-            {toast.message}
+            {toast.description}
           </Alert>
         </Snackbar>
       ))}

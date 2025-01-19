@@ -134,10 +134,7 @@ const ChartTooltipContent = React.forwardRef<
     const { config } = useChart()
 
     const tooltipLabel = React.useMemo(() => {
-      if (hideLabel || !payload?.length) {
-        return null
-      }
-
+      if (hideLabel || !payload?.length || !payload[0]) return null
       const [item] = payload
       const key = `${labelKey || item.dataKey || item.name || "value"}`
       const itemConfig = getPayloadConfigFromPayload(config, item, key)
@@ -355,9 +352,10 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config]
 }
 
-export {
-    ChartContainer, ChartLegend,
-    ChartLegendContent,
-    ChartStyle, ChartTooltip,
-    ChartTooltipContent
+export
+{
+  ChartContainer, ChartLegend,
+  ChartLegendContent,
+  ChartStyle, ChartTooltip,
+  ChartTooltipContent
 }
