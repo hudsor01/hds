@@ -5,8 +5,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { Lease, LEASE_STATUS, PAYMENT_FREQUENCY } from "@/lib/types/leases"
-import { Property } from "@/lib/types/properties"
+import type { Lease } from "@/lib/types/leases"
+import { LEASE_STATUS, PAYMENT_FREQUENCY } from "@/lib/types/leases"
+import type { Property } from "@/lib/types/properties"
 import { useState } from "react"
 
 interface LeaseDialogProps {
@@ -76,8 +77,8 @@ export function LeaseDialog({ open, onOpenChange, lease, properties, onSubmit }:
               <Select
                 name="propertyId"
                 value={selectedProperty?.id}
-                onValueChange={(value) => {
-                  const property = properties.find(p => p.id === value)
+                onChange={(e) => {
+                  const property = properties.find(p => p.id === e.target.value)
                   setSelectedProperty(property)
                 }}
                 required
