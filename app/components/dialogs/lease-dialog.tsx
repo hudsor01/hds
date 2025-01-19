@@ -238,3 +238,5 @@ export function LeaseDialog({ open, onOpenChangeAction, lease, properties, onSub
     </Dialog>
   )
 }
+
+export default LeaseDialog

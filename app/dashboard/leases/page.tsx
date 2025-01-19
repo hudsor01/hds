@@ -1,6 +1,6 @@
 'use client'
 
-import { LeaseDialog } from "@/components/dialogs/lease-dialog"
+import LeaseDialog from "@/components/dialogs/lease-dialog"
 import { Button } from "@/components/ui/button"
 import type { Lease } from "@/lib/types/leases"
 import { LEASE_STATUS } from "@/lib/types/leases"

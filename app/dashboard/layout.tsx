@@ -3,49 +3,41 @@
 import { cn } from "@/app/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import type { Route } from "next"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
 import { Home, Menu, Tool, Users } from "react-feather"
 
-type NavRoute = Route<string>
-
 interface SidebarItem {
   title: string
-  href: NavRoute
+  href: string
   icon: typeof Home | typeof Users | typeof Tool
 }
 
 const sidebarItems: SidebarItem[] = [
   {
-    title: "Dashboard",
-    href: "/dashboard" as NavRoute,
+    title: "Overview",
+    href: "/dashboard",
     icon: Home
   },
   {
     title: "Properties",
-    href: "/dashboard/properties" as NavRoute,
+    href: "/dashboard/properties",
     icon: Home
   },
   {
     title: "Tenants",
-    href: "/dashboard/tenants" as NavRoute,
+    href: "/dashboard/tenants",
     icon: Users
   },
   {
     title: "Maintenance",
-    href: "/dashboard/maintenance" as NavRoute,
+    href: "/dashboard/maintenance",
     icon: Tool
   },
   {
     title: "Leases",
-    href: "/dashboard/leases" as NavRoute,
-    icon: Users
-  },
-  {
-    title: "Analytics",
-    href: "/dashboard/analytics" as NavRoute,
+    href: "/dashboard/leases",
     icon: Users
   }
 ]
@@ -141,13 +133,13 @@ export default function DashboardLayout({
             </nav>
           </div>
         </aside>
-        <main className="flex-1 ml-64">
+        <main className="flex-1 ml-64 p-6">
           {children}
         </main>
       </div>
 
       {/* Mobile Content */}
-      <div className="lg:hidden">
+      <div className="lg:hidden p-6 pt-20">
         <main>
           {children}
         </main>
