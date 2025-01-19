@@ -103,11 +103,13 @@ export default function Home() {
                   '& .highlight': {
                     color: COLORS.primary,
                     WebkitTextFillColor: COLORS.primary,
+                    display: 'block',
+                    marginBottom: '0.2em'
                   }
                 }}
               >
                 <span className="highlight">Simplify</span>
-                {' '}Property Management
+                Property Management
               </Typography>
             </motion.div>
 
