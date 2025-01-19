@@ -72,3 +72,6 @@ export const SelectItem = React.forwardRef<
   </MenuItem>
 ))
 SelectItem.displayName = 'SelectItem'
+
+export default Select
+SelectItem

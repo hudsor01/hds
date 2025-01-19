@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from "@/app/lib/utils"
 import type { DrawerProps } from '@mui/material'
 import { IconButton, Drawer as MuiDrawer, styled } from '@mui/material'
 import * as React from 'react'

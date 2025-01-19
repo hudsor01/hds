@@ -50,3 +50,5 @@ export const ToggleGroup = React.forwardRef<HTMLDivElement, ToggleGroupProps>(
   }
 )
 ToggleGroup.displayName = 'ToggleGroup'
+
+export default ToggleGroup

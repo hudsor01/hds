@@ -21,12 +21,9 @@
     ],
     "paths": {
       "@/*": ["./*"],
-      "@/components/*": ["app/components/*"],
-      "@/hooks/*": ["app/hooks/*"],
-      "@/lib/*": ["app/lib/*"],
-      "@/styles/*": ["app/styles/*"],
-      "@/utils/*": ["app/utils/*"],
-      "@/types/*": ["app/types/*"]
+      "@/app/*": ["./app/*"],
+      "@/components/*": ["./app/components/*"],
+      "@/lib/*": ["./app/lib/*"]
     },
     "noUncheckedIndexedAccess": true,
     "noImplicitReturns": true,

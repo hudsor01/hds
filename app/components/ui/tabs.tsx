@@ -108,3 +108,5 @@ export const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
   }
 )
 TabPanel.displayName = 'TabPanel'
+
+export default Tabs

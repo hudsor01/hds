@@ -29,3 +29,5 @@ export const Separator = React.forwardRef<HTMLHRElement, SeparatorProps>(
   )
 )
 Separator.displayName = 'Separator'
+
+export default Separator

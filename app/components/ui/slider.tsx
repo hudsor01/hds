@@ -67,3 +67,5 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
   }
 )
 Slider.displayName = 'Slider'
+
+export default Slider

@@ -2,8 +2,9 @@
 
 import { LeaseDialog } from "@/components/dialogs/lease-dialog"
 import { Button } from "@/components/ui/button"
-import { Lease, LEASE_STATUS } from "@/lib/types/leases"
-import { Property } from "@/lib/types/properties"
+import type { Lease } from "@/lib/types/leases"
+import { LEASE_STATUS } from "@/lib/types/leases"
+import type { Property } from "@/lib/types/properties"
 import { useState } from "react"
 import { Edit, Plus, Trash } from "react-feather"
 
@@ -192,13 +193,12 @@ export default function LeasesPage() {
           </table>
         </div>
       </div>
-
       <LeaseDialog
         open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
+        onOpenChangeAction={setIsDialogOpen}
         lease={selectedLease}
         properties={mockProperties}
-        onSubmit={selectedLease ? handleEditLease : handleAddLease}
+        onSubmitAction={selectedLease ? handleEditLease : handleAddLease}
       />
     </div>
   )

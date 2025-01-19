@@ -2,8 +2,7 @@ import db from "@/lib/db"
 import { PrismaClient } from "@prisma/client"
 import type { Session } from '@supabase/supabase-js'
 import { nanoid } from "nanoid"
-import UAParser from 'ua-parser-js'
-
+import { UAParser } from 'ua-parser-js'
 
 const prisma = new PrismaClient()
 
@@ -17,13 +16,12 @@ export class AuthService {
     ipAddress: string
   ): Promise<Session> {
     // Parse user agent for device info
-    const parser = UAParser(userAgent)
+    const parser = new UAParser(userAgent)
     const browser = `${parser.getBrowser().name || 'unknown'} ${parser.getBrowser().version || ''}`
     const os = parser.getOS().name || 'unknown'
     const device = parser.getDevice().type || 'desktop'
-
     // Create session in database
-    const session = await db.session.create({
+    const session = await prisma.session.create({
       data: {
         userId,
         sessionToken: nanoid(32),

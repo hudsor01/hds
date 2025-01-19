@@ -2,40 +2,50 @@
 
 import { cn } from "@/app/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import type { Route } from "next"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import type { ReactNode } from "react"
 import { Home, Menu, Tool, Users } from "react-feather"
 
-const sidebarItems = [
+type NavRoute = Route<string>
+
+interface SidebarItem {
+  title: string
+  href: NavRoute
+  icon: typeof Home | typeof Users | typeof Tool
+}
+
+const sidebarItems: SidebarItem[] = [
   {
     title: "Dashboard",
-    href: { pathname: "/dashboard" },
+    href: "/dashboard" as NavRoute,
     icon: Home
   },
   {
     title: "Properties",
-    href: { pathname: "/dashboard/properties" },
+    href: "/dashboard/properties" as NavRoute,
     icon: Home
   },
   {
     title: "Tenants",
-    href: { pathname: "/dashboard/tenants" },
+    href: "/dashboard/tenants" as NavRoute,
     icon: Users
   },
   {
     title: "Maintenance",
-    href: { pathname: "/dashboard/maintenance" },
+    href: "/dashboard/maintenance" as NavRoute,
     icon: Tool
   },
   {
     title: "Leases",
-    href: { pathname: "/dashboard/leases" },
+    href: "/dashboard/leases" as NavRoute,
     icon: Users
   },
   {
     title: "Analytics",
-    href: { pathname: "/dashboard/analytics" },
+    href: "/dashboard/analytics" as NavRoute,
     icon: Users
   }
 ]
@@ -43,7 +53,7 @@ const sidebarItems = [
 export default function DashboardLayout({
   children,
 }: {
-  children: React.ReactNode
+  children: ReactNode
 }) {
   const pathname = usePathname()
 
@@ -59,17 +69,17 @@ export default function DashboardLayout({
             <Menu className="h-5 w-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent className="w-64 left-0">
+        <SheetContent className="w-64">
           <nav className="flex flex-col gap-4 mt-8">
             {sidebarItems.map((item) => {
               const Icon = item.icon
               return (
                 <Link
-                  key={item.href.pathname}
+                  key={item.href}
                   href={item.href}
                   className={cn(
                     "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
-                    pathname === item.href.pathname ? "bg-blue-50 text-blue-600" : "text-gray-600"
+                    pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"
                   )}
                 >
                   <Icon className="h-5 w-5" />
@@ -79,7 +89,7 @@ export default function DashboardLayout({
             })}
             <div className="flex-1" />
             <Link
-              href={{ pathname: "/dashboard/settings" }}
+              href="/dashboard/settings"
               className={cn(
                 "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                 pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
@@ -105,11 +115,11 @@ export default function DashboardLayout({
                 const Icon = item.icon
                 return (
                   <Link
-                    key={item.href.pathname}
+                    key={item.href}
                     href={item.href}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100 mb-1",
-                      pathname === item.href.pathname ? "bg-blue-50 text-blue-600" : "text-gray-600"
+                      pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"
                     )}
                   >
                     <Icon className="h-5 w-5" />
@@ -119,7 +129,7 @@ export default function DashboardLayout({
               })}
               <div className="flex-1" />
               <Link
-                href={{ pathname: "/dashboard/settings" }}
+                href="/dashboard/settings"
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                   pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
