@@ -12,13 +12,13 @@ import { useState } from "react"
 
 interface LeaseDialogProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   lease?: Lease
   properties: Property[]
-  onSubmit: (lease: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>) => Promise<void>
+  onSubmitAction: (lease: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>) => Promise<void>
 }
 
-export function LeaseDialog({ open, onOpenChange, lease, properties, onSubmit }: LeaseDialogProps) {
+export function LeaseDialog({ open, onOpenChangeAction, lease, properties, onSubmitAction }: LeaseDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
   const [selectedProperty, setSelectedProperty] = useState<Property | undefined>(
@@ -54,8 +54,8 @@ export function LeaseDialog({ open, onOpenChange, lease, properties, onSubmit }:
         status: formData.get("status") as keyof typeof LEASE_STATUS,
       }
 
-      await onSubmit(leaseData)
-      onOpenChange(false)
+      await onSubmitAction(leaseData)
+      onOpenChangeAction(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save lease")
     } finally {
@@ -64,7 +64,7 @@ export function LeaseDialog({ open, onOpenChange, lease, properties, onSubmit }:
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{lease ? 'Edit Lease' : 'Add Lease'}</DialogTitle>
@@ -224,8 +224,7 @@ export function LeaseDialog({ open, onOpenChange, lease, properties, onSubmit }:
           <div className="flex justify-end gap-3">
             <Button
               type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => onOpenChangeAction(false)}
               disabled={isLoading}
             >
               Cancel
