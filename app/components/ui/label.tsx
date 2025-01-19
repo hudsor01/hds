@@ -1,23 +1,37 @@
 "use client"
 
-import * as LabelPrimitive from "@radix-ui/react-label"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { FormLabelProps } from '@mui/material'
+import { FormLabel as MuiFormLabel, styled } from '@mui/material'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
+const StyledLabel = styled(MuiFormLabel)(({ theme }) => ({
+  fontSize: theme.typography.pxToRem(14),
+  fontWeight: theme.typography.fontWeightMedium,
+  color: theme.palette.text.primary,
+  '&.Mui-disabled': {
+    cursor: 'not-allowed',
+    opacity: 0.7,
+  },
+  '&.Mui-focused': {
+    color: theme.palette.primary.main,
+  },
+}))
 
-const Label = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <LabelPrimitive.Root
-    ref={ref}
-    className={cn(
-      "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
-      className
-    )}
-    {...props}
-  />
-))
-Label.displayName = LabelPrimitive.Root.displayName
+export interface LabelProps extends FormLabelProps {
+  htmlFor?: string
+}
 
-export { Label }
+export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
+  ({ className, ...props }, ref) => (
+    <StyledLabel
+      ref={ref}
+      className={cn(
+        'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
+        className
+      )}
+      {...props}
+    />
+  )
+)
+Label.displayName = 'Label'

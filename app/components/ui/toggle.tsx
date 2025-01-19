@@ -1,45 +1,55 @@
 "use client"
 
-import { cn } from "@/lib/utils"
-import * as TogglePrimitive from "@radix-ui/react-toggle"
-import { cva, type VariantProps } from "class-variance-authority"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { ToggleButtonProps } from '@mui/material'
+import { ToggleButton as MuiToggleButton, styled } from '@mui/material'
+import * as React from 'react'
 
-const toggleVariants = cva(
-  "inline-flex items-center justify-center rounded-md text-sm font-medium ring-offset-background transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-accent data-[state=on]:text-accent-foreground",
-  {
-    variants: {
-      variant: {
-        default: "bg-transparent",
-        outline: "border border-input bg-transparent hover:bg-accent hover:text-accent-foreground",
-      },
-      size: {
-        default: "h-10 px-3",
-        sm: "h-9 px-2.5",
-        lg: "h-11 px-5",
-      },
+const StyledToggleButton = styled(MuiToggleButton)(({ theme }) => ({
+  padding: theme.spacing(1, 2),
+  borderRadius: theme.shape.borderRadius,
+  border: 'none',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  '&.Mui-selected': {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    '&:hover': {
+      backgroundColor: theme.palette.primary.dark,
     },
-    defaultVariants: {
-      variant: "default",
-      size: "default",
-    },
+  },
+}))
+
+export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
+  pressed?: boolean
+  onPressedChange?: (pressed: boolean) => void
+  asChild?: boolean
+}
+
+export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
+  ({ className, pressed, onPressedChange, children, ...props }, ref) => {
+    const handleChange = React.useCallback(
+      (_: React.MouseEvent<HTMLElement>, selected: boolean) => {
+        onPressedChange?.(selected)
+      },
+      [onPressedChange]
+    )
+
+    return (
+      <StyledToggleButton
+        ref={ref}
+        selected={pressed}
+        onChange={handleChange}
+        className={cn(
+          'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </StyledToggleButton>
+    )
   }
 )
-
-export interface ToggleProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof toggleVariants> {}
-
-const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
-  ({ className, variant, size, ...props }, ref) => (
-    <TogglePrimitive.Root
-      ref={ref}
-      className={cn(toggleVariants({ variant, size, className }))}
-      {...props}
-    />
-  )
-)
-
-Toggle.displayName = "Toggle"
-
-export { Toggle, toggleVariants }
+Toggle.displayName = 'Toggle'

@@ -1,28 +1,69 @@
 "use client"
 
-import * as SliderPrimitive from "@radix-ui/react-slider"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { SliderProps as MuiSliderProps } from '@mui/material'
+import { Slider as MuiSlider, styled } from '@mui/material'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
+const StyledSlider = styled(MuiSlider)(({ theme }) => ({
+  height: 4,
+  '& .MuiSlider-thumb': {
+    width: 16,
+    height: 16,
+    backgroundColor: theme.palette.background.paper,
+    border: `2px solid ${theme.palette.primary.main}`,
+    '&:hover': {
+      boxShadow: `0 0 0 8px ${theme.palette.primary.main}20`,
+    },
+    '&.Mui-active': {
+      boxShadow: `0 0 0 12px ${theme.palette.primary.main}20`,
+    },
+  },
+  '& .MuiSlider-track': {
+    height: 4,
+    backgroundColor: theme.palette.primary.main,
+  },
+  '& .MuiSlider-rail': {
+    height: 4,
+    backgroundColor: theme.palette.primary.light,
+    opacity: 0.38,
+  },
+  '& .MuiSlider-mark': {
+    backgroundColor: theme.palette.primary.main,
+    height: 8,
+    width: 1,
+    marginTop: -2,
+  },
+  '& .MuiSlider-markActive': {
+    backgroundColor: theme.palette.background.paper,
+  },
+}))
 
-const Slider = React.forwardRef<
-  React.ElementRef<typeof SliderPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof SliderPrimitive.Root>
->(({ className, ...props }, ref) => (
-  <SliderPrimitive.Root
-    ref={ref}
-    className={cn(
-      "relative flex w-full touch-none select-none items-center",
-      className
-    )}
-    {...props}
-  >
-    <SliderPrimitive.Track className="relative h-1.5 w-full grow overflow-hidden rounded-full bg-primary/20">
-      <SliderPrimitive.Range className="absolute h-full bg-primary" />
-    </SliderPrimitive.Track>
-    <SliderPrimitive.Thumb className="block h-4 w-4 rounded-full border border-primary/50 bg-background shadow transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50" />
-  </SliderPrimitive.Root>
-))
-Slider.displayName = SliderPrimitive.Root.displayName
+export interface SliderProps extends MuiSliderProps {
+  onValueChange?: (value: number | number[]) => void
+}
 
-export { Slider }
+export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
+  ({ className, onValueChange, onChange, ...props }, ref) => {
+    const handleChange = React.useCallback(
+      (_: Event, value: number | number[], activeThumb: number) => {
+        onChange?.(_ as any, value, activeThumb)
+        onValueChange?.(value)
+      },
+      [onChange, onValueChange]
+    )
+
+    return (
+      <StyledSlider
+        ref={ref}
+        className={cn(
+          'relative flex w-full touch-none select-none items-center',
+          className
+        )}
+        onChange={handleChange}
+        {...props}
+      />
+    )
+  }
+)
+Slider.displayName = 'Slider'

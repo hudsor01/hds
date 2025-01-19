@@ -1,33 +1,100 @@
 "use client"
 
-import * as PopoverPrimitive from "@radix-ui/react-popover"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { PopoverProps as MuiPopoverProps } from '@mui/material'
+import {
+    IconButton,
+    Popover as MuiPopover,
+    styled,
+} from '@mui/material'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
+const StyledPopover = styled(MuiPopover)(({ theme }) => ({
+  '& .MuiPaper-root': {
+    borderRadius: theme.shape.borderRadius,
+    boxShadow: theme.shadows[4],
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.paper,
+  },
+}))
 
-const Popover = PopoverPrimitive.Root
+export interface PopoverProps extends Omit<MuiPopoverProps, 'open'> {
+  trigger?: React.ReactNode
+  onOpenChange?: (open: boolean) => void
+}
 
-const PopoverTrigger = PopoverPrimitive.Trigger
+export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(
+  ({ className, children, trigger, onOpenChange, ...props }, ref) => {
+    const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null)
+    const open = Boolean(anchorEl)
 
-const PopoverAnchor = PopoverPrimitive.Anchor
+    const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget)
+      onOpenChange?.(true)
+    }
 
-const PopoverContent = React.forwardRef<
-  React.ElementRef<typeof PopoverPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof PopoverPrimitive.Content>
->(({ className, align = "center", sideOffset = 4, ...props }, ref) => (
-  <PopoverPrimitive.Portal>
-    <PopoverPrimitive.Content
-      ref={ref}
-      align={align}
-      sideOffset={sideOffset}
-      className={cn(
-        "z-50 w-72 rounded-md border bg-popover p-4 text-popover-foreground shadow-md outline-none data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2",
-        className
-      )}
-      {...props}
-    />
-  </PopoverPrimitive.Portal>
+    const handleClose = () => {
+      setAnchorEl(null)
+      onOpenChange?.(false)
+    }
+
+    return (
+      <>
+        {trigger && (
+          <IconButton
+            onClick={handleClick}
+            className={className}
+          >
+            {trigger}
+          </IconButton>
+        )}
+        <StyledPopover
+          ref={ref}
+          open={open}
+          anchorEl={anchorEl}
+          onClose={handleClose}
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+          }}
+          {...props}
+        >
+          {children}
+        </StyledPopover>
+      </>
+    )
+  }
+)
+Popover.displayName = 'Popover'
+
+export const PopoverTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ className, ...props }, ref) => (
+  <button
+    ref={ref}
+    type="button"
+    className={cn(className)}
+    {...props}
+  />
 ))
-PopoverContent.displayName = PopoverPrimitive.Content.displayName
+PopoverTrigger.displayName = 'PopoverTrigger'
 
-export { Popover, PopoverAnchor, PopoverContent, PopoverTrigger }
+export const PopoverContent = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'z-50 w-72 rounded-md bg-popover p-4 text-popover-foreground shadow-md outline-none',
+      className
+    )}
+    {...props}
+  />
+))
+PopoverContent.displayName = 'PopoverContent'

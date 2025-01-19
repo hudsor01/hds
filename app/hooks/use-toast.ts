@@ -1,29 +1,34 @@
 'use client'
 
+import type { AlertColor } from '@mui/material'
 import { create } from 'zustand'
 
 export type Toast = {
   id: string
   title?: string
   description?: string
+  severity?: AlertColor
   action?: React.ReactNode
-  visible?: boolean
   duration?: number
 }
 
 type State = {
   toasts: Toast[]
-  toast: (toast: Omit<Toast, 'id' | 'visible'>) => void
+  addToast: (toast: Omit<Toast, 'id'>) => void
+  removeToast: (id: string) => void
 }
 
-const useToast = create<State>((set) => ({
+export const useToast = create<State>((set) => ({
   toasts: [],
-  toast: (toast) => set((state) => ({
-    toasts: [
-      ...state.toasts,
-      { ...toast, id: Math.random().toString(), visible: true }
-    ]
-  }))
+  addToast: (toast) =>
+    set((state) => ({
+      toasts: [
+        ...state.toasts,
+        { ...toast, id: Math.random().toString() }
+      ]
+    })),
+  removeToast: (id) =>
+    set((state) => ({
+      toasts: state.toasts.filter((toast) => toast.id !== id)
+    }))
 }))
-
-export { useToast }

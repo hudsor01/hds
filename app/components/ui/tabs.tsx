@@ -1,55 +1,109 @@
 "use client"
 
-import * as TabsPrimitive from "@radix-ui/react-tabs"
-import * as React from "react"
+import { cn } from '@/lib/utils'
+import type { TabProps as MuiTabProps, TabsProps as MuiTabsProps } from '@mui/material'
+import {
+    Tab as MuiTab,
+    Tabs as MuiTabs,
+    styled,
+} from '@mui/material'
+import * as React from 'react'
 
-import { cn } from "@/lib/utils"
+const StyledTabs = styled(MuiTabs)(({ theme }) => ({
+  minHeight: 36,
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.grey[100],
+  '& .MuiTabs-indicator': {
+    height: '100%',
+    borderRadius: theme.shape.borderRadius,
+    backgroundColor: theme.palette.background.paper,
+    zIndex: 0,
+  },
+}))
 
-const Tabs = TabsPrimitive.Root
+const StyledTab = styled(MuiTab)(({ theme }) => ({
+  minHeight: 36,
+  textTransform: 'none',
+  fontWeight: theme.typography.fontWeightMedium,
+  fontSize: theme.typography.pxToRem(14),
+  marginRight: theme.spacing(1),
+  color: theme.palette.text.secondary,
+  '&.Mui-selected': {
+    color: theme.palette.text.primary,
+  },
+  '&.Mui-focusVisible': {
+    backgroundColor: theme.palette.action.selected,
+  },
+  zIndex: 1,
+}))
 
-const TabsList = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.List>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.List>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.List
-    ref={ref}
-    className={cn(
-      "inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground",
-      className
-    )}
-    {...props}
-  />
-))
-TabsList.displayName = TabsPrimitive.List.displayName
+export interface TabsProps extends Omit<MuiTabsProps, 'orientation'> {
+  defaultValue?: string
+  onValueChange?: (value: string) => void
+}
 
-const TabsTrigger = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Trigger>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Trigger>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Trigger
-    ref={ref}
-    className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-background data-[state=active]:text-foreground data-[state=active]:shadow",
-      className
-    )}
-    {...props}
-  />
-))
-TabsTrigger.displayName = TabsPrimitive.Trigger.displayName
+export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
+  ({ className, value, onChange, defaultValue, onValueChange, children, ...props }, ref) => {
+    const handleChange = React.useCallback(
+      (event: React.SyntheticEvent, newValue: string) => {
+        onChange?.(event, newValue)
+        onValueChange?.(newValue)
+      },
+      [onChange, onValueChange]
+    )
 
-const TabsContent = React.forwardRef<
-  React.ElementRef<typeof TabsPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof TabsPrimitive.Content>
->(({ className, ...props }, ref) => (
-  <TabsPrimitive.Content
-    ref={ref}
-    className={cn(
-      "mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2",
-      className
-    )}
-    {...props}
-  />
-))
-TabsContent.displayName = TabsPrimitive.Content.displayName
+    return (
+      <StyledTabs
+        ref={ref}
+        value={value ?? defaultValue}
+        onChange={handleChange}
+        className={cn('inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground', className)}
+        {...props}
+      >
+        {children}
+      </StyledTabs>
+    )
+  }
+)
+Tabs.displayName = 'Tabs'
 
-export { Tabs, TabsContent, TabsList, TabsTrigger }
+export interface TabProps extends Omit<MuiTabProps, 'value'> {
+  value: string
+}
+
+export const Tab = React.forwardRef<HTMLDivElement, TabProps>(
+  ({ className, ...props }, ref) => (
+    <StyledTab
+      ref={ref}
+      className={cn(
+        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+        className
+      )}
+      {...props}
+    />
+  )
+)
+Tab.displayName = 'Tab'
+
+export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
+  value: string
+  tabValue: string
+}
+
+export const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
+  ({ className, value, tabValue, children, ...props }, ref) => {
+    if (value !== tabValue) return null
+
+    return (
+      <div
+        ref={ref}
+        role="tabpanel"
+        className={cn('mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2', className)}
+        {...props}
+      >
+        {children}
+      </div>
+    )
+  }
+)
+TabPanel.displayName = 'TabPanel'

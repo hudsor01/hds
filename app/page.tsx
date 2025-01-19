@@ -2,155 +2,240 @@
 
 import
   {
-    People as PeopleIcon,
-    Security as SecurityIcon,
-    Speed as SpeedIcon
-  } from '@mui/icons-material'
-import
-  {
-    AppBar, Button,
+    AppBar,
+    Box,
+    Button,
     Container,
     Grid,
     Paper,
     Toolbar,
-    Typography, useTheme
-  } from '@mui/material'
+    Typography,
+    useTheme
+  } from "@mui/material"
+import { styled } from "@mui/material/styles"
+import { motion } from "framer-motion"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
+import { Activity, Shield, Users } from "react-feather"
+
+// Styled Components
+const StyledPaper = styled(Paper)(({ theme }) => ({
+  padding: theme.spacing(4),
+  height: '100%',
+  transition: 'transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out',
+  '&:hover': {
+    transform: 'translateY(-4px)',
+    boxShadow: theme.shadows[4],
+  },
+}))
+
+const fadeInUp = {
+  initial: { opacity: 0, y: 60 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.6 }
+}
+
+const staggerContainer = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
 
 export default function Home() {
   const { data: session } = useSession()
   const theme = useTheme()
 
   return (
-    <div className="min-h-screen bg-white">
+    <Box className="min-h-screen bg-white">
       {/* Navigation */}
-      <AppBar position="static" className="bg-white shadow-none">
-        <Toolbar className="max-w-7xl mx-auto w-full justify-between px-4 sm:px-6 lg:px-8">
-          {/* Left: Brand */}
+      <AppBar position="static" color="transparent" elevation={0}>
+        <Toolbar sx={{ maxWidth: 'lg', width: '100%', mx: 'auto' }}>
           <Typography
-            component="a"
+            component={Link}
             href="/"
-            className="text-gray-900 font-bold text-2xl no-underline"
+            variant="h5"
+            sx={{
+              color: 'text.primary',
+              fontWeight: 700,
+              textDecoration: 'none',
+              flexGrow: 1
+            }}
           >
             Hudson Digital Solutions
           </Typography>
 
-          {/* Center: Navigation Links */}
-          <div className="flex-1 flex justify-center gap-8">
-            <Button component={Link} href="/features" className="text-gray-600 hover:text-gray-900">
+          <Box sx={{ display: 'flex', gap: 4 }}>
+            <Button
+              component={Link}
+              href="/features"
+              color="inherit"
+              sx={{ fontWeight: 500 }}
+            >
               Features
             </Button>
-            <Button component={Link} href="/pricing" className="text-gray-600 hover:text-gray-900">
+            <Button
+              component={Link}
+              href="/pricing"
+              color="inherit"
+              sx={{ fontWeight: 500 }}
+            >
               Pricing
             </Button>
-          </div>
+          </Box>
 
-          {/* Right: Auth Buttons */}
-          <div className="flex gap-4">
-            {!session && (
-              <>
-                <Button
-                  component={Link}
-                  href="/login"
-                  variant="outlined"
-                  className="border-primary-500 text-primary-500 hover:bg-primary-50"
-                >
-                  Login
-                </Button>
-                <Button
-                  component={Link}
-                  href="/pricing"
-                  variant="contained"
-                  className="bg-primary-500 hover:bg-primary-600 text-white"
-                >
-                  Get Started
-                </Button>
-              </>
-            )}
-          </div>
+          {!session && (
+            <Box sx={{ display: 'flex', gap: 2, ml: 4 }}>
+              <Button
+                component={Link}
+                href="/login"
+                variant="outlined"
+                color="primary"
+              >
+                Login
+              </Button>
+              <Button
+                component={Link}
+                href="/pricing"
+                variant="contained"
+                color="primary"
+              >
+                Get Started
+              </Button>
+            </Box>
+          )}
         </Toolbar>
       </AppBar>
 
       {/* Hero Section */}
-      <Container className="py-24 text-center">
-        <Typography variant="h2" component="h1" className="text-primary-500 font-medium mb-2">
-          Simplify
-        </Typography>
-        <Typography variant="h2" className="text-gray-900 mb-8">
-          Property Management
-        </Typography>
-        <Typography variant="h5" className="text-gray-600 max-w-3xl mx-auto mb-12">
-          Streamline your property management with our comprehensive platform. From
-          rent collection to maintenance requests, we've got you covered.
-        </Typography>
-        <div className="flex justify-center gap-4">
-          <Button
-            component={Link}
-            href="/pricing"
-            variant="contained"
-            size="large"
-            className="bg-primary-500 hover:bg-primary-600 text-white px-8"
+      <Container sx={{ py: 12, textAlign: 'center' }}>
+        <motion.div
+          initial="initial"
+          animate="animate"
+          variants={fadeInUp}
+        >
+          <Typography
+            variant="h2"
+            component="h1"
+            color="primary"
+            sx={{ fontWeight: 700, mb: 1 }}
           >
-            Get Started
-          </Button>
-          <Button
-            component={Link}
-            href="/features"
-            variant="outlined"
-            size="large"
-            className="border-primary-500 text-primary-500 hover:bg-primary-50 px-8"
+            Simplify
+          </Typography>
+          <Typography
+            variant="h2"
+            sx={{ fontWeight: 700, mb: 4 }}
           >
-            Learn More
-          </Button>
-        </div>
+            Property Management
+          </Typography>
+          <Typography
+            variant="h5"
+            color="text.secondary"
+            sx={{ maxWidth: 'md', mx: 'auto', mb: 6 }}
+          >
+            Streamline your property management with our comprehensive platform.
+            From rent collection to maintenance requests, we've got you covered.
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
+            <Button
+              component={Link}
+              href="/pricing"
+              variant="contained"
+              size="large"
+              sx={{ px: 4 }}
+            >
+              Get Started
+            </Button>
+            <Button
+              component={Link}
+              href="/features"
+              variant="outlined"
+              size="large"
+              sx={{ px: 4 }}
+            >
+              Learn More
+            </Button>
+          </Box>
+        </motion.div>
       </Container>
 
       {/* Features Section */}
-      <div className="bg-gray-50 py-24">
+      <Box sx={{ bgcolor: 'grey.50', py: 12 }}>
         <Container>
-          <Typography variant="h3" className="text-center mb-4">
-            Powerful <span className="text-primary-500">Features</span>
-          </Typography>
-          <Typography variant="h6" className="text-center text-gray-600 mb-12">
-            Everything you need to manage your properties efficiently
-          </Typography>
+          <motion.div
+            initial="initial"
+            animate="animate"
+            variants={fadeInUp}
+            className="text-center"
+          >
+            <Typography variant="h3" gutterBottom>
+              Powerful <span style={{ color: theme.palette.primary.main }}>Features</span>
+            </Typography>
+            <Typography
+              variant="h6"
+              color="text.secondary"
+              sx={{ mb: 8 }}
+            >
+              Everything you need to manage your properties efficiently
+            </Typography>
+          </motion.div>
 
-          <Grid container spacing={4}>
-            {[
-              {
-                icon: <SpeedIcon />,
-                title: "Smart Property Management",
-                description: "Streamline your property operations with our intelligent management tools and automated workflows."
-              },
-              {
-                icon: <SecurityIcon />,
-                title: "Secure Data Handling",
-                description: "Your data is protected with enterprise-grade security and regular backups."
-              },
-              {
-                icon: <PeopleIcon />,
-                title: "Multi-tenant Support",
-                description: "Manage multiple properties and tenants from a single, unified dashboard."
-              }
-            ].map((feature, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <Paper className="p-8 h-full hover:shadow-lg transition-shadow">
-                  <div className="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center mb-4">
-                    <span className="text-primary-500">{feature.icon}</span>
-                  </div>
-                  <Typography variant="h6" className="mb-4">
-                    {feature.title}
-                  </Typography>
-                  <Typography className="text-gray-600">
-                    {feature.description}
-                  </Typography>
-                </Paper>
-              </Grid>
-            ))}
-          </Grid>
+          <motion.div
+            variants={staggerContainer}
+            initial="initial"
+            animate="animate"
+          >
+            <Grid container spacing={4}>
+              {[
+                {
+                  icon: <Activity size={24} />,
+                  title: "Smart Property Management",
+                  description: "Streamline your property operations with our intelligent management tools and automated workflows."
+                },
+                {
+                  icon: <Shield size={24} />,
+                  title: "Secure Data Handling",
+                  description: "Your data is protected with enterprise-grade security and regular backups."
+                },
+                {
+                  icon: <Users size={24} />,
+                  title: "Multi-tenant Support",
+                  description: "Manage multiple properties and tenants from a single, unified dashboard."
+                }
+              ].map((feature, index) => (
+                <Grid item xs={12} md={4} key={index}>
+                  <motion.div variants={fadeInUp}>
+                    <StyledPaper elevation={0}>
+                      <Box
+                        sx={{
+                          width: 48,
+                          height: 48,
+                          bgcolor: 'primary.light',
+                          borderRadius: 2,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          mb: 2,
+                          color: 'primary.main'
+                        }}
+                      >
+                        {feature.icon}
+                      </Box>
+                      <Typography variant="h6" gutterBottom>
+                        {feature.title}
+                      </Typography>
+                      <Typography color="text.secondary">
+                        {feature.description}
+                      </Typography>
+                    </StyledPaper>
+                  </motion.div>
+                </Grid>
+              ))}
+            </Grid>
+          </motion.div>
         </Container>
-      </div>
-    </div>
+      </Box>
+    </Box>
   )
 }
