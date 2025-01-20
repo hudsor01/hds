@@ -1,6 +1,5 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
 import type { TooltipProps as MuiTooltipProps } from '@mui/material'
 import { Tooltip as MuiTooltip, styled } from '@mui/material'
 import * as React from 'react'
@@ -25,31 +24,17 @@ const StyledTooltip = styled(({ className, ...props }: MuiTooltipProps) => (
   },
 }))
 
-export interface TooltipProps {
-  className?: string
-  content: React.ReactNode
-  children: React.ReactElement
-  placement?: MuiTooltipProps['placement']
-  open?: boolean
-  onOpen?: () => void
-  onClose?: () => void
-  disabled?: boolean
-}
-
-export const Tooltip = React.forwardRef<HTMLDivElement, TooltipProps>(
-  ({ className, content, children, placement = 'top', ...props }, ref) => (
-    <StyledTooltip
-      ref={ref}
-      title={<>{content}</>}
-      arrow
-      placement={placement}
-      className={cn('', className)}
-      {...props}
-    >
+// Add compatibility layer for Radix-style usage
+export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>
+export const TooltipTrigger = React.forwardRef<HTMLDivElement, React.ComponentPropsWithRef<'div'>>(
+  ({ children, ...props }, ref) => (
+    <div ref={ref} {...props}>
       {children}
-    </StyledTooltip>
+    </div>
   )
 )
-Tooltip.displayName = 'Tooltip'
+export const TooltipContent = React.forwardRef<HTMLDivElement, { children: React.ReactNode }>(
+  ({ children }, ref) => <div ref={ref}>{children}</div>
+)
 
-export default Tooltip
+export const Tooltip = StyledTooltip

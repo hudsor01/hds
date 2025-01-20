@@ -1,10 +1,8 @@
 import db from "@/lib/db"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma"
 import type { Session } from '@supabase/supabase-js'
 import { nanoid } from "nanoid"
 import { UAParser } from 'ua-parser-js'
-
-const prisma = new PrismaClient()
 
 export class AuthService {
   [x: string]: any

@@ -31,4 +31,14 @@ model Property {
   @@map("properties")
 }
 
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  expires      DateTime
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  @@map("sessions")
+}
+
 // Add more models as needed

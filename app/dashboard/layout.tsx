@@ -3,6 +3,7 @@
 import { cn } from "@/app/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
+import type { Route } from 'next'
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import type { ReactNode } from "react"
@@ -10,7 +11,7 @@ import { Home, Menu, Tool, Users } from "react-feather"
 
 interface SidebarItem {
   title: string
-  href: string
+  href: Route
   icon: typeof Home | typeof Users | typeof Tool
 }
 
@@ -68,7 +69,7 @@ export default function DashboardLayout({
               return (
                 <Link
                   key={item.href}
-                  href={item.href}
+                  href={item.href as Route}
                   className={cn(
                     "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                     pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"
@@ -81,7 +82,7 @@ export default function DashboardLayout({
             })}
             <div className="flex-1" />
             <Link
-              href="/dashboard/settings"
+              href={"/dashboard/settings" as Route}
               className={cn(
                 "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                 pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
@@ -108,7 +109,7 @@ export default function DashboardLayout({
                 return (
                   <Link
                     key={item.href}
-                    href={item.href}
+                    href={item.href as Route}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100 mb-1",
                       pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"
@@ -121,7 +122,7 @@ export default function DashboardLayout({
               })}
               <div className="flex-1" />
               <Link
-                href="/dashboard/settings"
+                href={"/dashboard/settings" as Route}
                 className={cn(
                   "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                   pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
