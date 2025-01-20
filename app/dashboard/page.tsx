@@ -1,16 +1,15 @@
 'use client'
 
-import { DashboardStats } from '@/components/dashboard/dashboard-stats'
+import { DashboardStats, type PropertyStats } from '@/components/dashboard/dashboard-stats'
 import { QuickActions } from '@/components/dashboard/quick-actions'
 import { RecentActivityList } from '@/components/dashboard/recent-activity'
-import type { PropertyStats, RecentActivity } from '@/types/dashboard'
+import type { RecentActivity } from '@/lib/types/dashboard'
 
 // Mock data for testing
 const mockActivities: RecentActivity[] = []
 const mockStats: PropertyStats = {
   totalProperties: 15,
   activeTenants: 126,
-  activeLeases: 126,
   monthlyRevenue: 148500,
   occupancyRate: 92,
   percentageChanges: {

@@ -5,17 +5,18 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { Property, PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/supabase"
+import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/constants"
+import type { Property } from "@/lib/types/properties"
 import { useState } from "react"
 
 interface PropertyDialogProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   property?: Property
-  onSubmit: (property: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>) => Promise<void>
+  onSubmitAction: (property: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>) => Promise<void>
 }
 
-export function PropertyDialog({ open, onOpenChange, property, onSubmit }: PropertyDialogProps) {
+export function PropertyDialog({ open, onOpenChangeAction, property, onSubmitAction }: PropertyDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState("")
 
@@ -31,13 +32,16 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
         address: formData.get("address") as string,
         city: formData.get("city") as string,
         state: formData.get("state") as string,
-        zip_code: formData.get("zip_code") as string,
-        type: formData.get("type") as string,
-        status: formData.get("status") as string,
+        zipCode: formData.get("zipCode") as string,
+        type: formData.get("type") as keyof typeof PROPERTY_TYPES,
+        status: formData.get("status") as keyof typeof PROPERTY_STATUS,
+        units: [],
+        createdAt: new Date(),
+        updatedAt: new Date()
       }
 
-      await onSubmit(propertyData)
-      onOpenChange(false)
+      await onSubmitAction(propertyData)
+      onOpenChangeAction(false)
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to save property")
     } finally {
@@ -46,7 +50,7 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{property ? 'Edit Property' : 'Add Property'}</DialogTitle>
@@ -103,7 +107,7 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
             <Input
               id="zipCode"
               name="zipCode"
-              defaultValue={property?.zip_code}
+              defaultValue={property?.zipCode}
               required
               placeholder="Enter ZIP code"
             />
@@ -150,7 +154,7 @@ export function PropertyDialog({ open, onOpenChange, property, onSubmit }: Prope
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => onOpenChangeAction(false)}
               disabled={isLoading}
             >
               Cancel

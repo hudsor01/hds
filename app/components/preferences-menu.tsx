@@ -1,18 +1,17 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import
-  {
+import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
-  } from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu"
 
 export function PreferencesMenu() {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+      <DropdownMenuTrigger >
         <Button variant="ghost" size="icon">
           <span className="sr-only">Open preferences menu</span>
         </Button>

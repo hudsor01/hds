@@ -1,103 +1,115 @@
-import { ButtonProps, buttonVariants } from "@/components/ui/button"
-import { cn } from "@/lib/utils"
-import Link from "next/link"
-import * as React from "react"
+'use client'
 
-const Pagination = ({ className, ...props }: React.ComponentProps<"nav">) => (
+import { cn } from '@/lib/utils'
+import { Button } from '@mui/material'
+import type { Route } from 'next'
+import Link from 'next/link'
+import * as React from 'react'
+
+const Pagination = ({ className, ...props }: React.ComponentProps<'nav'>) => (
   <nav
     role="navigation"
     aria-label="pagination"
-    className={cn("mx-auto flex w-full justify-center", className)}
+    className={cn('mx-auto flex w-full justify-center', className)}
     {...props}
   />
 )
-Pagination.displayName = "Pagination"
+Pagination.displayName = 'Pagination'
 
 const PaginationContent = React.forwardRef<
   HTMLUListElement,
-  React.ComponentProps<"ul">
+  React.ComponentProps<'ul'>
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
-    className={cn("flex flex-row items-center gap-1", className)}
+    className={cn('flex flex-row items-center gap-1', className)}
     {...props}
   />
 ))
-PaginationContent.displayName = "PaginationContent"
+PaginationContent.displayName = 'PaginationContent'
 
 const PaginationItem = React.forwardRef<
   HTMLLIElement,
-  React.ComponentProps<"li">
+  React.ComponentProps<'li'>
 >(({ className, ...props }, ref) => (
-  <li ref={ref} className={cn("", className)} {...props} />
+  <li ref={ref} className={cn('', className)} {...props} />
 ))
-PaginationItem.displayName = "PaginationItem"
+PaginationItem.displayName = 'PaginationItem'
 
 type PaginationLinkProps = {
   isActive?: boolean
   children: React.ReactNode
-} & Pick<ButtonProps, "size"> &
-  React.ComponentProps<typeof Link>
+  href: Route
+  size?: 'small' | 'medium' | 'large'
+}
 
 const PaginationLink = ({
   className,
   isActive,
-  size = "icon",
+  size = 'medium',
   children,
+  href,
   ...props
 }: PaginationLinkProps) => {
   if (!children) {
-    throw new Error("PaginationLink must have content")
+    throw new Error('PaginationLink must have content')
   }
   return (
-    <Link
-      aria-current={isActive ? "page" : undefined}
-      className={cn(
-        buttonVariants({
-          variant: isActive ? "outline" : "ghost",
-          size,
-        }),
-        className
-      )}
-      {...props}
-    >
-      {children}
+    <Link href={href} passHref legacyBehavior>
+      <Button
+        component="a"
+        variant={isActive ? 'contained' : 'outlined'}
+        size={size}
+        className={cn(
+          'min-w-[2.25rem] px-3',
+          isActive && 'pointer-events-none',
+          className
+        )}
+        {...props}
+      >
+        {children}
+      </Button>
     </Link>
   )
 }
-PaginationLink.displayName = "PaginationLink"
+PaginationLink.displayName = 'PaginationLink'
 
 const PaginationPrevious = ({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
+}: Omit<PaginationLinkProps, 'children'>) => (
   <PaginationLink
     aria-label="Go to previous page"
-    size="default"
-    className={cn("gap-1 pl-2.5", className)}
+    size="medium"
+    className={cn('gap-1 pl-2.5', className)}
     {...props}
   >
     <span>Previous</span>
   </PaginationLink>
 )
-PaginationPrevious.displayName = "PaginationPrevious"
+PaginationPrevious.displayName = 'PaginationPrevious'
 
 const PaginationNext = ({
   className,
   ...props
-}: React.ComponentProps<typeof PaginationLink>) => (
+}: Omit<PaginationLinkProps, 'children'>) => (
   <PaginationLink
     aria-label="Go to next page"
-    size="default"
-    className={cn("gap-1 pr-2.5", className)}
+    size="medium"
+    className={cn('gap-1 pr-2.5', className)}
     {...props}
   >
     <span>Next</span>
   </PaginationLink>
 )
-PaginationNext.displayName = "PaginationNext"
+PaginationNext.displayName = 'PaginationNext'
 
-export {
-    Pagination,
-    PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious
+export
+{
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious
 }

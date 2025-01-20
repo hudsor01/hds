@@ -3,6 +3,7 @@
 import { Card } from '@/components/ui/card'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
+
 interface StatsChartProps {
   data: {
     name: string

@@ -1,16 +1,10 @@
 'use client'
 
 import { cn } from '@/app/lib/utils'
-import { Card } from '@/components/ui/card'
-import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
-} from '@/components/ui/tooltip'
-import { AnimatePresence, motion } from 'framer-motion'
-import { Building2, DollarSign, LineChart, TrendingUp, Users2 } from 'lucide-react'
+import { Card, CardContent, Tooltip as MuiTooltip } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useState } from 'react'
+import { Box, DollarSign, TrendingUp, Users } from 'react-feather'
 
 interface PercentageChanges {
   properties: number
@@ -31,102 +25,144 @@ interface DashboardStatsProps {
   stats: PropertyStats
 }
 
+const cardVariants = {
+  initial: { scale: 0.95, opacity: 0 },
+  animate: { scale: 1, opacity: 1 },
+  hover: { scale: 1.02, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 }
+}
+
+const iconVariants = {
+  initial: { rotate: -10, scale: 0.9 },
+  animate: { rotate: 0, scale: 1 },
+  hover: { rotate: 10, scale: 1.1 }
+}
+
 export function DashboardStats({ stats }: DashboardStatsProps) {
-  const [hoveredCard, setHoveredCard] = useState<string | null>(null)
+  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
 
   const items = [
     {
-      name: 'Total Properties',
+      title: "Total Properties",
       value: stats.totalProperties,
-      change: stats.percentageChanges.properties,
-      icon: Building2,
-      formatter: (value: number) => value.toString(),
-      detail: 'Total number of properties in your portfolio'
+      icon: Box,
+      percentageChange: stats.percentageChanges.properties,
+      description: "Total number of properties in your portfolio",
+      color: "blue"
     },
     {
-      name: 'Active Tenants',
+      title: "Active Tenants",
       value: stats.activeTenants,
-      change: stats.percentageChanges.tenants,
-      icon: Users2,
-      formatter: (value: number) => value.toString(),
-      detail: 'Current number of active tenant leases'
+      icon: Users,
+      percentageChange: stats.percentageChanges.tenants,
+      description: "Number of current active tenants",
+      color: "green"
     },
     {
-      name: 'Monthly Revenue',
-      value: stats.monthlyRevenue,
-      change: stats.percentageChanges.revenue,
+      title: "Monthly Revenue",
+      value: new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(stats.monthlyRevenue),
       icon: DollarSign,
-      formatter: (value: number) =>
-        new Intl.NumberFormat('en-US', {
-          style: 'currency',
-          currency: 'USD'
-        }).format(value),
-      detail: 'Total monthly revenue from all properties'
+      percentageChange: stats.percentageChanges.revenue,
+      description: "Total monthly revenue from all properties",
+      color: "purple"
     },
     {
-      name: 'Occupancy Rate',
-      value: stats.occupancyRate,
-      change: stats.percentageChanges.occupancy,
-      icon: LineChart,
-      formatter: (value: number) => `${value.toFixed(1)}%`,
-      detail: 'Current occupancy rate across all properties'
+      title: "Occupancy Rate",
+      value: `${stats.occupancyRate}%`,
+      icon: TrendingUp,
+      percentageChange: stats.percentageChanges.occupancy,
+      description: "Current occupancy rate across all properties",
+      color: "orange"
     }
-  ]
+  ] as const
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <TooltipProvider>
-        {items.map((item) => (
-          <Tooltip key={item.name}>
-            <TooltipTrigger asChild>
-              <Card
-                className={cn(
-                  'relative overflow-hidden p-6 transition-all duration-200',
-                  hoveredCard === item.name ? 'ring-2 ring-primary' : ''
-                )}
-                onMouseEnter={() => setHoveredCard(item.name)}
-                onMouseLeave={() => setHoveredCard(null)}
-              >
+    <motion.div
+      className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
+      initial="initial"
+      animate="animate"
+      variants={{
+        animate: {
+          transition: {
+            staggerChildren: 0.1
+          }
+        }
+      }}
+    >
+      {items.map((item, index) => (
+        <MuiTooltip
+          key={item.title}
+          title={item.description}
+          placement="top"
+          arrow
+        >
+          <motion.div
+            variants={cardVariants}
+            whileHover="hover"
+            whileTap="tap"
+            onHoverStart={() => setHoveredCard(index)}
+            onHoverEnd={() => setHoveredCard(null)}
+          >
+            <Card
+              className={cn(
+                "overflow-hidden",
+                hoveredCard === index && "ring-2",
+                item.color === "blue" && "ring-blue-400",
+                item.color === "green" && "ring-green-400",
+                item.color === "purple" && "ring-purple-400",
+                item.color === "orange" && "ring-orange-400"
+              )}
+            >
+              <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="space-y-1">
-                    <p className="text-sm font-medium text-muted-foreground">{item.name}</p>
-                    <div className="flex items-baseline gap-2">
-                      <p className="text-2xl font-semibold">{item.formatter(item.value)}</p>
-                      <AnimatePresence>
-                        {item.change !== 0 && (
-                          <motion.div
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
-                            className={cn(
-                              'flex items-center gap-0.5 text-xs',
-                              item.change > 0 ? 'text-green-500' : 'text-red-500'
-                            )}
-                          >
-                            <TrendingUp
-                              className={cn(
-                                'h-3 w-3',
-                                item.change < 0 && 'rotate-180 transform'
-                              )}
-                            />
-                            <span>{Math.abs(item.change)}%</span>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
+                    <p className="text-sm font-medium text-gray-500">
+                      {item.title}
+                    </p>
+                    <p className="text-2xl font-semibold">
+                      {item.value}
+                    </p>
                   </div>
-                  <div className="rounded-full bg-primary/10 p-2">
-                    <item.icon className="h-5 w-5 text-primary" />
-                  </div>
+                  <motion.div
+                    variants={iconVariants}
+                    className={cn(
+                      "p-3 rounded-full",
+                      item.color === "blue" && "bg-blue-100 text-blue-600",
+                      item.color === "green" && "bg-green-100 text-green-600",
+                      item.color === "purple" && "bg-purple-100 text-purple-600",
+                      item.color === "orange" && "bg-orange-100 text-orange-600"
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                  </motion.div>
                 </div>
-              </Card>
-            </TooltipTrigger>
-            <TooltipContent>
-              <p>{item.detail}</p>
-            </TooltipContent>
-          </Tooltip>
-        ))}
-      </TooltipProvider>
-    </div>
+                <div className="mt-4 flex items-center gap-2">
+                  <motion.div
+                    animate={{
+                      color: item.percentageChange >= 0 ? "#16a34a" : "#dc2626"
+                    }}
+                    className="flex items-center text-sm font-medium"
+                  >
+                    <TrendingUp
+                      className={cn(
+                        "h-4 w-4 mr-1",
+                        item.percentageChange >= 0
+                          ? "text-green-600"
+                          : "text-red-600 rotate-180"
+                      )}
+                    />
+                    {Math.abs(item.percentageChange)}%
+                  </motion.div>
+                  <span className="text-sm text-gray-500">vs last month</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </MuiTooltip>
+      ))}
+    </motion.div>
   )
 }

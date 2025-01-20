@@ -1,10 +1,10 @@
 'use client'
 
 import { Card } from '@/components/ui/card'
-import { LucideIcon } from 'lucide-react'
+import type { Icon } from 'react-feather'
 
 export interface StatsCardProps {
-  icon: LucideIcon
+  icon: Icon
   label: string
   value: string
   trend?: {

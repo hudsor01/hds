@@ -1,23 +1,19 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import {
+import
+  {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+  } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { MaintenancePriority, MaintenanceTicket, NewMaintenanceTicket } from "@/lib/types/maintenance"
+import { Select, SelectItem } from "@/components/ui/select"
+import Textarea from "@/components/ui/textarea"
+import type { MaintenancePriority, MaintenanceTicket, NewMaintenanceTicket } from "@/lib/types/maintenance"
+import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 
 interface Property {
@@ -109,36 +105,35 @@ export function MaintenanceTicketDialog({
             <Label htmlFor="property">Property</Label>
             <Select
               value={selectedProperty}
-              onValueChange={setSelectedProperty}
+              onChange={(event: SelectChangeEvent<unknown>) => {
+                setSelectedProperty(event.target.value as string)
+              }}
               required
+              placeholder="Select a property"
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select a property" />
-              </SelectTrigger>
-              <SelectContent>
-                {MOCK_PROPERTIES.map((property) => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
+              {MOCK_PROPERTIES.map((property) => (
+                <SelectItem key={property.id} value={property.id}>
+                  {property.name}
+                </SelectItem>
+              ))}
             </Select>
           </div>
 
           {selectedProperty && (
             <div>
               <Label htmlFor="unit">Unit (Optional)</Label>
-              <Select value={selectedUnit} onValueChange={setSelectedUnit}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {selectedPropertyUnits.map((unit) => (
-                    <SelectItem key={unit.id} value={unit.id}>
-                      Unit {unit.number}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <Select
+                value={selectedUnit}
+                onChange={(event: SelectChangeEvent<unknown>) => {
+                  setSelectedUnit(event.target.value as string)
+                }}
+                placeholder="Select a unit"
+              >
+                {selectedPropertyUnits.map((unit) => (
+                  <SelectItem key={unit.id} value={unit.id}>
+                    Unit {unit.number}
+                  </SelectItem>
+                ))}
               </Select>
             </div>
           )}
@@ -169,16 +164,12 @@ export function MaintenanceTicketDialog({
               name="priority"
               defaultValue={existingTicket?.priority || "medium"}
               required
+              placeholder="Select priority"
             >
-              <SelectTrigger>
-                <SelectValue placeholder="Select priority" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-              </SelectContent>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
             </Select>
           </div>
 

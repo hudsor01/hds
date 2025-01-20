@@ -1,14 +1,13 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { SelectProps as MuiSelectProps } from '@mui/material'
-import
-  {
+import {
     FormControl,
     MenuItem,
     Select as MuiSelect,
     styled,
-  } from '@mui/material'
+} from '@mui/material'
 import * as React from 'react'
 import { ChevronDown } from 'react-feather'
 
@@ -31,7 +30,7 @@ export interface SelectProps extends Omit<MuiSelectProps, 'variant'> {
   placeholder?: string
 }
 
-export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
+const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
   ({ className, children, placeholder, ...props }, ref) => (
     <FormControl fullWidth>
       <StyledSelect
@@ -56,7 +55,7 @@ export const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
 )
 Select.displayName = 'Select'
 
-export const SelectItem = React.forwardRef<
+const SelectItem = React.forwardRef<
   HTMLLIElement,
   React.ComponentProps<typeof MenuItem>
 >(({ className, children, ...props }, ref) => (
@@ -73,5 +72,9 @@ export const SelectItem = React.forwardRef<
 ))
 SelectItem.displayName = 'SelectItem'
 
+export {
+    Select,
+    SelectItem
+}
+
 export default Select
-SelectItem

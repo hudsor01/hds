@@ -20,8 +20,8 @@ export type Property = {
   city: string
   state: string
   zipCode: string
-  type: keyof typeof PROPERTY_TYPES
-  status: keyof typeof PROPERTY_STATUS
+  type: 'apartment' | 'house' | 'condo' | 'townhouse' | 'commercial'
+  status: 'active' | 'inactive' | 'maintenance' | 'sold'
   units: Array<{
     id: string
     number: string
@@ -33,4 +33,26 @@ export type Property = {
   }>
   createdAt: Date
   updatedAt: Date
+  owner_id: string
+  organization_id: string
+}
+
+export type PropertySale = {
+  propertyId: string
+  salePrice: string
+  saleDate: string
+  notes?: string
+}
+
+export type PropertyStats = {
+  totalProperties: number
+  activeTenants: number
+  monthlyRevenue: number
+  occupancyRate: number
+  percentageChanges: {
+    properties: number
+    tenants: number
+    revenue: number
+    occupancy: number
+  }
 }

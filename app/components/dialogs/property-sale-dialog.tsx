@@ -12,7 +12,7 @@ import
   } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Property, PropertySale } from "@/types/properties"
+import type { Property, PropertySale } from "@/lib/types/properties"
 import { useState } from "react"
 
 interface PropertySaleDialogProps {

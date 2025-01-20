@@ -24,7 +24,7 @@ const StyledToggleButton = styled(MuiToggleButton)(({ theme }) => ({
 export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
   pressed?: boolean
   onPressedChange?: (pressed: boolean) => void
-  asChild?: boolean
+  ?: boolean
 }
 
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(

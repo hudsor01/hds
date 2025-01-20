@@ -12,18 +12,12 @@ import
   } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import
-  {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+import { Select, SelectItem } from "@/components/ui/select"
+import Textarea from "@/components/ui/textarea"
 import { PRIORITY_LABELS, PRIORITY_LEVELS } from "@/lib/constants"
-import type { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from "@/types/maintenance"
-import type { Property } from "@/types/properties"
+import type { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from "@/lib/types/maintenance"
+import type { Property } from "@/lib/types/properties"
+import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 
 interface MaintenanceRequestDialogProps {
@@ -42,8 +36,6 @@ interface MaintenanceRequestEditDialogProps extends Omit<MaintenanceRequestDialo
 export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState(props.request?.propertyId || "")
-  const [open, setOpen] = useState(false)
-  const [_value, setValue] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -96,18 +88,16 @@ export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | 
               <Select
                 name="propertyId"
                 defaultValue={props.request?.propertyId}
-                onValueChange={setSelectedProperty}
+                onChange={(event: SelectChangeEvent<unknown>) => {
+                  setSelectedProperty(event.target.value as string)
+                }}
+                placeholder="Select a property"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a property" />
-                </SelectTrigger>
-                <SelectContent>
-                  {props.properties.map((property) => (
-                    <SelectItem key={property.id} value={property.id}>
-                      {property.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                {props.properties.map((property) => (
+                  <SelectItem key={property.id} value={property.id}>
+                    {property.name}
+                  </SelectItem>
+                ))}
               </Select>
             </div>
 
@@ -117,17 +107,13 @@ export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | 
                 name="unitId"
                 defaultValue={props.request?.unitId}
                 disabled={!selectedProperty}
+                placeholder="Select a unit"
               >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a unit" />
-                </SelectTrigger>
-                <SelectContent>
-                  {selectedPropertyUnits.map((unit) => (
-                    <SelectItem key={unit} value={unit}>
-                      {unit}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+                {selectedPropertyUnits.map((unit) => (
+                  <SelectItem key={unit.id} value={unit.id}>
+                    Unit {unit.number}
+                  </SelectItem>
+                ))}
               </Select>
             </div>
 
@@ -153,17 +139,16 @@ export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | 
 
             <div className="space-y-2">
               <Label htmlFor="priority">Priority</Label>
-              <Select name="priority" defaultValue={props.request?.priority}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select priority level" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(PRIORITY_LEVELS).map(([key, value]) => (
-                    <SelectItem key={key} value={key}>
-                      {PRIORITY_LABELS[key as keyof typeof PRIORITY_LEVELS]}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
+              <Select
+                name="priority"
+                defaultValue={props.request?.priority}
+                placeholder="Select priority level"
+              >
+                {Object.entries(PRIORITY_LEVELS).map(([key, value]) => (
+                  <SelectItem key={key} value={key}>
+                    {PRIORITY_LABELS[key as keyof typeof PRIORITY_LEVELS]}
+                  </SelectItem>
+                ))}
               </Select>
             </div>
           </div>

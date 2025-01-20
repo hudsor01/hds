@@ -1,46 +1,40 @@
-export type MaintenanceStatus = 'open' | 'in_progress' | 'completed' | 'cancelled'
-export type MaintenancePriority = 'low' | 'medium' | 'high' | 'urgent'
-
-export interface MaintenanceTicket {
+export type MaintenanceRequest = {
   id: string
+  propertyId: string
+  unitId?: string
+  tenantId?: string
   title: string
   description: string
-  status: MaintenanceStatus
-  priority: MaintenancePriority
-  propertyId: string
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+  createdAt: Date
+  updatedAt: Date
+}
+
+export type NewMaintenanceRequest = Omit<MaintenanceRequest, 'id' | 'status' | 'createdAt' | 'updatedAt'>
+
+export type UpdateMaintenanceRequest = Partial<MaintenanceRequest> & { id: string }
+
+export type MaintenanceTicket = MaintenanceRequest & {
   propertyName: string
-  unitId?: string
   unitNumber?: string
-  createdBy: string
   assignedTo?: string
-  createdAt: string
-  updatedAt: string
-  completedAt?: string
-  attachments?: string[]
-  comments: MaintenanceComment[]
+  comments: Array<{
+    id: string
+    content: string
+    createdBy: string
+    createdAt: Date
+    attachments?: Array<{
+      id: string
+      name: string
+      url: string
+    }>
+  }>
 }
 
-export interface MaintenanceComment {
-  id: string
-  ticketId: string
-  content: string
-  createdBy: string
-  createdAt: string
-  attachments?: string[]
-}
+export type NewMaintenanceTicket = Omit<MaintenanceRequest, 'id' | 'status' | 'createdAt' | 'updatedAt'>
 
-export interface NewMaintenanceTicket {
-  title: string
-  description: string
-  priority: MaintenancePriority
-  propertyId: string
-  unitId?: string
-}
+export type UpdateMaintenanceTicket = Partial<MaintenanceTicket> & { id: string }
 
-export interface UpdateMaintenanceTicket {
-  id: string
-  status?: MaintenanceStatus
-  priority?: MaintenancePriority
-  assignedTo?: string
-  description?: string
-}
+export type MaintenanceStatus = MaintenanceRequest['status']
+export type MaintenancePriority = MaintenanceRequest['priority']

@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input'
 import { ToggleGroup, ToggleGroupItem } from '@/components/ui/toggle-group'
 import { ACTIVITY_FILTERS, type ActivityType } from '@/lib/constants'
 import { Download, Search } from 'lucide-react'
+import * as React from 'react'
 
 interface ActivityHeaderProps {
   filter: ActivityType | 'ALL'
@@ -21,7 +22,7 @@ export function ActivityHeader({
   onSearchChangeAction,
   onExportAction
 }: ActivityHeaderProps) {
-  const handleFilterChange = (value: string | undefined) => {
+  const handleFilterChange = (_: React.MouseEvent, value: string | undefined) => {
     if (value) {
       onFilterChangeAction(value as ActivityType | 'ALL')
     }
@@ -49,9 +50,8 @@ export function ActivityHeader({
         </div>
 
         <ToggleGroup
-          type="single"
-          value={filter}
-          onValueChange={handleFilterChange}
+          defaultValue={filter}
+          onChange={handleFilterChange}
         >
           {ACTIVITY_FILTERS.map((filter) => (
             <ToggleGroupItem key={filter.value} value={filter.value}>

@@ -1,22 +1,18 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import {
+import
+  {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+  } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { MaintenanceStatus, MaintenanceTicket, UpdateMaintenanceTicket } from "@/lib/types/maintenance"
+import { Select, SelectItem } from "@/components/ui/select"
+import Textarea from "@/components/ui/textarea"
+import type { MaintenanceStatus, MaintenanceTicket, UpdateMaintenanceTicket } from "@/lib/types/maintenance"
+import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 import { AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip } from "react-feather"
 
@@ -49,7 +45,8 @@ export function MaintenanceTicketDetails({
     }
   }
 
-  const handleStatusUpdate = async (newStatus: MaintenanceStatus) => {
+  const handleStatusUpdate = async (event: SelectChangeEvent<unknown>) => {
+    const newStatus = event.target.value as MaintenanceStatus
     setIsLoading(true)
     try {
       await onUpdate({
@@ -114,18 +111,14 @@ export function MaintenanceTicketDetails({
                 <Label>Status</Label>
                 <Select
                   value={ticket.status}
-                  onValueChange={handleStatusUpdate}
+                  onChange={handleStatusUpdate}
                   disabled={isLoading}
+                  placeholder="Select status"
                 >
-                  <SelectTrigger className="w-[180px]">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="open">Open</SelectItem>
-                    <SelectItem value="in_progress">In Progress</SelectItem>
-                    <SelectItem value="completed">Completed</SelectItem>
-                    <SelectItem value="cancelled">Cancelled</SelectItem>
-                  </SelectContent>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
                 </Select>
               </div>
 
@@ -169,7 +162,7 @@ export function MaintenanceTicketDetails({
                 <Textarea
                   placeholder="Add a comment..."
                   value={newComment}
-                  onChange={(e) => setNewComment(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewComment(e.target.value)}
                 />
                 <div className="flex justify-end space-x-2">
                   <Button

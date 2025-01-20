@@ -34,7 +34,7 @@ export default function AuthenticatedLayout({ children }: AuthenticatedLayoutPro
     <div className="flex min-h-screen">
       {/* Mobile Sidebar */}
       <Sheet>
-        <SheetTrigger asChild className="lg:hidden">
+        <SheetTrigger  className="lg:hidden">
           <Button variant="ghost" size="icon" className="absolute left-4 top-4">
             <MenuIcon className="h-5 w-5" />
             <span className="sr-only">Toggle navigation menu</span>
