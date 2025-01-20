@@ -1,13 +1,15 @@
 'use client'
 
-import { DashboardStats, type PropertyStats } from '@/components/dashboard/dashboard-stats'
+import { DashboardStats } from '@/components/dashboard/dashboard-stats'
 import { QuickActions } from '@/components/dashboard/quick-actions'
 import { RecentActivityList } from '@/components/dashboard/recent-activity'
 import type { RecentActivity } from '@/lib/types/dashboard'
+import { Box, Container, Grid, Paper, Typography } from '@mui/material'
+import { motion } from 'framer-motion'
 
 // Mock data for testing
 const mockActivities: RecentActivity[] = []
-const mockStats: PropertyStats = {
+const mockStats = {
   totalProperties: 15,
   activeTenants: 126,
   monthlyRevenue: 148500,
@@ -20,37 +22,93 @@ const mockStats: PropertyStats = {
   }
 }
 
+const containerVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1 },
+  exit: { opacity: 0 }
+}
+
+const itemVariants = {
+  initial: { y: 20, opacity: 0 },
+  animate: { y: 0, opacity: 1 }
+}
+
 export default function DashboardPage() {
   return (
-    <div className="space-y-6">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div className="w-full">
-          <DashboardStats stats={mockStats} />
-        </div>
-        <div className="w-full">
-          <DashboardStats stats={mockStats} />
-        </div>
-        <div className="w-full">
-          <DashboardStats stats={mockStats} />
-        </div>
-        <div className="w-full">
-          <DashboardStats stats={mockStats} />
-        </div>
-      </div>
+    <Container maxWidth="xl">
+      <Box sx={{ py: 4 }}>
+        <motion.div
+          variants={containerVariants}
+          initial="initial"
+          animate="animate"
+          exit="exit"
+        >
+          {/* Page Header */}
+          <Box sx={{ mb: 4 }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Dashboard
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Welcome back! Here's an overview of your property management system.
+            </Typography>
+          </Box>
 
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Quick Actions */}
-        <div className="w-full">
-          <QuickActions />
-        </div>
+          {/* Stats Grid */}
+          <motion.div
+            variants={itemVariants}
+            transition={{ delay: 0.2 }}
+          >
+            <DashboardStats stats={mockStats} />
+          </motion.div>
 
-        {/* Recent Activity */}
-        <div className="w-full md:col-span-2">
-          <RecentActivityList activities={mockActivities} />
-        </div>
-      </div>
-    </div>
+          {/* Content Grid */}
+          <Grid container spacing={3} sx={{ mt: 2 }}>
+            {/* Quick Actions */}
+            <Grid item xs={12} md={4}>
+              <motion.div
+                variants={itemVariants}
+                transition={{ delay: 0.3 }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    p: 3,
+                    height: '100%',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider'
+                  }}
+                >
+                  <Typography variant="h6" sx={{ mb: 2 }}>
+                    Quick Actions
+                  </Typography>
+                  <QuickActions />
+                </Paper>
+              </motion.div>
+            </Grid>
+
+            {/* Recent Activity */}
+            <Grid item xs={12} md={8}>
+              <motion.div
+                variants={itemVariants}
+                transition={{ delay: 0.4 }}
+              >
+                <Paper
+                  elevation={0}
+                  sx={{
+                    height: '100%',
+                    borderRadius: 2,
+                    border: '1px solid',
+                    borderColor: 'divider'
+                  }}
+                >
+                  <RecentActivityList activities={mockActivities} />
+                </Paper>
+              </motion.div>
+            </Grid>
+          </Grid>
+        </motion.div>
+      </Box>
+    </Container>
   )
 }

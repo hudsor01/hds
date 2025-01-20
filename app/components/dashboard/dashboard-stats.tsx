@@ -1,25 +1,10 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
-import { Card, CardContent, Tooltip as MuiTooltip } from '@mui/material'
+import type { PropertyStats } from '@/lib/types/dashboard'
+import { Box, Card, Grid, Tooltip, Typography } from '@mui/material'
+import { alpha } from '@mui/material/styles'
 import { motion } from 'framer-motion'
-import { useState } from 'react'
-import { Box, DollarSign, TrendingUp, Users } from 'react-feather'
-
-interface PercentageChanges {
-  properties: number
-  tenants: number
-  revenue: number
-  occupancy: number
-}
-
-export interface PropertyStats {
-  totalProperties: number
-  activeTenants: number
-  monthlyRevenue: number
-  occupancyRate: number
-  percentageChanges: PercentageChanges
-}
+import { Box as BoxIcon, DollarSign, TrendingUp, Users } from 'react-feather'
 
 interface DashboardStatsProps {
   stats: PropertyStats
@@ -39,16 +24,14 @@ const iconVariants = {
 }
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null)
-
   const items = [
     {
       title: "Total Properties",
       value: stats.totalProperties,
-      icon: Box,
+      icon: BoxIcon,
       percentageChange: stats.percentageChanges.properties,
       description: "Total number of properties in your portfolio",
-      color: "blue"
+      color: "primary"
     },
     {
       title: "Active Tenants",
@@ -56,7 +39,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: Users,
       percentageChange: stats.percentageChanges.tenants,
       description: "Number of current active tenants",
-      color: "green"
+      color: "success"
     },
     {
       title: "Monthly Revenue",
@@ -67,7 +50,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: DollarSign,
       percentageChange: stats.percentageChanges.revenue,
       description: "Total monthly revenue from all properties",
-      color: "purple"
+      color: "info"
     },
     {
       title: "Occupancy Rate",
@@ -75,94 +58,93 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: TrendingUp,
       percentageChange: stats.percentageChanges.occupancy,
       description: "Current occupancy rate across all properties",
-      color: "orange"
+      color: "warning"
     }
   ] as const
 
   return (
-    <motion.div
-      className="grid gap-4 md:grid-cols-2 lg:grid-cols-4"
-      initial="initial"
-      animate="animate"
-      variants={{
-        animate: {
-          transition: {
-            staggerChildren: 0.1
-          }
-        }
-      }}
-    >
-      {items.map((item, index) => (
-        <MuiTooltip
-          key={item.title}
-          title={item.description}
-          placement="top"
-          arrow
-        >
-          <motion.div
-            variants={cardVariants}
-            whileHover="hover"
-            whileTap="tap"
-            onHoverStart={() => setHoveredCard(index)}
-            onHoverEnd={() => setHoveredCard(null)}
-          >
-            <Card
-              className={cn(
-                "overflow-hidden",
-                hoveredCard === index && "ring-2",
-                item.color === "blue" && "ring-blue-400",
-                item.color === "green" && "ring-green-400",
-                item.color === "purple" && "ring-purple-400",
-                item.color === "orange" && "ring-orange-400"
-              )}
+    <Grid container spacing={3}>
+      {items.map((item) => (
+        <Grid key={item.title} item xs={12} sm={6} md={3}>
+          <Tooltip title={item.description} arrow placement="top">
+            <motion.div
+              variants={cardVariants}
+              whileHover="hover"
+              whileTap="tap"
             >
-              <CardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <p className="text-sm font-medium text-gray-500">
-                      {item.title}
-                    </p>
-                    <p className="text-2xl font-semibold">
-                      {item.value}
-                    </p>
-                  </div>
-                  <motion.div
-                    variants={iconVariants}
-                    className={cn(
-                      "p-3 rounded-full",
-                      item.color === "blue" && "bg-blue-100 text-blue-600",
-                      item.color === "green" && "bg-green-100 text-green-600",
-                      item.color === "purple" && "bg-purple-100 text-purple-600",
-                      item.color === "orange" && "bg-orange-100 text-orange-600"
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                  </motion.div>
-                </div>
-                <div className="mt-4 flex items-center gap-2">
-                  <motion.div
-                    animate={{
-                      color: item.percentageChange >= 0 ? "#16a34a" : "#dc2626"
+              <Card
+                sx={{
+                  px: 3,
+                  py: 4,
+                  boxShadow: 0,
+                  textAlign: 'center',
+                  color: `${item.color}.darker`,
+                  bgcolor: `${item.color}.lighter`,
+                  border: '1px solid',
+                  borderColor: `${item.color}.light`,
+                  borderRadius: 2,
+                }}
+              >
+                <motion.div
+                  variants={iconVariants}
+                  style={{
+                    width: 48,
+                    height: 48,
+                    display: 'flex',
+                    borderRadius: '50%',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    margin: '0 auto',
+                    background: alpha('#000', 0.12),
+                    color: `${item.color}.dark`,
+                  }}
+                >
+                  <item.icon width={24} height={24} />
+                </motion.div>
+
+                <Typography variant="h3" sx={{ mt: 3, mb: 1 }}>
+                  {item.value}
+                </Typography>
+
+                <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+                  {item.title}
+                </Typography>
+
+                <Box
+                  component={motion.div}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  sx={{
+                    mt: 1.5,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  <TrendingUp
+                    width={16}
+                    height={16}
+                    style={{
+                      marginRight: 4,
+                      transform: item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
+                      color: item.percentageChange >= 0 ? '#16a34a' : '#dc2626'
                     }}
-                    className="flex items-center text-sm font-medium"
+                  />
+                  <Typography
+                    component="span"
+                    variant="subtitle2"
+                    sx={{
+                      color: item.percentageChange >= 0 ? 'success.dark' : 'error.dark',
+                    }}
                   >
-                    <TrendingUp
-                      className={cn(
-                        "h-4 w-4 mr-1",
-                        item.percentageChange >= 0
-                          ? "text-green-600"
-                          : "text-red-600 rotate-180"
-                      )}
-                    />
                     {Math.abs(item.percentageChange)}%
-                  </motion.div>
-                  <span className="text-sm text-gray-500">vs last month</span>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </MuiTooltip>
+                  </Typography>
+                </Box>
+              </Card>
+            </motion.div>
+          </Tooltip>
+        </Grid>
       ))}
-    </motion.div>
+    </Grid>
   )
 }
