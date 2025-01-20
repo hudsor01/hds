@@ -1,47 +1,40 @@
 'use client'
 
 import { cn } from "@/app/lib/utils"
-import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
-import type { Route } from 'next'
+import type { Route } from "next"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import type { ReactNode } from "react"
+import { useState, type ReactNode } from "react"
 import { Home, Menu, Tool, Users } from "react-feather"
 
-interface SidebarItem {
-  title: string
-  href: Route
-  icon: typeof Home | typeof Users | typeof Tool
-}
-
-const sidebarItems: SidebarItem[] = [
+const sidebarItems = [
   {
     title: "Overview",
-    href: "/dashboard",
+    href: "/dashboard" as Route,
     icon: Home
   },
   {
     title: "Properties",
-    href: "/dashboard/properties",
+    href: "/dashboard/properties" as Route,
     icon: Home
   },
   {
     title: "Tenants",
-    href: "/dashboard/tenants",
+    href: "/dashboard/tenants" as Route,
     icon: Users
   },
   {
     title: "Maintenance",
-    href: "/dashboard/maintenance",
+    href: "/dashboard/maintenance" as Route,
     icon: Tool
   },
   {
     title: "Leases",
-    href: "/dashboard/leases",
+    href: "/dashboard/leases" as Route,
     icon: Users
   }
-]
+] as const
 
 export default function DashboardLayout({
   children,
@@ -49,18 +42,19 @@ export default function DashboardLayout({
   children: ReactNode
 }) {
   const pathname = usePathname()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Mobile Navigation */}
-      <Sheet>
-        <SheetTrigger asChild>
-          <Button
-            variant="ghost"
-            className="lg:hidden fixed left-4 top-4 z-50"
-          >
-            <Menu className="h-5 w-5" />
-          </Button>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
+        <SheetTrigger
+          className={cn(
+            "lg:hidden fixed left-4 top-4 z-50",
+            "p-2 rounded-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200"
+          )}
+        >
+          <Menu className="h-5 w-5" />
         </SheetTrigger>
         <SheetContent className="w-64">
           <nav className="flex flex-col gap-4 mt-8">
@@ -69,11 +63,12 @@ export default function DashboardLayout({
               return (
                 <Link
                   key={item.href}
-                  href={item.href as Route}
+                  href={item.href}
                   className={cn(
                     "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                     pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"
                   )}
+                  onClick={() => setIsOpen(false)}
                 >
                   <Icon className="h-5 w-5" />
                   {item.title}
@@ -87,6 +82,7 @@ export default function DashboardLayout({
                 "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100",
                 pathname === "/dashboard/settings" ? "bg-blue-50 text-blue-600" : "text-gray-600"
               )}
+              onClick={() => setIsOpen(false)}
             >
               <Tool className="h-5 w-5" />
               Settings
@@ -109,7 +105,7 @@ export default function DashboardLayout({
                 return (
                   <Link
                     key={item.href}
-                    href={item.href as Route}
+                    href={item.href}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-lg hover:bg-gray-100 mb-1",
                       pathname === item.href ? "bg-blue-50 text-blue-600" : "text-gray-600"

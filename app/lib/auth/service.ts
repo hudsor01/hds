@@ -1,7 +1,21 @@
 import { prisma } from "@/lib/prisma"
-import type { Session } from '@supabase/supabase-js'
 import { nanoid } from "nanoid"
 import { UAParser } from 'ua-parser-js'
+
+export interface Session {
+  id: string
+  user_id: string
+  session_token: string
+  expires: Date
+  last_active: Date
+  is_revoked: boolean
+  device: string | null
+  browser: string | null
+  operating_system: string | null
+  ip_address: string | null
+  created_at: Date
+  updated_at: Date
+}
 
 export class AuthService {
   private readonly SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 hours
@@ -16,15 +30,17 @@ export class AuthService {
     const os = parser.getOS().name || 'unknown'
     const device = parser.getDevice().type || 'desktop'
 
-    const session = await prisma.session.create({
+    const session = await prisma.sessions.create({
       data: {
-        userId,
-        sessionToken: nanoid(32),
+        user_id: userId,
+        session_token: nanoid(32),
         device,
         browser,
-        operatingSystem: os,
-        ipAddress,
+        operating_system: os,
+        ip_address: ipAddress,
         expires: new Date(Date.now() + this.SESSION_DURATION),
+        last_active: new Date(),
+        is_revoked: false,
       },
     })
 
@@ -32,37 +48,37 @@ export class AuthService {
   }
 
   async getSessions(userId: string): Promise<Session[]> {
-    return prisma.session.findMany({
+    return prisma.sessions.findMany({
       where: {
-        userId,
-        isRevoked: false,
+        user_id: userId,
+        is_revoked: false,
         expires: { gt: new Date() },
       },
-      orderBy: { lastActive: 'desc' },
+      orderBy: { last_active: 'desc' },
     })
   }
 
   async revokeSession(sessionId: string): Promise<void> {
-    await prisma.session.update({
+    await prisma.sessions.update({
       where: { id: sessionId },
-      data: { isRevoked: true },
+      data: { is_revoked: true },
     })
   }
 
   async updateSessionActivity(sessionId: string): Promise<void> {
-    await prisma.session.update({
+    await prisma.sessions.update({
       where: { id: sessionId },
-      data: { lastActive: new Date() },
+      data: { last_active: new Date() },
     })
   }
 
   async cleanupExpiredSessions(): Promise<void> {
     const now = new Date()
-    await prisma.session.deleteMany({
+    await prisma.sessions.deleteMany({
       where: {
         OR: [
           { expires: { lt: now } },
-          { isRevoked: true },
+          { is_revoked: true },
         ],
       },
     })

@@ -3,13 +3,14 @@
 import { DashboardStats } from '@/components/dashboard/dashboard-stats'
 import { QuickActions } from '@/components/dashboard/quick-actions'
 import { RecentActivityList } from '@/components/dashboard/recent-activity'
-import type { RecentActivity } from '@/types/dashboard'
-import { Box, Container, Grid } from '@mui/material'
+import type { PropertyStats, RecentActivity } from '@/types/dashboard'
 
 // Mock data for testing
-const mockStats = {
+const mockActivities: RecentActivity[] = []
+const mockStats: PropertyStats = {
   totalProperties: 15,
   activeTenants: 126,
+  activeLeases: 126,
   monthlyRevenue: 148500,
   occupancyRate: 92,
   percentageChanges: {
@@ -20,54 +21,37 @@ const mockStats = {
   }
 }
 
-const mockActivities: RecentActivity[] = [
-  {
-    id: '1',
-    type: 'PAYMENT',
-    title: 'Rent Payment Received',
-    description: 'John Doe paid $2,500 for Unit 101',
-    timestamp: new Date(),
-    status: 'COMPLETED'
-  },
-  {
-    id: '2',
-    type: 'MAINTENANCE',
-    title: 'Maintenance Request',
-    description: 'New request for Unit 203: Leaking faucet',
-    timestamp: new Date(Date.now() - 3600000),
-    status: 'PENDING'
-  },
-  {
-    id: '3',
-    type: 'APPLICATION',
-    title: 'New Tenant Application',
-    description: 'Sarah Smith applied for Unit 305',
-    timestamp: new Date(Date.now() - 7200000),
-    status: 'IN_PROGRESS'
-  }
-]
-
 export default function DashboardPage() {
   return (
-    <Box>
-      <Container maxWidth="xl">
-        <Grid container spacing={4}>
-          {/* Stats Section */}
-          <Grid item xs={12}>
-            <DashboardStats stats={mockStats} />
-          </Grid>
+    <div className="space-y-6">
+      {/* Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="w-full">
+          <DashboardStats stats={mockStats} />
+        </div>
+        <div className="w-full">
+          <DashboardStats stats={mockStats} />
+        </div>
+        <div className="w-full">
+          <DashboardStats stats={mockStats} />
+        </div>
+        <div className="w-full">
+          <DashboardStats stats={mockStats} />
+        </div>
+      </div>
 
-          {/* Quick Actions */}
-          <Grid item xs={12} md={4}>
-            <QuickActions />
-          </Grid>
+      {/* Content Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {/* Quick Actions */}
+        <div className="w-full">
+          <QuickActions />
+        </div>
 
-          {/* Recent Activity */}
-          <Grid item xs={12} md={8}>
-            <RecentActivityList activities={mockActivities} />
-          </Grid>
-        </Grid>
-      </Container>
-    </Box>
+        {/* Recent Activity */}
+        <div className="w-full md:col-span-2">
+          <RecentActivityList activities={mockActivities} />
+        </div>
+      </div>
+    </div>
   )
 }

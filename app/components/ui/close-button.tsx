@@ -1,19 +1,15 @@
 'use client'
 
-import { X } from 'lucide-react'
-import { cn } from 'my-app/app/lib/utils'
+import { cn } from '@/lib/utils'
 import * as React from 'react'
+import { X } from 'react-feather'
 import { Button } from './button'
-
-interface CloseButtonProps extends React.ComponentPropsWithoutRef<typeof Button> {
-  className?: string
-}
 
 export const CloseButton = React.forwardRef<HTMLButtonElement, CloseButtonProps>(
   ({ className, ...props }, ref) => (
     <Button
       variant="ghost"
-      size="icon"
+      size="sm"
       className={cn('rounded-full', className)}
       ref={ref}
       {...props}
@@ -23,4 +19,6 @@ export const CloseButton = React.forwardRef<HTMLButtonElement, CloseButtonProps>
     </Button>
   )
 )
-CloseButton.displayName = 'CloseButton'
+
+export type CloseButtonProps = React.ComponentPropsWithoutRef<typeof Button>
+export default CloseButton

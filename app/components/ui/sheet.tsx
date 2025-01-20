@@ -6,7 +6,6 @@ import { IconButton, Drawer as MuiDrawer, styled } from '@mui/material'
 import * as React from 'react'
 import { X } from 'react-feather'
 
-
 const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     backgroundColor: theme.palette.background.paper,
@@ -15,50 +14,76 @@ const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
   },
 }))
 
+interface SheetContextValue {
+  open: boolean
+  onOpenChange: (open: boolean) => void
+}
+
+const SheetContext = React.createContext<SheetContextValue | undefined>(undefined)
+
+function useSheet() {
+  const context = React.useContext(SheetContext)
+  if (!context) {
+    throw new Error('Sheet components must be used within a Sheet')
+  }
+  return context
+}
+
 export interface SheetProps extends Omit<DrawerProps, 'open'> {
   open?: boolean
   onOpenChange?: (open: boolean) => void
 }
 
 export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
-  ({ className, children, open, onOpenChange, onClose, ...props }, ref) => {
+  ({ className, children, open = false, onOpenChange, onClose, ...props }, ref) => {
+    const [isOpen, setIsOpen] = React.useState(open)
+
+    React.useEffect(() => {
+      setIsOpen(open)
+    }, [open])
+
     const handleClose = React.useCallback(
       (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
         onClose?.(event, reason)
         onOpenChange?.(false)
+        setIsOpen(false)
       },
       [onClose, onOpenChange]
     )
 
     return (
-      <StyledDrawer
-        ref={ref}
-        open={open}
-        onClose={handleClose}
-        className={cn('fixed inset-0 z-50 outline-none', className)}
-        {...props}
-      >
-        {children}
-      </StyledDrawer>
+      <SheetContext.Provider value={{ open: isOpen, onOpenChange: (o) => {
+        setIsOpen(o)
+        onOpenChange?.(o)
+      }}}>
+        <StyledDrawer
+          ref={ref}
+          open={isOpen}
+          onClose={handleClose}
+          className={cn('fixed inset-0 z-50 outline-none', className)}
+          {...props}
+        >
+          {children}
+        </StyledDrawer>
+      </SheetContext.Provider>
     )
   }
 )
 Sheet.displayName = 'Sheet'
 
 export interface SheetTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  asChild?: boolean
+  className?: string
 }
 
 export const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
-  ({ className, asChild, children, ...props }, ref) => {
-    if (asChild) {
-      return children
-    }
+  ({ className, children, ...props }, ref) => {
+    const { onOpenChange } = useSheet()
     return (
       <button
-        ref={ref}
         type="button"
-        className={cn(className)}
+        ref={ref}
+        className={className}
+        onClick={() => onOpenChange(true)}
         {...props}
       >
         {children}
@@ -71,19 +96,25 @@ SheetTrigger.displayName = 'SheetTrigger'
 export const SheetClose = React.forwardRef<
   HTMLButtonElement,
   React.ComponentProps<typeof IconButton>
->(({ className, onClick, ...props }, ref) => (
-  <IconButton
-    ref={ref}
-    onClick={onClick}
-    className={cn(
-      'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary',
-      className
-    )}
-    {...props}
-  >
-    <X className="h-4 w-4" />
-  </IconButton>
-))
+>(({ className, onClick, ...props }, ref) => {
+  const { onOpenChange } = useSheet()
+  return (
+    <IconButton
+      ref={ref}
+      onClick={(e) => {
+        onClick?.(e)
+        onOpenChange(false)
+      }}
+      className={cn(
+        'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary',
+        className
+      )}
+      {...props}
+    >
+      <X className="h-4 w-4" />
+    </IconButton>
+  )
+})
 SheetClose.displayName = 'SheetClose'
 
 export const SheetContent = React.forwardRef<
@@ -98,6 +129,7 @@ export const SheetContent = React.forwardRef<
     )}
     {...props}
   >
+    <SheetClose />
     {children}
   </div>
 ))
