@@ -2,7 +2,7 @@
 
 import type { PropertyStats } from '@/lib/types/dashboard'
 import { Box, Card, Grid, Tooltip, Typography } from '@mui/material'
-import { alpha } from '@mui/material/styles'
+import { alpha, useTheme } from '@mui/material/styles'
 import { motion } from 'framer-motion'
 import { Box as BoxIcon, DollarSign, TrendingUp, Users } from 'react-feather'
 
@@ -24,6 +24,8 @@ const iconVariants = {
 }
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
+  const theme = useTheme()
+
   const items = [
     {
       title: "Total Properties",
@@ -31,7 +33,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: BoxIcon,
       percentageChange: stats.percentageChanges.properties,
       description: "Total number of properties in your portfolio",
-      color: "primary"
+      color: "primary",
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.2)} 0%, ${alpha(theme.palette.primary.dark, 0.2)} 100%)`
     },
     {
       title: "Active Tenants",
@@ -39,7 +42,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: Users,
       percentageChange: stats.percentageChanges.tenants,
       description: "Number of current active tenants",
-      color: "success"
+      color: "success",
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.success.light, 0.2)} 0%, ${alpha(theme.palette.success.dark, 0.2)} 100%)`
     },
     {
       title: "Monthly Revenue",
@@ -50,7 +54,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: DollarSign,
       percentageChange: stats.percentageChanges.revenue,
       description: "Total monthly revenue from all properties",
-      color: "info"
+      color: "info",
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.info.light, 0.2)} 0%, ${alpha(theme.palette.info.dark, 0.2)} 100%)`
     },
     {
       title: "Occupancy Rate",
@@ -58,7 +63,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       icon: TrendingUp,
       percentageChange: stats.percentageChanges.occupancy,
       description: "Current occupancy rate across all properties",
-      color: "warning"
+      color: "warning",
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.2)} 0%, ${alpha(theme.palette.warning.dark, 0.2)} 100%)`
     }
   ] as const
 
@@ -76,37 +82,56 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                 sx={{
                   px: 3,
                   py: 4,
-                  boxShadow: 0,
-                  textAlign: 'center',
-                  color: `${item.color}.darker`,
-                  bgcolor: `${item.color}.lighter`,
+                  boxShadow: 3,
+                  color: theme.palette[item.color].dark,
+                  background: item.gradient,
                   border: '1px solid',
-                  borderColor: `${item.color}.light`,
+                  borderColor: alpha(theme.palette[item.color].main, 0.2),
                   borderRadius: 2,
+                  transition: 'all 0.3s ease-in-out',
+                  '&:hover': {
+                    boxShadow: 16,
+                    borderColor: alpha(theme.palette[item.color].main, 0.4),
+                  }
                 }}
               >
                 <motion.div
                   variants={iconVariants}
                   style={{
-                    width: 48,
-                    height: 48,
+                    width: 56,
+                    height: 56,
                     display: 'flex',
                     borderRadius: '50%',
                     alignItems: 'center',
                     justifyContent: 'center',
                     margin: '0 auto',
-                    background: alpha('#000', 0.12),
-                    color: `${item.color}.dark`,
+                    background: `linear-gradient(135deg, ${theme.palette[item.color].light} 0%, ${theme.palette[item.color].dark} 100%)`,
+                    boxShadow: `0 2px 14px 0 ${alpha(theme.palette[item.color].main, 0.3)}`,
                   }}
                 >
-                  <item.icon width={24} height={24} />
+                  <item.icon width={28} height={28} color="#fff" />
                 </motion.div>
 
-                <Typography variant="h3" sx={{ mt: 3, mb: 1 }}>
+                <Typography
+                  variant="h3"
+                  sx={{
+                    mt: 3,
+                    mb: 1,
+                    fontWeight: 600,
+                    color: theme.palette[item.color].dark
+                  }}
+                >
                   {item.value}
                 </Typography>
 
-                <Typography variant="subtitle2" sx={{ opacity: 0.72 }}>
+                <Typography
+                  variant="subtitle2"
+                  sx={{
+                    opacity: 0.72,
+                    color: theme.palette[item.color].dark,
+                    fontWeight: 500
+                  }}
+                >
                   {item.title}
                 </Typography>
 
@@ -127,14 +152,15 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     style={{
                       marginRight: 4,
                       transform: item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
-                      color: item.percentageChange >= 0 ? '#16a34a' : '#dc2626'
+                      color: item.percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main
                     }}
                   />
                   <Typography
                     component="span"
                     variant="subtitle2"
                     sx={{
-                      color: item.percentageChange >= 0 ? 'success.dark' : 'error.dark',
+                      fontWeight: 600,
+                      color: item.percentageChange >= 0 ? 'success.main' : 'error.main',
                     }}
                   >
                     {Math.abs(item.percentageChange)}%

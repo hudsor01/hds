@@ -1,67 +1,53 @@
 'use client'
 
 import type { RecentActivity } from "@/lib/types/dashboard"
-import { cn } from "@/lib/utils"
-import { Card, CardContent, ToggleButton, ToggleButtonGroup } from "@mui/material"
+import { Box, Chip, Divider, IconButton, Stack, ToggleButton, ToggleButtonGroup, Typography } from "@mui/material"
+import { alpha, useTheme } from "@mui/material/styles"
 import { motion } from "framer-motion"
 import { useState } from "react"
-import { AlertCircle, CreditCard, FileText, Tool } from "react-feather"
+import { AlertTriangle, Check, Clock, DollarSign, FileText, User } from "react-feather"
 
 interface RecentActivityListProps {
   activities: RecentActivity[]
 }
 
-const listVariants = {
+const containerVariants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  exit: { opacity: 0 }
+  animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
 }
 
 const itemVariants = {
   initial: { x: -20, opacity: 0 },
-  animate: { x: 0, opacity: 1 },
-  exit: { x: 20, opacity: 0 }
+  animate: { x: 0, opacity: 1 }
 }
 
 export function RecentActivityList({ activities }: RecentActivityListProps) {
+  const theme = useTheme()
   const [filter, setFilter] = useState<'ALL' | 'APPLICATION' | 'MAINTENANCE' | 'PAYMENT'>('ALL')
 
-  const getIcon = (type: RecentActivity['type']) => {
+  const getActivityIcon = (type: RecentActivity['type']) => {
     switch (type) {
       case 'APPLICATION':
-        return FileText
+        return User
       case 'MAINTENANCE':
-        return Tool
+        return AlertTriangle
       case 'PAYMENT':
-        return CreditCard
+        return DollarSign
       default:
-        return AlertCircle
+        return FileText
     }
   }
 
-  const getStatusColor = (status: RecentActivity['status']) => {
+  const getStatusColor = (status: RecentActivity['status']): 'success' | 'warning' | 'info' => {
     switch (status) {
-      case 'PENDING':
-        return 'yellow'
-      case 'IN_PROGRESS':
-        return 'blue'
       case 'COMPLETED':
-        return 'green'
+        return 'success'
+      case 'IN_PROGRESS':
+        return 'warning'
+      case 'PENDING':
+        return 'info'
       default:
-        return 'gray'
-    }
-  }
-
-  const getPriorityColor = (priority: RecentActivity['priority']) => {
-    switch (priority) {
-      case 'low':
-        return 'blue'
-      case 'medium':
-        return 'yellow'
-      case 'high':
-        return 'red'
-      default:
-        return 'gray'
+        return 'info'
     }
   }
 
@@ -70,115 +56,138 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
   )
 
   return (
-    <Card>
-      <CardContent className="p-6">
-        <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
-            <h2 className="text-lg font-semibold">Recent Activity</h2>
-            <ToggleButtonGroup
-              value={filter}
-              exclusive
-              onChange={(_, value) => value && setFilter(value)}
-              size="small"
-            >
-              <ToggleButton value="ALL">All</ToggleButton>
-              <ToggleButton value="APPLICATION">Applications</ToggleButton>
-              <ToggleButton value="MAINTENANCE">Maintenance</ToggleButton>
-              <ToggleButton value="PAYMENT">Payments</ToggleButton>
-            </ToggleButtonGroup>
-          </div>
-          <motion.div
-            className="space-y-4"
-            initial="initial"
-            animate="animate"
-            exit="exit"
-            variants={listVariants}
-          >
-            {filteredActivities.length === 0 ? (
-              <motion.div
-                variants={itemVariants}
-                className="flex flex-col items-center justify-center py-8 text-gray-500"
-              >
-                <AlertCircle className="h-12 w-12 mb-4" />
-                <p className="text-sm">No recent activities found</p>
-              </motion.div>
-            ) : (
-              filteredActivities.map((activity) => {
-                const Icon = getIcon(activity.type)
-                const statusColor = getStatusColor(activity.status)
-                const priorityColor = activity.priority ? getPriorityColor(activity.priority) : null
+    <Box sx={{ p: 3 }}>
+      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
+        <Typography variant="h6">Recent Activity</Typography>
+        <ToggleButtonGroup
+          exclusive
+          size="small"
+          value={filter}
+          onChange={(_, value) => value && setFilter(value)}
+          sx={{
+            '& .MuiToggleButton-root': {
+              px: 2,
+              py: 0.5,
+              typography: 'body2',
+              borderRadius: '16px !important',
+              borderColor: 'divider',
+              '&.Mui-selected': {
+                bgcolor: theme => alpha(theme.palette.primary.main, 0.1),
+                color: 'primary.main',
+                borderColor: 'primary.main',
+              },
+            },
+          }}
+        >
+          <ToggleButton value="ALL">All</ToggleButton>
+          <ToggleButton value="APPLICATION">Applications</ToggleButton>
+          <ToggleButton value="MAINTENANCE">Maintenance</ToggleButton>
+          <ToggleButton value="PAYMENT">Payments</ToggleButton>
+        </ToggleButtonGroup>
+      </Stack>
 
-                return (
-                  <motion.div
-                    key={activity.id}
-                    variants={itemVariants}
-                    className="flex items-start gap-4 p-4 rounded-lg bg-gray-50"
-                  >
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      className={cn(
-                        "p-2 rounded-full",
-                        activity.type === 'APPLICATION' && "bg-purple-100 text-purple-600",
-                        activity.type === 'MAINTENANCE' && "bg-blue-100 text-blue-600",
-                        activity.type === 'PAYMENT' && "bg-green-100 text-green-600"
-                      )}
+      <motion.div
+        variants={containerVariants}
+        initial="initial"
+        animate="animate"
+      >
+        {filteredActivities.length === 0 ? (
+          <Box
+            sx={{
+              py: 10,
+              textAlign: 'center',
+              borderRadius: 2,
+              bgcolor: theme => alpha(theme.palette.primary.main, 0.04),
+            }}
+          >
+            <Clock size={40} style={{ marginBottom: 16, opacity: 0.5 }} />
+            <Typography variant="subtitle1" sx={{ mb: 1 }}>
+              No recent activities
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              New activities will appear here
+            </Typography>
+          </Box>
+        ) : (
+          <Stack spacing={2} divider={<Divider />}>
+            {filteredActivities.map((activity) => {
+              const Icon = getActivityIcon(activity.type)
+              const statusColor = getStatusColor(activity.status)
+
+              return (
+                <motion.div key={activity.id} variants={itemVariants}>
+                  <Stack direction="row" spacing={2} alignItems="flex-start">
+                    <Box
+                      sx={{
+                        p: 1,
+                        borderRadius: '50%',
+                        bgcolor: theme => alpha(theme.palette[statusColor].main, 0.1),
+                        color: `${statusColor}.main`,
+                      }}
                     >
-                      <Icon className="h-5 w-5" />
-                    </motion.div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center justify-between gap-2">
-                        <p className="font-medium truncate">{activity.title}</p>
-                        <div className="flex items-center gap-2">
-                          {activity.priority && (
-                            <span className={cn(
-                              "px-2 py-1 text-xs font-medium rounded-full",
-                              priorityColor === 'blue' && "bg-blue-100 text-blue-600",
-                              priorityColor === 'yellow' && "bg-yellow-100 text-yellow-600",
-                              priorityColor === 'red' && "bg-red-100 text-red-600",
-                              priorityColor === 'gray' && "bg-gray-100 text-gray-600"
-                            )}>
-                              {activity.priority}
-                            </span>
-                          )}
-                          <span className={cn(
-                            "px-2 py-1 text-xs font-medium rounded-full",
-                            statusColor === 'yellow' && "bg-yellow-100 text-yellow-600",
-                            statusColor === 'blue' && "bg-blue-100 text-blue-600",
-                            statusColor === 'green' && "bg-green-100 text-green-600",
-                            statusColor === 'gray' && "bg-gray-100 text-gray-600"
-                          )}>
-                            {activity.status}
-                          </span>
-                        </div>
-                      </div>
-                      <p className="mt-1 text-sm text-gray-500 truncate">
+                      <Icon size={20} />
+                    </Box>
+
+                    <Box sx={{ flex: 1 }}>
+                      <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                        {activity.title}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
                         {activity.description}
-                      </p>
-                      <div className="mt-2 flex items-center gap-4 text-xs text-gray-500">
-                        <time dateTime={activity.timestamp.toISOString()}>
-                          {new Intl.DateTimeFormat('en-US', {
-                            dateStyle: 'medium',
-                            timeStyle: 'short'
-                          }).format(activity.timestamp)}
-                        </time>
+                      </Typography>
+
+                      <Stack
+                        direction="row"
+                        alignItems="center"
+                        spacing={2}
+                        sx={{ typography: 'caption', color: 'text.secondary' }}
+                      >
+                        <Box component="span">
+                          {new Date(activity.timestamp).toLocaleDateString()}
+                        </Box>
+                        <Chip
+                          size="small"
+                          icon={activity.status === 'COMPLETED' ? <Check size={12} /> : undefined}
+                          label={activity.status.replace('_', ' ')}
+                          color={statusColor}
+                          variant="outlined"
+                          sx={{
+                            height: 24,
+                            fontSize: '0.75rem',
+                            '& .MuiChip-icon': { fontSize: 'inherit' }
+                          }}
+                        />
                         {activity.amount && (
-                          <span>
+                          <Box
+                            component="span"
+                            sx={{
+                              px: 1,
+                              py: 0.25,
+                              borderRadius: 1,
+                              typography: 'caption',
+                              bgcolor: 'success.lighter',
+                              color: 'success.dark',
+                            }}
+                          >
                             {new Intl.NumberFormat('en-US', {
                               style: 'currency',
                               currency: 'USD'
                             }).format(activity.amount)}
-                          </span>
+                          </Box>
                         )}
-                      </div>
-                    </div>
-                  </motion.div>
-                )
-              })
-            )}
-          </motion.div>
-        </div>
-      </CardContent>
-    </Card>
+                      </Stack>
+                    </Box>
+
+                    <IconButton size="small" sx={{ color: 'text.secondary' }}>
+                      <FileText size={16} />
+                    </IconButton>
+                  </Stack>
+                </motion.div>
+              )
+            })}
+          </Stack>
+        )}
+      </motion.div>
+    </Box>
   )
 }
