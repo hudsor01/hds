@@ -32,11 +32,18 @@ model Property {
 }
 
 model Session {
-  id           String   @id @default(uuid())
-  userId       String
-  expires      DateTime
-  created_at   DateTime @default(now())
-  updated_at   DateTime @updatedAt
+  id              String   @id @default(uuid())
+  userId          String
+  sessionToken    String   @unique
+  expires         DateTime
+  lastActive      DateTime @default(now())
+  isRevoked       Boolean  @default(false)
+  device          String?
+  browser         String?
+  operatingSystem String?
+  ipAddress       String?
+  created_at      DateTime @default(now())
+  updated_at      DateTime @updatedAt
 
   @@map("sessions")
 }
