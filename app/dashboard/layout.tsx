@@ -38,8 +38,15 @@ export default function DashboardLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const drawer = (
-    <Stack sx={{ height: '100%', width: DRAWER_WIDTH, bgcolor: 'background.paper' }}>
-      {/* Navigation Items */}
+    <Stack
+      sx={{
+        height: '100%',
+        width: DRAWER_WIDTH,
+        bgcolor: 'background.paper',
+        borderRight: 1,
+        borderColor: 'divider',
+      }}
+    >
       <Stack
         sx={{
           p: 3,
@@ -89,8 +96,14 @@ export default function DashboardLayout({
   )
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Sidebar */}
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        bgcolor: 'background.default'
+      }}
+    >
+      {/* Desktop Drawer */}
       <Drawer
         variant="permanent"
         sx={{
@@ -100,13 +113,10 @@ export default function DashboardLayout({
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
             boxSizing: 'border-box',
-            borderRight: 1,
-            borderColor: 'divider',
-            height: '100vh',
             position: 'fixed',
-            top: 0,
-            left: 0,
-            bottom: 0,
+            height: '100vh',
+            bgcolor: 'background.paper',
+            border: 'none'
           },
         }}
       >
@@ -124,8 +134,8 @@ export default function DashboardLayout({
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
             boxSizing: 'border-box',
-            borderRight: 1,
-            borderColor: 'divider',
+            bgcolor: 'background.paper',
+            border: 'none'
           },
         }}
       >
@@ -137,11 +147,14 @@ export default function DashboardLayout({
         component="main"
         sx={{
           flexGrow: 1,
-          p: 3,
-          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-          ml: { lg: `${DRAWER_WIDTH}px` },
           minHeight: '100vh',
-          bgcolor: 'background.default',
+          width: { xs: '100%', lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          ml: { xs: 0, lg: `${DRAWER_WIDTH}px` },
+          pt: { xs: 2, sm: 3 },
+          px: { xs: 2, sm: 3 },
+          pb: { xs: 2, sm: 3 },
+          position: 'relative',
+          zIndex: 1
         }}
       >
         {children}
