@@ -3,7 +3,6 @@
 import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import type { Route } from 'next'
-import Image from 'next/image'
 import Link from 'next/link'
 import { useState } from 'react'
 import
@@ -40,23 +39,15 @@ export default function DashboardLayout({
 
   const drawer = (
     <Stack sx={{ height: '100%', width: DRAWER_WIDTH, bgcolor: 'background.paper' }}>
-      {/* Logo Section */}
-      <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
-        <Link href="/dashboard">
-          <Box sx={{ position: 'relative', width: '100%', height: 60 }}>
-            <Image
-              src="/logo.png"
-              alt="Hudson Digital Solutions"
-              fill
-              style={{ objectFit: 'contain' }}
-              priority
-            />
-          </Box>
-        </Link>
-      </Box>
-
       {/* Navigation Items */}
-      <Stack sx={{ p: 2, flex: 1, gap: 1, overflowY: 'auto' }}>
+      <Stack
+        sx={{
+          p: 3,
+          flex: 1,
+          gap: 2,
+          overflowY: 'auto'
+        }}
+      >
         {sidebarItems.map((item, index) => {
           const Icon = item.icon
           return (
@@ -75,16 +66,18 @@ export default function DashboardLayout({
                   alignItems="center"
                   sx={{
                     px: 2,
-                    py: 1.5,
-                    borderRadius: 1,
+                    py: 2,
+                    borderRadius: 2,
                     color: 'text.secondary',
+                    transition: 'all 0.2s ease-in-out',
                     '&:hover': {
-                      bgcolor: 'action.hover',
-                      color: 'primary.main',
+                      bgcolor: 'primary.main',
+                      color: 'primary.contrastText',
+                      transform: 'translateX(5px)',
                     }
                   }}
                 >
-                  <Icon size={20} style={{ marginRight: '12px' }} />
+                  <Icon size={22} style={{ marginRight: '16px' }} />
                   {item.title}
                 </Stack>
               </Link>
@@ -92,26 +85,6 @@ export default function DashboardLayout({
           )
         })}
       </Stack>
-
-      {/* Preview Image */}
-      <Box sx={{ p: 2 }}>
-        <Box
-          sx={{
-            position: 'relative',
-            width: '100%',
-            height: 160,
-            borderRadius: 2,
-            overflow: 'hidden'
-          }}
-        >
-          <Image
-            src="/dashboard-preview.png"
-            alt="Dashboard Preview"
-            fill
-            style={{ objectFit: 'cover' }}
-          />
-        </Box>
-      </Box>
     </Stack>
   )
 
