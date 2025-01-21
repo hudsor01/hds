@@ -18,16 +18,16 @@ import { AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip } from "rea
 
 interface MaintenanceTicketDetailsProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   ticket: MaintenanceTicket
-  onUpdate: (data: UpdateMaintenanceTicket) => Promise<void>
+  onUpdateAction: (data: UpdateMaintenanceTicket) => Promise<void>
 }
 
 export function MaintenanceTicketDetails({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   ticket,
-  onUpdate,
+  onUpdateAction,
 }: MaintenanceTicketDetailsProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [newComment, setNewComment] = useState("")
@@ -49,7 +49,7 @@ export function MaintenanceTicketDetails({
     const newStatus = event.target.value as MaintenanceStatus
     setIsLoading(true)
     try {
-      await onUpdate({
+      await onUpdateAction({
         id: ticket.id,
         status: newStatus,
       })
@@ -77,7 +77,7 @@ export function MaintenanceTicketDetails({
   }
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center space-x-2">

@@ -46,16 +46,16 @@ const MOCK_PROPERTIES: Property[] = [
 
 interface MaintenanceTicketDialogProps {
   open: boolean
-  onOpenChange: (open: boolean) => void
+  onOpenChangeAction: (open: boolean) => void
   existingTicket?: MaintenanceTicket
-  onSubmit: (data: NewMaintenanceTicket) => Promise<void>
+  onSubmitAction: (data: NewMaintenanceTicket) => Promise<void>
 }
 
 export function MaintenanceTicketDialog({
   open,
-  onOpenChange,
+  onOpenChangeAction,
   existingTicket,
-  onSubmit,
+  onSubmitAction,
 }: MaintenanceTicketDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState<string>(
@@ -79,8 +79,8 @@ export function MaintenanceTicketDialog({
         unitId: selectedUnit || undefined,
       }
 
-      await onSubmit(data)
-      onOpenChange(false)
+      await onSubmitAction(data)
+      onOpenChangeAction(false)
     } catch (error) {
       console.error("Failed to submit ticket:", error)
     } finally {
@@ -93,7 +93,7 @@ export function MaintenanceTicketDialog({
   )?.units || []
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
+    <Dialog open={open} onOpenChange={onOpenChangeAction}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
@@ -177,7 +177,7 @@ export function MaintenanceTicketDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChange(false)}
+              onClick={() => onOpenChangeAction(false)}
             >
               Cancel
             </Button>
