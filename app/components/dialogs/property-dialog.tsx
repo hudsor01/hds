@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
 import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/constants"
-import type { Property } from "@/lib/types/properties"
+import type { Property, PropertyStatus } from "@/lib/types/properties"
 import { useState } from "react"
 
 interface PropertyDialogProps {
@@ -34,7 +34,9 @@ export function PropertyDialog({ open, onOpenChangeAction, property, onSubmitAct
         state: formData.get("state") as string,
         zipCode: formData.get("zipCode") as string,
         type: formData.get("type") as keyof typeof PROPERTY_TYPES,
-        status: formData.get("status") as keyof typeof PROPERTY_STATUS,
+        status: (formData.get("status") === 'active' ? 'available' :
+                formData.get("status") === 'inactive' ? 'inactive' :
+                formData.get("status") === 'maintenance' ? 'maintenance' : 'available') as PropertyStatus,
         units: [],
         createdAt: new Date(),
         updatedAt: new Date()

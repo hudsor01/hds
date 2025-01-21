@@ -22,7 +22,7 @@ const menuItems = [
 
 interface SidebarProps {
   open: boolean
-  onClose: () => void
+  onCloseAction: () => void
 }
 
 const MenuListItem = styled(ListItemButton)(({ theme }) => ({
@@ -58,7 +58,7 @@ const itemVariants = {
   animate: { x: 0, opacity: 1 }
 }
 
-export function Sidebar({ open, onClose }: SidebarProps) {
+export function Sidebar({ open, onCloseAction }: SidebarProps) {
   const theme = useTheme()
   const pathname = usePathname()
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
@@ -118,7 +118,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 component={Link}
                 href={item.path}
                 selected={pathname === item.path}
-                onClick={isMobile ? onClose : undefined}
+                onClick={isMobile ? onCloseAction : undefined}
               >
                 <ListItemIcon>
                   <item.icon size={20} />
@@ -174,7 +174,7 @@ export function Sidebar({ open, onClose }: SidebarProps) {
       variant="temporary"
       anchor="left"
       open={open}
-      onClose={onClose}
+      onClose={onCloseAction}
       ModalProps={{ keepMounted: true }}
       sx={{
         display: { xs: 'block', lg: 'none' },

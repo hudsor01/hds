@@ -7,7 +7,7 @@ import { useTheme as useNextTheme } from 'next-themes'
 import { Bell, Menu, Moon, Search, Sun } from 'react-feather'
 
 interface HeaderProps {
-  onOpenSidebar: () => void
+  onOpenSidebarAction: () => void
 }
 
 const containerVariants = {
@@ -20,7 +20,7 @@ const itemVariants = {
   animate: { scale: 1, opacity: 1 }
 }
 
-export function Header({ onOpenSidebar }: HeaderProps) {
+export function Header({ onOpenSidebarAction }: HeaderProps) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
   const { theme: mode, setTheme } = useNextTheme()
@@ -47,7 +47,7 @@ export function Header({ onOpenSidebar }: HeaderProps) {
         {/* Mobile Menu Button */}
         {isMobile && (
           <IconButton
-            onClick={onOpenSidebar}
+            onClick={onOpenSidebarAction}
             sx={{
               mr: 1,
               color: 'text.primary',
