@@ -1,71 +1,185 @@
 'use client'
 
 import { Header } from '@/components/layout/header'
-import { Sidebar } from '@/components/layout/sidebar'
-import { Box, Container } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
+import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
+import type { Route } from 'next'
+import Image from 'next/image'
+import Link from 'next/link'
 import { useState } from 'react'
+import
+  {
+    BarChart2,
+    FileText,
+    Home,
+    Key,
+    Settings,
+    Tool,
+    Users
+  } from 'react-feather'
 
-const DRAWER_WIDTH = 260
+const DRAWER_WIDTH = 280
 
-const containerVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1 }
-}
-
-const contentVariants = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0, transition: { delay: 0.2 } }
-}
+const sidebarItems = [
+  { title: 'Dashboard', href: '/dashboard' as Route, icon: Home },
+  { title: 'Properties', href: '/dashboard/properties' as Route, icon: Key },
+  { title: 'Tenants', href: '/dashboard/tenants' as Route, icon: Users },
+  { title: 'Maintenance', href: '/dashboard/maintenance' as Route, icon: Tool },
+  { title: 'Documents', href: '/dashboard/documents' as Route, icon: FileText },
+  { title: 'Analytics', href: '/dashboard/analytics' as Route, icon: BarChart2 },
+  { title: 'Settings', href: '/dashboard/settings' as Route, icon: Settings }
+]
 
 export default function DashboardLayout({
-  children,
+  children
 }: {
   children: React.ReactNode
 }) {
   const theme = useTheme()
-  const [open, setOpen] = useState(false)
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
+  const [mobileOpen, setMobileOpen] = useState(false)
+
+  const drawer = (
+    <Stack sx={{ height: '100%', bgcolor: 'background.paper' }}>
+      {/* Logo Section */}
+      <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
+        <Link href="/dashboard">
+          <Box sx={{ position: 'relative', width: '100%', height: 60 }}>
+            <Image
+              src="/logo.png"
+              alt="Hudson Digital Solutions"
+              fill
+              style={{ objectFit: 'contain' }}
+              priority
+            />
+          </Box>
+        </Link>
+      </Box>
+
+      {/* Navigation Items */}
+      <Stack sx={{ p: 2, flex: 1, gap: 1 }}>
+        {sidebarItems.map((item, index) => {
+          const Icon = item.icon
+          return (
+            <motion.div
+              key={item.href}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+            >
+              <Link
+                href={item.href}
+                style={{ textDecoration: 'none' }}
+              >
+                <Stack
+                  direction="row"
+                  alignItems="center"
+                  sx={{
+                    px: 2,
+                    py: 1.5,
+                    borderRadius: 1,
+                    color: 'text.secondary',
+                    '&:hover': {
+                      bgcolor: 'action.hover',
+                      color: 'primary.main',
+                    }
+                  }}
+                >
+                  <Icon size={20} style={{ marginRight: '12px' }} />
+                  {item.title}
+                </Stack>
+              </Link>
+            </motion.div>
+          )
+        })}
+      </Stack>
+
+      {/* Preview Image */}
+      <Box sx={{ p: 2 }}>
+        <Box
+          sx={{
+            position: 'relative',
+            width: '100%',
+            height: 160,
+            borderRadius: 2,
+            overflow: 'hidden'
+          }}
+        >
+          <Image
+            src="/dashboard-preview.png"
+            alt="Dashboard Preview"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
+        </Box>
+      </Box>
+    </Stack>
+  )
 
   return (
-    <Box
-      component={motion.div}
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-      sx={{
-        display: 'flex',
-        minHeight: '100vh',
-        overflow: 'hidden',
-        bgcolor: theme => alpha(theme.palette.primary.main, 0.02)
-      }}
-    >
-      <Sidebar open={open} onClose={() => setOpen(false)} />
-
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      {/* Mobile Drawer */}
       <Box
-        component="main"
+        component="nav"
+        sx={{ width: { lg: DRAWER_WIDTH }, flexShrink: { lg: 0 } }}
+      >
+        {isMobile ? (
+          <Drawer
+            variant="temporary"
+            open={mobileOpen}
+            onClose={() => setMobileOpen(false)}
+            ModalProps={{ keepMounted: true }}
+            sx={{
+              display: { xs: 'block', lg: 'none' },
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: DRAWER_WIDTH,
+                borderRight: 1,
+                borderColor: 'divider'
+              },
+            }}
+          >
+            {drawer}
+          </Drawer>
+        ) : (
+          <Drawer
+            variant="permanent"
+            sx={{
+              display: { xs: 'none', lg: 'block' },
+              '& .MuiDrawer-paper': {
+                boxSizing: 'border-box',
+                width: DRAWER_WIDTH,
+                borderRight: 1,
+                borderColor: 'divider'
+              },
+            }}
+            open
+          >
+            {drawer}
+          </Drawer>
+        )}
+      </Box>
+
+      {/* Main Content */}
+      <Box
         sx={{
-          flexGrow: 1,
-          overflow: 'auto',
-          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-          transition: theme.transitions.create('margin', {
-            duration: theme.transitions.duration.shorter,
-          }),
+          flex: 1,
+          display: 'flex',
+          flexDirection: 'column',
+          minHeight: '100vh',
         }}
       >
-        <Header onOpenSidebar={() => setOpen(true)} />
-
-        <Container
-          component={motion.div}
-          variants={contentVariants}
-          maxWidth="xl"
+        <Header onOpenSidebarAction={() => setMobileOpen(true)} />
+        <Box
+          component="main"
           sx={{
-            py: { xs: 3, sm: 5, md: 6 },
-            px: { xs: 2, sm: 3 },
+            flex: 1,
+            p: 3,
+            bgcolor: 'background.default',
           }}
         >
           {children}
-        </Container>
+        </Box>
       </Box>
     </Box>
   )
