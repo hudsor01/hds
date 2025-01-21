@@ -1,6 +1,5 @@
 'use client'
 
-import { Header } from '@/components/layout/header'
 import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import type { Route } from 'next'
@@ -40,7 +39,7 @@ export default function DashboardLayout({
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const drawer = (
-    <Stack sx={{ height: '100%', bgcolor: 'background.paper' }}>
+    <Stack sx={{ height: '100%', width: DRAWER_WIDTH, bgcolor: 'background.paper' }}>
       {/* Logo Section */}
       <Box sx={{ p: 3, borderBottom: 1, borderColor: 'divider' }}>
         <Link href="/dashboard">
@@ -57,7 +56,7 @@ export default function DashboardLayout({
       </Box>
 
       {/* Navigation Items */}
-      <Stack sx={{ p: 2, flex: 1, gap: 1 }}>
+      <Stack sx={{ p: 2, flex: 1, gap: 1, overflowY: 'auto' }}>
         {sidebarItems.map((item, index) => {
           const Icon = item.icon
           return (
@@ -118,68 +117,61 @@ export default function DashboardLayout({
 
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
-      {/* Mobile Drawer */}
-      <Box
-        component="nav"
-        sx={{ width: { lg: DRAWER_WIDTH }, flexShrink: { lg: 0 } }}
+      {/* Sidebar */}
+      <Drawer
+        variant="permanent"
+        sx={{
+          width: DRAWER_WIDTH,
+          flexShrink: 0,
+          display: { xs: 'none', lg: 'block' },
+          '& .MuiDrawer-paper': {
+            width: DRAWER_WIDTH,
+            boxSizing: 'border-box',
+            borderRight: 1,
+            borderColor: 'divider',
+            height: '100vh',
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            bottom: 0,
+          },
+        }}
       >
-        {isMobile ? (
-          <Drawer
-            variant="temporary"
-            open={mobileOpen}
-            onClose={() => setMobileOpen(false)}
-            ModalProps={{ keepMounted: true }}
-            sx={{
-              display: { xs: 'block', lg: 'none' },
-              '& .MuiDrawer-paper': {
-                boxSizing: 'border-box',
-                width: DRAWER_WIDTH,
-                borderRight: 1,
-                borderColor: 'divider'
-              },
-            }}
-          >
-            {drawer}
-          </Drawer>
-        ) : (
-          <Drawer
-            variant="permanent"
-            sx={{
-              display: { xs: 'none', lg: 'block' },
-              '& .MuiDrawer-paper': {
-                boxSizing: 'border-box',
-                width: DRAWER_WIDTH,
-                borderRight: 1,
-                borderColor: 'divider'
-              },
-            }}
-            open
-          >
-            {drawer}
-          </Drawer>
-        )}
-      </Box>
+        {drawer}
+      </Drawer>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        variant="temporary"
+        open={mobileOpen}
+        onClose={() => setMobileOpen(false)}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          display: { xs: 'block', lg: 'none' },
+          '& .MuiDrawer-paper': {
+            width: DRAWER_WIDTH,
+            boxSizing: 'border-box',
+            borderRight: 1,
+            borderColor: 'divider',
+          },
+        }}
+      >
+        {drawer}
+      </Drawer>
 
       {/* Main Content */}
       <Box
+        component="main"
         sx={{
-          flex: 1,
-          display: 'flex',
-          flexDirection: 'column',
+          flexGrow: 1,
+          p: 3,
+          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          ml: { lg: `${DRAWER_WIDTH}px` },
           minHeight: '100vh',
+          bgcolor: 'background.default',
         }}
       >
-        <Header onOpenSidebarAction={() => setMobileOpen(true)} />
-        <Box
-          component="main"
-          sx={{
-            flex: 1,
-            p: 3,
-            bgcolor: 'background.default',
-          }}
-        >
-          {children}
-        </Box>
+        {children}
       </Box>
     </Box>
   )
