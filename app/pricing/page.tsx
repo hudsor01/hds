@@ -9,7 +9,7 @@ const pricingTiers = [
   {
     title: 'Free Trial',
     description: 'Perfect for evaluating our platform',
-    price: 'Free',
+    price: '$0',
     duration: '14 days',
     priceId: null,
     features: [
@@ -39,14 +39,14 @@ const pricingTiers = [
     highlighted: false
   },
   {
-    title: 'Professional',
+    title: 'Growth',
     description: 'Ideal for growing property management businesses',
-    price: '$49',
+    price: '$69',
     duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_PRO,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_GROWTH,
     features: [
       'Up to 50 properties',
-      'Everything in Starter',
+      'Everything in Core',
       'Automated rent collection',
       'Advanced financial analytics',
       'Document management',
@@ -58,14 +58,14 @@ const pricingTiers = [
     highlighted: true
   },
   {
-    title: 'Business',
+    title: 'Elite',
     description: 'For established property management companies',
-    price: '$99',
+    price: '$199',
     duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_BUSINESS,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ELITE,
     features: [
       'Up to 100 properties',
-      'Everything in Professional',
+      'Everything in Growth',
       'Advanced reporting',
       'Bulk operations',
       'Custom workflows',
@@ -78,14 +78,14 @@ const pricingTiers = [
     highlighted: false
   },
   {
-    title: 'Enterprise',
+    title: 'Unlimited',
     description: 'Full-featured solution for large property management companies',
-    price: '$199',
+    price: '$499',
     duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ENTERPRISE,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_UNLIMITED,
     features: [
       'Unlimited properties',
-      'Everything in Business',
+      'Everything in Elite',
       'Dedicated account manager',
       'Custom integrations',
       'Advanced analytics',
