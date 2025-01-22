@@ -1,30 +1,28 @@
 'use client'
 
-import {
-    Box,
-    FormControl,
-    FormGroup,
-    FormHelperText,
-    MenuItem,
-    Select,
-    Typography
-} from '@mui/material'
-import { useState } from 'react'
+import { useUserPreferences } from '@/hooks/use-user-preferences'
+import
+    {
+        Box,
+        FormControl,
+        FormGroup,
+        FormHelperText,
+        MenuItem,
+        Select,
+        Typography
+    } from '@mui/material'
 
 export function GeneralSettings() {
-  const [settings, setSettings] = useState({
-    theme: 'light',
-    language: 'en',
-    timezone: 'UTC',
-    dateFormat: 'MM/DD/YYYY'
-  })
-
-  const handleChange = (field: keyof typeof settings) => (event: any) => {
-    setSettings(prev => ({
-      ...prev,
-      [field]: event.target.value
-    }))
-  }
+  const {
+    theme,
+    language,
+    timezone,
+    dateFormat,
+    setTheme,
+    setLanguage,
+    setTimezone,
+    setDateFormat
+  } = useUserPreferences()
 
   return (
     <Box sx={{ p: 3 }}>
@@ -41,8 +39,8 @@ export function GeneralSettings() {
             Theme
           </Typography>
           <Select
-            value={settings.theme}
-            onChange={handleChange('theme')}
+            value={theme}
+            onChange={(e) => setTheme(e.target.value as typeof theme)}
             size="small"
           >
             <MenuItem value="light">Light</MenuItem>
@@ -57,8 +55,8 @@ export function GeneralSettings() {
             Language
           </Typography>
           <Select
-            value={settings.language}
-            onChange={handleChange('language')}
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
             size="small"
           >
             <MenuItem value="en">English</MenuItem>
@@ -73,8 +71,8 @@ export function GeneralSettings() {
             Timezone
           </Typography>
           <Select
-            value={settings.timezone}
-            onChange={handleChange('timezone')}
+            value={timezone}
+            onChange={(e) => setTimezone(e.target.value)}
             size="small"
           >
             <MenuItem value="UTC">UTC</MenuItem>
@@ -89,8 +87,8 @@ export function GeneralSettings() {
             Date Format
           </Typography>
           <Select
-            value={settings.dateFormat}
-            onChange={handleChange('dateFormat')}
+            value={dateFormat}
+            onChange={(e) => setDateFormat(e.target.value)}
             size="small"
           >
             <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>

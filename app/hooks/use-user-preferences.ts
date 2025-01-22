@@ -7,6 +7,7 @@ interface UserPreferences {
   dateFormat: string
   currency: string
   timezone: string
+  language: string
 }
 
 interface UserPreferencesStore extends UserPreferences {
@@ -15,6 +16,7 @@ interface UserPreferencesStore extends UserPreferences {
   setDateFormat: (format: string) => void
   setCurrency: (currency: string) => void
   setTimezone: (timezone: string) => void
+  setLanguage: (language: string) => void
 }
 
 export const useUserPreferences = create<UserPreferencesStore>()(
@@ -26,16 +28,19 @@ export const useUserPreferences = create<UserPreferencesStore>()(
       dateFormat: 'MM/DD/YYYY',
       currency: 'USD',
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      language: 'en',
 
       // Actions
       setTheme: (theme) => set({ theme }),
       setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
       setDateFormat: (format) => set({ dateFormat: format }),
       setCurrency: (currency) => set({ currency }),
-      setTimezone: (timezone) => set({ timezone })
+      setTimezone: (timezone) => set({ timezone }),
+      setLanguage: (language) => set({ language })
     }),
     {
-      name: 'user-preferences'
+      name: 'user-preferences',
+      version: 1
     }
   )
 )

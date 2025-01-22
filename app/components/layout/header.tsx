@@ -3,8 +3,8 @@
 import { Avatar, Box, IconButton, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { motion } from 'framer-motion'
-import { useTheme as useNextTheme } from 'next-themes'
-import { Bell, Menu, Moon, Search, Sun } from 'react-feather'
+import { Bell, Menu } from 'react-feather'
+import { ThemeSwitcher } from '../theme-switcher'
 
 interface HeaderProps {
   onOpenSidebarAction: () => void
@@ -22,60 +22,40 @@ const itemVariants = {
 
 export function Header({ onOpenSidebarAction }: HeaderProps) {
   const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
-  const { theme: mode, setTheme } = useNextTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
 
   return (
-    <Box
-      component={motion.div}
+    <motion.div
       variants={containerVariants}
       initial="initial"
       animate="animate"
-      sx={{
-        py: 2,
-        px: { xs: 2.5, sm: 3 },
-        bgcolor: 'background.paper',
-        borderBottom: '1px dashed',
-        borderColor: 'divider',
-      }}
     >
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 0.5, sm: 2 }}
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          px: { xs: 2, sm: 3 },
+          py: 2,
+          borderBottom: '1px solid',
+          borderColor: 'divider',
+          bgcolor: 'background.paper'
+        }}
       >
-        {/* Mobile Menu Button */}
         {isMobile && (
-          <IconButton
-            onClick={onOpenSidebarAction}
-            sx={{
-              mr: 1,
-              color: 'text.primary',
-            }}
-          >
-            <Menu />
-          </IconButton>
+          <motion.div variants={itemVariants}>
+            <IconButton
+              onClick={onOpenSidebarAction}
+              sx={{
+                width: 40,
+                height: 40,
+                color: 'text.primary'
+              }}
+            >
+              <Menu size={20} />
+            </IconButton>
+          </motion.div>
         )}
-
-        {/* Search */}
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            bgcolor: theme => alpha(theme.palette.primary.main, 0.04),
-            borderRadius: 1,
-            py: 0.5,
-            px: 1,
-          }}
-        >
-          <Search size={20} style={{ color: theme.palette.text.secondary, marginRight: 8 }} />
-          <Typography
-            variant="body2"
-            sx={{ display: { xs: 'none', sm: 'block' }, color: 'text.secondary' }}
-          >
-            Search...
-          </Typography>
-        </Box>
 
         <Box sx={{ flexGrow: 1 }} />
 
@@ -86,18 +66,7 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
         >
           {/* Theme Toggle */}
           <motion.div variants={itemVariants}>
-            <Tooltip title={mode === 'dark' ? 'Light Mode' : 'Dark Mode'}>
-              <IconButton
-                onClick={() => setTheme(mode === 'dark' ? 'light' : 'dark')}
-                sx={{
-                  width: 40,
-                  height: 40,
-                  color: 'text.primary',
-                }}
-              >
-                {mode === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-              </IconButton>
-            </Tooltip>
+            <ThemeSwitcher />
           </motion.div>
 
           {/* Notifications */}
@@ -150,7 +119,7 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
             </Box>
           </motion.div>
         </Stack>
-      </Stack>
-    </Box>
+      </Box>
+    </motion.div>
   )
 }

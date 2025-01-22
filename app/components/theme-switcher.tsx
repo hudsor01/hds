@@ -1,23 +1,32 @@
 'use client'
 
+import { IconButton, Tooltip, useTheme as useMuiTheme } from '@mui/material'
+import { motion } from 'framer-motion'
 import { useTheme } from 'next-themes'
 import { Moon, Sun } from 'react-feather'
 
-import { Button } from '@/components/ui/button'
-
 export function ThemeSwitcher() {
   const { theme, setTheme } = useTheme()
+  const muiTheme = useMuiTheme()
 
   return (
-    <Button
-      variant="ghost"
-      size="icon"
-      className="rounded-full w-10 h-10 hover:bg-gray-100 dark:hover:bg-gray-800"
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-    >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-      <span className="sr-only">Toggle theme</span>
-    </Button>
+    <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+      <Tooltip title={theme === 'dark' ? 'Light Mode' : 'Dark Mode'}>
+        <IconButton
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+          sx={{
+            width: 40,
+            height: 40,
+            color: 'text.primary',
+          }}
+        >
+          {theme === 'dark' ? (
+            <Sun size={20} />
+          ) : (
+            <Moon size={20} />
+          )}
+        </IconButton>
+      </Tooltip>
+    </motion.div>
   )
 }

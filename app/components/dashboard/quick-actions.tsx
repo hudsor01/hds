@@ -1,22 +1,24 @@
 'use client'
 
-import {
+import
+  {
     Box,
     Card,
     Stack,
     Typography,
     alpha,
     useTheme
-} from '@mui/material'
+  } from '@mui/material'
 import { motion } from 'framer-motion'
 import type { Route } from 'next'
 import Link from 'next/link'
-import {
+import
+  {
     DollarSign,
     Plus,
     Settings,
     Users
-} from 'react-feather'
+  } from 'react-feather'
 
 const actions = [
   {
