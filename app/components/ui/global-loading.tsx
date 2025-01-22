@@ -2,7 +2,7 @@
 
 import { Box, Container, Grid, Paper, Skeleton, Stack } from '@mui/material'
 
-export default function PricingLoading() {
+export function GlobalLoadingUI() {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 6, md: 8 } }}>
       <Stack spacing={4} alignItems="center" textAlign="center" maxWidth="md" mx="auto" mb={8}>
@@ -14,7 +14,7 @@ export default function PricingLoading() {
 
       <Grid container spacing={4} alignItems="stretch">
         {[0, 1, 2, 3, 4].map((index) => (
-          <Grid item xs={12} sm={6} md={index === 2 ? 12 : 6} lg={index === 2 ? 12 : 6} xl={12/5} key={index}>
+          <Grid item xs={12} sm={6} md={index === 2 ? 12 : 6} lg={12/5} key={index}>
             <Paper
               elevation={index === 2 ? 8 : 1}
               sx={{

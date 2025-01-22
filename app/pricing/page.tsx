@@ -22,11 +22,11 @@ const pricingTiers = [
     highlighted: false
   },
   {
-    title: 'Starter',
+    title: 'Core',
     description: 'For individual landlords and small portfolios',
     price: '$29',
     duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_STARTER,
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_CORE,
     features: [
       'Up to 10 properties',
       'Advanced tenant screening',
