@@ -47,11 +47,13 @@ export default function DashboardLayout({
         borderColor: 'divider',
       }}
     >
+      {/* Navigation Items */}
       <Stack
         sx={{
-          p: 3,
+          py: 3,
+          px: 2,
           flex: 1,
-          gap: 2,
+          gap: 1,
           overflowY: 'auto'
         }}
       >
@@ -73,8 +75,8 @@ export default function DashboardLayout({
                   alignItems="center"
                   sx={{
                     px: 2,
-                    py: 2,
-                    borderRadius: 2,
+                    py: 1.5,
+                    borderRadius: 1,
                     color: 'text.secondary',
                     transition: 'all 0.2s ease-in-out',
                     '&:hover': {
@@ -84,7 +86,7 @@ export default function DashboardLayout({
                     }
                   }}
                 >
-                  <Icon size={22} style={{ marginRight: '16px' }} />
+                  <Icon size={20} style={{ marginRight: '12px' }} />
                   {item.title}
                 </Stack>
               </Link>
@@ -114,9 +116,12 @@ export default function DashboardLayout({
             width: DRAWER_WIDTH,
             boxSizing: 'border-box',
             position: 'fixed',
+            top: 0,
+            left: 0,
             height: '100vh',
             bgcolor: 'background.paper',
-            border: 'none'
+            border: 'none',
+            zIndex: theme.zIndex.drawer
           },
         }}
       >
