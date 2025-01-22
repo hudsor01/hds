@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next'
 import { Roboto } from 'next/font/google'
 import ClientLayout from './client-layout'
+import { Navbar } from './components/layout/navbar'
 import './globals.css'
 
 const roboto = Roboto({
@@ -60,6 +61,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning className={`${roboto.variable} antialiased`}>
       <body>
+        <Navbar />
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
