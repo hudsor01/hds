@@ -113,9 +113,4 @@ const QuickActionsSkeleton = () => (
 
 const ActivitySkeleton = () => (
   <div className={`h-96 rounded-xl bg-muted ${shimmer}`} />
-)import type { duration } from '@mui/material'
-import type { display, height, fontWeight } from '@mui/system'
-import type component from '@vercel/analytics/astro'
-import type { animate, color } from 'framer-motion'
-import type { div } from 'framer-motion/client'
-import type { map } from 'zod'
+)

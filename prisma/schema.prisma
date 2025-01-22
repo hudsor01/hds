@@ -41,43 +41,6 @@ model schema_migrations {
   @@schema("auth")
 }
 
-model users {
-  id                          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  email                       String?
-  encrypted_password          String?
-  email_confirmed_at          DateTime? @db.Timestamptz(6)
-  invited_at                  DateTime? @db.Timestamptz(6)
-  confirmation_token          String?
-  confirmation_sent_at        DateTime? @db.Timestamptz(6)
-  recovery_token              String?
-  recovery_sent_at            DateTime? @db.Timestamptz(6)
-  email_change_token          String?
-  email_change                String?
-  email_change_sent_at        DateTime? @db.Timestamptz(6)
-  last_sign_in_at             DateTime? @db.Timestamptz(6)
-  raw_app_meta_data           Json?
-  raw_user_meta_data          Json?
-  is_super_admin              Boolean?
-  created_at                  DateTime? @db.Timestamptz(6)
-  updated_at                  DateTime? @db.Timestamptz(6)
-  phone                       String?
-  phone_confirmed_at          DateTime? @db.Timestamptz(6)
-  phone_change                String?   @default("")
-  phone_change_token          String?   @default("")
-  phone_change_sent_at        DateTime? @db.Timestamptz(6)
-  confirmed_at                DateTime? @db.Timestamptz(6)
-  email_change_confirm_status Int?      @default(0) @db.SmallInt
-  banned_until                DateTime? @db.Timestamptz(6)
-  reauthentication_token      String?   @default("")
-  reauthentication_sent_at    DateTime? @db.Timestamptz(6)
-  is_sso_user                 Boolean?  @default(false)
-  deleted_at                  DateTime? @db.Timestamptz(6)
-
-  @@index([email])
-  @@index([phone])
-  @@schema("auth")
-}
-
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model prisma_migrations {
   user_id             String    @id @db.VarChar(36)
@@ -983,7 +946,7 @@ enum userrole {
 
 model Account {
   id                 String  @id @default(cuid())
-  userId             String
+  userId             String  @db.Uuid
   type               String
   provider           String
   providerAccountId  String
@@ -995,35 +958,65 @@ model Account {
   id_token           String?  @db.Text
   session_state      String?
 
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user users @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([provider, providerAccountId])
-  @@schema("public")
+  @@schema("auth")
 }
 
 model Session {
   id           String   @id @default(cuid())
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.Uuid
   expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         users    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@schema("public")
+  @@schema("auth")
 }
 
-model User {
-  id                  String    @id @default(cuid())
-  name                String?
-  email               String?   @unique
-  emailVerified       DateTime?
-  image               String?
-  accounts            Account[]
-  sessions            Session[]
-  stripeCustomerId    String?   @unique
-  stripeSubscriptionId String?  @unique
-  subscriptionStatus  String?   @default("inactive")
+model users {
+  id                          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                       String?
+  encrypted_password          String?
+  email_confirmed_at          DateTime? @db.Timestamptz(6)
+  invited_at                  DateTime? @db.Timestamptz(6)
+  confirmation_token          String?
+  confirmation_sent_at        DateTime? @db.Timestamptz(6)
+  recovery_token             String?
+  recovery_sent_at           DateTime? @db.Timestamptz(6)
+  email_change_token         String?
+  email_change               String?
+  email_change_sent_at       DateTime? @db.Timestamptz(6)
+  last_sign_in_at            DateTime? @db.Timestamptz(6)
+  raw_app_meta_data          Json?
+  raw_user_meta_data         Json?
+  is_super_admin             Boolean?
+  created_at                 DateTime? @db.Timestamptz(6)
+  updated_at                 DateTime? @db.Timestamptz(6)
+  phone                      String?
+  phone_confirmed_at         DateTime? @db.Timestamptz(6)
+  phone_change               String?   @default("")
+  phone_change_token         String?   @default("")
+  phone_change_sent_at       DateTime? @db.Timestamptz(6)
+  confirmed_at               DateTime? @db.Timestamptz(6)
+  email_change_confirm_status Int?     @default(0) @db.SmallInt
+  banned_until               DateTime? @db.Timestamptz(6)
+  reauthentication_token     String?   @default("")
+  reauthentication_sent_at   DateTime? @db.Timestamptz(6)
+  is_sso_user                Boolean?  @default(false)
+  deleted_at                 DateTime? @db.Timestamptz(6)
+  // Subscription fields
+  stripeCustomerId          String?   @unique @map("stripe_customer_id")
+  stripeSubscriptionId      String?   @map("stripe_subscription_id")
+  subscriptionStatus        String?   @default("inactive") @map("subscription_status")
+  trialEndsAt              DateTime? @db.Timestamptz(6) @map("trial_ends_at")
+  // Relations
+  accounts                  Account[]
+  sessions                  Session[]
 
-  @@schema("public")
+  @@index([email])
+  @@index([phone])
+  @@schema("auth")
 }
 
 model VerificationToken {
@@ -1032,5 +1025,5 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
-  @@schema("public")
+  @@schema("auth")
 }

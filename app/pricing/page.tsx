@@ -1,88 +1,109 @@
-'use client'
+"use client";
 
-import { routes } from '@/routes'
-import { Button, Container, Grid, useTheme } from '@mui/material'
-import { loadStripe } from '@stripe/stripe-js'
-import { useSession } from 'next-auth/react'
-import { useRouter } from 'next/navigation'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { routes } from "@/routes";
+import { loadStripe } from "@stripe/stripe-js";
+import { Check } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "sonner";
 
 const pricingTiers = [
   {
-    title: 'Free Trial',
-    description: 'Perfect for evaluating our platform',
-    price: '$0',
-    duration: '14 days',
+    title: "Free Trial",
+    description: "Perfect for evaluating our platform",
+    price: "$0",
+    duration: "14 days",
     priceId: null,
     features: [
-      'Up to 3 properties',
-      'Basic tenant management',
-      'Simple maintenance tracking',
-      'Basic financial reporting',
-      'Email support'
+      "Up to 3 properties",
+      "Basic tenant management",
+      "Simple maintenance tracking",
+      "Basic financial reporting",
+      "Email support",
     ],
-    highlighted: false
+    highlighted: false,
+    buttonText: "Start Free Trial",
   },
   {
-    title: 'Core',
-    description: 'For individual landlords and small portfolios',
-    price: '$29',
-    duration: 'per month',
+    title: "Core",
+    description: "For individual landlords and small portfolios",
+    price: "$29",
+    duration: "per month",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_CORE,
     features: [
-      'Up to 10 properties',
-      'Advanced tenant screening',
-      'Maintenance request system',
-      'Basic financial analytics',
-      'Document storage',
-      'Email & chat support',
-      'Mobile app access'
+      "Up to 10 properties",
+      "Advanced tenant screening",
+      "Maintenance request system",
+      "Basic financial analytics",
+      "Document storage",
+      "Email & chat support",
+      "Mobile app access",
     ],
-    highlighted: false
+    highlighted: false,
+    buttonText: "Subscribe Now",
   },
   {
-    title: 'Growth',
-    description: 'Ideal for growing property management businesses',
-    price: '$69',
-    duration: 'per month',
+    title: "Growth",
+    description: "Ideal for growing property management businesses",
+    price: "$69",
+    duration: "per month",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_GROWTH,
     features: [
-      'Up to 50 properties',
-      'Everything in Core',
-      'Automated rent collection',
-      'Advanced financial analytics',
-      'Document management',
-      'Priority support',
-      'Custom branding',
-      'API access',
-      'Team collaboration'
+      "Up to 50 properties",
+      "Everything in Core",
+      "Automated rent collection",
+      "Advanced financial analytics",
+      "Document management",
+      "Priority support",
+      "Custom branding",
+      "API access",
+      "Team collaboration",
     ],
-    highlighted: true
+    highlighted: true,
+    buttonText: "Get Started",
   },
   {
-    title: 'Elite',
-    description: 'For established property management companies',
-    price: '$199',
-    duration: 'per month',
+    title: "Elite",
+    description: "For established property management companies",
+    price: "$199",
+    duration: "per month",
     priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_ELITE,
     features: [
-      'Up to 100 properties',
-      'Everything in Growth',
-      'Advanced reporting',
-      'Bulk operations',
-      'Custom workflows',
-      'Premium support',
-      'White-label options',
-      'Advanced API access',
-      'Multi-user roles',
-      'Data exports'
+      "Up to 100 properties",
+      "Everything in Growth",
+      "Advanced reporting",
+      "Bulk operations",
+      "Custom workflows",
+      "Premium support",
+      "White-label options",
+      "Advanced API access",
+      "Multi-user roles",
+      "Data exports",
     ],
-    highlighted: false
-  }
-]
+    highlighted: false,
+    buttonText: "Contact Sales",
+  },
+];
 
-const PricingCheckoutButton = ({ priceId, text }: { priceId: string | null; text: string }) => {
+const PricingCheckoutButton = ({
+  priceId,
+  text,
+  highlighted,
+}: {
+  priceId: string | null;
+  text: string;
+  highlighted: boolean;
+}) => {
   const [isLoading, setIsLoading] = useState(false);
   const { data: session } = useSession();
   const router = useRouter();
@@ -90,99 +111,151 @@ const PricingCheckoutButton = ({ priceId, text }: { priceId: string | null; text
   const handleClick = async () => {
     try {
       setIsLoading(true);
-      toast('Processing your request...');
 
+      // For Elite plan, redirect to contact page
+      if (text === "Contact Sales") {
+        router.push(routes.contact);
+        return;
+      }
+
+      // For free trial
       if (!priceId) {
         if (!session) {
           router.push(routes.auth.register);
           return;
         }
 
-        const response = await fetch('/api/subscribe/free', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+        toast.loading("Setting up your trial...");
+        const response = await fetch("/api/subscribe/free", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ trialDays: 14 }),
         });
 
         if (response.ok) {
-          router.push('/dashboard');
-          toast.success('Free trial activated! Enjoy your 14-day access.');
+          router.push("/dashboard");
+          toast.success("Free trial activated! Enjoy your 14-day access.");
+        } else {
+          const error = await response.json();
+          throw new Error(error.message || "Failed to activate trial");
         }
         return;
       }
 
+      // For paid plans
       if (!session) {
-        toast.error('Please sign in to subscribe');
+        router.push(
+          `${routes.auth.login}?callbackUrl=${encodeURIComponent("/pricing")}`,
+        );
         return;
       }
 
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      toast.loading("Preparing checkout...");
+      const response = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ priceId }),
       });
 
       const data = await response.json();
 
-      if (!response.ok) throw new Error(data.error || 'Payment processing failed');
+      if (!response.ok) {
+        throw new Error(data.error || "Payment processing failed");
+      }
 
       if (data.url) {
         window.location.href = data.url;
       } else if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+        const stripe = await loadStripe(
+          process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
+        );
         await stripe?.redirectToCheckout({ sessionId: data.sessionId });
       }
     } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+      console.error("Checkout error:", error);
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Payment failed. Please try again.",
+      );
     } finally {
       setIsLoading(false);
+      toast.dismiss();
     }
   };
 
   return (
     <Button
-      variant={priceId ? 'contained' : 'outlined'}
-      size="large"
+      variant={highlighted ? "default" : "outline"}
+      size="lg"
       onClick={handleClick}
       disabled={isLoading}
-      fullWidth
-      sx={{
-        mt: 2,
-        fontWeight: 600,
-        ...(priceId && {
-          bgcolor: 'primary.main',
-          '&:hover': { bgcolor: 'primary.dark' }
-        })
-      }}
+      className={`w-full mt-4 font-semibold ${
+        highlighted ? "bg-blue-500 hover:bg-blue-600 text-white" : ""
+      }`}
     >
-      {isLoading ? 'Processing...' : text}
+      {isLoading ? "Processing..." : text}
     </Button>
   );
 };
 
 export default function PricingPage() {
-  const theme = useTheme()
-
   return (
-    <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 6, md: 8 } }}>
-      <Grid container spacing={3}>
+    <section className="py-16 container">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold font-roboto text-blue-500 mb-4">
+          Simple, Transparent Pricing
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Choose the perfect plan for your property management needs
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
         {pricingTiers.map((tier) => (
-          <Grid key={tier.title} xs={12} sm={6} md={4}>
-            {tier.priceId ? (
+          <Card
+            key={tier.title}
+            className={`relative ${
+              tier.highlighted
+                ? "border-blue-500 shadow-lg ring-2 ring-blue-500"
+                : "border-border hover:border-blue-200"
+            }`}
+          >
+            {tier.highlighted && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  Most Popular
+                </span>
+              </div>
+            )}
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">{tier.title}</CardTitle>
+              <CardDescription>{tier.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <span className="text-4xl font-bold">{tier.price}</span>
+                <span className="text-muted-foreground">/{tier.duration}</span>
+              </div>
+              <ul className="space-y-3">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2">
+                    <Check className="h-4 w-4 text-blue-500" />
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+            <CardFooter>
               <PricingCheckoutButton
                 priceId={tier.priceId ?? null}
-                text={tier.highlighted ? 'Subscribe' : 'Start Free Trial'}
+                text={tier.buttonText}
+                highlighted={tier.highlighted}
               />
-            ) : (
-              <PricingCheckoutButton
-                priceId={null}
-                text={tier.title}
-              />
-            )}
-          </Grid>
+            </CardFooter>
+          </Card>
         ))}
-      </Grid>
-    </Container>
-  )
+      </div>
+    </section>
+  );
 }

@@ -3,6 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
     "dev": "next dev",
@@ -78,6 +80,7 @@
     "@next/eslint-plugin-next": "^15.1.6",
     "@tailwindcss/typography": "^0.5.16",
     "@testing-library/dom": "^10.4.0",
+    "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/next": "^9.0.0",
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
@@ -91,6 +94,8 @@
     "globals": "^15.14.0",
     "postcss": "^8.5.1",
     "postcss-nesting": "^13.0.1",
+    "prettier": "^3.4.2",
+    "prettier-plugin-tailwindcss": "^0.6.10",
     "prisma": "^6.2.1",
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"

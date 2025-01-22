@@ -1,0 +1,13 @@
+# .prettierignore
+.next
+node_modules
+dist
+coverage
+*.md
+*.sql
+*.json
+*.yml
+*.html
+*.lock
+public
+.DS_Store
