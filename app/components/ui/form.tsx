@@ -1,7 +1,11 @@
-'use client'
+'use client';
 
 import { cn } from "@/lib/utils"
+import { Box, FormHelperText, InputLabel, TextField, Typography } from "@mui/material"
+import { styled } from '@mui/material/styles'
+import type { JSX } from 'react'
 import * as React from "react"
+import { Loader } from 'react-feather'
 import
   {
     Controller,
@@ -9,22 +13,21 @@ import
     type FieldPath,
     type FieldValues,
     FormProvider,
+    FormProviderProps,
     useFormContext,
+    useFormState
   } from "react-hook-form"
-import { Label } from "./label"
-
-const Form = FormProvider
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > = {
-  name: TName
-}
+  name: TName;
+};
 
 const FormFieldContext = React.createContext<FormFieldContextValue>(
   {} as FormFieldContextValue
-)
+);
 
 const FormField = <
   TFieldValues extends FieldValues = FieldValues,
@@ -36,21 +39,21 @@ const FormField = <
     <FormFieldContext.Provider value={{ name: props.name }}>
       <Controller {...props} />
     </FormFieldContext.Provider>
-  )
-}
+  );
+};
 
 const useFormField = () => {
-  const fieldContext = React.useContext(FormFieldContext)
-  const itemContext = React.useContext(FormItemContext)
-  const { getFieldState, formState } = useFormContext()
-
-  const fieldState = getFieldState(fieldContext.name, formState)
+  const fieldContext = React.useContext(FormFieldContext);
+  const itemContext = React.useContext(FormItemContext);
+  const { getFieldState, formState, control } = useFormContext();
+  const fieldState = getFieldState(fieldContext.name, formState);
+  const { isSubmitting } = useFormState({ control });
 
   if (!fieldContext) {
-    throw new Error("useFormField should be used within <FormField>")
+    throw new Error("useFormField should be used within <FormField>");
   }
 
-  const { id } = itemContext
+  const { id } = itemContext;
 
   return {
     id,
@@ -58,115 +61,177 @@ const useFormField = () => {
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
+    isSubmitting,
     ...fieldState,
-  }
-}
+  };
+};
 
 type FormItemContextValue = {
-  id: string
-}
+  id: string;
+};
 
 const FormItemContext = React.createContext<FormItemContextValue>(
   {} as FormItemContextValue
-)
+);
+
+const StyledFormItem = styled(Box)(({ theme }) => ({
+  marginBottom: theme.spacing(3),
+  '& .MuiFormControl-root': {
+    width: '100%'
+  }
+}));
 
 const FormItem = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => {
-  const id = React.useId()
-
+  React.ComponentProps<typeof Box> & {
+    orientation?: "vertical" | "horizontal";
+  }
+>(({ className, orientation = "vertical", ...props }, ref) => {
+  const id = React.useId();
   return (
     <FormItemContext.Provider value={{ id }}>
-      <div ref={ref} className={cn("space-y-2", className)} {...props} />
+      <StyledFormItem
+        ref={ref}
+        className={cn(
+          orientation === "horizontal" && "flex items-center gap-4",
+          className
+        )}
+        {...props}
+      />
     </FormItemContext.Provider>
-  )
-})
-FormItem.displayName = "FormItem"
+  );
+});
+FormItem.displayName = "FormItem";
 
 const FormLabel = React.forwardRef<
-  React.ElementRef<typeof LabelPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof LabelPrimitive.Root>
->(({ className, ...props }, ref) => {
-  const { error, formItemId } = useFormField()
-
+  HTMLLabelElement,
+  React.ComponentProps<typeof InputLabel> & {
+    required?: boolean;
+    optional?: boolean;
+  }
+>(({ className, required, optional, ...props }, ref) => {
+  const { error, formItemId, isSubmitting } = useFormField();
   return (
-    <Label
+    <InputLabel
       ref={ref}
-      className={cn(error && "text-destructive", className)}
       htmlFor={formItemId}
+      className={cn(
+        error && "text-error",
+        isSubmitting && "opacity-50",
+        className
+      )}
       {...props}
-    />
-  )
-})
-FormLabel.displayName = "FormLabel"
+    >
+      {props.children}
+      {required && <span className="text-error ml-1">*</span>}
+      {optional && (
+        <span className="text-gray-500 ml-1 text-sm">(optional)</span>
+      )}
+    </InputLabel>
+  );
+});
+FormLabel.displayName = "FormLabel";
 
 const FormControl = React.forwardRef<
-  React.ElementRef<typeof Slot>,
-  React.ComponentPropsWithoutRef<typeof Slot>
->(({ ...props }, ref) => {
-  const { error, formItemId, formDescriptionId, formMessageId } = useFormField()
+  HTMLDivElement,
+  React.ComponentProps<typeof TextField> & {
+    isLoading?: boolean;
+  }
+>(({ children, isLoading, disabled, ...props }, ref) => {
+  const { error, formItemId, formDescriptionId, formMessageId, isSubmitting } =
+    useFormField();
 
   return (
-    <Slot
-      ref={ref}
-      id={formItemId}
-      aria-describedby={
-        !error
-          ? `${formDescriptionId}`
-          : `${formDescriptionId} ${formMessageId}`
-      }
-      aria-invalid={!!error}
-      {...props}
-    />
-  )
-})
-FormControl.displayName = "FormControl"
+    <div className="relative">
+      <TextField
+        ref={ref}
+        id={formItemId}
+        error={!!error}
+        disabled={isSubmitting || disabled}
+        helperText={error?.message}
+        fullWidth
+        {...props}
+      />
+      {isLoading && (
+        <div className="absolute right-3 top-1/2 -translate-y-1/2">
+          <Loader className="h-4 w-4 animate-spin text-gray-400" />
+        </div>
+      )}
+    </div>
+  );
+});
+FormControl.displayName = "FormControl";
 
 const FormDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => {
-  const { formDescriptionId } = useFormField()
-
+  const { formDescriptionId } = useFormField();
   return (
-    <p
+    <FormHelperText
       ref={ref}
       id={formDescriptionId}
-      className={cn("text-[0.8rem] text-muted-foreground", className)}
+      className={cn(
+        "text-sm text-gray-500 transition-opacity",
+        className
+      )}
       {...props}
     />
-  )
-})
-FormDescription.displayName = "FormDescription"
+  );
+});
+FormDescription.displayName = "FormDescription";
 
 const FormMessage = React.forwardRef<
   HTMLParagraphElement,
-  React.HTMLAttributes<HTMLParagraphElement>
->(({ className, children, ...props }, ref) => {
-  const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message) : children
-
-  if (!body) {
-    return null
+  React.HTMLAttributes<HTMLParagraphElement> & {
+    renderError?: (error: string) => React.ReactNode;
   }
+>(({ className, children, renderError, ...props }, ref) => {
+  const { error, formMessageId } = useFormField();
+  const body = error?.message ? String(error.message) : children;
+
+  if (!body) return null;
 
   return (
-    <p
+    <Typography
       ref={ref}
+      color="error"
+      variant="body2"
       id={formMessageId}
-      className={cn("text-[0.8rem] font-medium text-destructive", className)}
+      className={cn("animate-in fade-in", className)}
       {...props}
     >
-      {body}
-    </p>
-  )
-})
-FormMessage.displayName = "FormMessage"
+      {renderError ? renderError(String(body)) : body}
+    </Typography>
+  );
+});
+FormMessage.displayName = "FormMessage";
+
+const FormSubmitButton = styled('button')(({ theme }) => ({
+  position: 'relative',
+  padding: theme.spacing(1.5, 3),
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  '&:disabled': {
+    opacity: 0.7,
+    cursor: 'not-allowed'
+  }
+}));
+
+const Form = FormProvider as <TFieldValues extends FieldValues>(
+  props: FormProviderProps<TFieldValues>
+) => JSX.Element;
 
 export
 {
-  Form, FormControl,
-  FormDescription, FormField, FormItem,
-  FormLabel, FormMessage, useFormField
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+  FormSubmitButton,
+  useFormField
 }

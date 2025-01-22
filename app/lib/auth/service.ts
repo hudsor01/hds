@@ -1,24 +1,17 @@
-import { prisma } from "@/lib/prisma"
-import { nanoid } from "nanoid"
+import { prisma } from '@/lib/prisma'
+import type { sessions as Session } from '@prisma/client'
+import { nanoid } from 'nanoid'
 import { UAParser } from 'ua-parser-js'
 
-export interface Session {
-  id: string
-  user_id: string
-  session_token: string
-  expires: Date
-  last_active: Date
-  is_revoked: boolean
-  device: string | null
-  browser: string | null
-  operating_system: string | null
-  ip_address: string | null
-  created_at: Date
-  updated_at: Date
-}
+export type { Session }
 
 export class AuthService {
   private readonly SESSION_DURATION = 24 * 60 * 60 * 1000 // 24 hours
+
+  static async setupTwoFactor(userId: string): Promise<{ secret: string; qrCode: string }> {
+    // Implementation will be added later
+    throw new Error('Not implemented')
+  }
 
   async createSession(
     userId: string,

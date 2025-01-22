@@ -33,6 +33,12 @@ export const routes = {
     view: (id: string) => `/dashboard/documents/${id}` as Route,
     edit: (id: string) => `/dashboard/documents/${id}/edit` as Route,
   },
+  finances: {
+    index: '/dashboard/finances' as Route,
+    new: '/dashboard/finances/new' as Route,
+    view: (id: string) => `/dashboard/finances/${id}` as Route,
+    edit: (id: string) => `/dashboard/finances/${id}/edit` as Route,
+  },
   settings: '/dashboard/settings' as Route,
   auth: {
     login: '/auth/login' as Route,

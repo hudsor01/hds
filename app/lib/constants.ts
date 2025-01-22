@@ -1,4 +1,4 @@
-import { Home, Settings, Users } from 'react-feather'
+import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather'
 import { routes } from '../routes'
 
 export const USER_ROLES = {
@@ -31,12 +31,15 @@ export const PRIORITY_LEVELS = {
 
 export type PriorityLevel = typeof PRIORITY_LEVELS[keyof typeof PRIORITY_LEVELS]
 
-export const NAVIGATION_LINKS = [
-  { name: 'Home', href: routes.dashboard, icon: Home },
-  { name: 'Properties', href: routes.properties.index, icon: Home },
+export const navItems = [
+  { name: 'Dashboard', href: routes.dashboard, icon: Home },
+  { name: 'Properties', href: routes.properties.index, icon: Box },
   { name: 'Tenants', href: routes.tenants.index, icon: Users },
+  { name: 'Documents', href: routes.documents.index, icon: FileText },
+  { name: 'Finances', href: routes.finances.index, icon: DollarSign },
+  { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
   { name: 'Settings', href: routes.settings, icon: Settings },
-] as const
+]
 
 export const ACTIVITY_FILTERS = [
   { value: 'ALL', label: 'All' },

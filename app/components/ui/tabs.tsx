@@ -1,91 +1,136 @@
-'use client'
+'use client';
 
-import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material'
+import { Box, Tab as MuiTab, Tabs as MuiTabs, SxProps, Theme } from '@mui/material'
 import { styled } from '@mui/material/styles'
-import * as React from 'react'
+import { forwardRef, ReactElement, ReactNode, SyntheticEvent } from 'react'
 
 interface TabPanelProps {
-  children?: React.ReactNode
-  index: number
-  value: number
+  children?: ReactNode;
+  index: number;
+  value: number;
+  className?: string;
+  sx?: SxProps<Theme>;
+  keepMounted?: boolean;
 }
 
-function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props
-
+const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(
+  { children, value, index, keepMounted = false, ...props },
+  ref,
+) {
   return (
     <div
+      ref={ref}
       role="tabpanel"
-      hidden={value !== index}
+      hidden={!keepMounted && value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
-      {...other}
+      {...props}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {children}
-        </Box>
+      {(keepMounted || value === index) && (
+        <Box sx={{ p: 3, ...props.sx }}>{children}</Box>
       )}
     </div>
-  )
-}
+  );
+});
 
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({
-  borderBottom: `1px solid ${theme.palette.divider}`,
   '& .MuiTabs-indicator': {
     backgroundColor: theme.palette.primary.main,
+    height: 3,
   },
-}))
+  '& .MuiTabs-scrollButtons': {
+    width: 48,
+  },
+}));
 
 const StyledTab = styled(MuiTab)(({ theme }) => ({
   textTransform: 'none',
   minWidth: 0,
-  padding: '12px 16px',
-  marginRight: theme.spacing(4),
+  minHeight: 48,
+  padding: theme.spacing(1, 2),
+  margin: theme.spacing(0, 1),
   color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
+  transition: theme.transitions.create(['color'], {
+    duration: theme.transitions.duration.short,
+  }),
   '&:hover': {
     color: theme.palette.text.primary,
-    opacity: 1,
   },
   '&.Mui-selected': {
     color: theme.palette.primary.main,
     fontWeight: theme.typography.fontWeightMedium,
   },
-}))
+  '&.Mui-focusVisible': {
+    backgroundColor: theme.palette.action.focus,
+  },
+}));
 
-interface TabsProps {
-  value: number
-  onChange: (event: React.SyntheticEvent, newValue: number) => void
-  items: { label: string; content: React.ReactNode }[]
+interface TabItem {
+  label: string;
+  content: ReactNode;
+  disabled?: boolean;
+  icon?: ReactElement;
+  iconPosition?: 'start' | 'end' | 'top';
 }
 
-export function Tabs({ value, onChange, items }: TabsProps) {
+interface TabsProps {
+  value: number;
+  onChangeAction: (event: SyntheticEvent, newValue: number) => void;
+  items: TabItem[];
+  variant?: 'standard' | 'scrollable' | 'fullWidth';
+  centered?: boolean;
+  keepMounted?: boolean;
+  sx?: SxProps<Theme>;
+  tabPanelSx?: SxProps<Theme>;
+  className?: string;
+}
+
+export function Tabs({
+  value,
+  onChangeAction,
+  items,
+  variant = 'standard',
+  centered = false,
+  keepMounted = false,
+  sx,
+  tabPanelSx,
+  className,
+}: TabsProps) {
   return (
-    <Box sx={{ width: '100%' }}>
-      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-        <StyledTabs
-          value={value}
-          onChange={onChange}
-          aria-label="tabs"
-          variant="scrollable"
-          scrollButtons="auto"
-        >
-          {items.map((item, index) => (
-            <StyledTab
-              key={index}
-              label={item.label}
-              id={`tab-${index}`}
-              aria-controls={`tabpanel-${index}`}
-            />
-          ))}
-        </StyledTabs>
-      </Box>
+    <Box sx={{ width: '100%', ...sx }} className={className}>
+      <StyledTabs
+        value={value}
+        onChange={onChangeAction}
+        variant={variant}
+        centered={centered}
+        scrollButtons={variant === 'scrollable' ? 'auto' : undefined}
+        aria-label="tabs navigation"
+      >
+        {items.map((item, index) => (
+          <StyledTab
+            key={index}
+            label={item.label}
+            id={`tab-${index}`}
+            aria-controls={`tabpanel-${index}`}
+            disabled={item.disabled}
+            icon={item.icon}
+            iconPosition={item.iconPosition}
+          />
+        ))}
+      </StyledTabs>
+
       {items.map((item, index) => (
-        <TabPanel key={index} value={value} index={index}>
+        <TabPanel
+          key={index}
+          value={value}
+          index={index}
+          keepMounted={keepMounted}
+          sx={tabPanelSx}
+        >
           {item.content}
         </TabPanel>
       ))}
     </Box>
-  )
+  );
 }

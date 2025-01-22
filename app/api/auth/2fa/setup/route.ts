@@ -1,10 +1,10 @@
-import { authService } from '@/lib/auth/service'
+import { AuthService } from '@/lib/auth/service'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
   try {
     const _userId = '123' // Placeholder until auth is implemented
-    const { secret, qrCode } = await authService.setupTwoFactor(_userId)
+    const { secret, qrCode } = await AuthService.setupTwoFactor(_userId)
     return NextResponse.json({ secret, qrCode })
   } catch (error) {
     return NextResponse.json(

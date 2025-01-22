@@ -1,24 +1,19 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import {
-  BuildingOffice2Icon,
-  Cog6ToothIcon,
-  CurrencyDollarIcon,
-  DocumentTextIcon,
-  HomeIcon,
-  UsersIcon,
-} from '@heroicons/react/24/outline'
+import { routes } from '@/routes'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather'
 
 const navigation = [
-  { name: 'Dashboard', href: { pathname: '/dashboard' }, icon: HomeIcon },
-  { name: 'Properties', href: { pathname: '/dashboard/properties' }, icon: BuildingOffice2Icon },
-  { name: 'Tenants', href: { pathname: '/dashboard/tenants' }, icon: UsersIcon },
-  { name: 'Documents', href: { pathname: '/dashboard/documents' }, icon: DocumentTextIcon },
-  { name: 'Finances', href: { pathname: '/dashboard/finances' }, icon: CurrencyDollarIcon },
-  { name: 'Settings', href: { pathname: '/dashboard/settings' }, icon: Cog6ToothIcon },
+  { name: 'Dashboard', href: routes.dashboard, icon: Home },
+  { name: 'Properties', href: routes.properties.index, icon: Box },
+  { name: 'Tenants', href: routes.tenants.index, icon: Users },
+  { name: 'Documents', href: routes.documents.index, icon: FileText },
+  { name: 'Finances', href: routes.finances.index, icon: DollarSign },
+  { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
+  { name: 'Settings', href: routes.settings, icon: Settings },
 ]
 
 export function DashboardSidebar() {
@@ -29,24 +24,22 @@ export function DashboardSidebar() {
       <div className="flex flex-1 flex-col overflow-y-auto">
         <nav className="flex-1 space-y-1 px-2 py-4">
           {navigation.map((item) => {
-            const isActive = pathname === item.href.pathname
+            const isActive = pathname === item.href
             return (
               <Link
                 key={item.name}
                 href={item.href}
                 className={cn(
                   isActive
-                    ? 'bg-gray-100 text-gray-900'
-                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                  'group flex items-center rounded-md px-2 py-2 text-sm font-medium'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground',
+                  'group flex items-center rounded-md px-3 py-2 text-sm font-medium'
                 )}
               >
                 <item.icon
                   className={cn(
-                    isActive
-                      ? 'text-gray-500'
-                      : 'text-gray-400 group-hover:text-gray-500',
-                    'mr-3 h-5 w-5 flex-shrink-0'
+                    'mr-3 h-5 w-5',
+                    isActive ? 'text-primary' : 'text-muted-foreground group-hover:text-foreground'
                   )}
                   aria-hidden="true"
                 />

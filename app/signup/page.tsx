@@ -1,270 +1,311 @@
 'use client'
 
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import Link from "next/link"
-import { useState } from "react"
-import { Home, Lock, Mail, User } from "react-feather"
+import { routes } from '@/routes'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Eye, EyeOff, Loader } from 'react-feather'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { InputGroup, InputRightElement } from '../components/ui/input-group'
 
-export default function SignUpPage() {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState("")
+const registerSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+  password: z
+    .string()
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+    .regex(/[0-9]/, 'Password must contain at least one number')
+    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+  confirmPassword: z.string()
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "Passwords don't match",
+  path: ['confirmPassword']
+})
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
-    setError("")
+type FormData = z.infer<typeof registerSchema>
 
-    const formData = new FormData(e.currentTarget)
-    const data = {
-      firstName: formData.get("firstName"),
-      lastName: formData.get("lastName"),
-      email: formData.get("email"),
-      companyName: formData.get("companyName"),
-      password: formData.get("password"),
-      confirmPassword: formData.get("confirmPassword"),
+export default function RegisterPage(): React.ReactElement {
+  const router = useRouter()
+  const [isPending, setIsPending] = useState(false)
+  const [passwordStrength, setPasswordStrength] = useState(0)
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm<FormData>({
+    resolver: zodResolver(registerSchema),
+    defaultValues: {
+      name: '',
+      email: '',
+      password: '',
+      confirmPassword: ''
     }
+  })
 
-    try {
-      // Validate passwords match
-      if (data.password !== data.confirmPassword) {
-        throw new Error("Passwords do not match")
-      }
+  const password = watch('password')
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
+  // Calculate password strength
+  const calculatePasswordStrength = (password: string): number => {
+    let score = 0
+    if (!password) return 0
 
-      // Add your registration logic here
-      console.log("Registration attempt:", data)
+    // Length check
+    if (password.length >= 8) score += 20
+    if (password.length >= 12) score += 20
 
-      // Redirect to dashboard on success
-      window.location.href = "/dashboard"
-    } catch (_err) {
-      setError('Failed to create account')
-    } finally {
-      setIsLoading(false)
-    }
+    // Character type checks
+    if (/[A-Z]/.test(password)) score += 20
+    if (/[0-9]/.test(password)) score += 20
+    if (/[^A-Za-z0-9]/.test(password)) score += 20
+
+    setPasswordStrength(score)
+    return score
   }
 
-  const handleGoogleSignUp = async () => {
-    setIsLoading(true)
+  // Update password strength when password changes
+  useEffect(() => {
+    calculatePasswordStrength(password)
+  }, [password])
+
+  const onSubmit = async (data: FormData): Promise<void> => {
     try {
-      // Simulate Google Sign Up
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      // Add your Google authentication logic here
-      window.location.href = "/dashboard"
-    } catch (err) {
-      setError("Google sign up failed")
+      setIsPending(true)
+      const response = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+      })
+
+      const responseData = await response.json()
+
+      if (!response.ok) {
+        throw new Error(responseData.error || 'Something went wrong!')
+      }
+
+      toast.success('Registration successful! Please check your email to verify your account.')
+      router.push(routes.auth.verifyEmail)
+
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        toast.error(error.message)
+      } else {
+        toast.error('An unexpected error occurred')
+      }
     } finally {
-      setIsLoading(false)
+      setIsPending(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
+    <div className="container mx-auto flex min-h-screen flex-col items-center justify-center px-4">
       <div className="w-full max-w-md space-y-8">
-        {/* Logo and Title */}
         <div className="text-center">
-          <div className="w-12 h-12 bg-blue-600 rounded-xl mx-auto mb-4" />
-          <h1 className="text-2xl font-bold">Create your account</h1>
-          <p className="text-gray-500 mt-2">
-            Start managing your properties today
+          <h1 className="text-2xl font-semibold tracking-tight">
+            Create an account
+          </h1>
+          <p className="mt-2 text-sm text-gray-600">
+            Enter your details below to create your account
           </p>
         </div>
 
-        {/* Sign Up Form */}
-        <Card className="p-6">
-          {/* Google Sign Up */}
-          <Button
-            type="button"
-            className="w-full mb-6 relative"
-            onClick={handleGoogleSignUp}
-            disabled={isLoading}
-          >
-            <div className="absolute left-4 top-1/2 -translate-y-1/2">
-              <svg className="h-4 w-4" viewBox="0 0 24 24">
-                <path
-                  d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                  fill="#4285F4"
-                />
-                <path
-                  d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                  fill="#34A853"
-                />
-                <path
-                  d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"
-                  fill="#FBBC05"
-                />
-                <path
-                  d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"
-                  fill="#EA4335"
-                />
-              </svg>
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            <div className="form-control w-full">
+              <label htmlFor="name" className="label">
+                <span className="label-text">Full Name</span>
+              </label>
+              <input
+                id="name"
+                type="text"
+                placeholder="John Doe"
+                className={`input input-bordered w-full ${errors.name ? 'input-error' : ''}`}
+                disabled={isPending}
+                {...register('name')}
+              />
+              {errors.name && (
+                <div className="mt-1 text-sm text-error">
+                  {errors.name.message}
+                </div>
+              )}
             </div>
-            Sign up with Google
-          </Button>
 
-          <div className="relative mb-6">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-200" />
+            <div className="form-control w-full">
+              <label htmlFor="email" className="label">
+                <span className="label-text">Email</span>
+              </label>
+              <input
+                id="email"
+                type="email"
+                placeholder="name@example.com"
+                className={`input input-bordered w-full ${errors.email ? 'input-error' : ''}`}
+                disabled={isPending}
+                {...register('email')}
+              />
+              {errors.email && (
+                <div className="mt-1 text-sm text-error">
+                  {errors.email.message}
+                </div>
+              )}
             </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="bg-white px-4 text-gray-500">or continue with</span>
+
+            <div className="form-control w-full">
+              <label htmlFor="password" className="label">
+                <span className="label-text">Password</span>
+              </label>
+              <InputGroup>
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  className={`input input-bordered w-full ${errors.password ? 'input-error' : ''}`}
+                  disabled={isPending}
+                  {...register('password')}
+                />
+                <InputRightElement>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => setShowPassword(!showPassword)}
+                  >
+                    {showPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </InputRightElement>
+              </InputGroup>
+              {password && (
+                <div className="mt-2">
+                  <progress
+                    className={`progress w-full ${
+                      passwordStrength >= 80 ? 'progress-success' :
+                      passwordStrength >= 60 ? 'progress-warning' :
+                      'progress-error'
+                    }`}
+                    value={passwordStrength}
+                    max="100"
+                  />
+                  <p className="mt-1 text-xs text-gray-600">
+                    Password strength: {
+                      passwordStrength >= 80 ? 'Strong' :
+                      passwordStrength >= 60 ? 'Good' :
+                      passwordStrength >= 40 ? 'Fair' :
+                      'Weak'
+                    }
+                  </p>
+                </div>
+              )}
+              {errors.password && (
+                <div className="mt-1 text-sm text-error">
+                  {errors.password.message}
+                </div>
+              )}
+            </div>
+
+            <div className="form-control w-full">
+              <label htmlFor="confirmPassword" className="label">
+                <span className="label-text">Confirm Password</span>
+              </label>
+              <InputGroup>
+                <input
+                  id="confirmPassword"
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  placeholder="••••••••"
+                  className={`input input-bordered w-full ${errors.confirmPassword ? 'input-error' : ''}`}
+                  disabled={isPending}
+                  {...register('confirmPassword')}
+                />
+                <InputRightElement>
+                  <button
+                    type="button"
+                    className="btn btn-ghost btn-sm"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  >
+                    {showConfirmPassword ? (
+                      <EyeOff className="h-4 w-4" />
+                    ) : (
+                      <Eye className="h-4 w-4" />
+                    )}
+                  </button>
+                </InputRightElement>
+              </InputGroup>
+              {errors.confirmPassword && (
+                <div className="mt-1 text-sm text-error">
+                  {errors.confirmPassword.message}
+                </div>
+              )}
             </div>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <Label htmlFor="firstName">First Name</Label>
-                <div className="mt-1 relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    id="firstName"
-                    name="firstName"
-                    type="text"
-                    required
-                    className="pl-10"
-                    placeholder="John"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <Label htmlFor="lastName">Last Name</Label>
-                <div className="mt-1 relative">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <User className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <Input
-                    id="lastName"
-                    name="lastName"
-                    type="text"
-                    required
-                    className="pl-10"
-                    placeholder="Doe"
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="email">Email</Label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-gray-400" />
-                </div>
-                <Input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="pl-10"
-                  placeholder="john@example.com"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="companyName">Company Name (Optional)</Label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Home className="h-5 w-5 text-gray-400" />
-                </div>
-                <Input
-                  id="companyName"
-                  name="companyName"
-                  type="text"
-                  className="pl-10"
-                  placeholder="Your Company LLC"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="password">Password</Label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <Input
-                  id="password"
-                  name="password"
-                  type="password"
-                  required
-                  className="pl-10"
-                  placeholder="Create a password"
-                />
-              </div>
-            </div>
-
-            <div>
-              <Label htmlFor="confirmPassword">Confirm Password</Label>
-              <div className="mt-1 relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-gray-400" />
-                </div>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type="password"
-                  required
-                  className="pl-10"
-                  placeholder="Confirm your password"
-                />
-              </div>
-            </div>
-
-            {error && (
-              <div className="text-sm text-red-500 text-center">
-                {error}
-              </div>
+          <button
+            type="submit"
+            className={`btn btn-primary w-full ${isPending ? 'loading' : ''}`}
+            disabled={isPending}
+          >
+            {isPending ? (
+              <>
+                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                Creating account...
+              </>
+            ) : (
+              'Create account'
             )}
+          </button>
+        </form>
 
-            <div className="flex items-center">
-              <input
-                id="terms"
-                name="terms"
-                type="checkbox"
-                required
-                className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-              />
-              <label htmlFor="terms" className="ml-2 block text-sm text-gray-900">
-                I agree to the{" "}
-                <Link href={{ pathname: "/terms" }} className="text-blue-600 hover:text-blue-500">
-                  Terms of Service
-                </Link>{" "}
-                and{" "}
-                <Link href={{ pathname: "/privacy" }} className="text-blue-600 hover:text-blue-500">
-                  Privacy Policy
-                </Link>
-              </label>
-            </div>
+        <div className="relative">
+          <div className="absolute inset-0 flex items-center">
+            <span className="w-full border-t" />
+          </div>
+          <div className="relative flex justify-center text-xs uppercase">
+            <span className="bg-background px-2 text-muted-foreground">
+              Or continue with
+            </span>
+          </div>
+        </div>
 
-            <Button
-              type="submit"
-              className="w-full bg-blue-600 hover:bg-blue-700"
-              disabled={isLoading}
-            >
-              {isLoading ? "Creating account..." : "Create account"}
-            </Button>
-          </form>
-        </Card>
+        <div className="grid grid-cols-2 gap-4">
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            disabled={isPending}
+          >
+            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+            </svg>
+            GitHub
+          </button>
+          <button
+            type="button"
+            className="btn btn-outline btn-sm"
+            disabled={isPending}
+          >
+            <svg className="mr-2 h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/>
+            </svg>
+            Google
+          </button>
+        </div>
 
-        {/* Sign In Link */}
-        <p className="text-center text-sm">
-          Already have an account?{" "}
-          <Link
-            href={{ pathname: "/login" }}
-            className="font-medium text-blue-600 hover:text-blue-500"
+        <p className="text-center text-sm text-gray-600">
+          Already have an account?{' '}
+          <button
+            type="button"
+            className="text-primary hover:underline"
+            onClick={() => router.push('/auth/login')}
           >
             Sign in
-          </Link>
+          </button>
         </p>
       </div>
     </div>

@@ -1,32 +1,33 @@
 'use client'
 
+import type { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
-import { Home, Menu as MenuIcon } from 'react-feather'
+import { FileText, Home, Menu as MenuIcon, Settings, Users } from 'react-feather'
 
-import { PreferencesMenu } from '../components/preferences-menu'
-import { ThemeSwitcher } from '../components/theme-switcher'
-import { Button } from '../components/ui/button'
-import { Sheet, SheetContent, SheetTrigger } from '../components/ui/sheet'
-import { Toaster } from '../components/ui/toaster'
-import { usePerformance } from '../hooks/use-performance'
-import { usePreferencesSync } from '../hooks/use-preferences-sync'
-import { cn } from '../lib/utils'
-import { routes } from '../routes'
+import { PreferencesMenu } from '@/components/preferences-menu'
+import { ThemeSwitcher } from '@/components/theme-switcher'
+import { Button } from '@/components/ui/button'
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
+import { Toaster } from '@/components/ui/toaster'
+import { usePerformance } from '@/hooks/use-performance'
+import { usePreferencesSync } from '@/hooks/use-preferences-sync'
+import { cn } from '@/lib/utils'
+import { routes } from '@/routes'
 
 interface NavigationItem {
   name: string
-  href: string
-  icon: React.ComponentType<{ className?: string }>
+  href: Route
+  icon?: React.ComponentType<{ className?: string }>
 }
 
-const navigationItems: NavigationItem[] = [
+const navigation: NavigationItem[] = [
   { name: 'Dashboard', href: routes.dashboard, icon: Home },
   { name: 'Properties', href: routes.properties.index, icon: Home },
-  { name: 'Tenants', href: routes.tenants.index, icon: Home },
-  { name: 'Analytics', href: routes.dashboard + '/analytics', icon: Home },
-  { name: 'Settings', href: routes.settings, icon: Home },
+  { name: 'Tenants', href: routes.tenants.index, icon: Users },
+  { name: 'Documents', href: routes.documents.index, icon: FileText },
+  { name: 'Settings', href: routes.settings, icon: Settings },
 ]
 
 interface AuthenticatedLayoutProps {
@@ -53,18 +54,20 @@ export default function AuthenticatedLayout({ children }: AuthenticatedLayoutPro
         </SheetTrigger>
         <SheetContent position="left" className="w-[300px] sm:w-[400px]">
           <nav className="flex flex-col space-y-4">
-            {navigationItems.map((item) => (
+            {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
                   'flex items-center space-x-2 rounded-lg px-3 py-2 text-sm transition-colors',
                   pathname === item.href
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-accent'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
-                <item.icon className="h-4 w-4" />
+                {item.icon && (
+                  <item.icon className="h-5 w-5" />
+                )}
                 <span>{item.name}</span>
               </Link>
             ))}
@@ -82,18 +85,20 @@ export default function AuthenticatedLayout({ children }: AuthenticatedLayoutPro
           </div>
 
           <div className="flex flex-col space-y-4 p-4">
-            {navigationItems.map((item) => (
+            {navigation.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 className={cn(
                   'flex items-center space-x-2 rounded-lg px-3 py-2 text-sm transition-colors',
                   pathname === item.href
-                    ? 'bg-primary text-primary-foreground'
-                    : 'hover:bg-accent'
+                    ? 'bg-primary/10 text-primary'
+                    : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
-                <item.icon className="h-4 w-4" />
+                {item.icon && (
+                  <item.icon className="h-5 w-5" />
+                )}
                 <span>{item.name}</span>
               </Link>
             ))}
