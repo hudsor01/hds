@@ -1,8 +1,8 @@
 'use client'
 
-import { useUserPreferences } from '@/lib/hooks/use-user-preferences'
 import { routes } from '@/lib/routes'
-import {
+import
+  {
     Box,
     Collapse,
     Divider,
@@ -18,11 +18,13 @@ import {
     Typography,
     alpha,
     useTheme
-} from '@mui/material'
+  } from '@mui/material'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import {
+import { useState } from 'react'
+import
+  {
     BarChart2,
     ChevronLeft,
     ChevronRight,
@@ -33,7 +35,7 @@ import {
     Settings,
     Tool,
     Users
-} from 'react-feather'
+  } from 'react-feather'
 
 const navItems = [
   {
@@ -74,7 +76,7 @@ const COLLAPSED_DRAWER_WIDTH = 72
 export function Sidebar() {
   const theme = useTheme()
   const pathname = usePathname()
-  const { sidebarCollapsed, setSidebarCollapsed } = useUserPreferences()
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
 
   const handleToggleCollapse = () => {
     setSidebarCollapsed(!sidebarCollapsed)

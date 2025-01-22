@@ -5,7 +5,7 @@
   "scripts": {
     "type-check": "tsc --noEmit",
     "type-check:watch": "tsc --noEmit --watch",
-    "dev": "next dev & yarn type-check:watch",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Roboto } from 'next/font/google'
 import ClientLayout from './client-layout'
 import './globals.css'
@@ -9,6 +9,12 @@ const roboto = Roboto({
   display: 'swap',
   variable: '--font-roboto',
 })
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 1,
+}
 
 export const metadata: Metadata = {
   title: {
@@ -21,10 +27,6 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
-    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' }
-  ],
   manifest: '/manifest.json',
   openGraph: {
     type: 'website',
@@ -36,11 +38,6 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@hudsondigital',
     creator: '@hudsondigital'
-  },
-  viewport: {
-    width: 'device-width',
-    initialScale: 1,
-    maximumScale: 1,
   },
   robots: {
     index: true,
