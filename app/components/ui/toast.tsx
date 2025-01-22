@@ -2,6 +2,7 @@
 
 import { Alert, AlertTitle, Snackbar } from '@mui/material'
 import { useEffect, useState } from 'react'
+import { create } from 'zustand'
 import type { Toast } from '../../hooks/use-toast'
 
 interface ToastProps extends Toast {
@@ -47,3 +48,14 @@ export function Toast({
     </Snackbar>
   )
 }
+
+interface ToastStore {
+  toast: (props: { title: string; description?: string }) => void
+}
+
+export const useToast = create<ToastStore>((set) => ({
+  toast: ({ title, description }) => {
+    // Implement toast notification logic here
+    console.log('Toast:', title, description)
+  },
+}))

@@ -1,32 +1,25 @@
-import { usePreferences } from '@/stores/preferences'
 import { useEffect } from 'react'
 
 export function usePreferencesSync() {
-  const sync = usePreferences((state) => state.sync)
-
   useEffect(() => {
-    // Sync on mount
-    sync()
-
-    // Sync every 5 minutes if the tab is active
-    const interval = setInterval(() => {
-      if (document.visibilityState === 'visible') {
-        sync()
+    // Load preferences from localStorage
+    const loadPreferences = () => {
+      try {
+        const storedPrefs = localStorage.getItem('userPreferences')
+        if (storedPrefs) {
+          return JSON.parse(storedPrefs)
+        }
+      } catch (error) {
+        console.error('Error loading preferences:', error)
       }
-    }, 5 * 60 * 1000)
-
-    // Sync when the tab becomes visible
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        sync()
-      }
+      return null
     }
 
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-
-    return () => {
-      clearInterval(interval)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    // Initialize preferences
+    const prefs = loadPreferences()
+    if (prefs) {
+      // Apply loaded preferences
+      document.documentElement.setAttribute('data-theme', prefs.theme || 'light')
     }
-  }, [sync])
+  }, [])
 }

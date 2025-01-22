@@ -4,10 +4,18 @@ import { useEffect } from 'react'
 
 export function usePerformance() {
   useEffect(() => {
-    // Record initial page load time
+    // Report initial page load performance
     if (typeof window !== 'undefined') {
-      const navigationTiming = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-      console.log('Page Load Time:', navigationTiming.loadEventEnd - navigationTiming.startTime)
+      const { performance } = window
+      if (performance) {
+        const navigationEntry = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
+        const paintEntries = performance.getEntriesByType('paint')
+
+        // Log performance metrics
+        console.debug('Page Load Time:', navigationEntry.loadEventEnd - navigationEntry.startTime)
+        console.debug('First Paint:', paintEntries[0]?.startTime)
+        console.debug('First Contentful Paint:', paintEntries[1]?.startTime)
+      }
     }
   }, [])
 }

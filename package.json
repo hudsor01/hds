@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "check-config": "tsc --noEmit --pretty next.config.js"
+    "check-config": "tsc -p tsconfig.json --pretty"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -36,6 +36,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "framer-motion": "^12.0.1",
+    "input-otp": "^1.4.2",
     "lucide-react": "^0.473.0",
     "next": "15.1.5",
     "next-auth": "^4.24.11",
@@ -46,6 +47,7 @@
     "react-feather": "^2.0.10",
     "react-hook-form": "^7.54.2",
     "react-icons": "^5.4.0",
+    "react-resizable-panels": "^2.1.7",
     "react-tooltip": "^5.28.0",
     "recharts": "^2.15.0",
     "sonner": "^1.7.2",

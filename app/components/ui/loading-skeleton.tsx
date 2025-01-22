@@ -1,6 +1,6 @@
 'use client'
 
-import { Skeleton } from 'my-app/app/components/ui/skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export function PropertyCardSkeleton() {
   return (

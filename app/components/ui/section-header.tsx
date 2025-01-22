@@ -1,5 +1,6 @@
-import { cn } from "@/lib/utils"
+'use client'
 
+import { cn } from '@/lib/utils'
 export function SectionHeader({
   title,
   subtitle,

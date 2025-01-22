@@ -1,13 +1,13 @@
 'use client'
 
 import { signOut } from '@/auth'
-import { Building2, ChevronLeft, ChevronRight, LogOut } from 'lucide-react'
-import { Button } from 'my-app/app/components/ui/button'
-import { NAVIGATION_LINKS } from 'my-app/app/lib/constants'
-import { cn } from 'my-app/app/lib/utils'
+import { Button } from '@/components/ui/button'
+import { NAVIGATION_LINKS } from '@/lib/constants'
+import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
+import { ChevronLeft, ChevronRight, Home, LogOut } from 'react-feather'
 
 export default function SideNav() {
   const pathname = usePathname()
@@ -21,7 +21,7 @@ export default function SideNav() {
       <div className="flex h-14 items-center border-b px-4">
         {!isCollapsed && (
           <Link href="/" className="flex items-center gap-2">
-            <Building2 className="h-6 w-6" />
+            <Home className="h-6 w-6" />
             <span className="font-semibold">Property Manager</span>
           </Link>
         )}

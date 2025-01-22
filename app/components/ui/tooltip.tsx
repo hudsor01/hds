@@ -23,8 +23,6 @@ const StyledTooltip = styled(({ className, ...props }: MuiTooltipProps) => (
     },
   },
 }))
-
-// Add compatibility layer for Radix-style usage
 export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => <>{children}</>
 export const TooltipTrigger = React.forwardRef<HTMLDivElement, React.ComponentPropsWithRef<'div'>>(
   ({ children, ...props }, ref) => (

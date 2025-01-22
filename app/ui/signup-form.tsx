@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from 'my-app/app/components/ui/button'
-import { Input } from 'my-app/app/components/ui/input'
-import { Label } from 'my-app/app/components/ui/label'
-import { register } from 'my-app/app/lib/actions'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { register } from '@/lib/actions'
 import { useFormState, useFormStatus } from 'react-dom'
 
 export default function SignUpForm() {

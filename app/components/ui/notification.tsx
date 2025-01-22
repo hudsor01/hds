@@ -1,7 +1,6 @@
 'use client'
 
-import type { Toast } from '@/app/hooks/use-toast'
-import { useToast } from '@/app/hooks/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { Alert, AlertTitle, Snackbar, Stack } from '@mui/material'
 
 export function NotificationProvider() {
@@ -9,19 +8,19 @@ export function NotificationProvider() {
 
   return (
     <Stack spacing={2} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 2000 }}>
-      {toasts.map((toast: Toast) => (
+      {toasts.map((toast) => (
         <Snackbar
           key={toast.id}
-          open={true}
+          open
           autoHideDuration={toast.duration || 5000}
           onClose={() => removeToast(toast.id)}
         >
           <Alert
             onClose={() => removeToast(toast.id)}
-            severity={toast.severity || 'info'}
+            severity="info"
             sx={{ width: '100%' }}
           >
-            {toast.title && <AlertTitle>{toast.title}</AlertTitle>}
+            <AlertTitle>{toast.title}</AlertTitle>
             {toast.description}
           </Alert>
         </Snackbar>

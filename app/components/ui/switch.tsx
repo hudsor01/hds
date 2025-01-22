@@ -1,12 +1,11 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { SwitchProps as MuiSwitchProps } from '@mui/material'
-import
-  {
-    Switch as MuiSwitch,
-    styled,
-  } from '@mui/material'
+import {
+  Switch as MuiSwitch,
+  styled,
+} from '@mui/material'
 import * as React from 'react'
 
 const StyledSwitch = styled(MuiSwitch)(({ theme }) => ({

@@ -1,15 +1,15 @@
 'use client'
 
+import { Loader2, Shield } from "-react"
 import { Button } from "@/components/ui/button"
 import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
-import { Loader2, Shield } from "lucide-react"
 import Image from "next/image"
 import { useState } from 'react'
 import { toast } from "sonner"

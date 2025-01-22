@@ -1,21 +1,21 @@
 'use client'
 
+import { Icon } from '-react'
 import { motion, useInView } from 'framer-motion'
-import { LucideIcon } from 'lucide-react'
 import { useEffect, useRef } from 'react'
 
 import { Card } from "@/components/ui/card"
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
 } from "@/components/ui/tooltip"
 
 interface FeatureCardProps {
   title: string
   description: string
-  icon: LucideIcon
+  icon: Icon
   delay?: number
   onView?: () => void
 }

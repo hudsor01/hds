@@ -1,5 +1,7 @@
 'use client';
 
+import { Button } from '@/components/ui/button'
+import { authenticate } from '@/lib/actions'
 import { ArrowRightIcon } from '@heroicons/react/20/solid'
 import
   {
@@ -7,10 +9,13 @@ import
     ExclamationCircleIcon,
     KeyIcon,
   } from '@heroicons/react/24/outline'
-import { Button } from 'my-app/app/components/ui/button'
-import { authenticate } from 'my-app/app/lib/actions'
+import { Roboto } from 'next/font/google'
 import { useActionState } from 'react'
-import { roboto } from '../fonts'
+
+const roboto = Roboto({
+  subsets: ['latin'],
+  weight: ['400', '500', '700'],
+})
 
 export default function LoginForm() {
   const [errorMessage, formAction, isPending] = useActionState(

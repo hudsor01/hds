@@ -1,13 +1,12 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { CheckboxProps as MuiCheckboxProps } from '@mui/material'
-import
-  {
-    FormControlLabel,
-    Checkbox as MuiCheckbox,
-    styled,
-  } from '@mui/material'
+import {
+  FormControlLabel,
+  Checkbox as MuiCheckbox,
+  styled,
+} from '@mui/material'
 import * as React from 'react'
 
 const StyledCheckbox = styled(MuiCheckbox)(({ theme }) => ({

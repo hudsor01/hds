@@ -1,8 +1,8 @@
 'use client'
 
-import { useToast } from '@/hooks/use-toast'
 import { PropertyStats, RecentActivity } from '@/types/dashboard'
 import { useEffect } from 'react'
+import { toast } from '../components/ui/use-toast'
 
 export type DashboardEvent = {
   type: 'STATS_UPDATE' | 'NEW_ACTIVITY'
@@ -13,8 +13,6 @@ export type DashboardEvent = {
 }
 
 export function useDashboardUpdates(onUpdate: (event: DashboardEvent) => void) {
-  const { toast } = useToast()
-
   useEffect(() => {
     const eventSource = new EventSource('/api/dashboard/events')
 
@@ -37,5 +35,5 @@ export function useDashboardUpdates(onUpdate: (event: DashboardEvent) => void) {
     }
 
     return () => eventSource.close()
-  }, [onUpdate, toast])
+  }, [onUpdate])
 }

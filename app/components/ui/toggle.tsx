@@ -1,11 +1,10 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
-import type { ToggleButtonProps } from '@mui/material'
-import { ToggleButton as MuiToggleButton, styled } from '@mui/material'
+import { cn } from '@/lib/utils'
+import { ToggleButton, type ToggleButtonProps, styled } from '@mui/material'
 import * as React from 'react'
 
-const StyledToggleButton = styled(MuiToggleButton)(({ theme }) => ({
+const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   padding: theme.spacing(1, 2),
   borderRadius: theme.shape.borderRadius,
   border: 'none',
@@ -24,7 +23,6 @@ const StyledToggleButton = styled(MuiToggleButton)(({ theme }) => ({
 export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
   pressed?: boolean
   onPressedChange?: (pressed: boolean) => void
-  ?: boolean
 }
 
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
@@ -52,4 +50,5 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
     )
   }
 )
+
 Toggle.displayName = 'Toggle'

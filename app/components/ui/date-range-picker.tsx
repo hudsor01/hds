@@ -1,21 +1,21 @@
 'use client'
 
+import { CalendarIcon, Check } from "-react"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
-    Command,
-    CommandGroup,
-    CommandItem,
+  Command,
+  CommandGroup,
+  CommandItem,
 } from "@/components/ui/command"
 import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
 } from "@/components/ui/popover"
 import { Separator } from "@/components/ui/separator"
 import { cn } from "@/lib/utils"
 import { format, startOfYear, subDays, subMonths } from "date-fns"
-import { CalendarIcon, Check } from "lucide-react"
 import * as React from "react"
 import { DateRange } from "react-day-picker"
 

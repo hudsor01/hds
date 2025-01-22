@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { LinearProgressProps } from '@mui/material'
 import { LinearProgress as MuiLinearProgress, styled } from '@mui/material'
 import * as React from 'react'

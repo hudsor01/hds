@@ -2,23 +2,22 @@
 
 import { Card } from '@/components/ui/card'
 import {
-    BarChart3,
-    Building2,
-    Calendar,
-    CreditCard,
-    FileText,
-    MessageSquare,
-    Settings,
-    Users,
-    Wallet,
-} from 'lucide-react'
+  BarChart2,
+  Calendar,
+  CreditCard,
+  FileText,
+  Home,
+  MessageSquare,
+  Settings,
+  Users
+} from 'react-feather'
 
 const features = [
   {
     title: 'Property Management',
     description:
       'Efficiently manage multiple properties with our comprehensive dashboard.',
-    icon: Building2,
+    icon: Home,
   },
   {
     title: 'Tenant Portal',
@@ -30,7 +29,7 @@ const features = [
     title: 'Financial Tracking',
     description:
       'Track rent payments, expenses, and generate detailed financial reports.',
-    icon: Wallet,
+    icon: CreditCard,
   },
   {
     title: 'Maintenance Management',
@@ -54,7 +53,7 @@ const features = [
     title: 'Analytics & Reporting',
     description:
       'Get insights into your property performance with detailed analytics.',
-    icon: BarChart3,
+    icon: BarChart2,
   },
   {
     title: 'Communication Tools',

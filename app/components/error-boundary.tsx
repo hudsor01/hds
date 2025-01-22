@@ -1,43 +1,70 @@
 'use client'
 
-import { ExclamationTriangleIcon } from '@radix-ui/react-icons'
-import { useEffect } from 'react'
+import { ErrorOutline } from '@mui/icons-material'
+import { Box, Button, Typography } from '@mui/material'
+import * as React from 'react'
 
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
+interface ErrorBoundaryProps {
+  children: React.ReactNode
+}
 
-export function ErrorBoundary({
-  error,
-  resetAction,
-}: {
-  error: Error & { digest?: string }
-  resetAction: () => void
-}) {
-  useEffect(() => {
-    console.error(error)
-  }, [error])
+interface ErrorBoundaryState {
+  hasError: boolean
+  error?: Error
+}
 
-  return (
-    <Card className="mx-auto max-w-md p-6">
-      <div className="flex flex-col items-center gap-4 text-center">
-        <ExclamationTriangleIcon className="h-8 w-8 text-destructive" />
-        <div className="space-y-2">
-          <h3 className="text-lg font-medium">
-            Something went wrong
-          </h3>
-          <p className="text-sm text-muted-foreground">
-            {error.message || 'There was a problem loading this section'}
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          onClick={resetAction}
-          size="sm"
-          className="gap-2"
+export class ErrorBoundary extends React.Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props)
+    this.state = { hasError: false }
+  }
+
+  static getDerivedStateFromError(error: Error) {
+    return { hasError: true, error }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            minHeight: '400px',
+            textAlign: 'center',
+            p: 4,
+          }}
         >
-          Try again
-        </Button>
-      </div>
-    </Card>
-  )
+          <ErrorOutline
+            sx={{
+              width: 48,
+              height: 48,
+              color: 'error.main',
+              mb: 2,
+            }}
+          />
+          <Typography variant="h5" sx={{ mb: 2 }}>
+            Something went wrong
+          </Typography>
+          <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
+            {this.state.error?.message || 'An unexpected error occurred'}
+          </Typography>
+          <Button
+            variant="contained"
+            onClick={() => window.location.reload()}
+            color="primary"
+          >
+            Try again
+          </Button>
+        </Box>
+      )
+    }
+
+    return this.props.children
+  }
 }

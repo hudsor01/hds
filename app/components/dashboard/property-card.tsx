@@ -1,7 +1,7 @@
 'use client'
 
 import { Card } from '@/components/ui/card'
-import { Building2 } from 'lucide-react'
+import { Home } from 'react-feather'
 
 export interface PropertyCardProps {
   name: string
@@ -14,7 +14,7 @@ export function PropertyCard({ name, address, units, occupancy }: PropertyCardPr
   return (
     <Card className="flex items-center space-x-4 p-4">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
-        <Building2 className="h-6 w-6 text-blue-600" />
+        <Home className="h-6 w-6 text-blue-600" />
       </div>
       <div className="flex-1 space-y-1">
         <h3 className="font-medium">{name}</h3>

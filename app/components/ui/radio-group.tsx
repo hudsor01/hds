@@ -1,15 +1,14 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { RadioGroupProps as MuiRadioGroupProps } from '@mui/material'
-import
-  {
-    FormControl,
-    FormControlLabel,
-    Radio as MuiRadio,
-    RadioGroup as MuiRadioGroup,
-    styled,
-  } from '@mui/material'
+import {
+  FormControl,
+  FormControlLabel,
+  Radio as MuiRadio,
+  RadioGroup as MuiRadioGroup,
+  styled,
+} from '@mui/material'
 import * as React from 'react'
 
 const StyledRadio = styled(MuiRadio)(({ theme }) => ({

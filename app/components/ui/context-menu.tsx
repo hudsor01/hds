@@ -1,14 +1,13 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
+import { cn } from '@/lib/utils'
 import type { MenuItemProps, MenuProps } from '@mui/material'
-import
-  {
-    Divider,
-    Menu,
-    MenuItem,
-    styled,
-  } from '@mui/material'
+import {
+  Divider,
+  Menu,
+  MenuItem,
+  styled,
+} from '@mui/material'
 import * as React from 'react'
 
 const StyledMenu = styled(Menu)(({ theme }) => ({

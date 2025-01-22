@@ -1,4 +1,5 @@
-import { Building2, Home, Settings, Users } from 'lucide-react'
+import { Home, Settings, Users } from 'react-feather'
+import { routes } from '../routes'
 
 export const USER_ROLES = {
   ADMIN: 'ADMIN',
@@ -31,10 +32,10 @@ export const PRIORITY_LEVELS = {
 export type PriorityLevel = typeof PRIORITY_LEVELS[keyof typeof PRIORITY_LEVELS]
 
 export const NAVIGATION_LINKS = [
-  { name: 'Home', href: '/dashboard', icon: Home },
-  { name: 'Properties', href: '/dashboard/properties', icon: Building2 },
-  { name: 'Tenants', href: '/dashboard/tenants', icon: Users },
-  { name: 'Settings', href: '/dashboard/settings', icon: Settings },
+  { name: 'Home', href: routes.dashboard, icon: Home },
+  { name: 'Properties', href: routes.properties.index, icon: Home },
+  { name: 'Tenants', href: routes.tenants.index, icon: Users },
+  { name: 'Settings', href: routes.settings, icon: Settings },
 ] as const
 
 export const ACTIVITY_FILTERS = [

@@ -1,18 +1,9 @@
 'use client'
 
-import { cn } from "@/app/lib/utils"
-import type { DrawerProps } from '@mui/material'
-import { IconButton, Drawer as MuiDrawer, styled } from '@mui/material'
+import { Dialog, DialogContent } from '@mui/material'
 import * as React from 'react'
 import { X } from 'react-feather'
-
-const StyledDrawer = styled(MuiDrawer)(({ theme }) => ({
-  '& .MuiDrawer-paper': {
-    backgroundColor: theme.palette.background.paper,
-    boxShadow: theme.shadows[4],
-    padding: theme.spacing(2),
-  },
-}))
+import { cn } from '../../../lib/utils'
 
 interface SheetContextValue {
   open: boolean
@@ -29,13 +20,14 @@ function useSheet() {
   return context
 }
 
-export interface SheetProps extends Omit<DrawerProps, 'open'> {
+interface SheetProps extends Omit<React.ComponentProps<typeof Dialog>, 'open'> {
   open?: boolean
   onOpenChange?: (open: boolean) => void
+  side?: 'top' | 'right' | 'bottom' | 'left'
 }
 
-export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
-  ({ className, children, open = false, onOpenChange, onClose, ...props }, ref) => {
+const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
+  ({ children, open = false, onOpenChange, onClose, side = 'right', ...props }, ref) => {
     const [isOpen, setIsOpen] = React.useState(open)
 
     React.useEffect(() => {
@@ -56,86 +48,103 @@ export const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
         setIsOpen(o)
         onOpenChange?.(o)
       }}}>
-        <StyledDrawer
+        <Dialog
           ref={ref}
           open={isOpen}
           onClose={handleClose}
-          className={cn('fixed inset-0 z-50 outline-none', className)}
           {...props}
+          PaperProps={{
+            sx: {
+              position: 'fixed',
+              [side]: 0,
+              top: 0,
+              bottom: 0,
+              width: side === 'left' || side === 'right' ? 'auto' : '100%',
+              height: side === 'top' || side === 'bottom' ? 'auto' : '100%',
+              m: 0,
+              maxHeight: '100vh',
+              borderRadius: 0,
+            },
+          }}
         >
           {children}
-        </StyledDrawer>
+        </Dialog>
       </SheetContext.Provider>
     )
   }
 )
 Sheet.displayName = 'Sheet'
 
-export interface SheetTriggerProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  className?: string
-}
-
-export const SheetTrigger = React.forwardRef<HTMLButtonElement, SheetTriggerProps>(
-  ({ className, children, ...props }, ref) => {
-    const { onOpenChange } = useSheet()
-    return (
-      <button
-        type="button"
-        ref={ref}
-        className={className}
-        onClick={() => onOpenChange(true)}
-        {...props}
-      >
-        {children}
-      </button>
-    )
-  }
-)
+const SheetTrigger = React.forwardRef<
+  HTMLButtonElement,
+  React.ButtonHTMLAttributes<HTMLButtonElement>
+>(({ children, ...props }, ref) => {
+  const { onOpenChange } = useSheet()
+  return (
+    <button
+      type="button"
+      ref={ref}
+      onClick={() => onOpenChange(true)}
+      {...props}
+    >
+      {children}
+    </button>
+  )
+})
 SheetTrigger.displayName = 'SheetTrigger'
 
-export const SheetClose = React.forwardRef<
+const SheetClose = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<typeof IconButton>
+  React.ButtonHTMLAttributes<HTMLButtonElement>
 >(({ className, onClick, ...props }, ref) => {
   const { onOpenChange } = useSheet()
   return (
-    <IconButton
+    <button
       ref={ref}
+      type="button"
+      className={cn(
+        'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+        className
+      )}
       onClick={(e) => {
         onClick?.(e)
         onOpenChange(false)
       }}
-      className={cn(
-        'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-secondary',
-        className
-      )}
       {...props}
     >
       <X className="h-4 w-4" />
-    </IconButton>
+    </button>
   )
 })
 SheetClose.displayName = 'SheetClose'
 
-export const SheetContent = React.forwardRef<
+const SheetContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <div
+  React.ComponentProps<typeof DialogContent> & { position?: 'left' | 'right' | 'top' | 'bottom' }
+>(({ children, className, position = 'right', ...props }, ref) => (
+  <DialogContent
     ref={ref}
-    className={cn(
-      'relative w-full h-full flex flex-col overflow-y-auto bg-background p-6',
-      className
-    )}
+    className={cn('relative p-6', className)}
+    sx={{
+      position: 'fixed',
+      [position]: 0,
+      top: 0,
+      bottom: 0,
+      width: position === 'left' || position === 'right' ? 'auto' : '100%',
+      height: position === 'top' || position === 'bottom' ? 'auto' : '100%',
+      m: 0,
+      maxHeight: '100vh',
+      borderRadius: 0,
+    }}
     {...props}
   >
     <SheetClose />
     {children}
-  </div>
+  </DialogContent>
 ))
 SheetContent.displayName = 'SheetContent'
 
-export const SheetHeader = React.forwardRef<
+const SheetHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -147,7 +156,7 @@ export const SheetHeader = React.forwardRef<
 ))
 SheetHeader.displayName = 'SheetHeader'
 
-export const SheetFooter = React.forwardRef<
+const SheetFooter = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -159,7 +168,7 @@ export const SheetFooter = React.forwardRef<
 ))
 SheetFooter.displayName = 'SheetFooter'
 
-export const SheetTitle = React.forwardRef<
+const SheetTitle = React.forwardRef<
   HTMLHeadingElement,
   React.HTMLAttributes<HTMLHeadingElement>
 >(({ className, ...props }, ref) => (
@@ -171,7 +180,7 @@ export const SheetTitle = React.forwardRef<
 ))
 SheetTitle.displayName = 'SheetTitle'
 
-export const SheetDescription = React.forwardRef<
+const SheetDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
@@ -182,3 +191,9 @@ export const SheetDescription = React.forwardRef<
   />
 ))
 SheetDescription.displayName = 'SheetDescription'
+
+export
+{
+  Sheet, SheetClose,
+  SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger
+}
