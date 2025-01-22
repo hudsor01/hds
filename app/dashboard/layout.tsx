@@ -1,20 +1,12 @@
+// Enhanced Dashboard Layout
 'use client'
 
-import { Box, Drawer, Stack, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import type { Route } from 'next'
 import Link from 'next/link'
 import { useState } from 'react'
-import
-  {
-    BarChart2,
-    FileText,
-    Home,
-    Key,
-    Settings,
-    Tool,
-    Users
-  } from 'react-feather'
+import { BarChart2, FileText, Home, Key, Menu, Settings, Tool, Users, X } from 'react-feather'
 
 const DRAWER_WIDTH = 280
 
@@ -28,35 +20,28 @@ const sidebarItems = [
   { title: 'Settings', href: '/dashboard/settings' as Route, icon: Settings }
 ]
 
-export default function DashboardLayout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const theme = useTheme()
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
   const [mobileOpen, setMobileOpen] = useState(false)
 
   const drawer = (
-    <Stack
-      sx={{
-        height: '100%',
-        width: DRAWER_WIDTH,
-        bgcolor: 'background.paper',
-        borderRight: 1,
-        borderColor: 'divider',
-      }}
-    >
-      {/* Navigation Items */}
-      <Stack
-        sx={{
-          py: 3,
-          px: 2,
-          flex: 1,
-          gap: 1,
-          overflowY: 'auto'
-        }}
-      >
+    <Stack sx={{
+      height: '100%',
+      width: DRAWER_WIDTH,
+      bgcolor: 'background.paper',
+      borderRight: 1,
+      borderColor: 'divider',
+    }}>
+      <Toolbar sx={{ minHeight: '64px!important', px: 2 }}>
+        {isMobile && (
+          <IconButton onClick={() => setMobileOpen(false)} sx={{ ml: 'auto' }}>
+            <X size={20} />
+          </IconButton>
+        )}
+      </Toolbar>
+
+      <Stack sx={{ p: 2, gap: 1, flex: 1 }}>
         {sidebarItems.map((item, index) => {
           const Icon = item.icon
           return (
@@ -66,27 +51,29 @@ export default function DashboardLayout({
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: index * 0.1 }}
             >
-              <Link
-                href={item.href}
-                style={{ textDecoration: 'none' }}
-              >
+              <Link href={item.href} passHref legacyBehavior>
                 <Stack
+                  component="a"
                   direction="row"
                   alignItems="center"
                   sx={{
-                    px: 2,
+                    px: 3,
                     py: 1.5,
-                    borderRadius: 1,
+                    borderRadius: 2,
                     color: 'text.secondary',
-                    transition: 'all 0.2s ease-in-out',
+                    transition: 'all 0.2s',
                     '&:hover': {
-                      bgcolor: 'primary.main',
-                      color: 'primary.contrastText',
-                      transform: 'translateX(5px)',
+                      bgcolor: 'action.hover',
+                      transform: 'translateX(4px)',
+                    },
+                    '&.active': {
+                      bgcolor: 'primary.light',
+                      color: 'primary.main',
+                      fontWeight: 600,
                     }
                   }}
                 >
-                  <Icon size={20} style={{ marginRight: '12px' }} />
+                  <Icon size={20} style={{ marginRight: 12 }} />
                   {item.title}
                 </Stack>
               </Link>
@@ -98,30 +85,38 @@ export default function DashboardLayout({
   )
 
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        minHeight: '100vh',
-        bgcolor: 'background.default'
-      }}
-    >
+    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+      {/* Mobile Header */}
+      {isMobile && (
+        <Box sx={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          zIndex: theme.zIndex.appBar,
+          bgcolor: 'background.paper',
+          borderBottom: 1,
+          borderColor: 'divider',
+          p: 2,
+          display: 'flex',
+          alignItems: 'center'
+        }}>
+          <IconButton onClick={() => setMobileOpen(true)}>
+            <Menu size={20} />
+          </IconButton>
+        </Box>
+      )}
+
       {/* Desktop Drawer */}
       <Drawer
         variant="permanent"
         sx={{
-          width: DRAWER_WIDTH,
-          flexShrink: 0,
           display: { xs: 'none', lg: 'block' },
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
-            boxSizing: 'border-box',
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            height: '100vh',
             bgcolor: 'background.paper',
             border: 'none',
-            zIndex: theme.zIndex.drawer
+            height: '100vh'
           },
         }}
       >
@@ -130,15 +125,11 @@ export default function DashboardLayout({
 
       {/* Mobile Drawer */}
       <Drawer
-        variant="temporary"
         open={mobileOpen}
         onClose={() => setMobileOpen(false)}
-        ModalProps={{ keepMounted: true }}
         sx={{
-          display: { xs: 'block', lg: 'none' },
           '& .MuiDrawer-paper': {
             width: DRAWER_WIDTH,
-            boxSizing: 'border-box',
             bgcolor: 'background.paper',
             border: 'none'
           },
@@ -152,14 +143,12 @@ export default function DashboardLayout({
         component="main"
         sx={{
           flexGrow: 1,
-          minHeight: '100vh',
-          width: { xs: '100%', lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-          ml: { xs: 0, lg: `${DRAWER_WIDTH}px` },
-          pt: { xs: 2, sm: 3 },
-          px: { xs: 2, sm: 3 },
-          pb: { xs: 2, sm: 3 },
-          position: 'relative',
-          zIndex: 1
+          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+          ml: { lg: `${DRAWER_WIDTH}px` },
+          pt: { xs: 8, lg: 3 },
+          px: { xs: 2, sm: 3, lg: 4 },
+          pb: 3,
+          minHeight: '100vh'
         }}
       >
         {children}

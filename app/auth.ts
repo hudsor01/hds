@@ -12,6 +12,13 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
+  pages: {
+    signIn: '/login',
+    signUp: '/signup',
+    error: '/error',
+    verifyRequest: '/verify-email',
+    newUser: '/signup'
+  },
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
@@ -22,10 +29,6 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-  },
-  pages: {
-    signIn: '/auth/login',
-    error: '/auth/error',
   },
 }
 

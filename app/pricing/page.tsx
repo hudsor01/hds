@@ -1,9 +1,12 @@
 'use client'
 
-import { StripeCheckoutButton } from '@/components/stripe-checkout-button'
-import { Box, Button, Card, Container, Grid, List, ListItem, ListItemIcon, ListItemText, Paper, Stack, Typography, alpha, useTheme } from '@mui/material'
-import { motion } from 'framer-motion'
-import { Check } from 'react-feather'
+import { routes } from '@/routes'
+import { Button, Container, Grid, useTheme } from '@mui/material'
+import { loadStripe } from '@stripe/stripe-js'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const pricingTiers = [
   {
@@ -76,168 +79,110 @@ const pricingTiers = [
       'Data exports'
     ],
     highlighted: false
-  },
-  {
-    title: 'Unlimited',
-    description: 'Full-featured solution for large property management companies',
-    price: '$499',
-    duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_UNLIMITED,
-    features: [
-      'Unlimited properties',
-      'Everything in Elite',
-      'Dedicated account manager',
-      'Custom integrations',
-      'Advanced analytics',
-      'Multi-user access',
-      'Role-based permissions',
-      'SLA guarantees',
-      'White-label solution',
-      'Bulk operations',
-      'Custom reporting',
-      'On-premise deployment option'
-    ],
-    highlighted: false
   }
 ]
+
+const PricingCheckoutButton = ({ priceId, text }: { priceId: string | null; text: string }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const { data: session } = useSession();
+  const router = useRouter();
+
+  const handleClick = async () => {
+    try {
+      setIsLoading(true);
+      toast('Processing your request...');
+
+      if (!priceId) {
+        if (!session) {
+          router.push(routes.auth.register);
+          return;
+        }
+
+        const response = await fetch('/api/subscribe/free', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ trialDays: 14 }),
+        });
+
+        if (response.ok) {
+          router.push('/dashboard');
+          toast.success('Free trial activated! Enjoy your 14-day access.');
+        }
+        return;
+      }
+
+      if (!session) {
+        toast.error('Please sign in to subscribe');
+        return;
+      }
+
+      const response = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) throw new Error(data.error || 'Payment processing failed');
+
+      if (data.url) {
+        window.location.href = data.url;
+      } else if (data.sessionId) {
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+      }
+    } catch (error) {
+      console.error('Checkout error:', error);
+      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Button
+      variant={priceId ? 'contained' : 'outlined'}
+      size="large"
+      onClick={handleClick}
+      disabled={isLoading}
+      fullWidth
+      sx={{
+        mt: 2,
+        fontWeight: 600,
+        ...(priceId && {
+          bgcolor: 'primary.main',
+          '&:hover': { bgcolor: 'primary.dark' }
+        })
+      }}
+    >
+      {isLoading ? 'Processing...' : text}
+    </Button>
+  );
+};
 
 export default function PricingPage() {
   const theme = useTheme()
 
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 6, md: 8 } }}>
-      <Stack spacing={4} alignItems="center" textAlign="center" maxWidth="md" mx="auto" mb={8}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Typography variant="h2" component="h1" gutterBottom fontWeight="bold">
-            Simple, transparent pricing
-          </Typography>
-          <Typography variant="h5" color="text.secondary">
-            Choose the perfect plan for your property management needs
-          </Typography>
-        </motion.div>
-      </Stack>
-
-      <Grid container spacing={4} alignItems="stretch">
-        {pricingTiers.map((tier, index) => (
-          <Grid item xs={12} md={4} key={tier.title}>
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              style={{ height: '100%' }}
-            >
-              <Card
-                component={Paper}
-                elevation={tier.highlighted ? 8 : 1}
-                sx={{
-                  p: 4,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  position: 'relative',
-                  ...(tier.highlighted && {
-                    borderColor: 'primary.main',
-                    borderWidth: 2,
-                    borderStyle: 'solid',
-                    bgcolor: alpha(theme.palette.primary.main, 0.03)
-                  })
-                }}
-              >
-                {tier.highlighted && (
-                  <Box
-                    sx={{
-                      position: 'absolute',
-                      top: 12,
-                      right: 12,
-                      px: 2,
-                      py: 0.5,
-                      bgcolor: 'primary.main',
-                      color: 'primary.contrastText',
-                      borderRadius: 1,
-                      fontSize: '0.875rem',
-                      fontWeight: 600
-                    }}
-                  >
-                    Most Popular
-                  </Box>
-                )}
-
-                <Stack spacing={2}>
-                  <Typography variant="h4" component="h2" fontWeight="bold">
-                    {tier.title}
-                  </Typography>
-                  <Typography color="text.secondary" sx={{ flexGrow: 1 }}>
-                    {tier.description}
-                  </Typography>
-
-                  <Box sx={{ my: 2 }}>
-                    <Typography variant="h3" component="div" fontWeight="bold">
-                      {tier.price}
-                    </Typography>
-                    <Typography variant="subtitle1" color="text.secondary">
-                      {tier.duration}
-                    </Typography>
-                  </Box>
-
-                  <List disablePadding sx={{ mb: 3, flexGrow: 1 }}>
-                    {tier.features.map((feature) => (
-                      <ListItem key={feature} disableGutters disablePadding sx={{ py: 1 }}>
-                        <ListItemIcon sx={{ minWidth: 36 }}>
-                          <Check size={20} color={theme.palette.success.main} />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={feature}
-                          primaryTypographyProps={{
-                            sx: { fontSize: '0.875rem' }
-                          }}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
-
-                  {tier.priceId ? (
-                    <StripeCheckoutButton
-                      priceId={tier.priceId}
-                      variant={tier.highlighted ? 'contained' : 'outlined'}
-                      size="large"
-                    />
-                  ) : (
-                    <Button
-                      variant={tier.highlighted ? 'contained' : 'outlined'}
-                      size="large"
-                      href="/auth/register"
-                    >
-                      Start Free Trial
-                    </Button>
-                  )}
-                </Stack>
-              </Card>
-            </motion.div>
+      <Grid container spacing={3}>
+        {pricingTiers.map((tier) => (
+          <Grid key={tier.title} xs={12} sm={6} md={4}>
+            {tier.priceId ? (
+              <PricingCheckoutButton
+                priceId={tier.priceId ?? null}
+                text={tier.highlighted ? 'Subscribe' : 'Start Free Trial'}
+              />
+            ) : (
+              <PricingCheckoutButton
+                priceId={null}
+                text={tier.title}
+              />
+            )}
           </Grid>
         ))}
       </Grid>
-
-      <Box sx={{ mt: 8, textAlign: 'center' }}>
-        <Typography variant="h6" component="div" gutterBottom>
-          Enterprise Features
-        </Typography>
-        <Typography color="text.secondary" maxWidth="md" mx="auto">
-          Need a custom solution? Our enterprise plan includes dedicated support, custom integrations,
-          and advanced features tailored to your specific needs. Contact us to learn more.
-        </Typography>
-        <Button
-          variant="outlined"
-          size="large"
-          href="mailto:sales@hudsondigitalsolutions.com"
-          sx={{ mt: 2 }}
-        >
-          Contact Sales
-        </Button>
-      </Box>
     </Container>
   )
 }

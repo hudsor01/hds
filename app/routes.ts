@@ -9,6 +9,7 @@ export const routes = {
     view: (id: string) => `/dashboard/properties/${id}` as Route,
     edit: (id: string) => `/dashboard/properties/${id}/edit` as Route,
   },
+  analytics: '/dashboard/analytics' as Route,
   tenants: {
     index: '/dashboard/tenants' as Route,
     new: '/dashboard/tenants/new' as Route,
@@ -41,11 +42,11 @@ export const routes = {
   },
   settings: '/dashboard/settings' as Route,
   auth: {
-    login: '/auth/login' as Route,
-    register: '/auth/register' as Route,
-    verifyEmail: '/auth/verify-email' as Route,
-    forgotPassword: '/auth/forgot-password' as Route,
-    resetPassword: '/auth/reset-password' as Route,
+    login: '/login' as Route,
+    register: '/signup' as Route,
+    verifyEmail: '/verify-email' as Route,
+    forgotPassword: '/forgot-password' as Route,
+    resetPassword: '/reset-password' as Route,
   },
 } as const
 
