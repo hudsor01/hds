@@ -1,8 +1,8 @@
-import { prisma } from '@/lib/prisma'
-import { PrismaAdapter } from '@auth/prisma-adapter'
-import { NextAuthOptions } from 'next-auth'
-import GoogleProvider from 'next-auth/providers/google'
-import { routes } from './routes'
+import { prisma } from "@/lib/prisma";
+import { PrismaAdapter } from "@auth/prisma-adapter";
+import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import { routes } from "./routes";
 
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
@@ -13,42 +13,40 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   pages: {
-    signIn: '/login',
-    signUp: '/signup',
-    error: '/error',
-    verifyRequest: '/verify-email',
-    newUser: '/signup'
+    signIn: "/login",
+    error: "/error",
+    verifyRequest: "/verify-email",
   },
   callbacks: {
     session: async ({ session, user }) => {
       if (session?.user) {
-        session.user.id = user.id
-        session.user.stripeCustomerId = user.stripeCustomerId
-        session.user.stripeSubscriptionId = user.stripeSubscriptionId
-        session.user.subscriptionStatus = user.subscriptionStatus
+        session.user.id = user.id;
+        session.user.stripeCustomerId = user.stripeCustomerId;
+        session.user.stripeSubscriptionId = user.stripeSubscriptionId;
+        session.user.subscriptionStatus = user.subscriptionStatus;
       }
-      return session
+      return session;
     },
   },
-}
+};
 
 export async function signOut() {
   try {
-    const response = await fetch('/api/auth/signout', {
-      method: 'POST',
+    const response = await fetch("/api/auth/signout", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-    })
+    });
 
     if (!response.ok) {
-      throw new Error('Failed to sign out')
+      throw new Error("Failed to sign out");
     }
 
     // Redirect to home page after successful sign out
-    window.location.href = routes.home
+    window.location.href = routes.home;
   } catch (error) {
-    console.error('Error signing out:', error)
-    throw error
+    console.error("Error signing out:", error);
+    throw error;
   }
 }

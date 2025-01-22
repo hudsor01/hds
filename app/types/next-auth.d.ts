@@ -1,19 +1,19 @@
 // types/next-auth.d.ts
-import { DefaultSession } from 'next-auth'
+import { DefaultSession, DefaultUser } from "next-auth";
 
-declare module 'next-auth' {
-  interface Session extends DefaultSession {
-    user?: {
-      id: string
-      stripeCustomerId?: string | null
-      stripeSubscriptionId?: string | null
-      subscriptionStatus?: string | null
-    } & DefaultSession['user']
+declare module "next-auth" {
+  interface Session {
+    user: {
+      id: string;
+      stripeCustomerId?: string | null;
+      stripeSubscriptionId?: string | null;
+      subscriptionStatus?: string | null;
+    } & DefaultSession["user"];
   }
 
-  interface User {
-    stripeCustomerId?: string | null
-    stripeSubscriptionId?: string | null
-    subscriptionStatus?: string | null
+  interface User extends DefaultUser {
+    stripeCustomerId?: string | null;
+    stripeSubscriptionId?: string | null;
+    subscriptionStatus?: string | null;
   }
 }

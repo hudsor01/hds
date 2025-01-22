@@ -11,6 +11,8 @@ ALTER TABLE auth.users ENABLE ROW LEVEL SECURITY;
 -- Drop existing policies if they exist
 DROP POLICY IF EXISTS "Users can view their own data" ON auth.users;
 DROP POLICY IF EXISTS "Users can update their own data" ON auth.users;
+DROP POLICY IF EXISTS "Users can read own subscription data" ON auth.users;
+DROP POLICY IF EXISTS "Users can update own subscription data" ON auth.users;
 
 -- Create new policies
 CREATE POLICY "Users can view their own data" ON auth.users
@@ -22,3 +24,14 @@ CREATE POLICY "Users can update their own data" ON auth.users
     FOR UPDATE
     TO authenticated
     USING (auth.uid() = id);
+
+CREATE POLICY "Users can read own subscription data" ON auth.users
+  FOR SELECT
+  TO authenticated
+  USING (auth.uid() = id);
+
+CREATE POLICY "Users can update own subscription data" ON auth.users
+  FOR UPDATE
+  TO authenticated
+  USING (auth.uid() = id)
+  WITH CHECK (auth.uid() = id);
