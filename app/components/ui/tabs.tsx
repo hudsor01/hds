@@ -1,112 +1,91 @@
 'use client'
 
-import { cn } from '@/app/lib/utils'
-import type { TabProps as MuiTabProps, TabsProps as MuiTabsProps } from '@mui/material'
-import
-  {
-    Tab as MuiTab,
-    Tabs as MuiTabs,
-    styled,
-  } from '@mui/material'
+import { Box, Tab as MuiTab, Tabs as MuiTabs } from '@mui/material'
+import { styled } from '@mui/material/styles'
 import * as React from 'react'
 
+interface TabPanelProps {
+  children?: React.ReactNode
+  index: number
+  value: number
+}
+
+function TabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`tabpanel-${index}`}
+      aria-labelledby={`tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  )
+}
+
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({
-  minHeight: 36,
-  borderRadius: theme.shape.borderRadius,
-  backgroundColor: theme.palette.grey[100],
+  borderBottom: `1px solid ${theme.palette.divider}`,
   '& .MuiTabs-indicator': {
-    height: '100%',
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.background.paper,
-    zIndex: 0,
+    backgroundColor: theme.palette.primary.main,
   },
 }))
 
 const StyledTab = styled(MuiTab)(({ theme }) => ({
-  minHeight: 36,
   textTransform: 'none',
-  fontWeight: theme.typography.fontWeightMedium,
-  fontSize: theme.typography.pxToRem(14),
-  marginRight: theme.spacing(1),
+  minWidth: 0,
+  padding: '12px 16px',
+  marginRight: theme.spacing(4),
   color: theme.palette.text.secondary,
-  '&.Mui-selected': {
+  fontWeight: theme.typography.fontWeightRegular,
+  '&:hover': {
     color: theme.palette.text.primary,
+    opacity: 1,
   },
-  '&.Mui-focusVisible': {
-    backgroundColor: theme.palette.action.selected,
+  '&.Mui-selected': {
+    color: theme.palette.primary.main,
+    fontWeight: theme.typography.fontWeightMedium,
   },
-  zIndex: 1,
 }))
 
-export interface TabsProps extends Omit<MuiTabsProps, 'orientation'> {
-  defaultValue?: string
-  onValueChange?: (value: string) => void
+interface TabsProps {
+  value: number
+  onChange: (event: React.SyntheticEvent, newValue: number) => void
+  items: { label: string; content: React.ReactNode }[]
 }
 
-export const Tabs = React.forwardRef<HTMLDivElement, TabsProps>(
-  ({ className, value, onChange, defaultValue, onValueChange, children, ...props }, ref) => {
-    const handleChange = React.useCallback(
-      (event: React.SyntheticEvent, newValue: string) => {
-        onChange?.(event, newValue)
-        onValueChange?.(newValue)
-      },
-      [onChange, onValueChange]
-    )
-
-    return (
-      <StyledTabs
-        ref={ref}
-        value={value ?? defaultValue}
-        onChange={handleChange}
-        className={cn('inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground', className)}
-        {...props}
-      >
-        {children}
-      </StyledTabs>
-    )
-  }
-)
-Tabs.displayName = 'Tabs'
-
-export interface TabProps extends Omit<MuiTabProps, 'value'> {
-  value: string
-}
-
-export const Tab = React.forwardRef<HTMLDivElement, TabProps>(
-  ({ className, ...props }, ref) => (
-    <StyledTab
-      ref={ref}
-      className={cn(
-        'inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
-        className
-      )}
-      {...props}
-    />
+export function Tabs({ value, onChange, items }: TabsProps) {
+  return (
+    <Box sx={{ width: '100%' }}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <StyledTabs
+          value={value}
+          onChange={onChange}
+          aria-label="tabs"
+          variant="scrollable"
+          scrollButtons="auto"
+        >
+          {items.map((item, index) => (
+            <StyledTab
+              key={index}
+              label={item.label}
+              id={`tab-${index}`}
+              aria-controls={`tabpanel-${index}`}
+            />
+          ))}
+        </StyledTabs>
+      </Box>
+      {items.map((item, index) => (
+        <TabPanel key={index} value={value} index={index}>
+          {item.content}
+        </TabPanel>
+      ))}
+    </Box>
   )
-)
-Tab.displayName = 'Tab'
-
-export interface TabPanelProps extends React.HTMLAttributes<HTMLDivElement> {
-  value: string
-  tabValue: string
 }
-
-export const TabPanel = React.forwardRef<HTMLDivElement, TabPanelProps>(
-  ({ className, value, tabValue, children, ...props }, ref) => {
-    if (value !== tabValue) return null
-
-    return (
-      <div
-        ref={ref}
-        role="tabpanel"
-        className={cn('mt-2 ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2', className)}
-        {...props}
-      >
-        {children}
-      </div>
-    )
-  }
-)
-TabPanel.displayName = 'TabPanel'
-
-export default Tabs

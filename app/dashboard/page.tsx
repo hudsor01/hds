@@ -1,10 +1,10 @@
 'use client'
 
-import { DashboardStats } from '@/components/dashboard/dashboard-stats'
+import { MetricsGrid } from '@/components/dashboard/metrics-grid'
 import { QuickActions } from '@/components/dashboard/quick-actions'
 import { RecentActivityList } from '@/components/dashboard/recent-activity'
 import type { RecentActivity } from '@/lib/types/dashboard'
-import { Box, Card, Grid, Stack, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import { motion } from 'framer-motion'
 
 const mockActivities: RecentActivity[] = [
@@ -55,60 +55,64 @@ const mockActivities: RecentActivity[] = [
   }
 ]
 
-const mockStats = {
-  totalProperties: 15,
-  activeTenants: 126,
-  monthlyRevenue: 148500,
-  occupancyRate: 92,
-  percentageChanges: {
-    properties: 6.7,
-    tenants: 4.5,
-    revenue: 12.3,
-    occupancy: 2.1
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1
+    }
   }
+}
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 }
 }
 
 export default function DashboardPage() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
+    <Box
+      component={motion.div}
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      sx={{
+        px: { xs: 2, sm: 3, md: 4 },
+        py: 2,
+        maxWidth: '100%',
+        width: '100%',
+        mx: 'auto'
+      }}
     >
-      <Stack spacing={4}>
-        {/* Welcome Text */}
-        <Box sx={{ mb: 2 }}>
-          <Typography variant="h4" gutterBottom>
-            Dashboard
-          </Typography>
-          <Typography variant="body1" color="text.secondary">
-            Welcome back! Here's an overview of your property management system.
-          </Typography>
-        </Box>
+      <Box component={motion.div} variants={itemVariants} sx={{ mb: 2 }}>
+        <Typography variant="h4" sx={{ mb: 0.5, fontWeight: 700 }}>
+          Welcome back
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary">
+          Here's what's happening with your properties today.
+        </Typography>
+      </Box>
 
-        {/* Stats Section */}
-        <Box sx={{ mb: 2 }}>
-          <DashboardStats stats={mockStats} />
-        </Box>
+      <Box component={motion.div} variants={itemVariants} sx={{ mb: 3 }}>
+        <MetricsGrid />
+      </Box>
 
-        {/* Quick Actions & Recent Activity */}
-        <Grid container spacing={3}>
-          <Grid item xs={12} lg={5}>
-            <QuickActions />
-          </Grid>
-          <Grid item xs={12} lg={7}>
-            <Card
-              elevation={0}
-              sx={{
-                height: '100%',
-                bgcolor: 'background.default'
-              }}
-            >
-              <RecentActivityList activities={mockActivities} />
-            </Card>
-          </Grid>
-        </Grid>
-      </Stack>
-    </motion.div>
+      <Box
+        component={motion.div}
+        variants={itemVariants}
+        sx={{
+          display: 'grid',
+          gap: 3,
+          gridTemplateColumns: {
+            xs: '1fr',
+            lg: '280px 1fr'
+          }
+        }}
+      >
+        <QuickActions />
+        <RecentActivityList activities={mockActivities} />
+      </Box>
+    </Box>
   )
 }

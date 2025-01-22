@@ -1,220 +1,253 @@
 'use client'
 
-import { Box, Drawer, List, ListItemButton, ListItemIcon, ListItemText, Stack, Typography, useMediaQuery } from '@mui/material'
-import { alpha, styled, useTheme } from '@mui/material/styles'
+import { useUserPreferences } from '@/lib/hooks/use-user-preferences'
+import { routes } from '@/lib/routes'
+import {
+    Box,
+    Collapse,
+    Divider,
+    Drawer,
+    IconButton,
+    List,
+    ListItem,
+    ListItemButton,
+    ListItemIcon,
+    ListItemText,
+    Stack,
+    Tooltip,
+    Typography,
+    alpha,
+    useTheme
+} from '@mui/material'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart2, Box as BoxIcon, FileText, Home, Settings, Tool, Users } from 'react-feather'
+import {
+    BarChart2,
+    ChevronLeft,
+    ChevronRight,
+    FileText,
+    Home,
+    Key,
+    Plus,
+    Settings,
+    Tool,
+    Users
+} from 'react-feather'
 
-const DRAWER_WIDTH = 260
-
-const menuItems = [
-  { title: 'Dashboard', path: '/dashboard', icon: Home },
-  { title: 'Properties', path: '/dashboard/properties', icon: BoxIcon },
-  { title: 'Tenants', path: '/dashboard/tenants', icon: Users },
-  { title: 'Maintenance', path: '/dashboard/maintenance', icon: Tool },
-  { title: 'Documents', path: '/dashboard/documents', icon: FileText },
-  { title: 'Analytics', path: '/dashboard/analytics', icon: BarChart2 },
-  { title: 'Settings', path: '/dashboard/settings', icon: Settings }
+const navItems = [
+  {
+    title: 'Dashboard',
+    icon: BarChart2,
+    href: routes.dashboard
+  },
+  {
+    title: 'Properties',
+    icon: Home,
+    href: routes.properties.index
+  },
+  {
+    title: 'Tenants',
+    icon: Users,
+    href: routes.tenants.index
+  },
+  {
+    title: 'Maintenance',
+    icon: Tool,
+    href: routes.maintenance.index
+  },
+  {
+    title: 'Leases',
+    icon: Key,
+    href: routes.leases.index
+  },
+  {
+    title: 'Documents',
+    icon: FileText,
+    href: routes.documents.index
+  }
 ] as const
 
-interface SidebarProps {
-  open: boolean
-  onCloseAction: () => void
-}
+const DRAWER_WIDTH = 280
+const COLLAPSED_DRAWER_WIDTH = 72
 
-const MenuListItem = styled(ListItemButton)(({ theme }) => ({
-  marginBottom: 2,
-  borderRadius: theme.shape.borderRadius,
-  '&.Mui-selected': {
-    color: theme.palette.primary.main,
-    backgroundColor: alpha(theme.palette.primary.main, 0.1),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.primary.main, 0.15),
-    },
-    '& .MuiListItemIcon-root': {
-      color: theme.palette.primary.main,
-    },
-  },
-  '&:hover': {
-    backgroundColor: alpha(theme.palette.primary.main, 0.05),
-  },
-}))
-
-const containerVariants = {
-  initial: { x: -DRAWER_WIDTH },
-  animate: { x: 0, transition: { duration: 0.3 } }
-}
-
-const listVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.2 } }
-}
-
-const itemVariants = {
-  initial: { x: -20, opacity: 0 },
-  animate: { x: 0, opacity: 1 }
-}
-
-export function Sidebar({ open, onCloseAction }: SidebarProps) {
+export function Sidebar() {
   const theme = useTheme()
   const pathname = usePathname()
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
+  const { sidebarCollapsed, setSidebarCollapsed } = useUserPreferences()
 
-  const content = (
-    <Box
-      component={motion.div}
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
+  const handleToggleCollapse = () => {
+    setSidebarCollapsed(!sidebarCollapsed)
+  }
+
+  return (
+    <Drawer
+      variant="permanent"
       sx={{
-        height: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: 'background.paper',
+        width: sidebarCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
+        flexShrink: 0,
+        '& .MuiDrawer-paper': {
+          width: sidebarCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
+          boxSizing: 'border-box',
+          borderRight: '1px solid',
+          borderColor: 'divider',
+          transition: theme.transitions.create(['width'], {
+            duration: theme.transitions.duration.shorter
+          })
+        }
       }}
     >
-      {/* Logo Section */}
-      <Box sx={{ p: 3 }}>
-        <Stack direction="row" alignItems="center" spacing={1}>
-          <Box
-            sx={{
-              width: 35,
-              height: 35,
-              borderRadius: 1,
-              bgcolor: theme => alpha(theme.palette.primary.main, 0.12),
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Image
-              src="/logo.png"
-              alt="Logo"
-              width={24}
-              height={24}
-              style={{ opacity: 0.87 }}
-            />
-          </Box>
-          <Typography variant="h6" sx={{ fontWeight: 600, letterSpacing: 0.5 }}>
-            HDS Admin
-          </Typography>
-        </Stack>
-      </Box>
-
-      {/* Menu Items */}
-      <Box sx={{ px: 2, flex: 1 }}>
-        <List
-          component={motion.ul}
-          variants={listVariants}
-          sx={{ '& .MuiListItemIcon-root': { minWidth: 36 } }}
-        >
-          {menuItems.map((item) => (
-            <motion.li key={item.path} variants={itemVariants}>
-              <MenuListItem
-                // @ts-expect-error - MUI hasn't properly typed the component prop
-                component={Link}
-                href={item.path}
-                selected={pathname === item.path}
-                onClick={isMobile ? onCloseAction : undefined}
-              >
-                <ListItemIcon>
-                  <item.icon size={20} />
-                </ListItemIcon>
-                <ListItemText
-                  primary={item.title}
-                  primaryTypographyProps={{
-                    fontSize: '0.875rem',
-                    fontWeight: pathname === item.path ? 600 : 500,
-                  }}
-                />
-              </MenuListItem>
-            </motion.li>
-          ))}
-        </List>
-      </Box>
-
-      {/* Footer */}
-      <Box sx={{ p: 3 }}>
-        <Box
+      <Stack sx={{ height: '100%' }}>
+        {/* Logo & Collapse Button */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent={sidebarCollapsed ? 'center' : 'space-between'}
           sx={{
-            p: 2.5,
-            borderRadius: 2,
-            bgcolor: theme => alpha(theme.palette.primary.main, 0.04),
-            border: '1px dashed',
-            borderColor: 'primary.main',
+            p: 2,
+            minHeight: 64
           }}
         >
-          <Stack spacing={2} alignItems="center" textAlign="center">
-            <Image
-              src="/illustration_rocket.png"
-              alt="Upgrade"
-              width={100}
-              height={100}
-              style={{ opacity: 0.87 }}
-            />
-            <div>
-              <Typography variant="subtitle1" sx={{ mb: 0.5 }}>
-                Upgrade to Pro
-              </Typography>
-              <Typography variant="body2" color="text.secondary">
-                Get access to premium features
-              </Typography>
-            </div>
-          </Stack>
-        </Box>
-      </Box>
-    </Box>
-  )
+          {!sidebarCollapsed && (
+            <Typography
+              variant="h6"
+              sx={{
+                fontWeight: 600,
+                fontSize: '1.25rem'
+              }}
+            >
+              HDS
+            </Typography>
+          )}
+          <IconButton onClick={handleToggleCollapse} size="small">
+            {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
+          </IconButton>
+        </Stack>
 
-  return isMobile ? (
-    <Drawer
-      variant="temporary"
-      anchor="left"
-      open={open}
-      onClose={onCloseAction}
-      ModalProps={{ keepMounted: true }}
-      sx={{
-        display: { xs: 'block', lg: 'none' },
-        '& .MuiDrawer-paper': {
-          boxSizing: 'border-box',
-          width: DRAWER_WIDTH,
-          borderRight: '1px dashed',
-          borderColor: 'divider',
-          backgroundImage: 'none',
-          boxShadow: 'inherit',
-        },
-      }}
-    >
-      {content}
+        <Divider />
+
+        {/* Quick Action Button */}
+        <Box sx={{ p: 2 }}>
+          <Link href={routes.properties.new} style={{ textDecoration: 'none' }}>
+            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+              <ListItemButton
+                sx={{
+                  py: 1,
+                  px: 2,
+                  borderRadius: 1,
+                  bgcolor: 'primary.main',
+                  color: 'primary.contrastText',
+                  '&:hover': {
+                    bgcolor: 'primary.dark'
+                  }
+                }}
+              >
+                <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
+                  <Plus size={20} />
+                </ListItemIcon>
+                <Collapse in={!sidebarCollapsed} orientation="horizontal">
+                  <ListItemText
+                    primary="Add Property"
+                    primaryTypographyProps={{
+                      sx: { fontWeight: 600 }
+                    }}
+                  />
+                </Collapse>
+              </ListItemButton>
+            </motion.div>
+          </Link>
+        </Box>
+
+        {/* Navigation Items */}
+        <List sx={{ px: 2, py: 1 }}>
+          {navItems.map((item) => {
+            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
+            return (
+              <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
+                <Link href={item.href} style={{ textDecoration: 'none', width: '100%' }}>
+                  <Tooltip
+                    title={sidebarCollapsed ? item.title : ''}
+                    placement="right"
+                  >
+                    <ListItemButton
+                      selected={isActive}
+                      sx={{
+                        borderRadius: 1,
+                        color: isActive ? 'primary.main' : 'text.secondary',
+                        bgcolor: isActive
+                          ? alpha(theme.palette.primary.main, 0.08)
+                          : 'transparent',
+                        '&:hover': {
+                          bgcolor: isActive
+                            ? alpha(theme.palette.primary.main, 0.12)
+                            : alpha(theme.palette.primary.main, 0.04)
+                        },
+                        '&.Mui-selected': {
+                          bgcolor: alpha(theme.palette.primary.main, 0.08),
+                          '&:hover': {
+                            bgcolor: alpha(theme.palette.primary.main, 0.12)
+                          }
+                        }
+                      }}
+                    >
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 36,
+                          color: isActive ? 'primary.main' : 'text.secondary'
+                        }}
+                      >
+                        <item.icon size={20} />
+                      </ListItemIcon>
+                      <Collapse in={!sidebarCollapsed} orientation="horizontal">
+                        <ListItemText
+                          primary={item.title}
+                          primaryTypographyProps={{
+                            sx: {
+                              fontWeight: isActive ? 600 : 500,
+                              color: isActive ? 'text.primary' : 'inherit'
+                            }
+                          }}
+                        />
+                      </Collapse>
+                    </ListItemButton>
+                  </Tooltip>
+                </Link>
+              </ListItem>
+            )
+          })}
+        </List>
+
+        <Box sx={{ flexGrow: 1 }} />
+
+        {/* Settings */}
+        <List sx={{ px: 2, py: 1 }}>
+          <ListItem disablePadding>
+            <Link href={routes.settings} style={{ textDecoration: 'none', width: '100%' }}>
+              <Tooltip
+                title={sidebarCollapsed ? 'Settings' : ''}
+                placement="right"
+              >
+                <ListItemButton
+                  selected={pathname === routes.settings}
+                  sx={{
+                    borderRadius: 1,
+                    '&:hover': {
+                      bgcolor: alpha(theme.palette.primary.main, 0.04)
+                    }
+                  }}
+                >
+                  <ListItemIcon sx={{ minWidth: 36 }}>
+                    <Settings size={20} />
+                  </ListItemIcon>
+                  <Collapse in={!sidebarCollapsed} orientation="horizontal">
+                    <ListItemText primary="Settings" />
+                  </Collapse>
+                </ListItemButton>
+              </Tooltip>
+            </Link>
+          </ListItem>
+        </List>
+      </Stack>
     </Drawer>
-  ) : (
-    <Box
-      component="nav"
-      sx={{
-        width: DRAWER_WIDTH,
-        flexShrink: 0,
-      }}
-    >
-      <Drawer
-        variant="permanent"
-        sx={{
-          display: { xs: 'none', lg: 'block' },
-          '& .MuiDrawer-paper': {
-            boxSizing: 'border-box',
-            width: DRAWER_WIDTH,
-            borderRight: '1px dashed',
-            borderColor: 'divider',
-            backgroundImage: 'none',
-            boxShadow: 'inherit',
-          },
-        }}
-        open
-      >
-        {content}
-      </Drawer>
-    </Box>
   )
 }

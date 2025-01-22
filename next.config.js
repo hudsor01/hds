@@ -1,6 +1,6 @@
-import type { NextConfig } from "next";
-
-const config: NextConfig = {
+// @ts-check
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   typescript: {
     ignoreBuildErrors: false,
@@ -15,14 +15,19 @@ const config: NextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
     },
-    optimizePackageImports: ['@heroicons/react', '@/components/ui'],
+    optimizePackageImports: [
+      '@heroicons/react',
+      '@mui/material',
+      '@supabase/supabase-js',
+      '@/components/ui'
+    ],
   },
   images: {
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: '**',
+        hostname: '**', // Allow all external images (adjust for production)
       },
     ],
   },
@@ -41,4 +46,4 @@ const config: NextConfig = {
   },
 }
 
-export default config;
+module.exports = nextConfig

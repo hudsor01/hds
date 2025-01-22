@@ -3,10 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "type-check": "tsc --noEmit",
+    "type-check:watch": "tsc --noEmit --watch",
+    "dev": "next dev & yarn type-check:watch",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "check-config": "tsc --noEmit --pretty next.config.js"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
@@ -17,22 +20,22 @@
     "@fontsource/roboto": "^5.1.1",
     "@heroicons/react": "^2.2.0",
     "@hookform/resolvers": "^3.10.0",
-    "@mui/icons-material": "^6.4.0",
-    "@mui/material": "^6.4.0",
+    "@mui/icons-material": "^6.4.1",
+    "@mui/material": "^6.4.1",
     "@mui/material-nextjs": "^6.3.1",
     "@prisma/client": "^6.2.1",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/auth-ui-react": "^0.4.7",
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.5.2",
-    "@supabase/supabase-js": "^2.47.16",
+    "@supabase/supabase-js": "^2.48.0",
     "@tailwindcss/aspect-ratio": "^0.4.2",
     "@tailwindcss/forms": "^0.5.10",
     "@vercel/analytics": "^1.4.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
-    "framer-motion": "^11.18.1",
+    "framer-motion": "^12.0.1",
     "lucide-react": "^0.473.0",
     "next": "15.1.5",
     "next-auth": "^4.24.11",
@@ -59,8 +62,8 @@
     "@types/node": "^22.10.7",
     "@types/react": "^19.0.7",
     "@types/react-dom": "^19.0.3",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
     "autoprefixer": "^10.4.20",
     "eslint": "^9.18.0",
     "eslint-config-next": "^15.1.5",
@@ -72,5 +75,8 @@
     "tailwindcss": "^3.4.17",
     "typescript": "^5.7.3"
   },
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.6.0",
+  "engines": {
+    "node": "23.6.1"
+  }
 }
