@@ -1006,10 +1006,10 @@ model users {
   is_sso_user                Boolean?  @default(false)
   deleted_at                 DateTime? @db.Timestamptz(6)
   // Subscription fields
-  stripeCustomerId          String?   @unique @map("stripe_customer_id")
-  stripeSubscriptionId      String?   @map("stripe_subscription_id")
-  subscriptionStatus        String?   @default("inactive") @map("subscription_status")
-  trialEndsAt              DateTime? @db.Timestamptz(6) @map("trial_ends_at")
+  stripe_customer_id         String?   @unique
+  stripe_subscription_id     String?
+  subscription_status        String?   @default("inactive")
+  trial_ends_at             DateTime? @db.Timestamptz(6)
   // Relations
   accounts                  Account[]
   sessions                  Session[]

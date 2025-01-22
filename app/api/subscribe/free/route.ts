@@ -27,21 +27,21 @@ export async function POST(req: Request) {
     const user = await prisma.users.update({
       where: { id: existingUser.id },
       data: {
-        subscriptionStatus: "trialing",
-        trialEndsAt: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
-      },
-      select: {
-        id: true,
-        email: true,
-        raw_user_meta_data: true,
-        subscriptionStatus: true,
-        trialEndsAt: true,
+        stripe_customer_id: null,
+        stripe_subscription_id: null,
+        subscription_status: "trialing",
+        trial_ends_at: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
       },
     });
 
     return NextResponse.json({
       success: true,
-      user,
+      user: {
+        id: user.id,
+        email: user.email,
+        subscription_status: user.subscription_status,
+        trial_ends_at: user.trial_ends_at,
+      },
     });
   } catch (error) {
     console.error("Free trial activation error:", error);
