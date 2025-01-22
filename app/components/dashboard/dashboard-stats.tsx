@@ -11,7 +11,7 @@ interface DashboardStatsProps {
 }
 
 const cardVariants = {
-  initial: { scale: 0.95, opacity: 0 },
+  initial: { scale: 0.96, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   hover: { scale: 1.02, transition: { duration: 0.2 } },
   tap: { scale: 0.98 }
@@ -20,7 +20,7 @@ const cardVariants = {
 const iconVariants = {
   initial: { rotate: -10, scale: 0.9 },
   animate: { rotate: 0, scale: 1 },
-  hover: { rotate: 10, scale: 1.1 }
+  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } }
 }
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
@@ -34,7 +34,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.properties,
       description: "Total number of properties in your portfolio",
       color: "primary",
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.2)} 0%, ${alpha(theme.palette.primary.dark, 0.2)} 100%)`
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.12)} 0%, ${alpha(theme.palette.primary.dark, 0.12)} 100%)`
     },
     {
       title: "Active Tenants",
@@ -43,19 +43,20 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.tenants,
       description: "Number of current active tenants",
       color: "success",
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.success.light, 0.2)} 0%, ${alpha(theme.palette.success.dark, 0.2)} 100%)`
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.success.light, 0.12)} 0%, ${alpha(theme.palette.success.dark, 0.12)} 100%)`
     },
     {
       title: "Monthly Revenue",
       value: new Intl.NumberFormat('en-US', {
         style: 'currency',
-        currency: 'USD'
+        currency: 'USD',
+        maximumFractionDigits: 0
       }).format(stats.monthlyRevenue),
       icon: DollarSign,
       percentageChange: stats.percentageChanges.revenue,
       description: "Total monthly revenue from all properties",
       color: "info",
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.info.light, 0.2)} 0%, ${alpha(theme.palette.info.dark, 0.2)} 100%)`
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.info.light, 0.12)} 0%, ${alpha(theme.palette.info.dark, 0.12)} 100%)`
     },
     {
       title: "Occupancy Rate",
@@ -64,25 +65,31 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.occupancy,
       description: "Current occupancy rate across all properties",
       color: "warning",
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.2)} 0%, ${alpha(theme.palette.warning.dark, 0.2)} 100%)`
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.12)} 0%, ${alpha(theme.palette.warning.dark, 0.12)} 100%)`
     }
   ] as const
 
   return (
-    <Grid container spacing={3}>
-      {items.map((item) => (
+    <Grid container spacing={{ xs: 2, sm: 3 }}>
+      {items.map((item, index) => (
         <Grid key={item.title} item xs={12} sm={6} md={3}>
           <Tooltip title={item.description} arrow placement="top">
             <motion.div
               variants={cardVariants}
+              initial="initial"
+              animate="animate"
               whileHover="hover"
               whileTap="tap"
+              transition={{ delay: index * 0.1 }}
             >
               <Card
                 sx={{
-                  px: 3,
-                  py: 4,
-                  boxShadow: 3,
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 3, sm: 4 },
+                  height: '100%',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  boxShadow: theme.shadows[2],
                   color: theme.palette[item.color].dark,
                   background: item.gradient,
                   border: '1px solid',
@@ -90,7 +97,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                   borderRadius: 2,
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
-                    boxShadow: 16,
+                    boxShadow: theme.shadows[8],
                     borderColor: alpha(theme.palette[item.color].main, 0.4),
                   }
                 }}
@@ -98,27 +105,27 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                 <motion.div
                   variants={iconVariants}
                   style={{
-                    width: 56,
-                    height: 56,
+                    width: 48,
+                    height: 48,
                     display: 'flex',
                     borderRadius: '50%',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    margin: '0 auto',
+                    marginBottom: theme.spacing(2),
                     background: `linear-gradient(135deg, ${theme.palette[item.color].light} 0%, ${theme.palette[item.color].dark} 100%)`,
-                    boxShadow: `0 2px 14px 0 ${alpha(theme.palette[item.color].main, 0.3)}`,
+                    boxShadow: `0 2px 10px 0 ${alpha(theme.palette[item.color].main, 0.3)}`,
                   }}
                 >
-                  <item.icon width={28} height={28} color="#fff" />
+                  <item.icon width={24} height={24} color="#fff" />
                 </motion.div>
 
                 <Typography
-                  variant="h3"
+                  variant="h4"
                   sx={{
-                    mt: 3,
                     mb: 1,
-                    fontWeight: 600,
-                    color: theme.palette[item.color].dark
+                    fontWeight: 700,
+                    color: theme.palette[item.color].dark,
+                    fontSize: { xs: '1.5rem', sm: '1.75rem' }
                   }}
                 >
                   {item.value}
@@ -127,7 +134,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                 <Typography
                   variant="subtitle2"
                   sx={{
-                    opacity: 0.72,
+                    mb: 1,
+                    opacity: 0.8,
                     color: theme.palette[item.color].dark,
                     fontWeight: 500
                   }}
@@ -139,11 +147,12 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                   component={motion.div}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
                   sx={{
-                    mt: 1.5,
+                    mt: 'auto',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'center',
+                    justifyContent: 'flex-start',
                   }}
                 >
                   <TrendingUp

@@ -75,9 +75,9 @@ export default function DashboardPage() {
       animate={{ opacity: 1 }}
       transition={{ duration: 0.3 }}
     >
-      <Stack spacing={3}>
+      <Stack spacing={4}>
         {/* Welcome Text */}
-        <Box>
+        <Box sx={{ mb: 2 }}>
           <Typography variant="h4" gutterBottom>
             Dashboard
           </Typography>
@@ -87,18 +87,24 @@ export default function DashboardPage() {
         </Box>
 
         {/* Stats Section */}
-        <DashboardStats stats={mockStats} />
+        <Box sx={{ mb: 2 }}>
+          <DashboardStats stats={mockStats} />
+        </Box>
 
         {/* Quick Actions & Recent Activity */}
         <Grid container spacing={3}>
-          <Grid item xs={12} md={6}>
+          <Grid item xs={12} lg={5}>
             <QuickActions />
           </Grid>
-          <Grid item xs={12} md={6}>
-            <Card>
-              <Box sx={{ p: 3 }}>
-                <RecentActivityList activities={mockActivities} />
-              </Box>
+          <Grid item xs={12} lg={7}>
+            <Card
+              elevation={0}
+              sx={{
+                height: '100%',
+                bgcolor: 'background.default'
+              }}
+            >
+              <RecentActivityList activities={mockActivities} />
             </Card>
           </Grid>
         </Grid>

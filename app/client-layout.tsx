@@ -54,72 +54,50 @@ export default function ClientLayout({
 }: {
   children: React.ReactNode
 }) {
-  const [isLoading, setIsLoading] = useState(true)
-  const [scrolled, setScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20)
-    }
-
-    window.addEventListener('scroll', handleScroll)
-    const timer = setTimeout(() => setIsLoading(false), 1000)
-
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      clearTimeout(timer)
-    }
+    setMounted(true)
   }, [])
 
+  if (!mounted) {
+    return null
+  }
+
   return (
-    <motion.div
-      className="min-h-screen"
-      style={{ background: theme.palette.background.default }}
-    >
-      <AppRouterCacheProvider>
-        <ThemeProvider theme={theme}>
-          <NextThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <Providers>
+    <AppRouterCacheProvider>
+      <ThemeProvider theme={theme}>
+        <NextThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Providers>
+            <div className="min-h-screen bg-background">
+              <Navbar />
               <AnimatePresence mode="wait">
-                {isLoading ? (
-                  <Loader key="loader" />
-                ) : (
-                  <>
-                    <Navbar scrolled={scrolled} />
-                    <motion.main
-                      className={cn("pt-16", theme.typography.fontFamily)}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      variants={pageVariants}
-                      transition={{
-                        type: "spring",
-                        stiffness: 100,
-                        damping: 20,
-                      }}
-                    >
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.2 }}
-                      >
-                        {children}
-                      </motion.div>
-                    </motion.main>
-                  </>
-                )}
+                <motion.main
+                  className={cn("container mx-auto px-4 py-8")}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
+                  variants={pageVariants}
+                  transition={{
+                    type: "spring",
+                    stiffness: 100,
+                    damping: 20,
+                  }}
+                >
+                  {children}
+                </motion.main>
               </AnimatePresence>
               <NotificationProvider />
-            </Providers>
-          </NextThemeProvider>
-        </ThemeProvider>
-      </AppRouterCacheProvider>
-      <Toaster position="top-right" />
-    </motion.div>
+              <Toaster position="top-right" />
+            </div>
+          </Providers>
+        </NextThemeProvider>
+      </ThemeProvider>
+    </AppRouterCacheProvider>
   )
 }

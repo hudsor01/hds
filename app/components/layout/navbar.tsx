@@ -27,8 +27,9 @@ export function Navbar() {
         <Stack
           direction="row"
           alignItems="center"
-          justifyContent="space-between"
+          spacing={2}
         >
+          {/* Brand */}
           <Link href="/" style={{ textDecoration: 'none' }}>
             <Box
               component="span"
@@ -43,12 +44,19 @@ export function Navbar() {
             </Box>
           </Link>
 
-          <Stack direction="row" spacing={2} alignItems="center">
+          {/* Navigation Links - Centered */}
+          <Stack
+            direction="row"
+            spacing={4}
+            alignItems="center"
+            sx={{ flexGrow: 1, justifyContent: 'center' }}
+          >
             <Link href="/about" style={{ textDecoration: 'none' }}>
               <Box
                 component="span"
                 sx={{
                   color: 'text.secondary',
+                  fontWeight: 500,
                   '&:hover': { color: 'primary.main' }
                 }}
               >
@@ -60,6 +68,7 @@ export function Navbar() {
                 component="span"
                 sx={{
                   color: 'text.secondary',
+                  fontWeight: 500,
                   '&:hover': { color: 'primary.main' }
                 }}
               >
@@ -71,6 +80,7 @@ export function Navbar() {
                 component="span"
                 sx={{
                   color: 'text.secondary',
+                  fontWeight: 500,
                   '&:hover': { color: 'primary.main' }
                 }}
               >
@@ -82,12 +92,17 @@ export function Navbar() {
                 component="span"
                 sx={{
                   color: 'text.secondary',
+                  fontWeight: 500,
                   '&:hover': { color: 'primary.main' }
                 }}
               >
                 Contact
               </Box>
             </Link>
+          </Stack>
+
+          {/* Auth Buttons */}
+          <Stack direction="row" spacing={2} alignItems="center">
             <Link href={'/auth/login' as Route} passHref>
               <Button
                 variant="outlined"

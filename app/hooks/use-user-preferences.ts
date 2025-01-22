@@ -1,64 +1,41 @@
-import { useEffect, useState } from 'react'
+import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 
 interface UserPreferences {
   theme: 'light' | 'dark' | 'system'
-  language: string
-  notifications: {
-    email: boolean
-    push: boolean
-    security: boolean
-  }
-  timezone: string
+  sidebarCollapsed: boolean
+  notificationsEnabled: boolean
+  currency: string
+  dateFormat: string
 }
 
-const defaultPreferences: UserPreferences = {
-  theme: 'system',
-  language: 'en',
-  notifications: {
-    email: true,
-    push: true,
-    security: true,
-  },
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+interface UserPreferencesStore extends UserPreferences {
+  setTheme: (theme: UserPreferences['theme']) => void
+  setSidebarCollapsed: (collapsed: boolean) => void
+  setNotificationsEnabled: (enabled: boolean) => void
+  setCurrency: (currency: string) => void
+  setDateFormat: (format: string) => void
 }
 
-export function useUserPreferences() {
-  const [preferences, setPreferences] = useState<UserPreferences>(defaultPreferences)
-  const [isLoading, setIsLoading] = useState(true)
+export const useUserPreferences = create<UserPreferencesStore>()(
+  persist(
+    (set) => ({
+      // Default preferences
+      theme: 'system',
+      sidebarCollapsed: false,
+      notificationsEnabled: true,
+      currency: 'USD',
+      dateFormat: 'MM/dd/yyyy',
 
-  useEffect(() => {
-    // Load preferences from localStorage or API
-    const loadPreferences = async () => {
-      try {
-        const stored = localStorage.getItem('user-preferences')
-        if (stored) {
-          setPreferences(JSON.parse(stored))
-        }
-      } catch (error) {
-        console.error('Failed to load preferences:', error)
-      } finally {
-        setIsLoading(false)
-      }
+      // Actions
+      setTheme: (theme) => set({ theme }),
+      setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
+      setNotificationsEnabled: (enabled) => set({ notificationsEnabled: enabled }),
+      setCurrency: (currency) => set({ currency }),
+      setDateFormat: (format) => set({ dateFormat }),
+    }),
+    {
+      name: 'user-preferences',
     }
-
-    loadPreferences()
-  }, [])
-
-  const updatePreferences = async (newPreferences: Partial<UserPreferences>) => {
-    try {
-      const updated = { ...preferences, ...newPreferences }
-      setPreferences(updated)
-      localStorage.setItem('user-preferences', JSON.stringify(updated))
-      // Here you would also sync with your backend
-    } catch (error) {
-      console.error('Failed to update preferences:', error)
-      throw error
-    }
-  }
-
-  return {
-    preferences,
-    updatePreferences,
-    isLoading,
-  }
-}
+  )
+)

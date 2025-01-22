@@ -1,10 +1,10 @@
 'use client'
 
-import { Box, Button, Container, Grid, Typography, useTheme } from '@mui/material'
+import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, CheckCircle } from 'react-feather'
+import { ArrowRight } from 'react-feather'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -16,22 +16,38 @@ const features = [
   {
     title: 'Property Management',
     description: 'Streamline your property operations with our comprehensive management tools',
-    icon: '🏢'
+    icon: '🏢',
+    color: 'primary.light'
   },
   {
     title: 'Tenant Portal',
     description: 'Give your tenants a modern platform to manage their rental experience',
-    icon: '👥'
+    icon: '👥',
+    color: 'secondary.light'
   },
   {
     title: 'Financial Analytics',
     description: 'Make data-driven decisions with our powerful analytics dashboard',
-    icon: '📊'
+    icon: '📊',
+    color: 'success.light'
   },
   {
     title: 'Maintenance Tracking',
     description: 'Keep your properties in top condition with our maintenance system',
-    icon: '🔧'
+    icon: '🔧',
+    color: 'info.light'
+  },
+  {
+    title: 'Document Management',
+    description: 'Securely store and manage all your property-related documents',
+    icon: '📄',
+    color: 'warning.light'
+  },
+  {
+    title: 'Smart Automation',
+    description: 'Automate routine tasks and improve operational efficiency',
+    icon: '⚡',
+    color: 'error.light'
   }
 ]
 
@@ -62,26 +78,58 @@ export default function HomePage() {
   return (
     <Box sx={{ overflow: 'hidden' }}>
       {/* Hero Section */}
-      <Container maxWidth="lg" sx={{ mt: 12, mb: 15 }}>
+      <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 }, mb: { xs: 10, md: 15 } }}>
         <Grid container spacing={6} alignItems="center">
           <Grid item xs={12} md={6}>
             <motion.div {...fadeInUp}>
-              <Typography variant="h1" sx={{ mb: 3, fontSize: { xs: '2.5rem', md: '3.5rem' }, fontWeight: 700 }}>
+              <Typography
+                variant="h1"
+                sx={{
+                  mb: 3,
+                  fontSize: { xs: '2.5rem', md: '3.5rem' },
+                  fontWeight: 700,
+                  background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                  backgroundClip: 'text',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                }}
+              >
                 Modern Property Management Solution
               </Typography>
               <Typography variant="h5" sx={{ mb: 4, color: 'text.secondary' }}>
-                Streamline your property management with our powerful platform
+                Streamline your property management with our powerful platform. Built for modern property managers.
               </Typography>
-              <Button
-                component={Link}
-                href="/dashboard"
-                variant="contained"
-                size="large"
-                endIcon={<ArrowRight />}
-                sx={{ borderRadius: '12px', py: 1.5 }}
-              >
-                Get Started
-              </Button>
+              <Stack direction="row" spacing={2}>
+                <Button
+                  component={Link}
+                  href="/auth/register"
+                  variant="contained"
+                  size="large"
+                  endIcon={<ArrowRight />}
+                  sx={{
+                    borderRadius: '12px',
+                    py: 1.5,
+                    px: 3,
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  Get Started Free
+                </Button>
+                <Button
+                  component={Link}
+                  href="/contact"
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    borderRadius: '12px',
+                    py: 1.5,
+                    px: 3,
+                    fontSize: '1.1rem'
+                  }}
+                >
+                  Contact Sales
+                </Button>
+              </Stack>
             </motion.div>
           </Grid>
           <Grid item xs={12} md={6}>
@@ -92,10 +140,14 @@ export default function HomePage() {
             >
               <Box sx={{ position: 'relative', height: '400px' }}>
                 <Image
-                  src="/dashboard-preview.png"
+                  src="/dashboard-preview.jpg"
                   alt="Dashboard Preview"
                   fill
-                  style={{ objectFit: 'contain' }}
+                  style={{
+                    objectFit: 'contain',
+                    borderRadius: '12px',
+                    boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)'
+                  }}
                   priority
                 />
               </Box>
@@ -105,18 +157,25 @@ export default function HomePage() {
       </Container>
 
       {/* Features Section */}
-      <Box sx={{ py: 15, bgcolor: 'background.paper' }}>
+      <Box sx={{ py: { xs: 10, md: 15 }, bgcolor: 'background.paper' }}>
         <Container maxWidth="lg">
           <Typography
             variant="h2"
             align="center"
-            sx={{ mb: 8, fontWeight: 700 }}
+            sx={{
+              mb: { xs: 6, md: 8 },
+              fontWeight: 700,
+              background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+              backgroundClip: 'text',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+            }}
           >
             Powerful Features
           </Typography>
           <Grid container spacing={4}>
             {features.map((feature, index) => (
-              <Grid item xs={12} md={6} key={index}>
+              <Grid item xs={12} sm={6} md={4} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -129,9 +188,13 @@ export default function HomePage() {
                       height: '100%',
                       borderRadius: 4,
                       bgcolor: 'background.default',
-                      boxShadow: theme.customShadows?.z8,
-                      transition: 'transform 0.3s',
-                      '&:hover': { transform: 'translateY(-8px)' }
+                      boxShadow: 1,
+                      transition: 'all 0.3s ease-in-out',
+                      '&:hover': {
+                        transform: 'translateY(-8px)',
+                        boxShadow: 3,
+                        bgcolor: feature.color,
+                      }
                     }}
                   >
                     <Typography variant="h1" sx={{ mb: 2, fontSize: '3rem' }}>
@@ -151,82 +214,50 @@ export default function HomePage() {
         </Container>
       </Box>
 
-      {/* Pricing Section */}
-      <Box sx={{ py: 15 }}>
+      {/* CTA Section */}
+      <Box
+        sx={{
+          py: { xs: 10, md: 15 },
+          background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+          color: 'white'
+        }}
+      >
         <Container maxWidth="lg">
-          <Typography
-            variant="h2"
-            align="center"
-            sx={{ mb: 8, fontWeight: 700 }}
-          >
-            Simple, Transparent Pricing
-          </Typography>
-          <Grid container spacing={4} justifyContent="center">
-            {pricingTiers.map((tier, index) => (
-              <Grid item xs={12} md={4} key={index}>
-                <motion.div
-                  initial={{ opacity: 0, y: 40 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: index * 0.1 }}
-                  viewport={{ once: true }}
+          <Grid container spacing={6} alignItems="center" justifyContent="center">
+            <Grid item xs={12} md={8} textAlign="center">
+              <motion.div
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                viewport={{ once: true }}
+              >
+                <Typography variant="h2" sx={{ mb: 3, fontWeight: 700 }}>
+                  Ready to Transform Your Property Management?
+                </Typography>
+                <Typography variant="h5" sx={{ mb: 4, opacity: 0.9 }}>
+                  Join thousands of property managers who trust our platform
+                </Typography>
+                <Button
+                  component={Link}
+                  href="/auth/register"
+                  variant="contained"
+                  size="large"
+                  sx={{
+                    borderRadius: '12px',
+                    py: 2,
+                    px: 4,
+                    fontSize: '1.1rem',
+                    bgcolor: 'white',
+                    color: 'primary.main',
+                    '&:hover': {
+                      bgcolor: 'grey.100'
+                    }
+                  }}
                 >
-                  <Box
-                    sx={{
-                      p: 4,
-                      height: '100%',
-                      borderRadius: 4,
-                      bgcolor: tier.recommended ? 'primary.main' : 'background.paper',
-                      color: tier.recommended ? 'primary.contrastText' : 'text.primary',
-                      boxShadow: theme.customShadows?.z16,
-                      position: 'relative',
-                      overflow: 'hidden'
-                    }}
-                  >
-                    {tier.recommended && (
-                      <Box
-                        sx={{
-                          position: 'absolute',
-                          top: 12,
-                          right: -32,
-                          transform: 'rotate(45deg)',
-                          bgcolor: 'secondary.main',
-                          color: 'secondary.contrastText',
-                          py: 0.5,
-                          px: 4,
-                          fontSize: '0.75rem',
-                          fontWeight: 'bold'
-                        }}
-                      >
-                        RECOMMENDED
-                      </Box>
-                    )}
-                    <Typography variant="h4" sx={{ mb: 2, fontWeight: 600 }}>
-                      {tier.title}
-                    </Typography>
-                    <Typography variant="h2" sx={{ mb: 4, fontWeight: 700 }}>
-                      {tier.price}
-                      <Typography component="span" sx={{ fontSize: '1rem', ml: 1 }}>
-                        /month
-                      </Typography>
-                    </Typography>
-                    {tier.features.map((feature, featureIndex) => (
-                      <Box key={featureIndex} sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                        <CheckCircle size={20} style={{ marginRight: '8px' }} />
-                        <Typography>{feature}</Typography>
-                      </Box>
-                    ))}
-                    <Button
-                      fullWidth
-                      variant={tier.recommended ? 'contained' : 'outlined'}
-                      color={tier.recommended ? 'secondary' : 'primary'}
-                      sx={{ mt: 4, borderRadius: '12px', py: 1.5 }}
-                    >
-                      Get Started
-                    </Button>
-                  </Box>
-                </motion.div>
-              </Grid>
-            ))}
+                  Start Your Free Trial
+                </Button>
+              </motion.div>
+            </Grid>
           </Grid>
         </Container>
       </Box>

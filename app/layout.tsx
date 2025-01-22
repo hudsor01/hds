@@ -20,6 +20,9 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: 'Hudson Digital',
   description: 'Property Management System',
+  icons: {
+    icon: '/favicon.ico',
+  },
 }
 
 export default function RootLayout({
@@ -29,7 +32,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${roboto.variable} ${inter.variable}`}>
+      <body className={`${roboto.variable} ${inter.variable} antialiased`}>
         <ClientLayout>{children}</ClientLayout>
       </body>
     </html>
