@@ -1,20 +1,19 @@
-import { authOptions } from "@/auth";
-import { stripe } from "@/lib/stripe";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { authOptions } from '@/auth';
+
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
+
+import { stripe } from '@/lib/stripe';
 
 export async function POST() {
   const session = await getServerSession(authOptions);
 
-  if (!session?.user?.stripeCustomerId) {
-    return NextResponse.json(
-      { error: "No subscription found" },
-      { status: 400 },
-    );
+  if (!session?.user?.stripe_customer_id) {
+    return NextResponse.json({ error: 'No Stripe customer ID found' }, { status: 400 });
   }
 
   const portalSession = await stripe.billingPortal.sessions.create({
-    customer: session.user.stripeCustomerId,
+    customer: session.user.stripe_customer_id,
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
   });
 

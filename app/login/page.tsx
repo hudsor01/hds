@@ -1,270 +1,129 @@
-'use client'
+'use client';
 
-import {
-    Box,
-    Button,
-    Container,
-    Divider,
-    IconButton,
-    InputAdornment,
-    Paper,
-    TextField,
-    Typography,
-    useTheme
-} from "@mui/material"
-import { styled } from "@mui/material/styles"
-import { motion } from "framer-motion"
-import { signIn } from "next-auth/react"
-import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { Eye, EyeOff, GitHub, Loader, Lock, Mail } from "react-feather"
-import { toast } from "sonner"
+import { FaEnvelope, FaEye, FaEyeSlash, FaGoogle, FaLock, FaShieldAlt } from 'react-icons/fa';
 
-// Styled Components
-const StyledPaper = styled(Paper)(({ theme }) => ({
-  padding: theme.spacing(4),
-  width: '100%',
-  maxWidth: 400,
-  [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(6),
-  },
-}))
+import React, { useState } from 'react';
 
-const StyledSocialButton = styled(Button)(({ theme }) => ({
-  flex: 1,
-  borderColor: theme.palette.divider,
-  '&:hover': {
-    borderColor: theme.palette.primary.main,
-    backgroundColor: theme.palette.primary.light,
-  },
-}))
+const LoginPage = () => {
+  const [showPassword, setShowPassword] = useState(false);
+  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState('');
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut"
-    }
-  }
-}
+  const handleGoogleLogin = () => {
+    console.log('Google Login Clicked');
+  };
 
-const formVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delay: 0.3,
-      duration: 0.5
-    }
-  }
-}
-
-export default function LoginPage() {
-  const router = useRouter()
-  const theme = useTheme()
-  const [isLoading, setIsLoading] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [formData, setFormData] = useState({
-    email: '',
-    password: '',
-  })
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
-
-  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    setIsLoading(true)
-
-    try {
-      const result = await signIn('credentials', {
-        redirect: false,
-        email: formData.email,
-        password: formData.password,
-      })
-
-      if (result?.error) {
-        throw new Error(result.error)
-      }
-
-      router.push('/dashboard')
-      toast.success('Welcome back!')
-    } catch (error) {
-      toast.error('Invalid email or password')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const handleSocialLogin = async (provider: string) => {
-    setIsLoading(true)
-    try {
-      await signIn(provider, { callbackUrl: '/dashboard' })
-    } catch (error) {
-      toast.error(`Failed to sign in with ${provider}`)
-      setIsLoading(false)
-    }
-  }
+  const handleEmailLogin = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log('Login with', email);
+  };
 
   return (
-    <Container
-      component={motion.div}
-      initial="hidden"
-      animate="visible"
-      variants={containerVariants}
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        py: 4
-      }}
-    >
-      <StyledPaper elevation={2}>
-        <Box sx={{ mb: 4, textAlign: 'center' }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Welcome back
-          </Typography>
-          <Typography color="text.secondary">
-            Sign in to your account
-          </Typography>
-        </Box>
+    <div className='font-roboto flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 to-blue-100 p-4'>
+      <div className='w-full max-w-5xl overflow-hidden rounded-3xl bg-white shadow-2xl'>
+        <div className='flex items-center justify-between bg-blue-600 px-12 py-6 text-white'>
+          <div className='flex items-center space-x-4'>
+            <FaShieldAlt className='text-3xl' />
+            <h1 className='text-2xl font-bold tracking-tight'>SecureLogin</h1>
+          </div>
+          <div className='flex items-center space-x-4'>
+            <a href='#' className='transition hover:text-blue-100'>
+              Help
+            </a>
+            <a href='#' className='transition hover:text-blue-100'>
+              Contact
+            </a>
+          </div>
+        </div>
 
-        <motion.form
-          variants={formVariants}
-          onSubmit={handleSubmit}
-          noValidate
-        >
-          <Box sx={{ mb: 3 }}>
-            <TextField
-              fullWidth
-              id="email"
-              name="email"
-              label="Email"
-              type="email"
-              required
-              disabled={isLoading}
-              value={formData.email}
-              onChange={handleChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Mail size={20} />
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
+        <div className='grid md:grid-cols-2'>
+          <div className='flex items-center justify-center bg-blue-50 p-12'>
+            <div className='text-center'>
+              <div className='mx-auto mb-6 flex h-48 w-48 items-center justify-center rounded-full bg-blue-200'>
+                <FaLock className='text-6xl text-blue-600' />
+              </div>
+              <h3 className='mb-4 text-2xl font-bold text-blue-800'>Secure Authentication</h3>
+              <p className='px-6 text-blue-600'>
+                Protect your digital identity with our advanced security protocols and multi-factor
+                authentication.
+              </p>
+            </div>
+          </div>
 
-          <Box sx={{ mb: 4 }}>
-            <TextField
-              fullWidth
-              id="password"
-              name="password"
-              label="Password"
-              type={showPassword ? 'text' : 'password'}
-              required
-              disabled={isLoading}
-              value={formData.password}
-              onChange={handleChange}
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <Lock size={20} />
-                  </InputAdornment>
-                ),
-                endAdornment: (
-                  <InputAdornment position="end">
-                    <IconButton
-                      aria-label="toggle password visibility"
-                      onClick={() => setShowPassword(!showPassword)}
-                      edge="end"
-                    >
-                      {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
-            />
-          </Box>
+          <div className='flex items-center p-12'>
+            <div className='w-full'>
+              <h2 className='mb-8 text-3xl font-bold tracking-tight text-blue-800'>Welcome Back</h2>
 
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            size="large"
-            disabled={isLoading}
-            sx={{ mb: 3 }}
-          >
-            {isLoading ? (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                <Loader size={20} className="animate-spin" />
-                Signing in...
-              </Box>
-            ) : (
-              'Sign in'
-            )}
-          </Button>
-
-          <Box sx={{ position: 'relative', my: 4 }}>
-            <Divider>
-              <Typography
-                variant="body2"
-                sx={{
-                  px: 2,
-                  color: 'text.secondary',
-                  bgcolor: 'background.paper',
-                }}
+              <button
+                onClick={handleGoogleLogin}
+                className='mb-6 flex w-full items-center justify-center rounded-lg border border-blue-200 bg-white py-3 text-blue-700 transition duration-300 ease-in-out hover:bg-blue-50'
               >
-                Or continue with
-              </Typography>
-            </Divider>
-          </Box>
+                <FaGoogle className='mr-3 text-lg text-red-500' /> Continue with Google
+              </button>
 
-          <Box sx={{ display: 'flex', gap: 2, mb: 4 }}>
-            <StyledSocialButton
-              variant="outlined"
-              startIcon={<GitHub size={20} />}
-              disabled={isLoading}
-              onClick={() => handleSocialLogin('github')}
-            >
-              GitHub
-            </StyledSocialButton>
-            <StyledSocialButton
-              variant="outlined"
-              startIcon={<Mail size={20} />}
-              disabled={isLoading}
-              onClick={() => handleSocialLogin('google')}
-            >
-              Google
-            </StyledSocialButton>
-          </Box>
+              <div className='my-6 flex items-center'>
+                <div className='flex-grow border-t border-blue-200'></div>
+                <span className='px-4 font-medium text-blue-400'>or</span>
+                <div className='flex-grow border-t border-blue-200'></div>
+              </div>
 
-          <Typography
-            variant="body2"
-            align="center"
-            color="text.secondary"
-          >
-            Don't have an account?{' '}
-            <Link
-              href="/register"
-              style={{
-                color: theme.palette.primary.main,
-                textDecoration: 'none',
-              }}
-            >
-              Sign up
-            </Link>
-          </Typography>
-        </motion.form>
-      </StyledPaper>
-    </Container>
-  )
-}
+              <form onSubmit={handleEmailLogin} className='space-y-5'>
+                <div className='relative'>
+                  <FaEnvelope className='absolute left-4 top-1/2 -translate-y-1/2 transform text-blue-400' />
+                  <input
+                    type='email'
+                    placeholder='Email Address'
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    className='w-full rounded-lg border border-blue-100 bg-white py-3.5 pl-12 pr-4 text-blue-800 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                    required
+                  />
+                </div>
+
+                <div className='relative'>
+                  <FaLock className='absolute left-4 top-1/2 -translate-y-1/2 transform text-blue-400' />
+                  <input
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder='Password'
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className='w-full rounded-lg border border-blue-100 bg-white py-3.5 pl-12 pr-12 text-blue-800 placeholder-blue-300 focus:outline-none focus:ring-2 focus:ring-blue-300'
+                    required
+                  />
+                  <button
+                    type='button'
+                    onClick={() => setShowPassword(!showPassword)}
+                    className='absolute right-4 top-1/2 -translate-y-1/2 transform text-blue-400 hover:text-blue-600'
+                  >
+                    {showPassword ? <FaEyeSlash /> : <FaEye />}
+                  </button>
+                </div>
+
+                <button
+                  type='submit'
+                  className='w-full rounded-lg bg-blue-600 py-3.5 text-white transition duration-300 ease-in-out hover:bg-blue-700'
+                >
+                  Log In
+                </button>
+              </form>
+
+              <div className='mt-6 text-center'>
+                <a href='#' className='font-medium text-blue-600 hover:underline'>
+                  Forgot Password?
+                </a>
+                <p className='mt-4 text-sm text-blue-400'>
+                  Don't have an account?{' '}
+                  <a href='#' className='text-blue-600 hover:underline'>
+                    Sign Up
+                  </a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default LoginPage;
