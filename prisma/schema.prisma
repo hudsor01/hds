@@ -680,10 +680,10 @@ model users {
   reauthentication_sent_at    DateTime? @db.Timestamptz(6)
   is_sso_user                 Boolean?  @default(false)
   deleted_at                  DateTime? @db.Timestamptz(6)
-  stripe_customer_id          String?   @unique
-  stripe_subscription_id      String?
-  subscription_status         String?   @default("inactive")
-  trial_ends_at               DateTime? @db.Timestamptz(6)
+  stripe_customer_id          String?   @unique @map("stripe_customer_id")
+  stripe_subscription_id      String?   @map("stripe_subscription_id")
+  subscription_status         String?   @default("inactive") @map("subscription_status")
+  trial_ends_at               DateTime? @map("trial_ends_at") @db.Timestamptz(6)
 
   @@index([email])
   @@index([phone])

@@ -1,14 +1,16 @@
-import { authOptions } from "@/auth";
-import { prisma } from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { NextResponse } from "next/server";
+import { authOptions } from '@/auth';
+
+import { getServerSession } from 'next-auth';
+import { NextResponse } from 'next/server';
+
+import { prisma } from '@/lib/prisma';
 
 export async function POST(req: Request) {
   try {
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const { trialDays } = await req.json();
@@ -20,7 +22,7 @@ export async function POST(req: Request) {
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Update user with trial information
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
         id: existingUser.id,
       },
       data: {
-        subscription_status: "trialing",
+        subscription_status: 'trialing',
         trial_ends_at: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
       },
       select: {
@@ -41,10 +43,7 @@ export async function POST(req: Request) {
     });
 
     if (!user || !user.subscription_status || !user.trial_ends_at) {
-      return NextResponse.json(
-        { error: "Failed to activate free trial" },
-        { status: 500 },
-      );
+      return NextResponse.json({ error: 'Failed to activate free trial' }, { status: 500 });
     }
 
     return NextResponse.json({
@@ -57,10 +56,7 @@ export async function POST(req: Request) {
       },
     });
   } catch (error) {
-    console.error("Free trial activation error:", error);
-    return NextResponse.json(
-      { error: "Failed to activate free trial" },
-      { status: 500 },
-    );
+    console.error('Free trial activation error:', error);
+    return NextResponse.json({ error: 'Failed to activate free trial' }, { status: 500 });
   }
 }
