@@ -1,61 +1,62 @@
-import { prisma } from '@/lib/prisma'
-import { stripe } from '@/lib/stripe'
-import { headers } from 'next/headers'
-import { NextResponse } from 'next/server'
-import type Stripe from 'stripe'
+import { prisma } from "@/lib/prisma";
+import { stripe } from "@/lib/stripe";
+import { headers } from "next/headers";
+import { NextResponse } from "next/server";
+import type Stripe from "stripe";
 
 export async function POST(req: Request) {
-  const body = await req.text()
-  const headersList = await headers()
-  const signature = headersList.get('stripe-signature')!
+  const body = await req.text();
+  const headersList = await headers();
+  const signature = headersList.get("stripe-signature")!;
 
   try {
     const event = stripe.webhooks.constructEvent(
       body,
       signature,
-      process.env.STRIPE_WEBHOOK_SECRET!
-    )
+      process.env.STRIPE_WEBHOOK_SECRET!,
+    );
 
     switch (event.type) {
-      case 'checkout.session.completed':
-        const session = event.data.object as Stripe.Checkout.Session
+      case "checkout.session.completed":
+        const session = event.data.object as Stripe.Checkout.Session;
         await prisma.users.update({
           where: { id: session.client_reference_id! },
           data: {
-            stripeCustomerId: session.customer as string,
-            stripeSubscriptionId: session.subscription as string,
-            subscriptionStatus: 'active'
-          }
-        })
-        break
+            stripe_customer_id: session.customer as string,
+            stripe_subscription_id: session.subscription as string,
+            subscription_status: "active",
+            trial_ends_at: null,
+          },
+        });
+        break;
 
-      case 'invoice.payment_succeeded':
-        const invoice = event.data.object as Stripe.Invoice
+      case "invoice.payment_succeeded":
+        const invoice = event.data.object as Stripe.Invoice;
         await prisma.users.update({
-          where: { stripeCustomerId: invoice.customer as string },
+          where: { stripe_customer_id: invoice.customer as string },
           data: {
-            subscriptionStatus: 'active'
-          }
-        })
-        break
+            subscription_status: "active",
+          },
+        });
+        break;
 
-      case 'invoice.payment_failed':
-        const failedInvoice = event.data.object as Stripe.Invoice
+      case "invoice.payment_failed":
+        const failedInvoice = event.data.object as Stripe.Invoice;
         await prisma.users.update({
-          where: { stripeCustomerId: failedInvoice.customer as string },
+          where: { stripe_customer_id: failedInvoice.customer as string },
           data: {
-            subscriptionStatus: 'past_due'
-          }
-        })
-        break
+            subscription_status: "past_due",
+          },
+        });
+        break;
     }
 
-    return NextResponse.json({ received: true })
+    return NextResponse.json({ received: true });
   } catch (error) {
-    console.error('Webhook error:', error)
+    console.error("Webhook error:", error);
     return NextResponse.json(
-      { error: 'Webhook handler failed' },
-      { status: 500 }
-    )
+      { error: "Webhook handler failed" },
+      { status: 500 },
+    );
   }
 }
