@@ -37,8 +37,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@hudsondigital',
-    creator: '@hudsondigital'
+    site: '@dickswayze',
+    creator: '@dickswayze'
   },
   robots: {
     index: true,

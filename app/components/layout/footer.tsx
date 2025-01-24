@@ -137,7 +137,7 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       className="text-gray-700 transition hover:text-blue-400"
-                      href={item.href as string}
+                      href={item.href}
                     >
                       {item.name}
                     </Link>
@@ -154,7 +154,7 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       className="text-gray-700 transition hover:text-blue-400"
-                      href={item.href as string}
+                      href={item.href}
                     >
                       {item.name}
                     </Link>
@@ -171,7 +171,7 @@ export function Footer() {
                   <li key={item.name}>
                     <Link
                       className="text-gray-700 transition hover:text-blue-400"
-                      href={item.href as string}
+                      href={item.href}
                     >
                       {item.name}
                     </Link>
@@ -187,11 +187,11 @@ export function Footer() {
             © Hudson Digital Solutions {new Date().getFullYear()}. All rights reserved.
             <br />
             Built with{' '}
-            <Link href={'/' as string} className="text-blue-400 underline transition hover:text-blue-500/75">
+            <Link href="/" className="text-blue-400 underline transition hover:text-blue-500/75">
               Next.js
             </Link>{' '}
             and{' '}
-            <Link href={'/' as string} className="text-blue-400 underline transition hover:text-blue-500/75">
+            <Link href="/" className="text-blue-400 underline transition hover:text-blue-500/75">
               Tailwind CSS
             </Link>
             .

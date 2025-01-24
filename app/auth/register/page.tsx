@@ -3,8 +3,9 @@
 import { InputGroup, InputRightElement } from '@/components/ui/input-group'
 import { routes } from '@/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
+import feather from 'feather-icons'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
@@ -177,9 +178,9 @@ export default function RegisterPage(): React.ReactElement {
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <div dangerouslySetInnerHTML={{ __html: feather.icons['eye-off'].toSvg({ class: 'h-4 w-4' }) }} />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <div dangerouslySetInnerHTML={{ __html: feather.icons.eye.toSvg({ class: 'h-4 w-4' }) }} />
                     )}
                   </button>
                 </InputRightElement>
@@ -188,19 +189,24 @@ export default function RegisterPage(): React.ReactElement {
                 <div className="mt-2">
                   <progress
                     className={`progress w-full ${
-                      passwordStrength >= 80 ? 'progress-success' :
-                      passwordStrength >= 60 ? 'progress-warning' :
-                      'progress-error'
+                      passwordStrength >= 80
+                        ? 'progress-success'
+                        : passwordStrength >= 60
+                        ? 'progress-warning'
+                        : 'progress-error'
                     }`}
                     value={passwordStrength}
                     max="100"
                   />
                   <p className="mt-1 text-xs text-gray-600">
                     Password strength: {
-                      passwordStrength >= 80 ? 'Strong' :
-                      passwordStrength >= 60 ? 'Good' :
-                      passwordStrength >= 40 ? 'Fair' :
-                      'Weak'
+                      passwordStrength >= 80
+                        ? 'Strong'
+                        : passwordStrength >= 60
+                        ? 'Good'
+                        : passwordStrength >= 40
+                        ? 'Fair'
+                        : 'Weak'
                     }
                   </p>
                 </div>
@@ -232,9 +238,9 @@ export default function RegisterPage(): React.ReactElement {
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
-                      <EyeOff className="h-4 w-4" />
+                      <div dangerouslySetInnerHTML={{ __html: feather.icons['eye-off'].toSvg({ class: 'h-4 w-4' }) }} />
                     ) : (
-                      <Eye className="h-4 w-4" />
+                      <div dangerouslySetInnerHTML={{ __html: feather.icons.eye.toSvg({ class: 'h-4 w-4' }) }} />
                     )}
                   </button>
                 </InputRightElement>
@@ -254,7 +260,12 @@ export default function RegisterPage(): React.ReactElement {
           >
             {isPending ? (
               <>
-                <Loader className="mr-2 h-4 w-4 animate-spin" />
+                <div
+                  className="mr-2 h-4 w-4 animate-spin"
+                  dangerouslySetInnerHTML={{
+                    __html: feather.icons.loader.toSvg()
+                  }}
+                />
                 Creating account...
               </>
             ) : (

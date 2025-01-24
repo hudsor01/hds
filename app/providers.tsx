@@ -1,12 +1,11 @@
 'use client'
 
-import { ThemeProvider } from '@mui/material/styles'
-import { theme } from './theme'
+import { ThemeProvider as NextThemeProvider } from 'next-themes'
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider theme={theme}>
+    <NextThemeProvider attribute="class" defaultTheme="system" enableSystem>
       {children}
-    </ThemeProvider>
+    </NextThemeProvider>
   )
 }
