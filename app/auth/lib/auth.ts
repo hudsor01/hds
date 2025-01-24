@@ -1,23 +1,25 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
-import type { DefaultSession, User } from 'next-auth'
-import NextAuth from 'next-auth'
+import NextAuth, { DefaultSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
-
-type UserExtensions = {
-  stripeCustomerId?: string | null
-  subscriptionStatus?: string | null
-  emailVerified?: Date | null
-}
 
 declare module 'next-auth' {
   interface Session extends DefaultSession {
-    user: DefaultSession['user'] & UserExtensions & {
+    user: {
       id: string
-    }
+      stripe_customer_id?: string | null
+      subscription_status?: string | null
+    } & DefaultSession['user']
   }
+}
 
-  interface User extends UserExtensions {}
+declare module 'next-auth/jwt' {
+  interface JWT {
+    id: string
+    stripe_customer_id?: string | null
+    subscription_status?: string | null
+    accessToken?: string
+  }
 }
 
 const prisma = new PrismaClient()
@@ -37,45 +39,28 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       }
     })
   ],
+  callbacks: {
+    session({ session, token }) {
+      if (session.user) {
+        session.user.id = token.id
+        session.user.stripe_customer_id = token.stripe_customer_id
+        session.user.subscription_status = token.subscription_status
+      }
+      return session
+    },
+    jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+        token.stripe_customer_id = user.stripe_customer_id
+        token.subscription_status = user.subscription_status
+      }
+      return token
+    }
+  },
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/auth/login',
     signOut: '/auth/logout',
     error: '/auth/error',
-  },
-  callbacks: {
-    async signIn({ account, profile }) {
-      if (!profile?.email) {
-        return false
-      }
-      return true
-    },
-    async jwt({ token, user, account }) {
-      if (user) {
-        token.id = user.id
-        token.email = user.email
-        token.name = user.name
-        token.picture = user.image
-        token.stripeCustomerId = (user as User & UserExtensions).stripeCustomerId
-        token.subscriptionStatus = (user as User & UserExtensions).subscriptionStatus
-        token.emailVerified = (user as User & UserExtensions).emailVerified
-      }
-      if (account) {
-        token.accessToken = account.access_token
-      }
-      return token
-    },
-    async session({ session, token }) {
-      if (session.user) {
-        session.user.id = token.id as string
-        session.user.email = token.email as string
-        session.user.name = token.name as string | undefined
-        session.user.image = token.picture as string | undefined
-        session.user.stripeCustomerId = token.stripeCustomerId as string | null
-        session.user.subscriptionStatus = token.subscriptionStatus as string | null
-        session.user.emailVerified = token.emailVerified as Date | null
-      }
-      return session
-    }
   }
 })
