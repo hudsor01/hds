@@ -1,34 +1,29 @@
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
-import type { DefaultSession } from 'next-auth'
+import type { DefaultSession, User } from 'next-auth'
 import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
+type UserExtensions = {
+  stripeCustomerId?: string | null
+  subscriptionStatus?: string | null
+  emailVerified?: Date | null
+}
+
 declare module 'next-auth' {
-  interface Session {
-    user: {
+  interface Session extends DefaultSession {
+    user: DefaultSession['user'] & UserExtensions & {
       id: string
-      email: string
-      name?: string | null
-      image?: string | null
-      stripe_customer_id?: string | null
-      subscription_status?: string | null
-      emailVerified?: Date | null
     }
   }
+
+  interface User extends UserExtensions {}
 }
 
 const prisma = new PrismaClient()
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
-  adapter: PrismaAdapter(prisma, {
-    modelMapping: {
-      User: 'authUser',
-      Account: 'authAccount',
-      Session: 'authSession',
-      VerificationToken: 'authVerificationToken',
-    }
-  }),
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -49,17 +44,36 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     error: '/auth/error',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async signIn({ account, profile }) {
+      if (!profile?.email) {
+        return false
+      }
+      return true
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id
         token.email = user.email
+        token.name = user.name
+        token.picture = user.image
+        token.stripeCustomerId = (user as User & UserExtensions).stripeCustomerId
+        token.subscriptionStatus = (user as User & UserExtensions).subscriptionStatus
+        token.emailVerified = (user as User & UserExtensions).emailVerified
+      }
+      if (account) {
+        token.accessToken = account.access_token
       }
       return token
     },
     async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id
+        session.user.id = token.id as string
         session.user.email = token.email as string
+        session.user.name = token.name as string | undefined
+        session.user.image = token.picture as string | undefined
+        session.user.stripeCustomerId = token.stripeCustomerId as string | null
+        session.user.subscriptionStatus = token.subscriptionStatus as string | null
+        session.user.emailVerified = token.emailVerified as Date | null
       }
       return session
     }
