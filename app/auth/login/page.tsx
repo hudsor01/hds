@@ -1,10 +1,11 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
-import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
-import { FaEnvelope, FaEye, FaEyeSlash, FaGoogle, FaLock } from 'react-icons/fa';
-import { toast } from 'sonner';
+import { Button, Checkbox, Divider, FormControlLabel, TextField } from '@mui/material'
+import FeatherIcon from 'feather-icons-react'
+import { signIn } from 'next-auth/react'
+import { useRouter, useSearchParams } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 export default function LoginPage() {
   const router = useRouter();
@@ -71,7 +72,7 @@ export default function LoginPage() {
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
                   <div className="bg-blue-500/20 p-3 rounded-full">
-                    <FaLock className="text-xl" />
+                    <FeatherIcon icon="lock" className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="font-semibold">Secure Access</h3>
@@ -80,11 +81,11 @@ export default function LoginPage() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="bg-blue-500/20 p-3 rounded-full">
-                    <FaGoogle className="text-xl" />
+                    <FeatherIcon icon="alert-circle" className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">Easy Login</h3>
-                    <p className="text-sm text-blue-100">Sign in with Google</p>
+                    <h3 className="font-semibold">24/7 Support</h3>
+                    <p className="text-sm text-blue-100">Always here to help</p>
                   </div>
                 </div>
               </div>
@@ -98,79 +99,83 @@ export default function LoginPage() {
               <p className="text-gray-600 mt-2">Welcome back! Please enter your details</p>
             </div>
 
-            <button
+            <Button
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full flex items-center justify-center space-x-3 py-3 px-4 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 transition duration-200 mb-6 disabled:opacity-50"
+              variant="outlined"
+              fullWidth
+              className="mb-6 py-3 normal-case"
+              startIcon={<img src="/google.svg" alt="Google" className="w-5 h-5" />}
             >
-              <FaGoogle className="text-xl text-red-500" />
-              <span className="text-gray-700">Continue with Google</span>
-            </button>
+              Continue with Google
+            </Button>
 
             <div className="relative my-6">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300"></div>
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">Or continue with</span>
-              </div>
+              <Divider>
+                <span className="px-2 text-gray-500">Or continue with</span>
+              </Divider>
             </div>
 
             <form onSubmit={handleEmailLogin} className="space-y-6">
-              <div>
-                <div className="relative">
-                  <FaEnvelope className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type="email"
-                    placeholder="Email address"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                    disabled={isLoading}
-                  />
-                </div>
-              </div>
+              <TextField
+                type="email"
+                label="Email address"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                fullWidth
+                required
+                disabled={isLoading}
+                InputProps={{
+                  startAdornment: <FeatherIcon icon="mail" className="w-5 h-5 text-gray-400 mr-2" />,
+                }}
+              />
 
-              <div>
-                <div className="relative">
-                  <FaLock className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                    className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                    required
-                    disabled={isLoading}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                  >
-                    {showPassword ? <FaEyeSlash /> : <FaEye />}
-                  </button>
-                </div>
-              </div>
+              <TextField
+                type={showPassword ? 'text' : 'password'}
+                label="Password"
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                fullWidth
+                required
+                disabled={isLoading}
+                InputProps={{
+                  startAdornment: <FeatherIcon icon="lock" className="w-5 h-5 text-gray-400 mr-2" />,
+                  endAdornment: (
+                    <button
+                      type="button"
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="text-gray-400 hover:text-gray-600"
+                    >
+                      {showPassword ? <FeatherIcon icon="eye-off" className="w-5 h-5" /> : <FeatherIcon icon="eye" className="w-5 h-5" />}
+                    </button>
+                  ),
+                }}
+              />
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center space-x-2">
-                  <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                  <span className="text-gray-600">Remember me</span>
-                </label>
+              <div className="flex items-center justify-between">
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      color="primary"
+                      className="text-blue-600 focus:ring-blue-500"
+                    />
+                  }
+                  label="Remember me"
+                />
                 <a href="/auth/forgot-password" className="text-blue-600 hover:text-blue-700 font-medium">
                   Forgot password?
                 </a>
               </div>
 
-              <button
+              <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full py-3 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-200 disabled:opacity-50"
+                variant="contained"
+                fullWidth
+                className="py-3 bg-blue-600 hover:bg-blue-700 normal-case"
               >
                 {isLoading ? 'Signing in...' : 'Sign in'}
-              </button>
+              </Button>
             </form>
 
             <p className="mt-8 text-center text-gray-600">

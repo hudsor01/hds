@@ -1,20 +1,24 @@
-import * as FeatherIcons from 'react-feather';
-import { IconProps as FeatherIconProps } from 'react-feather';
+import feather from 'feather-icons'
+import { HTMLAttributes, useEffect, useRef } from 'react'
 
-export interface IconProps extends Omit<FeatherIconProps, 'ref'> {
-  name: keyof typeof FeatherIcons;
-  className?: string;
+interface IconProps extends HTMLAttributes<HTMLSpanElement> {
+  name: string
+  size?: number
+  strokeWidth?: number
 }
 
-export function Icon({ name, className = '', size = 24, ...props }: IconProps) {
-  const FeatherIcon = FeatherIcons[name];
+export function Icon({ name, size = 24, strokeWidth = 2, className, ...props }: IconProps) {
+  const iconRef = useRef<HTMLSpanElement>(null)
 
-  return (
-    <FeatherIcon
-      size={size}
-      className={`inline-block align-middle ${className}`}
-      aria-hidden="true"
-      {...props}
-    />
-  );
+  useEffect(() => {
+    if (iconRef.current) {
+      iconRef.current.innerHTML = feather.icons[name].toSvg({
+        width: size,
+        height: size,
+        'stroke-width': strokeWidth
+      })
+    }
+  }, [name, size, strokeWidth])
+
+  return <span ref={iconRef} className={className} {...props} />
 }

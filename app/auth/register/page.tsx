@@ -1,14 +1,14 @@
 'use client'
 
+import { InputGroup, InputRightElement } from '@/components/ui/input-group'
 import { routes } from '@/routes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { Eye, EyeOff, Loader } from 'react-feather'
+import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { toast } from 'sonner'
 import { z } from 'zod'
-import { InputGroup, InputRightElement } from '../components/ui/input-group'
+
 
 const registerSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),

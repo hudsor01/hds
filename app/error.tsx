@@ -1,9 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
-import { AlertTriangle } from 'react-feather'
-
 import { Button } from '@/components/ui/button'
+import { Icon } from '@/components/ui/icon'
+import { useEffect } from 'react'
 
 export default function GlobalError({
   error,
@@ -21,7 +20,7 @@ export default function GlobalError({
       <body>
         <div className="flex min-h-screen flex-col items-center justify-center">
           <div className="container flex max-w-md flex-col items-center gap-6 text-center">
-            <AlertTriangle className="h-12 w-12 text-destructive" />
+            <Icon name="alert-triangle" className="h-12 w-12 text-destructive" />
             <h1 className="text-2xl font-bold tracking-tight">
               Something went wrong!
             </h1>

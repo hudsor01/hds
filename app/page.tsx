@@ -1,10 +1,10 @@
 'use client'
 
+import { Icon } from '@/components/ui/icon'
 import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight } from 'react-feather'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 60 },
@@ -105,7 +105,7 @@ export default function HomePage() {
                   href="/auth/register"
                   variant="contained"
                   size="large"
-                  endIcon={<ArrowRight />}
+                  endIcon={<Icon name="arrow-right" />}
                   sx={{
                     borderRadius: '12px',
                     py: 1.5,
