@@ -83,21 +83,17 @@ export default function HomePage() {
           <Grid item xs={12} md={6}>
             <motion.div {...fadeInUp}>
               <Typography
-                variant="h1"
+                variant="h2"
                 sx={{
                   mb: 3,
-                  fontSize: { xs: '2.5rem', md: '3.5rem' },
-                  fontWeight: 700,
-                  background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                  backgroundClip: 'text',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
+                  fontWeight: 600,
+                  color: 'text.primary',
                 }}
               >
                 Modern Property Management Solution
               </Typography>
-              <Typography variant="h5" sx={{ mb: 4, color: 'text.secondary' }}>
-                Streamline your property management with our powerful platform. Built for modern property managers.
+              <Typography variant="body1" sx={{ mb: 4, color: 'text.secondary' }}>
+                Streamline your property management with our powerful platform. Built for modern property managers who demand efficiency, transparency, and results.
               </Typography>
               <Stack direction="row" spacing={2}>
                 <Button
@@ -115,20 +111,6 @@ export default function HomePage() {
                 >
                   Get Started Free
                 </Button>
-                <Button
-                  component={Link}
-                  href="/contact"
-                  variant="outlined"
-                  size="large"
-                  sx={{
-                    borderRadius: '12px',
-                    py: 1.5,
-                    px: 3,
-                    fontSize: '1.1rem'
-                  }}
-                >
-                  Contact Sales
-                </Button>
               </Stack>
             </motion.div>
           </Grid>
@@ -144,7 +126,7 @@ export default function HomePage() {
                   alt="Dashboard Preview"
                   fill
                   style={{
-                    objectFit: 'contain',
+                    objectFit: 'cover',
                     borderRadius: '12px',
                     boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)'
                   }}
