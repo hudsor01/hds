@@ -1,7 +1,7 @@
 'use client'
 
 import { Icon } from '@/components/ui/icon'
-import { Box, Button, Container, Grid, Stack, Typography, useTheme } from '@mui/material'
+import { Box, Button, Container, Grid2, Stack, Typography, useTheme } from '@mui/material'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -79,8 +79,8 @@ export default function HomePage() {
     <Box sx={{ overflow: 'hidden' }}>
       {/* Hero Section */}
       <Container maxWidth="lg" sx={{ mt: { xs: 8, md: 12 }, mb: { xs: 10, md: 15 } }}>
-        <Grid container spacing={6} alignItems="center">
-          <Grid item xs={12} md={6}>
+        <Grid2 container spacing={6} alignItems="center">
+          <Grid2 item xs={12} md={6}>
             <motion.div {...fadeInUp}>
               <Typography
                 variant="h2"
@@ -113,8 +113,8 @@ export default function HomePage() {
                 </Button>
               </Stack>
             </motion.div>
-          </Grid>
-          <Grid item xs={12} md={6}>
+          </Grid2>
+          <Grid2 item xs={12} md={6}>
             <motion.div
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
@@ -134,8 +134,8 @@ export default function HomePage() {
                 />
               </Box>
             </motion.div>
-          </Grid>
-        </Grid>
+          </Grid2>
+        </Grid2>
       </Container>
 
       {/* Features Section */}
@@ -155,9 +155,9 @@ export default function HomePage() {
           >
             Powerful Features
           </Typography>
-          <Grid container spacing={4}>
+          <Grid2 container spacing={4}>
             {features.map((feature, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
+              <Grid2 item xs={12} sm={6} md={4} key={index}>
                 <motion.div
                   initial={{ opacity: 0, y: 40 }}
                   whileInView={{ opacity: 1, y: 0 }}
@@ -190,9 +190,9 @@ export default function HomePage() {
                     </Typography>
                   </Box>
                 </motion.div>
-              </Grid>
+              </Grid2>
             ))}
-          </Grid>
+          </Grid2>
         </Container>
       </Box>
 
@@ -205,8 +205,8 @@ export default function HomePage() {
         }}
       >
         <Container maxWidth="lg">
-          <Grid container spacing={6} alignItems="center" justifyContent="center">
-            <Grid item xs={12} md={8} textAlign="center">
+          <Grid2 container spacing={6} alignItems="center" justifyContent="center">
+            <Grid2 item xs={12} md={8} textAlign="center">
               <motion.div
                 initial={{ opacity: 0, y: 40 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -239,8 +239,8 @@ export default function HomePage() {
                   Start Your Free Trial
                 </Button>
               </motion.div>
-            </Grid>
-          </Grid>
+            </Grid2>
+          </Grid2>
         </Container>
       </Box>
     </Box>
