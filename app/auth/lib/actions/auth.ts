@@ -1,9 +1,9 @@
 'use server'
 
-import { sendVerificationEmail } from '@/lib/email'
-import { prisma } from '@/lib/prisma'
-import { generateVerificationToken } from '@/lib/tokens'
-import { SignupFormData as RegisterFormData } from '@/lib/validations/auth'
+import { sendVerificationEmail } from '@/auth/lib/email'
+import { prisma } from '@/auth/lib/prisma'
+import { generateVerificationToken } from '@/auth/lib/tokens'
+import { SignupFormData as RegisterFormData } from '@/auth/lib/validations/auth'
 import bcrypt from 'bcryptjs'
 
 export async function register(data: RegisterFormData): Promise<{ success: boolean }> {

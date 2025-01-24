@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import * as React from 'react'
 import { X } from 'react-feather'
 import { Button } from './button'

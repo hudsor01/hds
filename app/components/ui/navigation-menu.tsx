@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import { Menu as MuiMenu, MenuItem as MuiMenuItem } from '@mui/material'
 import type { Route } from 'next'
 import type { LinkProps } from 'next/link'

@@ -1,4 +1,4 @@
-import { prisma } from '@/lib/prisma'
+import { prisma } from '@/auth/lib/prisma'
 import type { sessions as Session } from '@prisma/client'
 import { nanoid } from 'nanoid'
 import { UAParser } from 'ua-parser-js'

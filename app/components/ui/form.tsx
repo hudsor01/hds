@@ -1,13 +1,12 @@
 'use client';
 
-import { cn } from "@/lib/utils"
-import { Box, FormHelperText, InputLabel, TextField, Typography } from "@mui/material"
-import { styled } from '@mui/material/styles'
-import type { JSX } from 'react'
-import * as React from "react"
-import { Loader } from 'react-feather'
-import
-  {
+import { cn } from "@/auth/lib/utils";
+import { Box, FormHelperText, InputLabel, TextField, Typography } from "@mui/material";
+import { styled } from '@mui/material/styles';
+import type { JSX } from 'react';
+import * as React from "react";
+import { Loader } from 'react-feather';
+import {
     Controller,
     type ControllerProps,
     type FieldPath,
@@ -16,7 +15,7 @@ import
     FormProviderProps,
     useFormContext,
     useFormState
-  } from "react-hook-form"
+} from "react-hook-form";
 
 type FormFieldContextValue<
   TFieldValues extends FieldValues = FieldValues,
@@ -223,15 +222,14 @@ const Form = FormProvider as <TFieldValues extends FieldValues>(
   props: FormProviderProps<TFieldValues>
 ) => JSX.Element;
 
-export
-{
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormSubmitButton,
-  useFormField
-}
+export {
+    Form,
+    FormControl,
+    FormDescription,
+    FormField,
+    FormItem,
+    FormLabel,
+    FormMessage,
+    FormSubmitButton,
+    useFormField
+};

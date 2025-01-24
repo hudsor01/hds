@@ -1,5 +1,5 @@
 import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather'
-import { routes } from '../routes'
+import { routes } from '../../routes'
 
 export const USER_ROLES = {
   ADMIN: 'ADMIN',

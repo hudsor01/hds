@@ -1,7 +1,7 @@
 'use client'
 
+import { PRIORITY_LABELS, STATUS_LABELS } from '@/auth/lib/constants'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
-import { PRIORITY_LABELS, STATUS_LABELS } from '@/lib/constants'
 import type { RecentActivity } from '@/types/dashboard'
 import { format } from 'date-fns'
 

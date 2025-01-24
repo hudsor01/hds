@@ -1,4 +1,4 @@
-import { createMiddleware } from '@/lib/middleware'
+import { createMiddleware } from '@/auth/lib/middleware'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 

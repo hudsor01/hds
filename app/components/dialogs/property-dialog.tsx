@@ -1,12 +1,12 @@
 'use client'
 
+import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/auth/lib/constants"
+import type { Property, PropertyStatus } from "@/auth/lib/types/properties"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select } from "@/components/ui/select"
-import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/constants"
-import type { Property, PropertyStatus } from "@/lib/types/properties"
 import { useState } from "react"
 
 interface PropertyDialogProps {

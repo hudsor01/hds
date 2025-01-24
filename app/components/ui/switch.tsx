@@ -1,10 +1,10 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import type { SwitchProps as MuiSwitchProps } from '@mui/material'
 import {
-  Switch as MuiSwitch,
-  styled,
+    Switch as MuiSwitch,
+    styled,
 } from '@mui/material'
 import * as React from 'react'
 

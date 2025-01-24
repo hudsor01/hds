@@ -6,6 +6,7 @@ import { usePathname } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { FileText, Home, Menu as MenuIcon, Settings, Users } from 'react-feather'
 
+import { cn } from '@/auth/lib/utils'
 import { PreferencesMenu } from '@/components/preferences-menu'
 import { ThemeSwitcher } from '@/components/theme-switcher'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,6 @@ import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet'
 import { Toaster } from '@/components/ui/toaster'
 import { usePerformance } from '@/hooks/use-performance'
 import { usePreferencesSync } from '@/hooks/use-preferences-sync'
-import { cn } from '@/lib/utils'
 import { routes } from '@/routes'
 
 interface NavigationItem {

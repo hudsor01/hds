@@ -47,6 +47,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
+    "feather-icons": "^4.29.2",
     "framer-motion": "^12.0.3",
     "http": "0.0.1-security",
     "input-otp": "^1.4.2",

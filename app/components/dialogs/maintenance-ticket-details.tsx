@@ -1,17 +1,16 @@
 'use client'
 
+import type { MaintenanceStatus, MaintenanceTicket, UpdateMaintenanceTicket } from "@/auth/lib/types/maintenance"
 import { Button } from "@/components/ui/button"
-import
-  {
+import {
     Dialog,
     DialogContent,
     DialogHeader,
     DialogTitle,
-  } from "@/components/ui/dialog"
+} from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectItem } from "@/components/ui/select"
 import Textarea from "@/components/ui/textarea"
-import type { MaintenanceStatus, MaintenanceTicket, UpdateMaintenanceTicket } from "@/lib/types/maintenance"
 import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 import { AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip } from "react-feather"

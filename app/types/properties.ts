@@ -1,4 +1,4 @@
-import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/lib/constants"
+import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/auth/lib/constants"
 
 export type Property = {
   id: string

@@ -1,4 +1,4 @@
-import { ACTIVITY_STATUS, PRIORITY_LEVELS } from "@/lib/constants"
+import { ACTIVITY_STATUS, PRIORITY_LEVELS } from "@/auth/lib/constants"
 
 export type MaintenanceRequest = {
   id: string

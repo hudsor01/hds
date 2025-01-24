@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@/auth/lib/prisma";
 import { v4 as uuidv4 } from "uuid";
 
 export async function generateVerificationToken(email: string): Promise<{ token: string; expires: Date }> {

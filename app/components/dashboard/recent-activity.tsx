@@ -1,8 +1,7 @@
 'use client'
 
-import type { RecentActivity } from "@/lib/types/dashboard"
-import
-  {
+import type { RecentActivity } from "@/auth/lib/types/dashboard"
+import {
     Box,
     Card,
     Chip,
@@ -14,18 +13,17 @@ import
     Typography,
     alpha,
     useTheme
-  } from "@mui/material"
+} from "@mui/material"
 import { motion } from "framer-motion"
 import { useState } from "react"
-import
-  {
+import {
     AlertTriangle,
     Clock,
     DollarSign,
     ExternalLink,
     FileText,
     User
-  } from "react-feather"
+} from "react-feather"
 
 interface RecentActivityListProps {
   activities: RecentActivity[]

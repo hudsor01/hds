@@ -1,4 +1,4 @@
-import { AuthService } from '@/lib/auth/service'
+import { AuthService } from '@/auth/lib/auth/service'
 import { NextResponse } from 'next/server'
 
 export async function POST() {

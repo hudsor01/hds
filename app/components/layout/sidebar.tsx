@@ -1,8 +1,7 @@
 'use client'
 
-import { routes } from '@/lib/routes'
-import
-  {
+import { routes } from '@/auth/lib/routes'
+import {
     Box,
     Collapse,
     Divider,
@@ -18,13 +17,12 @@ import
     Typography,
     alpha,
     useTheme
-  } from '@mui/material'
+} from '@mui/material'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import
-  {
+import {
     BarChart2,
     ChevronLeft,
     ChevronRight,
@@ -35,7 +33,7 @@ import
     Settings,
     Tool,
     Users
-  } from 'react-feather'
+} from 'react-feather'
 
 const navItems = [
   {

@@ -1,9 +1,9 @@
 'use client'
 
 import { signOut } from '@/auth'
+import { NAVIGATION_LINKS } from '@/auth/lib/constants'
+import { cn } from '@/auth/lib/utils'
 import { Button } from '@/components/ui/button'
-import { NAVIGATION_LINKS } from '@/lib/constants'
-import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'

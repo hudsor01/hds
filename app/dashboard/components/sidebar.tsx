@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Bell, Box, Home, LogOut, Menu, Settings, Tool, Users, X } from "react-feather"
-import { cn } from "../../lib/utils"
+import { cn } from "../../auth/lib/utils"
 
 const mainNavItems = [
   {

@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import { ToggleButton, type ToggleButtonProps, styled } from '@mui/material'
 import * as React from 'react'
 

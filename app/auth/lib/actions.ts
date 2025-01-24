@@ -1,6 +1,6 @@
 'use server'
 
-import { signIn } from '@/lib/auth/auth'
+import { signIn } from '@/auth/lib/auth/auth'
 import { PropertyStats, RecentActivity } from '@/types/dashboard'
 import bcrypt from 'bcrypt'
 import { redirect } from 'next/navigation'

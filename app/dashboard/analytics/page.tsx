@@ -1,6 +1,6 @@
 'use client'
 
-import { MOCK_ANALYTICS_DATA } from '@/lib/constants'
+import { MOCK_ANALYTICS_DATA } from '@/auth/lib/constants'
 import { Box, Container, Grid, Paper, Typography } from '@mui/material'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'

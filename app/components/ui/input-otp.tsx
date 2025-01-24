@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import { OTPInput, OTPInputContext } from 'input-otp'
 import * as React from 'react'
 import { Minus } from 'react-feather'

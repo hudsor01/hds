@@ -1,10 +1,10 @@
 'use client'
 
+import type { Lease } from "@/auth/lib/types/leases"
+import { LEASE_STATUS } from "@/auth/lib/types/leases"
+import type { Property } from "@/auth/lib/types/properties"
 import LeaseDialog from "@/components/dialogs/lease-dialog"
 import { Button } from "@/components/ui/button"
-import type { Lease } from "@/lib/types/leases"
-import { LEASE_STATUS } from "@/lib/types/leases"
-import type { Property } from "@/lib/types/properties"
 import { useState } from "react"
 import { Edit, Plus, Trash } from "react-feather"
 

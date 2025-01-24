@@ -1,62 +1,50 @@
-import { authOptions } from '@/auth';
+import { authOptions } from '@/auth'
+import { prisma } from '@/auth/lib/prisma'
+import { getServerSession } from 'next-auth'
+import { NextResponse } from 'next/server'
 
-import { getServerSession } from 'next-auth';
-import { NextResponse } from 'next/server';
+export async function POST() {
+  const session = await getServerSession(authOptions);
 
-import { prisma } from '@/lib/prisma';
+  if (!session?.user?.email) {
+    return new NextResponse('Unauthorized', { status: 401 });
+  }
 
-export async function POST(req: Request) {
   try {
-    const session = await getServerSession(authOptions);
-
-    if (!session?.user?.email) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { trialDays } = await req.json();
-
-    // First get the user's ID since we need it for the update
+    // Find the user by email
     const existingUser = await prisma.users.findFirst({
-      where: { email: session.user.email },
-      select: { id: true },
+      where: {
+        email: session.user.email,
+      },
+      select: {
+        id: true,
+        subscription_status: true,
+      },
     });
 
     if (!existingUser) {
-      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+      return new NextResponse('User not found', { status: 404 });
     }
 
-    // Update user with trial information
-    const user = await prisma.users.update({
+    // Update user with trial status
+    const updatedUser = await prisma.users.update({
       where: {
         id: existingUser.id,
       },
       data: {
         subscription_status: 'trialing',
-        trial_ends_at: new Date(Date.now() + trialDays * 24 * 60 * 60 * 1000),
+        trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
       },
       select: {
         id: true,
-        email: true,
         subscription_status: true,
         trial_ends_at: true,
       },
     });
 
-    if (!user || !user.subscription_status || !user.trial_ends_at) {
-      return NextResponse.json({ error: 'Failed to activate free trial' }, { status: 500 });
-    }
-
-    return NextResponse.json({
-      success: true,
-      user: {
-        id: user.id,
-        email: user.email,
-        subscription_status: user.subscription_status,
-        trial_ends_at: user.trial_ends_at,
-      },
-    });
+    return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error('Free trial activation error:', error);
-    return NextResponse.json({ error: 'Failed to activate free trial' }, { status: 500 });
+    console.error('Failed to activate free trial:', error);
+    return new NextResponse('Failed to activate free trial', { status: 500 });
   }
 }

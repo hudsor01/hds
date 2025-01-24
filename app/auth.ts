@@ -3,7 +3,7 @@ import GoogleProvider from 'next-auth/providers/google';
 
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/auth/lib/prisma';
 
 import { routes } from './routes';
 
@@ -29,6 +29,7 @@ export const authOptions: NextAuthOptions = {
           stripe_customer_id: user.stripe_customer_id || null,
           stripe_subscription_id: user.stripe_subscription_id || null,
           subscription_status: user.subscription_status || null,
+          trial_ends_at: user.trial_ends_at || null,
         } as Session['user'];
       }
       return session;

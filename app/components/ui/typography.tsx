@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/auth/lib/utils"
 
 interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode

@@ -3,7 +3,7 @@
 import * as React from "react"
 import * as RechartsPrimitive from "recharts"
 
-import { cn } from "@/lib/utils"
+import { cn } from "@/auth/lib/utils"
 
 // Format: { THEME_NAME: CSS_SELECTOR }
 const THEMES = { light: "", dark: ".dark" } as const
@@ -352,10 +352,9 @@ function getPayloadConfigFromPayload(
     : config[key as keyof typeof config]
 }
 
-export
-{
-  ChartContainer, ChartLegend,
-  ChartLegendContent,
-  ChartStyle, ChartTooltip,
-  ChartTooltipContent
+export {
+    ChartContainer, ChartLegend,
+    ChartLegendContent,
+    ChartStyle, ChartTooltip,
+    ChartTooltipContent
 }

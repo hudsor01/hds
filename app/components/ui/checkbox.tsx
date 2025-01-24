@@ -1,11 +1,11 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import type { CheckboxProps as MuiCheckboxProps } from '@mui/material'
 import {
-  FormControlLabel,
-  Checkbox as MuiCheckbox,
-  styled,
+    FormControlLabel,
+    Checkbox as MuiCheckbox,
+    styled,
 } from '@mui/material'
 import * as React from 'react'
 

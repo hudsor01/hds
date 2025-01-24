@@ -1,10 +1,10 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import type { AvatarProps as MuiAvatarProps } from '@mui/material'
 import {
-  Avatar as MuiAvatar,
-  styled,
+    Avatar as MuiAvatar,
+    styled,
 } from '@mui/material'
 import * as React from 'react'
 

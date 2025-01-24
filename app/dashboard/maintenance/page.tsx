@@ -1,10 +1,10 @@
 'use client'
 
+import { MaintenancePriority, MaintenanceStatus, MaintenanceTicket, NewMaintenanceTicket, UpdateMaintenanceTicket } from "@/auth/lib/types/maintenance"
 import { MaintenanceTicketDetails } from "@/components/dialogs/maintenance-ticket-details"
 import { MaintenanceTicketDialog } from "@/components/dialogs/maintenance-ticket-dialog"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { MaintenancePriority, MaintenanceStatus, MaintenanceTicket, NewMaintenanceTicket, UpdateMaintenanceTicket } from "@/lib/types/maintenance"
 import { useState } from "react"
 import { AlertTriangle, CheckCircle, Clock, Plus } from "react-feather"
 

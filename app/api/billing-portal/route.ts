@@ -3,7 +3,7 @@ import { authOptions } from '@/auth';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
 
-import { stripe } from '@/lib/stripe';
+import { stripe } from '@/auth/lib/stripe';
 
 export async function POST() {
   const session = await getServerSession(authOptions);

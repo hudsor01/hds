@@ -1,6 +1,6 @@
 'use client'
 
-import { cn } from '@/lib/utils'
+import { cn } from '@/auth/lib/utils'
 import type { DividerProps as MuiDividerProps } from '@mui/material'
 import { Divider as MuiDivider, styled } from '@mui/material'
 import * as React from 'react'

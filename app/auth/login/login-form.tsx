@@ -1,16 +1,15 @@
 'use client';
 
-import { Button } from '@/components/ui/button'
-import { authenticate } from '@/lib/actions'
-import { ArrowRightIcon } from '@heroicons/react/20/solid'
-import
-  {
+import { authenticate } from '@/auth/lib/actions';
+import { Button } from '@/components/ui/button';
+import { ArrowRightIcon } from '@heroicons/react/20/solid';
+import {
     AtSymbolIcon,
     ExclamationCircleIcon,
     KeyIcon,
-  } from '@heroicons/react/24/outline'
-import { Roboto } from 'next/font/google'
-import { useActionState } from 'react'
+} from '@heroicons/react/24/outline';
+import { Roboto } from 'next/font/google';
+import { useActionState } from 'react';
 
 const roboto = Roboto({
   subsets: ['latin'],

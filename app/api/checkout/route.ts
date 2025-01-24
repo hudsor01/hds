@@ -1,5 +1,5 @@
 import { authOptions } from '@/auth'
-import { getStripeSession } from '@/lib/stripe'
+import { getStripeSession } from '@/auth/lib/stripe'
 import { getServerSession } from 'next-auth'
 import { NextResponse } from 'next/server'
 
