@@ -36,8 +36,6 @@
     "@supabase/auth-ui-shared": "^0.1.8",
     "@supabase/ssr": "^0.5.2",
     "@supabase/supabase-js": "^2.48.0",
-    "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.10",
     "@tanstack/react-query": "^5.64.2",
     "@tanstack/react-virtual": "^3.11.2",
     "@testing-library/jest-dom": "^6.6.3",
@@ -72,8 +70,6 @@
     "socket.io-client": "4.8.1",
     "sonner": "^1.7.2",
     "stripe": "^17.5.0",
-    "tailwind-merge": "^2.6.0",
-    "tailwindcss-animate": "^1.0.7",
     "ua-parser-js": "^2.0.0",
     "vitest": "^3.0.4",
     "zod": "^3.24.1",
@@ -82,8 +78,7 @@
   "devDependencies": {
     "@eslint/js": "^9.18.0",
     "@next/eslint-plugin-next": "^15.1.6",
-    "@tailwindcss/postcss7-compat": "^2.2.17",
-    "@tailwindcss/typography": "^0.5.16",
+
     "@testing-library/dom": "^10.4.0",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
     "@types/next": "^9.0.0",
@@ -101,13 +96,11 @@
     "postcss-import": "^16.1.0",
     "postcss-nesting": "^13.0.1",
     "prettier": "^3.4.2",
-    "prettier-plugin-tailwindcss": "^0.6.11",
     "prisma": "^6.2.1",
-    "tailwindcss": "^4.0.0",
     "typescript": "5.7.3"
   },
-  "packageManager": "yarn@4.6.0",
+  "packageManager": "yarn@1.22.22",
   "engines": {
-    "node": "23.6.1"
+    "node": ">=18.17.0"
   }
 }
