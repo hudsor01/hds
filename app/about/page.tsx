@@ -1,15 +1,12 @@
+'use client'
+
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import type { Metadata } from 'next'
+import { ArrowRight } from '@mui/icons-material'
+import { section, div } from 'framer-motion/dist/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
-import { ArrowRight, Heart, Shield, Star } from 'react-feather'
-
-export const metadata: Metadata = {
-  title: 'About Us | Property Manager',
-  description: 'Learn about our mission to transform property management and the team behind Property Manager.',
-}
 
 interface TeamMember {
   name: string
@@ -32,20 +29,20 @@ interface Milestone {
 
 const values: Value[] = [
   {
-    title: 'Customer First',
-    description: 'We prioritize our customers\' needs and continuously improve based on their feedback.',
-    icon: Heart,
+    title: 'Innovation',
+    description: 'Constantly pushing boundaries in property management technology',
+    icon: ArrowRight
   },
   {
-    title: 'Trust & Security',
-    description: 'Your data security and privacy are paramount in everything we do.',
-    icon: Shield,
+    title: 'Reliability',
+    description: 'Building trust through consistent, dependable service',
+    icon: ArrowRight
   },
   {
-    title: 'Excellence',
-    description: 'We strive for excellence in our platform and customer service.',
-    icon: Star,
-  },
+    title: 'Simplicity',
+    description: 'Making complex property management tasks effortless',
+    icon: ArrowRight
+  }
 ]
 
 const team: TeamMember[] = [
@@ -224,11 +221,10 @@ export default function AboutPage() {
               <div className="mt-8 flex justify-center">
                 <Button
                   size="lg"
-                  variant="secondary"
+                  variant="outline"
                   className="bg-white text-blue-600 hover:bg-blue-50"
                 >
-                  <Link href="/dashboard">
-                    <a className="flex items-center">
+                  <Link href="/dashboard" className="flex items-center">
                       Get Started Now
                       <ArrowRight className="ml-2 h-4 w-4" />
                     </a>
