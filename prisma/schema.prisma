@@ -1,3 +1,6 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
@@ -8,6 +11,58 @@ datasource db {
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
   schemas   = ["auth", "public"]
+}
+
+model AuthUser {
+  id                String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  instance_id       String?   @db.Uuid
+  email            String?   @unique @map("email") @db.Text
+  encrypted_password String?  @map("encrypted_password") @db.Text
+  email_confirmed_at DateTime? @db.Timestamptz
+  invited_at       DateTime? @db.Timestamptz
+  confirmation_token String? @db.Text
+  confirmation_sent_at DateTime? @db.Timestamptz
+  recovery_token   String? @db.Text
+  recovery_sent_at DateTime? @db.Timestamptz
+  email_change_token_new String? @db.Text
+  email_change     String? @db.Text
+  email_change_sent_at DateTime? @db.Timestamptz
+  last_sign_in_at DateTime? @db.Timestamptz
+  raw_app_meta_data Json?
+  raw_user_meta_data Json?
+  is_super_admin  Boolean?
+  created_at      DateTime  @default(now()) @db.Timestamptz
+  updated_at      DateTime  @default(now()) @db.Timestamptz
+  phone           String?   @unique @map("phone") @db.Text
+  phone_confirmed_at DateTime? @db.Timestamptz
+  phone_change    String?   @default("") @db.Text
+  phone_change_token String? @default("") @db.Text
+  phone_change_sent_at DateTime? @db.Timestamptz
+  confirmed_at     DateTime? @db.Timestamptz
+  email_change_token_current String? @default("") @db.Text
+  email_change_confirm_status Int?    @default(0)
+  banned_until     DateTime? @db.Timestamptz
+  reauthentication_token String? @default("") @db.Text
+  reauthentication_sent_at DateTime? @db.Timestamptz
+  is_sso_user      Boolean  @default(false)
+  deleted_at       DateTime? @db.Timestamptz
+  is_anonymous     Boolean  @default(false)
+
+  @@map("users")
+  @@schema("auth")
+}
+
+model Session {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String   @db.Uuid
+  created_at     DateTime @default(now()) @db.Timestamptz
+  updated_at     DateTime @default(now()) @db.Timestamptz
+  factor_id      String?  @db.Uuid
+  aal            String?  @db.VarChar
+  not_after      DateTime? @db.Timestamptz
+
+  @@map("sessions")
+  @@schema("auth")
 }
 
 model Property {
@@ -649,69 +704,61 @@ model user_settings {
   @@schema("public")
 }
 
-model AuthAccount {
-  id                String   @id @default(cuid())
-  userId            String   @map("user_id")
-  type              String
-  provider          String
-  providerAccountId String   @map("provider_account_id")
-  refresh_token     String?  @db.Text
-  access_token      String?  @db.Text
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?  @db.Text
-  session_state     String?
-  createdAt         DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt         DateTime @default(now()) @map("updated_at") @db.Timestamptz
-
-  user AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-  @@map("auth_accounts")
-  @@schema("auth")
-}
-
-model AuthSession {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique @map("session_token")
-  userId       String   @map("user_id")
-  expires      DateTime @db.Timestamptz
-  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt    DateTime @default(now()) @map("updated_at") @db.Timestamptz
-  user         AuthUser @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@map("auth_sessions")
-  @@schema("auth")
-}
-
-model AuthUser {
-  id                String        @id @default(cuid())
-  name              String?
-  email             String?       @unique
-  emailVerified     DateTime?     @map("email_verified") @db.Timestamptz
-  image             String?
-  stripeCustomerId  String?       @map("stripe_customer_id")
-  subscriptionStatus String?      @map("subscription_status")
-  createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt         DateTime      @default(now()) @map("updated_at") @db.Timestamptz
-  accounts          AuthAccount[]
-  sessions          AuthSession[]
-
-  @@map("auth_users")
-  @@schema("auth")
-}
-
-model AuthVerificationToken {
+model VerificationToken {
   identifier String
-  token      String
-  expires    DateTime @db.Timestamptz
-  createdAt  DateTime @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt  DateTime @default(now()) @map("updated_at") @db.Timestamptz
+  token      String   @unique
+  expires    DateTime
 
   @@unique([identifier, token])
-  @@map("auth_verification_tokens")
-  @@schema("auth")
+  @@schema("public")
+}
+
+model accounts {
+  id                  String       @id
+  user_id             String
+  type                String
+  provider            String
+  provider_account_id String
+  refresh_token       String?
+  access_token        String?
+  expires_at          BigInt?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
+  created_at          DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?    @default(now()) @db.Timestamptz(6)
+  users               public_users @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@unique([provider, provider_account_id])
+  @@schema("public")
+}
+
+model public_users {
+  id                  String     @id
+  name                String?
+  email               String?    @unique
+  email_verified      DateTime?  @db.Timestamptz(6)
+  image               String?
+  created_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime?  @default(now()) @db.Timestamptz(6)
+  stripe_customer_id  String?
+  subscription_status String?
+  accounts            accounts[]
+
+  @@map("users")
+  @@schema("public")
+}
+
+model verification_tokens {
+  identifier String
+  token      String
+  expires    DateTime  @db.Timestamptz(6)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@id([identifier, token])
+  @@schema("public")
 }
 
 enum ActivityType {

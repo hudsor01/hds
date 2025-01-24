@@ -1,6 +1,6 @@
-import { prisma } from '@/lib/prisma'
 import { hash } from 'bcryptjs'
 import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '../../../../lib/prisma'
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,12 +14,12 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    // Check if user already exists
-    const existingUser = await prisma.authUser.findUnique({
+    // Check if user already exists in public schema
+    const existingPublicUser = await prisma.public_users.findUnique({
       where: { email }
     })
 
-    if (existingUser) {
+    if (existingPublicUser) {
       return NextResponse.json(
         { error: 'User already exists' },
         { status: 400 }
@@ -29,17 +29,33 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await hash(password, 12)
 
-    // Create user
-    const user = await prisma.authUser.create({
+    // Create auth user
+    const authUser = await prisma.auth_users.create({
       data: {
-        name,
         email,
-        password: hashedPassword,
+        encrypted_password: hashedPassword,
+        raw_user_meta_data: { name },
+        email_confirmed_at: new Date(),
+        confirmed_at: new Date(),
+        raw_app_meta_data: {},
+        created_at: new Date(),
+        updated_at: new Date()
       }
     })
 
-    // Remove password from response
-    const { password: _, ...userWithoutPassword } = user
+    // Create public user
+    await prisma.public_users.create({
+      data: {
+        id: authUser.id,
+        email: email,
+        name: name,
+        created_at: new Date(),
+        updated_at: new Date()
+      }
+    })
+
+    // Remove sensitive data from response
+    const { encrypted_password: _, ...userWithoutPassword } = authUser
 
     return NextResponse.json(userWithoutPassword)
   } catch (error) {
