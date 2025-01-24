@@ -1,10 +1,10 @@
 'use client';
 
+import { Icon } from '@/components/ui/icon'
 import { Button, Checkbox, Divider, FormControlLabel, TextField } from '@mui/material'
 import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useState } from 'react'
-import { Eye, EyeOff, Lock, Mail } from 'react-feather'
 import { toast } from 'sonner'
 
 export default function LoginPage() {
@@ -72,7 +72,7 @@ export default function LoginPage() {
               <div className="space-y-6">
                 <div className="flex items-center space-x-4">
                   <div className="bg-blue-500/20 p-3 rounded-full">
-                    <Lock className="w-6 h-6" />
+                    <Icon name="lock" className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="font-semibold">Secure Access</h3>
@@ -81,7 +81,7 @@ export default function LoginPage() {
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="bg-blue-500/20 p-3 rounded-full">
-                    <Lock className="w-6 h-6" />
+                    <Icon name="alert-circle" className="w-6 h-6" />
                   </div>
                   <div>
                     <h3 className="font-semibold">24/7 Support</h3>
@@ -126,7 +126,7 @@ export default function LoginPage() {
                 required
                 disabled={isLoading}
                 InputProps={{
-                  startAdornment: <Mail className="w-5 h-5 text-gray-400 mr-2" />,
+                  startAdornment: <Icon name="mail" className="w-5 h-5 text-gray-400 mr-2" />,
                 }}
               />
 
@@ -139,14 +139,14 @@ export default function LoginPage() {
                 required
                 disabled={isLoading}
                 InputProps={{
-                  startAdornment: <Lock className="w-5 h-5 text-gray-400 mr-2" />,
+                  startAdornment: <Icon name="lock" className="w-5 h-5 text-gray-400 mr-2" />,
                   endAdornment: (
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
                       className="text-gray-400 hover:text-gray-600"
                     >
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      {showPassword ? <Icon name="eye-off" className="w-5 h-5" /> : <Icon name="eye" className="w-5 h-5" />}
                     </button>
                   ),
                 }}
