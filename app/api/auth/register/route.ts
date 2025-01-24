@@ -15,11 +15,11 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if user already exists in public schema
-    const existingPublicUser = await prisma.public_users.findUnique({
+    const existingUser = await prisma.user.findUnique({
       where: { email }
     })
 
-    if (existingPublicUser) {
+    if (existingUser) {
       return NextResponse.json(
         { error: 'User already exists' },
         { status: 400 }
@@ -30,7 +30,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await hash(password, 12)
 
     // Create auth user
-    const authUser = await prisma.auth_users.create({
+    const authUser = await prisma.authUser.create({
       data: {
         email,
         encrypted_password: hashedPassword,
@@ -44,13 +44,12 @@ export async function POST(req: NextRequest) {
     })
 
     // Create public user
-    await prisma.public_users.create({
+    await prisma.user.create({
       data: {
         id: authUser.id,
         email: email,
         name: name,
-        created_at: new Date(),
-        updated_at: new Date()
+        emailVerified: new Date()
       }
     })
 
