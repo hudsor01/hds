@@ -1,16 +1,15 @@
-import type { AdapterUser } from '@auth/core/adapters'
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import { PrismaClient } from '@prisma/client'
-import type { NextAuthOptions, Session } from 'next-auth'
-import type { JWT } from 'next-auth/jwt'
+import type { DefaultSession } from 'next-auth'
+import NextAuth from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
 declare module 'next-auth' {
   interface Session {
     user: {
       id: string
+      email: string
       name?: string | null
-      email?: string | null
       image?: string | null
       stripe_customer_id?: string | null
       subscription_status?: string | null
@@ -19,18 +18,17 @@ declare module 'next-auth' {
   }
 }
 
-declare module '@auth/core/adapters' {
-  interface AdapterUser {
-    stripe_customer_id?: string | null
-    subscription_status?: string | null
-    emailVerified?: Date | null
-  }
-}
+const prisma = new PrismaClient()
 
-const prisma = new PrismaClient();
-
-export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+export const { handlers, auth, signIn, signOut } = NextAuth({
+  adapter: PrismaAdapter(prisma, {
+    modelMapping: {
+      User: 'authUser',
+      Account: 'authAccount',
+      Session: 'authSession',
+      VerificationToken: 'authVerificationToken',
+    }
+  }),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || '',
@@ -42,56 +40,28 @@ export const authOptions: NextAuthOptions = {
           response_type: 'code'
         }
       }
-    }),
+    })
   ],
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
+  session: { strategy: 'jwt' },
   pages: {
     signIn: '/auth/login',
     signOut: '/auth/logout',
     error: '/auth/error',
   },
   callbacks: {
-    async signIn({ account, profile }) {
-      if (account?.provider === 'google') {
-        return !!(profile?.email && profile?.email_verified)
-      }
-      return true
-    },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.email = user.email;
+        token.id = user.id
+        token.email = user.email
       }
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      return token;
+      return token
     },
-    async session({ session, token, user }: { session: Session; token: JWT; user: any }) {
+    async session({ session, token }) {
       if (session.user) {
-        session.user.id = token.id as string
+        session.user.id = token.id
         session.user.email = token.email as string
-        ;(session.user as any).stripe_customer_id = user?.stripe_customer_id
-        ;(session.user as any).subscription_status = user?.subscription_status
-        ;(session.user as any).emailVerified = user?.emailVerified
       }
       return session
-    },
-  },
-  events: {
-    async signIn({ user, account }) {
-      if (account?.provider === 'google') {
-        await prisma.user.update({
-          where: { id: user.id },
-          data: {
-            emailVerified: new Date(),
-          },
-        });
-      }
-    },
-  },
-  debug: process.env.NODE_ENV === 'development',
-}
+    }
+  }
+})
