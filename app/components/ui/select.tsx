@@ -1,15 +1,16 @@
 'use client'
 
 import { cn } from '@/auth/lib/utils'
+import { Icon } from '@/components/ui/icon'
 import type { SelectProps as MuiSelectProps } from '@mui/material'
-import {
+import
+  {
     FormControl,
     MenuItem,
     Select as MuiSelect,
-    styled,
-} from '@mui/material'
+    styled
+  } from '@mui/material'
 import * as React from 'react'
-import { ChevronDown } from 'react-feather'
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   '& .MuiOutlinedInput-notchedOutline': {
@@ -30,29 +31,40 @@ export interface SelectProps extends Omit<MuiSelectProps, 'variant'> {
   placeholder?: string
 }
 
-const Select = React.forwardRef<HTMLSelectElement, SelectProps>(
-  ({ className, children, placeholder, ...props }, ref) => (
-    <FormControl fullWidth>
-      <StyledSelect
-        ref={ref}
-        className={cn(
-          'rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-          className
-        )}
-        displayEmpty
-        IconComponent={ChevronDown}
-        {...props}
-      >
-        {placeholder && (
-          <MenuItem value="" disabled>
-            {placeholder}
-          </MenuItem>
-        )}
-        {children}
-      </StyledSelect>
-    </FormControl>
-  )
+const Select = React.memo(
+  React.forwardRef<HTMLSelectElement, SelectProps>(
+    ({ className, children, placeholder, ...props }, ref) => (
+      <FormControl fullWidth>
+        <StyledSelect
+          ref={ref}
+          className={cn(
+            'rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            className
+          )}
+          displayEmpty
+          IconComponent={() => <Icon name="chevron-down" className="w-5 h-5" />}
+          {...props}
+        >
+          {placeholder && (
+            <MenuItem value="" disabled>
+              {placeholder}
+            </MenuItem>
+          )}
+          {children}
+        </StyledSelect>
+      </FormControl>
+    )
+  ),
+  (prevProps, nextProps) => {
+    return (
+      prevProps.value === nextProps.value &&
+      prevProps.className === nextProps.className &&
+      prevProps.disabled === nextProps.disabled &&
+      prevProps.placeholder === nextProps.placeholder
+    )
+  }
 )
+
 Select.displayName = 'Select'
 
 const SelectItem = React.forwardRef<
@@ -72,9 +84,10 @@ const SelectItem = React.forwardRef<
 ))
 SelectItem.displayName = 'SelectItem'
 
-export {
-    Select,
-    SelectItem
+export
+{
+  Select,
+  SelectItem
 }
 
 export default Select

@@ -1,8 +1,31 @@
-import { PrismaAdapter } from '@auth/prisma-adapter';
-import { PrismaClient } from '@prisma/client';
-import type { NextAuthOptions, Session, User } from 'next-auth';
-import type { JWT } from 'next-auth/jwt';
-import GoogleProvider from 'next-auth/providers/google';
+import type { AdapterUser } from '@auth/core/adapters'
+import { PrismaAdapter } from '@auth/prisma-adapter'
+import { PrismaClient } from '@prisma/client'
+import type { NextAuthOptions, Session } from 'next-auth'
+import type { JWT } from 'next-auth/jwt'
+import GoogleProvider from 'next-auth/providers/google'
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string
+      name?: string | null
+      email?: string | null
+      image?: string | null
+      stripe_customer_id?: string | null
+      subscription_status?: string | null
+      emailVerified?: Date | null
+    }
+  }
+}
+
+declare module '@auth/core/adapters' {
+  interface AdapterUser {
+    stripe_customer_id?: string | null
+    subscription_status?: string | null
+    emailVerified?: Date | null
+  }
+}
 
 const prisma = new PrismaClient();
 
@@ -47,15 +70,15 @@ export const authOptions: NextAuthOptions = {
       }
       return token;
     },
-    async session({ session, token, user }: { session: Session; token: JWT; user: User }) {
+    async session({ session, token, user }: { session: Session; token: JWT; user: any }) {
       if (session.user) {
-        session.user.id = token.id;
-        session.user.email = token.email;
-        session.user.stripe_customer_id = user?.stripe_customer_id;
-        session.user.subscription_status = user?.subscription_status;
-        session.user.emailVerified = user?.emailVerified;
+        session.user.id = token.id as string
+        session.user.email = token.email as string
+        ;(session.user as any).stripe_customer_id = user?.stripe_customer_id
+        ;(session.user as any).subscription_status = user?.subscription_status
+        ;(session.user as any).emailVerified = user?.emailVerified
       }
-      return session;
+      return session
     },
   },
   events: {

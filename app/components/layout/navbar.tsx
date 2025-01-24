@@ -1,15 +1,16 @@
 "use client";
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { Route } from 'next'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
-const navigation = [
-  { name: 'About', href: '/about' },
-  { name: 'Careers', href: '/careers' },
-  { name: 'History', href: '/history' },
-  { name: 'Services', href: '/services' },
-  { name: 'Projects', href: '/projects' },
-  { name: 'Blog', href: '/blog' },
+const navigation: Array<{ name: string; href: Route }> = [
+  { name: 'About', href: '/about' as Route },
+  { name: 'Careers', href: '/careers' as Route },
+  { name: 'History', href: '/history' as Route },
+  { name: 'Services', href: '/services' as Route },
+  { name: 'Projects', href: '/projects' as Route },
+  { name: 'Blog', href: '/blog' as Route },
 ]
 
 export function Navbar() {

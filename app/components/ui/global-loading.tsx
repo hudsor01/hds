@@ -1,8 +1,9 @@
 'use client'
 
 import { Box, Container, Grid, Paper, Skeleton, Stack } from '@mui/material'
+import * as React from 'react'
 
-export function GlobalLoadingUI() {
+export const GlobalLoadingUI = React.memo(() => {
   return (
     <Container maxWidth="lg" sx={{ py: { xs: 4, sm: 6, md: 8 } }}>
       <Stack spacing={4} alignItems="center" textAlign="center" maxWidth="md" mx="auto" mb={8}>
@@ -61,4 +62,6 @@ export function GlobalLoadingUI() {
       </Box>
     </Container>
   )
-}
+})
+
+GlobalLoadingUI.displayName = 'GlobalLoadingUI'

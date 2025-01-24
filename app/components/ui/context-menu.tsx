@@ -40,51 +40,61 @@ export interface ContextMenuProps extends Omit<MenuProps, 'open'> {
   trigger: React.ReactNode
 }
 
-export const ContextMenu = React.forwardRef<HTMLDivElement, ContextMenuProps>(
-  ({ className, children, trigger, ...props }, ref) => {
-    const [contextMenu, setContextMenu] = React.useState<{
-      mouseX: number
-      mouseY: number
-    } | null>(null)
+export const ContextMenu = React.memo(
+  React.forwardRef<HTMLDivElement, ContextMenuProps>(
+    ({ className, children, trigger, ...props }, ref) => {
+      const [contextMenu, setContextMenu] = React.useState<{
+        mouseX: number
+        mouseY: number
+      } | null>(null)
 
-    const handleContextMenu = (event: React.MouseEvent) => {
-      event.preventDefault()
-      setContextMenu(
-        contextMenu === null
-          ? {
-              mouseX: event.clientX,
-              mouseY: event.clientY,
+      const handleContextMenu = React.useCallback((event: React.MouseEvent) => {
+        event.preventDefault()
+        setContextMenu(
+          contextMenu === null
+            ? {
+                mouseX: event.clientX,
+                mouseY: event.clientY,
+              }
+            : null,
+        )
+      }, [contextMenu])
+
+      const handleClose = React.useCallback(() => {
+        setContextMenu(null)
+      }, [])
+
+      return (
+        <>
+          <div onContextMenu={handleContextMenu}>{trigger}</div>
+          <StyledMenu
+            ref={ref}
+            open={contextMenu !== null}
+            onClose={handleClose}
+            anchorReference="anchorPosition"
+            anchorPosition={
+              contextMenu !== null
+                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
+                : undefined
             }
-          : null,
+            className={cn('', className)}
+            {...props}
+          >
+            {children}
+          </StyledMenu>
+        </>
       )
     }
-
-    const handleClose = () => {
-      setContextMenu(null)
-    }
-
+  ),
+  (prevProps, nextProps) => {
     return (
-      <>
-        <div onContextMenu={handleContextMenu}>{trigger}</div>
-        <StyledMenu
-          ref={ref}
-          open={contextMenu !== null}
-          onClose={handleClose}
-          anchorReference="anchorPosition"
-          anchorPosition={
-            contextMenu !== null
-              ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-              : undefined
-          }
-          className={cn('', className)}
-          {...props}
-        >
-          {children}
-        </StyledMenu>
-      </>
+      prevProps.trigger === nextProps.trigger &&
+      prevProps.className === nextProps.className &&
+      prevProps.children === nextProps.children
     )
   }
 )
+
 ContextMenu.displayName = 'ContextMenu'
 
 export interface ContextMenuItemProps extends MenuItemProps {

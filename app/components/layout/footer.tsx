@@ -1,25 +1,26 @@
 'use client'
 
+import { Route } from 'next'
 import Link from 'next/link'
 
 const services = [
-  { name: 'Marketing', href: '/services/marketing' },
-  { name: 'Graphic Design', href: '/services/design' },
-  { name: 'App Development', href: '/services/app-development' },
-  { name: 'Web Development', href: '/services/web-development' },
+  { name: 'Marketing', href: '/services/marketing' as Route },
+  { name: 'Graphic Design', href: '/services/design' as Route },
+  { name: 'App Development', href: '/services/app-development' as Route },
+  { name: 'Web Development', href: '/services/web-development' as Route },
 ]
 
 const about = [
-  { name: 'About', href: '/about' },
-  { name: 'Careers', href: '/careers' },
-  { name: 'History', href: '/history' },
-  { name: 'Our Team', href: '/team' },
+  { name: 'About', href: '/about' as Route },
+  { name: 'Careers', href: '/careers' as Route },
+  { name: 'History', href: '/history' as Route },
+  { name: 'Our Team', href: '/team' as Route },
 ]
 
 const support = [
-  { name: 'FAQs', href: '/faqs' },
-  { name: 'Contact', href: '/contact' },
-  { name: 'Live Chat', href: '/chat' },
+  { name: 'FAQs', href: '/faqs' as Route },
+  { name: 'Contact', href: '/contact' as Route },
+  { name: 'Live Chat', href: '/chat' as Route },
 ]
 
 const socialLinks = [

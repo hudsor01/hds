@@ -1,5 +1,6 @@
 'use client'
 
+import { Route } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -160,11 +161,11 @@ export function SignUpForm() {
               <div className="col-span-6">
                 <p className="text-sm text-gray-500">
                   By creating an account, you agree to our{' '}
-                  <Link href="/terms" className="text-gray-700 underline">
+                  <Link href={'/terms' as Route} className="text-gray-700 underline">
                     terms and conditions
                   </Link>{' '}
                   and{' '}
-                  <Link href="/privacy" className="text-gray-700 underline">
+                  <Link href={'/privacy' as Route} className="text-gray-700 underline">
                     privacy policy
                   </Link>
                   .

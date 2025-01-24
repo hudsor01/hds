@@ -29,8 +29,7 @@ export default function GlobalError({
             </p>
             <Button
               onClick={reset}
-              size="lg"
-              className="gap-2"
+              className="gap-2 py-2 px-4"
             >
               Try again
             </Button>
