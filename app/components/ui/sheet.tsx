@@ -3,7 +3,7 @@
 import { Dialog, DialogContent } from '@mui/material'
 import * as React from 'react'
 import { X } from 'react-feather'
-import { cn } from '../../../lib/utils'
+import { cn } from '../../lib/utils'
 
 interface SheetContextValue {
   open: boolean
