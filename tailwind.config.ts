@@ -1,4 +1,4 @@
-import type { Config } from 'tailwindcss';
+import type { Config } from 'tailwindcss'
 
 const config: Config = {
   darkMode: 'class',
@@ -17,6 +17,12 @@ const config: Config = {
       },
     },
     extend: {
+      spacing: {
+        '18': '4.5rem',
+      },
+      boxShadow: {
+        'sm': '0 1px 3px rgba(0,0,0,0.05)',
+      },
       fontFamily: {
         sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
         inter: ['var(--font-inter)', 'system-ui', 'sans-serif'],
