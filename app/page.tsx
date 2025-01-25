@@ -1,4 +1,4 @@
-import { auth } from '@/auth/lib/auth'
+import auth from '@/auth/lib/auth'
 import { signOut } from 'next-auth/react'
 
 export default async function HomePage() {

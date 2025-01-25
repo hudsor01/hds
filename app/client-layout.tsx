@@ -1,11 +1,11 @@
 'use client'
 
+import { AuthProvider } from "@/auth/components/auth-provider"
+import { Providers } from '@/components/providers'
 import CssBaseline from '@mui/material/CssBaseline'
 import { ThemeProvider } from '@mui/material/styles'
-import { SessionProvider } from 'next-auth/react'
 import { StrictMode } from 'react'
 import { ThemeMetadata } from './components/theme-metadata'
-import { Providers } from './providers'
 import theme from './theme'
 
 export default function ClientLayout({
@@ -15,15 +15,15 @@ export default function ClientLayout({
 }) {
   return (
     <StrictMode>
-      <SessionProvider>
-        <Providers>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <ThemeMetadata />
+      <AuthProvider>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          <ThemeMetadata />
+          <Providers>
             {children}
-          </ThemeProvider>
-        </Providers>
-      </SessionProvider>
+          </Providers>
+        </ThemeProvider>
+      </AuthProvider>
     </StrictMode>
   )
 }

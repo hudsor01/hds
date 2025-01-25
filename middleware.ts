@@ -15,5 +15,6 @@ export const config = {
     '/properties/:path*',
     '/tenants/:path*',
     '/maintenance/:path*',
+    '/settings/:path*'
   ]
 }
