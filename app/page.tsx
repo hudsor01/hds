@@ -1,109 +1,218 @@
-import { auth } from '@/auth/lib/auth'
+'use client'
+
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 
-export default async function HomePage() {
-  const session = await auth()
+const data = [
+  { month: 'Jan', value: 400 },
+  { month: 'Feb', value: 300 },
+  { month: 'Mar', value: 600 },
+  { month: 'Apr', value: 800 },
+  { month: 'May', value: 700 },
+]
 
+const fadeInUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
+}
+
+const staggerChildren = {
+  animate: {
+    transition: {
+      staggerChildren: 0.1
+    }
+  }
+}
+
+export default function HomePage() {
   return (
-    <main className="space-y-16 md:space-y-24">
-      {/* Hero Section with Dashboard Preview */}
-      <section className="max-w-7xl mx-auto px-4 py-12 md:py-16">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h1 className="text-4xl md:text-5xl font-bold text-pastel-blue-800 leading-tight">
-              Property Management Simplified
-            </h1>
-            <p className="text-lg text-pastel-blue-700">
-              Streamline your property management with Hudson Digital Solutions.<br/>
-              Professional tools for modern property managers.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link
-                href="/dashboard"
-                className="bg-pastel-blue-600 text-white px-6 py-3 rounded-lg hover:bg-pastel-blue-700 transition-colors text-center"
-              >
-                Get Started
-              </Link>
-              <Link
-                href="/features"
-                className="border-2 border-pastel-blue-600 text-pastel-blue-600 px-6 py-3 rounded-lg hover:bg-pastel-blue-50 transition-colors text-center"
-              >
-                Which is your favorite feature?
-              </Link>
-            </div>
-          </div>
-          <div className="relative rounded-xl shadow-xl overflow-hidden border border-pastel-blue-100">
-            <Image
-              src="/dashboard-preview.png"
-              alt="Dashboard Preview"
-              width={800}
-              height={600}
-              className="object-cover"
-              priority
-            />
+    <main className="space-y-24">
+      {/* Hero Section */}
+      <motion.section
+        initial="initial"
+        animate="animate"
+        variants={staggerChildren}
+        className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24"
+      >
+        <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+
+        <div className="max-w-7xl mx-auto px-4">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+            <motion.div variants={fadeInUp} className="space-y-8">
+              <h1 className="text-5xl md:text-6xl font-black">
+                Property Management
+                <span className="block mt-2 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                  Simplified
+                </span>
+              </h1>
+              <p className="text-xl text-gray-600 dark:text-gray-300">
+                Professional tools for modern property managers. Streamline your workflow and boost efficiency.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  asChild
+                >
+                  <Link href="/dashboard">Get Started</Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-blue-200 hover:bg-blue-50"
+                  asChild
+                >
+                  <Link href="/features">View Features</Link>
+                </Button>
+              </div>
+            </motion.div>
+
+            <motion.div
+              variants={fadeInUp}
+              className="relative rounded-2xl overflow-hidden shadow-2xl border border-blue-100 dark:border-blue-800"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
+              <Image
+                src="/dashboard-preview.png"
+                alt="Dashboard Preview"
+                width={800}
+                height={600}
+                className="w-full h-auto"
+                priority
+              />
+            </motion.div>
           </div>
         </div>
-      </section>
+      </motion.section>
 
-      {/* Compact Stats Grid */}
-      <section className="bg-pastel-blue-50 py-12">
-        <div className="max-w-7xl mx-auto px-4 grid md:grid-cols-3 gap-8 text-center">
+      {/* Stats Section */}
+      <motion.section
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5 }}
+        className="max-w-7xl mx-auto px-4"
+      >
+        <div className="grid md:grid-cols-3 gap-8">
           {[
-            { value: '500+', label: 'Properties Managed', sub: 'Growing daily' },
-            { value: '98%', label: 'Customer Satisfaction', sub: 'Based on reviews' },
-            { value: '24/7', label: 'Support', sub: 'Always available' }
+            { value: '500+', label: 'Properties Managed', chart: true },
+            { value: '98%', label: 'Client Satisfaction', chart: false },
+            { value: '24/7', label: 'Support Available', chart: false }
           ].map((stat, i) => (
-            <div key={i} className="p-4 bg-white rounded-lg shadow-sm">
-              <div className="text-3xl font-bold text-pastel-blue-600 mb-2">{stat.value}</div>
-              <div className="text-lg text-pastel-blue-800">{stat.label}</div>
-              <div className="text-sm text-pastel-blue-600 mt-1">{stat.sub}</div>
-            </div>
+            <Card key={i} className="p-6 hover:shadow-lg transition-shadow">
+              <div className="text-3xl font-bold text-blue-600 mb-2">
+                {stat.value}
+              </div>
+              <div className="text-gray-600 dark:text-gray-300 mb-4">
+                {stat.label}
+              </div>
+              {stat.chart && (
+                <div className="h-24">
+                  <ResponsiveContainer width="100%" height="100%">
+                    <AreaChart data={data}>
+                      <defs>
+                        <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#2563EB" stopOpacity={0}/>
+                        </linearGradient>
+                      </defs>
+                      <XAxis dataKey="month" hide />
+                      <Tooltip />
+                      <Area
+                        type="monotone"
+                        dataKey="value"
+                        stroke="#2563EB"
+                        fillOpacity={1}
+                        fill="url(#colorValue)"
+                      />
+                    </AreaChart>
+                  </ResponsiveContainer>
+                </div>
+              )}
+            </Card>
           ))}
         </div>
-      </section>
+      </motion.section>
 
       {/* Features Grid */}
-      <section className="max-w-7xl mx-auto px-4 py-12">
-        <h2 className="text-3xl font-bold text-pastel-blue-800 text-center mb-8">
+      <motion.section
+        initial="initial"
+        whileInView="animate"
+        viewport={{ once: true }}
+        variants={staggerChildren}
+        className="max-w-7xl mx-auto px-4"
+      >
+        <motion.h2
+          variants={fadeInUp}
+          className="text-3xl font-bold text-center mb-12"
+        >
           Comprehensive Management Tools
-        </h2>
-        <div className="grid md:grid-cols-3 gap-6">
+        </motion.h2>
+
+        <div className="grid md:grid-cols-3 gap-8">
           {[
             {
-              title: 'Property Management',
-              content: 'Real-time tracking of income, expenses, and occupancy rates through comprehensive dashboards.'
+              title: 'Property Analytics',
+              desc: 'Real-time financial tracking and occupancy insights',
+              gradient: 'from-blue-500 to-blue-600'
             },
             {
               title: 'Tenant Portal',
-              content: 'Digital handling of maintenance requests, rent payments, and document management.'
+              desc: 'Digital communication & payment infrastructure',
+              gradient: 'from-blue-400 to-blue-500'
             },
             {
-              title: 'Maintenance Tracking',
-              content: 'Coordinate repairs and track progress with real-time updates and automated workflows.'
+              title: 'Maintenance OS',
+              desc: 'Workflow automation & progress tracking',
+              gradient: 'from-blue-300 to-blue-400'
             }
           ].map((feature, i) => (
-            <div key={i} className="p-6 bg-white rounded-xl shadow-sm border border-pastel-blue-50">
-              <h3 className="text-xl font-semibold text-pastel-blue-800 mb-3">{feature.title}</h3>
-              <p className="text-pastel-blue-700 leading-relaxed">{feature.content}</p>
-            </div>
+            <motion.div
+              key={i}
+              variants={fadeInUp}
+              whileHover={{ scale: 1.02 }}
+              className="group cursor-pointer"
+            >
+              <Card className="h-full p-6 hover:shadow-xl transition-all border-transparent hover:border-blue-200">
+                <div className={`w-12 h-12 rounded-lg mb-4 bg-gradient-to-br ${feature.gradient}`} />
+                <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300">
+                  {feature.desc}
+                </p>
+              </Card>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      {/* Compact CTA */}
-      <section className="bg-pastel-blue-800 text-white py-12">
-        <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to Transform Your Property Management?</h2>
-          <p className="mb-6 opacity-90">Join thousands of professional property managers</p>
-          <Link
-            href="/pricing"
-            className="inline-block bg-white text-pastel-blue-800 px-8 py-3 rounded-lg hover:bg-pastel-blue-50 transition-colors"
+      {/* CTA Section */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="bg-gradient-to-r from-blue-600 to-blue-400 text-white"
+      >
+        <div className="max-w-4xl mx-auto px-4 py-16 text-center">
+          <h2 className="text-3xl font-bold mb-4">
+            Ready to Transform Your Workflow?
+          </h2>
+          <p className="text-xl mb-8 opacity-90">
+            Join thousands of property management professionals
+          </p>
+          <Button
+            variant="outline"
+            className="bg-white text-blue-600 hover:bg-blue-50"
+            asChild
           >
-            Start Free Trial
-          </Link>
+            <Link href="/pricing">Start Free Trial</Link>
+          </Button>
         </div>
-      </section>
+      </motion.section>
     </main>
   )
 }
