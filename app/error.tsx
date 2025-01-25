@@ -1,10 +1,9 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { Icon } from '@/components/ui/icon'
 import { useEffect } from 'react'
 
-export default function GlobalError({
+export default function Error({
   error,
   reset,
 }: {
@@ -16,26 +15,14 @@ export default function GlobalError({
   }, [error])
 
   return (
-    <html lang="en">
-      <body>
-        <div className="flex min-h-screen flex-col items-center justify-center">
-          <div className="container flex max-w-md flex-col items-center gap-6 text-center">
-            <Icon name="alert-triangle" className="h-12 w-12 text-destructive" />
-            <h1 className="text-2xl font-bold tracking-tight">
-              Something went wrong!
-            </h1>
-            <p className="text-muted-foreground">
-              An unexpected error occurred. We've been notified and are working to fix the issue.
-            </p>
-            <Button
-              onClick={reset}
-              className="gap-2 py-2 px-4"
-            >
-              Try again
-            </Button>
-          </div>
-        </div>
-      </body>
-    </html>
+    <div className="min-h-[400px] flex flex-col items-center justify-center p-4">
+      <h2 className="text-2xl font-bold mb-4">Something went wrong</h2>
+      <p className="text-gray-600 dark:text-gray-300 mb-6 text-center max-w-md">
+        {error.message || "An unexpected error occurred. Please try again."}
+      </p>
+      <Button onClick={reset} variant="outline">
+        Try again
+      </Button>
+    </div>
   )
 }

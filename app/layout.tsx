@@ -1,6 +1,8 @@
+import { CommandMenu } from '@/components/command-menu'
+import { Footer } from '@/components/footer'
+import { Providers } from '@/components/providers'
 import type { Metadata, Viewport } from 'next'
 import { Roboto } from 'next/font/google'
-import ClientLayout from './client-layout'
 import { Navbar } from './components/layout/navbar'
 import './globals.css'
 
@@ -85,8 +87,15 @@ export default function RootLayout({
       className={`${roboto.variable} antialiased`}
     >
       <body className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <Navbar />
-        <ClientLayout>{children}</ClientLayout>
+        <Providers>
+          <div className="relative flex min-h-screen flex-col">
+            <Navbar>
+              <CommandMenu />
+            </Navbar>
+            <main className="flex-1">{children}</main>
+            <Footer />
+          </div>
+        </Providers>
       </body>
     </html>
   )

@@ -1,5 +1,7 @@
 "use client";
 
+import { cn } from '@/lib/utils'
+import * as feather from 'feather-icons'
 import { Route } from 'next'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -11,47 +13,48 @@ const navigation: Array<{ name: string; href: Route }> = [
   { name: 'Contact', href: '/contact' as Route },
 ]
 
-export function Navbar() {
+interface NavbarProps {
+  children?: React.ReactNode
+}
+
+export function Navbar({ children }: NavbarProps) {
   const pathname = usePathname()
 
   return (
-    <header className="bg-white shadow-sm">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="flex h-16 items-center justify-between">
-          {/* Logo */}
-          <Link href="/" className="flex items-center gap-2">
-            <span className="text-2xl font-bold text-pastel-blue-600">HDS</span>
-          </Link>
-
-          {/* Centered Navigation */}
-          <nav aria-label="Global" className="flex flex-1 justify-center">
-            <ul className="flex items-center gap-8 text-sm">
-              {navigation.map((item) => (
-                <li key={item.name}>
-                  <Link
-                    href={item.href}
-                    className={`font-medium transition-colors ${
-                      pathname === item.href
-                        ? 'text-pastel-blue-600'
-                        : 'text-gray-600 hover:text-pastel-blue-500'
-                    }`}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <Link href="/" className="mr-6 flex items-center space-x-2">
+          <span
+            dangerouslySetInnerHTML={{
+              __html: feather.icons.home.toSvg({
+                width: 24,
+                height: 24,
+                class: 'text-current'
+              })
+            }}
+          />
+          <span className="hidden font-bold sm:inline-block">
+            HDS
+          </span>
+        </Link>
+        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+          {children}
+          <nav className="flex items-center">
+            {navigation.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground h-9 px-4 py-2",
+                  pathname === item.href
+                    ? "bg-accent text-accent-foreground"
+                    : "text-muted-foreground"
+                )}
+              >
+                {item.name}
+              </Link>
+            ))}
           </nav>
-
-          {/* Auth Buttons */}
-          <div className="flex items-center gap-4">
-            <Link
-              className="rounded-md bg-pastel-blue-600 px-5 py-2.5 text-sm font-medium text-white shadow hover:bg-pastel-blue-700 transition-colors"
-              href="/auth/login"
-            >
-              Sign In
-            </Link>
-          </div>
         </div>
       </div>
     </header>
