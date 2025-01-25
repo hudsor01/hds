@@ -60,7 +60,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" suppressHydrationWarning className={`${roboto.variable} antialiased`}>
-      <body>
+      <body className="min-h-screen bg-pastel-blue-50">
         <Navbar />
         <ClientLayout>{children}</ClientLayout>
       </body>

@@ -1,21 +1,23 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { routes } from "@/routes";
-import { loadStripe } from "@stripe/stripe-js";
-import { Check } from "lucide-react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
+import { Button } from "@/components/ui/button"
+import
+  {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+  } from "@/components/ui/card"
+import { routes } from "@/routes"
+import { loadStripe } from "@stripe/stripe-js"
+import * as feather from 'feather-icons'
+import type { Route } from 'next'
+import { useSession } from "next-auth/react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { toast } from "sonner"
 
 const pricingTiers = [
   {
@@ -112,16 +114,14 @@ const PricingCheckoutButton = ({
     try {
       setIsLoading(true);
 
-      // For Elite plan, redirect to contact page
       if (text === "Contact Sales") {
-        router.push(routes.contact);
+        router.push(routes.contact as Route);
         return;
       }
 
-      // For free trial
       if (!priceId) {
         if (!session) {
-          router.push(routes.auth.register);
+          router.push(routes.auth.register as Route);
           return;
         }
 
@@ -133,7 +133,7 @@ const PricingCheckoutButton = ({
         });
 
         if (response.ok) {
-          router.push("/dashboard");
+          router.push('/dashboard' as Route);
           toast.success("Free trial activated! Enjoy your 14-day access.");
         } else {
           const error = await response.json();
@@ -142,10 +142,9 @@ const PricingCheckoutButton = ({
         return;
       }
 
-      // For paid plans
       if (!session) {
         router.push(
-          `${routes.auth.login}?callbackUrl=${encodeURIComponent("/pricing")}`,
+          `${routes.auth.login}?callbackUrl=${encodeURIComponent("/pricing")}` as Route
         );
         return;
       }
@@ -176,7 +175,7 @@ const PricingCheckoutButton = ({
       toast.error(
         error instanceof Error
           ? error.message
-          : "Payment failed. Please try again.",
+          : "Payment failed. Please try again."
       );
     } finally {
       setIsLoading(false);
@@ -187,7 +186,6 @@ const PricingCheckoutButton = ({
   return (
     <Button
       variant={highlighted ? "default" : "outline"}
-      size="lg"
       onClick={handleClick}
       disabled={isLoading}
       className={`w-full mt-4 font-semibold ${
@@ -240,7 +238,12 @@ export default function PricingPage() {
               <ul className="space-y-3">
                 {tier.features.map((feature) => (
                   <li key={feature} className="flex items-center gap-2">
-                    <Check className="h-4 w-4 text-blue-500" />
+                    <span
+                      className="text-blue-500"
+                      dangerouslySetInnerHTML={{
+                        __html: feather.icons.check.toSvg({ width: 16, height: 16 })
+                      }}
+                    />
                     <span className="text-sm">{feature}</span>
                   </li>
                 ))}

@@ -1,5 +1,5 @@
 import type { NextAuthOptions } from 'next-auth'
-import NextAuth from 'next-auth'
+import NextAuth, { getServerSession } from 'next-auth'
 import GoogleProvider from 'next-auth/providers/google'
 
 export const authOptions: NextAuthOptions = {
@@ -29,10 +29,10 @@ export const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
-      if (session?.user) {
-        session.user.id = token.id
-        session.user.stripe_customer_id = token.stripe_customer_id
-        session.user.subscription_status = token.subscription_status
+      if (session?.user && token) {
+        session.user.id = token.id as string;
+        (session.user as any).stripe_customer_id = token.stripe_customer_id;
+        (session.user as any).subscription_status = token.subscription_status;
       }
       return session
     }
@@ -43,6 +43,8 @@ export const authOptions: NextAuthOptions = {
     error: '/auth/error',
   }
 }
+
+export const auth = () => getServerSession(authOptions)
 
 const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST }
