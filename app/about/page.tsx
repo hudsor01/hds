@@ -3,7 +3,6 @@
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ArrowRight } from '@mui/icons-material'
-import { section, div } from 'framer-motion/dist/client'
 import Image from 'next/image'
 import Link from 'next/link'
 import * as React from 'react'
@@ -219,17 +218,16 @@ export default function AboutPage() {
                 Experience the future of property management with our innovative platform.
               </p>
               <div className="mt-8 flex justify-center">
-                <Button
-                  size="lg"
-                  variant="outline"
-                  className="bg-white text-blue-600 hover:bg-blue-50"
-                >
-                  <Link href="/dashboard" className="flex items-center">
-                      Get Started Now
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </a>
-                  </Link>
-                </Button>
+                <Link href="/dashboard" className="flex items-center">
+                  <Button
+                    size="lg"
+                    variant="outline"
+                    className="bg-white text-blue-600 hover:bg-blue-50"
+                  >
+                    Get Started Now
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>

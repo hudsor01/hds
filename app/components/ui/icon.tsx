@@ -1,3 +1,5 @@
+'use client'
+
 import feather from 'feather-icons'
 import { HTMLAttributes, useEffect, useRef } from 'react'
 

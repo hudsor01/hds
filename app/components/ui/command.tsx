@@ -1,8 +1,10 @@
 'use client'
 
 import { cn } from '@/auth/lib/utils'
+import { DialogProps } from '@mui/material'
 import { Command as CommandPrimitive } from 'cmdk'
 import * as React from 'react'
+import { Search } from 'react-feather'
 import { Dialog, DialogContent } from './dialog'
 
 const Command = React.forwardRef<

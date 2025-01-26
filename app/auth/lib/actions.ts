@@ -1,11 +1,11 @@
 'use server'
 
-import { signIn } from '@/auth/lib/auth/auth'
+import { prisma } from '@/lib/prisma'
 import { PropertyStats, RecentActivity } from '@/types/dashboard'
 import bcrypt from 'bcrypt'
+import { signIn } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
-import { prisma } from './prisma'
 
 const RegisterSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
