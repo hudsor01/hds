@@ -90,7 +90,7 @@ export async function register(prevState: unknown, formData: FormData) {
         encrypted_password: hashedPassword,
         raw_user_meta_data: { name },
         email_confirmed_at: new Date(),
-        confirmed_at: new Date()
+        confirmation_sent_at: new Date()  // Changed from confirmed_at
       }
     })
 
@@ -116,13 +116,125 @@ export async function getDashboardStats(): Promise<PropertyStats> {
   await new Promise(resolve => setTimeout(resolve, 1000))
 
   return {
-    totalProperties: 12,
-    occupiedProperties: 45,
-    vacantProperties: 3,
-    totalRevenue: 52000,
-    revenueChange: 15.2,
-    occupancyRate: 92,
-    occupancyChange: 2.1
+    overview: {
+      totalProperties: 12,
+      occupiedUnits: 45,
+      vacantUnits: 3,
+      totalUnits: 48,
+      underMaintenance: 2
+    },
+
+    occupancy: {
+      rate: 93.75, // (45 occupied / 48 total) * 100
+      trend: 2.1,
+      historicalRates: [
+        { period: '2024-02', rate: 91.65 },
+        { period: '2024-03', rate: 93.75 }
+      ],
+      byPropertyType: {
+        'apartment': 95,
+        'house': 92,
+        'condo': 94
+      }
+    },
+
+    financial: {
+      revenue: {
+        amount: 52000,
+        currency: 'USD',
+        period: 'MONTHLY',
+        previousAmount: 45140,
+        percentageChange: 15.2,
+        breakdown: {
+          'rent': 48000,
+          'fees': 2500,
+          'other': 1500
+        }
+      },
+      expenses: {
+        amount: 15000,
+        currency: 'USD',
+        period: 'MONTHLY',
+        previousAmount: 14000,
+        percentageChange: 7.1
+      },
+      netIncome: {
+        amount: 37000,
+        currency: 'USD',
+        period: 'MONTHLY',
+        previousAmount: 31140,
+        percentageChange: 18.8
+      },
+      outstanding: {
+        amount: 3200,
+        currency: 'USD',
+        period: 'MONTHLY'
+      },
+      projections: {
+        nextMonth: {
+          amount: 53500,
+          currency: 'USD',
+          period: 'MONTHLY'
+        },
+        nextQuarter: {
+          amount: 162000,
+          currency: 'USD',
+          period: 'QUARTERLY'
+        }
+      }
+    },
+
+    tenants: {
+      total: 52,
+      active: 45,
+      pending: 3,
+      moveIns: 2,
+      moveOuts: 1,
+      satisfactionRate: 4.2
+    },
+
+    maintenance: {
+      openTickets: 8,
+      resolvedTickets: 45,
+      averageResolutionTime: 48, // hours
+      byPriority: {
+        'CRITICAL': 1,
+        'HIGH': 3,
+        'MEDIUM': 2,
+        'LOW': 2
+      },
+      byStatus: {
+        'PENDING': 2,
+        'IN_PROGRESS': 4,
+        'COMPLETED': 45,
+        'CANCELLED': 1,
+        'ON_HOLD': 1
+      }
+    },
+
+    leases: {
+      active: 45,
+      expiringSoon: 3,
+      renewed: 12,
+      newLeases: 5,
+      averageTerm: 12 // months
+    },
+
+    trends: {
+      occupancy: [91, 92, 93, 93.75],
+      revenue: [48000, 49500, 45140, 52000],
+      expenses: [14000, 14500, 14000, 15000],
+      satisfaction: [4.0, 4.1, 4.0, 4.2]
+    },
+
+    alerts: [
+      {
+        type: 'MAINTENANCE',
+        message: 'Critical repair needed in Unit 204',
+        priority: 'HIGH',
+        timestamp: new Date().toISOString()
+      }
+    ]
   }
 }
 

@@ -1,21 +1,22 @@
 'use client'
 
 import { PRIORITY_LABELS, PRIORITY_LEVELS } from "@/auth/lib/constants"
-import type { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from "@/auth/lib/types/maintenance"
-import type { Property } from "@/auth/lib/types/properties"
 import { Button } from "@/components/ui/button"
-import {
+import
+  {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+  } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Select, SelectItem } from "@/components/ui/select"
 import Textarea from "@/components/ui/textarea"
+import type { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from "@/types/maintenance"
+import type { Property } from "@/types/properties"
 import type { SelectChangeEvent } from "@mui/material"
 import { useState } from "react"
 

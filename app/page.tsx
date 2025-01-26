@@ -8,6 +8,8 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
+import { ArrowRight, CheckCircle, PlayArrow } from '@mui/icons-material'
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 const data = [
   { month: 'Jan', value: 400 },
@@ -32,6 +34,7 @@ const staggerChildren = {
 }
 
 export default function HomePage() {
+  const [videoOpen, setVideoOpen] = useState(false)
   const formik = useFormik({
     initialValues: {
       email: ''
@@ -60,7 +63,7 @@ export default function HomePage() {
 
   return (
     <main className="space-y-24">
-      {/* Hero Section */}
+      {/* Enhanced Hero Section */}
       <motion.section
         initial="initial"
         animate="animate"
@@ -68,6 +71,11 @@ export default function HomePage() {
         className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24"
       >
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
+        {/* Add animated background elements */}
+        <div className="absolute inset-0">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl" />
+        </div>
 
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
@@ -102,6 +110,24 @@ export default function HomePage() {
                   <Link href="/features">View Features</Link>
                 </Button>
               </div>
+              {/* Add social proof */}
+              <div className="flex items-center gap-4 text-sm text-gray-600">
+                <div className="flex -space-x-2">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200" />
+                  ))}
+                </div>
+                <span>Trusted by 1000+ property managers</span>
+              </div>
+              {/* Add video preview button */}
+              <Button
+                variant="outline"
+                onClick={() => setVideoOpen(true)}
+                className="flex items-center gap-2"
+              >
+                <PlayArrow className="w-4 h-4" />
+                Watch Demo
+              </Button>
             </motion.div>
 
             <motion.div
@@ -119,6 +145,44 @@ export default function HomePage() {
               />
             </motion.div>
           </div>
+        </div>
+      </motion.section>
+
+      {/* Add Testimonials Section before Stats */}
+      <motion.section
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        viewport={{ once: true }}
+        className="max-w-7xl mx-auto px-4"
+      >
+        <div className="grid md:grid-cols-2 gap-8">
+          {[
+            {
+              quote: "HDS transformed how we manage our properties. The efficiency gains are remarkable.",
+              author: "Sarah Johnson",
+              role: "Property Manager",
+              company: "Urban Living Properties"
+            },
+            {
+              quote: "The best property management software we've used. Intuitive and powerful.",
+              author: "Michael Chen",
+              role: "CEO",
+              company: "Pacific Real Estate Group"
+            }
+          ].map((testimonial, i) => (
+            <Card key={i} className="p-6 bg-blue-50/50">
+              <div className="flex flex-col gap-4">
+                <div className="text-blue-600">
+                  {"★".repeat(5)}
+                </div>
+                <p className="text-lg italic">{testimonial.quote}</p>
+                <div>
+                  <div className="font-semibold">{testimonial.author}</div>
+                  <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
+                </div>
+              </div>
+            </Card>
+          ))}
         </div>
       </motion.section>
 
@@ -261,6 +325,23 @@ export default function HomePage() {
           </form>
         </div>
       </motion.section>
+
+      {/* Video Dialog */}
+      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
+        <DialogContent className="max-w-4xl">
+          <div className="aspect-video">
+            <iframe
+              width="100%"
+              height="100%"
+              src="https://www.youtube.com/embed/your-video-id"
+              title="Product Demo"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        </DialogContent>
+      </Dialog>
     </main>
   )
 }

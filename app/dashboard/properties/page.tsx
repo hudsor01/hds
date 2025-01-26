@@ -1,7 +1,7 @@
 'use client'
 
-import type { Property, PropertyCardData } from '@/auth/lib/types/properties'
 import { PropertyDialog } from '@/components/dialogs/property-dialog'
+import type { Property, PropertyCardData } from '@/types/properties'
 import { Box, Button, Card, Chip, Grid, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
 import { motion } from 'framer-motion'

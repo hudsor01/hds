@@ -1,17 +1,18 @@
 'use client'
 
-import type { Property, PropertySale } from "@/auth/lib/types/properties"
 import { Button } from "@/components/ui/button"
-import {
+import
+  {
     Dialog,
     DialogContent,
     DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from "@/components/ui/dialog"
+  } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import type { Property, PropertySale } from "@/types/properties"
 import { useState } from "react"
 
 interface PropertySaleDialogProps {

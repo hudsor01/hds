@@ -18,7 +18,7 @@ export async function POST() {
       },
       select: {
         id: true,
-        subscription_status: true,
+        subscriptionStatus: true,
       },
     });
 
@@ -32,13 +32,13 @@ export async function POST() {
         id: existingUser.id,
       },
       data: {
-        subscription_status: 'trialing',
-        trial_ends_at: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
+        subscriptionStatus: 'trialing',
+        trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000), // 14 days from now
       },
       select: {
         id: true,
-        subscription_status: true,
-        trial_ends_at: true,
+        subscriptionStatus: true,
+        trialEndsAt: true,
       },
     });
 

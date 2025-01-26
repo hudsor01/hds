@@ -1,23 +1,79 @@
-import { PROPERTY_STATUS, PROPERTY_TYPES } from "@/auth/lib/constants"
+export const PROPERTY_STATUS = {
+  active: 'active',
+  inactive: 'inactive',
+  maintenance: 'maintenance',
+  sold: 'sold'
+} as const
 
-export type Property = {
+export const PROPERTY_TYPES = {
+  apartment: 'apartment',
+  house: 'house',
+  condo: 'condo',
+  townhouse: 'townhouse',
+  commercial: 'commercial'
+} as const
+
+export type PropertyType = 'apartment' | 'house' | 'condo' | 'townhouse' | 'commercial'
+export type PropertyStatus = 'available' | 'rented' | 'maintenance' | 'inactive'
+
+export interface Property {
   id: string
   name: string
   address: string
-  units: string[]
-  status: keyof typeof PROPERTY_STATUS
-  type: keyof typeof PROPERTY_TYPES
+  city: string
+  state: string
+  zipCode: string
+  type: PropertyType
+  status: PropertyStatus
+  units: PropertyUnit[]
+  owner_id: string
+  organization_id: string
+  createdAt: Date
+  updatedAt: Date
 }
 
-export type NewProperty = Omit<Property, 'id'>
-
-export type UpdateProperty = Partial<NewProperty> & {
+export interface PropertyUnit {
   id: string
+  number: string
+  floor?: number
+  bedrooms: number
+  bathrooms: number
+  price: number
+  sqft?: number
+  status: PropertyStatus
+  property_id: string
+  createdAt: Date
+  updatedAt: Date
 }
 
-export interface PropertySale {
+export interface PropertyCardData {
+  id: string
+  title: string
+  address: string
+  type: PropertyType
+  status: PropertyStatus
+  price: number
+  bedrooms: number
+  bathrooms: number
+  image: string
+}
+
+export type PropertySale = {
   propertyId: string
   salePrice: string
   saleDate: string
   notes?: string
+}
+
+export type PropertyStats = {
+  totalProperties: number
+  activeTenants: number
+  monthlyRevenue: number
+  occupancyRate: number
+  percentageChanges: {
+    properties: number
+    tenants: number
+    revenue: number
+    occupancy: number
+  }
 }

@@ -95,8 +95,102 @@ const pricingTiers = [
     highlighted: false,
     buttonText: "Contact Sales",
   },
+  {
+    title: "Unlimited",
+    description: "Enterprise-grade solution for large portfolios",
+    price: "Custom",
+    duration: "per month",
+    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_UNLIMITED,
+    features: [
+      "Unlimited properties",
+      "Everything in Elite",
+      "Enterprise SLA",
+      "Dedicated account manager",
+      "Custom integrations",
+      "On-premise deployment option",
+      "24/7 phone support",
+      "Custom training",
+      "Disaster recovery",
+      "Advanced security features",
+    ],
+    highlighted: false,
+    buttonText: "Contact Enterprise",
+  },
 ];
 
+export default function PricingPage() {
+  // Initialize with Growth tier as selected (Most Popular)
+  const [selectedTier, setSelectedTier] = useState<string>("Growth");
+
+  return (
+    <section className="py-16 container">
+      <div className="text-center mb-12">
+        <h1 className="text-4xl font-bold font-roboto text-blue-500 mb-4">
+          Simple, Transparent Pricing
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          Choose the perfect plan for your property management needs
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        {pricingTiers.map((tier) => (
+          <Card
+            key={tier.title}
+            className={`relative cursor-pointer transition-colors ${
+              selectedTier === tier.title
+                ? "border-blue-500 shadow-lg ring-2 ring-blue-500"
+                : "border-border"
+            }`}
+            onClick={() => setSelectedTier(tier.title)}
+          >
+            {tier.highlighted && selectedTier === "Growth" && (
+              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
+                <span className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-1 rounded-full text-sm font-medium">
+                  Most Popular
+                </span>
+              </div>
+            )}
+            <CardHeader>
+              <CardTitle className="text-2xl font-bold">{tier.title}</CardTitle>
+              <CardDescription>{tier.description}</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <span className="text-4xl font-bold">{tier.price}</span>
+                {tier.price !== "Custom" && (
+                  <span className="text-muted-foreground">/{tier.duration}</span>
+                )}
+              </div>
+              <ul className="space-y-3">
+                {tier.features.map((feature) => (
+                  <li key={feature} className="flex items-center gap-2">
+                    <span
+                      className={selectedTier === tier.title ? "text-blue-500" : "text-gray-400"}
+                      dangerouslySetInnerHTML={{
+                        __html: feather.icons.check.toSvg({ width: 16, height: 16 })
+                      }}
+                    />
+                    <span className="text-sm">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+            </CardContent>
+            <CardFooter>
+              <PricingCheckoutButton
+                priceId={tier.priceId ?? null}
+                text={tier.buttonText}
+                highlighted={selectedTier === tier.title}
+              />
+            </CardFooter>
+          </Card>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+// Update the Button styles in PricingCheckoutButton component
 const PricingCheckoutButton = ({
   priceId,
   text,
@@ -183,82 +277,19 @@ const PricingCheckoutButton = ({
     }
   };
 
+  // In the PricingCheckoutButton component
   return (
     <Button
       variant={highlighted ? "default" : "outline"}
       onClick={handleClick}
       disabled={isLoading}
-      className={`w-full mt-4 font-semibold ${
-        highlighted ? "bg-blue-500 hover:bg-blue-600 text-white" : ""
+      className={`w-full mt-4 font-semibold transition-colors ${
+        highlighted
+          ? "bg-blue-500 hover:bg-blue-600 text-white"
+          : "hover:border-blue-200"
       }`}
     >
       {isLoading ? "Processing..." : text}
     </Button>
   );
 };
-
-export default function PricingPage() {
-  return (
-    <section className="py-16 container">
-      <div className="text-center mb-12">
-        <h1 className="text-4xl font-bold font-roboto text-blue-500 mb-4">
-          Simple, Transparent Pricing
-        </h1>
-        <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-          Choose the perfect plan for your property management needs
-        </p>
-      </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-        {pricingTiers.map((tier) => (
-          <Card
-            key={tier.title}
-            className={`relative ${
-              tier.highlighted
-                ? "border-blue-500 shadow-lg ring-2 ring-blue-500"
-                : "border-border hover:border-blue-200"
-            }`}
-          >
-            {tier.highlighted && (
-              <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="bg-blue-500 text-white px-4 py-1 rounded-full text-sm font-medium">
-                  Most Popular
-                </span>
-              </div>
-            )}
-            <CardHeader>
-              <CardTitle className="text-2xl font-bold">{tier.title}</CardTitle>
-              <CardDescription>{tier.description}</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="mb-4">
-                <span className="text-4xl font-bold">{tier.price}</span>
-                <span className="text-muted-foreground">/{tier.duration}</span>
-              </div>
-              <ul className="space-y-3">
-                {tier.features.map((feature) => (
-                  <li key={feature} className="flex items-center gap-2">
-                    <span
-                      className="text-blue-500"
-                      dangerouslySetInnerHTML={{
-                        __html: feather.icons.check.toSvg({ width: 16, height: 16 })
-                      }}
-                    />
-                    <span className="text-sm">{feature}</span>
-                  </li>
-                ))}
-              </ul>
-            </CardContent>
-            <CardFooter>
-              <PricingCheckoutButton
-                priceId={tier.priceId ?? null}
-                text={tier.buttonText}
-                highlighted={tier.highlighted}
-              />
-            </CardFooter>
-          </Card>
-        ))}
-      </div>
-    </section>
-  );
-}

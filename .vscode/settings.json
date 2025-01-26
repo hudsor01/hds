@@ -34,5 +34,8 @@
   // File associations
   "files.associations": {
     ".prettierrc*": "json"
+  },
+  "[prisma]": {
+    "editor.defaultFormatter": "Prisma.prisma"
   }
 }
