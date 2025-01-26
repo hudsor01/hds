@@ -7,6 +7,7 @@ import { routes } from '@/routes'
 import { useFormik } from 'formik'
 import { motion } from 'framer-motion'
 import { useSession } from "next-auth/react"
+import Image from 'next/image'
 import Link from 'next/link'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 
@@ -39,7 +40,7 @@ export default function HomePage() {
   return (
     <main className="space-y-24">
       {/* Hero Section */}
-      <motion.section>
+      <motion.section
         initial="initial"
         animate="animate"
         variants={staggerChildren}
@@ -67,7 +68,7 @@ export default function HomePage() {
               <div className="flex flex-col sm:flex-row gap-4">
                 {session ? (
                   <Button
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
                     asChild
                   >
                     <Link href={routes.dashboard}>Go to Dashboard</Link>
@@ -282,7 +283,7 @@ export default function HomePage() {
                 className="border-white text-white hover:bg-white/10 w-full sm:w-auto"
                 asChild
               >
-                <Link href={routes.auth.login}>Sign In to Your Account</Link>
+                <Link href={routes.auth.login}>Sign In</Link>
               </Button>
             </div>
           )}
