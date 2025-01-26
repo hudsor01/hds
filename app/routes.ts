@@ -5,6 +5,7 @@ export const routes = {
   dashboard: "/dashboard" as Route,
   contact: "/contact" as Route,
   pricing: "/pricing" as Route,
+  mvp: "/mvp" as Route,
   properties: {
     index: "/dashboard/properties" as Route,
     new: "/dashboard/properties/new" as Route,

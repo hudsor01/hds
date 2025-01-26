@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { useFormik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -30,6 +31,32 @@ const staggerChildren = {
 }
 
 export default function HomePage() {
+  const formik = useFormik({
+    initialValues: {
+      email: ''
+    },
+    validate: values => {
+      const errors: { email?: string } = {}
+      if (!values.email) {
+        errors.email = 'Required'
+      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+        errors.email = 'Invalid email address'
+      }
+      return errors
+    },
+    onSubmit: async (values, { setSubmitting, resetForm }) => {
+      try {
+        // Add your submit logic here
+        console.log('Form submitted:', values)
+        resetForm()
+      } catch (error) {
+        console.error('Error submitting form:', error)
+      } finally {
+        setSubmitting(false)
+      }
+    }
+  })
+
   return (
     <main className="space-y-24">
       {/* Hero Section */}
@@ -196,7 +223,7 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* CTA Section */}
+      {/* CTA Section with Formik */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
@@ -210,13 +237,27 @@ export default function HomePage() {
           <p className="text-xl mb-8 opacity-90">
             Join thousands of property management professionals
           </p>
-          <Button
-            variant="outline"
-            className="bg-white text-blue-600 hover:bg-blue-50"
-            asChild
-          >
-            <Link href="/pricing">Start Free Trial</Link>
-          </Button>
+          <form onSubmit={formik.handleSubmit} className="max-w-md mx-auto">
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className={`flex-1 px-4 py-2 rounded-lg border ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-transparent'} bg-white/10 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/20`}
+                {...formik.getFieldProps('email')}
+              />
+              <Button
+                type="submit"
+                variant="outline"
+                className="bg-white text-blue-600 hover:bg-blue-50 disabled:opacity-50"
+                disabled={formik.isSubmitting}
+              >
+                {formik.isSubmitting ? 'Joining...' : 'Join Waitlist'}
+              </Button>
+            </div>
+            {formik.touched.email && formik.errors.email && (
+              <div className="mt-2 text-sm text-red-200">{formik.errors.email}</div>
+            )}
+          </form>
         </div>
       </motion.section>
     </main>
