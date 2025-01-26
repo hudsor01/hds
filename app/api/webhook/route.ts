@@ -1,8 +1,8 @@
-import { stripe } from "@/auth/lib/stripe";
-import { prisma } from '@/lib/prisma';
-import { headers } from "next/headers";
-import { NextResponse } from "next/server";
-import type Stripe from "stripe";
+import { stripe } from "@/auth/lib/stripe"
+import { prisma } from '@/lib/prisma'
+import { headers } from "next/headers"
+import { NextResponse } from "next/server"
+import type Stripe from "stripe"
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     switch (event.type) {
       case "checkout.session.completed":
         const session = event.data.object as Stripe.Checkout.Session;
-        await prisma.users.update({
+        await prisma.user.update({
           where: { id: session.client_reference_id! },
           data: {
             stripe_customer_id: session.customer as string,
@@ -32,7 +32,7 @@ export async function POST(req: Request) {
 
       case "invoice.payment_succeeded":
         const invoice = event.data.object as Stripe.Invoice;
-        await prisma.users.update({
+        await prisma.user.update({
           where: { stripe_customer_id: invoice.customer as string },
           data: {
             subscription_status: "active",
@@ -42,7 +42,7 @@ export async function POST(req: Request) {
 
       case "invoice.payment_failed":
         const failedInvoice = event.data.object as Stripe.Invoice;
-        await prisma.users.update({
+        await prisma.user.update({
           where: { stripe_customer_id: failedInvoice.customer as string },
           data: {
             subscription_status: "past_due",

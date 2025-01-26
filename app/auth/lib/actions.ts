@@ -3,9 +3,11 @@
 import { prisma } from '@/lib/prisma'
 import { PropertyStats, RecentActivity } from '@/types/dashboard'
 import bcrypt from 'bcrypt'
-import { signIn } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import { AuthService } from './auth/service'
+
+const authService = new AuthService()
 
 const RegisterSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -22,24 +24,34 @@ export async function authenticate(
   formData: FormData,
 ) {
   try {
-    await signIn('credentials', {
-      ...Object.fromEntries(formData),
-      redirect: false,
-    })
-  } catch (error) {
-    if (error && typeof error === 'object' && 'type' in error) {
-      const type = (error as { type: string }).type
-      switch (type) {
-        case 'CredentialsSignin':
-          return 'Invalid credentials.'
-        default:
-          return 'Something went wrong.'
-      }
-    }
-    throw error
-  }
+    const email = formData.get('email') as string
+    const password = formData.get('password') as string
 
-  redirect('/dashboard')
+    const user = await prisma.authUser.findUnique({
+      where: { email }
+    })
+
+    if (!user) {
+      return 'Invalid credentials.'
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.encrypted_password)
+    if (!passwordMatch) {
+      return 'Invalid credentials.'
+    }
+
+    // Create a new session
+    await authService.createSession(
+      user.id,
+      'user-agent', // TODO: Get actual user agent
+      'ip-address'  // TODO: Get actual IP address
+    )
+
+    redirect('/dashboard')
+  } catch (error) {
+    console.error('Authentication error:', error)
+    return 'Something went wrong.'
+  }
 }
 
 export async function register(prevState: unknown, formData: FormData) {
@@ -71,11 +83,24 @@ export async function register(prevState: unknown, formData: FormData) {
 
     const hashedPassword = await bcrypt.hash(password, 10)
 
+    // Create auth user first
+    const authUser = await prisma.authUser.create({
+      data: {
+        email,
+        encrypted_password: hashedPassword,
+        raw_user_meta_data: { name },
+        email_confirmed_at: new Date(),
+        confirmed_at: new Date()
+      }
+    })
+
+    // Then create public user with same ID
     await prisma.user.create({
       data: {
+        id: authUser.id,
         name,
         email,
-        password: hashedPassword
+        emailVerified: new Date()
       }
     })
 

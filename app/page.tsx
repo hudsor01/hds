@@ -2,6 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { routes } from '@/routes'
 import { useFormik } from 'formik'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
@@ -85,13 +86,13 @@ export default function HomePage() {
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                   asChild
                 >
-                  <Link href="/mvp">View MVP</Link>
+                  <Link href={routes.mvp}>View MVP</Link>
                 </Button>
                 <Button
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                   asChild
                 >
-                  <Link href="/dashboard">Get Started</Link>
+                  <Link href={routes.dashboard}>Get Started</Link>
                 </Button>
                 <Button
                   variant="outline"

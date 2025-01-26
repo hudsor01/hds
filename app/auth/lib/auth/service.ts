@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
-import type { sessions as Session } from '@prisma/client'
+import type { Session } from '@prisma/client'
 import { nanoid } from 'nanoid'
-import { UAParser } from 'ua-parser-js'
 
 export type { Session }
 
@@ -18,22 +17,11 @@ export class AuthService {
     userAgent: string,
     ipAddress: string
   ): Promise<Session> {
-    const parser = new UAParser(userAgent)
-    const browser = `${parser.getBrowser().name || 'unknown'} ${parser.getBrowser().version || ''}`
-    const os = parser.getOS().name || 'unknown'
-    const device = parser.getDevice().type || 'desktop'
-
-    const session = await prisma.sessions.create({
+    const session = await prisma.session.create({
       data: {
-        user_id: userId,
-        session_token: nanoid(32),
-        device,
-        browser,
-        operating_system: os,
-        ip_address: ipAddress,
-        expires: new Date(Date.now() + this.SESSION_DURATION),
-        last_active: new Date(),
-        is_revoked: false,
+        userId,
+        sessionToken: nanoid(32),
+        expires: new Date(Date.now() + this.SESSION_DURATION)
       },
     })
 
@@ -41,38 +29,34 @@ export class AuthService {
   }
 
   async getSessions(userId: string): Promise<Session[]> {
-    return prisma.sessions.findMany({
+    return prisma.session.findMany({
       where: {
-        user_id: userId,
-        is_revoked: false,
+        userId,
         expires: { gt: new Date() },
       },
-      orderBy: { last_active: 'desc' },
+      orderBy: { expires: 'desc' },
     })
   }
 
   async revokeSession(sessionId: string): Promise<void> {
-    await prisma.sessions.update({
+    await prisma.session.update({
       where: { id: sessionId },
-      data: { is_revoked: true },
+      data: { expires: new Date() },
     })
   }
 
   async updateSessionActivity(sessionId: string): Promise<void> {
-    await prisma.sessions.update({
+    await prisma.session.update({
       where: { id: sessionId },
-      data: { last_active: new Date() },
+      data: { expires: new Date(Date.now() + this.SESSION_DURATION) },
     })
   }
 
   async cleanupExpiredSessions(): Promise<void> {
     const now = new Date()
-    await prisma.sessions.deleteMany({
+    await prisma.session.deleteMany({
       where: {
-        OR: [
-          { expires: { lt: now } },
-          { is_revoked: true },
-        ],
+        expires: { lt: now }
       },
     })
   }

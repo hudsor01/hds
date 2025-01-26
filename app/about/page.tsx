@@ -2,45 +2,27 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { ArrowRight } from '@mui/icons-material'
+import { ArrowRight, Lightbulb, Security, TouchApp } from '@mui/icons-material'
 import Image from 'next/image'
 import Link from 'next/link'
-import * as React from 'react'
 
-interface TeamMember {
-  name: string
-  role: string
-  bio: string
-  image: string
-}
-
-interface Value {
-  title: string
-  description: string
-  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>
-}
-
-interface Milestone {
-  year: string
-  title: string
-  description: string
-}
+import { type Milestone, type TeamMember, type Value } from '@/types/about'
 
 const values: Value[] = [
   {
     title: 'Innovation',
     description: 'Constantly pushing boundaries in property management technology',
-    icon: ArrowRight
+    icon: Lightbulb
   },
   {
     title: 'Reliability',
     description: 'Building trust through consistent, dependable service',
-    icon: ArrowRight
+    icon: Security
   },
   {
     title: 'Simplicity',
     description: 'Making complex property management tasks effortless',
-    icon: ArrowRight
+    icon: TouchApp
   }
 ]
 

@@ -65,8 +65,8 @@ model User {
   image             String?
   accounts          Account[]
   sessions          Session[]
-  stripe_customer_id String?
-  subscription_status String?
+  stripeCustomerId  String?
+  subscriptionStatus String?
 
   @@map("users")
   @@schema("public")

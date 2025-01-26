@@ -12,7 +12,7 @@ export async function POST() {
 
   try {
     // Find the user by email
-    const existingUser = await prisma.users.findFirst({
+    const existingUser = await prisma.user.findFirst({
       where: {
         email: session.user.email,
       },
@@ -27,7 +27,7 @@ export async function POST() {
     }
 
     // Update user with trial status
-    const updatedUser = await prisma.users.update({
+    const updatedUser = await prisma.user.update({
       where: {
         id: existingUser.id,
       },
