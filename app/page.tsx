@@ -2,14 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
+import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { routes } from '@/routes'
 import { useFormik } from 'formik'
 import { motion } from 'framer-motion'
-import Image from 'next/image'
+import { useSession } from "next-auth/react"
 import Link from 'next/link'
 import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
-import { ArrowRight, CheckCircle, PlayArrow } from '@mui/icons-material'
-import { Dialog, DialogContent } from "@/components/ui/dialog"
 
 const data = [
   { month: 'Jan', value: 400 },
@@ -34,37 +33,13 @@ const staggerChildren = {
 }
 
 export default function HomePage() {
-  const [videoOpen, setVideoOpen] = useState(false)
-  const formik = useFormik({
-    initialValues: {
-      email: ''
-    },
-    validate: values => {
-      const errors: { email?: string } = {}
-      if (!values.email) {
-        errors.email = 'Required'
-      } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-        errors.email = 'Invalid email address'
-      }
-      return errors
-    },
-    onSubmit: async (values, { setSubmitting, resetForm }) => {
-      try {
-        // Add your submit logic here
-        console.log('Form submitted:', values)
-        resetForm()
-      } catch (error) {
-        console.error('Error submitting form:', error)
-      } finally {
-        setSubmitting(false)
-      }
-    }
-  })
-
+  const { data: session } = useSession()
+  // Remove videoOpen state and Dialog since we're not using it
+  
   return (
     <main className="space-y-24">
-      {/* Enhanced Hero Section */}
-      <motion.section
+      {/* Hero Section */}
+      <motion.section>
         initial="initial"
         animate="animate"
         variants={staggerChildren}
@@ -90,26 +65,38 @@ export default function HomePage() {
                 Professional tools for modern property managers. Streamline your workflow and boost efficiency.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  asChild
-                >
-                  <Link href={routes.mvp}>View MVP</Link>
-                </Button>
-                <Button
-                  className="bg-blue-600 hover:bg-blue-700 text-white"
-                  asChild
-                >
-                  <Link href={routes.dashboard}>Get Started</Link>
-                </Button>
-                <Button
-                  variant="outline"
-                  className="border-blue-200 hover:bg-blue-50"
-                  asChild
-                >
-                  <Link href="/features">View Features</Link>
-                </Button>
+                {session ? (
+                  <Button
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    asChild
+                  >
+                    <Link href={routes.dashboard}>Go to Dashboard</Link>
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                      asChild
+                    >
+                      <Link href={routes.auth.register}>Get Started Free</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-blue-200 hover:bg-blue-50 w-full sm:w-auto"
+                      asChild
+                    >
+                      <Link href={routes.auth.login}>Sign In</Link>
+                    </Button>
+                  </>
+                )}
               </div>
+              {/* Add auth status indicator */}
+              {session && (
+                <div className="flex items-center gap-2 text-sm text-gray-600">
+                  <div className="w-2 h-2 rounded-full bg-green-500" />
+                  <span>Logged in as {session.user?.email}</span>
+                </div>
+              )}
               {/* Add social proof */}
               <div className="flex items-center gap-4 text-sm text-gray-600">
                 <div className="flex -space-x-2">
@@ -119,35 +106,6 @@ export default function HomePage() {
                 </div>
                 <span>Trusted by 1000+ property managers</span>
               </div>
-              {/* Add video preview button */}
-              <Button
-                variant="outline"
-                onClick={() => setVideoOpen(true)}
-                className="flex items-center gap-2"
-              >
-                <PlayArrow className="w-4 h-4" />
-                Watch Demo
-              </Button>
-            </motion.div>
-
-            <motion.div
-              variants={fadeInUp}
-              className="relative rounded-2xl overflow-hidden shadow-2xl border border-blue-100 dark:border-blue-800"
-            >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
-              <Image
-                src="/dashboard-preview.png"
-                alt="Dashboard Preview"
-                width={800}
-                height={600}
-                className="w-full h-auto"
-                priority
-              />
-            </motion.div>
-          </div>
-        </div>
-      </motion.section>
-
       {/* Add Testimonials Section before Stats */}
       <motion.section
         initial={{ opacity: 0 }}
@@ -297,51 +255,39 @@ export default function HomePage() {
       >
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Transform Your Workflow?
+            {session ? 'Ready to Manage Your Properties?' : 'Start Your Free Trial Today'}
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of property management professionals
+            {session
+              ? 'Access your dashboard to get started'
+              : 'No credit card required • 14-day free trial • Full access'}
           </p>
-          <form onSubmit={formik.handleSubmit} className="max-w-md mx-auto">
-            <div className="flex flex-col sm:flex-row gap-4">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className={`flex-1 px-4 py-2 rounded-lg border ${formik.touched.email && formik.errors.email ? 'border-red-400' : 'border-transparent'} bg-white/10 text-white placeholder:text-white/60 focus:outline-none focus:ring-2 focus:ring-white/20`}
-                {...formik.getFieldProps('email')}
-              />
+          {session ? (
+            <Button
+              className="bg-white text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
+              asChild
+            >
+              <Link href={routes.dashboard}>Go to Dashboard</Link>
+            </Button>
+          ) : (
+            <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Button
-                type="submit"
-                variant="outline"
-                className="bg-white text-blue-600 hover:bg-blue-50 disabled:opacity-50"
-                disabled={formik.isSubmitting}
+                className="bg-white text-blue-600 hover:bg-blue-50 w-full sm:w-auto"
+                asChild
               >
-                {formik.isSubmitting ? 'Joining...' : 'Join Waitlist'}
+                <Link href={routes.auth.register}>Start Free Trial</Link>
+              </Button>
+              <Button
+                variant="outline"
+                className="border-white text-white hover:bg-white/10 w-full sm:w-auto"
+                asChild
+              >
+                <Link href={routes.auth.login}>Sign In to Your Account</Link>
               </Button>
             </div>
-            {formik.touched.email && formik.errors.email && (
-              <div className="mt-2 text-sm text-red-200">{formik.errors.email}</div>
-            )}
-          </form>
+          )}
         </div>
       </motion.section>
-
-      {/* Video Dialog */}
-      <Dialog open={videoOpen} onOpenChange={setVideoOpen}>
-        <DialogContent className="max-w-4xl">
-          <div className="aspect-video">
-            <iframe
-              width="100%"
-              height="100%"
-              src="https://www.youtube.com/embed/your-video-id"
-              title="Product Demo"
-              frameBorder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        </DialogContent>
-      </Dialog>
     </main>
   )
 }
