@@ -58,6 +58,12 @@ export default function HomePage() {
                   className="bg-blue-600 hover:bg-blue-700 text-white"
                   asChild
                 >
+                  <Link href="/mvp">View MVP</Link>
+                </Button>
+                <Button
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  asChild
+                >
                   <Link href="/dashboard">Get Started</Link>
                 </Button>
                 <Button
