@@ -35,7 +35,7 @@ export default function HomePage() {
   const { data: session } = useSession()
 
   return (
-    <main className="space-y-24">
+    <main className="space-y-24 bg-background text-foreground">
       {/* Hero Section */}
       <motion.section
         initial="initial"
@@ -46,29 +46,29 @@ export default function HomePage() {
         {/* Background Elements */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-teal-soft/20 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-lavender/20 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-accent/20 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             {/* Left Column */}
             <motion.div variants={fadeInUp} className="space-y-8">
-              <h1 className="font-display text-5xl md:text-6xl font-black">
+              <h1 className="font-display text-5xl md:text-6xl font-black text-foreground">
                 Property Management
-                <span className="block mt-2 bg-gradient-to-r from-teal-soft to-lavender bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
                   Simplified
                 </span>
               </h1>
-              <p className="font-body text-xl text-gray-600 dark:text-gray-300">
+              <p className="font-body text-xl text-muted-foreground">
                 Professional tools for modern property managers. Streamline your workflow and boost efficiency.
               </p>
-.
+
               {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 {session ? (
                   <Button
-                    className="bg-teal-soft hover:bg-teal-soft/90 text-gray-800 w-full sm:w-auto font-sans"
+                    className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto font-sans"
                     asChild
                   >
                     <Link href={routes.dashboard}>Go to Dashboard</Link>
@@ -76,14 +76,14 @@ export default function HomePage() {
                 ) : (
                   <>
                     <Button
-                      className="bg-teal-soft hover:bg-teal-soft/90 text-gray-800 w-full sm:w-auto font-sans"
+                      className="bg-primary hover:bg-primary/90 text-primary-foreground w-full sm:w-auto font-sans"
                       asChild
                     >
                       <Link href={routes.auth.register}>Get Started Free</Link>
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-lavender text-lavender-dark hover:bg-lavender/10 w-full sm:w-auto font-sans"
+                      className="border-accent text-accent-foreground hover:bg-accent/10 w-full sm:w-auto font-sans"
                       asChild
                     >
                       <Link href={routes.auth.login}>Sign In</Link>
@@ -94,28 +94,19 @@ export default function HomePage() {
             </motion.div>
 
             {/* Right Column - Hero Image */}
-            // Update the Image component to use a different image or remove if not ready
             <motion.div
               variants={fadeInUp}
-              className="relative rounded-2xl overflow-hidden shadow-2xl border border-lavender/20"
+              className="relative rounded-2xl overflow-hidden shadow-2xl border border-border"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-teal-soft/20 to-lavender/20" />
-              {/* Comment out or update the Image component until you have the actual image */}
-              {/* <Image
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+              <Image
                 src="/dashboard-preview.png"
                 alt="Dashboard Preview"
                 width={800}
                 height={600}
                 className="w-full h-auto"
                 priority
-              /> */}
-              {/* Temporary placeholder */}
-              <div className="aspect-video bg-gradient-to-br from-teal-soft/10 to-lavender/10 flex items-center justify-center p-8">
-                <div className="text-center">
-                  <div className="text-2xl font-display text-gray-800 mb-2">Dashboard Preview</div>
-                  <p className="text-gray-500 font-body">Coming Soon</p>
-                </div>
-              </div>
+              />
             </motion.div>
           </div>
         </div>
@@ -128,8 +119,7 @@ export default function HomePage() {
         viewport={{ once: true }}
         className="max-w-7xl mx-auto px-4"
       >
-        <div className="grid md:grid-cols-2 gap-8"
-          // In the testimonials section, remove image references
+        <div className="grid md:grid-cols-2 gap-8">
           {[
             {
               quote: "HDS transformed how we manage our properties. The efficiency gains are remarkable.",
@@ -159,6 +149,8 @@ export default function HomePage() {
           ))}
         </div>
       </motion.section>
+
+      {/* Remove duplicate motion.div and motion.section here */}
 
       {/* Stats Section */}
       <motion.section

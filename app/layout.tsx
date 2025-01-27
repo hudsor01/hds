@@ -2,7 +2,7 @@ import { CommandMenu } from '@/components/command-menu'
 import { Footer } from '@/components/layout/footer'
 import { Providers } from '@/components/providers'
 import type { Metadata, Viewport } from 'next'
-import { Roboto, Playfair_Display, Inter } from 'next/font/google'
+import { Inter, Playfair_Display, Roboto } from 'next/font/google'
 import { Navbar } from './components/layout/navbar'
 import './globals.css'
 
@@ -31,7 +31,7 @@ export const viewport: Viewport = {
   width: 'device-width',
   initialScale: 1,
   maximumScale: 1,
-  themeColor: '#60A5FA', // pastel blue
+  themeColor: '#A7E7D9',
   colorScheme: 'light dark',
 }
 
@@ -54,10 +54,10 @@ export const metadata: Metadata = {
     description: 'Enterprise-grade property management platform for modern real estate operations',
     images: [
       {
-        url: '/og-image.png',
-        width: 1200,
-        height: 630,
-        alt: 'Hudson Digital Solutions Preview'
+        url: '/dashboard-preview.png',
+        width: 800,
+        height: 600,
+        alt: 'Hudson Digital Solutions Dashboard Preview'
       }
     ]
   },
@@ -65,7 +65,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@dickswayze',
     creator: '@dickswayze',
-    images: ['/twitter-image.png']
+    images: ['/dashboard-preview.png']
   },
   robots: {
     index: true,
@@ -86,6 +86,7 @@ export const metadata: Metadata = {
     'property analytics'
   ]
 }
+
 export default function RootLayout({
   children,
 }: {
