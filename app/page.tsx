@@ -151,6 +151,25 @@ export default function HomePage() {
         </div>
       </motion.section>
 
+      // Add stats data near the top with other constants
+      const stats = [
+        {
+          value: '2,500+',
+          label: 'Properties Managed',
+          chart: true
+        },
+        {
+          value: '95%',
+          label: 'Customer Satisfaction',
+          chart: false
+        },
+        {
+          value: '50%',
+          label: 'Time Saved on Management',
+          chart: true
+        }
+      ]
+
       {/* Stats Section */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
@@ -160,37 +179,16 @@ export default function HomePage() {
         className="max-w-7xl mx-auto px-4"
       >
         <div className="grid md:grid-cols-3 gap-8">
-          <Card className="p-6 hover:shadow-lg transition-shadow border-pastel-blue-200/20">
-            <div className="text-3xl font-bold text-pastel-blue-500 mb-2">
-              {stat.value}
-            </div>
-            <div className="text-gray-600 dark:text-gray-300 mb-4 font-body">
-              {stat.label}
-            </div>
-            {stat.chart && (
-              <div className="h-24">
-                <ResponsiveContainer width="100%" height="100%">
-                  <AreaChart data={data}>
-                    <defs>
-                      <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="5%" stopColor="#A7E7D9" stopOpacity={0.3}/>
-                        <stop offset="95%" stopColor="#C7A7E7" stopOpacity={0}/>
-                      </linearGradient>
-                    </defs>
-                    <XAxis dataKey="month" hide />
-                    <Tooltip />
-                    <Area
-                      type="monotone"
-                      dataKey="value"
-                      stroke="#A7E7D9"
-                      fillOpacity={1}
-                      fill="url(#colorValue)"
-                    />
-                  </AreaChart>
-                </ResponsiveContainer>
+          {stats.map((stat, i) => (
+            <Card key={i} className="p-6 hover:shadow-lg transition-shadow border-pastel-blue-200/20">
+              <div className="text-3xl font-bold text-pastel-blue-500 mb-2">
+                {stat.value}
               </div>
-            )}
-          </Card>
+              <div className="text-gray-600 dark:text-gray-300 mb-4 font-body">
+                {stat.label}
+              </div>
+            </Card>
+          ))}
         </div>
       </motion.section>
 
