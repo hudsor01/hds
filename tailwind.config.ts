@@ -1,4 +1,8 @@
+import aspectRatio from '@tailwindcss/aspect-ratio'
+import forms from '@tailwindcss/forms'
+import typography from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
+import animate from 'tailwindcss-animate'
 
 const config: Config = {
   darkMode: ["class"],
@@ -17,15 +21,15 @@ const config: Config = {
       },
       colors: {
         primary: {
-          DEFAULT: '#A7E7D9', // teal-soft - Primary brand color
+          DEFAULT: '#A7E7D9',
           foreground: '#1F2937',
         },
         secondary: {
-          DEFAULT: '#C7A7E7', // lavender - Secondary brand color
+          DEFAULT: '#C7A7E7',
           foreground: '#1F2937',
         },
         tertiary: {
-          DEFAULT: '#A7C7E7', // blue-soft - Tertiary brand color
+          DEFAULT: '#A7C7E7',
           foreground: '#1F2937',
         },
         // Aliases for easier reference
@@ -40,7 +44,12 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    typography,
+    aspectRatio,
+    forms,
+    animate,
+  ],
 }
 
 export default config

@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from "next"
 
 const config: NextConfig = {
   reactStrictMode: true,
@@ -8,14 +8,14 @@ const config: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: false,
-    dirs: ["app"],
+    dirs: ["app", "components", "lib", "types"],
   },
   experimental: {
     typedRoutes: true,
     serverActions: {
       bodySizeLimit: "2mb",
+      allowedOrigins: ["localhost:3000"],
     },
-    optimizePackageImports: ['@heroicons/react', '@/components/ui'],
   },
   images: {
     formats: ["image/avif", "image/webp"],
@@ -25,6 +25,7 @@ const config: NextConfig = {
         hostname: '**',
       },
     ],
+    domains: ['localhost'],
   },
   poweredByHeader: false,
   async redirects() {
@@ -35,9 +36,6 @@ const config: NextConfig = {
         permanent: true,
       },
     ]
-  },
-  compiler: {
-    removeConsole: process.env.NODE_ENV === "production",
   },
 }
 
