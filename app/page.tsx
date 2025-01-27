@@ -54,7 +54,7 @@ export default function HomePage() {
             <motion.div variants={fadeInUp} className="space-y-8">
               <h1 className="text-5xl md:text-6xl font-black">
                 Property Management
-                <span className="block mt-2 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-pastel-blue-600 to-pastel-blue-400 bg-clip-text text-transparent">
                   Simplified
                 </span>
               </h1>

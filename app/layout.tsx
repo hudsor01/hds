@@ -1,5 +1,5 @@
 import { CommandMenu } from '@/components/command-menu'
-import { Footer } from '@/components/footer'
+import { Footer } from '@/components/layout/footer'
 import { Providers } from '@/components/providers'
 import type { Metadata, Viewport } from 'next'
 import { Roboto } from 'next/font/google'

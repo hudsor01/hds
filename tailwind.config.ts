@@ -24,8 +24,8 @@ const config: Config = {
         'sm': '0 1px 3px rgba(0,0,0,0.05)',
       },
       fontFamily: {
-        sans: ['var(--font-roboto)', 'system-ui', 'sans-serif'],
-        inter: ['var(--font-inter)', 'system-ui', 'sans-serif'],
+        sans: ['Roboto', 'system-ui', 'sans-serif'],
+        inter: ['Inter', 'system-ui', 'sans-serif'],
       },
       colors: {
         // Pastel Blue Color Scale
