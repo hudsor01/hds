@@ -2,7 +2,7 @@ import { CommandMenu } from '@/components/command-menu'
 import { Footer } from '@/components/layout/footer'
 import { Providers } from '@/components/providers'
 import type { Metadata, Viewport } from 'next'
-import { Roboto } from 'next/font/google'
+import { Roboto, Playfair_Display, Inter } from 'next/font/google'
 import { Navbar } from './components/layout/navbar'
 import './globals.css'
 
@@ -13,6 +13,18 @@ const roboto = Roboto({
   variable: '--font-roboto',
   fallback: ['system-ui', 'arial'],
   preload: true,
+})
+
+const playfair = Playfair_Display({
+  subsets: ['latin'],
+  variable: '--font-playfair',
+  display: 'swap',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
+  display: 'swap',
 })
 
 export const viewport: Viewport = {
@@ -74,7 +86,6 @@ export const metadata: Metadata = {
     'property analytics'
   ]
 }
-
 export default function RootLayout({
   children,
 }: {
@@ -84,7 +95,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${roboto.variable} antialiased`}
+      className={`${roboto.variable} ${playfair.variable} ${inter.variable}`}
     >
       <body className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <Providers>

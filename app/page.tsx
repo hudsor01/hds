@@ -43,28 +43,32 @@ export default function HomePage() {
         variants={staggerChildren}
         className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24"
       >
+        {/* Background Elements */}
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
         <div className="absolute inset-0">
-          <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl" />
-          <div className="absolute bottom-20 right-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl" />
+          <div className="absolute top-20 left-10 w-72 h-72 bg-teal-soft/20 rounded-full blur-3xl" />
+          <div className="absolute bottom-20 right-10 w-72 h-72 bg-lavender/20 rounded-full blur-3xl" />
         </div>
 
         <div className="max-w-7xl mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
+            {/* Left Column */}
             <motion.div variants={fadeInUp} className="space-y-8">
-              <h1 className="text-5xl md:text-6xl font-black">
+              <h1 className="font-display text-5xl md:text-6xl font-black">
                 Property Management
-                <span className="block mt-2 bg-gradient-to-r from-pastel-blue-600 to-pastel-blue-400 bg-clip-text text-transparent">
+                <span className="block mt-2 bg-gradient-to-r from-teal-soft to-lavender bg-clip-text text-transparent">
                   Simplified
                 </span>
               </h1>
-              <p className="text-xl text-gray-600 dark:text-gray-300">
+              <p className="font-body text-xl text-gray-600 dark:text-gray-300">
                 Professional tools for modern property managers. Streamline your workflow and boost efficiency.
               </p>
+.
+              {/* Buttons */}
               <div className="flex flex-col sm:flex-row gap-4">
                 {session ? (
                   <Button
-                    className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                    className="bg-teal-soft hover:bg-teal-soft/90 text-gray-800 w-full sm:w-auto font-sans"
                     asChild
                   >
                     <Link href={routes.dashboard}>Go to Dashboard</Link>
@@ -72,14 +76,14 @@ export default function HomePage() {
                 ) : (
                   <>
                     <Button
-                      className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
+                      className="bg-teal-soft hover:bg-teal-soft/90 text-gray-800 w-full sm:w-auto font-sans"
                       asChild
                     >
                       <Link href={routes.auth.register}>Get Started Free</Link>
                     </Button>
                     <Button
                       variant="outline"
-                      className="border-blue-200 hover:bg-blue-50 w-full sm:w-auto"
+                      className="border-lavender text-lavender-dark hover:bg-lavender/10 w-full sm:w-auto font-sans"
                       asChild
                     >
                       <Link href={routes.auth.login}>Sign In</Link>
@@ -87,37 +91,31 @@ export default function HomePage() {
                   </>
                 )}
               </div>
-              {/* Add auth status indicator */}
-              {session && (
-                <div className="flex items-center gap-2 text-sm text-gray-600">
-                  <div className="w-2 h-2 rounded-full bg-green-500" />
-                  <span>Logged in as {session.user?.email}</span>
-                </div>
-              )}
-              {/* Add social proof */}
-              <div className="flex items-center gap-4 text-sm text-gray-600">
-                <div className="flex -space-x-2">
-                  {[1, 2, 3, 4].map((i) => (
-                    <div key={i} className="w-8 h-8 rounded-full border-2 border-white bg-gray-200" />
-                  ))}
-                </div>
-                <span>Trusted by 1000+ property managers</span>
-              </div>
             </motion.div>
 
+            {/* Right Column - Hero Image */}
+            // Update the Image component to use a different image or remove if not ready
             <motion.div
               variants={fadeInUp}
-              className="relative rounded-2xl overflow-hidden shadow-2xl border border-blue-100 dark:border-blue-800"
+              className="relative rounded-2xl overflow-hidden shadow-2xl border border-lavender/20"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
-              <Image
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-soft/20 to-lavender/20" />
+              {/* Comment out or update the Image component until you have the actual image */}
+              {/* <Image
                 src="/dashboard-preview.png"
                 alt="Dashboard Preview"
                 width={800}
                 height={600}
                 className="w-full h-auto"
                 priority
-              />
+              /> */}
+              {/* Temporary placeholder */}
+              <div className="aspect-video bg-gradient-to-br from-teal-soft/10 to-lavender/10 flex items-center justify-center p-8">
+                <div className="text-center">
+                  <div className="text-2xl font-display text-gray-800 mb-2">Dashboard Preview</div>
+                  <p className="text-gray-500 font-body">Coming Soon</p>
+                </div>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -130,7 +128,8 @@ export default function HomePage() {
         viewport={{ once: true }}
         className="max-w-7xl mx-auto px-4"
       >
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8"
+          // In the testimonials section, remove image references
           {[
             {
               quote: "HDS transformed how we manage our properties. The efficiency gains are remarkable.",
@@ -145,15 +144,15 @@ export default function HomePage() {
               company: "Pacific Real Estate Group"
             }
           ].map((testimonial, i) => (
-            <Card key={i} className="p-6 bg-blue-50/50">
+            <Card key={i} className="p-6 bg-gradient-to-br from-teal-soft/5 to-lavender/5 hover:from-teal-soft/10 hover:to-lavender/10 transition-colors border-lavender/20">
               <div className="flex flex-col gap-4">
-                <div className="text-blue-600">
+                <div className="text-teal-soft font-bold">
                   {"★".repeat(5)}
                 </div>
-                <p className="text-lg italic">{testimonial.quote}</p>
+                <p className="font-display text-lg italic">{testimonial.quote}</p>
                 <div>
-                  <div className="font-semibold">{testimonial.author}</div>
-                  <div className="text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
+                  <div className="font-sans font-semibold">{testimonial.author}</div>
+                  <div className="font-body text-sm text-gray-600">{testimonial.role}, {testimonial.company}</div>
                 </div>
               </div>
             </Card>
@@ -175,11 +174,11 @@ export default function HomePage() {
             { value: '98%', label: 'Client Satisfaction', chart: false },
             { value: '24/7', label: 'Support Available', chart: false }
           ].map((stat, i) => (
-            <Card key={i} className="p-6 hover:shadow-lg transition-shadow">
-              <div className="text-3xl font-bold text-blue-600 mb-2">
+            <Card key={i} className="p-6 hover:shadow-lg transition-shadow border-lavender/20">
+              <div className="text-3xl font-bold text-teal-soft mb-2">
                 {stat.value}
               </div>
-              <div className="text-gray-600 dark:text-gray-300 mb-4">
+              <div className="text-gray-600 dark:text-gray-300 mb-4 font-body">
                 {stat.label}
               </div>
               {stat.chart && (
@@ -188,8 +187,8 @@ export default function HomePage() {
                     <AreaChart data={data}>
                       <defs>
                         <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3}/>
-                          <stop offset="95%" stopColor="#2563EB" stopOpacity={0}/>
+                          <stop offset="5%" stopColor="#A7E7D9" stopOpacity={0.3}/>
+                          <stop offset="95%" stopColor="#C7A7E7" stopOpacity={0}/>
                         </linearGradient>
                       </defs>
                       <XAxis dataKey="month" hide />
@@ -197,7 +196,7 @@ export default function HomePage() {
                       <Area
                         type="monotone"
                         dataKey="value"
-                        stroke="#2563EB"
+                        stroke="#A7E7D9"
                         fillOpacity={1}
                         fill="url(#colorValue)"
                       />
@@ -220,7 +219,7 @@ export default function HomePage() {
       >
         <motion.h2
           variants={fadeInUp}
-          className="text-3xl font-bold text-center mb-12"
+          className="font-display text-3xl font-bold text-center mb-12"
         >
           Comprehensive Management Tools
         </motion.h2>
@@ -230,17 +229,20 @@ export default function HomePage() {
             {
               title: 'Property Analytics',
               desc: 'Real-time financial tracking and occupancy insights',
-              gradient: 'from-blue-500 to-blue-600'
+              gradient: 'from-teal-soft to-teal-soft/70',
+              titleFont: 'font-sans', // Roboto - Primary
             },
             {
               title: 'Tenant Portal',
               desc: 'Digital communication & payment infrastructure',
-              gradient: 'from-blue-400 to-blue-500'
+              gradient: 'from-lavender to-lavender/70',
+              titleFont: 'font-display', // Playfair Display - Secondary
             },
             {
               title: 'Maintenance OS',
               desc: 'Workflow automation & progress tracking',
-              gradient: 'from-blue-300 to-blue-400'
+              gradient: 'from-teal-soft/70 to-lavender/70',
+              titleFont: 'font-body', // Inter - Tertiary
             }
           ].map((feature, i) => (
             <motion.div
@@ -249,12 +251,12 @@ export default function HomePage() {
               whileHover={{ scale: 1.02 }}
               className="group cursor-pointer"
             >
-              <Card className="h-full p-6 hover:shadow-xl transition-all border-transparent hover:border-blue-200">
+              <Card className="h-full p-6 hover:shadow-xl transition-all border-transparent hover:border-lavender/20">
                 <div className={`w-12 h-12 rounded-lg mb-4 bg-gradient-to-br ${feature.gradient}`} />
-                <h3 className="text-xl font-semibold mb-2 group-hover:text-blue-600 transition-colors">
+                <h3 className={`${feature.titleFont} text-xl font-semibold mb-2 group-hover:text-teal-soft transition-colors`}>
                   {feature.title}
                 </h3>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="font-body text-gray-600 dark:text-gray-300">
                   {feature.desc}
                 </p>
               </Card>
@@ -263,12 +265,12 @@ export default function HomePage() {
         </div>
       </motion.section>
 
-      {/* CTA Section with Formik */}
+      {/* CTA Section */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="bg-gradient-to-r from-blue-600 to-blue-400 text-white"
+        className="bg-gradient-to-r from-teal-soft to-lavender text-gray-800"
       >
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">

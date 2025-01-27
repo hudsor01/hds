@@ -24,11 +24,11 @@ const config: Config = {
         'sm': '0 1px 3px rgba(0,0,0,0.05)',
       },
       fontFamily: {
-        sans: ['Roboto', 'system-ui', 'sans-serif'],
-        inter: ['Inter', 'system-ui', 'sans-serif'],
+        sans: ['var(--font-roboto)', 'system-ui'],
+        display: ['var(--font-playfair)', 'Georgia'],
+        body: ['var(--font-inter)', 'system-ui'],
       },
       colors: {
-        // Pastel Blue Color Scale
         'pastel-blue': {
           DEFAULT: '#A7C7E7',
           50: '#f5fbff',
@@ -46,8 +46,13 @@ const config: Config = {
     100: '#e6faf5',
     200: '#bff2e6',
     300: '#80e4d0',
+    soft: '#A7E7D9',
   },
-
+  'lavender': {
+    DEFAULT: '#C7A7E7',
+    light: '#D4BBF0',
+    dark: '#B794E0',
+  },
         // Semantic Colors using Pastel Blue
         border: 'hsl(var(--pastel-blue-200))',
         input: 'hsl(var(--pastel-blue-200))',

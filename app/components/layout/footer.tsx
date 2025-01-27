@@ -107,11 +107,11 @@ export function Footer() {
 
           {/* Newsletter - Right Column */}
           <div className="lg:col-span-1">
-            <strong className="block text-xl font-bold text-gray-900">
+            <strong className="font-display text-xl font-bold text-gray-900">
               Want us to email you with the latest property management news?
             </strong>
 
-            <form className="mt-6">
+            <form className="mt-6 font-body">
               <div className="relative">
                 <label className="sr-only" htmlFor="email">Email</label>
                 <input
