@@ -1,7 +1,7 @@
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
 import ts from '@typescript-eslint/eslint-plugin'
-import parser from '@typescript-eslint/parser'
+import tsParser from '@typescript-eslint/parser'
 import prettier from 'eslint-config-prettier'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -10,18 +10,17 @@ import { fileURLToPath } from 'node:url'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-export default [
-  // 1. Base JS configuration (JavaScript files only)
-  {
-    ...js.configs.recommended,
-    files: ['**/*.js']
+const nextConfig = {
+  files: ['**/*.{js,jsx,ts,tsx}'],
+  plugins: {
+    '@next/next': nextPlugin
   },
+  rules: nextPlugin.configs.recommended.rules
+}
 
-  // 2. Next.js recommended rules (from documentation)
-  ...nextPlugin.configs.recommended,
-  ...nextPlugin.configs['core-web-vitals'],
-
-  // 3. TypeScript & React configuration
+export default [
+  js.configs.recommended,
+  nextConfig,
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
@@ -30,15 +29,10 @@ export default [
       'react-hooks': reactHooks,
     },
     languageOptions: {
-      parser: parser,
+      parser: tsParser,
       parserOptions: {
-        project: true, // Auto-detect tsconfig.json
+        project: './tsconfig.json',
         tsconfigRootDir: __dirname,
-        ecmaVersion: 2024,
-        sourceType: 'module',
-        ecmaFeatures: {
-          jsx: true
-        }
       }
     },
     settings: {
