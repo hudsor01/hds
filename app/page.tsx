@@ -7,14 +7,23 @@ import { motion } from 'framer-motion'
 import { useSession } from "next-auth/react"
 import Image from 'next/image'
 import Link from 'next/link'
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis } from 'recharts'
 
-const data = [
-  { month: 'Jan', value: 400 },
-  { month: 'Feb', value: 300 },
-  { month: 'Mar', value: 600 },
-  { month: 'Apr', value: 800 },
-  { month: 'May', value: 700 },
+const stats = [
+  {
+    value: '24/7',
+    label: 'Support Available',
+    chart: false
+  },
+  {
+    value: '100%',
+    label: 'Cloud-Based Solution',
+    chart: false
+  },
+  {
+    value: 'Real-Time',
+    label: 'Property Insights',
+    chart: false
+  }
 ]
 
 const fadeInUp = {
@@ -150,25 +159,6 @@ export default function HomePage() {
           ))}
         </div>
       </motion.section>
-
-      // Add stats data near the top with other constants
-      const stats = [
-        {
-          value: '2,500+',
-          label: 'Properties Managed',
-          chart: true
-        },
-        {
-          value: '95%',
-          label: 'Customer Satisfaction',
-          chart: false
-        },
-        {
-          value: '50%',
-          label: 'Time Saved on Management',
-          chart: true
-        }
-      ]
 
       {/* Stats Section */}
       <motion.section

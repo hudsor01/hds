@@ -11,19 +11,28 @@ import { fileURLToPath } from 'node:url'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default [
-  js.configs.recommended,
+  // 1. Base JS configuration (JavaScript files only)
+  {
+    ...js.configs.recommended,
+    files: ['**/*.js']
+  },
+
+  // 2. Next.js recommended rules (from documentation)
+  ...nextPlugin.configs.recommended,
+  ...nextPlugin.configs['core-web-vitals'],
+
+  // 3. TypeScript & React configuration
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
       '@typescript-eslint': ts,
-      '@next/next': nextPlugin,
       'react': react,
       'react-hooks': reactHooks,
     },
     languageOptions: {
       parser: parser,
       parserOptions: {
-        project: './tsconfig.json',
+        project: true, // Auto-detect tsconfig.json
         tsconfigRootDir: __dirname,
         ecmaVersion: 2024,
         sourceType: 'module',
@@ -34,10 +43,14 @@ export default [
     },
     settings: {
       react: {
-        version: '19.0'
+        version: '19.0.0'
+      },
+      next: {
+        rootDir: __dirname // Required for monorepo setups
       }
     },
     rules: {
+      // TypeScript rules
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
         varsIgnorePattern: '^_',
@@ -46,30 +59,35 @@ export default [
         ignoreRestSiblings: true
       }],
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-empty-interface': 'off',
       '@typescript-eslint/consistent-type-imports': ['warn', {
         prefer: 'type-imports',
         fixStyle: 'inline-type-imports'
       }],
-      '@typescript-eslint/ban-ts-comment': 'warn',
+
+      // React rules
       'react/no-unescaped-entities': 'off',
       'react-hooks/exhaustive-deps': 'error',
       'react-hooks/rules-of-hooks': 'error',
+
+      // Next.js rules (from documentation)
+      '@next/next/no-html-link-for-pages': 'error',
+      '@next/next/no-img-element': 'warn',
+      '@next/next/no-sync-scripts': 'error',
+
+      // Custom rules
       'no-console': ['error', { allow: ['warn', 'error'] }]
     }
   },
+
+  // 4. API routes specific overrides
   {
     files: ['app/api/**/*.{ts,tsx}'],
     rules: {
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        argsIgnorePattern: '^_',
-        varsIgnorePattern: '^_',
-        caughtErrorsIgnorePattern: '^_',
-        destructuredArrayIgnorePattern: '^_',
-        ignoreRestSiblings: true
-      }],
+      '@typescript-eslint/no-unused-vars': 'warn',
       'no-console': 'off'
     }
   },
+
+  // 5. Prettier integration (must be last)
   prettier
 ]
