@@ -2,9 +2,7 @@
 
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Dialog, DialogContent } from "@/components/ui/dialog"
 import { routes } from '@/routes'
-import { useFormik } from 'formik'
 import { motion } from 'framer-motion'
 import { useSession } from "next-auth/react"
 import Image from 'next/image'
@@ -35,8 +33,7 @@ const staggerChildren = {
 
 export default function HomePage() {
   const { data: session } = useSession()
-  // Remove videoOpen state and Dialog since we're not using it
-  
+
   return (
     <main className="space-y-24">
       {/* Hero Section */}
@@ -47,7 +44,6 @@ export default function HomePage() {
         className="relative overflow-hidden pt-20 pb-16 md:pt-32 md:pb-24"
       >
         <div className="absolute inset-0 bg-grid-pattern opacity-5" />
-        {/* Add animated background elements */}
         <div className="absolute inset-0">
           <div className="absolute top-20 left-10 w-72 h-72 bg-blue-400/10 rounded-full blur-3xl" />
           <div className="absolute bottom-20 right-10 w-72 h-72 bg-blue-600/10 rounded-full blur-3xl" />
@@ -107,7 +103,27 @@ export default function HomePage() {
                 </div>
                 <span>Trusted by 1000+ property managers</span>
               </div>
-      {/* Add Testimonials Section before Stats */}
+            </motion.div>
+
+            <motion.div
+              variants={fadeInUp}
+              className="relative rounded-2xl overflow-hidden shadow-2xl border border-blue-100 dark:border-blue-800"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent" />
+              <Image
+                src="/dashboard-preview.png"
+                alt="Dashboard Preview"
+                width={800}
+                height={600}
+                className="w-full h-auto"
+                priority
+              />
+            </motion.div>
+          </div>
+        </div>
+      </motion.section>
+
+      {/* Testimonials Section */}
       <motion.section
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
