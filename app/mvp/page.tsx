@@ -1,7 +1,6 @@
 'use client'
 
 import { WaitlistForm } from '@/components/forms/waitlist-form'
-import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { ChartBarIcon, CogIcon, HomeIcon } from '@heroicons/react/24/outline'
 import { motion } from 'framer-motion'
