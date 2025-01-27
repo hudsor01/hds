@@ -23,27 +23,35 @@ export async function POST(request: Request) {
         { status: 429 }
       )
     }
-    
-    // Get total signups count
-    const totalSignups = await prisma.waitlistEntry.count()
 
-    // Send notification email to admin
-    if (ADMIN_EMAIL) {
-      await resend.emails.send({
-        from: 'HDS Waitlist <info@hudsondigitalsolutions.com>',
-        to: ADMIN_EMAIL,
-        subject: `New Waitlist Registration #${totalSignups}`,
-        react: WaitlistNotification({ entry, totalSignups })
-      })
+    const entry = await prisma.waitlistEntry.create({
+          data: {
+            email: email.toLowerCase(),
+            name,
+            company
+          }
+        })
 
-      // Send confirmation email to user
-      await resend.emails.send({
-        from: 'HDS <info@hudsondigitalsolutions.com>',
-        to: email,
-        subject: 'Welcome to the HDS Waitlist',
-        react: WaitlistConfirmation({ name })
-      })
-    }
+        // Get total signups count
+        const totalSignups = await prisma.waitlistEntry.count()
+
+        // Send notification email to admin
+        if (ADMIN_EMAIL) {
+          await resend.emails.send({
+            from: 'HDS Waitlist <info@hudsondigitalsolutions.com>',
+            to: ADMIN_EMAIL,
+            subject: `New Waitlist Registration #${totalSignups}`,
+            react: WaitlistNotification({ entry, totalSignups })
+          })
+
+          // Send confirmation email to user
+          await resend.emails.send({
+            from: 'HDS <info@hudsondigitalsolutions.com>',
+            to: email,
+            subject: 'Welcome to the HDS Waitlist',
+            react: WaitlistConfirmation({ name })
+          })
+        }
 
     return NextResponse.json({ success: true, entry })
   } catch (_error) {

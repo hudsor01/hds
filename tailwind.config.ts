@@ -42,7 +42,21 @@ const config: Config = {
         border: '#E5E7EB',
         ring: '#A7E7D9',
       },
-    },
+      'pastel-blue': {
+        50: '#F0F8FF',
+        100: '#E1F0FF',
+        200: '#B9DCFF',
+        300: '#91C8FF',
+        400: '#69B4FF',
+        500: '#41A0FF',
+        600: '#1A8CFF',
+        700: '#0078FF',
+        800: '#0064D6',
+        900: '#0050AD',
+      },
+      'teal-soft': '#A7E7D9',
+      'lavender': '#C7A7E7',
+    }
   },
   plugins: [
     typography,

@@ -1,29 +1,33 @@
 import { type WaitlistEntry } from '@prisma/client'
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Text,
-} from '@react-email/components'
+import
+  {
+    Container,
+    Head,
+    Heading,
+    Preview,
+    Section,
+    Text,
+  } from '@react-email/components'
 import EmailLayout from './email-layout'
 
-export default function WaitlistNotification({ entry }: { entry: WaitlistEntry }) {
+export default function WaitlistNotification({ entry, totalSignups }: {
+  entry: WaitlistEntry
+  totalSignups: number
+}) {
   return (
-    <Html>
+    <EmailLayout>
       <Head />
-      <Preview>New Waitlist Registration for HDS</Preview>
-      <Body style={{ fontFamily: 'system-ui' }}>
-        <Container>
-          <Heading>New Waitlist Registration</Heading>
+      <Preview>New Waitlist Registration #{totalSignups.toString()} for HDS</Preview>
+      <Container>
+        <Heading className="text-2xl font-bold mb-4">New Waitlist Registration</Heading>
+        <Section className="bg-gray-50 p-4 rounded-lg mb-4">
+          <Text className="font-semibold">Total Signups: {totalSignups.toString()}</Text>
           <Text>Name: {entry.name}</Text>
           <Text>Email: {entry.email}</Text>
           {entry.company && <Text>Company: {entry.company}</Text>}
           <Text>Registered at: {entry.createdAt.toLocaleString()}</Text>
-        </Container>
-      </Body>
-    </Html>
+        </Section>
+      </Container>
+    </EmailLayout>
   )
 }

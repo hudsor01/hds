@@ -1,14 +1,16 @@
-import {
-  Body,
-  Container,
-  Head,
-  Hr,
-  Html,
-  Img,
-  Link,
-  Section,
-  Tailwind,
-} from '@react-email/components'
+import
+  {
+    Body,
+    Container,
+    Head,
+    Hr,
+    Html,
+    Img,
+    Link,
+    Section,
+    Tailwind,
+  } from '@react-email/components'
+import React from 'react'
 
 export default function EmailLayout({ children }: { children: React.ReactNode }) {
   return (

@@ -43,7 +43,7 @@ export default function MVPLandingPage() {
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 sm:py-32">
-        <div className="absolute inset-0 bg-[linear-gradient(to_right,#A7C7E7_1px,transparent_1px),linear-gradient(to_bottom,#A7C7E7_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-[0.1]" />
+        <div className="absolute inset-0 bg-[linear-gradient(to_right,#91C8FF_1px,transparent_1px),linear-gradient(to_bottom,#91C8FF_1px,transparent_1px)] bg-[size:4rem_4rem] opacity-[0.1]" />
         <motion.div
           initial="initial"
           animate="animate"
@@ -56,7 +56,7 @@ export default function MVPLandingPage() {
               className="font-display text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl md:text-7xl"
             >
               Transform Your
-              <span className="block mt-2 bg-gradient-to-r from-[#A7C7E7] to-[#F0F8FF] bg-clip-text text-transparent">
+              <span className="block mt-2 bg-gradient-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent">
                 Property Management
               </span>
             </motion.h1>
@@ -80,9 +80,9 @@ export default function MVPLandingPage() {
           {/* Preview Image */}
           <motion.div
             variants={fadeInUp}
-            className="mt-16 relative rounded-2xl overflow-hidden shadow-2xl border border-[#A7C7E7]/20"
+            className="mt-16 relative rounded-2xl overflow-hidden shadow-2xl border border-pastel-blue-200"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-[#A7C7E7]/20 to-[#F0F8FF]/20" />
+            <div className="absolute inset-0 bg-gradient-to-br from-pastel-blue-100/20 to-pastel-blue-50/20" />
             <Image
               src="/dashboard-preview.png"
               alt="Platform Preview"
@@ -96,7 +96,7 @@ export default function MVPLandingPage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-20 bg-[#F0F8FF]/30">
+      <section className="py-20 bg-pastel-blue-50/30">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <motion.div
             initial="initial"
@@ -111,8 +111,8 @@ export default function MVPLandingPage() {
                 variants={fadeInUp}
                 custom={index}
               >
-                <Card className="p-6 h-full hover:shadow-lg transition-shadow border-[#A7C7E7]/20">
-                  <feature.icon className="w-12 h-12 text-[#A7C7E7] mb-4" />
+                <Card className="p-6 h-full hover:shadow-lg transition-shadow border-pastel-blue-200">
+                  <feature.icon className="w-12 h-12 text-pastel-blue-500 mb-4" />
                   <h3 className="text-xl font-semibold mb-2 font-display">{feature.title}</h3>
                   <p className="text-gray-600 font-body">{feature.description}</p>
                 </Card>
