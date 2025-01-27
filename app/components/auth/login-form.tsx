@@ -24,7 +24,7 @@ export function LoginForm() {
             <div className="relative">
               <input
                 type="email"
-                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-xs"
                 placeholder="Enter email"
               />
 
@@ -55,7 +55,7 @@ export function LoginForm() {
             <div className="relative">
               <input
                 type="password"
-                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-sm"
+                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-xs"
                 placeholder="Enter password"
               />
 
@@ -94,7 +94,7 @@ export function LoginForm() {
 
             <button
               type="submit"
-              className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-none focus:ring"
+              className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-hidden focus:ring-3"
             >
               Sign in
             </button>

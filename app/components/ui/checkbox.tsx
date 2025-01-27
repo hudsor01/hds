@@ -45,7 +45,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         checked={checked}
         onChange={handleChange}
         className={cn(
-          'h-4 w-4 rounded-sm border border-primary shadow focus:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          'h-4 w-4 rounded-sm border border-primary shadow-sm focus:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         {...props}

@@ -65,7 +65,7 @@ export default function HomePage() {
             <motion.div variants={fadeInUp} className="space-y-8">
               <h1 className="font-display text-5xl md:text-6xl font-black text-gray-900">
                 Property Management
-                <span className="block mt-2 bg-gradient-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent">
+                <span className="block mt-2 bg-linear-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent">
                   Simplified
                 </span>
               </h1>
@@ -107,7 +107,7 @@ export default function HomePage() {
               variants={fadeInUp}
               className="relative rounded-2xl overflow-hidden shadow-2xl border border-pastel-blue-200"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-pastel-blue-100/20 to-pastel-blue-50/20" />
+              <div className="absolute inset-0 bg-linear-to-br from-pastel-blue-100/20 to-pastel-blue-50/20" />
               <Image
                 src="/dashboard-preview.png"
                 alt="Dashboard Preview"
@@ -144,7 +144,7 @@ export default function HomePage() {
               company: "Pacific Real Estate Group"
             }
           ].map((testimonial, i) => (
-            <Card key={i} className="p-6 bg-gradient-to-br from-teal-soft/5 to-lavender/5 hover:from-teal-soft/10 hover:to-lavender/10 transition-colors border-pastel-blue-200/20">
+            <Card key={i} className="p-6 bg-linear-to-br from-teal-soft/5 to-lavender/5 hover:from-teal-soft/10 hover:to-lavender/10 transition-colors border-pastel-blue-200/20">
               <div className="flex flex-col gap-4">
                 <div className="text-teal-soft font-bold">
                   {"★".repeat(5)}
@@ -187,7 +187,7 @@ export default function HomePage() {
         initial={{ opacity: 0 }}
         whileInView={{ opacity: 1 }}
         viewport={{ once: true }}
-        className="bg-gradient-to-r from-pastel-blue-300 to-pastel-blue-100 text-gray-800"
+        className="bg-linear-to-r from-pastel-blue-300 to-pastel-blue-100 text-gray-800"
       >
         <div className="max-w-4xl mx-auto px-4 py-16 text-center">
           <h2 className="text-3xl font-bold mb-4">

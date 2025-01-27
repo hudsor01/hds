@@ -58,7 +58,7 @@ export function FeatureCard({
                 <h3 className="text-xl font-bold">{title}</h3>
                 <p className="text-muted-foreground">{description}</p>
               </div>
-              <div className="absolute inset-x-0 bottom-0 h-px bg-gradient-to-r from-transparent via-primary/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent via-primary/20 to-transparent" />
             </Card>
           </motion.div>
         </TooltipTrigger>

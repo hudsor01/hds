@@ -146,7 +146,7 @@ export default function PricingPage() {
           >
             {tier.highlighted && selectedTier === "Growth" && (
               <div className="absolute -top-4 left-1/2 -translate-x-1/2">
-                <span className="bg-gradient-to-r from-blue-600 to-blue-400 text-white px-4 py-1 rounded-full text-sm font-medium">
+                <span className="bg-linear-to-r from-blue-600 to-blue-400 text-white px-4 py-1 rounded-full text-sm font-medium">
                   Most Popular
                 </span>
               </div>

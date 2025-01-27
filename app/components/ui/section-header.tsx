@@ -18,7 +18,7 @@ export function SectionHeader({
         {gradient ? (
           <>
             {title.split(' ').slice(0, -1).join(' ')}{' '}
-            <span className="bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
               {title.split(' ').slice(-1)}
             </span>
           </>

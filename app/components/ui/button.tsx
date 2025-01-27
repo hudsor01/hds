@@ -5,7 +5,7 @@ import { type VariantProps, cva } from 'class-variance-authority'
 import { type ButtonHTMLAttributes, forwardRef } from 'react'
 
 const buttonVariants = cva(
-  'inline-block rounded px-8 py-3 text-sm font-medium transition focus:outline-none focus:ring',
+  'inline-block rounded px-8 py-3 text-sm font-medium transition focus:outline-hidden focus:ring-3',
   {
     variants: {
       variant: {

@@ -56,7 +56,7 @@ export default function MVPLandingPage() {
               className="font-display text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl md:text-7xl"
             >
               Transform Your
-              <span className="block mt-2 bg-gradient-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent">
+              <span className="block mt-2 bg-linear-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent">
                 Property Management
               </span>
             </motion.h1>
@@ -82,7 +82,7 @@ export default function MVPLandingPage() {
             variants={fadeInUp}
             className="mt-16 relative rounded-2xl overflow-hidden shadow-2xl border border-pastel-blue-200"
           >
-            <div className="absolute inset-0 bg-gradient-to-br from-pastel-blue-100/20 to-pastel-blue-50/20" />
+            <div className="absolute inset-0 bg-linear-to-br from-pastel-blue-100/20 to-pastel-blue-50/20" />
             <Image
               src="/dashboard-preview.png"
               alt="Platform Preview"

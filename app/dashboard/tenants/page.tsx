@@ -43,11 +43,11 @@ export default function TenantsPage() {
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4">
-        <div className="p-4 bg-white rounded-lg shadow">
+        <div className="p-4 bg-white rounded-lg shadow-sm">
           <h3 className="text-sm text-gray-500 mb-1">Total Tenants</h3>
           <p className="text-2xl font-bold">{tenants.length}</p>
         </div>
-        <div className="p-4 bg-white rounded-lg shadow">
+        <div className="p-4 bg-white rounded-lg shadow-sm">
           <h3 className="text-sm text-gray-500 mb-1">Active Leases</h3>
           <p className="text-2xl font-bold">
             {tenants.filter(t => t.status === 'active').length}
@@ -55,7 +55,7 @@ export default function TenantsPage() {
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow overflow-hidden">
+      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>

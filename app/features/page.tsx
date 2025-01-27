@@ -91,7 +91,7 @@ export default function FeaturesPage() {
         className="text-center"
       >
         <h1 className="text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl md:text-6xl">
-          <span className="block bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+          <span className="block bg-linear-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
             Modern Property Management
           </span>
           <span className="mt-3 block text-2xl font-medium text-gray-600 dark:text-gray-400">
@@ -134,10 +134,10 @@ export default function FeaturesPage() {
             <Card
               className="group relative overflow-hidden p-8 transition-all hover:shadow-xl dark:hover:shadow-blue-900/20
               hover:-translate-y-2 h-full border border-transparent hover:border-blue-100 dark:hover:border-blue-900/50
-              bg-gradient-to-b from-white/50 to-white/0 dark:from-gray-900/50 dark:to-gray-900/0"
+              bg-linear-to-b from-white/50 to-white/0 dark:from-gray-900/50 dark:to-gray-900/0"
             >
               {/* Animated Background */}
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-transparent opacity-0
+              <div className="absolute inset-0 bg-linear-to-r from-blue-50/50 to-transparent opacity-0
                 group-hover:opacity-100 dark:from-blue-950/50 transition-opacity duration-300" />
 
               {/* Hover Effect */}
@@ -177,9 +177,9 @@ export default function FeaturesPage() {
       <div className="absolute left-0 right-0 top-0 -z-10 h-[800px] w-full overflow-hidden">
         <div className="absolute inset-x-0 top-0 h-[400px] will-change-transform
           [mask-image:linear-gradient(to_bottom,transparent,black)]">
-          <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-transparent opacity-30
+          <div className="absolute inset-0 bg-linear-to-b from-blue-500/20 to-transparent opacity-30
             dark:from-blue-900/30 dark:to-transparent" />
-          <div className="absolute left-1/3 top-0 h-full w-1/4 bg-gradient-to-r from-blue-400/20 to-transparent
+          <div className="absolute left-1/3 top-0 h-full w-1/4 bg-linear-to-r from-blue-400/20 to-transparent
             blur-3xl dark:from-blue-900/30" />
         </div>
       </div>

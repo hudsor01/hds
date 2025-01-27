@@ -31,7 +31,7 @@ const contactInfo = [
 
 export default function ContactPage() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-b from-blue-50 via-white to-indigo-50">
+    <div className="relative min-h-screen bg-linear-to-b from-blue-50 via-white to-indigo-50">
       <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]" />
       <div className="relative">
         <div className="mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8">
@@ -52,7 +52,7 @@ export default function ContactPage() {
                 delay: 0.1
               }}
             >
-              Get in <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Touch</span>
+              Get in <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">Touch</span>
             </motion.h2>
             <motion.p
               className="mt-6 text-lg leading-8 text-gray-600"
@@ -94,13 +94,13 @@ export default function ContactPage() {
                     transition={{ type: "spring", stiffness: 300 }}
                   >
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      className="absolute inset-0 bg-linear-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
                       initial={false}
                       animate={{ opacity: [0, 0.1, 0] }}
                       transition={{ duration: 2, repeat: Infinity }}
                     />
                     <div className="relative flex items-center gap-4">
-                      <div className="flex-shrink-0">
+                      <div className="shrink-0">
                         <div className="inline-flex rounded-lg bg-blue-500/10 p-3 ring-1 ring-blue-500/20">
                           <item.icon className="h-6 w-6 text-blue-600" />
                         </div>
@@ -146,7 +146,7 @@ export default function ContactPage() {
                           type="text"
                           name="first-name"
                           id="first-name"
-                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
                       <div>
@@ -157,7 +157,7 @@ export default function ContactPage() {
                           type="text"
                           name="last-name"
                           id="last-name"
-                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
                       <div className="sm:col-span-2">
@@ -168,7 +168,7 @@ export default function ContactPage() {
                           type="email"
                           name="email"
                           id="email"
-                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
                       <div className="sm:col-span-2">
@@ -179,7 +179,7 @@ export default function ContactPage() {
                           name="message"
                           id="message"
                           rows={5}
-                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                          className="mt-2 block w-full rounded-md border border-gray-300 px-4 py-3 text-gray-900 shadow-xs focus:border-blue-500 focus:ring-blue-500"
                         />
                       </div>
                     </motion.div>

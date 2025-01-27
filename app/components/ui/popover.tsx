@@ -91,7 +91,7 @@ export const PopoverContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'z-50 w-72 rounded-md bg-popover p-4 text-popover-foreground shadow-md outline-none',
+      'z-50 w-72 rounded-md bg-popover p-4 text-popover-foreground shadow-md outline-hidden',
       className
     )}
     {...props}

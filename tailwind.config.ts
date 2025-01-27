@@ -1,69 +1,57 @@
-import aspectRatio from '@tailwindcss/aspect-ratio'
-import forms from '@tailwindcss/forms'
-import typography from '@tailwindcss/typography'
 import type { Config } from 'tailwindcss'
-import animate from 'tailwindcss-animate'
 
-const config: Config = {
+const config = {
   darkMode: ["class"],
   content: [
-    './pages/**/*.{ts,tsx}',
-    './components/**/*.{ts,tsx}',
-    './app/**/*.{ts,tsx}',
-    './src/**/*.{ts,tsx}',
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ['var(--font-roboto)', 'Roboto', 'system-ui', 'sans-serif'],
-        display: ['var(--font-playfair)', 'Playfair Display', 'serif'],
-        body: ['var(--font-inter)', 'Inter', 'sans-serif'],
-      },
       colors: {
+        border: "var(--color-border)",
+        input: "var(--color-input)",
+        ring: "var(--color-ring)",
+        background: "var(--color-background)",
+        foreground: "var(--color-foreground)",
         primary: {
-          DEFAULT: '#A7E7D9',
-          foreground: '#1F2937',
+          DEFAULT: "var(--color-primary)",
+          foreground: "var(--color-primary-foreground)",
         },
         secondary: {
-          DEFAULT: '#C7A7E7',
-          foreground: '#1F2937',
+          DEFAULT: "var(--color-secondary)",
+          foreground: "var(--color-secondary-foreground)",
         },
-        tertiary: {
-          DEFAULT: '#A7C7E7',
-          foreground: '#1F2937',
+        destructive: {
+          DEFAULT: "var(--color-destructive)",
+          foreground: "var(--color-destructive-foreground)",
         },
-        // Aliases for easier reference
-        'teal-soft': '#A7E7D9',
-        'lavender': '#C7A7E7',
-        'blue-soft': '#A7C7E7',
-        // System colors
-        background: '#FFFFFF',
-        foreground: '#1F2937',
-        border: '#E5E7EB',
-        ring: '#A7E7D9',
+        muted: {
+          DEFAULT: "var(--color-muted)",
+          foreground: "var(--color-muted-foreground)",
+        },
+        accent: {
+          DEFAULT: "var(--color-accent)",
+          foreground: "var(--color-accent-foreground)",
+        },
+        popover: {
+          DEFAULT: "var(--color-popover)",
+          foreground: "var(--color-popover-foreground)",
+        },
+        card: {
+          DEFAULT: "var(--color-card)",
+          foreground: "var(--color-card-foreground)",
+        },
       },
-      'pastel-blue': {
-        50: '#F0F8FF',
-        100: '#E1F0FF',
-        200: '#B9DCFF',
-        300: '#91C8FF',
-        400: '#69B4FF',
-        500: '#41A0FF',
-        600: '#1A8CFF',
-        700: '#0078FF',
-        800: '#0064D6',
-        900: '#0050AD',
+      borderRadius: {
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
       },
-      'teal-soft': '#A7E7D9',
-      'lavender': '#C7A7E7',
-    }
+    },
   },
-  plugins: [
-    typography,
-    aspectRatio,
-    forms,
-    animate,
-  ],
-}
+  plugins: [],
+} satisfies Config
 
 export default config

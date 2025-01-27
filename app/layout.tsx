@@ -46,7 +46,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${roboto.variable} ${playfair.variable} ${inter.variable}`}
     >
-      <body className="min-h-screen bg-gradient-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+      <body className="min-h-screen bg-linear-to-br from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <Providers>
           <div className="relative flex min-h-screen flex-col">
             <Navbar>

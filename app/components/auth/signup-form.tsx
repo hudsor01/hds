@@ -84,7 +84,7 @@ export function SignUpForm() {
                   type="text"
                   id="FirstName"
                   name="first_name"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                 />
               </div>
 
@@ -97,7 +97,7 @@ export function SignUpForm() {
                   type="text"
                   id="LastName"
                   name="last_name"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                 />
               </div>
 
@@ -110,7 +110,7 @@ export function SignUpForm() {
                   type="email"
                   id="Email"
                   name="email"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                 />
               </div>
 
@@ -123,7 +123,7 @@ export function SignUpForm() {
                   type="password"
                   id="Password"
                   name="password"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                 />
               </div>
 
@@ -139,7 +139,7 @@ export function SignUpForm() {
                   type="password"
                   id="PasswordConfirmation"
                   name="password_confirmation"
-                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-sm"
+                  className="mt-1 w-full rounded-md border-gray-200 bg-white text-sm text-gray-700 shadow-xs"
                 />
               </div>
 
@@ -149,7 +149,7 @@ export function SignUpForm() {
                     type="checkbox"
                     id="MarketingAccept"
                     name="marketing_accept"
-                    className="size-5 rounded-md border-gray-200 bg-white shadow-sm"
+                    className="size-5 rounded-md border-gray-200 bg-white shadow-xs"
                   />
 
                   <span className="text-sm text-gray-700">
@@ -173,7 +173,7 @@ export function SignUpForm() {
               </div>
 
               <div className="col-span-6 sm:flex sm:items-center sm:gap-4">
-                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-none focus:ring active:text-blue-500">
+                <button className="inline-block shrink-0 rounded-md border border-blue-600 bg-blue-600 px-12 py-3 text-sm font-medium text-white transition hover:bg-transparent hover:text-blue-600 focus:outline-hidden focus:ring-3 active:text-blue-500">
                   Create an account
                 </button>
 

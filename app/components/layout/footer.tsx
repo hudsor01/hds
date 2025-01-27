@@ -63,7 +63,7 @@ const socialLinks = [
 export function Footer() {
   return (
     <footer className="bg-white">
-      <div className="mx-auto max-w-screen-xl px-4 pb-8 pt-16 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-(--breakpoint-xl) px-4 pb-8 pt-16 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* Company Info & Social Links - Left Column */}
           <div className="lg:col-span-1">
@@ -122,7 +122,7 @@ export function Footer() {
                 />
                 <button
                   type="submit"
-                  className="absolute end-1 top-1/2 -translate-y-1/2 rounded-full bg-blue-200 px-5 py-3 text-sm font-medium text-gray-800 transition hover:rotate-2 hover:scale-110 focus:outline-none focus:ring active:bg-blue-300"
+                  className="absolute end-1 top-1/2 -translate-y-1/2 rounded-full bg-blue-200 px-5 py-3 text-sm font-medium text-gray-800 transition hover:rotate-2 hover:scale-110 focus:outline-hidden focus:ring-3 active:bg-blue-300"
                 >
                   Subscribe
                 </button>

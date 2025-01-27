@@ -79,7 +79,7 @@ export function PricingCards() {
 
             <Link
               href="/auth/register"
-              className={`mt-8 block rounded-full border px-12 py-3 text-center text-sm font-medium transition focus:outline-none focus:ring ${
+              className={`mt-8 block rounded-full border px-12 py-3 text-center text-sm font-medium transition focus:outline-hidden focus:ring-3 ${
                 plan.highlighted
                   ? 'border-indigo-600 bg-indigo-600 text-white hover:bg-indigo-700 hover:ring-1 hover:ring-indigo-700 active:text-indigo-500'
                   : 'border-indigo-600 bg-white text-indigo-600 hover:ring-1 hover:ring-indigo-600 active:text-indigo-500'
