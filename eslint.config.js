@@ -1,6 +1,7 @@
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
 import ts from '@typescript-eslint/eslint-plugin'
+import tsParser from '@typescript-eslint/parser'
 import prettier from 'eslint-config-prettier'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -20,6 +21,7 @@ export default [
       'react-hooks': reactHooks,
     },
     languageOptions: {
+      parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
         tsconfigRootDir: __dirname,

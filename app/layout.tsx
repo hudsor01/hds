@@ -1,7 +1,7 @@
 import { CommandMenu } from '@/components/command-menu'
 import { Footer } from '@/components/layout/footer'
 import { Providers } from '@/components/providers'
-import type { Metadata, Viewport } from 'next'
+import type { Viewport } from 'next'
 import { Inter, Playfair_Display, Roboto } from 'next/font/google'
 import { Navbar } from './components/layout/navbar'
 import './globals.css'
@@ -33,58 +33,6 @@ export const viewport: Viewport = {
   maximumScale: 1,
   themeColor: '#A7E7D9',
   colorScheme: 'light dark',
-}
-
-export const metadata: Metadata = {
-  title: {
-    default: 'Hudson Digital Solutions | Property Management',
-    template: '%s | Hudson Digital Solutions'
-  },
-  description: 'Enterprise-grade property management platform for modern real estate operations',
-  applicationName: 'Hudson Digital Solutions',
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'),
-  alternates: {
-    canonical: '/',
-  },
-  manifest: '/manifest.json',
-  openGraph: {
-    type: 'website',
-    siteName: 'Hudson Digital Solutions',
-    title: 'Hudson Digital Solutions - Property Management Platform',
-    description: 'Enterprise-grade property management platform for modern real estate operations',
-    images: [
-      {
-        url: '/dashboard-preview.png',
-        width: 800,
-        height: 600,
-        alt: 'Hudson Digital Solutions Dashboard Preview'
-      }
-    ]
-  },
-  twitter: {
-    card: 'summary_large_image',
-    site: '@dickswayze',
-    creator: '@dickswayze',
-    images: ['/dashboard-preview.png']
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
-    },
-  },
-  keywords: [
-    'property management',
-    'real estate software',
-    'tenant management',
-    'landlord tools',
-    'property analytics'
-  ]
 }
 
 export default function RootLayout({

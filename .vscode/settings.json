@@ -1,7 +1,4 @@
 {
-  "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true,
-
   // Core formatting settings
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
@@ -10,7 +7,7 @@
 
   // Prettier specific configuration
   "prettier.enable": true,
-  "prettier.configPath": ".prettierrc.cjs",
+  "prettier.configPath": ".prettierrc.json",
   "prettier.requireConfig": true,
 
   // Language specific settings
@@ -35,7 +32,4 @@
   "files.associations": {
     ".prettierrc*": "json"
   },
-  "[prisma]": {
-    "editor.defaultFormatter": "Prisma.prisma"
-  }
 }
