@@ -1,22 +1,21 @@
-'use client'
+'use client';
 
-import { ThemeProvider } from "next-themes"
-import { Toaster } from "sonner"
+import { SessionProvider } from 'next-auth/react';
+import { Toaster } from 'sonner';
+
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+
+import { ThemeProvider } from '@/components/theme-provider';
 
 export function Providers({ children }: { children: React.ReactNode }) {
   return (
-    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-      {children}
-      <Toaster
-        position="top-right"
-        toastOptions={{
-          style: {
-            background: 'var(--background)',
-            color: 'var(--foreground)',
-            border: '1px solid var(--border)'
-          }
-        }}
-      />
-    </ThemeProvider>
-  )
+    <SessionProvider>
+      <AppRouterCacheProvider>
+        <ThemeProvider>
+          {children}
+          <Toaster position='top-right' />
+        </ThemeProvider>
+      </AppRouterCacheProvider>
+    </SessionProvider>
+  );
 }

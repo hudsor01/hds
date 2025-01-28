@@ -1,13 +1,11 @@
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
-
 import { Footer } from '@/components/layout/footer';
+import { Navbar } from '@/components/layout/navbar';
 
-import { Navbar } from './components/layout/navbar';
 import './globals.css';
-import { ThemeProvider } from './theme-provider';
+import { Providers } from './providers';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700', '900'],
@@ -26,15 +24,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' className={roboto.variable}>
-      <body>
-        <AppRouterCacheProvider>
-          <ThemeProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </ThemeProvider>
-        </AppRouterCacheProvider>
+    <html lang='en' className={`${roboto.variable} antialiased`}>
+      <body className='min-h-screen bg-background font-sans antialiased'>
+        <Providers>
+          <Navbar />
+          <main className='relative flex min-h-screen flex-col'>{children}</main>
+          <Footer />
+        </Providers>
       </body>
     </html>
   );
