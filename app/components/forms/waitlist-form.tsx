@@ -6,9 +6,6 @@ import { useFormik } from 'formik'
 import { useState } from 'react'
 import * as Yup from 'yup'
 
-// Add fetch import
-import { fetch } from 'next/dist/compiled/node-fetch'
-
 const validationSchema = Yup.object({
   email: Yup.string()
     .email('Invalid email address')
@@ -57,12 +54,10 @@ export function WaitlistForm() {
 
   if (isSubmitted) {
     return (
-      <div className="bg-[#A7C7E7]/10 p-6 rounded-lg">
-        <p className="text-lg font-display text-gray-900">
-          Thank you for joining our waitlist!
-        </p>
-        <p className="mt-2 font-body text-gray-600">
-          We'll notify you when we launch.
+      <div className="bg-[#A7C7E7]/10 p-8 rounded-2xl text-center space-y-3">
+        <h3 className="text-2xl font-bold text-gray-900">Thank you for joining!</h3>
+        <p className="text-gray-600">
+          We'll notify you when we launch. Get ready to transform your property management.
         </p>
       </div>
     )
@@ -70,59 +65,47 @@ export function WaitlistForm() {
 
   return (
     <form onSubmit={formik.handleSubmit} className="space-y-4">
-      {error && (
-        <div className="p-3 text-sm bg-red-50 text-red-500 rounded-lg">
-          {error}
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <Input
+            name="name"
+            placeholder="Your name"
+            className="h-12 bg-white/50 border-[#A7C7E7]/20 focus:border-[#A7C7E7] transition-colors"
+            onChange={formik.handleChange}
+            value={formik.values.name}
+          />
+          {formik.touched.name && formik.errors.name && (
+            <div className="mt-1 text-sm text-red-500">{formik.errors.name}</div>
+          )}
         </div>
-      )}
-      <div>
-        <Input
-          type="text"
-          name="name"
-          placeholder="Your name"
-          value={formik.values.name}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="w-full font-body"
-        />
-        {formik.touched.name && formik.errors.name && (
-          <div className="mt-1 text-sm text-red-500">{formik.errors.name}</div>
-        )}
+        <div>
+          <Input
+            name="email"
+            type="email"
+            placeholder="Your email"
+            className="h-12 bg-white/50 border-[#A7C7E7]/20 focus:border-[#A7C7E7] transition-colors"
+            onChange={formik.handleChange}
+            value={formik.values.email}
+          />
+          {formik.touched.email && formik.errors.email && (
+            <div className="mt-1 text-sm text-red-500">{formik.errors.email}</div>
+          )}
+        </div>
       </div>
-
-      <div>
-        <Input
-          type="email"
-          name="email"
-          placeholder="Your email"
-          value={formik.values.email}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="w-full font-body"
-        />
-        {formik.touched.email && formik.errors.email && (
-          <div className="mt-1 text-sm text-red-500">{formik.errors.email}</div>
-        )}
-      </div>
-
-      <div>
-        <Input
-          type="text"
-          name="company"
-          placeholder="Company (optional)"
-          value={formik.values.company}
-          onChange={formik.handleChange}
-          onBlur={formik.handleBlur}
-          className="w-full font-body"
-        />
-      </div>
-
+      <Input
+        name="company"
+        placeholder="Company (optional)"
+        className="h-12 bg-white/50 border-[#A7C7E7]/20 focus:border-[#A7C7E7] transition-colors"
+        onChange={formik.handleChange}
+        value={formik.values.company}
+      />
+      {error && <div className="text-sm text-red-500">{error}</div>}
       <Button
         type="submit"
-        className="w-full bg-[#A7C7E7] hover:bg-[#87B3D9] text-white font-sans"
         disabled={formik.isSubmitting}
+        className="w-full h-12 bg-[#A7C7E7] hover:bg-[#87B3D9] text-white font-medium transition-colors"
       >
-        {formik.isSubmitting ? 'Joining...' : 'Join Waitlist'}
+        {formik.isSubmitting ? 'Joining...' : 'Join the Waitlist'}
       </Button>
     </form>
   )

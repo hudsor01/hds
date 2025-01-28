@@ -1,3 +1,4 @@
+import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
@@ -16,6 +17,12 @@ const roboto = Roboto({
   fallback: ['system-ui', 'arial'],
   preload: true,
 });
+
+export const metadata: Metadata = {
+  title: 'PropTech Hub - The Future of Property Management',
+  description:
+    'Join the waitlist for the most comprehensive property management platform connecting owners, managers, tenants, and service providers.',
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (

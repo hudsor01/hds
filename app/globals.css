@@ -1,128 +1,6 @@
-/* Base Tailwind imports */
-@import 'tailwindcss/base';
-@import 'tailwindcss/components';
-@import 'tailwindcss/utilities';
-
-/* Your existing theme configuration */
-@theme {
-  --color-border: hsl(var(--border));
-  --color-input: hsl(var(--input));
-  --color-ring: hsl(var(--ring));
-  --color-background: hsl(var(--background));
-  --color-foreground: hsl(var(--foreground));
-
-  --color-primary: hsl(var(--primary));
-  --color-primary-foreground: hsl(var(--primary-foreground));
-
-  --color-secondary: hsl(var(--secondary));
-  --color-secondary-foreground: hsl(var(--secondary-foreground));
-
-  --color-destructive: hsl(var(--destructive));
-  --color-destructive-foreground: hsl(var(--destructive-foreground));
-
-  --color-muted: hsl(var(--muted));
-  --color-muted-foreground: hsl(var(--muted-foreground));
-
-  --color-accent: hsl(var(--accent));
-  --color-accent-foreground: hsl(var(--accent-foreground));
-
-  --color-popover: hsl(var(--popover));
-  --color-popover-foreground: hsl(var(--popover-foreground));
-
-  --color-card: hsl(var(--card));
-  --color-card-foreground: hsl(var(--card-foreground));
-
-  --radius-lg: var(--radius);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-sm: calc(var(--radius) - 4px);
-}
-
-/*
-  The default border color has changed to `currentColor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
-@layer base {
-  *,
-  ::after,
-  ::before,
-  ::backdrop,
-  ::file-selector-button {
-    border-color: var(--color-gray-200, currentColor);
-  }
-}
-
-@utility shimmer-overlay {
-  mask-image: linear-gradient(
-    120deg,
-    transparent 5%,
-    white 20%,
-    transparent 35%
-  );
-}
-
-@utility hover-card {
-  @apply transition-all duration-300 ease-[cubic-bezier(0.34_1.56_0.64_1)] shadow-xs hover:shadow-lg;
-  transform-origin: center;
-  will-change: transform, box-shadow;
-
-  &:hover {
-    @apply -translate-y-1 scale-[1.01];
-    box-shadow: 0 20px 40px -10px hsl(var(--primary) / 0.1);
-  }
-
-  .dark &:hover {
-    box-shadow: 0 20px 40px -10px hsl(var(--primary) / 0.2);
-  }
-}
-
-@utility dark {
-  & .hover-card:hover {
-    box-shadow: 0 20px 40px -10px hsl(var(--primary) / 0.2);
-  }
-}
-
-@utility transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 200ms;
-}
-
-@layer utilities {
-  /* Optimized line heights */
-  .leading-tight {
-    line-height: 1.25;
-  }
-  .leading-relaxed {
-    line-height: 1.6;
-  }
-
-  /* Smooth transitions */
-  .transition-colors {
-    transition:
-      color 0.2s,
-      background-color 0.2s;
-  }
-
-  /* Subtle shadows */
-  .shadow-sm {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-  }
-
-  /* Custom utility classes */
-  .leading-relaxed {
-    line-height: 1.625;
-  }
-
-  /* Prose overrides */
-  .prose :where(h1, h2, h3):not(:where([class~='not-prose'] *)) {
-    margin-top: 0;
-    margin-bottom: 0.75em;
-  }
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 @layer base {
   :root {
@@ -171,157 +49,131 @@
     --warning: 48 96% 89%;
     --warning-foreground: 38 92% 50%;
   }
-}
 
-@layer base {
   * {
     @apply border-border;
-    scrollbar-width: thin;
-    scrollbar-color: hsl(var(--primary)) transparent;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: 'rlig' 1, 'calt' 1;
-    min-height: 100dvh;
+    font-feature-settings:
+      'rlig' 1,
+      'calt' 1;
   }
 
   ::-webkit-scrollbar {
-    @apply w-2 h-2;
+    width: 8px;
+    height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-background;
+    background-color: hsl(var(--background));
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-border rounded-full;
+    background-color: hsl(var(--border));
+    border-radius: 9999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-primary/60;
+    background-color: hsl(var(--primary) / 0.6);
+  }
+}
+
+@layer utilities {
+  .shimmer-overlay {
+    mask-image: linear-gradient(120deg, transparent 5%, white 20%, transparent 35%);
+  }
+
+  .hover-card {
+    @apply shadow-xs transition-all duration-300 hover:shadow-lg;
+    transform-origin: center;
+    will-change: transform, box-shadow;
+  }
+
+  .hover-card:hover {
+    @apply -translate-y-1 scale-[1.01];
+    box-shadow: 0 20px 40px -10px hsl(var(--primary) / 0.1);
+  }
+
+  .dark .hover-card:hover {
+    box-shadow: 0 20px 40px -10px hsl(var(--primary) / 0.2);
+  }
+
+  .animate-float {
+    animation: float 6s ease-in-out infinite;
+    will-change: transform;
+  }
+
+  .animate-fade-in {
+    animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  .tap-scale:active {
+    transform: scale(0.97);
+  }
+
+  .gradient-mask-x {
+    mask-image: linear-gradient(90deg, transparent 0%, #fff 15%, #fff 85%, transparent 100%);
+  }
+
+  .hover-tilt {
+    transition: transform 0.3s ease;
+    transform-style: preserve-3d;
+  }
+
+  .hover-tilt:hover {
+    transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
   }
 }
 
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-12px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.97) translateZ(0); }
-  to { transform: scale(1) translateZ(0); }
+  from {
+    transform: scale(0.97) translateZ(0);
+  }
+  to {
+    transform: scale(1) translateZ(0);
+  }
 }
 
 @keyframes slideInFromRight {
-  from { transform: translateX(30px); opacity: 0; }
-  to { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
-}
-
-@keyframes ripple {
-  to { transform: scale(4); opacity: 0; }
-}
-
-@keyframes bounce {
-  0%, 100% { transform: translateY(-15%); }
-  50% { transform: translateY(0); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-  will-change: transform;
-}
-
-.animate-fade-in {
-  animation: fadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-scale-in {
-  animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-}
-
-.animate-slide-in-right {
-  animation: slideInFromRight 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-spin {
-  animation: spin 1s linear infinite;
-}
-
-.animate-pulse {
-  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-}
-
-.animate-shimmer {
-  animation: shimmer 3s linear infinite;
-  background-size: 200% auto;
-}
-
-.animate-bounce {
-  animation: bounce 1s infinite;
-}
-
-.ripple-effect {
-  position: relative;
-  overflow: hidden;
-}
-
-.ripple-effect::after {
-  content: '';
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: radial-gradient(circle, hsl(var(--primary)/0.2) 10%, transparent 10.01%);
-  animation: ripple 600ms linear;
-  transform: scale(0);
-}
-
-.stagger-animation > * {
-  opacity: 0;
-  animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.stagger-animation > *:nth-child(1) { animation-delay: 100ms; }
-.stagger-animation > *:nth-child(2) { animation-delay: 200ms; }
-.stagger-animation > *:nth-child(3) { animation-delay: 300ms; }
-.stagger-animation > *:nth-child(n+4) { animation-delay: 400ms; }
-
-.tap-scale:active {
-  transform: scale(0.97);
-}
-
-.gradient-mask-x {
-  mask-image: linear-gradient(90deg, transparent 0%, #fff 15%, #fff 85%, transparent 100%);
-}
-
-.hover-tilt {
-  transition: transform 0.3s ease;
-  transform-style: preserve-3d;
-}
-
-.hover-tilt:hover {
-  transform: perspective(1000px) rotateX(2deg) rotateY(2deg);
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -340,14 +192,4 @@
   .no-print {
     @apply hidden;
   }
-}
-/* Add this to remove the focus outline */
-.outline-none {
-  outline: none !important;
-}
-
-/* Optional: Add this if you want to show a different style for keyboard navigation */
-.outline-none:focus-visible {
-  outline: 2px solid #3b82f6 !important;
-  outline-offset: 2px;
 }
