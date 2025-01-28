@@ -62,82 +62,42 @@ const socialLinks = [
 
 export function Footer() {
   return (
-    <footer className='bg-white'>
-      <div className='mx-auto max-w-7xl px-6 py-12 lg:px-8'>
-        <div className='grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-12 lg:gap-12'>
-          {/* Company Info & Social Links - Left Column */}
-          <div className='lg:col-span-4'>
-            <p className='text-gray-600 text-sm leading-relaxed'>
-              Hudson Digital Solutions helps property managers streamline their operations with
-              modern, efficient software solutions designed for today's real estate market.
-            </p>
-
-            <div className='mt-6 flex gap-4'>
-              {socialLinks.map(item => (
-                <a
-                  key={item.name}
-                  className='text-gray-400 transition-colors hover:text-blue-500'
-                  href={item.href}
-                  target='_blank'
-                  rel='noreferrer'
-                >
-                  <span className='sr-only'>{item.name}</span>
-                  <item.icon className='size-6' aria-hidden='true' />
-                </a>
-              ))}
-            </div>
+    <footer className='bg-white border-t'>
+      <div className='mx-auto max-w-7xl px-4 py-4'>
+        <div className='flex flex-wrap items-center justify-between gap-2'>
+          {/* Social Links */}
+          <div className='flex gap-2'>
+            {socialLinks.map(item => (
+              <a
+                key={item.name}
+                className='text-gray-400 transition-colors hover:text-blue-500'
+                href={item.href}
+                target='_blank'
+                rel='noreferrer'
+              >
+                <span className='sr-only'>{item.name}</span>
+                <item.icon className='size-6' aria-hidden='true' />
+              </a>
+            ))}
           </div>
 
-          {/* Navigation Links - Middle Column */}
-          <div className='lg:col-span-3 lg:ml-8'>
-            <p className='text-base font-semibold text-gray-900'>About</p>
-            <ul className='mt-6 space-y-4'>
-              {about.map(item => (
-                <li key={item.name}>
-                  <Link
-                    className='text-sm text-gray-600 transition-colors hover:text-blue-500'
-                    href={item.href}
-                  >
-                    {item.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Navigation Links */}
+          <div className='flex gap-3'>
+            {about.map(item => (
+              <Link
+                key={item.name}
+                className='text-[12px] text-black-600 transition-colors hover:text-blue-500'
+                href={item.href}
+              >
+                {item.name}
+              </Link>
+            ))}
           </div>
 
-          {/* Newsletter - Right Column */}
-          <div className='lg:col-span-5'>
-            <p className='text-base font-semibold text-gray-900'>
-              Stay updated with property management news
-            </p>
-
-            <form className='mt-6'>
-              <div className='relative max-w-md'>
-                <label className='sr-only' htmlFor='email'>
-                  Email
-                </label>
-                <input
-                  className='w-full rounded-lg border border-gray-200 bg-transparent px-4 py-3 text-sm text-gray-900 placeholder-gray-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500'
-                  id='email'
-                  type='email'
-                  placeholder='Enter your email'
-                />
-                <button
-                  type='submit'
-                  className='absolute end-1 top-1/2 -translate-y-1/2 rounded-md bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 active:bg-blue-700'
-                >
-                  Subscribe
-                </button>
-              </div>
-            </form>
+          {/* Copyright */}
+          <div className='text-[12px] text-black-600'>
+            © {new Date().getFullYear()} Hudson Digital Solutions
           </div>
-        </div>
-
-        {/* Copyright - Bottom */}
-        <div className='mt-12 border-t border-gray-100 pt-8'>
-          <p className='text-center text-sm text-gray-500'>
-            © Hudson Digital Solutions {new Date().getFullYear()}. All rights reserved.
-          </p>
         </div>
       </div>
     </footer>

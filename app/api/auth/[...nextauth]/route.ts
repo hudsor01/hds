@@ -1,5 +1,6 @@
 import { compare } from 'bcryptjs';
 import NextAuth from 'next-auth';
+import { Adapter } from 'next-auth/adapters';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -7,8 +8,23 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 
 import { prisma } from '@/lib/prisma';
 
+// Custom adapter to handle schema prefixing
+const customAdapter: Adapter = {
+  ...PrismaAdapter(prisma),
+  createUser: async data => {
+    return prisma.user.create({
+      data: {
+        ...data,
+        accounts: {
+          create: [], // Ensure accounts relation is initialized
+        },
+      },
+    });
+  },
+};
+
 export const authOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: customAdapter,
   session: {
     strategy: 'jwt',
   },

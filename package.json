@@ -2,7 +2,6 @@
   "name": "hds",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "format": "prettier --write .",
     "format:check": "prettier --check .",
@@ -104,7 +103,7 @@
     "@tailwindcss/forms": "^0.5.10",
     "@tailwindcss/typography": "^0.5.16",
     "@trivago/prettier-plugin-sort-imports": "^5.2.1",
-    "@types/bcryptjs": "^2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/node": "^22.12.0",
     "@types/postcss-load-config": "^3.0.1",
     "@types/tailwindcss": "^3.1.0",
