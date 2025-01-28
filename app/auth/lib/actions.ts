@@ -25,11 +25,11 @@ const RegisterSchema = z
 
 export async function authenticate(prevState: string | undefined, formData: FormData) {
   try {
-    const email = formData.get('email');
-    const password = formData.get('password');
+    const email = formData.get('email')?.toString();
+    const password = formData.get('password')?.toString();
 
     if (!email || !password) {
-      return 'Invalid credentials.';
+      return 'Please provide both email and password.';
     }
 
     const user = await prisma.authUser.findUnique({
@@ -40,9 +40,13 @@ export async function authenticate(prevState: string | undefined, formData: Form
       return 'Invalid credentials.';
     }
 
-    const passwordMatch = await compare(password.toString(), user.encrypted_password);
+    if (!user.encrypted_password) {
+      return 'Account requires password reset.';
+    }
+
+    const passwordMatch = await compare(password, user.encrypted_password);
     if (!passwordMatch) {
-      return 'Invalid credentials.';
+      return 'Invalid email or password.';
     }
 
     // Create a new session

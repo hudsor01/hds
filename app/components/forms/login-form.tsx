@@ -3,7 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
-import { Loader2, Mail } from 'react-feather';
+import { Loader, Mail } from 'react-feather';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -130,7 +130,7 @@ export function LoginForm() {
           </AnimatePresence>
 
           <Button type='submit' className='w-full' disabled={isLoading}>
-            {isLoading ? <Loader2 className='w-4 h-4 mr-2 animate-spin' /> : 'Sign In'}
+            {isLoading ? <Loader className='w-4 h-4 mr-2 animate-spin' /> : 'Sign In'}
           </Button>
         </form>
       </Form>

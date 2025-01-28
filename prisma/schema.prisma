@@ -40,10 +40,10 @@ model AuthUser {
 // Public schema models for NextAuth
 model Account {
   id                String  @id @default(cuid())
-  userId            String
+  user_id           String  @map("userId")
   type              String
   provider          String
-  providerAccountId String
+  provider_account_id String  @map("providerAccountId")
   refresh_token     String? @db.Text
   access_token      String? @db.Text
   expires_at        Int?
@@ -51,9 +51,10 @@ model Account {
   scope             String?
   id_token          String? @db.Text
   session_state     String?
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  @@index([userId])
-  @@unique([provider, providerAccountId])
+  user              User    @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id])
+  @@unique([provider, provider_account_id])
   @@map("accounts")
   @@schema("public")
 }
@@ -75,8 +76,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
-  password      String?
   role          String    @default("USER")
+  stripe_customer_id     String?   @unique
+  stripe_subscription_id String?
+  subscription_status    String?
+  trial_ends_at          DateTime?
   properties    Property[]
   tenancies     Tenancy[]
   maintenanceRequests MaintenanceRequest[]

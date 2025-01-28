@@ -68,7 +68,7 @@ export default function HomePage() {
               <h1 className='font-display text-5xl md:text-6xl font-black text-gray-900'>
                 Property Management
                 <span className='block mt-2 bg-linear-to-r from-pastel-blue-400 to-pastel-blue-200 bg-clip-text text-transparent'>
-                  Simplified
+                  Simplify
                 </span>
               </h1>
               <p className='font-body text-xl text-gray-600'>

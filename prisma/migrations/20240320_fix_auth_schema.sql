@@ -9,7 +9,7 @@ CREATE INDEX IF NOT EXISTS "users_provider_provider_id_idx" ON "public"."users" 
 -- Ensure accounts table exists with proper relations
 CREATE TABLE IF NOT EXISTS "public"."accounts" (
     "id" TEXT NOT NULL,
-    "user_id" TEXT NOT NULL,
+    "user_id" UUID NOT NULL,
     "type" TEXT NOT NULL,
     "provider" TEXT NOT NULL,
     "provider_account_id" TEXT NOT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS "public"."accounts" (
     "id_token" TEXT,
     "session_state" TEXT,
     CONSTRAINT "accounts_pkey" PRIMARY KEY ("id"),
-    CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id")
+    CONSTRAINT "accounts_user_id_fkey" FOREIGN KEY ("user_id"::uuid)
         REFERENCES "public"."users" ("id") ON DELETE CASCADE,
     CONSTRAINT "accounts_provider_provider_account_id_key" UNIQUE ("provider", "provider_account_id")
 );
