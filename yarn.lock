@@ -2851,6 +2851,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/bcryptjs@npm:^2":
+  version: 2.4.6
+  resolution: "@types/bcryptjs@npm:2.4.6"
+  checksum: 10c0/1182663f0c081c5c58760019459cd309335e9b5fc6552780b0fd21b6c5f25661a844709e46218796f4bdbebe6736e11cfc5af0729bc2cdb0160943650aceb3da
+  languageName: node
+  linkType: hard
+
 "@types/cookie@npm:^0.6.0":
   version: 0.6.0
   resolution: "@types/cookie@npm:0.6.0"
@@ -3581,6 +3588,13 @@ __metadata:
   version: 2.0.0
   resolution: "base64id@npm:2.0.0"
   checksum: 10c0/6919efd237ed44b9988cbfc33eca6f173a10e810ce50292b271a1a421aac7748ef232a64d1e6032b08f19aae48dce6ee8f66c5ae2c9e5066c82b884861d4d453
+  languageName: node
+  linkType: hard
+
+"bcryptjs@npm:^2.4.3":
+  version: 2.4.3
+  resolution: "bcryptjs@npm:2.4.3"
+  checksum: 10c0/b969467087ed7a01ff905a1c6a0c45014ec586248a448ea08370c8ed8bb314bda16a870ca23e0961d7d23bdce1a04c76fa70a9d680be814fa9ac7d8fc61870a3
   languageName: node
   linkType: hard
 
@@ -5670,6 +5684,7 @@ __metadata:
     "@tanstack/react-query": "npm:^5.65.1"
     "@tanstack/react-virtual": "npm:^3.11.3"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.1"
+    "@types/bcryptjs": "npm:^2"
     "@types/feather-icons": "npm:^4.29.4"
     "@types/node": "npm:^22.12.0"
     "@types/postcss-load-config": "npm:^3.0.1"
@@ -5685,6 +5700,7 @@ __metadata:
     "@typescript-eslint/types": "npm:^8.22.0"
     "@vercel/analytics": "npm:^1.4.1"
     autoprefixer: "npm:10.4.20"
+    bcryptjs: "npm:^2.4.3"
     chart.js: "npm:^4.4.7"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"

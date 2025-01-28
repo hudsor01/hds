@@ -51,15 +51,15 @@ model Account {
   scope             String?
   id_token          String?
   session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  @@index([userId])
   @@unique([provider, providerAccountId])
   @@map("accounts")
   @@schema("public")
 }
 
 model Session {
-  id           String   @id @default(uuid())
+  id           String   @id @default(cuid())
   sessionToken String   @unique
   userId       String
   expires      DateTime
@@ -70,19 +70,71 @@ model Session {
 }
 
 model User {
-  id                 String    @id @default(uuid())
-  name               String?
-  email              String?   @unique
-  emailVerified      DateTime?
-  image              String?
-  accounts           Account[]
-  sessions           Session[]
-  stripeCustomerId   String?
-  subscriptionStatus String?
-  trialEndsAt        DateTime?
-  role               String?   @default("user")
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("USER")
+  properties    Property[]
+  tenancies     Tenancy[]
+  maintenanceRequests MaintenanceRequest[]
+  accounts      Account[]
+  sessions      Session[]
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
 
   @@map("users")
+  @@schema("public")
+}
+
+model Property {
+  id          String    @id @default(cuid())
+  title       String
+  address     String
+  type        String
+  status      String    @default("AVAILABLE")
+  rent        Float
+  ownerId     String
+  owner       User      @relation(fields: [ownerId], references: [id])
+  tenancies   Tenancy[]
+  maintenanceRequests MaintenanceRequest[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("public")
+}
+
+model Tenancy {
+  id          String    @id @default(cuid())
+  startDate   DateTime
+  endDate     DateTime?
+  rent        Float
+  status      String    @default("ACTIVE")
+  propertyId  String
+  property    Property  @relation(fields: [propertyId], references: [id])
+  tenantId    String
+  tenant      User      @relation(fields: [tenantId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@schema("public")
+}
+
+model MaintenanceRequest {
+  id          String    @id @default(cuid())
+  title       String
+  description String
+  status      String    @default("PENDING")
+  priority    String    @default("MEDIUM")
+  propertyId  String
+  property    Property  @relation(fields: [propertyId], references: [id])
+  requesterId String
+  requester   User      @relation(fields: [requesterId], references: [id])
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
   @@schema("public")
 }
 
