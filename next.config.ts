@@ -8,7 +8,7 @@ const config: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: false,
-    dirs: ["app", "components", "lib", "types"],
+    dirs: ["app", "components", "lib", "hooks", "types"],
   },
   experimental: {
     typedRoutes: true,

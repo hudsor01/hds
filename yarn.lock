@@ -1735,6 +1735,54 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@mui/x-date-pickers@npm:^7.24.1":
+  version: 7.24.1
+  resolution: "@mui/x-date-pickers@npm:7.24.1"
+  dependencies:
+    "@babel/runtime": "npm:^7.25.7"
+    "@mui/utils": "npm:^5.16.6 || ^6.0.0"
+    "@mui/x-internals": "npm:7.24.1"
+    "@types/react-transition-group": "npm:^4.4.11"
+    clsx: "npm:^2.1.1"
+    prop-types: "npm:^15.8.1"
+    react-transition-group: "npm:^4.4.5"
+  peerDependencies:
+    "@emotion/react": ^11.9.0
+    "@emotion/styled": ^11.8.1
+    "@mui/material": ^5.15.14 || ^6.0.0
+    "@mui/system": ^5.15.14 || ^6.0.0
+    date-fns: ^2.25.0 || ^3.2.0 || ^4.0.0
+    date-fns-jalali: ^2.13.0-0 || ^3.2.0-0 || ^4.0.0-0
+    dayjs: ^1.10.7
+    luxon: ^3.0.2
+    moment: ^2.29.4
+    moment-hijri: ^2.1.2 || ^3.0.0
+    moment-jalaali: ^0.7.4 || ^0.8.0 || ^0.9.0 || ^0.10.0
+    react: ^17.0.0 || ^18.0.0 || ^19.0.0
+    react-dom: ^17.0.0 || ^18.0.0 || ^19.0.0
+  peerDependenciesMeta:
+    "@emotion/react":
+      optional: true
+    "@emotion/styled":
+      optional: true
+    date-fns:
+      optional: true
+    date-fns-jalali:
+      optional: true
+    dayjs:
+      optional: true
+    luxon:
+      optional: true
+    moment:
+      optional: true
+    moment-hijri:
+      optional: true
+    moment-jalaali:
+      optional: true
+  checksum: 10c0/f1de87f1c8063bf856940cff76d7e5923c149eadb27ce2192de592f0ed823bfb9efa2911fc42ca73fed8c146e578ff537ca94f6fe6f7b3d7953de44ce4577bad
+  languageName: node
+  linkType: hard
+
 "@mui/x-internals@npm:7.24.1":
   version: 7.24.1
   resolution: "@mui/x-internals@npm:7.24.1"
@@ -2528,29 +2576,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@supabase/auth-helpers-nextjs@npm:^0.10.0":
-  version: 0.10.0
-  resolution: "@supabase/auth-helpers-nextjs@npm:0.10.0"
-  dependencies:
-    "@supabase/auth-helpers-shared": "npm:0.7.0"
-    set-cookie-parser: "npm:^2.6.0"
-  peerDependencies:
-    "@supabase/supabase-js": ^2.39.8
-  checksum: 10c0/83e6e7f514fcdc4c6f4097cbf7d8fb424ba9f1b8ff4799b8670126e9e5b9f2b1dba47e028925f26dee1b6cd749ee421478a0148b0a9c48b75c5368731acb3150
-  languageName: node
-  linkType: hard
-
-"@supabase/auth-helpers-shared@npm:0.7.0":
-  version: 0.7.0
-  resolution: "@supabase/auth-helpers-shared@npm:0.7.0"
-  dependencies:
-    jose: "npm:^4.14.4"
-  peerDependencies:
-    "@supabase/supabase-js": ^2.39.8
-  checksum: 10c0/c356d9599a9086966796912fe27018cf4c131fb546e99f4a25f4be585025d7fc0f797cae45954c24826f4e9f4ecc6b80b68f7b534ddfc8f1449d8326046ceaec
-  languageName: node
-  linkType: hard
-
 "@supabase/auth-js@npm:2.67.3":
   version: 2.67.3
   resolution: "@supabase/auth-js@npm:2.67.3"
@@ -2887,11 +2912,11 @@ __metadata:
   linkType: hard
 
 "@types/node@npm:*, @types/node@npm:>=10.0.0, @types/node@npm:>=8.1.0, @types/node@npm:^22.10.10":
-  version: 22.10.10
-  resolution: "@types/node@npm:22.10.10"
+  version: 22.12.0
+  resolution: "@types/node@npm:22.12.0"
   dependencies:
     undici-types: "npm:~6.20.0"
-  checksum: 10c0/3425772d4513cd5dbdd87c00acda088113c03a97445f84f6a89744c60a66990b56c9d3a7213d09d57b6b944ae8ff45f985565e0c1846726112588e33a22dd12b
+  checksum: 10c0/be220706732d95db2ed1c441c1e64cab90bf9a47519ce6f4c79cc5a9ec9d5c517131a149a9ac30afac1a30103e67e3a00d453ba7c1b0141608a3a7ba6397c303
   languageName: node
   linkType: hard
 
@@ -2952,7 +2977,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-transition-group@npm:^4.4.12":
+"@types/react-transition-group@npm:^4.4.11, @types/react-transition-group@npm:^4.4.12":
   version: 4.4.12
   resolution: "@types/react-transition-group@npm:4.4.12"
   peerDependencies:
@@ -3111,35 +3136,6 @@ __metadata:
     "@typescript-eslint/types": "npm:8.22.0"
     eslint-visitor-keys: "npm:^4.2.0"
   checksum: 10c0/fd83d2feadaf79950427fbbc3d23ca01cf4646ce7e0dd515a9c881d31ec1cc768e7b8898d3af065e31df39452501a3345092581cbfccac89e89d293519540557
-  languageName: node
-  linkType: hard
-
-"@upstash/core-analytics@npm:^0.0.10":
-  version: 0.0.10
-  resolution: "@upstash/core-analytics@npm:0.0.10"
-  dependencies:
-    "@upstash/redis": "npm:^1.28.3"
-  checksum: 10c0/c90b1bfaf1f54eed8a48f2aa679f8e082083f49931cf08bd90a0a0035b010f65b6e7420268677f15df1d04687f7e5a9093320c591ef4dbd45d804ea83d890f3f
-  languageName: node
-  linkType: hard
-
-"@upstash/ratelimit@npm:^2.0.5":
-  version: 2.0.5
-  resolution: "@upstash/ratelimit@npm:2.0.5"
-  dependencies:
-    "@upstash/core-analytics": "npm:^0.0.10"
-  peerDependencies:
-    "@upstash/redis": ^1.34.3
-  checksum: 10c0/9bc3c7d498557d5f896a0ce5b24bafe112cda9000f063e2e21c8e8e6a4d37b29858b48a186552f172066755e4ad536478637f9ac96270f2c0abbf4ecb6a3d897
-  languageName: node
-  linkType: hard
-
-"@upstash/redis@npm:^1.28.3, @upstash/redis@npm:^1.34.3":
-  version: 1.34.3
-  resolution: "@upstash/redis@npm:1.34.3"
-  dependencies:
-    crypto-js: "npm:^4.2.0"
-  checksum: 10c0/c192651740663a8c5db466eec00a6f8c97bc8c3c5f1cf0a48925c1f79097b9a63a32cd12ed99878c668e09123064e206f7591bc9bd19dffb8f809acc1d15cc5e
   languageName: node
   linkType: hard
 
@@ -3491,13 +3487,6 @@ __metadata:
   version: 2.0.0
   resolution: "base64id@npm:2.0.0"
   checksum: 10c0/6919efd237ed44b9988cbfc33eca6f173a10e810ce50292b271a1a421aac7748ef232a64d1e6032b08f19aae48dce6ee8f66c5ae2c9e5066c82b884861d4d453
-  languageName: node
-  linkType: hard
-
-"bcrypt-ts@npm:^5.0.3":
-  version: 5.0.3
-  resolution: "bcrypt-ts@npm:5.0.3"
-  checksum: 10c0/0a14a70afe1d38a7db66fe44c043ae1bf4807ac1365770f2716957b8d250ce104d2938b7fda876cda9a535b0affd74678bafa2a881e8070bead6e8f091e9995d
   languageName: node
   linkType: hard
 
@@ -3898,13 +3887,6 @@ __metadata:
     shebang-command: "npm:^2.0.0"
     which: "npm:^2.0.1"
   checksum: 10c0/053ea8b2135caff68a9e81470e845613e374e7309a47731e81639de3eaeb90c3d01af0e0b44d2ab9d50b43467223b88567dfeb3262db942dc063b9976718ffc1
-  languageName: node
-  linkType: hard
-
-"crypto-js@npm:^4.2.0":
-  version: 4.2.0
-  resolution: "crypto-js@npm:4.2.0"
-  checksum: 10c0/8fbdf9d56f47aea0794ab87b0eb9833baf80b01a7c5c1b0edc7faf25f662fb69ab18dc2199e2afcac54670ff0cd9607a9045a3f7a80336cccd18d77a55b9fdf0
   languageName: node
   linkType: hard
 
@@ -5520,13 +5502,13 @@ __metadata:
     "@mui/styled-engine-sc": "npm:^6.4.0"
     "@mui/system": "npm:^6.4.1"
     "@mui/x-data-grid": "npm:^7.24.1"
+    "@mui/x-date-pickers": "npm:^7.24.1"
     "@next/bundle-analyzer": "npm:^15.1.6"
     "@next/eslint-plugin-next": "npm:^15.1.6"
     "@prisma/client": "npm:^6.2.1"
     "@react-email/components": "npm:^0.0.32"
     "@stripe/react-stripe-js": "npm:^3.1.1"
     "@stripe/stripe-js": "npm:^5.5.0"
-    "@supabase/auth-helpers-nextjs": "npm:^0.10.0"
     "@supabase/auth-ui-shared": "npm:^0.1.8"
     "@supabase/ssr": "npm:^0.5.2"
     "@supabase/supabase-js": "npm:^2.48.1"
@@ -5549,16 +5531,14 @@ __metadata:
     "@typescript-eslint/parser": "npm:^8.22.0"
     "@typescript-eslint/type-utils": "npm:^8.22.0"
     "@typescript-eslint/types": "npm:^8.22.0"
-    "@upstash/ratelimit": "npm:^2.0.5"
-    "@upstash/redis": "npm:^1.34.3"
     "@vercel/analytics": "npm:^1.4.1"
     autoprefixer: "npm:^10.4.20"
-    bcrypt-ts: "npm:^5.0.3"
     chart.js: "npm:^4.4.7"
     class-variance-authority: "npm:^0.7.1"
     clsx: "npm:^2.1.1"
     cmdk: "npm:^1.0.4"
     date-fns: "npm:^4.1.0"
+    encoding: "npm:^0.1.13"
     eslint: "npm:^9.19.0"
     eslint-config-next: "npm:^15.1.6"
     eslint-config-prettier: "npm:^10.0.1"
@@ -5581,7 +5561,7 @@ __metadata:
     prettier: "npm:^3.4.2"
     prettier-plugin-tailwindcss: "npm:^0.6.11"
     prisma: "npm:^6.2.1"
-    react: "npm:19.0.0"
+    react: "npm:^19.0.0"
     react-chartjs-2: "npm:^5.3.0"
     react-dom: "npm:^19.0.0"
     react-email: "npm:^3.0.6"
@@ -5597,6 +5577,7 @@ __metadata:
     sonner: "npm:^1.7.2"
     stripe: "npm:^17.6.0"
     styled-components: "npm:^6.1.14"
+    supports-color: "npm:^9.4.0"
     tailwind-merge: "npm:^2.6.0"
     tailwindcss: "npm:^4.0.0"
     tailwindcss-animate: "npm:^1.0.7"
@@ -6137,7 +6118,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:^4.14.4, jose@npm:^4.15.5, jose@npm:^4.15.9":
+"jose@npm:^4.15.5, jose@npm:^4.15.9":
   version: 4.15.9
   resolution: "jose@npm:4.15.9"
   checksum: 10c0/4ed4ddf4a029db04bd167f2215f65d7245e4dc5f36d7ac3c0126aab38d66309a9e692f52df88975d99429e357e5fd8bab340ff20baab544d17684dd1d940a0f4
@@ -8479,13 +8460,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"set-cookie-parser@npm:^2.6.0":
-  version: 2.7.1
-  resolution: "set-cookie-parser@npm:2.7.1"
-  checksum: 10c0/060c198c4c92547ac15988256f445eae523f57f2ceefeccf52d30d75dedf6bff22b9c26f756bd44e8e560d44ff4ab2130b178bd2e52ef5571bf7be3bd7632d9a
-  languageName: node
-  linkType: hard
-
 "set-function-length@npm:^1.2.2":
   version: 1.2.2
   resolution: "set-function-length@npm:1.2.2"
@@ -9088,6 +9062,13 @@ __metadata:
   dependencies:
     has-flag: "npm:^4.0.0"
   checksum: 10c0/afb4c88521b8b136b5f5f95160c98dee7243dc79d5432db7efc27efb219385bbc7d9427398e43dd6cc730a0f87d5085ce1652af7efbe391327bc0a7d0f7fc124
+  languageName: node
+  linkType: hard
+
+"supports-color@npm:^9.4.0":
+  version: 9.4.0
+  resolution: "supports-color@npm:9.4.0"
+  checksum: 10c0/6c24e6b2b64c6a60e5248490cfa50de5924da32cf09ae357ad8ebbf305cc5d2717ba705a9d4cb397d80bbf39417e8fdc8d7a0ce18bd0041bf7b5b456229164e4
   languageName: node
   linkType: hard
 
