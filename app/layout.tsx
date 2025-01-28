@@ -1,4 +1,5 @@
 import { Footer } from '@/components/layout/footer'
+import { ThemeProvider as MaterialTailwindProvider } from '@material-tailwind/react'
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter'
 import { Roboto } from 'next/font/google'
 import { Navbar } from './components/layout/navbar'
@@ -20,13 +21,15 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${roboto.variable}`}>
+    <html lang="en" className={roboto.variable}>
       <body>
         <AppRouterCacheProvider>
           <ThemeProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
+            <MaterialTailwindProvider>
+              <Navbar />
+              <main>{children}</main>
+              <Footer />
+            </MaterialTailwindProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
