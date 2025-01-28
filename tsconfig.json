@@ -6,20 +6,14 @@
     "skipLibCheck": true,
     "strict": true,
     "strictNullChecks": true,
-    "noImplicitAny": false,
     "noEmit": true,
     "esModuleInterop": true,
-    "moduleResolution": "bundler",
     "module": "esnext",
-    "allowImportingTsExtensions": true,
+    "moduleResolution": "bundler",
     "resolveJsonModule": true,
-    "types": ["node", "react", "react-dom", "tailwindcss"],
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "types": ["node", "react", "react-dom"],
-    "allowSyntheticDefaultImports": true,
     "plugins": [
       {
         "name": "next"
@@ -35,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "*.config.mjs"
   ],
   "exclude": ["node_modules"]
 }

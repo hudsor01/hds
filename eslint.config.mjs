@@ -1,49 +1,36 @@
-import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
-import ts from '@typescript-eslint/eslint-plugin'
-import tsParser from '@typescript-eslint/parser'
-import prettier from 'eslint-config-prettier'
 import react from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import { dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
+import tseslint from 'typescript-eslint'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
-const nextConfig = {
-  files: ['**/*.{js,jsx,ts,tsx}'],
-  plugins: {
-    '@next/next': nextPlugin
+export default tseslint.config(
+  {
+    ignores: ['**/build/**', '**/dist/**', '.next/**']
   },
-  rules: nextPlugin.configs.recommended.rules
-}
-
-export default [
-  js.configs.recommended,
-  nextConfig,
+  eslint.configs.recommended,
+  tseslint.configs.recommended,
+  tseslint.configs.strict,
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
-      '@typescript-eslint': ts,
+      '@typescript-eslint': tseslint.plugin,
       'react': react,
       'react-hooks': reactHooks,
+      '@next/next': nextPlugin
     },
     languageOptions: {
-      parser: tsParser,
+      parser: tseslint.parser,
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: __dirname,
-      }
-    },
-    settings: {
-      react: {
-        version: '19.0.0'
-      },
-      next: {
-        rootDir: __dirname // Required for monorepo setups
       }
     },
     rules: {
+      ...nextPlugin.configs.recommended.rules,
+      ...nextPlugin.configs['core-web-vitals'].rules,
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': ['error', {
         argsIgnorePattern: '^_',
@@ -80,8 +67,5 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
       'no-console': 'off'
     }
-  },
-
-  // 5. Prettier integration (must be last)
-  prettier
-]
+  }
+)
