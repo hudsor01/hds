@@ -2953,9 +2953,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/feather-icons@npm:^4.29.4":
+"@types/react-feather@npm:^4.29.4":
   version: 4.29.4
-  resolution: "@types/feather-icons@npm:4.29.4"
+  resolution: "@types/react-feather@npm:4.29.4"
   checksum: 10c0/756e33dd395a57fb6b6e55a72834e3eb47cf4ce97bca2c8f7d8b44845c38b0cd397555824b09e562567191aa1d578779d8cde28f52b89fa7a00b7b9298e159b8
   languageName: node
   linkType: hard
@@ -5730,7 +5730,7 @@ __metadata:
     "@tanstack/react-virtual": "npm:^3.11.3"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
     "@types/bcryptjs": "npm:^2.4.6"
-    "@types/feather-icons": "npm:^4.29.4"
+    "@types/react-feather": "npm:^4.29.4"
     "@types/jsonwebtoken": "npm:^9"
     "@types/node": "npm:^22.12.0"
     "@types/postcss-load-config": "npm:^3.0.1"

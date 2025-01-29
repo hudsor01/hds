@@ -1,10 +1,9 @@
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { getServerSession } from 'next-auth/next';
+import { auth } from '@/auth';
 
 import { Box, Typography } from '@mui/material';
 
 export async function ServerProfile() {
-  const session = await getServerSession(authOptions);
+  const session = await auth();
 
   if (!session) {
     return (

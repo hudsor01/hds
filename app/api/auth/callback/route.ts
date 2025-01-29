@@ -1,34 +1,21 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get('code');
+  const next = searchParams.get('next') ?? '/';
 
   if (!code) {
-    console.error('No code received in callback')
-    return NextResponse.redirect(`${origin}/auth/error`)
+    console.error('No code received in callback');
+    return NextResponse.redirect(`${origin}/auth/error`);
   }
 
   try {
-    console.log('Received auth callback with code')
-    const cookieStore = cookies()
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore })
-
-    const { data, error } = await supabase.auth.exchangeCodeForSession(code)
-
-    if (error) {
-      console.error('Failed to exchange code for session:', error.message, error)
-      throw error
-    }
-
-    console.log('Successfully exchanged code for session:', !!data.session)
-    return NextResponse.redirect(`${origin}${next}`)
-
+    console.log('Received auth callback with code');
+    const cookieStore = cookies();
   } catch (error) {
-    console.error('Auth callback error:', error instanceof Error ? error.message : error)
-    return NextResponse.redirect(`${origin}/auth/error`)
+    console.error('Auth callback error:', error instanceof Error ? error.message : error);
+    return NextResponse.redirect(`${origin}/auth/error`);
   }
 }

@@ -1,6 +1,6 @@
 import { compare } from 'bcryptjs';
-import NextAuth from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
+import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -10,8 +10,6 @@ import { PrismaAdapter } from '@auth/prisma-adapter';
 import { prisma } from '@/lib/prisma';
 
 import { AuthUserMetadata } from '@/types/auth-user';
-
-import { routes } from './routes';
 
 const customAdapter: Adapter = {
   ...PrismaAdapter(prisma),
@@ -49,7 +47,7 @@ const customAdapter: Adapter = {
   },
 };
 
-export const { auth, signIn } = NextAuth({
+export const { auth, signIn, signOut } = NextAuth({
   adapter: customAdapter,
   providers: [
     GoogleProvider({
@@ -108,7 +106,7 @@ export const { auth, signIn } = NextAuth({
     verifyRequest: '/verify-email',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user }: { token: any; user: any }) {
       if (user) {
         token.id = user.id;
         token.stripe_customer_id = (user as any).stripe_customer_id;
@@ -118,7 +116,7 @@ export const { auth, signIn } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }) {
+    async session({ session, token }: { session: any; token: any }) {
       if (session?.user && token) {
         session.user.id = token.id as string;
         (session.user as any).stripe_customer_id = token.stripe_customer_id;
@@ -130,23 +128,3 @@ export const { auth, signIn } = NextAuth({
     },
   },
 });
-
-export async function signOut() {
-  try {
-    const response = await fetch('/api/auth/signout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (!response.ok) {
-      throw new Error('Failed to sign out');
-    }
-
-    window.location.href = routes.home;
-  } catch (error) {
-    console.error('Error signing out:', error);
-    throw error;
-  }
-}

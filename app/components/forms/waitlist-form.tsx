@@ -1,8 +1,10 @@
 'use client';
 
+import { createClient } from '@/app/utils/supabase/client';
+
 import { useState } from 'react';
-import { toast } from 'sonner';
-import { supabase } from '@/lib/supabase';
+
+const supabase = createClient();
 
 export function WaitlistForm() {
   const [formData, setFormData] = useState({
@@ -18,9 +20,5 @@ export function WaitlistForm() {
     // ... rest of your form submission logic ...
   };
 
-  return (
-    <form onSubmit={handleSubmit}>
-      {/* Your form JSX */}
-    </form>
-  );
+  return <form onSubmit={handleSubmit}>{/* Your form JSX */}</form>;
 }

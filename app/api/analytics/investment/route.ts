@@ -1,63 +1,73 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
-import { cookies } from 'next/headers'
-import { NextResponse } from 'next/server'
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function GET(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const propertyId = searchParams.get('propertyId')
-    const organizationId = searchParams.get('organizationId')
-    const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString())
+    const { searchParams } = new URL(request.url);
+    const propertyId = searchParams.get('propertyId');
+    const organizationId = searchParams.get('organizationId');
+    const year = parseInt(searchParams.get('year') || new Date().getFullYear().toString());
 
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient({ cookies });
 
     if (propertyId) {
       // Get property-specific ROI metrics
-      const { data: roiMetrics, error: roiError } = await supabase
-        .rpc('calculate_property_roi', {
+      const { data: roiMetrics, error: roiError } = await (supabase as any).rpc(
+        'calculate_property_roi',
+        {
           p_property_id: propertyId,
-          p_year: year
-        })
+          p_year: year,
+        },
+      );
 
-      if (roiError) throw roiError
+      if (roiError) throw roiError;
 
-      return NextResponse.json({ roiMetrics })
+      return NextResponse.json({ roiMetrics });
     }
 
     if (organizationId) {
       // Get organization-wide investment metrics
-      const { data: portfolioMetrics, error: portfolioError } = await supabase
-        .rpc('calculate_portfolio_investment_metrics', {
+      const supabaseClient = createRouteHandlerClient({ cookies });
+      const { data: portfolioMetrics, error: portfolioError } = await (supabaseClient as any).rpc(
+        'calculate_portfolio_investment_metrics',
+        {
           p_organization_id: organizationId,
-          p_year: year
-        })
+          p_year: year,
+        },
+      );
 
-      if (portfolioError) throw portfolioError
+      if (portfolioError) throw portfolioError;
 
       // Get investment performance report
-      const { data: performanceReport, error: reportError } = await supabase
-        .rpc('generate_investment_performance_report', {
+      const { data: performanceReport, error: reportError } = await (supabase as any).rpc(
+        'generate_investment_performance_report',
+        {
           p_organization_id: organizationId,
-          p_year: year
-        })
+          p_year: year,
+        },
+      );
 
-      if (reportError) throw reportError
+      if (reportError) throw reportError;
 
       return NextResponse.json({
         portfolioMetrics,
-        performanceReport
-      })
+        performanceReport,
+      });
     }
 
     return NextResponse.json(
       { error: 'Either propertyId or organizationId is required' },
-      { status: 400 }
-    )
+      { status: 400 },
+    );
   } catch (error) {
-    console.error('Investment analytics error:', error)
-    return NextResponse.json(
-      { error: 'Error fetching investment analytics' },
-      { status: 500 }
-    )
+    console.error('Investment analytics error:', error);
+    return NextResponse.json({ error: 'Error fetching investment analytics' }, { status: 500 });
   }
+}
+function createRouteHandlerClient(arg0: {
+  cookies: () => Promise<
+    import('next/dist/server/web/spec-extension/adapters/request-cookies').ReadonlyRequestCookies
+  >;
+}) {
+  throw new Error('Function not implemented.');
 }

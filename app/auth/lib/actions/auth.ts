@@ -11,7 +11,20 @@ import { redirect } from 'next/navigation';
 
 import { createSession } from '@/lib/session';
 
-import { type RecentActivity } from '../types/dashboard';
+interface RecentActivity {
+  id: string;
+  type: 'APPLICATION' | 'MAINTENANCE' | 'PAYMENT';
+  title: string;
+  description: string;
+  timestamp: string;
+  status: 'pending' | 'completed';
+  propertyId: string;
+  applicationId?: string;
+  maintenanceId?: string;
+  amount?: number;
+  tenantId?: string;
+  paymentId?: string;
+}
 
 const prisma = new PrismaClient();
 

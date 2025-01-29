@@ -26,6 +26,10 @@ export interface RecentActivity {
   amount?: number;
   propertyId?: string;
   unitId?: string;
+  maintenanceId?: string;
+  applicationId?: string;
+  paymentId?: string;
+  tenantId?: string;
 }
 
 export interface PropertyStats {
