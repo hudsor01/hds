@@ -1,10 +1,10 @@
-import { User } from '@prisma/client';
 import { compare } from 'bcryptjs';
-import NextAuth, { type NextAuthOptions, RequestInternal } from 'next-auth';
+import NextAuth, { type NextAuthOptions, RequestInternal, User } from 'next-auth';
 import { Adapter } from 'next-auth/adapters';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
+import type { AdapterUser } from '@auth/core/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
 import { prisma } from '@/lib/prisma';
@@ -12,12 +12,7 @@ import { prisma } from '@/lib/prisma';
 // Custom adapter to handle schema prefixing
 const customAdapter: Adapter = {
   ...PrismaAdapter(prisma),
-  createUser: async (user: {
-    email: string;
-    emailVerified?: Date | null;
-    name?: string | null;
-    image?: string | null;
-  }) => {
+  createUser: async (user: Omit<AdapterUser, 'id'>): Promise<AdapterUser> => {
     const authUser = await prisma.authUser.create({
       data: {
         email: user.email,
@@ -39,11 +34,11 @@ const customAdapter: Adapter = {
 
     return {
       id: newUser.id,
-      email: newUser.email,
+      email: newUser.email as string,
       emailVerified: newUser.emailVerified,
       name: newUser.name,
       image: newUser.image,
-    };
+    } as AdapterUser;
   },
 };
 
@@ -71,7 +66,7 @@ export const authOptions: NextAuthOptions = {
       async authorize(
         credentials: Record<'email' | 'password', string> | undefined,
         req: Pick<RequestInternal, 'query' | 'headers' | 'body' | 'method'>,
-      ): Promise<User | null> {
+      ) {
         if (!credentials?.email || !credentials?.password) {
           throw new Error('Invalid credentials');
         }
@@ -96,33 +91,31 @@ export const authOptions: NextAuthOptions = {
           where: { id: authUser.id },
         });
 
-        if (!user) {
+        if (!user || !user.email) {
           throw new Error('User not found');
         }
 
         return {
           id: user.id,
           email: user.email,
-          name: user.name,
-          image: user.image,
-        };
+          name: user.name ?? null,
+          image: user.image ?? null,
+          emailVerified: user.emailVerified ?? null,
+        } as User;
       },
     }),
   ],
   callbacks: {
     async session({ session, token }) {
       if (token && session.user) {
-        // Extend the session.user type to include additional properties
-        const extendedUser = {
-          ...session.user,
-          id: token.id as string,
-          name: (token.name as string) || '',
-          email: (token.email as string) || '',
-          image: (token.picture as string) || '',
-          stripe_customer_id: token.stripe_customer_id as string | null,
-          subscription_status: token.subscription_status as string | null,
-        } as const;
-        session.user = extendedUser;
+        // Ensure all required fields are present and properly typed
+        session.user.id = token.id as string;
+        session.user.name = token.name as string;
+        session.user.email = token.email as string;
+        session.user.image = (token.picture as string) || null;
+        // Add custom fields
+        (session.user as any).stripe_customer_id = token.stripe_customer_id as string | null;
+        (session.user as any).subscription_status = token.subscription_status as string | null;
       }
       return session;
     },
