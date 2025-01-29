@@ -1,5 +1,8 @@
 'use client';
 
+import { useUser } from '@/app/auth/lib/auth/config';
+import { supabase } from '@/app/auth/lib/supabase';
+import { useDashboardCrud } from '@/app/hooks/use-dashboard-crud';
 import { PropertyDialog } from 'components/dialogs/property-dialog';
 import { motion } from 'framer-motion';
 import { Edit2, Plus, Search, Trash2 } from 'react-feather';
@@ -14,7 +17,6 @@ import {
   Button,
   Card,
   Chip,
-  Grid2,
   IconButton,
   InputAdornment,
   Stack,
@@ -22,35 +24,8 @@ import {
   Tooltip,
   Typography,
 } from '@mui/material';
+import Grid from '@mui/material/Grid';
 import { alpha, useTheme } from '@mui/material/styles';
-
-import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
-
-// Mock data - replace with your actual data fetching
-const mockProperties: PropertyCardData[] = [
-  {
-    id: '1',
-    title: 'Luxury Apartment',
-    address: '123 Main St, New York, NY 10001',
-    type: 'apartment',
-    status: 'available',
-    price: 2500,
-    bedrooms: 2,
-    bathrooms: 2,
-    image: '/properties/apartment-1.jpg',
-  },
-  {
-    id: '2',
-    title: 'Modern House',
-    address: '456 Park Ave, Los Angeles, CA 90001',
-    type: 'house',
-    status: 'rented',
-    price: 3500,
-    bedrooms: 3,
-    bathrooms: 2.5,
-    image: '/properties/house-1.jpg',
-  },
-];
 
 const containerVariants = {
   initial: { opacity: 0 },
@@ -64,6 +39,7 @@ const itemVariants = {
 
 export default function PropertiesPage() {
   const theme = useTheme();
+  const { user } = useUser();
   const [properties, setProperties] = useState<PropertyCardData[]>([]);
   const [search, setSearch] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -73,9 +49,7 @@ export default function PropertiesPage() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const { data, error } = await new SupabaseAuthClient()
-          .from('properties')
-          .select('*, units(*)');
+        const { data, error } = await supabase.from('properties').select('*, units(*)');
 
         if (error) throw error;
 
@@ -101,26 +75,32 @@ export default function PropertiesPage() {
     }
 
     void fetchProperties();
-  }, [SupabaseAuthClient]);
+  }, []);
 
   const handleEdit = async (property: PropertyCardData) => {
     setSelectedProperty(property);
     setOpenDialog(true);
   };
 
+  const { remove: deleteProperty, loading: deleteLoading } = useDashboardCrud<Property>({
+    table: 'properties',
+    onSuccess: () => {
+      setProperties(prev => prev.filter(p => p.id !== selectedProperty?.id));
+    },
+    onError: error => {
+      console.error('Error deleting property:', error);
+    },
+  });
+
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await SupabaseAuthClient.from('properties').delete().eq('id', id);
-
-      if (error) throw error;
-
-      setProperties(prev => prev.filter(p => p.id !== id));
+      await deleteProperty(id);
     } catch (error) {
       console.error('Error deleting property:', error);
     }
   };
 
-  const filteredProperties = mockProperties.filter(
+  const filteredProperties = properties.filter(
     property =>
       property.title.toLowerCase().includes(search.toLowerCase()) ||
       property.address.toLowerCase().includes(search.toLowerCase()),
@@ -228,9 +208,9 @@ export default function PropertiesPage() {
           </Typography>
         </Card>
       ) : (
-        <Grid2 container spacing={3}>
+        <Grid container spacing={3}>
           {filteredProperties.map(property => (
-            <Grid2 key={property.id} xs={12} sm={6} md={4}>
+            <Grid item xs={12} sm={6} md={4} key={property.id}>
               <motion.div variants={itemVariants}>
                 <Card
                   sx={{
@@ -322,9 +302,9 @@ export default function PropertiesPage() {
                   </Box>
                 </Card>
               </motion.div>
-            </Grid2>
+            </Grid>
           ))}
-        </Grid2>
+        </Grid>
       )}
 
       {/* Add/Edit Dialog */}
@@ -332,12 +312,61 @@ export default function PropertiesPage() {
         open={openDialog}
         onOpenChangeAction={setOpenDialog}
         property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
-        onSubmitAction={async (
-          data: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>,
-        ) => {
-          // Add your submit logic here
-          console.log('Submit property:', data);
-          setOpenDialog(false);
+        onSubmitAction={async data => {
+          try {
+            const { create, update } = useDashboardCrud<Property>({
+              table: 'properties',
+              onSuccess: result => {
+                setProperties(prev => {
+                  if (selectedProperty) {
+                    return prev.map(p =>
+                      p.id === result.id
+                        ? {
+                            ...p,
+                            title: result.name,
+                            address: `${result.address}, ${result.city}, ${result.state} ${result.zipCode}`,
+                            type: result.type,
+                            status: result.status,
+                          }
+                        : p,
+                    );
+                  }
+                  return [
+                    ...prev,
+                    {
+                      id: result.id,
+                      title: result.name,
+                      address: `${result.address}, ${result.city}, ${result.state} ${result.zipCode}`,
+                      type: result.type,
+                      status: result.status,
+                      price: data.units?.[0]?.price || 0,
+                      bedrooms: data.units?.[0]?.bedrooms || 0,
+                      bathrooms: data.units?.[0]?.bathrooms || 0,
+                      image: '/properties/default.jpg',
+                    },
+                  ];
+                });
+                setOpenDialog(false);
+              },
+              onError: error => {
+                console.error('Error saving property:', error);
+              },
+            });
+
+            const propertyData = {
+              ...data,
+              owner_id: user?.id,
+              organization_id: user?.id, // In a real app, you might want to fetch this from a separate organizations table
+            };
+
+            if (selectedProperty) {
+              await update(selectedProperty.id, propertyData);
+            } else {
+              await create(propertyData);
+            }
+          } catch (error) {
+            console.error('Error saving property:', error);
+          }
         }}
       />
     </motion.div>
