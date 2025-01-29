@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma';
 
 export function CustomAdapter(): Adapter {
   return {
-    createUser: async (data): Promise<AdapterUser> => {
+    createUser: async (data: Omit<AdapterUser, 'id'>): Promise<AdapterUser> => {
       if (!data.email) {
         throw new Error('User email is required');
       }
@@ -142,7 +142,7 @@ export function CustomAdapter(): Adapter {
       });
     },
 
-    linkAccount: async data => {
+    linkAccount: async (data: any) => {
       await prisma.account.create({
         data,
       });

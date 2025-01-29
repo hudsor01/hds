@@ -1,14 +1,56 @@
-import { NextAuthOptions } from 'next-auth';
+import { compare } from 'bcryptjs';
+import NextAuth from 'next-auth';
+import { Adapter } from 'next-auth/adapters';
+import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
-import { CustomAdapter } from './auth/lib/auth/adapter';
+import type { AdapterUser } from '@auth/core/adapters';
+import { PrismaAdapter } from '@auth/prisma-adapter';
+
+import { prisma } from '@/lib/prisma';
+
+import { AuthUserMetadata } from '@/types/auth-user';
+
 import { routes } from './routes';
 
-export const authOptions: NextAuthOptions = {
-  adapter: CustomAdapter(),
-  session: {
-    strategy: 'jwt',
+const customAdapter: Adapter = {
+  ...PrismaAdapter(prisma),
+  createUser: async (user: Omit<AdapterUser, 'id'>): Promise<AdapterUser> => {
+    const authUser = await prisma.authUser.create({
+      data: {
+        email: user.email,
+        email_confirmed_at: user.emailVerified,
+        raw_user_meta_data: { name: user.name },
+        encrypted_password: '', // Set a default empty password that will be updated later
+      },
+    });
+
+    const newUser = await prisma.user.create({
+      data: {
+        id: authUser.id,
+        email: user.email,
+        name: user.name ?? null,
+        image: user.image ?? null,
+        emailVerified: user.emailVerified ?? null,
+      },
+    });
+
+    if (!newUser.email) {
+      throw new Error('User email is required');
+    }
+
+    return {
+      id: newUser.id,
+      email: newUser.email,
+      emailVerified: newUser.emailVerified,
+      name: newUser.name,
+      image: newUser.image,
+    } as AdapterUser;
   },
+};
+
+export const { auth, signIn } = NextAuth({
+  adapter: customAdapter,
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
@@ -21,7 +63,43 @@ export const authOptions: NextAuthOptions = {
         },
       },
     }),
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        email: { label: 'Email', type: 'email' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          throw new Error('Invalid credentials');
+        }
+
+        const user = await prisma.authUser.findUnique({
+          where: { email: credentials.email },
+        });
+
+        if (!user || !user.encrypted_password) {
+          throw new Error('Invalid credentials');
+        }
+
+        const isValid = await compare(credentials.password, user.encrypted_password);
+
+        if (!isValid) {
+          throw new Error('Invalid credentials');
+        }
+
+        return {
+          id: user.id,
+          email: user.email,
+          name: (user.raw_user_meta_data as AuthUserMetadata)?.name ?? null,
+          image: null,
+        };
+      },
+    }),
   ],
+  session: {
+    strategy: 'jwt',
+  },
   pages: {
     signIn: '/login',
     error: '/error',
@@ -31,10 +109,10 @@ export const authOptions: NextAuthOptions = {
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.stripe_customer_id = user.stripe_customer_id;
-        token.stripe_subscription_id = user.stripe_subscription_id;
-        token.subscription_status = user.subscription_status;
-        token.trial_ends_at = user.trial_ends_at;
+        token.stripe_customer_id = (user as any).stripe_customer_id;
+        token.stripe_subscription_id = (user as any).stripe_subscription_id;
+        token.subscription_status = (user as any).subscription_status;
+        token.trial_ends_at = (user as any).trial_ends_at;
       }
       return token;
     },
@@ -49,7 +127,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-};
+});
 
 export async function signOut() {
   try {

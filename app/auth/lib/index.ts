@@ -1,5 +1,4 @@
 // auth/lib/index.ts
-import NextAuth from "next-auth"
-import { authOptions } from "./auth"
+import { auth, signIn, signOut } from '../../auth';
 
-export const auth = NextAuth(authOptions).auth
+export { auth, signIn, signOut };
