@@ -15,6 +15,19 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>;
 
+// Server action
+async function formAction(prevState: any, formData: FormData) {
+  try {
+    const email = formData.get('email') as string;
+    const password = formData.get('password') as string;
+    // Handle your form submission logic here
+    console.log({ email, password });
+    return { message: 'Success' };
+  } catch (error) {
+    return { error: 'Failed to submit' };
+  }
+}
+
 export function SimpleForm() {
   const { control, handleSubmit } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -25,20 +38,10 @@ export function SimpleForm() {
   });
 
   const { pending } = useFormStatus();
-
-  const handleFormSubmit = async (data: FormValues) => {
-    // Handle form submission here
-    try {
-      console.log('Form data:', data);
-    } catch (error) {
-      console.error('Form submission error:', error);
-    }
-  };
-
-  const [state, formAction] = useFormState(handleSubmit(handleFormSubmit), null);
+  const [state, dispatch] = useFormState(formAction, null);
 
   return (
-    <Box component='form' action={formAction} className='max-w-md mx-auto'>
+    <Box component='form' action={dispatch} className='max-w-md mx-auto'>
       <div className='space-y-4 mb-6'>
         <Controller
           name='email'
@@ -82,6 +85,12 @@ export function SimpleForm() {
           )}
         />
       </div>
+
+      {state?.error && (
+        <FormHelperText error className='mb-4'>
+          {state.error}
+        </FormHelperText>
+      )}
 
       <Button
         type='submit'

@@ -1,15 +1,16 @@
 'use client';
 
+import { WaitlistForm } from 'components/forms/waitlist-form';
+import { Card } from 'components/ui/card';
+import { motion } from 'framer-motion';
 import {
   BuildingOfficeIcon,
   BuildingStorefrontIcon,
   ClipboardDocumentCheckIcon,
+  Key,
+  Users,
   WrenchIcon,
-} from '@heroicons/react/24/outline';
-import { WaitlistForm } from 'components/forms/waitlist-form';
-import { Card } from 'components/ui/card';
-import { motion } from 'framer-motion';
-import { Key, Users } from 'react-feather';
+} from 'react-feather';
 
 import Image from 'next/image';
 

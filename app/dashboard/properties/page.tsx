@@ -353,11 +353,15 @@ export default function PropertiesPage() {
               },
             });
 
+            if (!user?.id) {
+              throw new Error('User not authenticated');
+            }
+
             const propertyData = {
               ...data,
-              owner_id: user?.id,
-              organization_id: user?.id, // In a real app, you might want to fetch this from a separate organizations table
-            };
+              owner_id: user.id,
+              organization_id: user.id, // Using user.id as organization_id
+            } as const;
 
             if (selectedProperty) {
               await update(selectedProperty.id, propertyData);

@@ -1,14 +1,23 @@
 'use client';
 
-import { PlusIcon } from '@heroicons/react/24/outline';
-import { PropertyDialog } from '@/components/dashboard/property-dialog';
-import { Button } from '@/components/ui/button';
-import type { Property } from '@/types/properties';
+import { Plus } from 'react-feather';
+import { toast } from 'sonner';
 
 import { useEffect, useState } from 'react';
 
+import { PropertyDialog } from '@/components/dashboard/property-dialog';
+import { Button } from '@/components/ui/button';
+
 import { useDashboardCrud } from '@/hooks/use-dashboard-crud';
 import { useDashboardUpdates } from '@/hooks/use-dashboard-updates';
+
+import type {
+  CreatePropertyInput,
+  Property,
+  PropertyUnit,
+  UpdatePropertyInput,
+  PropertyStatus,
+} from '@/types/properties';
 
 import { CrudContainer } from './crud-container';
 import { PropertyCard } from './property-card';
@@ -16,20 +25,15 @@ import { PropertyCard } from './property-card';
 export function PropertyManager() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
   const { create, update, remove, getAll, loading } = useDashboardCrud<Property>({
     table: 'properties',
     select: '*, units(*)',
-    onSuccess: data => {
-      if (Array.isArray(data)) {
-        setProperties(data);
-      }
-    },
   });
 
   useDashboardUpdates({
     table: 'properties',
-    select: '*, units(*)',
     onUpdate: (data: Property) => {
       setProperties(prev => prev.map(p => (p.id === data.id ? data : p)));
     },
@@ -39,55 +43,59 @@ export function PropertyManager() {
   });
 
   useEffect(() => {
-    void getAll();
+    const fetchProperties = async () => {
+      try {
+        const data = await getAll();
+        if (data) setProperties(data);
+      } catch (error) {
+        toast.error('Failed to fetch properties');
+      }
+    };
+    void fetchProperties();
   }, [getAll]);
 
   const handleAddProperty = () => {
+    setSelectedProperty(null);
     setDialogOpen(true);
   };
 
-  const handleUpdateProperty = async (id: string, data: Partial<Property>) => {
+  const handleUpdateProperty = async (property: Property, updateData: UpdatePropertyInput) => {
     try {
-      await update(id, data);
-      toast({
-        title: 'Success',
-        description: 'Property updated successfully',
-      });
+      await update(property.id, updateData);
+      toast.success('Property updated successfully');
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to update property',
-        variant: 'destructive',
-      });
+      toast.error('Failed to update property');
     }
   };
 
   const handleDeleteProperty = async (id: string) => {
     try {
       await remove(id);
-      toast({
-        title: 'Success',
-        description: 'Property deleted successfully',
-      });
+      toast.success('Property deleted successfully');
     } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to delete property',
-        variant: 'destructive',
-      });
+      toast.error('Failed to delete property');
     }
   };
 
+  const getOccupiedUnits = (units?: PropertyUnit[]) => {
+    if (!units) return 0;
+    return units.filter(unit => unit.status === 'OCCUPIED' as PropertyStatus).length;
+  };
+
+  const getTotalUnits = (units?: PropertyUnit[]) => {
+    return units?.length || 0;
+  };
+
   return (
-    <CrudContainer<Property>
+    <CrudContainer
       table='properties'
       title='Properties'
       loading={loading}
-      onItemCreated={item => setProperties(prev => [...prev, item])}
+      onItemCreated={item => setProperties(prev => [...prev, item as Property])}
     >
       <div className='flex justify-end mb-4'>
         <Button onClick={handleAddProperty}>
-          <PlusIcon className='h-4 w-4 mr-2' />
+          <Plus className='h-4 w-4 mr-2' />
           Add Property
         </Button>
       </div>
@@ -97,22 +105,34 @@ export function PropertyManager() {
             key={property.id}
             name={property.name}
             address={property.address}
-            units={`${property.units.length} Units`}
-            occupancy={`${property.units.filter(u => u.status === 'OCCUPIED').length}/${property.units.length}`}
-            onEdit={() => handleUpdateProperty(property.id, property)}
+            units={`${getTotalUnits(property.units)} Units`}
+            occupancy={`${getOccupiedUnits(property.units)}/${getTotalUnits(property.units)}`}
+            onEdit={() => {
+              setSelectedProperty(property);
+              setDialogOpen(true);
+            }}
             onDelete={() => handleDeleteProperty(property.id)}
           />
         ))}
       </div>
       <PropertyDialog
         open={dialogOpen}
-        onOpenChangeAction={setDialogOpen}
-        onSubmitAction={async propertyData => {
+        onOpenChangeAction={open => {
+          setDialogOpen(open);
+          if (!open) setSelectedProperty(null);
+        }}
+        property={selectedProperty}
+        onSubmitAction={async (data: CreatePropertyInput) => {
           try {
-            await create(propertyData);
+            if (selectedProperty) {
+              await handleUpdateProperty(selectedProperty, data);
+            } else {
+              await create(data);
+            }
             setDialogOpen(false);
+            toast.success(`Property ${selectedProperty ? 'updated' : 'created'} successfully`);
           } catch (error) {
-            console.error('Failed to create property:', error);
+            toast.error(`Failed to ${selectedProperty ? 'update' : 'create'} property`);
           }
         }}
       />

@@ -77,3 +77,15 @@ export type PropertyStats = {
     occupancy: number
   }
 }
+
+export interface CreatePropertyInput {
+  name: string;
+  address: string;
+  city: string;
+  state: string;
+  zipCode: string;
+  type: string;
+  status: string;
+}
+
+export interface UpdatePropertyInput extends Partial<CreatePropertyInput> {}
