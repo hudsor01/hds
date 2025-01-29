@@ -4,7 +4,7 @@ import { PlusIcon } from '@heroicons/react/24/outline';
 import { PropertyDialog } from 'components/dashboard/property-dialog';
 import { Button } from 'components/ui/button';
 import { useToast } from 'components/ui/use-toast';
-import type { Property } from 'types/property';
+import type { Property } from 'types/properties';
 
 import { useEffect, useState } from 'react';
 
@@ -100,7 +100,7 @@ export function PropertyManager() {
             name={property.name}
             address={property.address}
             units={`${property.units.length} Units`}
-            occupancy={`${property.units.filter(u => u.status === 'occupied').length}/${property.units.length}`}
+            occupancy={`${property.units.filter(u => u.status === 'OCCUPIED').length}/${property.units.length}`}
             onEdit={() => handleUpdateProperty(property.id, property)}
             onDelete={() => handleDeleteProperty(property.id)}
           />

@@ -1,13 +1,15 @@
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { type NextRequest, NextResponse } from 'next/server';
 
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
 
-// Define public routes that don't require authentication
 const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
-export async function middleware(req: NextRequest) {
-  const res = NextResponse.next();
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,17 +17,17 @@ export async function middleware(req: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          return req.cookies.get(name)?.value;
+          return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
-          res.cookies.set({
+          response.cookies.set({
             name,
             value,
             ...options,
           });
         },
         remove(name: string, options: CookieOptions) {
-          res.cookies.set({
+          response.cookies.set({
             name,
             value: '',
             ...options,
@@ -35,28 +37,15 @@ export async function middleware(req: NextRequest) {
     },
   );
 
-  const {
-    data: { session },
-    error,
-  } = await supabase.auth.getSession();
+  await supabase.auth.getSession();
 
-  if (error) {
-    return NextResponse.json({ error: 'Authentication Error' }, { status: 401 });
-  }
-
-  // Protect all dashboard routes
-  if (req.nextUrl.pathname.startsWith('/dashboard') && !session) {
-    return NextResponse.redirect(new URL('/login', req.url));
-  }
-
-  // Protect all API routes
-  if (req.nextUrl.pathname.startsWith('/api/') && !session) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  return res;
+  return response;
 }
 
 export const config = {
-  matcher: ['/dashboard/:path*', '/api/:path*'],
+  matcher: [
+    '/dashboard/:path*',
+    '/api/:path*',
+    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+  ],
 };

@@ -1,10 +1,6 @@
 'use client';
 
-import { createClient } from '@/app/utils/supabase/client';
-
 import { useState } from 'react';
-
-const supabase = createClient();
 
 export function WaitlistForm() {
   const [formData, setFormData] = useState({

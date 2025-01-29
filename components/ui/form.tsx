@@ -9,7 +9,6 @@ import {
   type FieldValues,
   FormProvider,
   FormProviderProps,
-  useActionState,
   useFormContext,
 } from 'react-hook-form';
 
@@ -46,7 +45,6 @@ const useFormField = () => {
   const itemContext = React.useContext(FormItemContext);
   const { getFieldState, formState, control } = useFormContext();
   const fieldState = getFieldState(fieldContext.name, formState);
-  const { isSubmitting } = useActionState({ control });
 
   if (!fieldContext) {
     throw new Error('useFormField should be used within <FormField>');
@@ -60,7 +58,6 @@ const useFormField = () => {
     formItemId: `${id}-form-item`,
     formDescriptionId: `${id}-form-item-description`,
     formMessageId: `${id}-form-item-message`,
-    isSubmitting,
     ...fieldState,
   };
 };
@@ -104,12 +101,12 @@ const FormLabel = React.forwardRef<
     optional?: boolean;
   }
 >(({ className, required, optional, ...props }, ref) => {
-  const { error, formItemId, isSubmitting } = useFormField();
+  const { error, formItemId } = useFormField();
   return (
     <InputLabel
       ref={ref}
       htmlFor={formItemId}
-      className={cn(error && 'text-error', isSubmitting && 'opacity-50', className)}
+      className={cn(error && 'text-error' && 'opacity-50', className)}
       {...props}
     >
       {props.children}
@@ -126,7 +123,7 @@ const FormControl = React.forwardRef<
     isLoading?: boolean;
   }
 >(({ children, isLoading, disabled, ...props }, ref) => {
-  const { error, formItemId, formDescriptionId, formMessageId, isSubmitting } = useFormField();
+  const { error, formItemId, formDescriptionId, formMessageId } = useFormField();
 
   return (
     <div className='relative'>
@@ -134,7 +131,6 @@ const FormControl = React.forwardRef<
         ref={ref}
         id={formItemId}
         error={!!error}
-        disabled={isSubmitting || disabled}
         helperText={error?.message}
         fullWidth
         {...props}

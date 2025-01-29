@@ -1,14 +1,35 @@
 import { compare } from 'bcryptjs';
-import { Adapter } from 'next-auth/adapters';
-import NextAuth from 'next-auth/next';
+import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import { AuthUserMetadata } from 'types/auth-user';
 
-import type { AdapterUser } from '@auth/core/adapters';
+import type { Adapter, AdapterUser } from '@auth/core/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
 import { prisma } from '@/lib/prisma';
+
+import type { AuthUserMetadata } from './types/auth-user';
+
+declare module 'next-auth' {
+  interface Session {
+    user: {
+      id: string;
+      email: string;
+      name?: string | null;
+      image?: string | null;
+      stripe_customer_id?: string | null;
+      stripe_subscription_id?: string | null;
+      subscription_status?: string | null;
+      trial_ends_at?: Date | null;
+    };
+  }
+  interface User extends AdapterUser {
+    stripe_customer_id?: string | null;
+    stripe_subscription_id?: string | null;
+    subscription_status?: string | null;
+    trial_ends_at?: Date | null;
+  }
+}
 
 const customAdapter: Adapter = {
   ...PrismaAdapter(prisma),
@@ -18,7 +39,7 @@ const customAdapter: Adapter = {
         email: user.email,
         email_confirmed_at: user.emailVerified,
         raw_user_meta_data: { name: user.name },
-        encrypted_password: '', // Set a default empty password that will be updated later
+        encrypted_password: '',
       },
     });
 
@@ -32,9 +53,7 @@ const customAdapter: Adapter = {
       },
     });
 
-    if (!newUser.email) {
-      throw new Error('User email is required');
-    }
+    if (!newUser.email) throw new Error('User email is required');
 
     return {
       id: newUser.id,
@@ -46,12 +65,12 @@ const customAdapter: Adapter = {
   },
 };
 
-export const { auth, signIn, signOut } = NextAuth({
+export const { auth, handlers, signIn, signOut } = NextAuth({
   adapter: customAdapter,
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.AUTH_GOOGLE_ID!,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET!,
       authorization: {
         params: {
           prompt: 'consent',
@@ -73,15 +92,22 @@ export const { auth, signIn, signOut } = NextAuth({
 
         const user = await prisma.authUser.findUnique({
           where: { email: credentials.email },
+          select: {
+            id: true,
+            email: true,
+            encrypted_password: true,
+            raw_user_meta_data: true,
+            stripe_customer_id: true,
+            stripe_subscription_id: true,
+            subscription_status: true,
+            trial_ends_at: true,
+          },
         });
 
-        if (!user || !user.encrypted_password) {
-          throw new Error('Invalid credentials');
-        }
-
-        const isValid = await compare(credentials.password, user.encrypted_password);
-
-        if (!isValid) {
+        if (
+          !user?.encrypted_password ||
+          !(await compare(credentials.password, user.encrypted_password))
+        ) {
           throw new Error('Invalid credentials');
         }
 
@@ -90,22 +116,17 @@ export const { auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: (user.raw_user_meta_data as AuthUserMetadata)?.name ?? null,
           image: null,
+          stripe_customer_id: user.stripe_customer_id,
+          stripe_subscription_id: user.stripe_subscription_id,
+          subscription_status: user.subscription_status,
+          trial_ends_at: user.trial_ends_at,
         };
       },
     }),
   ],
-  session: {
-    strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60, // 30 days
-  },
-  secret: process.env.NEXTAUTH_SECRET,
-  pages: {
-    signIn: '/login',
-    error: '/error',
-    verifyRequest: '/verify-email',
-  },
+  session: { strategy: 'jwt' },
   callbacks: {
-    async jwt({ token, user }: { token: any; user: any }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
         token.stripe_customer_id = (user as any).stripe_customer_id;
@@ -115,15 +136,20 @@ export const { auth, signIn, signOut } = NextAuth({
       }
       return token;
     },
-    async session({ session, token }: { session: any; token: any }) {
+    async session({ session, token }) {
       if (session?.user && token) {
         session.user.id = token.id as string;
-        (session.user as any).stripe_customer_id = token.stripe_customer_id;
-        (session.user as any).stripe_subscription_id = token.stripe_subscription_id;
-        (session.user as any).subscription_status = token.subscription_status;
-        (session.user as any).trial_ends_at = token.trial_ends_at;
+        session.user.stripe_customer_id = token.stripe_customer_id as string;
+        session.user.stripe_subscription_id = token.stripe_subscription_id as string;
+        session.user.subscription_status = token.subscription_status as string;
+        session.user.trial_ends_at = token.trial_ends_at as Date;
       }
       return session;
     },
+  },
+  pages: {
+    signIn: '/login',
+    error: '/error',
+    verifyRequest: '/verify-email',
   },
 });

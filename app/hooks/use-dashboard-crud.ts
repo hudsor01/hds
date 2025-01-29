@@ -1,9 +1,10 @@
-import { createClient } from '@/app/utils/supabase/client';
 import { toast } from 'sonner';
 
 import { useState } from 'react';
 
-const supabase = createClient();
+import { createClient } from '@/utils/supabase/server';
+
+const supabase = createClient({});
 
 interface Entity {
   id: string;
