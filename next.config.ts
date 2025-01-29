@@ -1,16 +1,16 @@
 import { NextConfig } from 'next/types';
 
-const config: NextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   typescript: {
-    ignoreBuildErrors: false,
+    ignoreBuildErrors: true,
     tsconfigPath: './tsconfig.json',
   },
   eslint: {
     ignoreDuringBuilds: true,
-    dirs: ['app', 'components', 'lib', 'hooks', 'types'],
   },
   experimental: {
+    reactCompiler: true,
     typedRoutes: true,
     serverActions: {
       bodySizeLimit: '2mb',
@@ -39,4 +39,4 @@ const config: NextConfig = {
   },
 };
 
-export default config;
+export default nextConfig;

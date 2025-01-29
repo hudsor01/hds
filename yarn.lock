@@ -244,7 +244,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/types@npm:^7.24.5, @babel/types@npm:^7.25.9, @babel/types@npm:^7.26.5, @babel/types@npm:^7.26.7, @babel/types@npm:^7.8.3":
+"@babel/types@npm:^7.19.0, @babel/types@npm:^7.24.5, @babel/types@npm:^7.25.9, @babel/types@npm:^7.26.5, @babel/types@npm:^7.26.7, @babel/types@npm:^7.8.3":
   version: 7.26.7
   resolution: "@babel/types@npm:7.26.7"
   dependencies:
@@ -3590,6 +3590,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"babel-plugin-react-compiler@npm:19.0.0-beta-27714ef-20250124":
+  version: 19.0.0-beta-27714ef-20250124
+  resolution: "babel-plugin-react-compiler@npm:19.0.0-beta-27714ef-20250124"
+  dependencies:
+    "@babel/types": "npm:^7.19.0"
+  checksum: 10c0/f7733f9461e5ca66af52dcc072a3e7f48d8020c9237f7621e4fc6229d74ae813c8883b7c5b904e69766a4de14599b95422e0374991cbbccceae3fbc17bd08262
+  languageName: node
+  linkType: hard
+
 "balanced-match@npm:^1.0.0":
   version: 1.0.2
   resolution: "balanced-match@npm:1.0.2"
@@ -5737,6 +5746,7 @@ __metadata:
     "@typescript-eslint/types": "npm:^8.22.0"
     "@vercel/analytics": "npm:^1.4.1"
     autoprefixer: "npm:10.4.20"
+    babel-plugin-react-compiler: "npm:19.0.0-beta-27714ef-20250124"
     bcryptjs: "npm:^2.4.3"
     chart.js: "npm:^4.4.7"
     class-variance-authority: "npm:^0.7.1"

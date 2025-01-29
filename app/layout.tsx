@@ -12,7 +12,7 @@ const roboto = Roboto({
   subsets: ['latin'],
   display: 'swap',
   variable: '--font-roboto',
-  fallback: ['system-ui', 'arial'],
+  fallback: ['system-ui', 'inter'],
   preload: true,
 });
 

@@ -1,36 +1,38 @@
-import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather'
-import { routes } from '../../routes'
+import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather';
+
+import { routes } from '../../routes';
 
 export const USER_ROLES = {
   ADMIN: 'ADMIN',
   USER: 'USER',
-} as const
+} as const;
 
-export type UserRole = typeof USER_ROLES[keyof typeof USER_ROLES]
+export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
 
 export const ACTIVITY_TYPES = {
   MAINTENANCE: 'MAINTENANCE',
   PAYMENT: 'PAYMENT',
   LEASE: 'LEASE',
-} as const
+} as const;
 
-export type ActivityType = typeof ACTIVITY_TYPES[keyof typeof ACTIVITY_TYPES]
+export type ActivityType = (typeof ACTIVITY_TYPES)[keyof typeof ACTIVITY_TYPES];
 
 export const ACTIVITY_STATUS = {
-  pending: "Pending",
-  in_progress: "In Progress",
-  completed: "Completed",
-} as const
+  pending: 'Pending',
+  in_progress: 'In Progress',
+  completed: 'Completed',
+} as const;
 
-export type ActivityStatus = typeof ACTIVITY_STATUS[keyof typeof ACTIVITY_STATUS]
+export type ActivityStatus = (typeof ACTIVITY_STATUS)[keyof typeof ACTIVITY_STATUS];
 
 export const PRIORITY_LEVELS = {
-  low: "Low",
-  medium: "Medium",
-  high: "High",
-} as const
+  low: 'Low',
+  medium: 'Medium',
+  high: 'High',
+  critical: 'Critical',
+} as const;
 
-export type PriorityLevel = typeof PRIORITY_LEVELS[keyof typeof PRIORITY_LEVELS]
+export type PriorityLevel = (typeof PRIORITY_LEVELS)[keyof typeof PRIORITY_LEVELS];
 
 export const navItems = [
   { name: 'Dashboard', href: routes.dashboard, icon: Home },
@@ -40,52 +42,53 @@ export const navItems = [
   { name: 'Finances', href: routes.finances.index, icon: DollarSign },
   { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
   { name: 'Settings', href: routes.settings, icon: Settings },
-]
+];
 
 export const ACTIVITY_FILTERS = [
   { value: 'ALL', label: 'All' },
   { value: 'MAINTENANCE', label: 'Maintenance' },
   { value: 'PAYMENT', label: 'Payments' },
   { value: 'LEASE', label: 'Leases' },
-] as const
+] as const;
 
 export const PRIORITY_LABELS = {
-  low: "Low Priority",
-  medium: "Medium Priority",
-  high: "High Priority",
-} as const
+  low: 'Low Priority',
+  medium: 'Medium Priority',
+  high: 'High Priority',
+  critical: 'Critical Priority',
+} as const;
 
 export const STATUS_LABELS = {
   PENDING: 'Pending',
   IN_PROGRESS: 'In Progress',
   COMPLETED: 'Completed',
-} as const
+} as const;
 
 export const PROPERTY_STATUS = {
-  active: "Active",
-  inactive: "Inactive",
-  maintenance: "Under Maintenance",
-} as const
+  active: 'Active',
+  inactive: 'Inactive',
+  maintenance: 'Under Maintenance',
+} as const;
 
 export const PROPERTY_TYPES = {
-  apartment: "Apartment",
-  house: "House",
-  condo: "Condominium",
-  commercial: "Commercial",
-} as const
+  apartment: 'Apartment',
+  house: 'House',
+  condo: 'Condominium',
+  commercial: 'Commercial',
+} as const;
 
 export const LEASE_STATUS = {
-  active: "Active",
-  pending: "Pending",
-  expired: "Expired",
-  terminated: "Terminated",
-} as const
+  active: 'Active',
+  pending: 'Pending',
+  expired: 'Expired',
+  terminated: 'Terminated',
+} as const;
 
 export const LEASE_TYPES = {
-  residential: "Residential",
-  commercial: "Commercial",
-  shortTerm: "Short Term",
-} as const
+  residential: 'Residential',
+  commercial: 'Commercial',
+  shortTerm: 'Short Term',
+} as const;
 
 export const MOCK_ANALYTICS_DATA = {
   financialPerformance: {
@@ -112,8 +115,8 @@ export const MOCK_ANALYTICS_DATA = {
   revenueDistribution: {
     'Rental Income': 75,
     'Parking Fees': 10,
-    'Amenities': 8,
-    'Other': 7,
+    Amenities: 8,
+    Other: 7,
   },
   tenantInsights: {
     satisfaction: {
@@ -137,4 +140,4 @@ export const MOCK_ANALYTICS_DATA = {
       '2024': 88,
     },
   },
-}
+};
