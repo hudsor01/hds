@@ -25,7 +25,7 @@ export function Navbar({ children }: NavbarProps) {
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60'>
       <div className='container flex h-14 items-center justify-between'>
-        <Link href='/' className='ml-4 flex items-center space-x-2'>
+        <Link href={'/' as Route} className='ml-4 flex items-center space-x-2'>
           <Home size={24} className='text-current' />
           <span className='hidden font-bold sm:inline-block'>HDS</span>
         </Link>

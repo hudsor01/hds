@@ -11,9 +11,8 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 
-import { Divider } from '@mui/material';
+import { Button, Divider } from '@mui/material';
 
-import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -22,6 +21,19 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+
+const [formData, setFormData] = useState({
+  name: '',
+  email: '',
+});
+
+const handleChange = e => {
+  const { name, value } = e.target;
+  setFormData(prevState => ({
+    ...prevState,
+    [name]: value,
+  }));
+};
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -34,7 +46,10 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const router = useRouter();
-
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+  });
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {

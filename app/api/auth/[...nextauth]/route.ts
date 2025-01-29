@@ -32,9 +32,13 @@ const customAdapter: Adapter = {
       },
     });
 
+    if (!newUser.email) {
+      throw new Error('User email is required');
+    }
+
     return {
       id: newUser.id,
-      email: newUser.email as string,
+      email: newUser.email,
       emailVerified: newUser.emailVerified,
       name: newUser.name,
       image: newUser.image,
@@ -95,6 +99,10 @@ export const authOptions: NextAuthOptions = {
           throw new Error('User not found');
         }
 
+        if (!user.email) {
+          throw new Error('User email is required');
+        }
+
         return {
           id: user.id,
           email: user.email,
@@ -112,8 +120,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        session.user.image = (token.picture as string) || null;
-        // Add custom fields
+        session.user.image = token.picture as string;
         (session.user as any).stripe_customer_id = token.stripe_customer_id as string | null;
         (session.user as any).subscription_status = token.subscription_status as string | null;
       }
