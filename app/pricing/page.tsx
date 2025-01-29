@@ -2,6 +2,7 @@
 
 import { routes } from '@/routes';
 import { loadStripe } from '@stripe/stripe-js';
+import { Button } from 'components/ui/button';
 import { useSession } from 'next-auth/react';
 import { toast } from 'sonner';
 
@@ -9,8 +10,6 @@ import { useState } from 'react';
 
 import type { Route } from 'next';
 import { useRouter } from 'next/navigation';
-
-import { Button } from '@/components/ui/button';
 
 const pricingTiers = [
   {

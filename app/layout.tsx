@@ -1,8 +1,8 @@
+import { Footer } from 'components/layout/footer';
+import { Navbar } from 'components/layout/navbar';
+
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-
-import { Footer } from '@/components/layout/footer';
-import { Navbar } from '@/components/layout/navbar';
 
 import './globals.css';
 import { Providers } from './providers';

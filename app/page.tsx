@@ -1,15 +1,14 @@
 'use client';
 
 import { routes } from '@/routes';
+import { Button } from 'components/ui/button';
+import { Card } from 'components/ui/card';
 import { motion } from 'framer-motion';
 import { useSession } from 'next-auth/react';
 import { BarChart2, DollarSign, FileText, Home, Tool, Users } from 'react-feather';
 
 import Image from 'next/image';
 import Link from 'next/link';
-
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
 
 const stats = [
   {

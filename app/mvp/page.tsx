@@ -1,18 +1,17 @@
 'use client';
 
-import { useState } from 'react';
 import {
   BuildingOfficeIcon,
   BuildingStorefrontIcon,
   ClipboardDocumentCheckIcon,
   WrenchIcon,
 } from '@heroicons/react/24/outline';
+import { WaitlistForm } from 'components/forms/waitlist-form';
+import { Card } from 'components/ui/card';
 import { motion } from 'framer-motion';
 import { Key, Users } from 'react-feather';
-import Image from 'next/image';
 
-import { WaitlistForm } from '@/components/forms/waitlist-form';
-import { Card } from '@/components/ui/card';
+import Image from 'next/image';
 
 // Animation variants
 const fadeInUp = {
@@ -34,7 +33,8 @@ const features = [
   {
     icon: <BuildingOfficeIcon className='w-6 h-6' />,
     title: 'Property Owners',
-    description: 'Streamline your property portfolio management with powerful analytics and automated workflows.',
+    description:
+      'Streamline your property portfolio management with powerful analytics and automated workflows.',
   },
   {
     icon: <BuildingStorefrontIcon className='w-6 h-6' />,

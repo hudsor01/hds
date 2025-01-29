@@ -5,6 +5,8 @@ declare namespace NodeJS {
     SUPABASE_SERVICE_ROLE_KEY: string;
     NEXTAUTH_SECRET: string;
     NEXTAUTH_URL: string;
-    // Add other environment variables here
+    DATABASE_URL: string;
+    GOOGLE_CLIENT_ID: string;
+    GOOGLE_CLIENT_SECRET: string;
   }
 }

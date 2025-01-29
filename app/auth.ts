@@ -3,13 +3,12 @@ import { Adapter } from 'next-auth/adapters';
 import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import { AuthUserMetadata } from 'types/auth-user';
 
 import type { AdapterUser } from '@auth/core/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
 import { prisma } from '@/lib/prisma';
-
-import { AuthUserMetadata } from '@/types/auth-user';
 
 const customAdapter: Adapter = {
   ...PrismaAdapter(prisma),

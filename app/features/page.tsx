@@ -1,5 +1,6 @@
 'use client';
 
+import { Card } from 'components/ui/card';
 import { motion, useInView } from 'framer-motion';
 import {
   BarChart2,
@@ -13,8 +14,6 @@ import {
 } from 'react-feather';
 
 import { useRef } from 'react';
-
-import { Card } from '@/components/ui/card';
 
 interface Feature {
   title: string;

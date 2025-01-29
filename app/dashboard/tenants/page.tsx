@@ -1,117 +1,110 @@
-'use client'
+'use client';
 
-import { Button } from "@/components/ui/button"
-import { useState } from "react"
+import { Button } from 'components/ui/button';
+
+import { useState } from 'react';
 
 interface Tenant {
-  id: string
-  name: string
-  email: string
-  phone: string
-  propertyId: string
-  propertyName: string
-  unitId: string
-  leaseEnd: string
-  status: 'active' | 'inactive' | 'pending'
+  id: string;
+  name: string;
+  email: string;
+  phone: string;
+  propertyId: string;
+  propertyName: string;
+  unitId: string;
+  leaseEnd: string;
+  status: 'active' | 'inactive' | 'pending';
 }
 
 export default function TenantsPage() {
   const [tenants] = useState<Tenant[]>([
     {
-      id: "1",
-      name: "John Doe",
-      email: "john@example.com",
-      phone: "(555) 123-4567",
-      propertyId: "1",
-      propertyName: "Sunset Apartments",
-      unitId: "101",
-      leaseEnd: "12/30/2024",
-      status: "active"
-    }
-  ])
+      id: '1',
+      name: 'John Doe',
+      email: 'john@example.com',
+      phone: '(555) 123-4567',
+      propertyId: '1',
+      propertyName: 'Sunset Apartments',
+      unitId: '101',
+      leaseEnd: '12/30/2024',
+      status: 'active',
+    },
+  ]);
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
+    <div className='p-6'>
+      <div className='flex justify-between items-center mb-6'>
         <div>
-          <h1 className="text-2xl font-bold">Tenants</h1>
-          <p className="text-gray-500">Manage your tenants and leases</p>
+          <h1 className='text-2xl font-bold'>Tenants</h1>
+          <p className='text-gray-500'>Manage your tenants and leases</p>
         </div>
-        <Button className="bg-blue-500 hover:bg-blue-600 text-white">
-          + Add Tenant
-        </Button>
+        <Button className='bg-blue-500 hover:bg-blue-600 text-white'>+ Add Tenant</Button>
       </div>
 
-      <div className="mb-6 grid grid-cols-2 gap-4">
-        <div className="p-4 bg-white rounded-lg shadow-sm">
-          <h3 className="text-sm text-gray-500 mb-1">Total Tenants</h3>
-          <p className="text-2xl font-bold">{tenants.length}</p>
+      <div className='mb-6 grid grid-cols-2 gap-4'>
+        <div className='p-4 bg-white rounded-lg shadow-sm'>
+          <h3 className='text-sm text-gray-500 mb-1'>Total Tenants</h3>
+          <p className='text-2xl font-bold'>{tenants.length}</p>
         </div>
-        <div className="p-4 bg-white rounded-lg shadow-sm">
-          <h3 className="text-sm text-gray-500 mb-1">Active Leases</h3>
-          <p className="text-2xl font-bold">
-            {tenants.filter(t => t.status === 'active').length}
-          </p>
+        <div className='p-4 bg-white rounded-lg shadow-sm'>
+          <h3 className='text-sm text-gray-500 mb-1'>Active Leases</h3>
+          <p className='text-2xl font-bold'>{tenants.filter(t => t.status === 'active').length}</p>
         </div>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm overflow-hidden">
-        <table className="w-full">
-          <thead className="bg-gray-50">
+      <div className='bg-white rounded-lg shadow-sm overflow-hidden'>
+        <table className='w-full'>
+          <thead className='bg-gray-50'>
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Contact
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Property
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Unit
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Lease Ends
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Status
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className='px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider'>
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {tenants.map((tenant) => (
+          <tbody className='bg-white divide-y divide-gray-200'>
+            {tenants.map(tenant => (
               <tr key={tenant.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm font-medium text-gray-900">
-                    {tenant.name}
-                  </div>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <div className='text-sm font-medium text-gray-900'>{tenant.name}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{tenant.email}</div>
-                  <div className="text-sm text-gray-500">{tenant.phone}</div>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <div className='text-sm text-gray-500'>{tenant.email}</div>
+                  <div className='text-sm text-gray-500'>{tenant.phone}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">
-                    {tenant.propertyName}
-                  </div>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <div className='text-sm text-gray-500'>{tenant.propertyName}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{tenant.unitId}</div>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <div className='text-sm text-gray-500'>{tenant.unitId}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <div className="text-sm text-gray-500">{tenant.leaseEnd}</div>
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <div className='text-sm text-gray-500'>{tenant.leaseEnd}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 capitalize">
+                <td className='px-6 py-4 whitespace-nowrap'>
+                  <span className='px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800 capitalize'>
                     {tenant.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                  <Button variant="ghost" className="text-blue-600 hover:text-blue-900">
+                <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
+                  <Button variant='ghost' className='text-blue-600 hover:text-blue-900'>
                     ...
                   </Button>
                 </td>
@@ -121,5 +114,5 @@ export default function TenantsPage() {
         </table>
       </div>
     </div>
-  )
+  );
 }

@@ -1,13 +1,13 @@
 'use client'
 
-import { PropertyDialog } from '@/components/dialogs/property-dialog'
-import type { Property, PropertyCardData } from '@/types/properties'
 import { Box, Button, Card, Chip, Grid, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from '@mui/material'
 import { alpha, useTheme } from '@mui/material/styles'
+import { PropertyDialog } from 'components/dialogs/property-dialog'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useState } from 'react'
 import { Edit2, Plus, Search, Trash2 } from 'react-feather'
+import type { Property, PropertyCardData } from 'types/properties'
 
 // Mock data - replace with your actual data fetching
 const mockProperties: PropertyCardData[] = [
@@ -46,20 +46,66 @@ const itemVariants = {
 }
 
 export default function PropertiesPage() {
-  const theme = useTheme()
-  const [search, setSearch] = useState('')
-  const [openDialog, setOpenDialog] = useState(false)
-  const [selectedProperty, setSelectedProperty] = useState<PropertyCardData | undefined>()
+  const supabase = createClientComponentClient()
+  const theme = useTheme();
+  const [properties, setProperties] = useState<PropertyCardData[]>([]);
+  const [search, setSearch] = useState('');
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedProperty, setSelectedProperty] = useState<PropertyCardData | undefined>();
+  const [loading, setLoading] = useState(true);
 
-  const handleEdit = (property: PropertyCardData) => {
-    setSelectedProperty(property)
-    setOpenDialog(true)
-  }
+  useEffect(() => {
+    async function fetchProperties() {
+      try {
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*, units(*)');
 
-  const handleDelete = (id: string) => {
-    // Add your delete logic here
-    console.log('Delete property:', id)
-  }
+        if (error) throw error;
+
+        if (data) {
+          const transformedData: PropertyCardData[] = data.map(property => ({
+            id: property.id,
+            title: property.name,
+            address: property.address,
+            type: property.type || 'apartment',
+            status: property.status || 'available',
+            price: property.units[0]?.price || 0,
+            bedrooms: property.units[0]?.bedrooms || 0,
+            bathrooms: property.units[0]?.bathrooms || 0,
+            image: property.image_url || '/properties/default.jpg'
+          }));
+          setProperties(transformedData);
+        }
+      } catch (error) {
+        console.error('Error fetching properties:', error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    void fetchProperties();
+  }, [supabase]);
+
+  const handleEdit = async (property: PropertyCardData) => {
+    setSelectedProperty(property);
+    setOpenDialog(true);
+  };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const { error } = await supabase
+        .from('properties')
+        .delete()
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setProperties(prev => prev.filter(p => p.id !== id));
+    } catch (error) {
+      console.error('Error deleting property:', error);
+    }
+  };
 
   const filteredProperties = mockProperties.filter(
     property =>
@@ -173,9 +219,9 @@ export default function PropertiesPage() {
           </Typography>
         </Card>
       ) : (
-        <Grid container spacing={3}>
+        <Grid2 container spacing={3}>
           {filteredProperties.map((property) => (
-            <Grid key={property.id} item xs={12} sm={6} md={4}>
+            <Grid2 key={property.id} xs={12} sm={6} md={4}>
               <motion.div variants={itemVariants}>
                 <Card
                   sx={{

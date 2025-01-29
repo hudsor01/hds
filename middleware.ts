@@ -3,6 +3,9 @@ import { NextResponse } from 'next/server';
 
 import { type CookieOptions, createServerClient } from '@supabase/ssr';
 
+// Define public routes that don't require authentication
+const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
+
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
 
@@ -34,7 +37,12 @@ export async function middleware(req: NextRequest) {
 
   const {
     data: { session },
+    error,
   } = await supabase.auth.getSession();
+
+  if (error) {
+    return NextResponse.json({ error: 'Authentication Error' }, { status: 401 });
+  }
 
   // Protect all dashboard routes
   if (req.nextUrl.pathname.startsWith('/dashboard') && !session) {

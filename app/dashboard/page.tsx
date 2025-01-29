@@ -1,16 +1,14 @@
 'use client';
 
+import { getRecentActivity } from '@/auth/lib/actions';
+import { MetricsGrid } from 'components/dashboard/metrics-grid';
+import { QuickActions } from 'components/dashboard/quick-actions';
+import { RecentActivityList } from 'components/dashboard/recent-activity';
 import { motion } from 'framer-motion';
 
 import { Suspense } from 'react';
 
 import { Box, Typography } from '@mui/material';
-
-import { MetricsGrid } from '@/components/dashboard/metrics-grid';
-import { QuickActions } from '@/components/dashboard/quick-actions';
-import { RecentActivityList } from '@/components/dashboard/recent-activity';
-
-import { getRecentActivity } from '@/auth/lib/actions';
 
 const containerVariants = {
   hidden: { opacity: 0 },

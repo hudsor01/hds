@@ -2,6 +2,11 @@
 
 import { cn } from '@/auth/lib/utils';
 import { routes } from '@/routes';
+import { PreferencesMenu } from 'components/preferences-menu';
+import { ThemeSwitcher } from 'components/theme-switcher';
+import { Button } from 'components/ui/button';
+import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
+import { Toaster } from 'components/ui/toaster';
 import { FileText, Home, Menu as MenuIcon, Settings, Users } from 'react-feather';
 
 import type { ReactNode } from 'react';
@@ -9,12 +14,6 @@ import type { ReactNode } from 'react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-
-import { PreferencesMenu } from '@/components/preferences-menu';
-import { ThemeSwitcher } from '@/components/theme-switcher';
-import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
-import { Toaster } from '@/components/ui/toaster';
 
 import { usePerformance } from '@/hooks/use-performance';
 import { usePreferencesSync } from '@/hooks/use-preferences-sync';
