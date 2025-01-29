@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/auth/lib/utils';
 import { Button } from 'components/ui/button';
 import {
   Card,
@@ -11,6 +10,8 @@ import {
   CardTitle,
 } from 'components/ui/card';
 import { Check } from 'react-feather';
+
+import { cn } from '@/lib/utils';
 
 interface PricingCardProps {
   title: string;

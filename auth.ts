@@ -1,72 +1,53 @@
 import { compare } from 'bcryptjs';
-import NextAuth from 'next-auth';
+import NextAuth, { DefaultUser } from 'next-auth';
+import { type JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 
-import type { Adapter, AdapterUser } from '@auth/core/adapters';
 import { PrismaAdapter } from '@auth/prisma-adapter';
 
-import { prisma } from '@/lib/prisma';
-
+import { prisma } from './lib/prisma';
 import type { AuthUserMetadata } from './types/auth-user';
+
+type ExtendedUser = {
+  stripe_customer_id?: string | null;
+  stripe_subscription_id?: string | null;
+  subscription_status?: string | null;
+  trial_ends_at?: Date | null;
+};
 
 declare module 'next-auth' {
   interface Session {
     user: {
+      stripe_customer_id: string | null | undefined;
+      stripe_subscription_id: string | null | undefined;
+      subscription_status: string | null | undefined;
+      trial_ends_at: Date | null | undefined;
       id: string;
       email: string;
-      name?: string | null;
-      image?: string | null;
-      stripe_customer_id?: string | null;
-      stripe_subscription_id?: string | null;
-      subscription_status?: string | null;
-      trial_ends_at?: Date | null;
+      name?: string | undefined;
+      image?: string | undefined;
     };
   }
-  interface User extends AdapterUser {
-    stripe_customer_id?: string | null;
-    stripe_subscription_id?: string | null;
-    subscription_status?: string | null;
-    trial_ends_at?: Date | null;
+
+  interface User extends DefaultUser, ExtendedUser {
+    id: string;
   }
 }
 
-const customAdapter: Adapter = {
-  ...PrismaAdapter(prisma),
-  createUser: async (user: Omit<AdapterUser, 'id'>): Promise<AdapterUser> => {
-    const authUser = await prisma.authUser.create({
-      data: {
-        email: user.email,
-        email_confirmed_at: user.emailVerified,
-        raw_user_meta_data: { name: user.name },
-        encrypted_password: '',
-      },
-    });
+declare module 'next-auth/jwt' {
+  interface JWT extends ExtendedUser {
+    id: string;
+    email: string;
+    name?: string | null;
+    picture?: string | null;
+  }
+}
 
-    const newUser = await prisma.user.create({
-      data: {
-        id: authUser.id,
-        email: user.email,
-        name: user.name ?? null,
-        image: user.image ?? null,
-        emailVerified: user.emailVerified ?? null,
-      },
-    });
-
-    if (!newUser.email) throw new Error('User email is required');
-
-    return {
-      id: newUser.id,
-      email: newUser.email,
-      emailVerified: newUser.emailVerified,
-      name: newUser.name,
-      image: newUser.image,
-    } as AdapterUser;
-  },
-};
+const adapter = PrismaAdapter(prisma);
 
 export const { auth, handlers, signIn, signOut } = NextAuth({
-  adapter: customAdapter,
+  adapter,
   providers: [
     GoogleProvider({
       clientId: process.env.AUTH_GOOGLE_ID!,
@@ -129,20 +110,20 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
     async jwt({ token, user }) {
       if (user) {
         token.id = user.id;
-        token.stripe_customer_id = (user as any).stripe_customer_id;
-        token.stripe_subscription_id = (user as any).stripe_subscription_id;
-        token.subscription_status = (user as any).subscription_status;
-        token.trial_ends_at = (user as any).trial_ends_at;
+        token.stripe_customer_id = user.stripe_customer_id;
+        token.stripe_subscription_id = user.stripe_subscription_id;
+        token.subscription_status = user.subscription_status;
+        token.trial_ends_at = user.trial_ends_at;
       }
       return token;
     },
     async session({ session, token }) {
       if (session?.user && token) {
-        session.user.id = token.id as string;
-        session.user.stripe_customer_id = token.stripe_customer_id as string;
-        session.user.stripe_subscription_id = token.stripe_subscription_id as string;
-        session.user.subscription_status = token.subscription_status as string;
-        session.user.trial_ends_at = token.trial_ends_at as Date;
+        session.user.id = token.id;
+        session.user.stripe_customer_id = token.stripe_customer_id;
+        session.user.stripe_subscription_id = token.stripe_subscription_id;
+        session.user.subscription_status = token.subscription_status;
+        session.user.trial_ends_at = token.trial_ends_at;
       }
       return session;
     },

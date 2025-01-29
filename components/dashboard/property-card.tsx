@@ -8,6 +8,8 @@ export interface PropertyCardProps {
   address: string;
   units: string;
   occupancy: string;
+  onUpdate: () => void;
+  onDelete: () => void;
 }
 
 export function PropertyCard({

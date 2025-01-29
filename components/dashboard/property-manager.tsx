@@ -14,20 +14,25 @@ import { useDashboardUpdates } from '@/hooks/use-dashboard-updates';
 import type {
   CreatePropertyInput,
   Property,
+  PropertyStatus,
   PropertyUnit,
   UpdatePropertyInput,
-  PropertyStatus,
 } from '@/types/properties';
 
 import { CrudContainer } from './crud-container';
 import { PropertyCard } from './property-card';
+
+type PropertyWithoutIdAndUnits = Omit<Property, 'id' | 'units'>;
 
 export function PropertyManager() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
-  const { create, update, remove, getAll, loading } = useDashboardCrud<Property>({
+  const { create, update, remove, getAll, loading } = useDashboardCrud<
+    Property,
+    PropertyWithoutIdAndUnits
+  >({
     table: 'properties',
     select: '*, units(*)',
   });
@@ -46,7 +51,9 @@ export function PropertyManager() {
     const fetchProperties = async () => {
       try {
         const data = await getAll();
-        if (data) setProperties(data);
+        if (Array.isArray(data)) {
+          setProperties(data as Property[]);
+        }
       } catch (error) {
         toast.error('Failed to fetch properties');
       }
@@ -79,11 +86,41 @@ export function PropertyManager() {
 
   const getOccupiedUnits = (units?: PropertyUnit[]) => {
     if (!units) return 0;
-    return units.filter(unit => unit.status === 'OCCUPIED' as PropertyStatus).length;
+    return units.filter(unit => unit.status === ('OCCUPIED' as PropertyStatus)).length;
   };
 
   const getTotalUnits = (units?: PropertyUnit[]) => {
     return units?.length || 0;
+  };
+
+  const handleSubmitProperty = async (data: CreatePropertyInput) => {
+    try {
+      if (selectedProperty) {
+        const updateData: UpdatePropertyInput = {
+          name: data.name,
+          address: data.address,
+          city: data.city,
+          state: data.state,
+          zipCode: data.zipCode,
+          type: data.type,
+          status: data.status,
+        };
+        await handleUpdateProperty(selectedProperty, updateData);
+      } else {
+        const newPropertyData: PropertyWithoutIdAndUnits = {
+          ...data,
+          owner_id: 'default',
+          organization_id: 'default',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+        await create(newPropertyData);
+      }
+      setDialogOpen(false);
+      toast.success(`Property ${selectedProperty ? 'updated' : 'created'} successfully`);
+    } catch (error) {
+      toast.error(`Failed to ${selectedProperty ? 'update' : 'create'} property`);
+    }
   };
 
   return (
@@ -91,7 +128,10 @@ export function PropertyManager() {
       table='properties'
       title='Properties'
       loading={loading}
-      onItemCreated={item => setProperties(prev => [...prev, item as Property])}
+      onItemCreated={(item: unknown) => {
+        const property = item as Property;
+        setProperties(prev => [...prev, property]);
+      }}
     >
       <div className='flex justify-end mb-4'>
         <Button onClick={handleAddProperty}>
@@ -107,7 +147,7 @@ export function PropertyManager() {
             address={property.address}
             units={`${getTotalUnits(property.units)} Units`}
             occupancy={`${getOccupiedUnits(property.units)}/${getTotalUnits(property.units)}`}
-            onEdit={() => {
+            onUpdate={() => {
               setSelectedProperty(property);
               setDialogOpen(true);
             }}
@@ -122,19 +162,7 @@ export function PropertyManager() {
           if (!open) setSelectedProperty(null);
         }}
         property={selectedProperty}
-        onSubmitAction={async (data: CreatePropertyInput) => {
-          try {
-            if (selectedProperty) {
-              await handleUpdateProperty(selectedProperty, data);
-            } else {
-              await create(data);
-            }
-            setDialogOpen(false);
-            toast.success(`Property ${selectedProperty ? 'updated' : 'created'} successfully`);
-          } catch (error) {
-            toast.error(`Failed to ${selectedProperty ? 'update' : 'create'} property`);
-          }
-        }}
+        onSubmitAction={handleSubmitProperty}
       />
     </CrudContainer>
   );

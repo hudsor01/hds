@@ -1,7 +1,6 @@
 'use client';
 
 import { CalendarIcon, Check } from '-react';
-import { cn } from '@/auth/lib/utils';
 import { Button } from 'components/ui/button';
 import { Calendar } from 'components/ui/calendar';
 import { Command, CommandGroup, CommandItem } from 'components/ui/command';
@@ -11,6 +10,8 @@ import { format, startOfYear, subDays, subMonths } from 'date-fns';
 import { DateRange } from 'react-day-picker';
 
 import * as React from 'react';
+
+import { cn } from '@/lib/utils';
 
 interface DateRangePickerProps {
   value: DateRange;

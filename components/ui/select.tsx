@@ -1,12 +1,13 @@
 'use client';
 
-import { cn } from '@/auth/lib/utils';
 import { Icon } from 'components/ui/icon';
 
 import * as React from 'react';
 
 import type { SelectProps as MuiSelectProps } from '@mui/material';
 import { FormControl, MenuItem, Select as MuiSelect, styled } from '@mui/material';
+
+import { cn } from '@/lib/utils';
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   '& .MuiOutlinedInput-notchedOutline': {

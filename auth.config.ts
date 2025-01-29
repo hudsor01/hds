@@ -1,4 +1,4 @@
-import type { NextAuthConfig, Session, User } from 'next-auth';
+import { Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 
 import { createClient } from '@supabase/supabase-js';
@@ -17,7 +17,7 @@ const supabase = createClient(
 );
 
 // Define custom interface for user attributes
-interface CustomUser extends User {
+interface CustomUser {
   id: string;
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;

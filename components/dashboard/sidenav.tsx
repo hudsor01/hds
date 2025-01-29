@@ -2,7 +2,6 @@
 
 import { signOut } from '@/auth';
 import { NAVIGATION_LINKS } from '@/auth/lib/constants';
-import { cn } from '@/auth/lib/utils';
 import { Button } from 'components/ui/button';
 import { ChevronLeft, ChevronRight, Home, LogOut } from 'react-feather';
 
@@ -10,6 +9,8 @@ import { useState } from 'react';
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { cn } from '@/lib/utils';
 
 export default function SideNav() {
   const pathname = usePathname();

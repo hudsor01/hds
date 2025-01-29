@@ -1,6 +1,5 @@
 'use client';
 
-import { cn } from '@/auth/lib/utils';
 import { routes } from '@/routes';
 import { PreferencesMenu } from 'components/preferences-menu';
 import { ThemeSwitcher } from 'components/theme-switcher';
@@ -14,6 +13,8 @@ import type { ReactNode } from 'react';
 import type { Route } from 'next';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+
+import { cn } from '@/lib/utils';
 
 import { usePerformance } from '@/hooks/use-performance';
 import { usePreferencesSync } from '@/hooks/use-preferences-sync';
