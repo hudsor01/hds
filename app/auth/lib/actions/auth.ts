@@ -11,6 +11,8 @@ import { redirect } from 'next/navigation';
 
 import { createSession } from '@/lib/session';
 
+import { type RecentActivity } from '../types/dashboard';
+
 const prisma = new PrismaClient();
 
 const authService = new AuthService();
@@ -88,4 +90,43 @@ export async function register(data: RegisterFormData): Promise<{ success: boole
   await sendVerificationEmail(email, verificationToken.token);
 
   return { success: true };
+}
+
+export async function getRecentActivity(): Promise<RecentActivity[]> {
+  // TODO: Implement actual data fetching from your database
+  // This is a mock implementation for now
+  return [
+    {
+      id: '1',
+      type: 'APPLICATION',
+      title: 'New Rental Application',
+      description: 'John Doe submitted a rental application for 123 Main St',
+      timestamp: new Date().toISOString(),
+      status: 'pending',
+      propertyId: 'prop_1',
+      applicationId: 'app_1',
+    },
+    {
+      id: '2',
+      type: 'MAINTENANCE',
+      title: 'Maintenance Request',
+      description: 'Plumbing issue reported at 456 Oak Ave',
+      timestamp: new Date().toISOString(),
+      status: 'completed',
+      propertyId: 'prop_2',
+      maintenanceId: 'maint_1',
+    },
+    {
+      id: '3',
+      type: 'PAYMENT',
+      title: 'Rent Payment Received',
+      description: 'Monthly rent payment received from tenant',
+      timestamp: new Date().toISOString(),
+      status: 'completed',
+      amount: 1500,
+      propertyId: 'prop_3',
+      tenantId: 'tenant_1',
+      paymentId: 'pay_1',
+    },
+  ];
 }
