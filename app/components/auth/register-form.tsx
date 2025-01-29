@@ -1,5 +1,6 @@
 'use client';
 
+import { register } from '@/auth/lib/actions';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AnimatePresence, motion } from 'framer-motion';
 import { signIn } from 'next-auth/react';
@@ -10,8 +11,10 @@ import { z } from 'zod';
 
 import { useState } from 'react';
 
-import { useRouter } from 'next/navigation';
+import { Route } from 'next';
+import { useRouter, useSearchParams } from 'next/navigation';
 
+import { PasswordStrengthIndicator } from '@/components/auth/PasswordStrengthIndicator';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form';
@@ -19,26 +22,37 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Separator } from '@/components/ui/separator';
 
-const loginSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, 'Name must be at least 2 characters'),
+    email: z.string().email('Please enter a valid email address'),
+    password: z.string().min(6, 'Password must be at least 6 characters'),
+    confirmPassword: z.string(),
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword'],
+  });
 
-type LoginFormData = z.infer<typeof loginSchema>;
+type RegisterFormData = z.infer<typeof registerSchema>;
 
 type FormState = {
   errors?: {
+    name?: string[];
     email?: string[];
     password?: string[];
+    confirmPassword?: string[];
   };
   message?: string;
 } | null;
 
 async function authenticate(prevState: FormState, formData: FormData) {
   try {
-    const validatedFields = loginSchema.safeParse({
+    const validatedFields = registerSchema.safeParse({
+      name: formData.get('name'),
       email: formData.get('email'),
       password: formData.get('password'),
+      confirmPassword: formData.get('confirmPassword'),
     });
 
     if (!validatedFields.success) {
@@ -48,15 +62,11 @@ async function authenticate(prevState: FormState, formData: FormData) {
       };
     }
 
-    const result = await signIn('credentials', {
-      email: validatedFields.data.email,
-      password: validatedFields.data.password,
-      redirect: false,
-    });
+    const result = await register(undefined, formData);
 
-    if (result?.error) {
+    if (result.error) {
       return {
-        message: 'Invalid email or password',
+        message: result.error,
       };
     }
 
@@ -68,34 +78,66 @@ async function authenticate(prevState: FormState, formData: FormData) {
   }
 }
 
-export function LoginForm() {
+export function RegisterForm() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = (searchParams.get('callbackUrl') || '/dashboard') as Route;
   const [state, formAction] = useFormState(authenticate, null);
   const { pending } = useFormStatus();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const form = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
+  const form = useForm<RegisterFormData>({
+    resolver: zodResolver(registerSchema),
     defaultValues: {
+      name: '',
       email: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
   const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
-    signIn('google', { callbackUrl: '/dashboard' });
+    signIn('google', { callbackUrl });
   };
 
   return (
     <Card className='w-full max-w-md mx-auto shadow-lg animate-fade-in'>
       <CardHeader className='space-y-1'>
-        <CardTitle className='text-2xl font-bold'>Welcome back</CardTitle>
-        <CardDescription>Sign in to your account to continue</CardDescription>
+        <CardTitle className='text-2xl font-bold'>Create an account</CardTitle>
+        <CardDescription>Enter your information to get started</CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
           <form action={formAction} className='space-y-4'>
+            <FormField
+              control={form.control}
+              name='name'
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Full Name</Label>
+                  <FormControl>
+                    <Input
+                      type='text'
+                      placeholder='John Doe'
+                      disabled={pending}
+                      className='transition-all duration-200'
+                      {...field}
+                    />
+                  </FormControl>
+                  {state?.errors?.name && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className='text-sm text-red-500'
+                    >
+                      {state.errors.name[0]}
+                    </motion.p>
+                  )}
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name='email'
@@ -139,6 +181,7 @@ export function LoginForm() {
                       {...field}
                     />
                   </FormControl>
+                  <PasswordStrengthIndicator password={field.value} />
                   {state?.errors?.password && (
                     <motion.p
                       initial={{ opacity: 0, y: -10 }}
@@ -146,6 +189,34 @@ export function LoginForm() {
                       className='text-sm text-red-500'
                     >
                       {state.errors.password[0]}
+                    </motion.p>
+                  )}
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name='confirmPassword'
+              render={({ field }) => (
+                <FormItem>
+                  <Label>Confirm Password</Label>
+                  <FormControl>
+                    <Input
+                      type='password'
+                      placeholder='Confirm your password'
+                      disabled={pending}
+                      className='transition-all duration-200'
+                      {...field}
+                    />
+                  </FormControl>
+                  {state?.errors?.confirmPassword && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className='text-sm text-red-500'
+                    >
+                      {state.errors.confirmPassword[0]}
                     </motion.p>
                   )}
                 </FormItem>
@@ -173,10 +244,10 @@ export function LoginForm() {
               {pending ? (
                 <>
                   <Loader className='w-4 h-4 mr-2 animate-spin' />
-                  Signing in...
+                  Creating account...
                 </>
               ) : (
-                'Sign in'
+                'Create account'
               )}
             </Button>
 
@@ -223,16 +294,16 @@ export function LoginForm() {
                   />
                 </svg>
               )}
-              <span className='text-sm font-medium tracking-wide'>Sign in with Google</span>
+              <span className='text-sm font-medium tracking-wide'>Sign up with Google</span>
             </Button>
 
             <p className='text-center text-sm text-muted-foreground'>
-              Don't have an account?{' '}
+              Already have an account?{' '}
               <a
-                href='/auth/register'
+                href='/auth/login'
                 className='font-medium text-primary hover:opacity-90 transition-opacity'
               >
-                Sign up
+                Sign in
               </a>
             </p>
           </form>

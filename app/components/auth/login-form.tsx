@@ -1,117 +1,160 @@
-'use client'
+'use client';
 
-import Image from 'next/image'
-import Link from 'next/link'
+import { signIn } from 'next-auth/react';
+import { Loader } from 'react-feather';
+
+import { useState } from 'react';
+
+import { Route } from 'next';
+import { useRouter, useSearchParams } from 'next/navigation';
+
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 export function LoginForm() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const callbackUrl = (searchParams.get('callbackUrl') || '/dashboard') as Route;
+
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+
+  async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    setIsLoading(true);
+    setError(null);
+
+    try {
+      const result = await signIn('credentials', {
+        redirect: false,
+        email: formData.email,
+        password: formData.password,
+        callbackUrl,
+      });
+
+      if (!result?.error) {
+        router.push(callbackUrl);
+      } else {
+        setError('Invalid email or password');
+      }
+    } catch (error) {
+      setError('An error occurred. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  }
+
   return (
-    <section className="relative flex flex-wrap lg:h-screen lg:items-center">
-      <div className="w-full px-4 py-12 sm:px-6 sm:py-16 lg:w-1/2 lg:px-8 lg:py-24">
-        <div className="mx-auto max-w-lg text-center">
-          <h1 className="text-2xl font-bold sm:text-3xl">Welcome back! 👋</h1>
+    <Card className='w-full max-w-md mx-auto'>
+      <CardHeader className='space-y-1'>
+        <CardTitle className='text-2xl font-bold'>Welcome back</CardTitle>
+        <CardDescription>Sign in to your account to continue</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <form onSubmit={handleSubmit} className='space-y-4'>
+          {error && <div className='p-3 text-sm text-red-500 bg-red-50 rounded-md'>{error}</div>}
 
-          <p className="mt-4 text-gray-500">
-            Sign in to your account to continue managing your properties and tenants efficiently.
+          <div className='space-y-2'>
+            <Label htmlFor='email'>Email</Label>
+            <Input
+              id='email'
+              type='email'
+              placeholder='name@example.com'
+              value={formData.email}
+              onChange={e => setFormData({ ...formData, email: e.target.value })}
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          <div className='space-y-2'>
+            <Label htmlFor='password'>Password</Label>
+            <Input
+              id='password'
+              type='password'
+              placeholder='Enter your password'
+              value={formData.password}
+              onChange={e => setFormData({ ...formData, password: e.target.value })}
+              required
+              disabled={isLoading}
+            />
+          </div>
+
+          <Button type='submit' className='w-full' disabled={isLoading}>
+            {isLoading ? (
+              <>
+                <Loader className='mr-2 h-4 w-4 animate-spin' />
+                Signing in...
+              </>
+            ) : (
+              'Sign in'
+            )}
+          </Button>
+
+          <div className='relative'>
+            <div className='absolute inset-0 flex items-center'>
+              <div className='w-full border-t' />
+            </div>
+            <div className='relative flex justify-center text-xs uppercase'>
+              <span className='bg-background px-2 text-muted-foreground'>Or continue with</span>
+            </div>
+          </div>
+
+          <Button
+            type='button'
+            variant='outline'
+            className='w-full h-10 flex items-center justify-center gap-3 px-4 py-0 border border-gray-200 rounded-md bg-white hover:bg-gray-50 shadow-xs transition-all'
+            onClick={() => signIn('google', { callbackUrl })}
+            disabled={isLoading}
+            style={{
+              fontFamily: 'Roboto, arial, sans-serif',
+              color: 'rgb(68, 67, 67)',
+            }}
+          >
+            {isLoading ? (
+              <Loader className='h-[18px] w-[18px] animate-spin' />
+            ) : (
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                viewBox='0 0 48 48'
+                className='h-[18px] w-[18px]'
+                aria-hidden='true'
+              >
+                <path
+                  fill='#EA4335'
+                  d='M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z'
+                />
+                <path
+                  fill='#4285F4'
+                  d='M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z'
+                />
+                <path
+                  fill='#FBBC05'
+                  d='M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z'
+                />
+                <path
+                  fill='#34A853'
+                  d='M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.15 1.45-4.92 2.3-8.16 2.3-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z'
+                />
+              </svg>
+            )}
+            <span className='text-sm font-medium tracking-wide'>Sign in with Google</span>
+          </Button>
+
+          <p className='text-center text-sm text-muted-foreground'>
+            Don't have an account?{' '}
+            <a href='/auth/register' className='underline underline-offset-4 hover:text-primary'>
+              Sign up
+            </a>
           </p>
-        </div>
-
-        <form action="#" className="mx-auto mb-0 mt-8 max-w-md space-y-4">
-          <div>
-            <label htmlFor="email" className="sr-only">
-              Email
-            </label>
-
-            <div className="relative">
-              <input
-                type="email"
-                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-xs"
-                placeholder="Enter email"
-              />
-
-              <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="size-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-
-          <div>
-            <label htmlFor="password" className="sr-only">
-              Password
-            </label>
-
-            <div className="relative">
-              <input
-                type="password"
-                className="w-full rounded-lg border-gray-200 p-4 pe-12 text-sm shadow-xs"
-                placeholder="Enter password"
-              />
-
-              <span className="absolute inset-y-0 end-0 grid place-content-center px-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="size-4 text-gray-400"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                  />
-                </svg>
-              </span>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-500">
-              No account?{' '}
-              <Link href="/auth/register" className="underline">
-                Sign up
-              </Link>
-            </p>
-
-            <button
-              type="submit"
-              className="inline-block rounded-lg bg-blue-500 px-5 py-3 text-sm font-medium text-white hover:bg-blue-600 focus:outline-hidden focus:ring-3"
-            >
-              Sign in
-            </button>
-          </div>
         </form>
-      </div>
-
-      <div className="relative h-64 w-full sm:h-96 lg:h-full lg:w-1/2">
-        <Image
-          alt="Welcome"
-          src="https://images.unsplash.com/photo-1630450202872-e0829c9d6172"
-          className="absolute inset-0 h-full w-full object-cover"
-          width={1200}
-          height={800}
-          priority
-        />
-      </div>
-    </section>
-  )
+      </CardContent>
+    </Card>
+  );
 }
