@@ -1,10 +1,9 @@
 'use client';
 
 import { PlusIcon } from '@heroicons/react/24/outline';
-import { PropertyDialog } from 'components/dashboard/property-dialog';
-import { Button } from 'components/ui/button';
-import { useToast } from 'components/ui/use-toast';
-import type { Property } from 'types/properties';
+import { PropertyDialog } from '@/components/dashboard/property-dialog';
+import { Button } from '@/components/ui/button';
+import type { Property } from '@/types/properties';
 
 import { useEffect, useState } from 'react';
 
@@ -17,7 +16,6 @@ import { PropertyCard } from './property-card';
 export function PropertyManager() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const { toast } = useToast();
 
   const { create, update, remove, getAll, loading } = useDashboardCrud<Property>({
     table: 'properties',

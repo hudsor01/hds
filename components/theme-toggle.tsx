@@ -2,7 +2,7 @@
 
 import { Button } from 'components/ui/button';
 import { useTheme } from 'next-themes';
-import * as feather from 'react-feather';
+import { Moon, Sun } from 'react-feather';
 
 import { useEffect, useState } from 'react';
 
@@ -21,15 +21,7 @@ export function ThemeToggle() {
       className='w-9 h-9'
     >
       <span className='sr-only'>Toggle theme</span>
-      <span
-        dangerouslySetInnerHTML={{
-          __html: feather.icons[theme === 'dark' ? 'sun' : 'moon'].toSvg({
-            width: 16,
-            height: 16,
-            class: 'text-current',
-          }),
-        }}
-      />
+      {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
     </Button>
   );
 }

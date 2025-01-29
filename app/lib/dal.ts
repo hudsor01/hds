@@ -1,7 +1,7 @@
 'use server';
 
-import { prisma } from '@/lib/prisma';
-import { getSession } from '@/lib/session';
+import { prisma } from '../lib/prisma';
+import { getSession } from '../lib/session';
 
 export async function getUser() {
   const session = await getSession();

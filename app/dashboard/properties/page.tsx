@@ -1,13 +1,30 @@
-'use client'
+'use client';
 
-import { Box, Button, Card, Chip, Grid, IconButton, InputAdornment, Stack, TextField, Tooltip, Typography } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { PropertyDialog } from 'components/dialogs/property-dialog'
-import { motion } from 'framer-motion'
-import Image from 'next/image'
-import { useState } from 'react'
-import { Edit2, Plus, Search, Trash2 } from 'react-feather'
-import type { Property, PropertyCardData } from 'types/properties'
+import { PropertyDialog } from 'components/dialogs/property-dialog';
+import { motion } from 'framer-motion';
+import { Edit2, Plus, Search, Trash2 } from 'react-feather';
+import type { Property, PropertyCardData } from 'types/properties';
+
+import { useEffect, useState } from 'react';
+
+import Image from 'next/image';
+
+import {
+  Box,
+  Button,
+  Card,
+  Chip,
+  Grid2,
+  IconButton,
+  InputAdornment,
+  Stack,
+  TextField,
+  Tooltip,
+  Typography,
+} from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
+
+import { SupabaseAuthClient } from '@supabase/supabase-js/dist/module/lib/SupabaseAuthClient';
 
 // Mock data - replace with your actual data fetching
 const mockProperties: PropertyCardData[] = [
@@ -20,7 +37,7 @@ const mockProperties: PropertyCardData[] = [
     price: 2500,
     bedrooms: 2,
     bathrooms: 2,
-    image: '/properties/apartment-1.jpg'
+    image: '/properties/apartment-1.jpg',
   },
   {
     id: '2',
@@ -31,22 +48,21 @@ const mockProperties: PropertyCardData[] = [
     price: 3500,
     bedrooms: 3,
     bathrooms: 2.5,
-    image: '/properties/house-1.jpg'
-  }
-]
+    image: '/properties/house-1.jpg',
+  },
+];
 
 const containerVariants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
-}
+  animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
+};
 
 const itemVariants = {
   initial: { y: 20, opacity: 0 },
-  animate: { y: 0, opacity: 1 }
-}
+  animate: { y: 0, opacity: 1 },
+};
 
 export default function PropertiesPage() {
-  const supabase = createClientComponentClient()
   const theme = useTheme();
   const [properties, setProperties] = useState<PropertyCardData[]>([]);
   const [search, setSearch] = useState('');
@@ -57,7 +73,7 @@ export default function PropertiesPage() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const { data, error } = await supabase
+        const { data, error } = await new SupabaseAuthClient()
           .from('properties')
           .select('*, units(*)');
 
@@ -73,7 +89,7 @@ export default function PropertiesPage() {
             price: property.units[0]?.price || 0,
             bedrooms: property.units[0]?.bedrooms || 0,
             bathrooms: property.units[0]?.bathrooms || 0,
-            image: property.image_url || '/properties/default.jpg'
+            image: property.image_url || '/properties/default.jpg',
           }));
           setProperties(transformedData);
         }
@@ -85,7 +101,7 @@ export default function PropertiesPage() {
     }
 
     void fetchProperties();
-  }, [supabase]);
+  }, [SupabaseAuthClient]);
 
   const handleEdit = async (property: PropertyCardData) => {
     setSelectedProperty(property);
@@ -94,10 +110,7 @@ export default function PropertiesPage() {
 
   const handleDelete = async (id: string) => {
     try {
-      const { error } = await supabase
-        .from('properties')
-        .delete()
-        .eq('id', id);
+      const { error } = await SupabaseAuthClient.from('properties').delete().eq('id', id);
 
       if (error) throw error;
 
@@ -110,13 +123,13 @@ export default function PropertiesPage() {
   const filteredProperties = mockProperties.filter(
     property =>
       property.title.toLowerCase().includes(search.toLowerCase()) ||
-      property.address.toLowerCase().includes(search.toLowerCase())
-  )
+      property.address.toLowerCase().includes(search.toLowerCase()),
+  );
 
   const convertToProperty = (cardData: PropertyCardData): Property => {
-    const [street, cityState] = cardData.address.split(',')
-    const [city, stateZip] = (cityState || '').trim().split(',')
-    const [state, zipCode] = (stateZip || '').trim().split(' ')
+    const [street, cityState] = cardData.address.split(',');
+    const [city, stateZip] = (cityState || '').trim().split(',');
+    const [state, zipCode] = (stateZip || '').trim().split(' ');
 
     return {
       id: cardData.id,
@@ -127,38 +140,34 @@ export default function PropertiesPage() {
       zipCode: zipCode || '',
       type: cardData.type,
       status: cardData.status,
-      units: [{
-        id: '1',
-        number: '1',
-        bedrooms: cardData.bedrooms,
-        bathrooms: cardData.bathrooms,
-        price: cardData.price,
-        status: cardData.status,
-        property_id: cardData.id,
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }],
+      units: [
+        {
+          id: '1',
+          number: '1',
+          bedrooms: cardData.bedrooms,
+          bathrooms: cardData.bathrooms,
+          price: cardData.price,
+          status: cardData.status,
+          property_id: cardData.id,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        },
+      ],
       owner_id: '1', // Replace with actual owner ID
       organization_id: '1', // Replace with actual organization ID
       createdAt: new Date(),
-      updatedAt: new Date()
-    }
-  }
+      updatedAt: new Date(),
+    };
+  };
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-    >
+    <motion.div variants={containerVariants} initial='initial' animate='animate'>
       {/* Header */}
       <Box sx={{ mb: 4 }}>
-        <Typography variant="h4" gutterBottom>
+        <Typography variant='h4' gutterBottom>
           Properties
         </Typography>
-        <Typography color="text.secondary">
-          Manage your property portfolio
-        </Typography>
+        <Typography color='text.secondary'>Manage your property portfolio</Typography>
       </Box>
 
       {/* Actions */}
@@ -170,11 +179,11 @@ export default function PropertiesPage() {
       >
         <TextField
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Search properties..."
+          onChange={e => setSearch(e.target.value)}
+          placeholder='Search properties...'
           InputProps={{
             startAdornment: (
-              <InputAdornment position="start">
+              <InputAdornment position='start'>
                 <Search size={20} />
               </InputAdornment>
             ),
@@ -182,11 +191,11 @@ export default function PropertiesPage() {
           sx={{ flex: 1 }}
         />
         <Button
-          variant="contained"
+          variant='contained'
           startIcon={<Plus size={20} />}
           onClick={() => {
-            setSelectedProperty(undefined)
-            setOpenDialog(true)
+            setSelectedProperty(undefined);
+            setOpenDialog(true);
           }}
           sx={{ minWidth: 200 }}
         >
@@ -205,22 +214,22 @@ export default function PropertiesPage() {
           }}
         >
           <Image
-            src="/illustrations/no-data.svg"
-            alt="No properties"
+            src='/illustrations/no-data.svg'
+            alt='No properties'
             width={180}
             height={180}
             style={{ marginBottom: 16, opacity: 0.7 }}
           />
-          <Typography variant="h6" paragraph>
+          <Typography variant='h6' paragraph>
             No properties found
           </Typography>
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant='body2' color='text.secondary'>
             Try adjusting your search or add a new property
           </Typography>
         </Card>
       ) : (
         <Grid2 container spacing={3}>
-          {filteredProperties.map((property) => (
+          {filteredProperties.map(property => (
             <Grid2 key={property.id} xs={12} sm={6} md={4}>
               <motion.div variants={itemVariants}>
                 <Card
@@ -255,39 +264,33 @@ export default function PropertiesPage() {
 
                   {/* Property Details */}
                   <Box sx={{ p: 3 }}>
-                    <Typography variant="subtitle1" noWrap paragraph>
+                    <Typography variant='subtitle1' noWrap paragraph>
                       {property.title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary" noWrap sx={{ mb: 2 }}>
+                    <Typography variant='body2' color='text.secondary' noWrap sx={{ mb: 2 }}>
                       {property.address}
                     </Typography>
 
-                    <Stack direction="row" alignItems="center" spacing={3} sx={{ mb: 2 }}>
-                      <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography variant="subtitle1">
-                          ${property.price}
-                        </Typography>
-                        <Typography variant="caption" color="text.secondary">
+                    <Stack direction='row' alignItems='center' spacing={3} sx={{ mb: 2 }}>
+                      <Stack direction='row' alignItems='center' spacing={1}>
+                        <Typography variant='subtitle1'>${property.price}</Typography>
+                        <Typography variant='caption' color='text.secondary'>
                           /month
                         </Typography>
                       </Stack>
-                      <Stack direction="row" spacing={1}>
-                        <Typography variant="body2">
-                          {property.bedrooms} beds
-                        </Typography>
-                        <Typography variant="body2" color="text.secondary">
+                      <Stack direction='row' spacing={1}>
+                        <Typography variant='body2'>{property.bedrooms} beds</Typography>
+                        <Typography variant='body2' color='text.secondary'>
                           •
                         </Typography>
-                        <Typography variant="body2">
-                          {property.bathrooms} baths
-                        </Typography>
+                        <Typography variant='body2'>{property.bathrooms} baths</Typography>
                       </Stack>
                     </Stack>
 
-                    <Stack direction="row" spacing={1}>
-                      <Tooltip title="Edit">
+                    <Stack direction='row' spacing={1}>
+                      <Tooltip title='Edit'>
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => handleEdit(property)}
                           sx={{
                             color: 'primary.main',
@@ -300,9 +303,9 @@ export default function PropertiesPage() {
                           <Edit2 size={16} />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title="Delete">
+                      <Tooltip title='Delete'>
                         <IconButton
-                          size="small"
+                          size='small'
                           onClick={() => handleDelete(property.id)}
                           sx={{
                             color: 'error.main',
@@ -319,9 +322,9 @@ export default function PropertiesPage() {
                   </Box>
                 </Card>
               </motion.div>
-            </Grid>
+            </Grid2>
           ))}
-        </Grid>
+        </Grid2>
       )}
 
       {/* Add/Edit Dialog */}
@@ -329,12 +332,14 @@ export default function PropertiesPage() {
         open={openDialog}
         onOpenChangeAction={setOpenDialog}
         property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
-        onSubmitAction={async (data: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>) => {
+        onSubmitAction={async (
+          data: Omit<Property, 'id' | 'created_at' | 'owner_id' | 'organization_id'>,
+        ) => {
           // Add your submit logic here
-          console.log('Submit property:', data)
-          setOpenDialog(false)
+          console.log('Submit property:', data);
+          setOpenDialog(false);
         }}
       />
     </motion.div>
-  )
+  );
 }

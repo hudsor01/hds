@@ -1,7 +1,7 @@
 'use client';
 
-import { Providers } from 'components/providers';
 import { AuthProvider } from 'components/providers/auth-provider';
+import { Providers } from 'components/providers/providers';
 
 import { StrictMode } from 'react';
 

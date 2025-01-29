@@ -1,10 +1,7 @@
+import { supabase } from '@/app/auth/lib/supabase';
 import { toast } from 'sonner';
 
 import { useState } from 'react';
-
-import { createClient } from '@/utils/supabase/server';
-
-const supabase = createClient({});
 
 interface Entity {
   id: string;
@@ -26,8 +23,7 @@ export function useDashboardCrud<T extends Entity>(options: UseDashboardCrudOpti
   const handleError = (error: Error) => {
     setError(error);
     onError?.(error);
-    toast({
-      description: error.message,
+    toast(error.message, {
       variant: 'destructive',
     });
   };
@@ -43,9 +39,8 @@ export function useDashboardCrud<T extends Entity>(options: UseDashboardCrudOpti
 
       if (error) throw error;
       onSuccess?.(result as T);
-      toast({
+      toast('Item created successfully', {
         title: 'Success',
-        description: 'Item created successfully',
       });
       return result as T;
     } catch (error) {
@@ -68,9 +63,8 @@ export function useDashboardCrud<T extends Entity>(options: UseDashboardCrudOpti
 
       if (error) throw error;
       onSuccess?.(result as T);
-      toast({
+      toast('Item updated successfully', {
         title: 'Success',
-        description: 'Item updated successfully',
       });
       return result as T;
     } catch (error) {
@@ -86,9 +80,8 @@ export function useDashboardCrud<T extends Entity>(options: UseDashboardCrudOpti
     try {
       const { error } = await supabase.from(table).delete().eq('id', id);
       if (error) throw error;
-      toast({
+      toast('Item deleted successfully', {
         title: 'Success',
-        description: 'Item deleted successfully',
       });
     } catch (error) {
       handleError(error as Error);
