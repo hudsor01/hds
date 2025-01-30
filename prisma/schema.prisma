@@ -21,7 +21,6 @@ model User {
   subscription_status  String?
   properties           Json[]                 @default([])
   tenancies            Json[]                 @default([])
-  maintenance_requests Json[]                 @default([])
   maintenance_requests maintenance_requests[]
 
   @@map("users")
@@ -85,7 +84,7 @@ model prisma_migrations {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model activities {
-  user_id     String       @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id     String       @default(cuid()) @db.Text
   type        ActivityType
   entity_type EntityType
   entity_id   String
@@ -182,7 +181,7 @@ model ip_blacklist {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model leases {
-  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id     String      @id @default(cuid()) @db.Text
   tenant_id     String
   property_id   String
   type          LeaseType
@@ -318,7 +317,7 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  user_id     String         @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id     String      @id @default(cuid()) @db.Text
   lease_id    String
   tenant_id   String
   property_id String
@@ -345,7 +344,7 @@ model payments {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model profiles {
-  user_id    String    @id @unique(map: "profiles_id_key") @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id    String    @id @default(cuid()) @db.Text
   full_name  String
   email      String    @unique
   phone      String?

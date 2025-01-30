@@ -1,5 +1,5 @@
 import { useAuth } from '@clerk/nextjs';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '../lib/prisma';
 
 export async function checkRole(requiredRole: string[], organizationId: string) {
   const { userId } = useAuth();
@@ -8,21 +8,17 @@ export async function checkRole(requiredRole: string[], organizationId: string) 
     throw new Error('Unauthorized');
   }
 
-  const member = await prisma.organizationMember.findUnique({
+  const organization = await prisma.organizations.findFirst({
     where: {
-      userId_organizationId: {
-        userId,
-        organizationId,
-      },
-    },
-    include: {
-      permissions: true,
+      id: organizationId,
+      user_id: userId, // This should match your Clerk userId
     },
   });
 
-  if (!member || !requiredRole.includes(member.role)) {
-    throw new Error('Insufficient permissions');
+  if (organization) {
+    // Organization owner has all permissions
+    return organization;
   }
 
-  return member;
+  throw new Error('Organization not found or insufficient permissions');
 }
