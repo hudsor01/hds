@@ -7,21 +7,21 @@ datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
   directUrl = env("DIRECT_URL")
-  schemas   = ["private", "public"]
+  schemas   = ["auth", "private", "public"]
 }
 
 model User {
-  id                   String                 @id @default(cuid())
-  name                 String?
-  email                String?                @unique
-  image                String?
-  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  stripe_customer_id   String?
-  subscription_status  String?
-  properties           Json[]                 @default([])
-  tenancies            Json[]                 @default([])
-  maintenance_requests maintenance_requests[]
+  id                 String             @id @default(cuid())
+  name               String?
+  email              String?            @unique
+  image              String?
+  createdAt          DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt          DateTime?          @default(now()) @map("updated_at") @db.Timestamptz(6)
+  stripeCustomerId   String?            @map("stripe_customer_id")
+  subscriptionStatus String?            @map("subscription_status")
+  properties         Json[]             @default([])
+  tenancies          Json[]             @default([])
+  maintenanceRequests MaintenanceRequest[]
 
   @@map("users")
   @@schema("public")
@@ -50,33 +50,32 @@ model Tenancy {
 
 model Account {
   id                String  @id
-  userId            String
+  userId            String  @map("user_id")
   type              String
   provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
+  providerAccountId String  @map("provider_account_id")
+  refreshToken      String? @map("refresh_token")
+  accessToken       String? @map("access_token")
+  expiresAt         Int?    @map("expires_at")
+  tokenType         String? @map("token_type")
   scope             String?
-  id_token          String?
-  session_state     String?
+  idToken           String? @map("id_token")
+  sessionState      String? @map("session_state")
 
   @@unique([provider, providerAccountId])
   @@schema("public")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model prisma_migrations {
-  user_id             String    @id @db.VarChar(36)
+model PrismaMigration {
+  userId             String    @id @map("user_id") @db.VarChar(36)
   checksum            String    @db.VarChar(64)
-  finished_at         DateTime? @db.Timestamptz(6)
-  migration_name      String    @db.VarChar(255)
+  finishedAt         DateTime? @map("finished_at") @db.Timestamptz(6)
+  migrationName      String    @map("migration_name") @db.VarChar(255)
   logs                String?
-  rolled_back_at      DateTime? @db.Timestamptz(6)
-  started_at          DateTime  @default(now()) @db.Timestamptz(6)
-  applied_steps_count Int       @default(0)
-  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  rolledBackAt      DateTime? @map("rolled_back_at") @db.Timestamptz(6)
+  startedAt          DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
+  appliedStepsCount Int       @default(0) @map("applied_steps_count")
+  createdAt          DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("_prisma_migrations")
   @@schema("public")
@@ -84,7 +83,7 @@ model prisma_migrations {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model activities {
-  user_id     String       @default(cuid()) @db.Text
+  user_id     String       @default(dbgenerated("auth.uid()")) @db.Uuid
   type        ActivityType
   entity_type EntityType
   entity_id   String
@@ -181,7 +180,7 @@ model ip_blacklist {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model leases {
-  user_id     String      @id @default(cuid()) @db.Text
+  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
   tenant_id     String
   property_id   String
   type          LeaseType
@@ -293,7 +292,7 @@ model notifications {
 }
 
 model organizations {
-  id         String    @id
+  user_id    String    @id @unique(map: "organizations_id_key") @db.Uuid
   name       String
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @default(now()) @db.Timestamp(6)
@@ -317,14 +316,14 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  user_id     String      @id @default(cuid()) @db.Text
+  user_id     String         @id @default(dbgenerated("auth.uid()")) @db.Uuid
   lease_id    String
   tenant_id   String
   property_id String
   amount      Decimal
   due_date    DateTime
   paid_date   DateTime?
-  status      paymentstatus  @default(Pending)
+  status      PaymentStatus  @default(Pending)
   method      PaymentMethod?
   reference   String?
   created_at  DateTime       @default(now()) @db.Timestamptz(6)
@@ -344,11 +343,11 @@ model payments {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model profiles {
-  user_id    String    @id @default(cuid()) @db.Text
+  user_id    String    @id @unique(map: "profiles_id_key") @default(dbgenerated("auth.uid()")) @db.Uuid
   full_name  String
   email      String    @unique
   phone      String?
-  role       userrole  @default(Tenant)
+  role       UserRole  @default(TENANT)
   created_at DateTime? @default(now()) @db.Timestamptz(6)
 
   @@index([role])
@@ -369,7 +368,7 @@ model properties {
   created_at           DateTime?              @default(now()) @db.Timestamptz(6)
   updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
   type                 String                 @default("Residential")
-  price                Decimal?               @db.Decimal(10, 2)
+  rent_amount          Decimal?               @db.Decimal(10, 2)
   amenities            String[]               @default([])
   images               String[]               @default([])
   bathrooms            Int?
@@ -564,13 +563,91 @@ model waitlist_attempts {
   @@schema("public")
 }
 
+model schema_migrations {
+  version String @id @unique(map: "schema_migrations_version_idx") @db.VarChar(14)
+
+  @@schema("auth")
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model users {
+  id                          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email                       String
+  encrypted_password          String
+  email_confirmed_at          DateTime? @db.Timestamptz(6)
+  invited_at                  DateTime? @db.Timestamptz(6)
+  confirmation_token          String?
+  confirmation_sent_at        DateTime? @db.Timestamptz(6)
+  recovery_token              String?
+  recovery_sent_at            DateTime? @db.Timestamptz(6)
+  email_change_token          String?
+  email_change                String?
+  email_change_sent_at        DateTime? @db.Timestamptz(6)
+  last_sign_in_at             DateTime? @db.Timestamptz(6)
+  raw_app_meta_data           Json?
+  raw_user_meta_data          Json?
+  is_super_admin              Boolean?
+  created_at                  DateTime? @db.Timestamptz(6)
+  updated_at                  DateTime? @db.Timestamptz(6)
+  phone                       String?
+  phone_confirmed_at          DateTime? @db.Timestamptz(6)
+  phone_change                String?   @default("")
+  phone_change_token          String?   @default("")
+  phone_change_sent_at        DateTime? @db.Timestamptz(6)
+  confirmed_at                DateTime? @db.Timestamptz(6)
+  email_change_confirm_status Int?      @default(0) @db.SmallInt
+  banned_until                DateTime? @db.Timestamptz(6)
+  reauthentication_token      String?   @default("")
+  reauthentication_sent_at    DateTime? @db.Timestamptz(6)
+  is_sso_user                 Boolean?  @default(false)
+  deleted_at                  DateTime? @db.Timestamptz(6)
+  stripe_customer_id          String?   @unique
+  stripe_subscription_id      String?
+  subscription_status         String?   @default("inactive")
+  trial_ends_at               DateTime? @db.Timestamptz(6)
+  provider                    String?
+  provider_account_id         String?
+  access_token                String?
+  refresh_token               String?
+  expires_at                  Int?
+  email_verified              DateTime? @db.Timestamp(6)
+
+  @@unique([provider, provider_account_id], map: "users_provider_account_unique")
+  @@index([email_verified], map: "idx_users_email_verified")
+  @@index([email])
+  @@index([email], map: "users_email_idx_auth")
+  @@index([phone])
+  @@schema("auth")
+}
+
+model verification_tokens {
+  identifier String
+  token      String
+  expires    DateTime @db.Timestamptz(6)
+
+  @@id([identifier, token])
+  @@schema("auth")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model organization_members {
+  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  created_at      DateTime  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
+  organization_id String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id         String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role            String?   @default("'member'")
+  updated_at      DateTime? @default(now()) @db.Timestamp(6)
+
+  @@schema("public")
+}
+
 enum ActivityType {
   CREATE
   UPDATE
   DELETE
   LOGIN
   LOGOUT
-
   @@schema("public")
 }
 
@@ -581,7 +658,6 @@ enum EntityType {
   PAYMENT
   MAINTENANCE
   DOCUMENT
-
   @@schema("public")
 }
 
@@ -590,16 +666,6 @@ enum LeaseType {
   MONTH_TO_MONTH
   WEEKLY
   YEARLY
-
-  @@schema("public")
-}
-
-enum PaymentMethod {
-  CREDIT_CARD
-  BANK_TRANSFER
-  CASH
-  CHECK
-
   @@schema("public")
 }
 
@@ -608,11 +674,13 @@ enum TenantStatus {
   INACTIVE
   PENDING
   REJECTED
+  EVICTION
+  MOVED_OUT
 
   @@schema("public")
 }
 
-enum audit_action {
+enum AuditAction {
   CREATE
   UPDATE
   DELETE
@@ -623,11 +691,10 @@ enum audit_action {
   PASSWORD_RESET
   EMAIL_CHANGE
   ROLE_CHANGE
-
   @@schema("public")
 }
 
-enum entity_type {
+enum EntityType {
   USER
   PROPERTY
   TENANT
@@ -642,37 +709,34 @@ enum entity_type {
   @@schema("public")
 }
 
-enum image_job_priority {
-  low
-  medium
-  high
-
+enum ImageJobPriority {
+  LOW
+  MEDIUM
+  HIGH
   @@schema("public")
 }
 
-enum image_job_status {
-  pending
-  processing
-  completed
-  failed
-
+enum ImageJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  NOT_STARTED
   @@schema("public")
 }
 
-enum invoice_status {
-  draft
-  pending
-  paid
-  overdue
-  cancelled
-
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
   @@schema("public")
 }
 
-enum invoice_template_type {
-  standard
-  custom
-
+enum InvoiceTemplateType {
+  STANDARD
+  CUSTOM
   @@schema("public")
 }
 
@@ -713,19 +777,7 @@ enum notification_type {
   @@schema("public")
 }
 
-enum payment_status {
-  pending
-  paid
-  partial
-  late
-  overdue
-  cancelled
-  refunded
-
-  @@schema("public")
-}
-
-enum paymentcategory {
+enum PaymentCategory {
   RENT
   SECURITY_DEPOSIT
   LATE_FEE
@@ -736,7 +788,7 @@ enum paymentcategory {
   @@schema("public")
 }
 
-enum paymentmethod {
+enum PaymentMethod {
   CASH
   CHECK
   CREDIT_CARD
@@ -746,16 +798,19 @@ enum paymentmethod {
   @@schema("public")
 }
 
-enum paymentstatus {
+enum PaymentStatus {
   Pending
   Paid
+  Partial
+  Late
   Overdue
   Cancelled
+  Refunded
 
   @@schema("public")
 }
 
-enum paymenttype {
+enum PaymentType {
   Rent
   Deposit
   Maintenance
@@ -764,30 +819,7 @@ enum paymenttype {
   @@schema("public")
 }
 
-enum property_status {
-  available
-  occupied
-  maintenance
-  renovation
-  off_market
-
-  @@schema("public")
-}
-
-enum property_type {
-  single_family
-  multi_family
-  apartment
-  condo
-  townhouse
-  commercial
-  industrial
-  land
-
-  @@schema("public")
-}
-
-enum propertystatus {
+enum PropertyStatus {
   Occupied
   Vacant
   Maintenance
@@ -821,15 +853,6 @@ enum tenant_status {
   @@schema("public")
 }
 
-enum tenantstatus {
-  ACTIVE
-  INACTIVE
-  PENDING
-  TERMINATED
-
-  @@schema("public")
-}
-
 enum tool_type {
   property_manager
   project_manager
@@ -850,11 +873,12 @@ enum user_role {
   @@schema("public")
 }
 
-enum userrole {
-  Admin
-  Manager
-  Owner
-  Tenant
-
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PROPERTY_MANAGER
+  MAINTENANCE
+  TENANT
+  USER
   @@schema("public")
 }

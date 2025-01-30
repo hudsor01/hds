@@ -1,16 +1,14 @@
 import { useSession } from '@clerk/nextjs';
-import { Session } from '@prisma/client';
 
 export function useAuth() {
-  const { data: session, status } = useSession();
-  const isLoading = status === 'loading';
-  const isAuthenticated = status === 'authenticated';
+  const { isLoaded, isSignedIn, session } = useSession();
+  const isLoading = !isLoaded;
+  const isAuthenticated = isSignedIn;
 
   return {
-    session: session as Session | null,
-    status,
+    session: session as unknown as typeof useSession | null,
+    status: isLoaded ? (isSignedIn ? 'authenticated' : 'unauthenticated') : 'loading',
     isLoading,
     isAuthenticated,
-    user: session?.user,
   };
 }

@@ -14,13 +14,13 @@ async function main() {
   });
 
   // Create a test property
-  const property = await prisma.property.create({
+  const property = await prisma.properties.create({
     data: {
-      title: 'Test Property',
+      name: 'Test Property',
       address: '123 Test Street',
       type: 'APARTMENT',
-      rent: 1500,
-      ownerId: user.id, // Now using the created user's ID
+      rent_amount: 1500,
+      ownerId: user.id,
       status: 'AVAILABLE',
     },
   });

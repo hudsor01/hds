@@ -2,7 +2,7 @@
 
 import { useSession } from '@clerk/nextjs';
 import { Button } from 'components/ui/button';
-import { signIn, signOut } from '../../app/auth/lib';
+import { signOut } from '../../app/auth/lib/auth/auth';
 
 export function AuthButton() {
   const { session, isLoaded } = useSession();
@@ -18,6 +18,10 @@ export function AuthButton() {
         Sign Out
       </Button>
     );
+  }
+
+  function signIn(arg0: string): void {
+    throw new Error('Function not implemented.');
   }
 
   return <Button onClick={() => signIn('google')}>Sign In with Google</Button>;
