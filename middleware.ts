@@ -1,71 +1,56 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
-import { auth } from './auth'
+import { withAuth } from 'next-auth/middleware';
+import { NextResponse } from 'next/server';
+import type { NextFetchEvent } from 'next/server';
 
 const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
-export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
-    request: {
-      headers: request.headers,
-    },
-  });
+export default withAuth(
+  function middleware(req, event: NextFetchEvent) {
+    const { nextUrl } = req;
+    const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth');
+    const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        get(name: string) {
-          return request.cookies.get(name)?.value;
+    // Clone the request headers
+    const requestHeaders = new Headers(req.headers);
+    requestHeaders.set('x-middleware-cache', 'no-cache');
+
+    if (isPublicRoute || isApiAuthRoute) {
+      return NextResponse.next({
+        request: {
+          headers: requestHeaders,
         },
-        set(name: string, value: string, options: CookieOptions) {
-          response.cookies.set({
-            name,
-            value,
-            ...options,
-          });
-        },
-        remove(name: string, options: CookieOptions) {
-          response.cookies.set({
-            name,
-            value: '',
-            ...options,
-          });
-        },
+      });
+    }
+
+    const response = NextResponse.next({
+      request: {
+        headers: requestHeaders,
       },
+    });
+
+    // Optional: Add background tasks using waitUntil
+    event.waitUntil(
+      fetch('/api/auth/log', {
+        method: 'POST',
+        body: JSON.stringify({ 
+          path: nextUrl.pathname,
+          timestamp: new Date().toISOString()
+        }),
+      }).catch(() => {}) // Ignore errors in background task
+    );
+
+    return response;
+  },
+  {
+    callbacks: {
+      authorized: ({ token }) => !!token,
     },
-  );
-
-  await supabase.auth.getSession();
-
-  return response;
-}
-
-export const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
-
-export default auth((req) => {
-  const { nextUrl } = req;
-  const isLoggedIn = !!req.auth;
-
-  const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth');
-  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
-
-  if (isPublicRoute || isApiAuthRoute) {
-    return null;
+    pages: {
+      signIn: '/login',
+    },
   }
-
-  if (!isLoggedIn) {
-    const redirectUrl = new URL('/login', nextUrl);
-    redirectUrl.searchParams.set('callbackUrl', nextUrl.pathname);
-    return NextResponse.redirect(redirectUrl);
-  }
-
-  return null;
-});
+);
 
 export const config = {
-  matcher: [
-    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
-  ],
+  matcher: ['/((?!api/auth|_next/static|_next/image|favicon.ico|.*\\..*$).*)'],
 };

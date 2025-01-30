@@ -1,7 +1,8 @@
 import { Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
-
+import { PrismaAdapter } from '@auth/prisma-adapter';
 import { createClient } from '@supabase/supabase-js';
+import { prisma } from './lib/prisma';
 
 if (!process.env.NEXT_PUBLIC_SUPABASE_URL) {
   throw new Error('Missing NEXT_PUBLIC_SUPABASE_URL environment variable');
@@ -62,12 +63,8 @@ declare module 'next-auth/jwt' {
 
 const THIRTY_DAYS = 30 * 24 * 60 * 60; // 30 days in seconds
 
-const authConfig = {
-  providers: [],
-  session: {
-    strategy: 'jwt',
-    maxAge: THIRTY_DAYS,
-  },
+export const authConfig = {
+  adapter: PrismaAdapter(prisma),
   pages: {
     signIn: '/login',
     error: '/error',

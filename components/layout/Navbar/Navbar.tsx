@@ -1,15 +1,9 @@
-import { signOut, useSession } from 'next-auth/react';
-import { Home, Link } from 'react-feather';
-import {
-  RequestCookie,
-  ResponseCookie,
-  ResponseCookies,
-} from 'next/dist/compiled/@edge-runtime/cookies';
-import { usePathname } from 'next/navigation';
-import { Route } from 'next/types';
-import { Avatar } from '@mui/material';
-import { cn } from '@/lib/utils';
-import { createClient } from '@/utils/supabase/server';
+import { cn } from '@/lib/utils'
+import { Avatar } from '@mui/material'
+import { signOut, useSession } from 'next-auth/react'
+import { usePathname } from 'next/navigation'
+import { Route } from 'next/types'
+import { Home, Link } from 'react-feather'
 
 const navigation: Array<{ name: string; href: Route }> = [
   { name: 'About', href: '/about' },
@@ -18,40 +12,9 @@ const navigation: Array<{ name: string; href: Route }> = [
   { name: 'Contact', href: '/contact' },
 ];
 
-export default async function Navbar() {
+export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
-  const supabase = createClient({
-    [Symbol.iterator]: function () {
-      throw new Error('Function not implemented.');
-    },
-    size: 0,
-    get: function (...args: [RequestCookie] | [name: string]): RequestCookie | undefined {
-      throw new Error('Function not implemented.');
-    },
-    getAll: function (...args: [name: string] | [RequestCookie] | []): RequestCookie[] {
-      throw new Error('Function not implemented.');
-    },
-    has: function (name: string): boolean {
-      throw new Error('Function not implemented.');
-    },
-    set: function (
-      ...args:
-        | [key: string, value: string, cookie?: Partial<ResponseCookie> | undefined]
-        | [options: ResponseCookie]
-    ): ResponseCookies {
-      throw new Error('Function not implemented.');
-    },
-    delete: function (
-      ...args: [key: string] | [options: Omit<ResponseCookie, 'value' | 'expires'>]
-    ): ResponseCookies {
-      throw new Error('Function not implemented.');
-    },
-  });
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
 
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60'>
@@ -61,6 +24,7 @@ export default async function Navbar() {
           <span className='hidden font-bold sm:inline-block'>HDS</span>
         </Link>
 
+        {/* Rest of the component remains the same */}
         <nav className='flex-1 flex items-center justify-center space-x-2'>
           {navigation.map(item => (
             <Link
@@ -80,7 +44,6 @@ export default async function Navbar() {
 
         <div className='flex items-center space-x-4 mr-4'>
           {session ? (
-            // User is signed in
             <div className='flex items-center space-x-2'>
               <Avatar
                 alt={session?.user?.name || 'User'}
@@ -98,7 +61,6 @@ export default async function Navbar() {
               </button>
             </div>
           ) : (
-            // User is not signed in
             <>
               <Link
                 href='/login'

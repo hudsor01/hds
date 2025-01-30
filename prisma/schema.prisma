@@ -1,13 +1,31 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
   schemas  = ["auth", "public", "private"]
 }
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  previewFeatures = ["multiSchema", "tracing"]
 }
+
+model Waitlist {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  firstName    String?
+  lastName     String?
+  propertyCount String?
+  interests    String[]
+  referralSource String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  newsletter   Boolean  @default(true)
+  status       String   @default("pending") // pending, validated, invited
+
+@@schema("public")
+}
+
 
 // Auth schema models
 model AuthUser {
