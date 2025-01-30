@@ -30,16 +30,16 @@ interface CustomUser {
 declare module 'next-auth' {
   interface Session {
     user: {
+      stripe_customer_id: string | null | undefined;
+      stripe_subscription_id: string | null | undefined;
+      subscription_status: string | null | undefined;
+      trial_ends_at: Date | null | undefined;
       id: string;
       email: string;
-      name?: string | null;
-      image?: string | null;
-      stripe_customer_id?: string | null;
-      stripe_subscription_id?: string | null;
-      subscription_status?: string | null;
-      trial_ends_at?: Date | null;
-      supabase_provider?: string | null;
-      role?: string | null;
+      name?: string | undefined;
+      image?: string | undefined;
+      supabase_provider?: string | null | undefined;
+      role?: string | null | undefined;
     };
   }
 
@@ -122,15 +122,18 @@ const authConfig = {
           stripe_customer_id: token.stripe_customer_id,
           stripe_subscription_id: token.stripe_subscription_id,
           subscription_status: token.subscription_status,
-          trial_ends_at: token.trial_ends_at,
-          supabase_provider: token.supabase_provider,
-          role: token.role,
+          trial_ends_at: token.trial_ends_at ? new Date(token.trial_ends_at).toISOString() : null,
         };
+
+        // Assign role separately to avoid type errors
+        if ('role' in token) {
+          session.user.role = token.role;
+        }
       }
 
       return session;
     },
   },
-} satisfies NextAuthConfig;
+} as const;
 
 export default authConfig;

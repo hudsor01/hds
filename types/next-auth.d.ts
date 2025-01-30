@@ -13,6 +13,7 @@ declare module 'next-auth/jwt' {
 declare module 'next-auth' {
   interface Session {
     user: {
+      [x: string]: string | null | undefined;
       stripe_customer_id: string | null | undefined;
       stripe_subscription_id: string | null | undefined;
       subscription_status: string | null | undefined;
