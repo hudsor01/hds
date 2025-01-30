@@ -1,146 +1,861 @@
-datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  schemas  = ["public", "private"]
-}
-
 generator client {
   provider        = "prisma-client-js"
   previewFeatures = ["multiSchema"]
 }
 
-model Waitlist {
-  id           String   @id @default(cuid())
-  email        String   @unique
-  firstName    String?
-  lastName     String?
-  propertyCount String?
-  interests    String[]
-  referralSource String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  newsletter   Boolean  @default(true)
-  status       String   @default("pending") // pending, validated, invited
-
-@@schema("public")
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+  schemas   = ["private", "public"]
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  image         String?
-  stripe_customer_id     String?   @unique
-  subscription_status    String?
-  properties    Property[]
-  tenancies     Tenancy[]
-  maintenanceRequests MaintenanceRequest[]
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  id                   String                 @id @default(cuid())
+  name                 String?
+  email                String?                @unique
+  image                String?
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  stripe_customer_id   String?
+  subscription_status  String?
+  properties           Json[]                 @default([])
+  tenancies            Json[]                 @default([])
+  maintenance_requests Json[]                 @default([])
+  maintenance_requests maintenance_requests[]
 
   @@map("users")
   @@schema("public")
 }
 
-model Property {
-  id          String    @id @default(uuid())
-  title       String
-  address     String
-  type        String
-  status      String    @default("AVAILABLE")
-  rent        Float
-  ownerId     String
-  owner       User      @relation(fields: [ownerId], references: [id])
-  tenancies   Tenancy[]
-  maintenanceRequests MaintenanceRequest[]
-  organizations Organization[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@schema("public")
-}
-
-model Organization {
-  id        String   @id @default(cuid())
-  name      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  members   OrganizationMember[]
-  properties Property[]
-
-  @@schema("public")
-}
-
 model Tenancy {
-  id                String    @id @default(uuid()) @db.Uuid
+  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   unitId           String    @map("unit_id") @db.Uuid
-  firstName        String    @map("first_name") @db.Text
-  lastName         String    @map("last_name") @db.Text
-  email            String    @db.Text
-  phone            String    @db.Text
-  status           String    @db.Text
-  moveInDate       DateTime  @map("move_in_date") @db.Date
+  firstName        String    @map("first_name")
+  lastName         String    @map("last_name")
+  email            String
+  phone            String?
+  status           String    @default("active")
+  moveInDate       DateTime? @map("move_in_date") @db.Date
   moveOutDate      DateTime? @map("move_out_date") @db.Date
-  emergencyContact Json?     @map("emergency_contact") @db.JsonB
-  documents        Json[]    @db.JsonB
-  createdAt        DateTime  @default(now()) @map("created_at") @db.Timestamptz
-  updatedAt        DateTime  @updatedAt @map("updated_at") @db.Timestamptz
-  property         Property  @relation(fields: [unitId], references: [id])
-  tenant           User      @relation(fields: [email], references: [email])
+  emergencyContact Json?     @default("{}") @map("emergency_contact")
+  documents        Json[]    @default([])
+  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
 
+  @@index([status])
+  @@index([unitId])
   @@map("tenants")
   @@schema("public")
 }
 
-model MaintenanceRequest {
-  id          String    @id @default(uuid())
-  propertyId  String    @db.Uuid
-  title       String
+model Account {
+  id                String  @id
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  @@unique([provider, providerAccountId])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model prisma_migrations {
+  user_id             String    @id @db.VarChar(36)
+  checksum            String    @db.VarChar(64)
+  finished_at         DateTime? @db.Timestamptz(6)
+  migration_name      String    @db.VarChar(255)
+  logs                String?
+  rolled_back_at      DateTime? @db.Timestamptz(6)
+  started_at          DateTime  @default(now()) @db.Timestamptz(6)
+  applied_steps_count Int       @default(0)
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@map("_prisma_migrations")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model activities {
+  user_id     String       @default(dbgenerated("auth.uid()")) @db.Uuid
+  type        ActivityType
+  entity_type EntityType
+  entity_id   String
   description String
-  status      String    @default("PENDING")
-  priority    String    @default("MEDIUM")
-  property    Property  @relation(fields: [propertyId], references: [id])
-  requesterId String
-  requester   User      @relation(fields: [requesterId], references: [id])
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  created_at  DateTime?    @default(now()) @db.Timestamptz(6)
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  @@index([entity_id], map: "activities_entityId_idx")
+  @@index([entity_type, entity_id], map: "activities_entity_type_id_idx")
+  @@index([type])
+  @@index([user_id, created_at])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model admin_audit_logs {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id     String?      @db.Uuid
+  action      audit_action
+  entity_type entity_type
+  entity_id   String?      @db.Uuid
+  old_values  Json?
+  new_values  Json?
+  ip_address  String?      @db.VarChar(45)
+  user_agent  String?
+  created_at  DateTime?    @default(now()) @db.Timestamptz(6)
 
   @@schema("public")
 }
 
-model WaitlistEntry {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  name      String
-  company   String?
-  createdAt DateTime @default(now())
-
-  @@schema("public")
-}
-
-model OrganizationMember {
-  id             String       @id @default(uuid()) // Change to uuid
-  userId         String
-  organizationId String
-  role          String       @default("TENANT")
-  createdAt     DateTime     @default(now())
-  updatedAt     DateTime     @updatedAt
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  permissions    Permission[]
-
-  @@unique([userId, organizationId])
-  @@index([userId])
-  @@schema("public")
-}
-
-model Permission {
-  id          String   @id @default(uuid()) // Change to uuid
+model documents {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  memberId    String
-  member      OrganizationMember @relation(fields: [memberId], references: [id])
+  description String?
+  url         String
+  type        String
+  size        BigInt?
+  property_id String?   @db.Uuid
+  lease_id    String?   @db.Uuid
+  uploaded_by String    @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model email_templates {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @db.VarChar(255)
+  subject    String    @db.VarChar(255)
+  body       String
+  variables  Json?
+  is_active  Boolean?  @default(true)
+  created_by String?   @db.Uuid
+  updated_by String?   @db.Uuid
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model expenses {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  property_id String    @db.Uuid
+  category    String
+  amount      Decimal   @db.Decimal(10, 2)
+  description String?
+  date        DateTime  @db.Date
+  receipt_url String?
+  created_by  String?   @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([category])
+  @@index([property_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model ip_blacklist {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  ip_address String    @unique @db.Inet
+  reason     String
+  added_by   String?   @db.Uuid
+  expires_at DateTime? @db.Timestamptz(6)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([expires_at], map: "ip_blacklist_expires_idx")
+  @@index([ip_address], map: "ip_blacklist_ip_idx")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model leases {
+  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  tenant_id     String
+  property_id   String
+  type          LeaseType
+  status        leasestatus @default(Pending)
+  start_date    DateTime
+  end_date      DateTime?
+  rent_amount   Decimal
+  depositAmount Decimal
+  payment_day   Int
+  documents     String[]
+  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at])
+  @@index([start_date, end_date, status], map: "leases_dates_status_idx")
+  @@index([end_date])
+  @@index([property_id], map: "leases_propertyId_idx")
+  @@index([start_date])
+  @@index([status])
+  @@index([tenant_id], map: "leases_tenantId_idx")
+  @@index([tenant_id])
+  @@index([type])
+  @@index([user_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model login_history {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id        String?   @db.Uuid
+  ip_address     String?   @db.VarChar(45)
+  user_agent     String?
+  success        Boolean?  @default(true)
+  failure_reason String?
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model maintenance_requests {
+  id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title        String
+  description  String
+  status       String?     @default("PENDING")
+  priority     String?     @default("MEDIUM")
+  property_id  String?     @db.Uuid
+  requester_id String?
+  created_at   DateTime?   @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime?   @default(now()) @db.Timestamptz(6)
+  properties   properties? @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users        User?       @relation(fields: [requester_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model message_threads {
+  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  subject         String
+  last_message_id String?   @db.Uuid
+  participants    String[]  @db.Uuid
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at])
+  @@index([participants], type: Gin)
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model messages {
+  id           String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sender_id    String          @db.Uuid
+  recipient_id String          @db.Uuid
+  subject      String?
+  content      String
+  status       message_status? @default(sent)
+  read_at      DateTime?       @db.Timestamptz(6)
+  attachments  String[]        @default([])
+  parent_id    String?         @db.Uuid
+  thread_id    String?         @db.Uuid
+  created_at   DateTime?       @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime?       @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at])
+  @@index([recipient_id])
+  @@index([sender_id])
+  @@index([thread_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model notifications {
+  id         String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String               @db.Uuid
+  type       notification_type
+  title      String
+  message    String
+  status     notification_status? @default(unread)
+  data       Json?                @default("{}")
+  read_at    DateTime?            @db.Timestamptz(6)
+  created_at DateTime?            @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?            @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at])
+  @@index([status])
+  @@index([type])
+  @@index([user_id])
+  @@schema("public")
+}
+
+model organizations {
+  id         String    @id
+  name       String
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  updated_at DateTime? @default(now()) @db.Timestamp(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model password_reset_requests {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id    String?   @db.Uuid
+  token      String
+  expires_at DateTime  @db.Timestamptz(6)
+  used_at    DateTime? @db.Timestamptz(6)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([expires_at], map: "password_reset_expires_at_idx")
+  @@index([token], map: "password_reset_token_idx")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model payments {
+  user_id     String         @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  lease_id    String
+  tenant_id   String
+  property_id String
+  amount      Decimal
+  due_date    DateTime
+  paid_date   DateTime?
+  status      paymentstatus  @default(Pending)
+  method      PaymentMethod?
+  reference   String?
+  created_at  DateTime       @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at])
+  @@index([due_date])
+  @@index([lease_id], map: "payments_leaseId_idx")
+  @@index([property_id], map: "payments_propertyId_idx")
+  @@index([property_id])
+  @@index([status, created_at])
+  @@index([status])
+  @@index([tenant_id], map: "payments_tenantId_idx")
+  @@index([tenant_id])
+  @@index([user_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model profiles {
+  user_id    String    @id @unique(map: "profiles_id_key") @default(dbgenerated("auth.uid()")) @db.Uuid
+  full_name  String
+  email      String    @unique
+  phone      String?
+  role       userrole  @default(Tenant)
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([role])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model properties {
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                 String
+  address              String
+  city                 String
+  state                String
+  zip                  String
+  owner_id             String                 @db.Uuid
+  manager_id           String?                @db.Uuid
+  status               String                 @default("active")
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  type                 String                 @default("Residential")
+  price                Decimal?               @db.Decimal(10, 2)
+  amenities            String[]               @default([])
+  images               String[]               @default([])
+  bathrooms            Int?
+  bedrooms             Int?
+  size                 Int?
+  maintenance_requests maintenance_requests[]
+
+  @@index([owner_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model rent_payments {
+  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  property_id    String    @db.Uuid
+  unit_id        String    @db.Uuid
+  tenant_id      String    @db.Uuid
+  amount         Decimal   @db.Decimal(10, 2)
+  due_date       DateTime  @db.Date
+  paid_date      DateTime? @db.Date
+  status         String    @default("pending")
+  payment_method String?
+  invoice_number String?
+  transaction_id String?
+  late_fee       Decimal?  @default(0) @db.Decimal(10, 2)
+  notes          String?
+  created_at     DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([due_date])
+  @@index([property_id])
+  @@index([tenant_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model security_audit_log {
+  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id       String?   @db.Uuid
+  event_type    String
+  resource_type String
+  resource_id   String?
+  ip_address    String?   @db.Inet
+  user_agent    String?
+  old_values    Json?
+  new_values    Json?
+  metadata      Json?
+  severity      String
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([created_at], map: "security_audit_created_at_idx")
+  @@index([event_type], map: "security_audit_event_type_idx")
+  @@index([resource_type, resource_id], map: "security_audit_resource_idx")
+  @@index([user_id], map: "security_audit_user_id_idx")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model subscriptions {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id      String?   @db.Uuid
+  product_id   String
+  status       String
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  active_until DateTime? @db.Timestamptz(6)
+
+  @@unique([user_id, product_id])
+  @@index([active_until])
+  @@index([product_id])
+  @@index([status])
+  @@index([user_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model system_configurations {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String    @unique @db.VarChar(255)
+  value       Json
+  description String?
+  updated_by  String?   @db.Uuid
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model units {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  property_id String    @db.Uuid
+  unit_number String
+  floor_plan  String?
+  square_feet Int?
+  bedrooms    Int?
+  bathrooms   Decimal?  @db.Decimal(3, 1)
+  rent_amount Decimal?  @db.Decimal(10, 2)
+  status      String    @default("vacant")
+  features    Json?     @default("{}")
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@unique([property_id, unit_number])
+  @@index([property_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_activity_logs {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String?   @db.Uuid
+  action     String
+  entity     String
+  entity_id  String?   @db.Uuid
+  details    Json?
+  ip_address String?
+  user_agent String?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@index([action])
+  @@index([created_at])
+  @@index([user_id])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_profiles {
+  id                       String     @id @db.Uuid
+  first_name               String?
+  last_name                String?
+  email                    String     @unique
+  phone                    String?
+  role                     user_role? @default(user)
+  avatar_url               String?
+  company_name             String?
+  company_position         String?
+  timezone                 String?    @default("UTC")
+  notification_preferences Json?      @default("{}")
+  last_login_at            DateTime?  @db.Timestamptz(6)
+  last_login_ip            String?
+  created_at               DateTime?  @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime?  @default(now()) @db.Timestamptz(6)
+
+  @@index([email])
+  @@index([role])
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_security_settings {
+  user_id                 String    @id @db.Uuid
+  two_factor_enabled      Boolean?  @default(false)
+  two_factor_method       String?
+  backup_codes            String[]
+  allowed_ips             String[]  @db.Inet
+  max_sessions            Int?      @default(5)
+  password_expires_at     DateTime? @db.Timestamptz(6)
+  require_password_change Boolean?  @default(false)
+  last_password_change    DateTime? @db.Timestamptz(6)
+  security_questions      Json?
+  login_notifications     Boolean?  @default(true)
+  updated_at              DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model user_settings {
+  id                    String    @id @db.Uuid
+  theme                 String?   @default("light")
+  language              String?   @default("en")
+  currency              String?   @default("USD")
+  date_format           String?   @default("MM/DD/YYYY")
+  time_format           String?   @default("12h")
+  notifications_enabled Boolean?  @default(true)
+  email_notifications   Boolean?  @default(true)
+  sms_notifications     Boolean?  @default(false)
+  created_at            DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at            DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model waitlist_attempts {
+  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  identifier String
+  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+
+  @@index([created_at], map: "idx_waitlist_attempts_created_at")
+  @@index([identifier], map: "idx_waitlist_attempts_identifier")
+  @@schema("public")
+}
+
+enum ActivityType {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+
+  @@schema("public")
+}
+
+enum EntityType {
+  PROPERTY
+  TENANT
+  LEASE
+  PAYMENT
+  MAINTENANCE
+  DOCUMENT
+
+  @@schema("public")
+}
+
+enum LeaseType {
+  FIXED_TERM
+  MONTH_TO_MONTH
+  WEEKLY
+  YEARLY
+
+  @@schema("public")
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  CASH
+  CHECK
+
+  @@schema("public")
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  REJECTED
+
+  @@schema("public")
+}
+
+enum audit_action {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  ADMIN_ACCESS
+  SETTINGS_CHANGE
+  PASSWORD_RESET
+  EMAIL_CHANGE
+  ROLE_CHANGE
+
+  @@schema("public")
+}
+
+enum entity_type {
+  USER
+  PROPERTY
+  TENANT
+  MAINTENANCE
+  PAYMENT
+  LEASE
+  DOCUMENT
+  SETTINGS
+  EMAIL_TEMPLATE
+  ROUTE
+
+  @@schema("public")
+}
+
+enum image_job_priority {
+  low
+  medium
+  high
+
+  @@schema("public")
+}
+
+enum image_job_status {
+  pending
+  processing
+  completed
+  failed
+
+  @@schema("public")
+}
+
+enum invoice_status {
+  draft
+  pending
+  paid
+  overdue
+  cancelled
+
+  @@schema("public")
+}
+
+enum invoice_template_type {
+  standard
+  custom
+
+  @@schema("public")
+}
+
+enum leasestatus {
+  Active
+  Pending
+  Expired
+  Terminated
+
+  @@schema("public")
+}
+
+enum message_status {
+  sent
+  delivered
+  read
+  failed
+
+  @@schema("public")
+}
+
+enum notification_status {
+  unread
+  read
+  archived
+
+  @@schema("public")
+}
+
+enum notification_type {
+  system
+  maintenance
+  payment
+  lease
+  message
+  alert
+
+  @@schema("public")
+}
+
+enum payment_status {
+  pending
+  paid
+  partial
+  late
+  overdue
+  cancelled
+  refunded
+
+  @@schema("public")
+}
+
+enum paymentcategory {
+  RENT
+  SECURITY_DEPOSIT
+  LATE_FEE
+  MAINTENANCE
+  UTILITIES
+  OTHER
+
+  @@schema("public")
+}
+
+enum paymentmethod {
+  CASH
+  CHECK
+  CREDIT_CARD
+  BANK_TRANSFER
+  OTHER
+
+  @@schema("public")
+}
+
+enum paymentstatus {
+  Pending
+  Paid
+  Overdue
+  Cancelled
+
+  @@schema("public")
+}
+
+enum paymenttype {
+  Rent
+  Deposit
+  Maintenance
+  Other
+
+  @@schema("public")
+}
+
+enum property_status {
+  available
+  occupied
+  maintenance
+  renovation
+  off_market
+
+  @@schema("public")
+}
+
+enum property_type {
+  single_family
+  multi_family
+  apartment
+  condo
+  townhouse
+  commercial
+  industrial
+  land
+
+  @@schema("public")
+}
+
+enum propertystatus {
+  Occupied
+  Vacant
+  Maintenance
+
+  @@schema("public")
+}
+
+enum propertytype {
+  Residential
+  Commercial
+  Industrial
+
+  @@schema("public")
+}
+
+enum request_status {
+  pending
+  approved
+  rejected
+
+  @@schema("public")
+}
+
+enum tenant_status {
+  active
+  pending
+  inactive
+  eviction
+  moved_out
+
+  @@schema("public")
+}
+
+enum tenantstatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  TERMINATED
+
+  @@schema("public")
+}
+
+enum tool_type {
+  property_manager
+  project_manager
+  image_optimizer
+  document_manager
+
+  @@schema("public")
+}
+
+enum user_role {
+  super_admin
+  admin
+  property_manager
+  maintenance
+  tenant
+  user
+
+  @@schema("public")
+}
+
+enum userrole {
+  Admin
+  Manager
+  Owner
+  Tenant
 
   @@schema("public")
 }
