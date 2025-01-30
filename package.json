@@ -59,6 +59,7 @@
     "resend": "^4.1.1",
     "sonner": "^1.7.3",
     "stripe": "^17.6.0",
+    "svix": "^1.45.1",
     "vaul": "^1.1.2",
     "zod": "^3.24.1",
     "zustand": "^5.0.3"
@@ -85,6 +86,7 @@
     "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-react": "^7.37.4",
     "eslint-plugin-react-hooks": "^5.1.0",
+    "ngrok": "^5.0.0-beta.2",
     "postcss": "8.5.1",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-import": "^16.1.0",

@@ -1,8 +1,9 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs'
+import { SignUp, useAuth, useUser } from '@clerk/nextjs'
 import { Button, Card, CardContent } from '@mui/material'
 import { motion } from 'framer-motion'
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies'
 import { cookies } from 'next/headers'
 import Image from 'next/image'
 import Link from 'next/link'
@@ -156,11 +157,19 @@ const features = [
 </motion.section>;
 
 export default function HomePage() {
-   const cookieStore = await cookies()
+  const { user } = useUser()
+
+  if (!user) {
+  return <SignUp />
+}
+  return <div>Welcome!</div>
+}
+
+  const cookieStore = await cookies()
   const supabase = createClient(cookieStore)
   const { isSignedIn } = useAuth();
 
-  const { data: todos } = await supabase.from('todos').select()
+const { data: todos } = await (supabase?.from('todos')?.select() as Promise<{ data: any[] }>) ?? { data: [] }
 
   return (
     <ul>
@@ -169,7 +178,7 @@ export default function HomePage() {
       ))}
     </ul>
   )
-}
+
     <main className='space-y-24 bg-white'>
       {/* Hero Section */}
       <section className="max-w-7xl mx-auto px-4 py-12">
@@ -392,4 +401,8 @@ export default function HomePage() {
       )}
     </main>
   );
+}
+function createClient (cookieStore: ReadonlyRequestCookies)
+{
+  throw new Error('Function not implemented.')
 }

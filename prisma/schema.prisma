@@ -20,7 +20,7 @@ model User {
   subscriptionStatus String?            @map("subscription_status")
   properties         Json[]             @default([])
   tenancies          Json[]             @default([])
-  maintenanceRequests MaintenanceRequest[]
+  maintenance_requests maintenance_requests[]
 
   @@map("users")
   @@schema("public")
