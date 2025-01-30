@@ -1,8 +1,8 @@
 import { ClerkProvider } from '@clerk/nextjs';
 import { Footer } from 'components/layout/footer';
-import Navbar from 'components/layout/Navbar/Navbar';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
+import Navbar from '@/components/layout/Navbar';
 import './globals.css';
 import { Providers } from './providers';
 
