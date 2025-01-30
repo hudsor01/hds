@@ -1,14 +1,15 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
-import { motion } from 'framer-motion';
-// Add icon imports at the top
-import { BarChart2, DollarSign, FileText, Home, Tool, Users } from 'react-feather';
-import { Key } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button, Card, CardContent } from '@mui/material';
-import { routes } from './routes';
+import { useAuth } from '@clerk/nextjs'
+import { Button, Card, CardContent } from '@mui/material'
+import { motion } from 'framer-motion'
+import { cookies } from 'next/headers'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Key } from 'react'
+import { BarChart2, DollarSign, FileText, Home, Tool, Users } from 'react-feather'
+import { routes } from './routes'
+
 
 const stats = [
   {
@@ -155,31 +156,25 @@ const features = [
 </motion.section>;
 
 export default function HomePage() {
+   const cookieStore = await cookies()
+  const supabase = createClient(cookieStore)
   const { isSignedIn } = useAuth();
 
+  const { data: todos } = await supabase.from('todos').select()
+
   return (
+    <ul>
+      {todos?.map((todo) => (
+        <li>{todo}</li>
+      ))}
+    </ul>
+  )
+}
     <main className='space-y-24 bg-white'>
-      {/* Hero Section buttons */}
-      <div className='flex flex-col sm:flex-row gap-4'>
-        {isSignedIn ? (
-          <Button
-            variant='contained'
-            sx={{
-              bgcolor: 'var(--pastel-blue-500)',
-              color: 'white',
-              '&:hover': {
-                bgcolor: 'var(--pastel-blue-600)',
-                transform: 'scale(1.05)',
-              },
-              transition: 'all 0.2s',
-            }}
-            component={Link}
-            href={routes.dashboard}
-          >
-            Go to Dashboard
-          </Button>
-        ) : (
-          <>
+      {/* Hero Section */}
+      <section className="max-w-7xl mx-auto px-4 py-12">
+        <div className='flex flex-col sm:flex-row gap-4'>
+          {isSignedIn ? (
             <Button
               variant='contained'
               sx={{
@@ -192,30 +187,49 @@ export default function HomePage() {
                 transition: 'all 0.2s',
               }}
               component={Link}
-              href='/sign-up'
+              href={routes.dashboard}
             >
-              Get Started Free
+              Go to Dashboard
             </Button>
-            <Button
-              variant='outlined'
-              sx={{
-                borderColor: 'var(--pastel-blue-400)',
-                color: 'var(--pastel-blue-600)',
-                '&:hover': {
-                  bgcolor: 'var(--pastel-blue-50)',
+          ) : (
+            <>
+              <Button
+                variant='contained'
+                sx={{
+                  bgcolor: 'var(--pastel-blue-500)',
+                  color: 'white',
+                  '&:hover': {
+                    bgcolor: 'var(--pastel-blue-600)',
+                    transform: 'scale(1.05)',
+                  },
+                  transition: 'all 0.2s',
+                }}
+                component={Link}
+                href='/sign-up'
+              >
+                Get Started Free
+              </Button>
+              <Button
+                variant='outlined'
+                sx={{
                   borderColor: 'var(--pastel-blue-400)',
-                  transform: 'scale(1.05)',
-                },
-                transition: 'all 0.2s',
-              }}
-              component={Link}
-              href='/sign-in'
-            >
-              Learn More
-            </Button>
-          </>
-        )}
-      </div>
+                  color: 'var(--pastel-blue-600)',
+                  '&:hover': {
+                    bgcolor: 'var(--pastel-blue-50)',
+                    borderColor: 'var(--pastel-blue-400)',
+                    transform: 'scale(1.05)',
+                  },
+                  transition: 'all 0.2s',
+                }}
+                component={Link}
+                href='/sign-in'
+              >
+                Learn More
+              </Button>
+            </>
+          )}
+        </div>
+      </section>
 
       {/* Testimonials Cards */}
       {testimonials.map((testimonial, i) => (

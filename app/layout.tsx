@@ -1,4 +1,4 @@
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import { Footer } from 'components/layout/footer';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
@@ -16,7 +16,7 @@ const roboto = Roboto({
 });
 
 export const metadata: Metadata = {
-  title: 'PropTech Hub - The Future of Property Management',
+  title: 'Simplify Property Managment - Hub by Hudson Digital Solutions',
   description:
     'Join the waitlist for the most comprehensive property management platform connecting owners, managers, tenants, and service providers.',
 };
@@ -26,6 +26,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <ClerkProvider>
       <html lang='en'>
         <body className={roboto.className}>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
+          <SignedIn>
+            <UserButton />
+          </SignedIn>
+
           <Providers>
             <Navbar />
             <main>{children}</main>

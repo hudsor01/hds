@@ -6,7 +6,6 @@ generator client {
 datasource db {
   provider  = "postgresql"
   url       = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
   schemas   = ["auth", "private", "public"]
 }
 
@@ -82,39 +81,41 @@ model PrismaMigration {
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model activities {
-  user_id     String       @default(dbgenerated("auth.uid()")) @db.Uuid
-  type        ActivityType
-  entity_type EntityType
-  entity_id   String
-  description String
-  created_at  DateTime?    @default(now()) @db.Timestamptz(6)
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+model Activity {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String       @default(dbgenerated("auth.uid()")) @map("user_id") @db.Uuid
+  type         ActivityType
+  entityType   EntityType   @map("entity_type")
+  entityId     String       @map("entity_id")
+  description  String
+  createdAt    DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
 
-  @@index([entity_id], map: "activities_entityId_idx")
-  @@index([entity_type, entity_id], map: "activities_entity_type_id_idx")
+  @@index([entityId], map: "activities_entityId_idx")
+  @@index([entityType, entityId], map: "activities_entity_type_id_idx")
   @@index([type])
-  @@index([user_id, created_at])
+  @@index([userId, createdAt])
+  @@map("activities")
   @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model admin_audit_logs {
+model AdminAuditLog {
   id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id     String?      @db.Uuid
-  action      audit_action
-  entity_type entity_type
-  entity_id   String?      @db.Uuid
-  old_values  Json?
-  new_values  Json?
-  ip_address  String?      @db.VarChar(45)
-  user_agent  String?
-  created_at  DateTime?    @default(now()) @db.Timestamptz(6)
+  userId      String?      @map("user_id") @db.Uuid
+  action      AuditAction
+  entityType  EntityType
+  entityId    String?      @db.Uuid
+  oldValues   Json?
+  newValues   Json?
+  ipAddress   String?      @map("ip_address") @db.VarChar(45)
+  userAgent   String?      @map("user_agent")
+  createdAt   DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
 
+  @@map("admin_audit_logs")
   @@schema("public")
 }
 
-model documents {
+model Documents {
   id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
@@ -648,16 +649,6 @@ enum ActivityType {
   DELETE
   LOGIN
   LOGOUT
-  @@schema("public")
-}
-
-enum EntityType {
-  PROPERTY
-  TENANT
-  LEASE
-  PAYMENT
-  MAINTENANCE
-  DOCUMENT
   @@schema("public")
 }
 
