@@ -1,14 +1,9 @@
 // pages/auth/signup.tsx
 import { yupResolver } from '@hookform/resolvers/yup';
-import { signIn, useSession } from 'next-auth/react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import * as yup from 'yup';
-
 import { useState } from 'react';
-
 import { useRouter } from 'next/router';
-
 import { Box, Button, Link, TextField, Typography } from '@mui/material';
 
 const validationSchema = yup.object().shape({

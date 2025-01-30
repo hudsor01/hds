@@ -1,5 +1,3 @@
-import { Adapter, AdapterUser } from 'next-auth/adapters';
-
 import { prisma } from '@/lib/prisma';
 
 export function CustomAdapter(): Adapter {

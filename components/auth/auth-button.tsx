@@ -1,10 +1,11 @@
 'use client';
 
+import { useSession } from '@clerk/nextjs';
 import { Button } from 'components/ui/button';
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { signIn, signOut } from '../../app/auth/lib';
 
 export function AuthButton() {
-  const { data: session, status } = useSession();
+  const { session, isLoaded } = useSession();
   const isLoading = status === 'loading';
 
   if (isLoading) {

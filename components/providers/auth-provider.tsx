@@ -1,7 +1,6 @@
 'use client';
 
-import { SessionProvider } from 'next-auth/react';
-
+import { SessionProvider } from '@clerk/nextjs';
 import type { ReactNode } from 'react';
 
 export interface AuthProviderProps {

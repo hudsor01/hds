@@ -5,7 +5,6 @@ import { Button } from 'components/ui/button';
 import { Label } from 'components/ui/label';
 import { Separator } from 'components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { signIn } from 'next-auth/react';
 import { useFormStatus } from 'react-dom';
 import { Loader } from 'react-feather';
 import { Controller, useForm } from 'react-hook-form';
@@ -15,6 +14,7 @@ import { useRouter } from 'next/navigation';
 import { Box, FormControl } from '@mui/material';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
+import { signIn } from '../../app/auth/lib';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),

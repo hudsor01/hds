@@ -10,15 +10,11 @@ import { Input } from 'components/ui/input';
 import { Label } from 'components/ui/label';
 import { Separator } from 'components/ui/separator';
 import { AnimatePresence, motion } from 'framer-motion';
-import { signIn } from 'next-auth/react';
 import { useFormStatus } from 'react-dom';
 import { Loader } from 'react-feather';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-
-import { useActionState } from 'react';
-import { useState } from 'react';
-
+import { useActionState, useState } from 'react';
 import { Route } from 'next';
 import { useRouter, useSearchParams } from 'next/navigation';
 

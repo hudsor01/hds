@@ -1,9 +1,11 @@
-import { cn } from '@/lib/utils'
-import { Avatar } from '@mui/material'
-import { signOut, useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
-import { Route } from 'next/types'
-import { Home, Link } from 'react-feather'
+'use client';
+
+import { cn } from '@/lib/utils';
+import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { usePathname } from 'next/navigation';
+import { Route } from 'next/types';
+import { Home } from 'react-feather';
+import Link from 'next/link';
 
 const navigation: Array<{ name: string; href: Route }> = [
   { name: 'About', href: '/about' },
@@ -14,7 +16,6 @@ const navigation: Array<{ name: string; href: Route }> = [
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { data: session } = useSession();
 
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60'>
@@ -24,7 +25,6 @@ export default function Navbar() {
           <span className='hidden font-bold sm:inline-block'>HDS</span>
         </Link>
 
-        {/* Rest of the component remains the same */}
         <nav className='flex-1 flex items-center justify-center space-x-2'>
           {navigation.map(item => (
             <Link
@@ -43,39 +43,16 @@ export default function Navbar() {
         </nav>
 
         <div className='flex items-center space-x-4 mr-4'>
-          {session ? (
-            <div className='flex items-center space-x-2'>
-              <Avatar
-                alt={session?.user?.name || 'User'}
-                src={session?.user?.image}
-                onClick={() => {
-                  /* handle avatar click for profile/settings */
-                }}
-                sx={{ cursor: 'pointer' }}
-              />
-              <button
-                onClick={() => signOut()}
-                className='text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
-              >
-                Sign Out
-              </button>
-            </div>
-          ) : (
-            <>
-              <Link
-                href='/login'
-                className='text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
-              >
+          <SignedOut>
+            <SignInButton mode="modal">
+              <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
                 Sign In
-              </Link>
-              <Link
-                href='/signup'
-                className='inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground shadow hover:bg-primary/90 h-9 px-4 py-2'
-              >
-                Sign Up
-              </Link>
-            </>
-          )}
+              </button>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <UserButton afterSignOutUrl="/" />
+          </SignedIn>
         </div>
       </div>
     </header>

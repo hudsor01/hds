@@ -1,5 +1,5 @@
-import type { Session } from 'next-auth';
-import { useSession } from 'next-auth/react';
+import { useSession } from '@clerk/nextjs';
+import { Session } from '@prisma/client';
 
 export function useAuth() {
   const { data: session, status } = useSession();

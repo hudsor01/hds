@@ -1,9 +1,8 @@
+import { ClerkProvider } from '@clerk/nextjs';
 import { Footer } from 'components/layout/footer';
-import { Navbar } from 'components/layout/navbar';
-
+import Navbar from 'components/layout/Navbar/Navbar';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-
 import './globals.css';
 import { Providers } from './providers';
 
@@ -24,14 +23,16 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang='en' className={`${roboto.variable} antialiased`}>
-      <body className='min-h-screen bg-background font-sans antialiased'>
-        <Providers>
-          <Navbar />
-          <main className='relative flex min-h-screen flex-col'>{children}</main>
-          <Footer />
-        </Providers>
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang='en'>
+        <body className={roboto.className}>
+          <Providers>
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
+          </Providers>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }

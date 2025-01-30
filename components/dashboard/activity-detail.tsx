@@ -1,9 +1,9 @@
 'use client';
 
-import { PRIORITY_LABELS, STATUS_LABELS } from '@/auth/lib/constants';
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/ui/sheet';
 import { format } from 'date-fns';
 import type { RecentActivity } from 'types/dashboard';
+import { PRIORITY_LABELS, STATUS_LABELS } from '../../app/auth/lib/constants';
 
 interface ActivityDetailProps {
   activity: RecentActivity;
