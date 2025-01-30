@@ -3,9 +3,7 @@ import NextAuth, { DefaultUser } from 'next-auth';
 import { type JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-
 import { PrismaAdapter } from '@auth/prisma-adapter';
-
 import { prisma } from './lib/prisma';
 import type { AuthUserMetadata } from './types/auth-user';
 
@@ -13,20 +11,20 @@ type ExtendedUser = {
   stripe_customer_id?: string | null;
   stripe_subscription_id?: string | null;
   subscription_status?: string | null;
-  trial_ends_at?: Date | null;
+  trial_ends_at?: string | null; // Change to string here
 };
 
 declare module 'next-auth' {
   interface Session {
     user: {
-      stripe_customer_id: string | null | undefined;
-      stripe_subscription_id: string | null | undefined;
-      subscription_status: string | null | undefined;
-      trial_ends_at: Date | null | undefined;
       id: string;
       email: string;
       name?: string | undefined;
       image?: string | undefined;
+      stripe_customer_id?: string | null;
+      stripe_subscription_id?: string | null;
+      subscription_status?: string | null;
+      trial_ends_at?: string | null;
     };
   }
 
@@ -113,16 +111,21 @@ export const { auth, handlers, signIn, signOut } = NextAuth({
         token.stripe_customer_id = user.stripe_customer_id;
         token.stripe_subscription_id = user.stripe_subscription_id;
         token.subscription_status = user.subscription_status;
-        token.trial_ends_at = user.trial_ends_at;
+        // Convert Date to ISO string when storing in token
+        token.trial_ends_at = user.trial_ends_at instanceof Date 
+          ? user.trial_ends_at.toISOString() 
+          : user.trial_ends_at;
       }
       return token;
     },
+
     async session({ session, token }) {
       if (session?.user && token) {
         session.user.id = token.id;
         session.user.stripe_customer_id = token.stripe_customer_id;
         session.user.stripe_subscription_id = token.stripe_subscription_id;
         session.user.subscription_status = token.subscription_status;
+        // Direct assignment as it's already a string
         session.user.trial_ends_at = token.trial_ends_at;
       }
       return session;

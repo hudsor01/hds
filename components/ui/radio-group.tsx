@@ -1,15 +1,15 @@
-'use client'
+'use client';
 
-import { cn } from '@/auth/lib/utils'
-import type { RadioGroupProps as MuiRadioGroupProps } from '@mui/material'
+import * as React from 'react';
+import type { RadioGroupProps as MuiRadioGroupProps } from '@mui/material';
 import {
-    FormControl,
-    FormControlLabel,
-    Radio as MuiRadio,
-    RadioGroup as MuiRadioGroup,
-    styled,
-} from '@mui/material'
-import * as React from 'react'
+  FormControl,
+  FormControlLabel,
+  Radio as MuiRadio,
+  RadioGroup as MuiRadioGroup,
+  styled,
+} from '@mui/material';
+import { cn } from '@/lib/utils';
 
 const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
@@ -22,22 +22,22 @@ const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   '&:hover': {
     backgroundColor: theme.palette.action.hover,
   },
-}))
+}));
 
 export interface RadioGroupProps extends Omit<MuiRadioGroupProps, 'defaultValue'> {
-  defaultValue?: string
-  onValueChange?: (value: string) => void
+  defaultValue?: string;
+  onValueChange?: (value: string) => void;
 }
 
 export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
   ({ className, defaultValue, value, onChange, onValueChange, children, ...props }, ref) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
-        onChange?.(event, event.target.value)
-        onValueChange?.(event.target.value)
+        onChange?.(event, event.target.value);
+        onValueChange?.(event.target.value);
       },
-      [onChange, onValueChange]
-    )
+      [onChange, onValueChange],
+    );
 
     return (
       <FormControl>
@@ -52,13 +52,13 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           {children}
         </MuiRadioGroup>
       </FormControl>
-    )
-  }
-)
-RadioGroup.displayName = 'RadioGroup'
+    );
+  },
+);
+RadioGroup.displayName = 'RadioGroup';
 
 export interface RadioGroupItemProps extends React.ComponentProps<typeof MuiRadio> {
-  label?: React.ReactNode
+  label?: React.ReactNode;
 }
 
 export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItemProps>(
@@ -69,15 +69,15 @@ export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItem
           ref={ref}
           className={cn(
             'aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow-sm focus:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
-            className
+            className,
           )}
           {...props}
         />
       }
       label={label}
     />
-  )
-)
-RadioGroupItem.displayName = 'RadioGroupItem'
+  ),
+);
+RadioGroupItem.displayName = 'RadioGroupItem';
 
-export default RadioGroup
+export default RadioGroup;

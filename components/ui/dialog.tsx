@@ -1,22 +1,26 @@
-'use client'
+'use client';
 
-import { cn } from '@/auth/lib/utils'
-import { Dialog as MuiDialog, DialogContent as MuiDialogContent, DialogTitle as MuiDialogTitle } from '@mui/material'
-import * as React from 'react'
+import * as React from 'react';
+import {
+  Dialog as MuiDialog,
+  DialogContent as MuiDialogContent,
+  DialogTitle as MuiDialogTitle,
+} from '@mui/material';
+import { cn } from '@/lib/utils';
 
 interface DialogProps extends React.ComponentProps<typeof MuiDialog> {
-  onOpenChange?: (open: boolean) => void
+  onOpenChange?: (open: boolean) => void;
 }
 
 const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
   ({ className, children, onOpenChange, open, onClose, ...props }, ref) => {
     const handleClose = React.useCallback(
       (event: {}, reason: 'backdropClick' | 'escapeKeyDown') => {
-        onClose?.(event, reason)
-        onOpenChange?.(false)
+        onClose?.(event, reason);
+        onOpenChange?.(false);
       },
-      [onClose, onOpenChange]
-    )
+      [onClose, onOpenChange],
+    );
 
     return (
       <MuiDialog
@@ -28,10 +32,10 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
       >
         {children}
       </MuiDialog>
-    )
-  }
-)
-Dialog.displayName = 'Dialog'
+    );
+  },
+);
+Dialog.displayName = 'Dialog';
 
 const DialogContent = React.forwardRef<
   HTMLDivElement,
@@ -39,38 +43,26 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <MuiDialogContent
     ref={ref}
-    className={cn(
-      'relative bg-background p-6 shadow-lg sm:rounded-lg',
-      className
-    )}
+    className={cn('relative bg-background p-6 shadow-lg sm:rounded-lg', className)}
     {...props}
   >
     {children}
   </MuiDialogContent>
-))
-DialogContent.displayName = 'DialogContent'
+));
+DialogContent.displayName = 'DialogContent';
 
-const DialogHeader = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
-  <div
-    className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)}
-    {...props}
-  />
-)
-DialogHeader.displayName = 'DialogHeader'
+const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+  <div className={cn('flex flex-col space-y-1.5 text-center sm:text-left', className)} {...props} />
+);
+DialogHeader.displayName = 'DialogHeader';
 
-const DialogFooter = ({
-  className,
-  ...props
-}: React.HTMLAttributes<HTMLDivElement>) => (
+const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
   <div
     className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
     {...props}
   />
-)
-DialogFooter.displayName = 'DialogFooter'
+);
+DialogFooter.displayName = 'DialogFooter';
 
 const DialogTitle = React.forwardRef<
   HTMLHeadingElement,
@@ -81,26 +73,15 @@ const DialogTitle = React.forwardRef<
     className={cn('text-lg font-semibold leading-none tracking-tight', className)}
     {...props}
   />
-))
-DialogTitle.displayName = 'DialogTitle'
+));
+DialogTitle.displayName = 'DialogTitle';
 
 const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
-    {...props}
-  />
-))
-DialogDescription.displayName = 'DialogDescription'
+  <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+));
+DialogDescription.displayName = 'DialogDescription';
 
-export {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle
-}
+export { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle };

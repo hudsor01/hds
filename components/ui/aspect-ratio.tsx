@@ -1,11 +1,11 @@
-'use client'
+'use client';
 
-import { cn } from '@/auth/lib/utils'
-import { Box } from '@mui/material'
-import * as React from 'react'
+import * as React from 'react';
+import { Box } from '@mui/material';
+import { cn } from '@/lib/utils';
 
 export interface AspectRatioProps extends React.ComponentProps<typeof Box> {
-  ratio?: number
+  ratio?: number;
 }
 
 export const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
@@ -19,6 +19,6 @@ export const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
       }}
       {...props}
     />
-  )
-)
-AspectRatio.displayName = 'AspectRatio'
+  ),
+);
+AspectRatio.displayName = 'AspectRatio';

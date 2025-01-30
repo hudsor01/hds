@@ -1,15 +1,10 @@
-'use client'
+'use client';
 
-import { cn } from '@/auth/lib/utils'
-import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material'
-import {
-    Link,
-    Breadcrumbs as MuiBreadcrumbs,
-    Typography,
-    styled,
-} from '@mui/material'
-import * as React from 'react'
-import { ChevronRight } from 'react-feather'
+import { ChevronRight } from 'react-feather';
+import * as React from 'react';
+import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material';
+import { Link, Breadcrumbs as MuiBreadcrumbs, styled, Typography } from '@mui/material';
+import { cn } from '@/lib/utils';
 
 const StyledBreadcrumbs = styled(MuiBreadcrumbs)(({ theme }) => ({
   '& .MuiBreadcrumbs-separator': {
@@ -19,13 +14,13 @@ const StyledBreadcrumbs = styled(MuiBreadcrumbs)(({ theme }) => ({
     display: 'flex',
     alignItems: 'center',
   },
-}))
+}));
 
 export interface BreadcrumbsProps extends MuiBreadcrumbsProps {
   items: {
-    href?: string
-    label: React.ReactNode
-  }[]
+    href?: string;
+    label: React.ReactNode;
+  }[];
 }
 
 export const Breadcrumbs = React.forwardRef<HTMLDivElement, BreadcrumbsProps>(
@@ -37,37 +32,33 @@ export const Breadcrumbs = React.forwardRef<HTMLDivElement, BreadcrumbsProps>(
       {...props}
     >
       {items.map((item, index) => {
-        const isLast = index === items.length - 1
+        const isLast = index === items.length - 1;
 
         if (isLast) {
           return (
-            <Typography
-              key={index}
-              variant="body2"
-              className="text-foreground font-medium"
-            >
+            <Typography key={index} variant='body2' className='text-foreground font-medium'>
               {item.label}
             </Typography>
-          )
+          );
         }
 
         return item.href ? (
           <Link
             key={index}
             href={item.href}
-            underline="hover"
-            color="inherit"
-            className="hover:text-foreground"
+            underline='hover'
+            color='inherit'
+            className='hover:text-foreground'
           >
             {item.label}
           </Link>
         ) : (
-          <Typography key={index} variant="body2" color="inherit">
+          <Typography key={index} variant='body2' color='inherit'>
             {item.label}
           </Typography>
-        )
+        );
       })}
     </StyledBreadcrumbs>
-  )
-)
-Breadcrumbs.displayName = 'Breadcrumbs'
+  ),
+);
+Breadcrumbs.displayName = 'Breadcrumbs';

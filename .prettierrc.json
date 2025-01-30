@@ -28,15 +28,11 @@
     "^@/public/(.*)$",
     "^[./]"
   ],
-  "importOrderSeparation": true,
   "importOrderSortSpecifiers": true,
   "importOrderCaseInsensitive": true,
   "tailwindConfig": "./tailwind.config.ts",
   "tailwindFunctions": ["clsx", "cva", "twMerge"],
-  "plugins": [
-    "prettier-plugin-tailwindcss",
-    "@trivago/prettier-plugin-sort-imports"
-  ],
+  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
   "overrides": [
     {
       "files": "*.{ts,tsx}",

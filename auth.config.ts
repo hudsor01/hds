@@ -33,7 +33,7 @@ declare module 'next-auth' {
       stripe_customer_id: string | null | undefined;
       stripe_subscription_id: string | null | undefined;
       subscription_status: string | null | undefined;
-      trial_ends_at: Date | null | undefined;
+      trial_ends_at: string | null | undefined; // Change Date to string
       id: string;
       email: string;
       name?: string | undefined;
@@ -74,18 +74,18 @@ const authConfig = {
     verifyRequest: '/verify-email',
   },
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account }: { token: JWT; user?: CustomUser; account?: any }) {
       if (user) {
         // Update token with user data during sign in
         token = {
           ...token,
           id: user.id,
-          stripe_customer_id: (user as CustomUser).stripe_customer_id,
-          stripe_subscription_id: (user as CustomUser).stripe_subscription_id,
-          subscription_status: (user as CustomUser).subscription_status,
-          trial_ends_at: (user as CustomUser).trial_ends_at,
+          stripe_customer_id: user.stripe_customer_id,
+          stripe_subscription_id: user.stripe_subscription_id,
+          subscription_status: user.subscription_status,
+          trial_ends_at: user.trial_ends_at,
           supabase_provider: account?.provider,
-          role: (user as CustomUser).role,
+          role: user.role,
         };
       }
 
