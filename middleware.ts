@@ -1,6 +1,6 @@
-import { type NextRequest, NextResponse } from 'next/server';
-
-import { type CookieOptions, createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
+import { auth } from './auth'
 
 const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
 
@@ -42,10 +42,30 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+export const publicRoutes = ['/login', '/signup', '/forgot-password', '/reset-password'];
+
+export default auth((req) => {
+  const { nextUrl } = req;
+  const isLoggedIn = !!req.auth;
+
+  const isApiAuthRoute = nextUrl.pathname.startsWith('/api/auth');
+  const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
+
+  if (isPublicRoute || isApiAuthRoute) {
+    return null;
+  }
+
+  if (!isLoggedIn) {
+    const redirectUrl = new URL('/login', nextUrl);
+    redirectUrl.searchParams.set('callbackUrl', nextUrl.pathname);
+    return NextResponse.redirect(redirectUrl);
+  }
+
+  return null;
+});
+
 export const config = {
   matcher: [
-    '/dashboard/:path*',
-    '/api/:path*',
-    '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    '/((?!api/auth|_next/static|_next/image|favicon.ico).*)',
   ],
 };

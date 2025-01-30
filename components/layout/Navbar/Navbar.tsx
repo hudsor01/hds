@@ -1,15 +1,15 @@
-'use client';
-
 import { signOut, useSession } from 'next-auth/react';
-import { Home } from 'react-feather';
-
-import type { Route } from 'next';
-import Link from 'next/link';
+import { Home, Link } from 'react-feather';
+import {
+  RequestCookie,
+  ResponseCookie,
+  ResponseCookies,
+} from 'next/dist/compiled/@edge-runtime/cookies';
 import { usePathname } from 'next/navigation';
-
+import { Route } from 'next/types';
 import { Avatar } from '@mui/material';
-
 import { cn } from '@/lib/utils';
+import { createClient } from '@/utils/supabase/server';
 
 const navigation: Array<{ name: string; href: Route }> = [
   { name: 'About', href: '/about' },
@@ -18,9 +18,40 @@ const navigation: Array<{ name: string; href: Route }> = [
   { name: 'Contact', href: '/contact' },
 ];
 
-export function Navbar() {
+export default async function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
+  const supabase = createClient({
+    [Symbol.iterator]: function () {
+      throw new Error('Function not implemented.');
+    },
+    size: 0,
+    get: function (...args: [RequestCookie] | [name: string]): RequestCookie | undefined {
+      throw new Error('Function not implemented.');
+    },
+    getAll: function (...args: [name: string] | [RequestCookie] | []): RequestCookie[] {
+      throw new Error('Function not implemented.');
+    },
+    has: function (name: string): boolean {
+      throw new Error('Function not implemented.');
+    },
+    set: function (
+      ...args:
+        | [key: string, value: string, cookie?: Partial<ResponseCookie> | undefined]
+        | [options: ResponseCookie]
+    ): ResponseCookies {
+      throw new Error('Function not implemented.');
+    },
+    delete: function (
+      ...args: [key: string] | [options: Omit<ResponseCookie, 'value' | 'expires'>]
+    ): ResponseCookies {
+      throw new Error('Function not implemented.');
+    },
+  });
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
   return (
     <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60'>
