@@ -19,9 +19,9 @@ export async function ServerProfile() {
       <Typography variant='h6' gutterBottom>
         Server-Side Profile Data
       </Typography>
-      <Typography variant='body1'>User ID: {session.user.id}</Typography>
-      <Typography variant='body1'>Email: {session.user.email}</Typography>
-      {session.user.name && <Typography variant='body1'>Name: {session.user.name}</Typography>}
+      <Typography variant='body1'>User ID: {session.userId}</Typography>
+      <Typography variant='body1'>Email: {session.emailAddresses?.[0]?.emailAddress}</Typography>
+      {session.firstName && <Typography variant='body1'>Name: {session.firstName}</Typography>}
     </Box>
   );
 }

@@ -29,6 +29,7 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
           <input type='hidden' name='redirect' value={redirect || ''} />
           <input type='hidden' name='priceId' value={priceId || ''} />
           <input type='hidden' name='inviteId' value={inviteId || ''} />
+          
           <div>
             <Label htmlFor='email' className='block text-sm font-medium text-gray-700'>
               Email
@@ -72,13 +73,9 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
             <Button
               type='submit'
               className='w-full flex justify-center items-center py-2 px-4 border border-transparent rounded-full shadow-sm text-sm font-medium text-white bg-orange-600 hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500'
+              disabled={false}
             >
-              {mode === 'signin' ? 'Sign in' : 'Sign up'}
-            </Button>
-          </div>
-              disabled={pending}
-            >
-              {pending ? (
+              {false ? (
                 <>
                   <Loader className='animate-spin mr-2 h-4 w-4' />
                   Loading...
@@ -89,8 +86,8 @@ export function Login({ mode = 'signin' }: { mode?: 'signin' | 'signup' }) {
                 'Sign up'
               )}
             </Button>
-          </div></>
-        </form>}
+          </div>
+        </form>
 
         <div className='mt-6'>
           <div className='relative'>

@@ -1,24 +1,19 @@
-import { authMiddleware, createRouteMatcher } from '@clerk/nextjs';
+import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server';
+import { NextRequest } from 'next/server';
 
 // Define route matchers for different access levels
-const isAdminRoute = createRouteMatcher([
-  '/admin(.*)',
-  '/api/admin(.*)'
-]);
+const isAdminRoute = createRouteMatcher(['/admin(.*)', '/api/admin(.*)']);
 
 const isTenantRoute = createRouteMatcher([
   '/dashboard(.*)',
   '/account(.*)',
   '/features(.*)',
-  '/api/tenant(.*)'
+  '/api/tenant(.*)',
 ]);
 
-const isMaintenanceRoute = createRouteMatcher([
-  '/maintenance(.*)',
-  '/api/maintenance(.*)'
-]);
+const isMaintenanceRoute = createRouteMatcher(['/maintenance(.*)', '/api/maintenance(.*)']);
 
-export default authMiddleware({
+export default clerkMiddleware({
   publicRoutes: [
     '/',
     '/sign-in',
@@ -28,25 +23,29 @@ export default authMiddleware({
     '/api/webhook/clerk',
     '/api/webhook/stripe',
   ],
-  ignoredRoutes: [
-    '/api/webhook/clerk',
-    '/api/webhook/stripe'
-  ],
-  async afterAuth(auth, req) {
+  ignoredRoutes: ['/api/webhook/clerk', '/api/webhook/stripe'],
+  async afterAuth(
+    auth: {
+      userId: any;
+      orgId: any;
+      sessionClaims: { role: string; permissions: string | string[] };
+    },
+    req: { url: string | NextRequest | URL | undefined },
+  ) {
     // Debug mode in development
     if (process.env.NODE_ENV === 'development') {
       console.log('Auth middleware:', {
         userId: auth.userId,
         orgId: auth.orgId,
-        sessionClaims: auth.sessionClaims
+        sessionClaims: auth.sessionClaims,
       });
     }
 
     // Handle protected routes
-    if (isAdminRoute(req.url)) {
+    if (isAdminRoute(req.url?.toString())) {
       const isAdmin = auth.sessionClaims?.role === 'admin';
       if (!isAdmin) {
-        return Response.redirect(new URL('/dashboard', req.url));
+        return Response.redirect(new URL('/dashboard', req.url.toString()));
       }
     }
 
@@ -65,7 +64,7 @@ export default authMiddleware({
         return Response.redirect(new URL('/dashboard', req.url));
       }
     }
-  }
+  },
 });
 
 export const config = {

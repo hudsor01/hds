@@ -1,7 +1,7 @@
 'use client';
 
 import { useSession } from '@clerk/nextjs';
-import { Button } from 'components/ui/button';
+import { Button } from '@/components/ui/button';
 import { signOut } from '../../app/auth/lib/auth/auth';
 
 export function AuthButton() {

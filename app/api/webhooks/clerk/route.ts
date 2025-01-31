@@ -16,18 +16,12 @@ export async function POST(req: Request) {
     const svix_timestamp = headerPayload.get('svix-timestamp');
     const svix_signature = headerPayload.get('svix-signature');
 
-    // If there are no headers, error out
     if (!svix_id || !svix_timestamp || !svix_signature) {
-      return new Response('Error occured -- no svix headers', {
-        status: 400,
-      });
+      return new Response('Missing Svix headers', { status: 400 });
     }
 
-    // Get the body
     const payload = await req.json();
     const body = JSON.stringify(payload);
-
-    // Create a new Svix instance with your secret
     const wh = new Webhook(WEBHOOK_SECRET);
 
     let evt: WebhookEvent;
@@ -39,36 +33,64 @@ export async function POST(req: Request) {
         'svix-signature': svix_signature,
       }) as WebhookEvent;
     } catch (err) {
-      console.error('Error verifying webhook:', err);
-      return new Response('Error occured', {
-        status: 400,
-      });
+      console.error('Webhook verification failed:', err);
+      return new Response('Verification failed', { status: 400 });
     }
 
-    // Handle the webhook
-    if (evt.type === 'user.created') {
-      const userData = evt.data;
-      console.log('Webhook received:', {
-        type: evt.type,
-        userId: userData.id,
-        email: userData.email_addresses[0]?.email_address,
-        name: `${userData.first_name} ${userData.last_name}`,
-        timestamp: evt.type === 'user.created' ? userData.created_at : userData.updated_at,
-      });
+    switch (evt.type) {
+      case 'user.created':
+        const userData = evt.data;
+        await prisma.user.create({
+          data: {
+            clerkId: userData.id,
+            email: userData.email_addresses[0]?.email_address,
+            name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim(),
+            image: userData.image_url,
+            role: 'USER',
+            subscriptionStatus: 'INACTIVE',
+          },
+        });
+        break;
 
-      await prisma.user.create({
-        data: {
-          id: userData.id,
-          email: userData.email_addresses[0].email_address,
-          name: `${userData.first_name || ''} ${userData.last_name || ''}`.trim(),
-          image: userData.image_url,
-        },
-      });
-      console.log('User created successfully in database');
+      case 'user.updated':
+        const updatedUser = evt.data;
+        await prisma.user.update({
+          where: { clerkId: updatedUser.id },
+          data: {
+            email: updatedUser.email_addresses[0]?.email_address,
+            name: `${updatedUser.first_name || ''} ${updatedUser.last_name || ''}`.trim(),
+            image: updatedUser.image_url,
+          },
+        });
+        break;
+
+      case 'user.deleted':
+        await prisma.user.delete({
+          where: { clerkId: evt.data.id },
+        });
+        break;
+
+      case 'organization.created':
+        const orgData = evt.data;
+        await prisma.organization.create({
+          data: {
+            clerkId: orgData.id,
+            name: orgData.name,
+            slug: orgData.slug,
+            imageUrl: orgData.image_url,
+          },
+        });
+        break;
+
+      default:
+        console.log(`Unhandled webhook event type: ${evt.type}`);
     }
-    return new Response('Success', { status: 200 });
+    return new Response('Webhook processed', { status: 200 });
   } catch (error) {
     console.error('Webhook error:', error);
-    return new Response('Webhook error', { status: 500 });
+    if (error instanceof Error) {
+      return new Response(`Webhook error: ${error.message}`, { status: 500 });
+    }
+    return new Response('Webhook processing failed', { status: 500 });
   }
 }

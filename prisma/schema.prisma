@@ -10,17 +10,17 @@ datasource db {
 }
 
 model User {
-  id                   String                @id @default(dbgenerated("uuid_generate_v4()"))
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()"))
   name                 String?
-  email                String                @unique
+  email                String                 @unique
   image                String?
-  createdAt            DateTime              @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt            DateTime              @default(now()) @map("updated_at") @db.Timestamptz(6)
-  stripeCustomerId     String?               @map("stripe_customer_id")
-  subscriptionStatus   String?               @map("subscription_status")
-  properties           Json[]                @default([])
-  tenancies            Json[]                @default([])
-  maintenanceRequests  maintenance_requests[] @relation("UserMaintenanceRequests")
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  stripe_customer_id   String?
+  subscription_status  String?
+  properties           Json[]                 @default([])
+  tenancies            Json[]                 @default([])
+  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
   @@map("users")
   @@schema("public")
@@ -62,21 +62,6 @@ model Account {
   sessionState      String? @map("session_state")
 
   @@unique([provider, providerAccountId])
-  @@schema("public")
-}
-
-model PrismaMigration {
-  userId            String    @id @map("user_id") @db.VarChar(36)
-  checksum          String    @db.VarChar(64)
-  finishedAt        DateTime? @map("finished_at") @db.Timestamptz(6)
-  migrationName     String    @map("migration_name") @db.VarChar(255)
-  logs              String?
-  rolledBackAt      DateTime? @map("rolled_back_at") @db.Timestamptz(6)
-  startedAt         DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
-  appliedStepsCount Int       @default(0) @map("applied_steps_count")
-  createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-
-  @@map("_prisma_migrations")
   @@schema("public")
 }
 
