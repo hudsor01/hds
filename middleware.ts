@@ -14,15 +14,18 @@ const isTenantRoute = createRouteMatcher([
 const isMaintenanceRoute = createRouteMatcher(['/maintenance(.*)', '/api/maintenance(.*)']);
 
 export default clerkMiddleware({
-  publicRoutes: [
-    '/',
-    '/sign-in',
-    '/sign-up',
-    '/about',
-    '/contact',
-    '/api/webhook/clerk',
-    '/api/webhook/stripe',
-  ],
+  publicRoutes: (req) => {
+    const publicPaths = [
+      '/',
+      '/sign-in',
+      '/sign-up',
+      '/about',
+      '/contact',
+      '/api/webhook/clerk',
+      '/api/webhook/stripe'
+    ];
+    return publicPaths.includes(new URL(req.url).pathname);
+  },
   ignoredRoutes: ['/api/webhook/clerk', '/api/webhook/stripe'],
   async afterAuth(
     auth: {
