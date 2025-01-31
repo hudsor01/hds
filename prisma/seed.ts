@@ -9,19 +9,24 @@ async function main() {
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscription_status: 'active',
+      subscriptionStatus: 'active',
     },
   });
 
   // Create a test property
-  const property = prisma.properties.create({
+  const property = await prisma.properties.create({
     data: {
       name: 'Test Property',
       address: '123 Test Street',
-      type: 'APARTMENT',
-      rentAmount: 1500,
-      ownerId: user.id,
-      status: 'AVAILABLE',
+      city: 'Test City',
+      state: 'CA',
+      zip: '12345',
+      type: 'Residential',
+      rent_amount: 1500,
+      owner_id: user.id,
+      status: 'active',
+      amenities: [],
+      images: [],
     },
   });
 

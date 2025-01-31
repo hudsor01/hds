@@ -4,23 +4,23 @@ generator client {
 }
 
 datasource db {
-  provider  = "postgresql"
-  url       = env("DATABASE_URL")
-  schemas   = ["auth", "private", "public"]
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+  schemas  = ["auth", "private", "public"]
 }
 
 model User {
-  id                 String             @id @default(cuid())
-  name               String?
-  email              String?            @unique
-  image              String?
-  createdAt          DateTime?          @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt          DateTime?          @default(now()) @map("updated_at") @db.Timestamptz(6)
-  stripeCustomerId   String?            @map("stripe_customer_id")
-  subscriptionStatus String?            @map("subscription_status")
-  properties         Json[]             @default([])
-  tenancies          Json[]             @default([])
-  maintenance_requests maintenance_requests[]
+  id                   String                 @id @default(dbgenerated("(gen_random_uuid())::text"))
+  name                 String?
+  email                String                 @unique
+  image                String?
+  createdAt            DateTime?              @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt            DateTime?              @default(now()) @map("updated_at") @db.Timestamptz(6)
+  stripeCustomerId     String?                @map("stripe_customer_id")
+  subscriptionStatus   String?                @map("subscription_status")
+  properties           Json[]                 @default([])
+  tenancies            Json[]                 @default([])
+  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
   @@map("users")
   @@schema("public")
@@ -49,10 +49,10 @@ model Tenancy {
 
 model Account {
   id                String  @id
-  userId            String  @map("user_id")
+  userId            String
   type              String
   provider          String
-  providerAccountId String  @map("provider_account_id")
+  providerAccountId String
   refreshToken      String? @map("refresh_token")
   accessToken       String? @map("access_token")
   expiresAt         Int?    @map("expires_at")
@@ -66,67 +66,32 @@ model Account {
 }
 
 model PrismaMigration {
-  userId             String    @id @map("user_id") @db.VarChar(36)
-  checksum            String    @db.VarChar(64)
-  finishedAt         DateTime? @map("finished_at") @db.Timestamptz(6)
-  migrationName      String    @map("migration_name") @db.VarChar(255)
-  logs                String?
+  userId            String    @id @map("user_id") @db.VarChar(36)
+  checksum          String    @db.VarChar(64)
+  finishedAt        DateTime? @map("finished_at") @db.Timestamptz(6)
+  migrationName     String    @map("migration_name") @db.VarChar(255)
+  logs              String?
   rolledBackAt      DateTime? @map("rolled_back_at") @db.Timestamptz(6)
-  startedAt          DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
+  startedAt         DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
   appliedStepsCount Int       @default(0) @map("applied_steps_count")
-  createdAt          DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  createdAt         DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
 
   @@map("_prisma_migrations")
   @@schema("public")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model Activity {
-  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String       @default(dbgenerated("auth.uid()")) @map("user_id") @db.Uuid
-  type         ActivityType
-  entityType   EntityType   @map("entity_type")
-  entityId     String       @map("entity_id")
-  description  String
-  createdAt    DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
-
-  @@index([entityId], map: "activities_entityId_idx")
-  @@index([entityType, entityId], map: "activities_entity_type_id_idx")
-  @@index([type])
-  @@index([userId, createdAt])
-  @@map("activities")
-  @@schema("public")
-}
-
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model AdminAuditLog {
-  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId      String?      @map("user_id") @db.Uuid
-  action      AuditAction
-  entityType  EntityType
-  entityId    String?      @db.Uuid
-  oldValues   Json?
-  newValues   Json?
-  ipAddress   String?      @map("ip_address") @db.VarChar(45)
-  userAgent   String?      @map("user_agent")
-  createdAt   DateTime?    @default(now()) @map("created_at") @db.Timestamptz(6)
-
-  @@map("admin_audit_logs")
-  @@schema("public")
-}
-
 model Documents {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id(map: "documents_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   name        String
   description String?
   url         String
   type        String
   size        BigInt?
-  property_id String?   @db.Uuid
-  lease_id    String?   @db.Uuid
-  uploaded_by String    @db.Uuid
-  created_at  DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  propertyId  String?   @db.Uuid
+  leaseId     String?   @db.Uuid
+  uploadedBy  String    @db.Uuid
+  createdAt   DateTime? @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime? @default(now()) @db.Timestamptz(6)
 
   @@schema("public")
 }
@@ -181,25 +146,23 @@ model ip_blacklist {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model leases {
-  user_id       String      @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String    @id @default(dbgenerated("auth.uid()")) @db.Uuid
   tenant_id     String
   property_id   String
   type          LeaseType
-  status        leasestatus @default(Pending)
   start_date    DateTime
   end_date      DateTime?
   rent_amount   Decimal
   depositAmount Decimal
   payment_day   Int
   documents     String[]
-  created_at    DateTime    @default(now()) @db.Timestamptz(6)
+  created_at    DateTime  @default(now()) @db.Timestamptz(6)
+  status        String?   @default("Pending")
 
   @@index([created_at])
-  @@index([start_date, end_date, status], map: "leases_dates_status_idx")
   @@index([end_date])
   @@index([property_id], map: "leases_propertyId_idx")
   @@index([start_date])
-  @@index([status])
   @@index([tenant_id], map: "leases_tenantId_idx")
   @@index([tenant_id])
   @@index([type])
@@ -230,8 +193,8 @@ model maintenance_requests {
   requester_id String?
   created_at   DateTime?   @default(now()) @db.Timestamptz(6)
   updated_at   DateTime?   @default(now()) @db.Timestamptz(6)
-  properties   properties? @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  users        User?       @relation(fields: [requester_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  properties   properties? @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MaintenanceRequest_property_fkey")
+  users        User?       @relation("UserMaintenanceRequests", fields: [requester_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MaintenanceRequest_user_fkey")
 
   @@schema("public")
 }
@@ -252,18 +215,17 @@ model message_threads {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model messages {
-  id           String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  sender_id    String          @db.Uuid
-  recipient_id String          @db.Uuid
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  sender_id    String    @db.Uuid
+  recipient_id String    @db.Uuid
   subject      String?
   content      String
-  status       message_status? @default(sent)
-  read_at      DateTime?       @db.Timestamptz(6)
-  attachments  String[]        @default([])
-  parent_id    String?         @db.Uuid
-  thread_id    String?         @db.Uuid
-  created_at   DateTime?       @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?       @default(now()) @db.Timestamptz(6)
+  read_at      DateTime? @db.Timestamptz(6)
+  attachments  String[]  @default([])
+  parent_id    String?   @db.Uuid
+  thread_id    String?   @db.Uuid
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
 
   @@index([created_at])
   @@index([recipient_id])
@@ -274,19 +236,17 @@ model messages {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model notifications {
-  id         String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  user_id    String               @db.Uuid
+  id         String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String            @db.Uuid
   type       notification_type
   title      String
   message    String
-  status     notification_status? @default(unread)
-  data       Json?                @default("{}")
-  read_at    DateTime?            @db.Timestamptz(6)
-  created_at DateTime?            @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?            @default(now()) @db.Timestamptz(6)
+  data       Json?             @default("{}")
+  read_at    DateTime?         @db.Timestamptz(6)
+  created_at DateTime?         @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?         @default(now()) @db.Timestamptz(6)
 
   @@index([created_at])
-  @@index([status])
   @@index([type])
   @@index([user_id])
   @@schema("public")
@@ -324,7 +284,7 @@ model payments {
   amount      Decimal
   due_date    DateTime
   paid_date   DateTime?
-  status      PaymentStatus  @default(Pending)
+  status      paymentstatus  @default(Pending)
   method      PaymentMethod?
   reference   String?
   created_at  DateTime       @default(now()) @db.Timestamptz(6)
@@ -348,10 +308,8 @@ model profiles {
   full_name  String
   email      String    @unique
   phone      String?
-  role       UserRole  @default(TENANT)
   created_at DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@index([role])
   @@schema("public")
 }
 
@@ -369,7 +327,7 @@ model properties {
   created_at           DateTime?              @default(now()) @db.Timestamptz(6)
   updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
   type                 String                 @default("Residential")
-  rent_amount          Decimal?               @db.Decimal(10, 2)
+  rent_amount          Decimal                @db.Decimal(10, 2)
   amenities            String[]               @default([])
   images               String[]               @default([])
   bathrooms            Int?
@@ -497,24 +455,22 @@ model user_activity_logs {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model user_profiles {
-  id                       String     @id @db.Uuid
+  id                       String    @id @db.Uuid
   first_name               String?
   last_name                String?
-  email                    String     @unique
+  email                    String    @unique
   phone                    String?
-  role                     user_role? @default(user)
   avatar_url               String?
   company_name             String?
   company_position         String?
-  timezone                 String?    @default("UTC")
-  notification_preferences Json?      @default("{}")
-  last_login_at            DateTime?  @db.Timestamptz(6)
+  timezone                 String?   @default("UTC")
+  notification_preferences Json?     @default("{}")
+  last_login_at            DateTime? @db.Timestamptz(6)
   last_login_ip            String?
-  created_at               DateTime?  @default(now()) @db.Timestamptz(6)
-  updated_at               DateTime?  @default(now()) @db.Timestamptz(6)
+  created_at               DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at               DateTime? @default(now()) @db.Timestamptz(6)
 
   @@index([email])
-  @@index([role])
   @@schema("public")
 }
 
@@ -643,12 +599,42 @@ model organization_members {
   @@schema("public")
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Activity {
+  userId      String       @default(dbgenerated("auth.uid()")) @db.Uuid
+  type        ActivityType
+  entityType  EntityType
+  entityId    String
+  description String
+  createdAt   DateTime?    @default(now()) @db.Timestamptz(6)
+  id          String       @id(map: "activities_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  @@index([type], map: "activities_type_idx")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model AdminAuditLog {
+  id         String      @id(map: "admin_audit_logs_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String?     @db.Uuid
+  entityType entity_type
+  entityId   String?     @db.Uuid
+  oldValues  Json?
+  newValues  Json?
+  ipAddress  String?     @db.VarChar(45)
+  userAgent  String?
+  createdAt  DateTime?   @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
 enum ActivityType {
   CREATE
   UPDATE
   DELETE
   LOGIN
   LOGOUT
+
   @@schema("public")
 }
 
@@ -657,6 +643,7 @@ enum LeaseType {
   MONTH_TO_MONTH
   WEEKLY
   YEARLY
+
   @@schema("public")
 }
 
@@ -665,8 +652,6 @@ enum TenantStatus {
   INACTIVE
   PENDING
   REJECTED
-  EVICTION
-  MOVED_OUT
 
   @@schema("public")
 }
@@ -682,77 +667,17 @@ enum AuditAction {
   PASSWORD_RESET
   EMAIL_CHANGE
   ROLE_CHANGE
+
   @@schema("public")
 }
 
 enum EntityType {
-  USER
   PROPERTY
   TENANT
-  MAINTENANCE
-  PAYMENT
   LEASE
+  PAYMENT
+  MAINTENANCE
   DOCUMENT
-  SETTINGS
-  EMAIL_TEMPLATE
-  ROUTE
-
-  @@schema("public")
-}
-
-enum ImageJobPriority {
-  LOW
-  MEDIUM
-  HIGH
-  @@schema("public")
-}
-
-enum ImageJobStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  NOT_STARTED
-  @@schema("public")
-}
-
-enum InvoiceStatus {
-  DRAFT
-  PENDING
-  PAID
-  OVERDUE
-  CANCELLED
-  @@schema("public")
-}
-
-enum InvoiceTemplateType {
-  STANDARD
-  CUSTOM
-  @@schema("public")
-}
-
-enum leasestatus {
-  Active
-  Pending
-  Expired
-  Terminated
-
-  @@schema("public")
-}
-
-enum message_status {
-  sent
-  delivered
-  read
-  failed
-
-  @@schema("public")
-}
-
-enum notification_status {
-  unread
-  read
-  archived
 
   @@schema("public")
 }
@@ -768,52 +693,11 @@ enum notification_type {
   @@schema("public")
 }
 
-enum PaymentCategory {
-  RENT
-  SECURITY_DEPOSIT
-  LATE_FEE
-  MAINTENANCE
-  UTILITIES
-  OTHER
-
-  @@schema("public")
-}
-
 enum PaymentMethod {
-  CASH
-  CHECK
   CREDIT_CARD
   BANK_TRANSFER
-  OTHER
-
-  @@schema("public")
-}
-
-enum PaymentStatus {
-  Pending
-  Paid
-  Partial
-  Late
-  Overdue
-  Cancelled
-  Refunded
-
-  @@schema("public")
-}
-
-enum PaymentType {
-  Rent
-  Deposit
-  Maintenance
-  Other
-
-  @@schema("public")
-}
-
-enum PropertyStatus {
-  Occupied
-  Vacant
-  Maintenance
+  CASH
+  CHECK
 
   @@schema("public")
 }
@@ -834,17 +718,44 @@ enum request_status {
   @@schema("public")
 }
 
-enum tenant_status {
-  active
-  pending
-  inactive
-  eviction
-  moved_out
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PROPERTY_MANAGER
+  MAINTENANCE
+  TENANT
+  USER
 
   @@schema("public")
 }
 
-enum tool_type {
+enum LeaseStatus {
+  ACTIVE
+  PENDING
+  EXPIRED
+  TERMINATED
+
+  @@schema("public")
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+
+  @@schema("public")
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  ARCHIVED
+
+  @@schema("public")
+}
+
+enum ToolType {
   property_manager
   project_manager
   image_optimizer
@@ -853,23 +764,133 @@ enum tool_type {
   @@schema("public")
 }
 
-enum user_role {
-  super_admin
-  admin
-  property_manager
-  maintenance
-  tenant
-  user
+enum entity_type {
+  USER
+  PROPERTY
+  TENANT
+  MAINTENANCE
+  PAYMENT
+  LEASE
+  DOCUMENT
+  SETTINGS
+  EMAIL_TEMPLATE
+  ROUTE
 
   @@schema("public")
 }
 
-enum UserRole {
-  SUPER_ADMIN
-  ADMIN
-  PROPERTY_MANAGER
+enum image_job_priority {
+  low
+  medium
+  high
+
+  @@schema("public")
+}
+
+enum image_job_status {
+  pending
+  processing
+  completed
+  failed
+
+  @@schema("public")
+}
+
+enum invoice_status {
+  draft
+  pending
+  paid
+  overdue
+  cancelled
+
+  @@schema("public")
+}
+
+enum invoice_template_type {
+  standard
+  custom
+
+  @@schema("public")
+}
+
+enum payment_status {
+  pending
+  paid
+  partial
+  late
+  overdue
+  cancelled
+  refunded
+
+  @@schema("public")
+}
+
+enum paymentcategory {
+  RENT
+  SECURITY_DEPOSIT
+  LATE_FEE
   MAINTENANCE
-  TENANT
-  USER
+  UTILITIES
+  OTHER
+
+  @@schema("public")
+}
+
+enum paymentmethod {
+  CASH
+  CHECK
+  CREDIT_CARD
+  BANK_TRANSFER
+  OTHER
+
+  @@schema("public")
+}
+
+enum paymentstatus {
+  Pending
+  Paid
+  Overdue
+  Cancelled
+
+  @@schema("public")
+}
+
+enum paymenttype {
+  Rent
+  Deposit
+  Maintenance
+  Other
+
+  @@schema("public")
+}
+
+enum property_status {
+  available
+  occupied
+  maintenance
+  renovation
+  off_market
+
+  @@schema("public")
+}
+
+enum property_type {
+  single_family
+  multi_family
+  apartment
+  condo
+  townhouse
+  commercial
+  industrial
+  land
+
+  @@schema("public")
+}
+
+enum propertystatus {
+  Occupied
+  Vacant
+  Maintenance
+
   @@schema("public")
 }

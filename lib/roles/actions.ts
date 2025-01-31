@@ -1,17 +1,17 @@
-import { auth } from '@clerk/nextjs';
-// Use server-side auth if applicable
-import { OrganizationRole } from '@prisma/client';
+'use server';
+
+import { useAuth } from '@clerk/nextjs';
 import { prisma } from '@/lib/prisma';
 import { ROLE_PERMISSIONS } from '@/types/roles';
 
 export async function createOrganization(name: string) {
-  const { userId } = auth(); // Use server-side auth
+  const { userId } = useAuth(); // Use server-side auth
 
   if (!userId) {
     throw new Error('Unauthorized');
   }
 
-  const organization = await prisma.organization.create({
+  const organization = await prisma.organizations.create({
     // Ensure model name matches schema
     data: {
       name,
@@ -47,7 +47,7 @@ export async function addMemberToOrganization(
   userId: string,
   role: OrganizationRole, // Use the correct enum
 ) {
-  const member = await prisma.organizationMember.create({
+  const member = await prisma.organization_members.create({
     // Ensure model name matches schema
     data: {
       userId, // Ensure this matches your schema
