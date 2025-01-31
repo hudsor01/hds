@@ -1,7 +1,6 @@
-import { getTeamByStripeCustomerId, getUser, updateTeamSubscription } from '@/lib/db/queries'
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
-import  from '@/lib/db/schema/roles';
+import  from '@/lib/db/schema/roles'
 
 // Single Stripe instance with complete configuration
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

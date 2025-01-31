@@ -20,6 +20,7 @@ model User {
   subscriptionStatus   String?                @map("subscription_status")
   properties           Json[]                 @default([])
   tenancies            Json[]                 @default([])
+  maintenance_requests Json[]                 @default([])
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
   @@map("users")
@@ -682,42 +683,6 @@ enum EntityType {
   @@schema("public")
 }
 
-enum notification_type {
-  system
-  maintenance
-  payment
-  lease
-  message
-  alert
-
-  @@schema("public")
-}
-
-enum PaymentMethod {
-  CREDIT_CARD
-  BANK_TRANSFER
-  CASH
-  CHECK
-
-  @@schema("public")
-}
-
-enum propertytype {
-  Residential
-  Commercial
-  Industrial
-
-  @@schema("public")
-}
-
-enum request_status {
-  pending
-  approved
-  rejected
-
-  @@schema("public")
-}
-
 enum UserRole {
   SUPER_ADMIN
   ADMIN
@@ -760,6 +725,15 @@ enum ToolType {
   project_manager
   image_optimizer
   document_manager
+
+  @@schema("public")
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  BANK_TRANSFER
+  CASH
+  CHECK
 
   @@schema("public")
 }
@@ -809,6 +783,17 @@ enum invoice_status {
 enum invoice_template_type {
   standard
   custom
+
+  @@schema("public")
+}
+
+enum notification_type {
+  system
+  maintenance
+  payment
+  lease
+  message
+  alert
 
   @@schema("public")
 }
@@ -891,6 +876,22 @@ enum propertystatus {
   Occupied
   Vacant
   Maintenance
+
+  @@schema("public")
+}
+
+enum propertytype {
+  Residential
+  Commercial
+  Industrial
+
+  @@schema("public")
+}
+
+enum request_status {
+  pending
+  approved
+  rejected
 
   @@schema("public")
 }
