@@ -1,4 +1,4 @@
-import { auth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs/server';
 import { prisma } from '@/lib/prisma';
 import { PERMISSIONS } from '@/types/roles';
 
@@ -6,11 +6,14 @@ export async function checkPermission(
   permission: keyof typeof PERMISSIONS,
   organizationId: string,
 ) {
-  const { userId } = auth();
+  const { userId, sessionClaims } = await auth();
 
   if (!userId) {
     throw new Error('Unauthorized');
   }
+
+  // You can use sessionClaims to check roles/permissions
+  const userRole = sessionClaims?.role;
 
   const member = await prisma.organizations.findFirst({
     where: {
@@ -20,16 +23,15 @@ export async function checkPermission(
       id: true,
       name: true,
       user_id: true,
-    }
+    },
   });
 
   if (!member) {
     throw new Error('Organization not found');
   }
 
-  // For now, if the user is a member of the organization, grant permission
-  // You can expand this later with more granular permission checks
-  if (member.user_id !== userId) {
+  // Add role-based permission check
+  if (userRole !== 'admin' && member.user_id !== userId) {
     throw new Error('Insufficient permissions');
   }
 

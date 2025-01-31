@@ -1,38 +1,73 @@
-import { clerkMiddleware } from '@clerk/nextjs/server';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import { authMiddleware, createRouteMatcher } from '@clerk/nextjs';
 
-export function middleware(request: NextRequest) {
-  // Get the pathname
-  const path = request.nextUrl.pathname;
+// Define route matchers for different access levels
+const isAdminRoute = createRouteMatcher([
+  '/admin(.*)',
+  '/api/admin(.*)'
+]);
 
-  // Define public paths
-  const isPublicPath =
-    path === '/sign-in' || path === '/sign-up' || path === '/' || path.startsWith('/api/public');
+const isTenantRoute = createRouteMatcher([
+  '/dashboard(.*)',
+  '/account(.*)',
+  '/features(.*)',
+  '/api/tenant(.*)'
+]);
 
-  // Check auth token
-  const token = request.cookies.get('auth-token');
+const isMaintenanceRoute = createRouteMatcher([
+  '/maintenance(.*)',
+  '/api/maintenance(.*)'
+]);
 
-  // Redirect unauthenticated users to sign in
-  if (!isPublicPath && !token) {
-    return NextResponse.redirect(new URL('/sign-in', request.url));
+export default authMiddleware({
+  publicRoutes: [
+    '/',
+    '/sign-in',
+    '/sign-up',
+    '/about',
+    '/contact',
+    '/api/webhook/clerk',
+    '/api/webhook/stripe',
+  ],
+  ignoredRoutes: [
+    '/api/webhook/clerk',
+    '/api/webhook/stripe'
+  ],
+  async afterAuth(auth, req) {
+    // Debug mode in development
+    if (process.env.NODE_ENV === 'development') {
+      console.log('Auth middleware:', {
+        userId: auth.userId,
+        orgId: auth.orgId,
+        sessionClaims: auth.sessionClaims
+      });
+    }
+
+    // Handle protected routes
+    if (isAdminRoute(req.url)) {
+      const isAdmin = auth.sessionClaims?.role === 'admin';
+      if (!isAdmin) {
+        return Response.redirect(new URL('/dashboard', req.url));
+      }
+    }
+
+    if (isTenantRoute(req.url)) {
+      if (!auth.userId) {
+        const searchParams = new URLSearchParams({
+          redirect_url: req.url,
+        });
+        return Response.redirect(new URL(`/sign-in?${searchParams}`, req.url));
+      }
+    }
+
+    if (isMaintenanceRoute(req.url)) {
+      const canAccessMaintenance = auth.sessionClaims?.permissions?.includes('maintenance:access');
+      if (!canAccessMaintenance) {
+        return Response.redirect(new URL('/dashboard', req.url));
+      }
+    }
   }
-
-  // Redirect authenticated users away from auth pages
-  if (token && (path === '/sign-in' || path === '/sign-up')) {
-    return NextResponse.redirect(new URL('/dashboard', request.url));
-  }
-
-  return NextResponse.next();
-}
-
-export default clerkMiddleware();
+});
 
 export const config = {
-  matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
-    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
-    // Always run for API routes
-    '/(api|trpc)(.*)',
-  ],
+  matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
 };

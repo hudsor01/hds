@@ -1,11 +1,11 @@
 'use client';
 
-import { cn } from '@/lib/utils';
-import { SignInButton, SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
-import { usePathname } from 'next/navigation';
-import { Route } from 'next/types';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import { Home } from 'react-feather';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Route } from 'next/types';
+import { cn } from '@/lib/utils';
 
 const navigation: Array<{ name: string; href: Route }> = [
   { name: 'About', href: '/about' },
@@ -44,14 +44,14 @@ export default function Navbar() {
 
         <div className='flex items-center space-x-4 mr-4'>
           <SignedOut>
-            <SignInButton mode="modal">
-              <button className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
+            <SignInButton mode='modal'>
+              <button className='text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'>
                 Sign In
               </button>
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton afterSignOutUrl="/" />
+            <UserButton afterSignOutUrl='/' />
           </SignedIn>
         </div>
       </div>

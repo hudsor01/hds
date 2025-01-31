@@ -1,11 +1,9 @@
 'use server';
 
-import { clerkClient } from '@clerk/nextjs/server';
+import { useOrganizationList, useUser } from '@clerk/nextjs';
 
 export async function createOrganization(name: string) {
-  const organization = await clerkClient.organizations.createOrganization({
-    name: name,
-  });
+  const { user } = useUser();
 
-  return organization;
+  return useOrganizationList();
 }

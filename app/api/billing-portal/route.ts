@@ -1,6 +1,6 @@
-import { auth } from '@/auth/lib/auth';
 import { stripe } from '@/auth/lib/stripe';
-import type { Session } from '@clerk/nextjs/dist/types/server';
+import type { Session } from '@clerk/nextjs/server';
+import { auth } from '@clerk/nextjs/server';
 import { NextResponse } from 'next/server';
 
 type SessionWithUser = Session & {
@@ -10,7 +10,7 @@ type SessionWithUser = Session & {
 };
 
 export async function POST() {
-  const session = (await auth()) as SessionWithUser;
+  const session = (await auth()) as unknown as SessionWithUser;
 
   if (!session?.user?.stripe_customer_id) {
     return NextResponse.json({ error: 'No Stripe customer ID found' }, { status: 400 });

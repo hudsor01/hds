@@ -1,5 +1,4 @@
-import { auth } from '@/auth';
-
+import { auth } from '@clerk/nextjs/server';
 import { Box, Typography } from '@mui/material';
 
 export async function ServerProfile() {

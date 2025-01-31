@@ -1,8 +1,6 @@
-import { ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
-import { Footer } from 'components/layout/footer';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
-import Navbar from '@/components/layout/Navbar';
 import './globals.css';
 import { Providers } from './providers';
 
@@ -39,23 +37,10 @@ function Header() {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <ClerkProvider>
-      <html lang='en'>
-        <body className={roboto.className}>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-
-          <Providers>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
-          </Providers>
-        </body>
-      </html>
-    </ClerkProvider>
+    <html lang='en'>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
   );
 }
