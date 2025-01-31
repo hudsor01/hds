@@ -12,7 +12,7 @@ export async function checkPermission(
     throw new Error('Unauthorized');
   }
 
-  const member = await prisma.organizationMember.findUnique({
+  const member = await prisma.organization_members.findUnique({
     where: {
       userId_organizationId: {
         userId,

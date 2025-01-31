@@ -1,10 +1,16 @@
-import Stripe from 'stripe';
-import { redirect } from 'next/navigation';
-import { getTeamByStripeCustomerId, getUser, updateTeamSubscription } from '@/lib/db/queries';
-import { Team } from '@/lib/db/schema';
+import { getTeamByStripeCustomerId, getUser, updateTeamSubscription } from '@/lib/db/queries'
+import { redirect } from 'next/navigation'
+import Stripe from 'stripe'
+import  from '@/lib/db/schema/roles';
 
+// Single Stripe instance with complete configuration
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-01-27.acacia',
+  typescript: true,
+  appInfo: {
+    name: 'HDS Platform',
+    version: '1.0.0',
+  },
 });
 
 export async function createCheckoutSession({

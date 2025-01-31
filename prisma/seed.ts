@@ -14,7 +14,7 @@ async function main() {
   });
 
   // Create a test property
-  const property = await prisma.properties.create({
+  const property = prisma.properties.create({
     data: {
       name: 'Test Property',
       address: '123 Test Street',

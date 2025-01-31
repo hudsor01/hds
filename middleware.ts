@@ -1,16 +1,14 @@
 import { clerkMiddleware } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export function middleware(request: NextRequest) {
   // Get the pathname
   const path = request.nextUrl.pathname;
 
   // Define public paths
-  const isPublicPath = path === '/sign-in' || 
-                      path === '/sign-up' || 
-                      path === '/' ||
-                      path.startsWith('/api/public');
+  const isPublicPath =
+    path === '/sign-in' || path === '/sign-up' || path === '/' || path.startsWith('/api/public');
 
   // Check auth token
   const token = request.cookies.get('auth-token');
@@ -27,12 +25,6 @@ export function middleware(request: NextRequest) {
 
   return NextResponse.next();
 }
-
-export const config = {
-  matcher: [
-    '/((?!_next/static|_next/image|favicon.ico).*)',
-  ],
-};
 
 export default clerkMiddleware();
 

@@ -1,26 +1,39 @@
-import { useAuth } from '@clerk/nextjs';
+import { auth } from '@clerk/nextjs';
+// Use server-side auth if applicable
+import { OrganizationRole } from '@prisma/client';
 import { prisma } from '@/lib/prisma';
 import { ROLE_PERMISSIONS } from '@/types/roles';
 
 export async function createOrganization(name: string) {
-  const { userId } = useAuth();
+  const { userId } = auth(); // Use server-side auth
 
   if (!userId) {
     throw new Error('Unauthorized');
   }
 
-  const organization = await prisma.organizations.create({
+  const organization = await prisma.organization.create({
+    // Ensure model name matches schema
     data: {
       name,
-      members: {
+      organizationMembers: {
+        // Ensure this matches your schema
         create: {
-          userId,
-          role: 'OWNER',
+          userId, // Ensure this matches your schema
+          role: OrganizationRole.OWNER, // Use the correct enum
           permissions: {
             create: ROLE_PERMISSIONS.OWNER.map(permission => ({
               name: permission,
+              userId, // Ensure this matches your schema
             })),
           },
+        },
+      },
+    },
+    include: {
+      organizationMembers: {
+        // Ensure this matches your schema
+        include: {
+          permissions: true,
         },
       },
     },
@@ -32,18 +45,24 @@ export async function createOrganization(name: string) {
 export async function addMemberToOrganization(
   organizationId: string,
   userId: string,
-  role: 'PROPERTY_MANAGER' | 'MAINTENANCE' | 'TENANT',
+  role: OrganizationRole, // Use the correct enum
 ) {
   const member = await prisma.organizationMember.create({
+    // Ensure model name matches schema
     data: {
-      userId,
-      organizationId,
+      userId, // Ensure this matches your schema
+      organizationId, // Ensure this matches your schema
       role,
       permissions: {
         create: ROLE_PERMISSIONS[role].map(permission => ({
           name: permission,
+          userId, // Ensure this matches your schema
+          organizationId, // Ensure this matches your schema
         })),
       },
+    },
+    include: {
+      permissions: true,
     },
   });
 

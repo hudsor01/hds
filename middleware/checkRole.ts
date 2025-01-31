@@ -1,4 +1,5 @@
 import { useAuth } from '@clerk/nextjs';
+import { roleSchema } from '@/lib/db/schema/roles';
 import { prisma } from '../lib/prisma';
 
 export async function checkRole(requiredRole: string[], organizationId: string) {
@@ -12,7 +13,7 @@ export async function checkRole(requiredRole: string[], organizationId: string) 
   // First try to find the organization
   const organization = await prisma.organizations.findFirst({
     where: {
-      id: organizationId,
+      user_id: organizationId,
     },
   });
 
@@ -36,7 +37,7 @@ export async function checkRole(requiredRole: string[], organizationId: string) 
     throw new Error('User is not a member of this organization');
   }
 
-  if (!requiredRole.includes(member.role)) {
+  if (!requiredRole.includes(roleSchema.parse(member.role).name)) {
     throw new Error('Insufficient permissions');
   }
 
