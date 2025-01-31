@@ -1,5 +1,6 @@
 'use client';
 
+import { SignIn } from '@clerk/nextjs';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from 'components/ui/button';
 import { Label } from 'components/ui/label';
@@ -14,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import { Box, FormControl } from '@mui/material';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
-import { signIn } from '../../app/auth/lib';
 
 const loginSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -45,7 +45,7 @@ async function authenticate(prevState: FormState, formData: FormData) {
       };
     }
 
-    const result = await signIn('credentials', {
+    const result = SignIn('credentials', {
       email: validatedFields.data.email,
       password: validatedFields.data.password,
       redirect: false,
@@ -81,12 +81,12 @@ export function LoginForm() {
 
   const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
-    signIn('google', { callbackUrl: '/dashboard' });
+    SignIn('google', { callbackUrl: '/dashboard' });
   };
 
   const onSubmit = async (data: LoginFormData) => {
     try {
-      const result = await signIn('credentials', {
+      const result = SignIn('credentials', {
         email: data.email,
         password: data.password,
         redirect: false,

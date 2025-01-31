@@ -2,6 +2,35 @@
 
 import { Box, Card, Grid, Skeleton, Stack } from '@mui/material'
 import { motion } from 'framer-motion'
+import { CardContent, Skeleton } from '@mui/material';
+
+export default function Loading() {
+  return (
+    <div className="space-y-4">
+      {/* Header Skeleton */}
+      <div className="mb-8">
+        <Skeleton variant="rectangular" width="200px" height={40} />
+      </div>
+
+      {/* Stats Grid Skeleton */}
+      <div className="grid md:grid-cols-3 gap-4">
+        {[1, 2, 3].map((i) => (
+          <Card key={i}>
+            <CardContent>
+              <Skeleton variant="text" width="60%" />
+              <Skeleton variant="rectangular" height={60} />
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* Content Skeleton */}
+      <div className="mt-8">
+        <Skeleton variant="rectangular" height={200} />
+      </div>
+    </div>
+  );
+}
 
 export default function DashboardLoading() {
   return (

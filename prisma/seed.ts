@@ -19,7 +19,7 @@ async function main() {
       name: 'Test Property',
       address: '123 Test Street',
       type: 'APARTMENT',
-      rent_amount: 1500,
+      rentAmount: 1500,
       ownerId: user.id,
       status: 'AVAILABLE',
     },

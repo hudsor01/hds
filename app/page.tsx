@@ -1,13 +1,12 @@
 'use client';
 
-import { SignUp, useAuth, useUser } from '@clerk/nextjs'
-import { Button, Card, CardContent } from '@mui/material'
-import { motion } from 'framer-motion'
-import Link from 'next/link'
-import { Key } from 'react'
-import { BarChart2, DollarSign, FileText, Home, Tool, Users } from 'react-feather'
-import { routes } from './routes'
-
+import { SignUp, useAuth, useUser } from '@clerk/nextjs';
+import { motion } from 'framer-motion';
+import { BarChart2, DollarSign, FileText, Home, Tool, Users } from 'react-feather';
+import { Key } from 'react';
+import Link from 'next/link';
+import { Button, Card, CardContent } from '@mui/material';
+import { routes } from './routes';
 
 const stats = [
   {
@@ -154,7 +153,7 @@ const features = [
 </motion.section>;
 
 export default function HomePage() {
-  const { user } = useUser()
+  const { user } = useUser();
   const { isSignedIn } = useAuth();
 
   if (!user) {
@@ -163,7 +162,7 @@ export default function HomePage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="flex min-h-screen items-center justify-center"
+        className='flex min-h-screen items-center justify-center'
       >
         <SignUp />
       </motion.div>
@@ -172,16 +171,13 @@ export default function HomePage() {
 
   return (
     <motion.main
-      initial="initial"
-      animate="animate"
+      initial='initial'
+      animate='animate'
       variants={staggerChildren}
       className='space-y-24 bg-white'
     >
       {/* Hero Section */}
-      <motion.section
-        variants={fadeInUp}
-        className="max-w-7xl mx-auto px-4 py-12"
-      >
+      <motion.section variants={fadeInUp} className='max-w-7xl mx-auto px-4 py-12'>
         <div className='flex flex-col sm:flex-row gap-4'>
           {isSignedIn ? (
             <motion.div whileHover={{ scale: 1.05 }}>
@@ -196,8 +192,6 @@ export default function HomePage() {
                     bgcolor: 'rgba(255, 255, 255, 0.9)',
                   },
                 }}
-                component={Link}
-                href={routes.dashboard}
               >
                 Go to Dashboard
               </Button>
@@ -248,86 +242,96 @@ export default function HomePage() {
             viewport={{ once: true }}
             transition={{ delay: i * 0.2 }}
           >
-            <Card>
-              {/* Feature content remains the same */}
-            </Card>
+            <Card>{/* Feature content remains the same */}</Card>
           </motion.div>
         ))}
       </motion.section>
 
       {/* Features Section */}
-      <motion.section
-        variants={fadeInUp}
-        className='max-w-7xl mx-auto px-4'
-        id='features'
-      >
-        <div className='text-center mb-12'>
-          <h2 className='text-4xl font-bold text-gray-900 mb-4'>Powerful Features</h2>
-          <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
-            Everything you need to manage your properties efficiently
-          </p>
-        </div>
+      <motion.section variants={fadeInUp} className='max-w-7xl mx-auto px-4'></motion.section>
+      <div className='text-center mb-12'>
+        <h2 className='text-4xl font-bold text-gray-900 mb-4'>Powerful Features</h2>
+        <p className='text-xl text-gray-600 max-w-2xl mx-auto'>
+          Everything you need to manage your properties efficiently
+        </p>
+      </div>
 
-        <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
-          {features.map((feature: { title: Key | null | undefined }, i: number) => (
-            <motion.div
-              key={feature.title}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1 }}
-            >
-              <Card
-                sx={{
-                  height: '100%',
-                  position: 'relative',
-                  overflow: 'hidden',
-                  transition: 'all 0.3s ease',
-                  background: 'linear-gradient(to bottom right, white, transparent)',
-                  border: '1px solid rgba(var(--pastel-blue-200), 0.2)',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: 3,
-                    borderColor: 'rgba(var(--pastel-blue-300), 0.5)',
-                    background:
-                      'linear-gradient(to bottom right, rgba(var(--pastel-blue-50), 0.8), white)',
-                  },
-                }}
-              >
-                <CardContent
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
-                >
-                  {/* Feature content remains the same */}
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Stats Section */}
-        <div className='grid md:grid-cols-3 gap-8'>
-          {stats.map((stat, i) => (
+      <div className='grid md:grid-cols-2 lg:grid-cols-3 gap-8'>
+        {features.map((feature: { title: Key | null | undefined }, i: number) => (
+          <motion.div
+            key={feature.title}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: i * 0.1 }}
+          >
             <Card
-              key={i}
               sx={{
-                p: 3,
-                transition: 'box-shadow 0.3s ease',
+                height: '100%',
+                position: 'relative',
+                overflow: 'hidden',
+                transition: 'all 0.3s ease',
+                background: 'linear-gradient(to bottom right, white, transparent)',
                 border: '1px solid rgba(var(--pastel-blue-200), 0.2)',
                 '&:hover': {
+                  transform: 'translateY(-4px)',
                   boxShadow: 3,
+                  borderColor: 'rgba(var(--pastel-blue-300), 0.5)',
+                  background:
+                    'linear-gradient(to bottom right, rgba(var(--pastel-blue-50), 0.8), white)',
                 },
               }}
             >
-              <CardContent>
-                <div className='text-3xl font-bold text-pastel-blue-500 mb-2'>{stat.value}</div>
-                <div className='text-gray-600 dark:text-gray-300 mb-4 font-body'>{stat.label}</div>
+              <CardContent
+                sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: 2 }}
+              >
+                {/* Feature content remains the same */}
               </CardContent>
             </Card>
-          ))}
-        </div>
+          </motion.div>
+        ))}
+      </div>
 
-        {/* CTA Section */}
-        {isSignedIn ? (
+      {/* Stats Section */}
+      <div className='grid md:grid-cols-3 gap-8'>
+        {stats.map((stat, i) => (
+          <Card
+            key={i}
+            sx={{
+              p: 3,
+              transition: 'box-shadow 0.3s ease',
+              border: '1px solid rgba(var(--pastel-blue-200), 0.2)',
+              '&:hover': {
+                boxShadow: 3,
+              },
+            }}
+          >
+            <CardContent>
+              <div className='text-3xl font-bold text-pastel-blue-500 mb-2'>{stat.value}</div>
+              <div className='text-gray-600 dark:text-gray-300 mb-4 font-body'>{stat.label}</div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
+
+      {/* CTA Section */}
+      {isSignedIn ? (
+        <Button
+          variant='contained'
+          sx={{
+            bgcolor: 'white',
+            color: 'var(--pastel-blue-600)',
+            '&:hover': {
+              bgcolor: 'rgba(255, 255, 255, 0.9)',
+            },
+          }}
+          component={Link}
+          href={routes.dashboard}
+        >
+          Go to Dashboard
+        </Button>
+      ) : (
+        <div className='flex flex-col sm:flex-row justify-center gap-4'>
           <Button
             variant='contained'
             sx={{
@@ -338,47 +342,27 @@ export default function HomePage() {
               },
             }}
             component={Link}
-            href={routes.dashboard}
+            href='/sign-up'
           >
-            Go to Dashboard
+            Start Free Trial
           </Button>
-        ) : (
-          <div className='flex flex-col sm:flex-row justify-center gap-4'>
-            <Button
-              variant='contained'
-              sx={{
-                bgcolor: 'white',
-                color: 'var(--pastel-blue-600)',
-                '&:hover': {
-                  bgcolor: 'rgba(255, 255, 255, 0.9)',
-                },
-              }}
-              component={Link}
-              href='/sign-up'
-            >
-              Start Free Trial
-            </Button>
-            <Button
-              variant='outlined'
-              sx={{
+          <Button
+            variant='outlined'
+            sx={{
+              borderColor: 'white',
+              color: 'white',
+              '&:hover': {
                 borderColor: 'white',
-                color: 'white',
-                '&:hover': {
-                  borderColor: 'white',
-                  bgcolor: 'rgba(255, 255, 255, 0.1)',
-                },
-              }}
-              component={Link}
-              href='/sign-in'
-            >
-              Sign In
-            </Button>
-          </div>
-        )}
-      </main>
-    );
-}
-function createClient (cookieStore: ReadonlyRequestCookies)
-{
-  throw new Error('Function not implemented.')
+                bgcolor: 'rgba(255, 255, 255, 0.1)',
+              },
+            }}
+            component={Link}
+            href='/sign-in'
+          >
+            Sign In
+          </Button>
+        </div>
+      )}
+    </motion.main>
+  );
 }

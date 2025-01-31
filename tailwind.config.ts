@@ -82,15 +82,6 @@ const config = {
           900: '#0c4a6e',
         },
       },
-      borderRadius: {
-        lg: 'var(--radius-lg)',
-        md: 'var(--radius-md)',
-        sm: 'var(--radius-sm)',
-      },
-      backgroundImage: {
-        'linear-to-r': 'linear-gradient(to right, var(--tw-gradient-stops))',
-        'linear-to-br': 'linear-gradient(to bottom right, var(--tw-gradient-stops))',
-      },
     },
   },
   plugins: [],

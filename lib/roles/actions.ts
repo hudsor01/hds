@@ -9,7 +9,7 @@ export async function createOrganization(name: string) {
     throw new Error('Unauthorized');
   }
 
-  const organization = await prisma.organization.create({
+  const organization = await prisma.organizations.create({
     data: {
       name,
       members: {

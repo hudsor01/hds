@@ -5,7 +5,7 @@ import { NextResponse } from 'next/server';
 const { getToken } = useAuth();
 
 export async function createMiddleware(request: NextRequest) {
-  const token = await getToken({ req: request });
+  const token = await getToken();
 
   // If user is not logged in, redirect to login page
   if (!token) {
