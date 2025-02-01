@@ -1,3 +1,6 @@
+/// <reference types="@clerk/express/env" />
+
+
 export { }
 
 // Create a type for the roles

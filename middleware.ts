@@ -1,14 +1,24 @@
-import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
+import { createRouteMatcher } from '@clerk/nextjs/server'
+import { NextResponse, type NextRequest } from 'next/server'
+import { clerkMiddleware } from '@clerk/express'
+import express from 'express'
 
 const isPublicRoute = createRouteMatcher(['/sign-in(.*)', '/sign-up(.*)'])
 const isAdminRoute = createRouteMatcher(['/admin(.*)'])
+const app = express()
 
-export default clerkMiddleware(async (auth, req) => {
-  const { userId, sessionClaims } = await auth()
+export default clerkMiddleware({
+  afterAuth: async ({
+    auth,
+    req,
+  }: {
+    auth: (() => PromiseLike<{ userId: string | null; sessionClaims: Record<string, unknown> }>) | { userId: string | null; sessionClaims: Record<string, unknown> };
+    req: NextRequest;
+  }) => {
+    const { userId, sessionClaims } = typeof auth === 'function' ? await auth() : auth;
 
-  // Allow public routes
-  if (isPublicRoute(req)) {
+    // Allow public routes
+    if (isPublicRoute(req)) {
     return NextResponse.next()
   }
 
