@@ -1,21 +1,22 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { Card } from 'components/ui/card';
-import { type Milestone, type TeamMember, type Value } from 'types/about';
+import { Button } from '@/components/ui/button'
+import { Card } from '@/components/ui/card'
+import { type Milestone, type TeamMember, type Value } from '@/types/about'
 
-import Image from 'next/image';
-import Link from 'next/link';
+import Image from 'next/image'
+import Link from 'next/link'
 
-import {
-  Apartment,
-  ArrowRight,
-  Lightbulb,
-  People,
-  Security,
-  Timeline,
-  TouchApp,
-} from '@mui/icons-material';
+import
+  {
+    Apartment,
+    ArrowRight,
+    Lightbulb,
+    People,
+    Security,
+    Timeline,
+    TouchApp,
+  } from '@mui/icons-material'
 
 // Enhanced values with more property management specific content
 const values: Value[] = [

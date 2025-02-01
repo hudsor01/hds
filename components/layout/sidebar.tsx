@@ -1,253 +1,93 @@
-'use client'
+// components/layout/sidebar.tsx
+'use client';
 
-import { routes } from '@/auth/lib/routes'
-import {
-    Box,
-    Collapse,
-    Divider,
-    Drawer,
-    IconButton,
-    List,
-    ListItem,
-    ListItemButton,
-    ListItemIcon,
-    ListItemText,
-    Stack,
-    Tooltip,
-    Typography,
-    alpha,
-    useTheme
-} from '@mui/material'
-import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useState } from 'react'
-import {
-    BarChart2,
-    ChevronLeft,
-    ChevronRight,
-    FileText,
-    Home,
-    Key,
-    Plus,
-    Settings,
-    Tool,
-    Users
-} from 'react-feather'
-
-const navItems = [
-  {
-    title: 'Dashboard',
-    icon: BarChart2,
-    href: routes.dashboard
-  },
-  {
-    title: 'Properties',
-    icon: Home,
-    href: routes.properties.index
-  },
-  {
-    title: 'Tenants',
-    icon: Users,
-    href: routes.tenants.index
-  },
-  {
-    title: 'Maintenance',
-    icon: Tool,
-    href: routes.maintenance.index
-  },
-  {
-    title: 'Leases',
-    icon: Key,
-    href: routes.leases.index
-  },
-  {
-    title: 'Documents',
-    icon: FileText,
-    href: routes.documents.index
-  }
-] as const
-
-const DRAWER_WIDTH = 280
-const COLLAPSED_DRAWER_WIDTH = 72
+import { ChevronLeft, ChevronRight, Folder, Home, Users } from 'react-feather'
 
 export function Sidebar() {
-  const theme = useTheme()
-  const pathname = usePathname()
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const [isCollapsed, setIsCollapsed] = useState(false);
+  const pathname = usePathname();
 
-  const handleToggleCollapse = () => {
-    setSidebarCollapsed(!sidebarCollapsed)
-  }
+  const mainNavigation = [
+    { name: 'Dashboard', href: '/dashboard', icon: Home },
+    { name: 'Properties', href: '/dashboard/properties', icon: Home },
+    { name: 'Tenants', href: '/dashboard/tenants', icon: Users },
+    { name: 'Maintenance', href: '/dashboard/maintenance', icon: Wrench },
+    { name: 'Financials', href: '/dashboard/financials', icon: ChartBar },
+    { name: 'Documents', href: '/dashboard/documents', icon: Folder },
+  ];
 
   return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width: sidebarCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width: sidebarCollapsed ? COLLAPSED_DRAWER_WIDTH : DRAWER_WIDTH,
-          boxSizing: 'border-box',
-          borderRight: '1px solid',
-          borderColor: 'divider',
-          transition: theme.transitions.create(['width'], {
-            duration: theme.transitions.duration.shorter
-          })
-        }
-      }}
-    >
-      <Stack sx={{ height: '100%' }}>
-        {/* Logo & Collapse Button */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent={sidebarCollapsed ? 'center' : 'space-between'}
-          sx={{
-            p: 2,
-            minHeight: 64
-          }}
-        >
-          {!sidebarCollapsed && (
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 600,
-                fontSize: '1.25rem'
-              }}
+    <>
+      <aside
+        className={`fixed left-0 top-0 z-40 h-screen bg-white border-r border-gray-200 transition-width duration-300 ease-in-out
+          ${isCollapsed ? 'w-16' : 'w-64'}`}
+      >
+        <div className="flex flex-col h-full">
+          {/* Logo and Toggle Section */}
+          <div className="h-16 flex items-center justify-between px-4 border-b border-gray-200">
+            {!isCollapsed && <span className="text-xl font-semibold">PMS</span>}
+            <button
+              onClick={() => setIsCollapsed(!isCollapsed)}
+              className={`p-1.5 rounded-lg hover:bg-gray-100 transition-colors
+                ${isCollapsed ? 'mx-auto' : ''}`}
             >
-              HDS
-            </Typography>
-          )}
-          <IconButton onClick={handleToggleCollapse} size="small">
-            {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
-          </IconButton>
-        </Stack>
+              {isCollapsed ? (
+                <ChevronRight className="h-5 w-5" />
+              ) : (
+                <ChevronLeft className="h-5 w-5" />
+              )}
+            </button>
+          </div>
 
-        <Divider />
-
-        {/* Quick Action Button */}
-        <Box sx={{ p: 2 }}>
-          <Link href={routes.properties.new} style={{ textDecoration: 'none' }}>
-            <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <ListItemButton
-                sx={{
-                  py: 1,
-                  px: 2,
-                  borderRadius: 1,
-                  bgcolor: 'primary.main',
-                  color: 'primary.contrastText',
-                  '&:hover': {
-                    bgcolor: 'primary.dark'
-                  }
-                }}
-              >
-                <ListItemIcon sx={{ minWidth: 36, color: 'inherit' }}>
-                  <Plus size={20} />
-                </ListItemIcon>
-                <Collapse in={!sidebarCollapsed} orientation="horizontal">
-                  <ListItemText
-                    primary="Add Property"
-                    primaryTypographyProps={{
-                      sx: { fontWeight: 600 }
-                    }}
-                  />
-                </Collapse>
-              </ListItemButton>
-            </motion.div>
-          </Link>
-        </Box>
-
-        {/* Navigation Items */}
-        <List sx={{ px: 2, py: 1 }}>
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`)
-            return (
-              <ListItem key={item.href} disablePadding sx={{ mb: 0.5 }}>
-                <Link href={item.href} style={{ textDecoration: 'none', width: '100%' }}>
-                  <Tooltip
-                    title={sidebarCollapsed ? item.title : ''}
-                    placement="right"
-                  >
-                    <ListItemButton
-                      selected={isActive}
-                      sx={{
-                        borderRadius: 1,
-                        color: isActive ? 'primary.main' : 'text.secondary',
-                        bgcolor: isActive
-                          ? alpha(theme.palette.primary.main, 0.08)
-                          : 'transparent',
-                        '&:hover': {
-                          bgcolor: isActive
-                            ? alpha(theme.palette.primary.main, 0.12)
-                            : alpha(theme.palette.primary.main, 0.04)
-                        },
-                        '&.Mui-selected': {
-                          bgcolor: alpha(theme.palette.primary.main, 0.08),
-                          '&:hover': {
-                            bgcolor: alpha(theme.palette.primary.main, 0.12)
-                          }
-                        }
-                      }}
-                    >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 36,
-                          color: isActive ? 'primary.main' : 'text.secondary'
-                        }}
-                      >
-                        <item.icon size={20} />
-                      </ListItemIcon>
-                      <Collapse in={!sidebarCollapsed} orientation="horizontal">
-                        <ListItemText
-                          primary={item.title}
-                          primaryTypographyProps={{
-                            sx: {
-                              fontWeight: isActive ? 600 : 500,
-                              color: isActive ? 'text.primary' : 'inherit'
-                            }
-                          }}
-                        />
-                      </Collapse>
-                    </ListItemButton>
-                  </Tooltip>
-                </Link>
-              </ListItem>
-            )
-          })}
-        </List>
-
-        <Box sx={{ flexGrow: 1 }} />
-
-        {/* Settings */}
-        <List sx={{ px: 2, py: 1 }}>
-          <ListItem disablePadding>
-            <Link href={routes.settings} style={{ textDecoration: 'none', width: '100%' }}>
-              <Tooltip
-                title={sidebarCollapsed ? 'Settings' : ''}
-                placement="right"
-              >
-                <ListItemButton
-                  selected={pathname === routes.settings}
-                  sx={{
-                    borderRadius: 1,
-                    '&:hover': {
-                      bgcolor: alpha(theme.palette.primary.main, 0.04)
-                    }
-                  }}
+          {/* Main Navigation */}
+          <nav className="flex-1 px-3 py-4">
+            <div className="space-y-1">
+              {mainNavigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`flex items-center px-2 py-2 rounded-lg transition-colors
+                    ${pathname === item.href
+                      ? 'bg-pastel-blue-50 text-pastel-blue-600'
+                      : 'text-gray-700 hover:bg-gray-100'
+                    } ${isCollapsed ? 'justify-center' : ''}`}
                 >
-                  <ListItemIcon sx={{ minWidth: 36 }}>
-                    <Settings size={20} />
-                  </ListItemIcon>
-                  <Collapse in={!sidebarCollapsed} orientation="horizontal">
-                    <ListItemText primary="Settings" />
-                  </Collapse>
-                </ListItemButton>
-              </Tooltip>
+                  <item.icon className="h-5 w-5 flex-shrink-0" />
+                  {!isCollapsed && (
+                    <span className="ml-3 text-sm font-medium">{item.name}</span>
+                  )}
+                </Link>
+              ))}
+            </div>
+          </nav>
+
+          {/* Settings Section - Fixed at Bottom */}
+          <div className="border-t border-gray-200 p-3">
+            <Link
+              href="/settings"
+              className={`flex items-center px-2 py-2 rounded-lg text-gray-700 hover:bg-gray-100 transition-colors
+                ${pathname === '/settings' ? 'bg-gray-100' : ''}
+                ${isCollapsed ? 'justify-center' : ''}`}
+            >
+              <Wrench className="h-5 w-5 flex-shrink-0" />
+              {!isCollapsed && (
+                <span className="ml-3 text-sm font-medium">Settings</span>
+              )}
             </Link>
-          </ListItem>
-        </List>
-      </Stack>
-    </Drawer>
-  )
+          </div>
+        </div>
+      </aside>
+
+      {/* Main Content Wrapper */}
+      <main
+        className={`min-h-screen bg-gray-50 transition-all duration-300 ease-in-out
+          ${isCollapsed ? 'ml-16' : 'ml-64'}`}
+      >
+        {/* Your dashboard content goes here */}
+      </main>
+    </>
+  );
 }

@@ -1,0 +1,38 @@
+import { clerkClient, clerkMiddleware } from "@clerk/nextjs/server"
+import { NextResponse } from "next/server"
+
+export const config = {
+  matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
+};
+
+export default clerkMiddleware({
+  async afterAuth(auth, req) {
+    if (!auth.userId && !auth.isPublicRoute) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+
+    // Handle users who aren't authenticated
+    if (!auth.userId && !auth.isPublicRoute) {
+      return NextResponse.redirect(new URL("/sign-in", req.url));
+    }
+
+    // Set the user's role
+    if (auth.userId) {
+      try {
+        const user = await clerkClient.users.getUser(auth.userId);
+        const metadata = user.privateMetadata as { role?: string };
+
+        if (!metadata.role) {
+          await clerkClient.users.updateUserMetadata(auth.userId, {
+            privateMetadata: {
+              ...metadata,
+              role: "OWNER", // Default role
+            },
+          });
+        }
+      } catch (error) {
+        console.error("Error setting user role:", error);
+      }
+    }
+  },
+});
