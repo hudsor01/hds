@@ -1,46 +1,15 @@
 {
-  "printWidth": 100,
+  "semi": true,
+  "trailingComma": "all",
   "singleQuote": true,
   "jsxSingleQuote": true,
-  "trailingComma": "all",
-  "tabWidth": 2,
-  "semi": true,
-  "bracketSpacing": true,
+  "bracketSpacing": false,
   "bracketSameLine": false,
   "arrowParens": "avoid",
-  "proseWrap": "always",
   "endOfLine": "auto",
-  "importOrder": [
-    "^react$",
-    "^next(/.*|$)",
-    "^@mui/(.*)$",
-    "^@tanstack/(.*)$",
-    "^@auth/(.*)$",
-    "^@supabase/(.*)$",
-    "^@vercel/(.*)$",
-    "^@/components/(.*)$",
-    "^@/lib/(.*)$",
-    "^@/hooks/(.*)$",
-    "^@/types/(.*)$",
-    "^@/styles/(.*)$",
-    "^@/prisma/(.*)$",
-    "^@/utils/(.*)$",
-    "^@/public/(.*)$",
-    "^[./]"
-  ],
-  "importOrderSortSpecifiers": true,
-  "importOrderCaseInsensitive": true,
+  "printWidth": 100,
+  "tabWidth": 2,
   "tailwindConfig": "./tailwind.config.ts",
   "tailwindFunctions": ["clsx", "cva", "twMerge"],
-  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"],
-  "overrides": [
-    {
-      "files": "*.{ts,tsx}",
-      "options": { "parser": "typescript" }
-    },
-    {
-      "files": "*.{md,mdx}",
-      "options": { "proseWrap": "preserve" }
-    }
-  ]
+  "plugins": ["prettier-plugin-tailwindcss", "trivago/prettier-plugin-sort-imports"]
 }

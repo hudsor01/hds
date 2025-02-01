@@ -1,68 +1,60 @@
-import WaitlistConfirmation from 'components/emails/waitlist-confirmation';
-import WaitlistNotification from 'components/emails/waitlist-notification';
-import process from 'node:process';
+// app/api/waitlist/route.ts
 import { Resend } from 'resend';
-
 import { NextResponse } from 'next/server';
-
+import { createClient } from '@supabase/supabase-js';
 import { prisma } from '@/lib/prisma';
 
-import { rateLimit } from '../../lib/rate-limit';
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_KEY!,
+);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL;
 
 export async function POST(request: Request) {
   try {
-    const { email, name, company } = await request.json();
+    const body = await request.json();
 
-    // Rate limiting
-    const identifier = email.toLowerCase();
-    const { success } = await rateLimit(identifier);
+    // Check for existing email
+    const existingUser = await prisma.waitlist.findUnique({
+      where: { email: body.email },
+    });
 
-    if (!success) {
-      return NextResponse.json(
-        { error: 'Too many requests. Please try again later.' },
-        { status: 429 },
-      );
+    if (existingUser) {
+      return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
     }
 
-    const entry = await prisma.waitlistEntry.create({
+    // Create new waitlist entry
+    const user = await prisma.waitlist.create({
       data: {
-        email: email.toLowerCase(),
-        name,
-        company,
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        propertyCount: body.propertyCount,
+        interests: body.interests,
+        referralSource: body.referralSource,
+        newsletter: body.newsletter,
       },
     });
 
-    // Get total signups count
-    const totalSignups = await prisma.waitlistEntry.count();
+    // Send welcome email
+    await resend.emails.send({
+      from: 'PropertyPro <hello@propertypro.com>',
+      to: body.email,
+      subject: 'Welcome to the PropertyPro Waitlist!',
+      react: WelcomeEmail({
+        firstName: body.firstName,
+        estimatedLaunch: 'July 2025',
+      }),
+    });
 
-    // Send notification email to admin
-    if (ADMIN_EMAIL) {
-      await resend.emails.send({
-        from: 'HDS Waitlist <info@hudsondigitalsolutions.com>',
-        to: ADMIN_EMAIL,
-        subject: `New Waitlist Registration #${totalSignups}`,
-        react: WaitlistNotification({ entry, totalSignups }),
-      });
-
-      // Send confirmation email to user
-      await resend.emails.send({
-        from: 'HDS <info@hudsondigitalsolutions.com>',
-        to: email,
-        subject: 'Welcome to the HDS Waitlist',
-        react: WaitlistConfirmation({ name }),
-      });
-    }
-
-    return NextResponse.json({ success: true, entry });
-  } catch (_error) {
-    const errorMessage =
-      process.env.NODE_ENV === 'development'
-        ? (_error as Error).message
-        : 'Failed to join waitlist';
-
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    console.error('Waitlist error:', error);
+    return NextResponse.json({ error: 'Failed to join waitlist' }, { status: 500 });
   }
+}
+
+function WelcomeEmail(arg0: { firstName: any; estimatedLaunch: string }) {
+  throw new Error('Function not implemented.');
 }

@@ -13,9 +13,8 @@ const isTenantRoute = createRouteMatcher([
 
 const isMaintenanceRoute = createRouteMatcher(['/maintenance(.*)', '/api/maintenance(.*)']);
 
-export default clerkMiddleware({
-  publicRoutes: (req) => {
-    const publicPaths = [
+export default clerkMiddleware((req) => {
+  const publicPaths = [
       '/',
       '/sign-in',
       '/sign-up',
@@ -24,52 +23,10 @@ export default clerkMiddleware({
       '/api/webhook/clerk',
       '/api/webhook/stripe'
     ];
-    return publicPaths.includes(new URL(req.url).pathname);
-  },
-  ignoredRoutes: ['/api/webhook/clerk', '/api/webhook/stripe'],
-  async afterAuth(
-    auth: {
-      userId: any;
-      orgId: any;
-      sessionClaims: { role: string; permissions: string | string[] };
-    },
-    req: { url: string | NextRequest | URL | undefined },
-  ) {
-    // Debug mode in development
-    if (process.env.NODE_ENV === 'development') {
-      console.log('Auth middleware:', {
-        userId: auth.userId,
-        orgId: auth.orgId,
-        sessionClaims: auth.sessionClaims,
-      });
-    }
-
-    // Handle protected routes
-    if (isAdminRoute(req.url?.toString())) {
-      const isAdmin = auth.sessionClaims?.role === 'admin';
-      if (!isAdmin) {
-        return Response.redirect(new URL('/dashboard', req.url.toString()));
-      }
-    }
-
-    if (isTenantRoute(req.url)) {
-      if (!auth.userId) {
-        const searchParams = new URLSearchParams({
-          redirect_url: req.url,
-        });
-        return Response.redirect(new URL(`/sign-in?${searchParams}`, req.url));
-      }
-    }
-
-    if (isMaintenanceRoute(req.url)) {
-      const canAccessMaintenance = auth.sessionClaims?.permissions?.includes('maintenance:access');
-      if (!canAccessMaintenance) {
-        return Response.redirect(new URL('/dashboard', req.url));
-      }
-    }
-  },
-});
-
+     if (publicPaths.includes(new URL(req.url).pathname)) {
+    return null;
+  }
 export const config = {
   matcher: ['/((?!.*\\..*|_next).*)', '/', '/(api|trpc)(.*)'],
-};
+},
+});

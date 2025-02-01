@@ -2,13 +2,13 @@
 
 import { motion } from 'framer-motion';
 import { BarChart2, FileText, Home, Key, Menu, Settings, Tool, Users, X } from 'react-feather';
-
 import { useState } from 'react';
-
 import type { Route } from 'next';
 import Link from 'next/link';
-
 import { Box, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material';
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { DashboardHeader } from '@/components/dashboard/header';
+import { DashboardNav } from '@/components/dashboard/nav';
 
 const DRAWER_WIDTH = 280;
 
@@ -89,76 +89,85 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   );
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
-      {/* Mobile Header */}
-      {isMobile && (
-        <Box
+    <AuthGuard>
+      <div className='flex h-screen'>
+        <DashboardNav />
+        <div className='flex flex-col flex-1 w-full'>
+          <DashboardHeader />
+          <main className='p-6'>{children}</main>
+        </div>
+      </div>
+      <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+        {/* Mobile Header */}
+        {isMobile && (
+          <Box
+            sx={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              zIndex: theme.zIndex.appBar,
+              bgcolor: 'background.paper',
+              borderBottom: 1,
+              borderColor: 'divider',
+              p: 2,
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            <IconButton onClick={() => setMobileOpen(true)}>
+              <Menu size={20} />
+            </IconButton>
+          </Box>
+        )}
+
+        {/* Desktop Drawer */}
+        <Drawer
+          variant='permanent'
           sx={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: theme.zIndex.appBar,
-            bgcolor: 'background.paper',
-            borderBottom: 1,
-            borderColor: 'divider',
-            p: 2,
-            display: 'flex',
-            alignItems: 'center',
+            display: { xs: 'none', lg: 'block' },
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH,
+              bgcolor: 'background.paper',
+              border: 'none',
+              height: '100vh',
+            },
           }}
         >
-          <IconButton onClick={() => setMobileOpen(true)}>
-            <Menu size={20} />
-          </IconButton>
+          {drawer}
+        </Drawer>
+
+        {/* Mobile Drawer */}
+        <Drawer
+          open={mobileOpen}
+          onClose={() => setMobileOpen(false)}
+          sx={{
+            '& .MuiDrawer-paper': {
+              width: DRAWER_WIDTH,
+              bgcolor: 'background.paper',
+              border: 'none',
+            },
+          }}
+        >
+          {drawer}
+        </Drawer>
+
+        {/* Main Content */}
+        <Box
+          component='main'
+          sx={{
+            flexGrow: 1,
+            width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
+            ml: { lg: `${DRAWER_WIDTH}px` },
+            pt: { xs: 8, lg: 3 },
+            px: { xs: 2, sm: 3, lg: 4 },
+            pb: 3,
+            minHeight: '100vh',
+          }}
+        >
+          {children}
         </Box>
-      )}
-
-      {/* Desktop Drawer */}
-      <Drawer
-        variant='permanent'
-        sx={{
-          display: { xs: 'none', lg: 'block' },
-          '& .MuiDrawer-paper': {
-            width: DRAWER_WIDTH,
-            bgcolor: 'background.paper',
-            border: 'none',
-            height: '100vh',
-          },
-        }}
-      >
-        {drawer}
-      </Drawer>
-
-      {/* Mobile Drawer */}
-      <Drawer
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        sx={{
-          '& .MuiDrawer-paper': {
-            width: DRAWER_WIDTH,
-            bgcolor: 'background.paper',
-            border: 'none',
-          },
-        }}
-      >
-        {drawer}
-      </Drawer>
-
-      {/* Main Content */}
-      <Box
-        component='main'
-        sx={{
-          flexGrow: 1,
-          width: { lg: `calc(100% - ${DRAWER_WIDTH}px)` },
-          ml: { lg: `${DRAWER_WIDTH}px` },
-          pt: { xs: 8, lg: 3 },
-          px: { xs: 2, sm: 3, lg: 4 },
-          pb: 3,
-          minHeight: '100vh',
-        }}
-      >
-        {children}
       </Box>
-    </Box>
+    </AuthGuard>
   );
 }
