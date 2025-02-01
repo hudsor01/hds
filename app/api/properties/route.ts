@@ -22,6 +22,8 @@ export async function POST(req: NextRequest) {
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });
     }
+    }
+    }
 
     const json = await req.json();
     const body = createPropertySchema.parse(json);

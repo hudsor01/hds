@@ -147,17 +147,43 @@ export interface Database {
           created_at?: string
         }
       }
+      tasks: {
+        Row: {
+          id: number
+          name: string
+          user_id: string
+          created_at: string
+        }
+        Insert: {
+          id?: number
+          name: string
+          user_id?: string
+          created_at?: string
+        }
+        Update: {
+          id?: number
+          name?: string
+          user_id?: string
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      requesting_user_id: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       property_status: 'available' | 'occupied' | 'maintenance' | 'renovation' | 'off_market'
       payment_status: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled'
       payment_method: 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'CHECK'
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }

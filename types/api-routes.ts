@@ -1,12 +1,12 @@
 // types/api-routes.ts
 import { NextRequest } from 'next/server'
-
 // Waitlist API Routes
 export interface WaitlistPostRequest extends NextRequest {
- body: {
+ body: ReadableStream<Uint8Array<ArrayBufferLike>> & {
    email: string;
    source?: string;
    referralCode?: string;
+ }
  }
 }
 

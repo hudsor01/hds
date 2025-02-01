@@ -1,6 +1,6 @@
-import { NextResponse } from 'next/server';
-import { auth, currentUser } from '@clerk/nextjs/server';
-import { prisma } from '@/lib/prisma';
+import { prisma } from '@/lib/prisma'
+import { auth, currentUser } from '@clerk/nextjs/server'
+import { NextResponse } from 'next/server'
 
 export async function GET() {
   const { userId } = await auth();
@@ -10,14 +10,13 @@ export async function GET() {
   }
 
   const clerkUser = await currentUser();
-  
+
   // Get additional user data from Prisma
   const dbUser = await prisma.user.findUnique({
     where: { clerkId: userId },
     select: {
       id: true,
       subscriptionStatus: true,
-      trialEndsAt: true,
       role: true,
       organizations: {
         select: {
