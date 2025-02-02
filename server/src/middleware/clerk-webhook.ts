@@ -1,13 +1,22 @@
-import { WebhookEvent } from '@clerk/backend/dist/types'
 import { Request, Response } from 'express'
 import { Webhook } from 'svix'
 
+interface WebhookEvent {
+  type: string
+  data: {
+    id: string
+    object: string
+    [key: string]: any
+  }
+}
+
 const webhookSecret = process.env.CLERK_WEBHOOK_SECRET
 
-export async function handleClerkWebhook(req: Request, res: Response) {
+export async function handleClerkWebhook(req: Request, res: Response): Promise<void> {
   if (!webhookSecret) {
     console.error('Missing CLERK_WEBHOOK_SECRET')
-    return res.status(500).json({ error: 'Server configuration error' })
+    res.status(500).json({ error: 'Server configuration error' })
+    return
   }
 
   // Get the headers
@@ -17,7 +26,8 @@ export async function handleClerkWebhook(req: Request, res: Response) {
 
   // If there are missing headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return res.status(400).json({ error: 'Missing required Svix headers' })
+    res.status(400).json({ error: 'Missing required Svix headers' })
+    return
   }
 
   // Get the body
@@ -26,44 +36,37 @@ export async function handleClerkWebhook(req: Request, res: Response) {
   // Create a new Svix instance with your webhook secret
   const wh = new Webhook(webhookSecret)
 
-  let evt: WebhookEvent
-
   try {
     // Verify the webhook payload
-    evt = wh.verify(payload, {
+    const evt = wh.verify(payload, {
       'svix-id': svix_id,
       'svix-timestamp': svix_timestamp,
       'svix-signature': svix_signature,
     }) as WebhookEvent
-  } catch (err) {
-    console.error('Error verifying webhook:', err)
-    return res.status(400).json({ error: 'Invalid webhook payload' })
-  }
 
-  // Handle the webhook
-  try {
-    const { type } = evt
+    // Handle the webhook
+    const { type, data } = evt
     switch (type) {
       case 'user.created':
         // Handle user creation
-        console.log('User created:', evt.data)
+        console.log('User created:', data)
         break
       case 'user.updated':
         // Handle user update
-        console.log('User updated:', evt.data)
+        console.log('User updated:', data)
         break
       case 'user.deleted':
         // Handle user deletion
-        console.log('User deleted:', evt.data)
+        console.log('User deleted:', data)
         break
       // Add more cases as needed
       default:
         console.log(`Unhandled webhook type: ${type}`)
     }
 
-    return res.status(200).json({ message: 'Webhook processed successfully' })
+    res.status(200).json({ message: 'Webhook processed successfully' })
   } catch (err) {
     console.error('Error processing webhook:', err)
-    return res.status(500).json({ error: 'Error processing webhook' })
+    res.status(500).json({ error: 'Error processing webhook' })
   }
 }

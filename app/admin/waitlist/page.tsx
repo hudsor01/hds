@@ -6,7 +6,7 @@ import { DataGrid } from '@mui/x-data-grid'
 const columns = [
   { field: 'email', headerName: 'Email', width: 300 },
   { field: 'createdAt', headerName: 'Joined', width: 200,
-    valueFormatter: (params) => new Date(params.value).toLocaleString()
+    valueFormatter: (params: { value: string }) => new Date(params.value).toLocaleString()
   },
   { field: 'status', headerName: 'Status', width: 130 }
 ]

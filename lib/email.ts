@@ -1,4 +1,3 @@
-// lib/email.ts
 import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -21,8 +20,8 @@ export default function WelcomeEmail({ email }: { email: string }) {
  return (
    <EmailTemplate>
      <h1>Welcome to Property Pro!</h1>
-     <p>Thanks for joining our waitlist.</p>
-     <p>We'll notify you when early access is available.</p>
+     <p>Thank you for joining our waitlist.</p>
+     <p>We will notify you when early access is available.</p>
    </EmailTemplate>
  )
 }

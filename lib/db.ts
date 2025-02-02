@@ -1,4 +1,3 @@
-// lib/db.ts
 import { sql } from '@vercel/postgres'
 
 interface WaitlistEntry {

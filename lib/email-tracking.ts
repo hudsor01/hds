@@ -1,4 +1,3 @@
-// lib/email-tracking.ts
 export const emailTrackingService = {
  async createPixel(emailId: string) {
    return `${process.env.NEXT_PUBLIC_URL}/api/track/email/${emailId}.png`;

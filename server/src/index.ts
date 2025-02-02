@@ -1,5 +1,5 @@
 import { createClerkClient } from '@clerk/backend'
-import { clerkMiddleware } from '@clerk/express'
+import { clerkMiddleware, requireAuth } from '@clerk/express'
 import { createClient } from '@supabase/supabase-js'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -42,22 +42,22 @@ const limiter = rateLimit({
 })
 app.use(limiter)
 
-// Initialize Clerk middleware
-const auth = clerkMiddleware()
-
 // Health check endpoint
 app.get('/health', (_req: Request, res: Response) => {
   res.status(200).json({ status: 'ok' })
 })
 
 // Webhook endpoint (must be before auth middleware)
-app.post('/api/webhooks/clerk', handleClerkWebhook)
+app.post('/api/webhooks/clerk', express.raw({ type: 'application/json' }), (req, res) => handleClerkWebhook(req, res))
 
-// Protected routes
-app.use('/api', auth)
+// Initialize Clerk middleware
+app.use(clerkMiddleware())
+
+// Protected routes middleware
+const auth = requireAuth()
 
 // Properties routes
-app.get('/api/properties', async (req: Request, res: Response) => {
+app.get('/api/properties', auth, async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('properties')
@@ -72,7 +72,7 @@ app.get('/api/properties', async (req: Request, res: Response) => {
   }
 })
 
-app.post('/api/properties', async (req: Request, res: Response) => {
+app.post('/api/properties', auth, async (req: Request, res: Response) => {
   try {
     const { data, error } = await supabase
       .from('properties')
@@ -105,7 +105,7 @@ app.post('/api/waitlist', async (req: Request, res: Response) => {
 })
 
 // User profile routes
-app.post('/api/user-profiles', async (req: Request, res: Response) => {
+app.post('/api/user-profiles', auth, async (req: Request, res: Response) => {
   const userId = req.auth.userId
   if (!userId) {
     res.status(401).json({ error: 'Unauthorized' })

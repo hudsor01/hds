@@ -1,9 +1,7 @@
-// app/admin/analytics/page.tsx
-import { Card, CardHeader, Grid } from '@mui/material'
 import
   {
     BarChart,
-    Box
+    LineChart
   } from '@mui/x-charts'
 
 export default async function AnalyticsPage() {

@@ -10,7 +10,10 @@ declare global {
           userId: string
           status: string
         }
+        claims?: Record<string, unknown>
       }
     }
   }
 }
+
+export { }

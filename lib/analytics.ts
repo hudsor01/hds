@@ -1,6 +1,4 @@
-// lib/analytics.ts
-import { Analytics } from '@vercel/analytics/react';
-import { track } from '@vercel/analytics';
+import { track } from '@vercel/analytics'
 
 // Track email events and waitlist metrics
 export const analyticsService = {
@@ -16,7 +14,3 @@ export const analyticsService = {
    track('waitlist_join', { position });
  }
 };
-
-
-
-/
