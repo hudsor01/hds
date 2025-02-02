@@ -1,4 +1,3 @@
-// components/notifications/notifications-menu.tsx
 import BuildIcon from '@mui/icons-material/Build'
 import HomeIcon from '@mui/icons-material/Home'
 import PaymentIcon from '@mui/icons-material/Payment'

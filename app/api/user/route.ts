@@ -5,7 +5,8 @@ import { getUserByClerkId } from '@/lib/db/users'
 
 export async function GET() {
   try {
-    const { userId } = auth();
+    const authObj = await auth();
+    const userId = authObj.userId;
 
     if (!userId) {
       return new NextResponse('Unauthorized', { status: 401 });

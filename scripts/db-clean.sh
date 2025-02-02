@@ -1,0 +1,11 @@
+#!/bin/bash
+psql $DATABASE_URL <<EOF
+DROP SCHEMA IF EXISTS public CASCADE;
+CREATE SCHEMA public;
+GRANT ALL ON SCHEMA public TO postgres;
+GRANT ALL ON SCHEMA public TO public;
+DROP SCHEMA IF EXISTS auth CASCADE;
+CREATE SCHEMA auth;
+GRANT ALL ON SCHEMA auth TO postgres;
+GRANT ALL ON SCHEMA auth TO public;
+EOF

@@ -6,24 +6,22 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["auth", "private", "public"]
+  schemas  = ["public"]
 }
 
 model User {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v4()"))
-  clerkId              String                 @unique
-  role                 String                 @default(USER)
-  name                 String?
-  email                String                 @unique
-  image                String?
-  created_at           DateTime               @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime               @updatedAt @db.Timestamptz(6)
-  stripe_customer_id   String?
-  subscription_status  String?
-  properties           Json[]                 @default([])
-  tenancies            Json[]                 @default([])
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()"))
+  clerkId             String   @unique
+  role                String   @default("USER")
+  name                String?
+  email               String   @unique
+  image               String?
+  created_at          DateTime @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime @updatedAt @db.Timestamptz(6)
+  stripe_customer_id  String?
+  subscription_status String?
 
-  // Relations
+  // Relations (remove duplicates)
   properties           properties[]           @relation("UserProperties")
   tenancies            Tenancy[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
@@ -46,6 +44,8 @@ model Tenancy {
   documents        Json[]    @default([])
   createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  user             User      @relation("UserTenancies", fields: [user_id], references: [id])
+  user_id          String
 
   @@index([status])
   @@index([unitId])
@@ -175,17 +175,20 @@ model login_history {
 }
 
 model maintenance_requests {
-  id           String      @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title        String
-  description  String
-  status       String?     @default("PENDING")
-  priority     String?     @default("MEDIUM")
-  property_id  String?     @db.Uuid
-  requester_id String?
-  created_at   DateTime?   @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime?   @default(now()) @db.Timestamptz(6)
-  properties   properties? @relation(fields: [property_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MaintenanceRequest_property_fkey")
-  users        User?       @relation("UserMaintenanceRequests", fields: [requester_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "MaintenanceRequest_user_fkey")
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title       String
+  description String
+  status      String?   @default("PENDING")
+  priority    String?   @default("MEDIUM")
+  property_id String?   @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  // Relations (only define ONCE)
+  user         User   @relation("UserMaintenanceRequests", fields: [requester_id], references: [id], onDelete: Cascade)
+  requester_id String
+
+  properties properties? @relation(fields: [property_id], references: [id])
 
   @@schema("public")
 }
@@ -325,6 +328,8 @@ model properties {
   bedrooms             Int?
   size                 Int?
   maintenance_requests maintenance_requests[]
+  user                 User                   @relation("UserProperties", fields: [user_id], references: [id])
+  user_id              String
 
   @@index([owner_id])
   @@schema("public")
@@ -460,9 +465,11 @@ model user_profiles {
   last_login_ip            String?
   created_at               DateTime? @default(now()) @db.Timestamptz(6)
   updated_at               DateTime? @default(now()) @db.Timestamptz(6)
+  auth_user                String    @unique @db.Uuid
 
   @@index([email])
-  @@schema("public")
+  @@relation(fields: [auth_user], references: [id], onDelete: Cascade)
+  @@map("user_profiles")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -566,7 +573,6 @@ model users {
   @@index([email])
   @@index([email], map: "users_email_idx_auth")
   @@index([phone])
-  @@schema("auth")
 }
 
 model verification_tokens {
@@ -575,7 +581,6 @@ model verification_tokens {
   expires    DateTime @db.Timestamptz(6)
 
   @@id([identifier, token])
-  @@schema("auth")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

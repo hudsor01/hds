@@ -1,37 +1,35 @@
-import { clerkClient, clerkMiddleware } from "@clerk/nextjs/server"
-import { NextResponse } from "next/server"
+import { clerkClient, clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server"
 
 export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
 
-export default clerkMiddleware(
-  (auth, req) => {
-    // Public routes
+const isPublicRoute = createRouteMatcher([
+  '/',
+  '/sign-in(.*)',
+  '/sign-up(.*)',
+  '/api/webhook',
+]);
+
+export default clerkMiddleware((auth, req) => {
+  if (!isPublicRoute(req)) {
     auth().protect();
-
-    // AfterAuth logic
-    if (!auth().userId && !auth().isPublicRoute) {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
-    }
-
-    // Role assignment logic
-    if (auth().userId) {
-      try {
-        const user = await clerkClient.users.getUser(auth().userId);
-        const metadata = user.privateMetadata as { role?: string };
-
-        if (!metadata.role) {
-          await clerkClient.users.updateUserMetadata(auth().userId, {
-            privateMetadata: { ...metadata, role: "OWNER" },
-          });
-        }
-      } catch (error) {
-        console.error("Error setting user role:", error);
-      }
-    }
-  },
-  {
-    // Other middleware options
   }
-);
+
+  // Role assignment logic
+  if (auth().userId) {
+    try {
+      const clerk = await clerkClient();
+      const user = await clerk.users.getUser(auth().userId);
+      const metadata = user.privateMetadata as { role?: string };
+
+      if (!metadata.role) {
+       clerk.users.updateUserMetadata(auth().userId, {
+          privateMetadata: { ...metadata, role: "OWNER" },
+        });
+      }
+    } catch (error) {
+      console.error("Error setting user role:", error);
+    }
+  }
+});

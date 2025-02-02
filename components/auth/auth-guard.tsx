@@ -1,23 +1,40 @@
-// components/auth/auth-guard.tsx
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
-import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
+import { useAuth } from '@clerk/nextjs'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useRouter } from 'next/navigation'
+import { useEffect } from 'react'
 
-// components/auth/auth-guard.tsx
+interface AuthGuardProps {
+  children: React.ReactNode;
+  requiredRole?: 'ADMIN' | 'PROPERTY_MANAGER' | 'OWNER' | 'TENANT' | 'USER';
+}
 
-export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isLoaded, userId } = useAuth();
+export function AuthGuard({ children, requiredRole }: AuthGuardProps) {
+  const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (isLoaded && !userId) {
+    if (isLoaded && !isSignedIn) {
       router.push('/sign-in');
     }
-  }, [isLoaded, userId, router]);
+  }, [isLoaded, isSignedIn, router]);
 
-  if (!isLoaded || !userId) {
+  if (!isLoaded) {
+    return (
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh'
+      }}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
+  if (!isSignedIn) {
     return null;
   }
 

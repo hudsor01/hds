@@ -1,4 +1,3 @@
-// lib/db/users.ts
 import { prisma } from '@/lib/prisma'
 import { Role } from '@prisma/client'
 

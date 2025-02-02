@@ -1,4 +1,4 @@
-// components/layout/dashboard-layout.tsx
+'use client'
 import { UserButton } from '@clerk/nextjs'
 import NotificationsIcon from '@mui/icons-material/Notifications'
 import AppBar from '@mui/material/AppBar'
@@ -7,8 +7,9 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Toolbar from '@mui/material/Toolbar'
 import { useState } from 'react'
+import { DashboardSideNav } from '../dashboard/side-nav'
+import { BreadcrumbNav } from '../navigation/breadcrumbs'
 import { NotificationsMenu } from '../notifications/notifications-menu'
-import { DashboardSidebar } from './dashboard-sidebar'
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [notificationsAnchor, setNotificationsAnchor] = useState<null | HTMLElement>(null);
@@ -46,7 +47,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
         </Toolbar>
       </AppBar>
 
-      <DashboardSidebar />
+      <DashboardSideNav />
 
       <Box
         component="main"
@@ -57,6 +58,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
           backgroundColor: 'background.default'
         }}
       >
+        <BreadcrumbNav />
         {children}
       </Box>
 
