@@ -1,4 +1,3 @@
-// components/profile/user-profile.tsx
 'use client';
 
 import { UserButton, useUser } from '@clerk/nextjs'
@@ -31,7 +30,7 @@ export function UserProfile() {
             {user?.primaryEmailAddress?.emailAddress}
           </Typography>
         </Box>
-        <UserButton afterSignOutUrl="/sign-in" />
+        <UserButton />
       </Box>
     </Paper>
   );

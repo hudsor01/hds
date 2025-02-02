@@ -1,7 +1,6 @@
-// components/ui/data-table.tsx
 import Box from '@mui/material/Box'
 import LinearProgress from '@mui/material/LinearProgress'
-import { DataGrid, type GridColDef } from '@mui/x-data-grid'
+import { DataGrid, type GridColDef, type GridSlotsComponent } from '@mui/x-data-grid'
 
 interface DataTableProps {
   columns: GridColDef[];
@@ -32,7 +31,7 @@ export function DataTable({
         disableRowSelectionOnClick
         loading={loading}
         slots={{
-          loadingOverlay: LinearProgress,
+          loadingOverlay: LinearProgress as GridSlotsComponent['loadingOverlay'],
         }}
       />
     </Box>

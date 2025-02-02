@@ -1,12 +1,14 @@
-// components/analytics/EmailMetricsTable.tsx
-export function EmailMetricsTable({ data }) {
+import { type EmailMetricsProps } from '@/types/analytics'
+import { DataGrid } from '@mui/x-data-grid'
+
+export function EmailMetricsTable({ data }: EmailMetricsProps) {
  const columns = [
    { field: 'template', headerName: 'Template' },
    { field: 'sent', headerName: 'Sent' },
    { field: 'opened', headerName: 'Opened' },
    { field: 'clicked', headerName: 'Clicked' },
    { field: 'openRate', headerName: 'Open Rate',
-     valueFormatter: (params) => `${params.value}%`
+     valueFormatter: (params: any) => `${params.value}%`
    }
  ];
 
