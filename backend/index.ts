@@ -20,7 +20,7 @@ app.get('/api/protected', requireAuth, (req, res) => {
 app.get('/api/admin', requireAuth, async (req, res) => {
   const user = await clerkClient.users.getUser(req.auth.userId)
 
-  if (!user.publicMetadata.role === 'admin') {
+  if (user.publicMetadata.role !== 'admin') {
     return res.status(403).json({ error: 'Not authorized' })
   }
 

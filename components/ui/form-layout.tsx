@@ -1,4 +1,3 @@
-// components/ui/form-layout.tsx
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'

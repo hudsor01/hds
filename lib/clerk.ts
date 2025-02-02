@@ -1,11 +1,11 @@
-import { auth, clerkClient } from '@clerk/nextjs'
+import { auth, clerkClient } from '@clerk/nextjs/server'
 
 export const getCurrentUser = async () => {
-  const { userId } = auth()
+  const authResult = await auth(); // Await the auth promise
+  const userId = authResult.userId; // Access userId from resolved object
 
-  if (!userId) {
-    return null
-  }
+  if (!userId) return null;
 
-  return await clerkClient.users.getUser(userId)
+  const client = await clerkClient();
+  return client.users.getUser(userId);
 }

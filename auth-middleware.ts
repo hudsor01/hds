@@ -1,4 +1,4 @@
-import { clerkMiddleware } from "@clerk/nextjs"
+import { clerkMiddleware } from "@clerk/nextjs/server"
 
 export default clerkMiddleware({
   // Public routes that don't require authentication

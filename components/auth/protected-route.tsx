@@ -1,4 +1,3 @@
-// components/auth/protected-route.tsx
 'use client';
 
 import { useAuth } from '@clerk/nextjs'

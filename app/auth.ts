@@ -5,29 +5,25 @@ export const config = {
   matcher: ["/((?!.*\\..*|_next).*)", "/", "/(api|trpc)(.*)"],
 };
 
-export default clerkMiddleware({
-  async afterAuth(auth, req) {
-    if (!auth.userId && !auth.isPublicRoute) {
+export default clerkMiddleware(
+  (auth, req) => {
+    // Public routes
+    auth().protect();
+
+    // AfterAuth logic
+    if (!auth().userId && !auth().isPublicRoute) {
       return NextResponse.redirect(new URL("/sign-in", req.url));
     }
 
-    // Handle users who aren't authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
-      return NextResponse.redirect(new URL("/sign-in", req.url));
-    }
-
-    // Set the user's role
-    if (auth.userId) {
+    // Role assignment logic
+    if (auth().userId) {
       try {
-        const user = await clerkClient.users.getUser(auth.userId);
+        const user = await clerkClient.users.getUser(auth().userId);
         const metadata = user.privateMetadata as { role?: string };
 
         if (!metadata.role) {
-          await clerkClient.users.updateUserMetadata(auth.userId, {
-            privateMetadata: {
-              ...metadata,
-              role: "OWNER", // Default role
-            },
+          await clerkClient.users.updateUserMetadata(auth().userId, {
+            privateMetadata: { ...metadata, role: "OWNER" },
           });
         }
       } catch (error) {
@@ -35,4 +31,7 @@ export default clerkMiddleware({
       }
     }
   },
-});
+  {
+    // Other middleware options
+  }
+);

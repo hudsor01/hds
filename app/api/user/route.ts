@@ -1,13 +1,28 @@
 import { prisma } from '@/lib/prisma'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
+import { getUserByClerkId } from '@/lib/db/users'
 
 export async function GET() {
-  const { userId } = await auth();
+  try {
+    const { userId } = auth();
 
-  if (!userId) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    if (!userId) {
+      return new NextResponse('Unauthorized', { status: 401 });
+    }
+
+    const user = await getUserByClerkId(userId);
+
+    if (!user) {
+      return new NextResponse('User not found', { status: 404 });
+    }
+
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
+}
 
   const clerkUser = await currentUser();
 
@@ -16,7 +31,7 @@ export async function GET() {
     where: { clerkId: userId },
     select: {
       id: true,
-      subscriptionStatus: true,
+      subscription_status: true,
       role: true,
       organizations: {
         select: {

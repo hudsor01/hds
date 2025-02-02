@@ -11,15 +11,21 @@ datasource db {
 
 model User {
   id                   String                 @id @default(dbgenerated("uuid_generate_v4()"))
+  clerkId              String                 @unique
+  role                 String                 @default(USER)
   name                 String?
   email                String                 @unique
   image                String?
   created_at           DateTime               @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @updatedAt @db.Timestamptz(6)
   stripe_customer_id   String?
   subscription_status  String?
   properties           Json[]                 @default([])
   tenancies            Json[]                 @default([])
+
+  // Relations
+  properties           properties[]           @relation("UserProperties")
+  tenancies            Tenancy[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
   @@map("users")
@@ -876,6 +882,17 @@ enum request_status {
   pending
   approved
   rejected
+
+  @@schema("public")
+}
+
+enum Role {
+  ADMIN
+  PROPERTY_MANAGER
+  PROPERTY_OWNER
+  MAINTENANCE
+  TENANT
+  USER
 
   @@schema("public")
 }
