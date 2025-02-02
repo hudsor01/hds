@@ -468,7 +468,6 @@ model user_profiles {
   auth_user                String    @unique @db.Uuid
 
   @@index([email])
-  @@relation(fields: [auth_user], references: [id], onDelete: Cascade)
   @@map("user_profiles")
 }
 
@@ -630,8 +629,6 @@ enum ActivityType {
   DELETE
   LOGIN
   LOGOUT
-
-  @@schema("public")
 }
 
 enum LeaseType {
@@ -639,8 +636,6 @@ enum LeaseType {
   MONTH_TO_MONTH
   WEEKLY
   YEARLY
-
-  @@schema("public")
 }
 
 enum TenantStatus {
@@ -648,8 +643,6 @@ enum TenantStatus {
   INACTIVE
   PENDING
   REJECTED
-
-  @@schema("public")
 }
 
 enum AuditAction {
@@ -663,8 +656,6 @@ enum AuditAction {
   PASSWORD_RESET
   EMAIL_CHANGE
   ROLE_CHANGE
-
-  @@schema("public")
 }
 
 enum EntityType {
@@ -674,8 +665,6 @@ enum EntityType {
   PAYMENT
   MAINTENANCE
   DOCUMENT
-
-  @@schema("public")
 }
 
 enum UserRole {
@@ -685,8 +674,6 @@ enum UserRole {
   MAINTENANCE
   TENANT
   USER
-
-  @@schema("public")
 }
 
 enum LeaseStatus {
@@ -694,8 +681,6 @@ enum LeaseStatus {
   PENDING
   EXPIRED
   TERMINATED
-
-  @@schema("public")
 }
 
 enum MessageStatus {
@@ -703,16 +688,12 @@ enum MessageStatus {
   DELIVERED
   READ
   FAILED
-
-  @@schema("public")
 }
 
 enum NotificationStatus {
   UNREAD
   READ
   ARCHIVED
-
-  @@schema("public")
 }
 
 enum ToolType {
@@ -720,8 +701,6 @@ enum ToolType {
   project_manager
   image_optimizer
   document_manager
-
-  @@schema("public")
 }
 
 enum PaymentMethod {
@@ -729,8 +708,6 @@ enum PaymentMethod {
   BANK_TRANSFER
   CASH
   CHECK
-
-  @@schema("public")
 }
 
 enum entity_type {
@@ -744,16 +721,12 @@ enum entity_type {
   SETTINGS
   EMAIL_TEMPLATE
   ROUTE
-
-  @@schema("public")
 }
 
 enum image_job_priority {
   low
   medium
   high
-
-  @@schema("public")
 }
 
 enum image_job_status {
@@ -761,8 +734,6 @@ enum image_job_status {
   processing
   completed
   failed
-
-  @@schema("public")
 }
 
 enum invoice_status {
@@ -771,15 +742,11 @@ enum invoice_status {
   paid
   overdue
   cancelled
-
-  @@schema("public")
 }
 
 enum invoice_template_type {
   standard
   custom
-
-  @@schema("public")
 }
 
 enum notification_type {
@@ -789,8 +756,6 @@ enum notification_type {
   lease
   message
   alert
-
-  @@schema("public")
 }
 
 enum payment_status {
@@ -801,8 +766,6 @@ enum payment_status {
   overdue
   cancelled
   refunded
-
-  @@schema("public")
 }
 
 enum paymentcategory {
@@ -812,8 +775,6 @@ enum paymentcategory {
   MAINTENANCE
   UTILITIES
   OTHER
-
-  @@schema("public")
 }
 
 enum paymentmethod {
@@ -822,8 +783,6 @@ enum paymentmethod {
   CREDIT_CARD
   BANK_TRANSFER
   OTHER
-
-  @@schema("public")
 }
 
 enum paymentstatus {
@@ -831,8 +790,6 @@ enum paymentstatus {
   Paid
   Overdue
   Cancelled
-
-  @@schema("public")
 }
 
 enum paymenttype {
@@ -840,8 +797,6 @@ enum paymenttype {
   Deposit
   Maintenance
   Other
-
-  @@schema("public")
 }
 
 enum property_status {
@@ -850,8 +805,6 @@ enum property_status {
   maintenance
   renovation
   off_market
-
-  @@schema("public")
 }
 
 enum property_type {
@@ -863,32 +816,24 @@ enum property_type {
   commercial
   industrial
   land
-
-  @@schema("public")
 }
 
 enum propertystatus {
   Occupied
   Vacant
   Maintenance
-
-  @@schema("public")
 }
 
 enum propertytype {
   Residential
   Commercial
   Industrial
-
-  @@schema("public")
 }
 
 enum request_status {
   pending
   approved
   rejected
-
-  @@schema("public")
 }
 
 enum Role {
@@ -898,6 +843,4 @@ enum Role {
   MAINTENANCE
   TENANT
   USER
-
-  @@schema("public")
 }
