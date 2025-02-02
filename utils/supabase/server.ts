@@ -1,6 +1,6 @@
 import { clerkMiddleware } from '@clerk/express'
 import { PrismaClient } from '@prisma/client'
-import { createServerClient } from '@supabase/supabase-js'
+import { createServerClient } from '@supabase/ssr'
 import cors from 'cors'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
