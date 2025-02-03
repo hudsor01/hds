@@ -1,12 +1,12 @@
-import { auth } from '@clerk/nextjs/server';
-import { prisma } from '@/lib/prisma';
-import { PERMISSIONS } from '@/types/roles';
+import {prisma} from '@/lib/prisma';
+import {PERMISSIONS} from '@/types/roles';
+import {auth} from '@clerk/nextjs/server';
 
 export async function checkPermission(
   permission: keyof typeof PERMISSIONS,
   organizationId: string,
 ) {
-  const { userId, sessionClaims } = await auth();
+  const {userId, sessionClaims} = await auth();
 
   if (!userId) {
     throw new Error('Unauthorized');

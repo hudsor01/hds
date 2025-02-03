@@ -1,21 +1,19 @@
 'use client';
 
-import { routes } from '@/routes';
-import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather';
-
+import {cn} from '@/lib/utils';
+import {routes} from '@/routes';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-import { cn } from '@/lib/utils';
+import {usePathname} from 'next/navigation';
+import {Box, DollarSign, FileText, Home, Settings, Tool, Users} from 'react-feather';
 
 const navigation = [
-  { name: 'Dashboard', href: routes.dashboard, icon: Home },
-  { name: 'Properties', href: routes.properties.index, icon: Box },
-  { name: 'Tenants', href: routes.tenants.index, icon: Users },
-  { name: 'Documents', href: routes.documents.index, icon: FileText },
-  { name: 'Finances', href: routes.finances.index, icon: DollarSign },
-  { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
-  { name: 'Settings', href: routes.settings, icon: Settings },
+  {name: 'Dashboard', href: routes.dashboard, icon: Home},
+  {name: 'Properties', href: routes.properties.index, icon: Box},
+  {name: 'Tenants', href: routes.tenants.index, icon: Users},
+  {name: 'Documents', href: routes.documents.index, icon: FileText},
+  {name: 'Finances', href: routes.finances.index, icon: DollarSign},
+  {name: 'Maintenance', href: routes.maintenance.index, icon: Tool},
+  {name: 'Settings', href: routes.settings, icon: Settings},
 ];
 
 export function DashboardSidebar() {

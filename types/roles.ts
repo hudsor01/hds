@@ -17,3 +17,13 @@ export const ROLE_PERMISSIONS = {
   MAINTENANCE: [PERMISSIONS.MANAGE_MAINTENANCE],
   TENANT: [],
 } as const;
+
+export type UserRole = 'ADMIN' | 'OWNER' | 'MANAGER' | 'USER';
+
+export interface UserRoleMetadata {
+  role?: UserRole;
+}
+
+export function isValidRole(role: string): role is UserRole {
+  return ['ADMIN', 'OWNER', 'MANAGER', 'USER'].includes(role as UserRole);
+}

@@ -1,7 +1,7 @@
-import { useSession } from '@clerk/nextjs';
+import {useSession} from '@clerk/nextjs';
 
 export function useAuth() {
-  const { isLoaded, isSignedIn, session } = useSession();
+  const {isLoaded, isSignedIn, session} = useSession();
   const isLoading = !isLoaded;
   const isAuthenticated = isSignedIn;
 

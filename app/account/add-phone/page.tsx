@@ -1,68 +1,68 @@
-'use client'
+'use client';
 
-import { useUser } from '@clerk/nextjs'
-import { PhoneNumberResource } from '@clerk/types'
-import * as React from 'react'
+import {useUser} from '@clerk/nextjs';
+import {PhoneNumberResource} from '@clerk/types';
+import * as React from 'react';
 
 export default function Page() {
-  const { isLoaded, user } = useUser()
-  const [phone, setPhone] = React.useState('')
-  const [code, setCode] = React.useState('')
-  const [isVerifying, setIsVerifying] = React.useState(false)
-  const [successful, setSuccessful] = React.useState(false)
-  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>()
+  const {isLoaded, user} = useUser();
+  const [phone, setPhone] = React.useState('');
+  const [code, setCode] = React.useState('');
+  const [isVerifying, setIsVerifying] = React.useState(false);
+  const [successful, setSuccessful] = React.useState(false);
+  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>();
 
-  if (!isLoaded) return null
+  if (!isLoaded) return null;
 
   if (isLoaded && !user?.id) {
-    return <p>You must be logged in to access this page</p>
+    return <p>You must be logged in to access this page</p>;
   }
 
   // Handle addition of the phone number
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     try {
       // Add unverified phone number to user
-      const res = await user.createPhoneNumber({ phoneNumber: phone })
+      const res = await user.createPhoneNumber({phoneNumber: phone});
       // Reload user to get updated User object
-      await user.reload()
+      await user.reload();
 
       // Create a reference to the new phone number to use related methods
-      const phoneNumber = user.phoneNumbers.find((a) => a.id === res.id)
-      setPhoneObj(phoneNumber)
+      const phoneNumber = user.phoneNumbers.find(a => a.id === res.id);
+      setPhoneObj(phoneNumber);
 
       // Send the user an SMS with the verification code
-      phoneNumber?.prepareVerification()
+      phoneNumber?.prepareVerification();
 
       // Set to true to display second form
       // and capture the OTP code
-      setIsVerifying(true)
+      setIsVerifying(true);
     } catch (err) {
       // See https://clerk.com/docs/custom-flows/error-handling
       // for more info on error handling
-      console.error(JSON.stringify(err, null, 2))
+      console.error(JSON.stringify(err, null, 2));
     }
-  }
+  };
 
   // Handle the submission of the verification form
   const verifyCode = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
       // Verify that the provided code matches the code sent to the user
-      const phoneVerifyAttempt = await phoneObj?.attemptVerification({ code })
+      const phoneVerifyAttempt = await phoneObj?.attemptVerification({code});
 
       if (phoneVerifyAttempt?.verification.status === 'verified') {
-        setSuccessful(true)
+        setSuccessful(true);
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
-        console.error(JSON.stringify(phoneVerifyAttempt, null, 2))
+        console.error(JSON.stringify(phoneVerifyAttempt, null, 2));
       }
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2))
+      console.error(JSON.stringify(err, null, 2));
     }
-  }
+  };
 
   // Display a success message if the phone number was added successfully
   if (successful) {
@@ -70,7 +70,7 @@ export default function Page() {
       <>
         <h1>Phone added</h1>
       </>
-    )
+    );
   }
 
   // Display the verification form to capture the OTP code
@@ -79,24 +79,24 @@ export default function Page() {
       <>
         <h1>Verify phone</h1>
         <div>
-          <form onSubmit={(e) => verifyCode(e)}>
+          <form onSubmit={e => verifyCode(e)}>
             <div>
-              <label htmlFor="code">Enter code</label>
+              <label htmlFor='code'>Enter code</label>
               <input
-                onChange={(e) => setCode(e.target.value)}
-                id="code"
-                name="code"
-                type="text"
+                onChange={e => setCode(e.target.value)}
+                id='code'
+                name='code'
+                type='text'
                 value={code}
               />
             </div>
             <div>
-              <button type="submit">Verify</button>
+              <button type='submit'>Verify</button>
             </div>
           </form>
         </div>
       </>
-    )
+    );
   }
 
   // Display the initial form to capture the phone number
@@ -104,22 +104,22 @@ export default function Page() {
     <>
       <h1>Add phone</h1>
       <div>
-        <form onSubmit={(e) => handleSubmit(e)}>
+        <form onSubmit={e => handleSubmit(e)}>
           <div>
-            <label htmlFor="phone">Enter phone number</label>
+            <label htmlFor='phone'>Enter phone number</label>
             <input
-              onChange={(e) => setPhone(e.target.value)}
-              id="phone"
-              name="phone"
-              type="phone"
+              onChange={e => setPhone(e.target.value)}
+              id='phone'
+              name='phone'
+              type='phone'
               value={phone}
             />
           </div>
           <div>
-            <button type="submit">Continue</button>
+            <button type='submit'>Continue</button>
           </div>
         </form>
       </div>
     </>
-  )
+  );
 }

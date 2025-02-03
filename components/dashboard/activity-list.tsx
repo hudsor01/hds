@@ -1,13 +1,11 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { motion } from 'framer-motion';
-import { FileText, Home, Key, Tool, User } from 'react-feather';
-
-import { Box, Chip, Divider, ListItem, Stack, Typography } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
-
-import { VirtualizedList } from './virtualized-list.jsx';
+import {VirtualizedList} from './virtualized-list.jsx';
+import {Box, Chip, Divider, ListItem, Stack, Typography} from '@mui/material';
+import {alpha, useTheme} from '@mui/material/styles';
+import {formatDistanceToNow} from 'date-fns';
+import {motion} from 'framer-motion';
+import {FileText, Home, Key, Tool, User} from 'react-feather';
 
 interface ActivityItem {
   id: string;
@@ -37,7 +35,7 @@ const typeIcons = {
 } as const;
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: {opacity: 0},
   show: {
     opacity: 1,
     transition: {
@@ -47,11 +45,11 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  hidden: {opacity: 0, y: 20},
+  show: {opacity: 1, y: 0},
 };
 
-export function ActivityList({ activities }: ActivityListProps) {
+export function ActivityList({activities}: ActivityListProps) {
   const theme = useTheme();
 
   const renderActivityItem = (activity: ActivityItem, index: number) => {
@@ -63,7 +61,7 @@ export function ActivityList({ activities }: ActivityListProps) {
         component={motion.div}
         variants={itemVariants}
         sx={{
-          px: { xs: 2, sm: 3 },
+          px: {xs: 2, sm: 3},
           py: 2,
           display: 'flex',
           alignItems: 'flex-start',
@@ -102,13 +100,13 @@ export function ActivityList({ activities }: ActivityListProps) {
             divider={<Divider orientation='vertical' flexItem />}
           >
             <Typography variant='caption' color='text.disabled'>
-              {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
+              {formatDistanceToNow(activity.timestamp, {addSuffix: true})}
             </Typography>
             <Chip
               label={activity.status}
               size='small'
               color={statusColor}
-              sx={{ height: 20, fontSize: '0.75rem' }}
+              sx={{height: 20, fontSize: '0.75rem'}}
             />
           </Stack>
         </Stack>

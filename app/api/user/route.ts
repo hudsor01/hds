@@ -1,24 +1,24 @@
-import { prisma } from '@/lib/prisma'
-import { currentUser } from '@clerk/nextjs/server'
-import { NextResponse } from 'next/server'
+import {prisma} from '@/lib/prisma';
+import {currentUser} from '@clerk/nextjs/server';
+import {NextResponse} from 'next/server';
 
 export async function GET() {
   try {
-    const user = await currentUser()
+    const user = await currentUser();
 
     if (!user) {
-      return new NextResponse('Unauthorized', { status: 401 })
+      return new NextResponse('Unauthorized', {status: 401});
     }
 
     const dbUser = await prisma.users.findUnique({
-      where: { clerkId: user.id },
+      where: {clerkId: user.id},
       select: {
         id: true,
         subscription_status: true,
         email: true,
         stripe_customer_id: true,
-      }
-    })
+      },
+    });
 
     if (!dbUser) {
       // Create user in database if they don't exist
@@ -27,15 +27,15 @@ export async function GET() {
           clerkId: user.id,
           email: user.emailAddresses[0]?.emailAddress || '',
           name: `${user.firstName} ${user.lastName}`.trim(),
-        }
-      })
+        },
+      });
       return NextResponse.json({
         clerkId: user.id,
         firstName: user.firstName,
         lastName: user.lastName,
         emailAddress: user.emailAddresses[0]?.emailAddress,
-        dbUser: newUser
-      })
+        dbUser: newUser,
+      });
     }
 
     return NextResponse.json({
@@ -43,10 +43,10 @@ export async function GET() {
       firstName: user.firstName,
       lastName: user.lastName,
       emailAddress: user.emailAddresses[0]?.emailAddress,
-      ...dbUser
-    })
+      ...dbUser,
+    });
   } catch (error) {
-    console.error('Error in user route:', error)
-    return new NextResponse('Internal Server Error', { status: 500 })
+    console.error('Error in user route:', error);
+    return new NextResponse('Internal Server Error', {status: 500});
   }
 }

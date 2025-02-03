@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'components/ui/button';
+import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,11 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import type { Property, PropertySale } from 'types/properties';
-
-import { useState } from 'react';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {useState} from 'react';
+import type {Property, PropertySale} from 'types/properties';
 
 interface PropertySaleDialogProps {
   open: boolean;

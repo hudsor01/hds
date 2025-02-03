@@ -1,13 +1,13 @@
-import { useCreateLease, useUpdateLease } from '@/hooks/use-leases'
-import { type Lease } from '@/types'
-import { zodResolver } from '@hookform/resolvers/zod'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Grid from '@mui/material/Grid'
-import TextField from '@mui/material/TextField'
-import { DatePicker } from '@mui/x-date-pickers/DatePicker'
-import { Controller, useForm } from 'react-hook-form'
-import { z } from 'zod'
+import {useCreateLease, useUpdateLease} from '@/hooks/use-leases';
+import {type Lease} from '@/types';
+import {zodResolver} from '@hookform/resolvers/zod';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
+import TextField from '@mui/material/TextField';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {Controller, useForm} from 'react-hook-form';
+import {z} from 'zod';
 
 const leaseSchema = z.object({
   propertyId: z.string().min(1, 'Property is required'),
@@ -32,14 +32,14 @@ interface LeaseFormProps {
   onSuccess?: () => void;
 }
 
-export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
+export function LeaseForm({initialData, onSuccess}: LeaseFormProps) {
   const createLease = useCreateLease();
   const updateLease = useUpdateLease();
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm<LeaseFormData>({
     resolver: zodResolver(leaseSchema),
     defaultValues: initialData || {
@@ -56,7 +56,7 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
   const onSubmit = async (data: LeaseFormData) => {
     try {
       if (initialData?.id) {
-        await updateLease.mutateAsync({ id: initialData.id, ...data });
+        await updateLease.mutateAsync({id: initialData.id, ...data});
       } else {
         await createLease.mutateAsync(data);
       }
@@ -71,12 +71,12 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
       <Grid container spacing={3}>
         <Grid item xs={12} sm={6}>
           <Controller
-            name="propertyId"
+            name='propertyId'
             control={control}
-            render={({ field }) => (
+            render={({field}) => (
               <TextField
                 {...field}
-                label="Property"
+                label='Property'
                 select
                 fullWidth
                 error={!!errors.propertyId}
@@ -90,12 +90,12 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="tenantId"
+            name='tenantId'
             control={control}
-            render={({ field }) => (
+            render={({field}) => (
               <TextField
                 {...field}
-                label="Tenant"
+                label='Tenant'
                 select
                 fullWidth
                 error={!!errors.tenantId}
@@ -109,12 +109,12 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="startDate"
+            name='startDate'
             control={control}
-            render={({ field }) => (
+            render={({field}) => (
               <DatePicker
                 {...field}
-                label="Start Date"
+                label='Start Date'
                 slotProps={{
                   textField: {
                     fullWidth: true,
@@ -129,12 +129,12 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
 
         <Grid item xs={12} sm={6}>
           <Controller
-            name="endDate"
+            name='endDate'
             control={control}
-            render={({ field }) => (
+            render={({field}) => (
               <DatePicker
                 {...field}
-                label="End Date"
+                label='End Date'
                 slotProps={{
                   textField: {
                     fullWidth: true,
@@ -150,10 +150,10 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
         {/* Add remaining form fields */}
 
         <Grid item xs={12}>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+          <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
             <Button
-              type="submit"
-              variant="contained"
+              type='submit'
+              variant='contained'
               disabled={createLease.isPending || updateLease.isPending}
             >
               {initialData ? 'Update Lease' : 'Create Lease'}

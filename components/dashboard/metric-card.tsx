@@ -1,41 +1,33 @@
-'use client'
+'use client';
 
-import
-    {
-        Box,
-        Card,
-        Tooltip,
-        Typography,
-        alpha,
-        useTheme
-    } from '@mui/material'
-import { motion } from 'framer-motion'
-import React from 'react'
-import type { Icon } from 'react-feather'
-import { TrendingUp } from 'react-feather'
+import {Box, Card, Tooltip, Typography, alpha, useTheme} from '@mui/material';
+import {motion} from 'framer-motion';
+import React from 'react';
+import type {Icon} from 'react-feather';
+import {TrendingUp} from 'react-feather';
 
 interface MetricCardProps {
-  title: string
-  value: string | number
-  icon: Icon
-  color: 'primary' | 'success' | 'info' | 'warning'
-  percentageChange?: number
-  tooltip?: string
-  formatType?: 'currency' | 'number' | 'percentage'
+  title: string;
+  value: string | number;
+  icon: Icon;
+  color: 'primary' | 'success' | 'info' | 'warning';
+  percentageChange?: number;
+  tooltip?: string;
+  formatType?: 'currency' | 'number' | 'percentage';
 }
 
 const cardVariants = {
-  initial: { scale: 0.96, opacity: 0 },
-  animate: { scale: 1, opacity: 1 },
-  hover: { scale: 1.02, transition: { duration: 0.2 } },
-  tap: { scale: 0.98 }
-}
+  initial: {scale: 0.96, opacity: 0},
+  animate: {scale: 1, opacity: 1},
+  hover: {scale: 1.02, transition: {duration: 0.2}},
+  tap: {scale: 0.98},
+};
 
 const iconVariants = {
-  initial: { rotate: -10, scale: 0.9 },
-  animate: { rotate: 0, scale: 1 },
-  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } }
-}
+  initial: {rotate: -10, scale: 0.9},
+  animate: {rotate: 0, scale: 1},
+  hover: {rotate: 5, scale: 1.1, transition: {duration: 0.2}},
+};
 
 export function MetricCard({
   title,
@@ -44,33 +36,33 @@ export function MetricCard({
   color,
   percentageChange,
   tooltip,
-  formatType = 'number'
+  formatType = 'number',
 }: MetricCardProps) {
-  const theme = useTheme()
+  const theme = useTheme();
 
   const formattedValue = React.useMemo(() => {
     switch (formatType) {
       case 'currency':
-        return `$${Number(value).toLocaleString()}`
+        return `$${Number(value).toLocaleString()}`;
       case 'percentage':
-        return `${Number(value)}%`
+        return `${Number(value)}%`;
       default:
-        return String(value)
+        return String(value);
     }
-  }, [value, formatType])
+  }, [value, formatType]);
 
   return (
-    <Tooltip title={tooltip || ''} arrow placement="top">
+    <Tooltip title={tooltip || ''} arrow placement='top'>
       <motion.div
         variants={cardVariants}
-        initial="initial"
-        animate="animate"
-        whileHover="hover"
-        whileTap="tap"
+        initial='initial'
+        animate='animate'
+        whileHover='hover'
+        whileTap='tap'
       >
         <Card
           sx={{
-            p: { xs: 1.5, sm: 2 },
+            p: {xs: 1.5, sm: 2},
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -84,10 +76,10 @@ export function MetricCard({
             '&:hover': {
               boxShadow: theme.shadows[8],
               borderColor: alpha(theme.palette[color].main, 0.4),
-            }
+            },
           }}
         >
-          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5 }}>
+          <Box sx={{display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5}}>
             <motion.div
               variants={iconVariants}
               style={{
@@ -101,15 +93,15 @@ export function MetricCard({
                 boxShadow: `0 2px 8px 0 ${alpha(theme.palette[color].main, 0.3)}`,
               }}
             >
-              <Icon width={20} height={20} color="#fff" />
+              <Icon width={20} height={20} color='#fff' />
             </motion.div>
 
             <Typography
-              variant="h4"
+              variant='h4'
               sx={{
                 fontWeight: 700,
                 color: theme.palette[color].dark,
-                fontSize: { xs: '1.25rem', sm: '1.5rem' }
+                fontSize: {xs: '1.25rem', sm: '1.5rem'},
               }}
             >
               {formattedValue}
@@ -117,12 +109,12 @@ export function MetricCard({
           </Box>
 
           <Typography
-            variant="subtitle2"
+            variant='subtitle2'
             sx={{
               opacity: 0.8,
               color: theme.palette[color].dark,
               fontWeight: 500,
-              mb: 0.5
+              mb: 0.5,
             }}
           >
             {title}
@@ -131,25 +123,26 @@ export function MetricCard({
           {percentageChange !== undefined && (
             <Box
               component={motion.div}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{opacity: 0, y: 10}}
+              animate={{opacity: 1, y: 0}}
               sx={{
                 mt: 'auto',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 0.5
+                gap: 0.5,
               }}
             >
               <TrendingUp
                 size={14}
                 style={{
                   transform: percentageChange < 0 ? 'rotate(180deg)' : 'none',
-                  color: percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main
+                  color:
+                    percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main,
                 }}
               />
               <Typography
-                component="span"
-                variant="caption"
+                component='span'
+                variant='caption'
                 sx={{
                   fontWeight: 600,
                   color: percentageChange >= 0 ? 'success.main' : 'error.main',
@@ -162,5 +155,5 @@ export function MetricCard({
         </Card>
       </motion.div>
     </Tooltip>
-  )
+  );
 }

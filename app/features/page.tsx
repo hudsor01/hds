@@ -1,7 +1,8 @@
 'use client';
 
-import { Card } from 'components/ui/card';
-import { motion, useInView } from 'framer-motion';
+import {Card} from 'components/ui/card';
+import {motion, useInView} from 'framer-motion';
+import {useRef} from 'react';
 import {
   BarChart2,
   Calendar,
@@ -12,8 +13,6 @@ import {
   Settings,
   Users,
 } from 'react-feather';
-
-import { useRef } from 'react';
 
 interface Feature {
   title: string;
@@ -65,7 +64,7 @@ const features: Feature[] = [
 ];
 
 const staggerVariants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: {opacity: 0, y: 20},
   visible: (i: number) => ({
     opacity: 1,
     y: 0,
@@ -78,7 +77,7 @@ const staggerVariants = {
 };
 
 const containerVariants = {
-  hidden: { opacity: 0 },
+  hidden: {opacity: 0},
   visible: {
     opacity: 1,
     transition: {
@@ -90,7 +89,7 @@ const containerVariants = {
 
 export default function FeaturesPage() {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: '-100px' });
+  const isInView = useInView(ref, {once: true, margin: '-100px'});
 
   return (
     <motion.div
@@ -103,9 +102,9 @@ export default function FeaturesPage() {
       <div className='absolute inset-0 bg-[linear-gradient(to_right,#e2e8f0_1px,transparent_1px),linear-gradient(to_bottom,#e2e8f0_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20' />
       {/* Enhanced Header */}
       <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
+        initial={{opacity: 0, y: 30}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.8}}
         className='text-center'
       >
         <h1 className='text-4xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-5xl md:text-6xl'>
@@ -118,9 +117,9 @@ export default function FeaturesPage() {
         </h1>
 
         <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.4 }}
+          initial={{opacity: 0}}
+          animate={{opacity: 1}}
+          transition={{delay: 0.4}}
           className='mt-6 text-lg leading-8 text-gray-600 dark:text-gray-400 max-w-3xl mx-auto'
         >
           Streamline your operations with our comprehensive suite of tools designed for{' '}

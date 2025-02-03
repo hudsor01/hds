@@ -1,7 +1,8 @@
 'use client';
 
-import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/auth/lib/constants';
-import { Button } from 'components/ui/button';
+import {PRIORITY_LABELS, PRIORITY_LEVELS} from '@/auth/lib/constants';
+import type {SelectChangeEvent} from '@mui/material';
+import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -10,20 +11,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Select, SelectItem } from 'components/ui/select';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
+import {useState} from 'react';
 import type {
   MaintenanceRequest,
   NewMaintenanceRequest,
   UpdateMaintenanceRequest,
 } from 'types/maintenance';
-import type { Property } from 'types/properties';
-
-import { useState } from 'react';
-
-import type { SelectChangeEvent } from '@mui/material';
+import type {Property} from 'types/properties';
 
 interface MaintenanceRequestDialogProps {
   open: boolean;

@@ -1,5 +1,5 @@
 // stores/uiStore.ts
-import { create } from 'zustand'
+import {create} from 'zustand';
 
 type UIState = {
   darkMode: boolean;
@@ -17,23 +17,23 @@ type Notification = {
   timestamp: Date;
 };
 
-const useUIStore = create<UIState>((set) => ({
+const useUIStore = create<UIState>(set => ({
   darkMode: false,
   notifications: [],
   actions: {
-    toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-    addNotification: (notification) =>
-      set((state) => ({
+    toggleDarkMode: () => set(state => ({darkMode: !state.darkMode})),
+    addNotification: notification =>
+      set(state => ({
         notifications: [
           ...state.notifications,
           {
             ...notification,
             id: crypto.randomUUID(),
             timestamp: new Date(),
-          }
-        ]
-      }))
-  }
+          },
+        ],
+      })),
+  },
 }));
 
 export default useUIStore;

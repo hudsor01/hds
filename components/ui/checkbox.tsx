@@ -1,11 +1,11 @@
 'use client';
 
+import {cn} from '@/lib/utils';
+import type {CheckboxProps as MuiCheckboxProps} from '@mui/material';
+import {FormControlLabel, Checkbox as MuiCheckbox, styled} from '@mui/material';
 import * as React from 'react';
-import type { CheckboxProps as MuiCheckboxProps } from '@mui/material';
-import { FormControlLabel, Checkbox as MuiCheckbox, styled } from '@mui/material';
-import { cn } from '@/lib/utils';
 
-const StyledCheckbox = styled(MuiCheckbox)(({ theme }) => ({
+const StyledCheckbox = styled(MuiCheckbox)(({theme}) => ({
   padding: theme.spacing(0.5),
   '& .MuiSvgIcon-root': {
     fontSize: 20,
@@ -25,7 +25,7 @@ export interface CheckboxProps extends Omit<MuiCheckboxProps, 'defaultChecked'> 
 }
 
 export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
-  ({ className, label, defaultChecked, checked, onChange, onCheckedChange, ...props }, ref) => {
+  ({className, label, defaultChecked, checked, onChange, onCheckedChange, ...props}, ref) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(event, event.target.checked);

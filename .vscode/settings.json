@@ -31,5 +31,5 @@
   // File associations
   "files.associations": {
     ".prettierrc*": "json"
-  },
+  }
 }

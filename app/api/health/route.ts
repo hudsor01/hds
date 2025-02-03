@@ -5,8 +5,8 @@ export async function GET() {
     database: await checkDatabase(),
     redis: await checkRedis(),
     email: await checkEmailService(),
-    timestamp: Date.now()
-  }
+    timestamp: Date.now(),
+  };
 
-  return Response.json(health)
+  return Response.json(health);
 }

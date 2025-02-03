@@ -1,12 +1,12 @@
-import { auth } from '@clerk/nextjs/server';
-import { NextResponse } from 'next/server';
-import { prisma } from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
+import {auth} from '@clerk/nextjs/server';
+import {NextResponse} from 'next/server';
 
 export async function POST() {
-  const { userId } = await auth();
+  const {userId} = await auth();
 
   if (!userId) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    return new NextResponse('Unauthorized', {status: 401});
   }
 
   try {
@@ -21,7 +21,7 @@ export async function POST() {
     });
 
     if (!existingUser) {
-      return new NextResponse('User not found', { status: 404 });
+      return new NextResponse('User not found', {status: 404});
     }
 
     const updatedUser = await prisma.user.update({
@@ -42,6 +42,6 @@ export async function POST() {
     return NextResponse.json(updatedUser);
   } catch (error) {
     console.error('Failed to activate free trial:', error);
-    return new NextResponse('Failed to activate free trial', { status: 500 });
+    return new NextResponse('Failed to activate free trial', {status: 500});
   }
 }

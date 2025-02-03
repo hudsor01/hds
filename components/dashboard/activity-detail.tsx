@@ -1,9 +1,9 @@
 'use client';
 
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/ui/sheet';
-import { format } from 'date-fns';
-import type { RecentActivity } from 'types/dashboard';
-import { PRIORITY_LABELS, STATUS_LABELS } from '../../app/auth/lib/constants';
+import {PRIORITY_LABELS, STATUS_LABELS} from '../../app/auth/lib/constants';
+import {Sheet, SheetContent, SheetHeader, SheetTitle} from 'components/ui/sheet';
+import {format} from 'date-fns';
+import type {RecentActivity} from 'types/dashboard';
 
 interface ActivityDetailProps {
   activity: RecentActivity;
@@ -11,7 +11,7 @@ interface ActivityDetailProps {
   open: boolean;
 }
 
-export function ActivityDetail({ activity, onCloseAction, open }: ActivityDetailProps) {
+export function ActivityDetail({activity, onCloseAction, open}: ActivityDetailProps) {
   const renderActivitySpecificDetails = () => {
     switch (activity.type) {
       case 'MAINTENANCE':

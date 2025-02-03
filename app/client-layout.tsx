@@ -1,17 +1,14 @@
 'use client';
 
-import { AuthProvider } from 'components/providers/auth-provider';
-import { Providers } from 'components/providers/providers';
-
-import { StrictMode } from 'react';
-
-import CssBaseline from '@mui/material/CssBaseline';
-import { ThemeProvider } from '@mui/material/styles';
-
-import { ThemeMetadata } from '../components/theme-metadata';
+import {ThemeMetadata} from '../components/theme-metadata';
 import theme from './theme';
+import CssBaseline from '@mui/material/CssBaseline';
+import {ThemeProvider} from '@mui/material/styles';
+import {AuthProvider} from 'components/providers/auth-provider';
+import {Providers} from 'components/providers/providers';
+import {StrictMode} from 'react';
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+export default function ClientLayout({children}: {children: React.ReactNode}) {
   return (
     <StrictMode>
       <AuthProvider>

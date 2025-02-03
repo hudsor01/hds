@@ -1,6 +1,6 @@
 'use client';
 
-import { Button } from 'components/ui/button';
+import {Button} from 'components/ui/button';
 import {
   CommandDialog,
   CommandEmpty,
@@ -9,20 +9,18 @@ import {
   CommandItem,
   CommandList,
 } from 'components/ui/command';
+import {Route} from 'next';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
 import * as feather from 'react-feather';
 
-import { useEffect, useState } from 'react';
-
-import { Route } from 'next';
-import { useRouter } from 'next/navigation';
-
 const navigationItems = [
-  { label: 'Home', icon: 'home', href: '/' as Route },
-  { label: 'Dashboard', icon: 'layout', href: '/dashboard' as Route },
-  { label: 'Properties', icon: 'home', href: '/properties' as Route },
-  { label: 'Tenants', icon: 'users', href: '/tenants' as Route },
-  { label: 'Maintenance', icon: 'tool', href: '/maintenance' as Route },
-  { label: 'Settings', icon: 'settings', href: '/settings' as Route },
+  {label: 'Home', icon: 'home', href: '/' as Route},
+  {label: 'Dashboard', icon: 'layout', href: '/dashboard' as Route},
+  {label: 'Properties', icon: 'home', href: '/properties' as Route},
+  {label: 'Tenants', icon: 'users', href: '/tenants' as Route},
+  {label: 'Maintenance', icon: 'tool', href: '/maintenance' as Route},
+  {label: 'Settings', icon: 'settings', href: '/settings' as Route},
 ];
 
 export function CommandMenu() {

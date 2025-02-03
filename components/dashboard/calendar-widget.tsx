@@ -1,14 +1,14 @@
 // components/dashboard/calendar-widget.tsx
-import Badge from '@mui/material/Badge'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import Tooltip from '@mui/material/Tooltip'
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns'
-import { DateCalendar } from '@mui/x-date-pickers/DateCalendar'
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
-import { isSameDay } from 'date-fns'
-import { useState } from 'react'
+import Badge from '@mui/material/Badge';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Tooltip from '@mui/material/Tooltip';
+import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns';
+import {DateCalendar} from '@mui/x-date-pickers/DateCalendar';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import {isSameDay} from 'date-fns';
+import {useState} from 'react';
 
 interface CalendarEvent {
   id: string;
@@ -28,22 +28,22 @@ export function CalendarWidget() {
       date: new Date(),
       type: 'payment',
       title: 'Rent Due',
-      description: '5 properties have rent due'
+      description: '5 properties have rent due',
     },
     {
       id: '2',
       date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       type: 'maintenance',
       title: 'Scheduled Maintenance',
-      description: 'HVAC inspection at 123 Main St'
+      description: 'HVAC inspection at 123 Main St',
     },
     {
       id: '3',
       date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
       type: 'lease',
       title: 'Lease Expiring',
-      description: 'Lease expires for 456 Oak Ave'
-    }
+      description: 'Lease expires for 456 Oak Ave',
+    },
   ];
 
   const getDayProps = (day: Date) => {
@@ -62,11 +62,7 @@ export function CalendarWidget() {
             </div>
           ))}
         >
-          <Badge
-            color="primary"
-            variant="dot"
-            overlap="circular"
-          >
+          <Badge color='primary' variant='dot' overlap='circular'>
             {day.getDate()}
           </Badge>
         </Tooltip>
@@ -76,18 +72,16 @@ export function CalendarWidget() {
 
   return (
     <Card>
-      <CardHeader title="Calendar" />
+      <CardHeader title='Calendar' />
       <CardContent>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateCalendar
             value={selectedDate}
-            onChange={(newDate) => setSelectedDate(newDate)}
+            onChange={newDate => setSelectedDate(newDate)}
             slots={{
-              day: (props) => {
+              day: props => {
                 const dayProps = getDayProps(props.day);
-                return dayProps.renderDay ?
-                  dayProps.renderDay(props.day) :
-                  props.children;
+                return dayProps.renderDay ? dayProps.renderDay(props.day) : props.children;
               },
             }}
           />

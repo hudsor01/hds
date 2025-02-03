@@ -1,12 +1,11 @@
 'use client';
 
-import { ACTIVITY_FILTERS, type ActivityType } from '@/auth/lib/constants';
-import { Button } from 'components/ui/button';
-import { Input } from 'components/ui/input';
-import { ToggleGroup, ToggleGroupItem } from 'components/ui/toggle-group';
-import { Download, Search } from 'react-feather';
-
+import {ACTIVITY_FILTERS, type ActivityType} from '@/auth/lib/constants';
+import {Button} from 'components/ui/button';
+import {Input} from 'components/ui/input';
+import {ToggleGroup, ToggleGroupItem} from 'components/ui/toggle-group';
 import * as React from 'react';
+import {Download, Search} from 'react-feather';
 
 interface ActivityHeaderProps {
   filter: ActivityType | 'ALL';

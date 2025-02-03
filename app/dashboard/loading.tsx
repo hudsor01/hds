@@ -1,7 +1,7 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Box, Card, CardContent, Grid, Skeleton, Stack } from '@mui/material';
+import {Box, Card, CardContent, Grid, Skeleton, Stack} from '@mui/material';
+import {motion} from 'framer-motion';
 
 export function LoadingSkeleton() {
   return (
@@ -33,7 +33,7 @@ export function LoadingSkeleton() {
 
 export default function DashboardLoading() {
   return (
-    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
+    <motion.div initial={{opacity: 0}} animate={{opacity: 1}} transition={{duration: 0.3}}>
       {/* Welcome Text Skeleton */}
       <Stack spacing={1} mb={4}>
         <Skeleton variant='text' width={300} height={40} />
@@ -45,7 +45,7 @@ export default function DashboardLoading() {
         {[...Array(4)].map((_, index) => (
           <Grid item xs={12} sm={6} md={3} key={index}>
             <Card>
-              <Box sx={{ p: 3 }}>
+              <Box sx={{p: 3}}>
                 <Stack spacing={2}>
                   <Skeleton variant='circular' width={40} height={40} />
                   <Skeleton variant='text' width={80} height={40} />
@@ -65,13 +65,13 @@ export default function DashboardLoading() {
       <Grid container spacing={3} mb={4}>
         <Grid item xs={12} md={6}>
           <Card>
-            <Box sx={{ p: 3 }}>
+            <Box sx={{p: 3}}>
               <Stack spacing={2}>
                 <Skeleton variant='text' width={200} height={32} />
                 <Grid container spacing={2}>
                   {[...Array(4)].map((_, index) => (
                     <Grid item xs={12} sm={6} key={index}>
-                      <Card sx={{ p: 2 }}>
+                      <Card sx={{p: 2}}>
                         <Stack spacing={1}>
                           <Skeleton variant='circular' width={32} height={32} />
                           <Skeleton variant='text' width={120} height={24} />
@@ -89,7 +89,7 @@ export default function DashboardLoading() {
         {/* Recent Activity Skeleton */}
         <Grid item xs={12} md={6}>
           <Card>
-            <Box sx={{ p: 3 }}>
+            <Box sx={{p: 3}}>
               <Stack spacing={2}>
                 <Stack direction='row' justifyContent='space-between' alignItems='center'>
                   <Skeleton variant='text' width={150} height={32} />

@@ -1,12 +1,12 @@
 'use client';
 
-import { useSession } from '@clerk/nextjs';
-import { loadStripe } from '@stripe/stripe-js';
-import { Button } from 'components/ui/button';
-import { toast } from 'sonner';
-import { useState } from 'react';
-import type { Route } from 'next';
-import { useRouter } from 'next/navigation';
+import {useSession} from '@clerk/nextjs';
+import {loadStripe} from '@stripe/stripe-js';
+import {Button} from 'components/ui/button';
+import type {Route} from 'next';
+import {useRouter} from 'next/navigation';
+import {useState} from 'react';
+import {toast} from 'sonner';
 
 const pricingTiers = [
   {
@@ -158,7 +158,7 @@ const PricingCheckoutButton = ({
   highlighted: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession();
+  const {data: session} = useSession();
   const router = useRouter();
 
   const handleClick = async () => {
@@ -179,8 +179,8 @@ const PricingCheckoutButton = ({
         toast.loading('Setting up your trial...');
         const response = await fetch('/api/subscribe/free', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ trialDays: 14 }),
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({trialDays: 14}),
         });
 
         if (response.ok) {
@@ -201,8 +201,8 @@ const PricingCheckoutButton = ({
       toast.loading('Preparing checkout...');
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId }),
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({priceId}),
       });
 
       const data = await response.json();
@@ -215,7 +215,7 @@ const PricingCheckoutButton = ({
         window.location.href = data.url;
       } else if (data.sessionId) {
         const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+        await stripe?.redirectToCheckout({sessionId: data.sessionId});
       }
     } catch (error) {
       console.error('Checkout error:', error);

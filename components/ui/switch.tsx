@@ -1,11 +1,11 @@
 'use client';
 
+import {cn} from '@/lib/utils';
+import type {SwitchProps as MuiSwitchProps} from '@mui/material';
+import {Switch as MuiSwitch, styled} from '@mui/material';
 import * as React from 'react';
-import type { SwitchProps as MuiSwitchProps } from '@mui/material';
-import { Switch as MuiSwitch, styled } from '@mui/material';
-import { cn } from '@/lib/utils';
 
-const StyledSwitch = styled(MuiSwitch)(({ theme }) => ({
+const StyledSwitch = styled(MuiSwitch)(({theme}) => ({
   width: 36,
   height: 20,
   padding: 0,
@@ -44,7 +44,7 @@ export interface SwitchProps extends Omit<MuiSwitchProps, 'size'> {
 }
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
-  ({ className, size = 'default', ...props }, ref) => (
+  ({className, size = 'default', ...props}, ref) => (
     <StyledSwitch
       ref={ref}
       className={cn(

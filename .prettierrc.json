@@ -11,5 +11,5 @@
   "tabWidth": 2,
   "tailwindConfig": "./tailwind.config.ts",
   "tailwindFunctions": ["clsx", "cva", "twMerge"],
-  "plugins": ["prettier-plugin-tailwindcss", "trivago/prettier-plugin-sort-imports"]
+  "plugins": ["prettier-plugin-tailwindcss", "@trivago/prettier-plugin-sort-imports"]
 }

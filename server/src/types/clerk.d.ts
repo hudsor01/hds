@@ -1,7 +1,7 @@
-import { WebhookEvent as ClerkWebhookEvent } from '@clerk/backend/dist/webhook'
+import {WebhookEvent as ClerkWebhookEvent} from '@clerk/backend/dist/webhook';
 
 declare global {
-  type WebhookEvent = ClerkWebhookEvent
+  type WebhookEvent = ClerkWebhookEvent;
 }
 
-export { }
+export {};

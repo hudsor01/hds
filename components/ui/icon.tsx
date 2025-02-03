@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import { cn } from '@/lib/utils';
+import {cn} from '@/lib/utils';
+import {useEffect, useRef} from 'react';
 
 interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   name: string;
@@ -9,13 +9,7 @@ interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
   strokeWidth?: number;
 }
 
-export function Icon({ 
-  name, 
-  size = 24, 
-  strokeWidth = 2, 
-  className, 
-  ...props 
-}: IconProps) {
+export function Icon({name, size = 24, strokeWidth = 2, className, ...props}: IconProps) {
   const iconRef = useRef<HTMLSpanElement>(null);
 
   useEffect(() => {
@@ -37,7 +31,7 @@ export function Icon({
     <span
       ref={iconRef}
       className={cn('inline-block', className)}
-      style={{ width: size, height: size }}
+      style={{width: size, height: size}}
       {...props}
     />
   );

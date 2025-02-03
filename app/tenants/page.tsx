@@ -1,7 +1,20 @@
-'use client'
+'use client';
 
-import { Box, Button, Container, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { Plus } from 'react-feather'
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Typography,
+} from '@mui/material';
+import {Plus} from 'react-feather';
 
 // Mock data for testing
 const mockTenants = [
@@ -13,7 +26,7 @@ const mockTenants = [
     leaseStart: '2023-01-15',
     leaseEnd: '2024-01-14',
     rentAmount: 2500,
-    status: 'Active'
+    status: 'Active',
   },
   {
     id: '2',
@@ -23,7 +36,7 @@ const mockTenants = [
     leaseStart: '2023-03-01',
     leaseEnd: '2024-02-29',
     rentAmount: 2800,
-    status: 'Active'
+    status: 'Active',
   },
   {
     id: '3',
@@ -33,31 +46,26 @@ const mockTenants = [
     leaseStart: '2023-06-15',
     leaseEnd: '2024-06-14',
     rentAmount: 2200,
-    status: 'Active'
-  }
-]
+    status: 'Active',
+  },
+];
 
 export default function TenantsPage() {
   return (
     <Box>
-      <Container maxWidth="xl">
+      <Container maxWidth='xl'>
         {/* Header */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-        >
+        <Stack direction='row' justifyContent='space-between' alignItems='center' mb={4}>
           <Box>
-            <Typography variant="h4" fontWeight={600} gutterBottom>
+            <Typography variant='h4' fontWeight={600} gutterBottom>
               Tenants
             </Typography>
-            <Typography variant="body1" color="text.secondary">
+            <Typography variant='body1' color='text.secondary'>
               Manage your tenants and leases
             </Typography>
           </Box>
           <Button
-            variant="contained"
+            variant='contained'
             startIcon={<Plus size={20} />}
             sx={{
               bgcolor: 'primary.main',
@@ -70,7 +78,7 @@ export default function TenantsPage() {
               borderRadius: 2,
               '&:hover': {
                 bgcolor: 'primary.dark',
-              }
+              },
             }}
           >
             Add Tenant
@@ -78,7 +86,7 @@ export default function TenantsPage() {
         </Stack>
 
         {/* Tenants Table */}
-        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 1 }}>
+        <TableContainer component={Paper} sx={{borderRadius: 2, boxShadow: 1}}>
           <Table>
             <TableHead>
               <TableRow>
@@ -92,13 +100,13 @@ export default function TenantsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTenants.map((tenant) => (
+              {mockTenants.map(tenant => (
                 <TableRow
                   key={tenant.id}
                   hover
                   sx={{
                     cursor: 'pointer',
-                    '&:last-child td, &:last-child th': { border: 0 }
+                    '&:last-child td, &:last-child th': {border: 0},
                   }}
                 >
                   <TableCell>{tenant.name}</TableCell>
@@ -109,7 +117,7 @@ export default function TenantsPage() {
                   <TableCell>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
-                      currency: 'USD'
+                      currency: 'USD',
                     }).format(tenant.rentAmount)}
                   </TableCell>
                   <TableCell>
@@ -121,7 +129,7 @@ export default function TenantsPage() {
                         borderRadius: 1,
                         bgcolor: tenant.status === 'Active' ? 'success.light' : 'error.light',
                         color: tenant.status === 'Active' ? 'success.dark' : 'error.dark',
-                        fontSize: '0.875rem'
+                        fontSize: '0.875rem',
                       }}
                     >
                       {tenant.status}
@@ -134,5 +142,5 @@ export default function TenantsPage() {
         </TableContainer>
       </Container>
     </Box>
-  )
+  );
 }

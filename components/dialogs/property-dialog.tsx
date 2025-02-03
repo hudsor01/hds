@@ -1,14 +1,13 @@
 'use client';
 
-import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/auth/lib/constants';
-import { Button } from 'components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Select } from 'components/ui/select';
-import type { Property, PropertyStatus } from 'types/properties';
-
-import { useState } from 'react';
+import {PROPERTY_STATUS, PROPERTY_TYPES} from '@/auth/lib/constants';
+import {Button} from 'components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {Select} from 'components/ui/select';
+import {useState} from 'react';
+import type {Property, PropertyStatus} from 'types/properties';
 
 interface PropertyDialogProps {
   open: boolean;

@@ -1,6 +1,5 @@
-import { Box, DollarSign, FileText, Home, Settings, Tool, Users } from 'react-feather';
-
-import { routes } from '../../routes';
+import {routes} from '../../routes';
+import {Box, DollarSign, FileText, Home, Settings, Tool, Users} from 'react-feather';
 
 export const USER_ROLES = {
   ADMIN: 'ADMIN',
@@ -35,20 +34,20 @@ export const PRIORITY_LEVELS = {
 export type PriorityLevel = (typeof PRIORITY_LEVELS)[keyof typeof PRIORITY_LEVELS];
 
 export const navItems = [
-  { name: 'Dashboard', href: routes.dashboard, icon: Home },
-  { name: 'Properties', href: routes.properties.index, icon: Box },
-  { name: 'Tenants', href: routes.tenants.index, icon: Users },
-  { name: 'Leases', href: routes.leases.index, icon: FileText },
-  { name: 'Finances', href: routes.finances.index, icon: DollarSign },
-  { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
-  { name: 'Settings', href: routes.settings, icon: Settings },
+  {name: 'Dashboard', href: routes.dashboard, icon: Home},
+  {name: 'Properties', href: routes.properties.index, icon: Box},
+  {name: 'Tenants', href: routes.tenants.index, icon: Users},
+  {name: 'Leases', href: routes.leases.index, icon: FileText},
+  {name: 'Finances', href: routes.finances.index, icon: DollarSign},
+  {name: 'Maintenance', href: routes.maintenance.index, icon: Tool},
+  {name: 'Settings', href: routes.settings, icon: Settings},
 ];
 
 export const ACTIVITY_FILTERS = [
-  { value: 'ALL', label: 'All' },
-  { value: 'MAINTENANCE', label: 'Maintenance' },
-  { value: 'PAYMENT', label: 'Payments' },
-  { value: 'LEASE', label: 'Leases' },
+  {value: 'ALL', label: 'All'},
+  {value: 'MAINTENANCE', label: 'Maintenance'},
+  {value: 'PAYMENT', label: 'Payments'},
+  {value: 'LEASE', label: 'Leases'},
 ] as const;
 
 export const PRIORITY_LABELS = {
@@ -93,12 +92,12 @@ export const LEASE_TYPES = {
 export const MOCK_ANALYTICS_DATA = {
   financialPerformance: {
     monthlyTrend: [
-      { month: 'Jan', revenue: 48900, expenses: 33200 },
-      { month: 'Feb', revenue: 52300, expenses: 35100 },
-      { month: 'Mar', revenue: 49800, expenses: 34500 },
-      { month: 'Apr', revenue: 51200, expenses: 33800 },
-      { month: 'May', revenue: 53400, expenses: 34900 },
-      { month: 'Jun', revenue: 54800, expenses: 35600 },
+      {month: 'Jan', revenue: 48900, expenses: 33200},
+      {month: 'Feb', revenue: 52300, expenses: 35100},
+      {month: 'Mar', revenue: 49800, expenses: 34500},
+      {month: 'Apr', revenue: 51200, expenses: 33800},
+      {month: 'May', revenue: 53400, expenses: 34900},
+      {month: 'Jun', revenue: 54800, expenses: 35600},
     ],
   },
   tenantActivity: {

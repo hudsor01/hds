@@ -1,9 +1,9 @@
-import { render } from '@react-email/render';
-import { Ratelimit } from '@upstash/ratelimit';
-import { Redis } from '@upstash/redis';
-import { Resend } from 'resend';
-import { NextRequest, NextResponse } from 'next/server';
 import WelcomeTemplate from '../../../emails';
+import {render} from '@react-email/render';
+import {Ratelimit} from '@upstash/ratelimit';
+import {Redis} from '@upstash/redis';
+import {NextRequest, NextResponse} from 'next/server';
+import {Resend} from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -34,14 +34,14 @@ export async function POST(request: NextRequest, response: NextResponse) {
     );
   }
 
-  const { email, firstname } = await request.json();
+  const {email, firstname} = await request.json();
 
-  const { data, error } = await resend.emails.send({
+  const {data, error} = await resend.emails.send({
     from: 'Lakshay<hello@waitlist.lakshb.dev>',
     to: [email],
     subject: 'Thankyou for wailisting the Next.js + Notion CMS template!',
     reply_to: 'lakshb.work@gmail.com',
-    html: await render(WelcomeTemplate({ userFirstname: firstname })),
+    html: await render(WelcomeTemplate({userFirstname: firstname})),
   });
 
   // const { data, error } = { data: true, error: null }
@@ -51,8 +51,8 @@ export async function POST(request: NextRequest, response: NextResponse) {
   }
 
   if (!data) {
-    return NextResponse.json({ message: 'Failed to send email' });
+    return NextResponse.json({message: 'Failed to send email'});
   }
 
-  return NextResponse.json({ message: 'Email sent successfully' });
+  return NextResponse.json({message: 'Email sent successfully'});
 }

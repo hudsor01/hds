@@ -1,21 +1,21 @@
-import { Activity, ActivityType } from '@/types/database.types'
-import BuildIcon from '@mui/icons-material/Build'
-import HomeIcon from '@mui/icons-material/Home'
-import PaymentIcon from '@mui/icons-material/Payment'
-import PersonIcon from '@mui/icons-material/Person'
-import Timeline from '@mui/lab/Timeline'
-import TimelineConnector from '@mui/lab/TimelineConnector'
-import TimelineContent from '@mui/lab/TimelineContent'
-import TimelineDot from '@mui/lab/TimelineDot'
-import TimelineItem from '@mui/lab/TimelineItem'
-import TimelineSeparator from '@mui/lab/TimelineSeparator'
-import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import Typography from '@mui/material/Typography'
-import { format } from 'date-fns'
-import { useState } from 'react'
+import {Activity, ActivityType} from '@/types/database.types';
+import BuildIcon from '@mui/icons-material/Build';
+import HomeIcon from '@mui/icons-material/Home';
+import PaymentIcon from '@mui/icons-material/Payment';
+import PersonIcon from '@mui/icons-material/Person';
+import Timeline from '@mui/lab/Timeline';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardHeader from '@mui/material/CardHeader';
+import Typography from '@mui/material/Typography';
+import {format} from 'date-fns';
+import {useState} from 'react';
 
 function getActivityIcon(type: ActivityType) {
   switch (type) {
@@ -57,7 +57,7 @@ export function ActivityTimeline() {
       metadata: {
         amount: '$1,500',
         property: '123 Main St',
-      }
+      },
     },
     {
       id: '2',
@@ -68,7 +68,7 @@ export function ActivityTimeline() {
       metadata: {
         priority: 'High',
         property: '456 Oak Ave',
-      }
+      },
     },
     {
       id: '3',
@@ -79,7 +79,7 @@ export function ActivityTimeline() {
       metadata: {
         lease_term: '12 months',
         property: '789 Pine St',
-      }
+      },
     },
   ];
 
@@ -88,13 +88,10 @@ export function ActivityTimeline() {
   return (
     <Card>
       <CardHeader
-        title="Recent Activity"
+        title='Recent Activity'
         action={
           activities.length > 3 && (
-            <Button
-              onClick={() => setExpanded(!expanded)}
-              size="small"
-            >
+            <Button onClick={() => setExpanded(!expanded)} size='small'>
               {expanded ? 'Show Less' : 'View All'}
             </Button>
           )
@@ -111,29 +108,29 @@ export function ActivityTimeline() {
                 {index < displayedActivities.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent>
-                <Typography variant="subtitle2" component="div">
+                <Typography variant='subtitle2' component='div'>
                   {activity.title}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   {activity.description}
                 </Typography>
-                <Typography variant="caption" color="text.secondary">
+                <Typography variant='caption' color='text.secondary'>
                   {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
                 </Typography>
                 {activity.metadata && (
                   <Typography
-                    variant="caption"
-                    component="div"
+                    variant='caption'
+                    component='div'
                     sx={{
                       mt: 1,
                       p: 1,
                       bgcolor: 'action.hover',
                       borderRadius: 1,
-                      display: 'inline-block'
+                      display: 'inline-block',
                     }}
                   >
                     {Object.entries(activity.metadata).map(([key, value]) => (
-                      <span key={key} style={{ marginRight: 8 }}>
+                      <span key={key} style={{marginRight: 8}}>
                         {key.replace('_', ' ')}: <strong>{value}</strong>
                       </span>
                     ))}

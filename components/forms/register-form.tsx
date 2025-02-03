@@ -1,22 +1,22 @@
 'use client';
 
-import { register } from '@/auth/lib/actions';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { PasswordStrengthIndicator } from 'components/auth/PasswordStrengthIndicator';
-import { Button } from 'components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from 'components/ui/card';
-import { Form, FormControl, FormField, FormItem } from 'components/ui/form';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Separator } from 'components/ui/separator';
-import { AnimatePresence, motion } from 'framer-motion';
-import { useFormStatus } from 'react-dom';
-import { Loader } from 'react-feather';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
-import { useActionState, useState } from 'react';
-import { Route } from 'next';
-import { useRouter, useSearchParams } from 'next/navigation';
+import {register} from '@/auth/lib/actions';
+import {zodResolver} from '@hookform/resolvers/zod';
+import {PasswordStrengthIndicator} from 'components/auth/PasswordStrengthIndicator';
+import {Button} from 'components/ui/button';
+import {Card, CardContent, CardDescription, CardHeader, CardTitle} from 'components/ui/card';
+import {Form, FormControl, FormField, FormItem} from 'components/ui/form';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {Separator} from 'components/ui/separator';
+import {AnimatePresence, motion} from 'framer-motion';
+import {Route} from 'next';
+import {useRouter, useSearchParams} from 'next/navigation';
+import {useActionState, useState} from 'react';
+import {useFormStatus} from 'react-dom';
+import {Loader} from 'react-feather';
+import {useForm} from 'react-hook-form';
+import {z} from 'zod';
 
 const registerSchema = z
   .object({
@@ -79,7 +79,7 @@ export function RegisterForm() {
   const searchParams = useSearchParams();
   const callbackUrl = (searchParams.get('callbackUrl') || '/dashboard') as Route;
   const [state, formAction] = useActionState(authenticate, null);
-  const { pending } = useFormStatus();
+  const {pending} = useFormStatus();
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
   const form = useForm<RegisterFormData>({
@@ -94,7 +94,7 @@ export function RegisterForm() {
 
   const handleGoogleSignIn = () => {
     setIsGoogleLoading(true);
-    signIn('google', { callbackUrl });
+    signIn('google', {callbackUrl});
   };
 
   return (
@@ -109,7 +109,7 @@ export function RegisterForm() {
             <FormField
               control={form.control}
               name='name'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <Label>Full Name</Label>
                   <FormControl>
@@ -123,8 +123,8 @@ export function RegisterForm() {
                   </FormControl>
                   {state?.errors?.name && (
                     <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{opacity: 0, y: -10}}
+                      animate={{opacity: 1, y: 0}}
                       className='text-sm text-red-500'
                     >
                       {state.errors.name[0]}
@@ -137,7 +137,7 @@ export function RegisterForm() {
             <FormField
               control={form.control}
               name='email'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <Label>Email</Label>
                   <FormControl>
@@ -151,8 +151,8 @@ export function RegisterForm() {
                   </FormControl>
                   {state?.errors?.email && (
                     <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{opacity: 0, y: -10}}
+                      animate={{opacity: 1, y: 0}}
                       className='text-sm text-red-500'
                     >
                       {state.errors.email[0]}
@@ -165,7 +165,7 @@ export function RegisterForm() {
             <FormField
               control={form.control}
               name='password'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <Label>Password</Label>
                   <FormControl>
@@ -180,8 +180,8 @@ export function RegisterForm() {
                   <PasswordStrengthIndicator password={field.value} />
                   {state?.errors?.password && (
                     <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{opacity: 0, y: -10}}
+                      animate={{opacity: 1, y: 0}}
                       className='text-sm text-red-500'
                     >
                       {state.errors.password[0]}
@@ -194,7 +194,7 @@ export function RegisterForm() {
             <FormField
               control={form.control}
               name='confirmPassword'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <Label>Confirm Password</Label>
                   <FormControl>
@@ -208,8 +208,8 @@ export function RegisterForm() {
                   </FormControl>
                   {state?.errors?.confirmPassword && (
                     <motion.p
-                      initial={{ opacity: 0, y: -10 }}
-                      animate={{ opacity: 1, y: 0 }}
+                      initial={{opacity: 0, y: -10}}
+                      animate={{opacity: 1, y: 0}}
                       className='text-sm text-red-500'
                     >
                       {state.errors.confirmPassword[0]}
@@ -222,9 +222,9 @@ export function RegisterForm() {
             <AnimatePresence>
               {state?.message && (
                 <motion.div
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
+                  initial={{opacity: 0, y: -10}}
+                  animate={{opacity: 1, y: 0}}
+                  exit={{opacity: 0}}
                   className='p-3 text-sm text-red-500 bg-red-50 rounded-md'
                 >
                   {state.message}

@@ -1,10 +1,5 @@
-export const logWebhookEvent = async (
- type: string,
- data: any,
- success: boolean,
- error?: any
-) => {
- await sql`
+export const logWebhookEvent = async (type: string, data: any, success: boolean, error?: any) => {
+  await sql`
    INSERT INTO webhook_logs (
      event_type,
      payload,
@@ -18,5 +13,5 @@ export const logWebhookEvent = async (
      ${JSON.stringify(error)},
      NOW()
    )
- `
-}
+ `;
+};

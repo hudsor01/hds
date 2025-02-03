@@ -1,15 +1,13 @@
 'use client';
 
 // Import your settings components here
-import { BillingSettings } from 'components/settings/billing';
-import { GeneralSettings } from 'components/settings/general';
-import { NotificationSettings } from 'components/settings/notifications';
-import { SecuritySettings } from 'components/settings/security';
-import { Tabs } from 'components/ui/tabs';
-
-import { useState } from 'react';
-
-import { Box, Card, Container, Typography } from '@mui/material';
+import {Box, Card, Container, Typography} from '@mui/material';
+import {BillingSettings} from 'components/settings/billing';
+import {GeneralSettings} from 'components/settings/general';
+import {NotificationSettings} from 'components/settings/notifications';
+import {SecuritySettings} from 'components/settings/security';
+import {Tabs} from 'components/ui/tabs';
+import {useState} from 'react';
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState(0);
@@ -39,7 +37,7 @@ export default function SettingsPage() {
 
   return (
     <Container maxWidth='lg'>
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{mb: 4}}>
         <Typography variant='h4' gutterBottom>
           Settings
         </Typography>

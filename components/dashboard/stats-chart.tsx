@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from 'components/ui/card';
-import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
+import {Card} from 'components/ui/card';
+import {Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 interface StatsChartProps {
   data: {
@@ -12,7 +12,7 @@ interface StatsChartProps {
   formatter?: (value: number) => string;
 }
 
-export function StatsChart({ data, title, formatter }: StatsChartProps) {
+export function StatsChart({data, title, formatter}: StatsChartProps) {
   const defaultFormatter = (value: number) => value.toString();
   const formatValue = formatter || defaultFormatter;
 
@@ -50,7 +50,7 @@ export function StatsChart({ data, title, formatter }: StatsChartProps) {
                 fontSize: '0.875rem',
               }}
               formatter={(value: number) => [formatValue(value), title]}
-              labelStyle={{ color: '#fff' }}
+              labelStyle={{color: '#fff'}}
             />
             <Area
               type='monotone'

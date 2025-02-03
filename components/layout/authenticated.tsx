@@ -1,43 +1,39 @@
 'use client';
 
-import { routes } from '@/routes';
-import { PreferencesMenu } from 'components/preferences-menu';
-import { ThemeSwitcher } from 'components/theme-switcher';
-import { Button } from 'components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from 'components/ui/sheet';
-import { Toaster } from 'components/ui/toaster';
-import { FileText, Home, Menu as MenuIcon, Settings, Users } from 'react-feather';
-
-import type { ReactNode } from 'react';
-
-import type { Route } from 'next';
+import {usePerformance} from '@/hooks/use-performance';
+import {usePreferencesSync} from '@/hooks/use-preferences-sync';
+import {cn} from '@/lib/utils';
+import {routes} from '@/routes';
+import {PreferencesMenu} from 'components/preferences-menu';
+import {ThemeSwitcher} from 'components/theme-switcher';
+import {Button} from 'components/ui/button';
+import {Sheet, SheetContent, SheetTrigger} from 'components/ui/sheet';
+import {Toaster} from 'components/ui/toaster';
+import type {Route} from 'next';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-
-import { cn } from '@/lib/utils';
-
-import { usePerformance } from '@/hooks/use-performance';
-import { usePreferencesSync } from '@/hooks/use-preferences-sync';
+import {usePathname} from 'next/navigation';
+import type {ReactNode} from 'react';
+import {FileText, Home, Menu as MenuIcon, Settings, Users} from 'react-feather';
 
 interface NavigationItem {
   name: string;
   href: Route;
-  icon?: React.ComponentType<{ className?: string }>;
+  icon?: React.ComponentType<{className?: string}>;
 }
 
 const navigation: NavigationItem[] = [
-  { name: 'Dashboard', href: routes.dashboard, icon: Home },
-  { name: 'Properties', href: routes.properties.index, icon: Home },
-  { name: 'Tenants', href: routes.tenants.index, icon: Users },
-  { name: 'Documents', href: routes.documents.index, icon: FileText },
-  { name: 'Settings', href: routes.settings, icon: Settings },
+  {name: 'Dashboard', href: routes.dashboard, icon: Home},
+  {name: 'Properties', href: routes.properties.index, icon: Home},
+  {name: 'Tenants', href: routes.tenants.index, icon: Users},
+  {name: 'Documents', href: routes.documents.index, icon: FileText},
+  {name: 'Settings', href: routes.settings, icon: Settings},
 ];
 
 interface AuthenticatedLayoutProps {
   children: ReactNode;
 }
 
-export default function AuthenticatedLayout({ children }: AuthenticatedLayoutProps) {
+export default function AuthenticatedLayout({children}: AuthenticatedLayoutProps) {
   const pathname = usePathname();
   usePerformance();
   usePreferencesSync();

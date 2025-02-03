@@ -1,9 +1,9 @@
 'use client';
 
-import { useAuth } from '@clerk/nextjs';
+import {useAuth} from '@clerk/nextjs';
 
 export function ProtectedComponent() {
-  const { isLoaded, isSignedIn, userId } = useAuth();
+  const {isLoaded, isSignedIn, userId} = useAuth();
 
   if (!isLoaded) {
     return <div>Loading...</div>;

@@ -6,5 +6,5 @@ export default function robots() {
       disallow: '/admin/',
     },
     sitemap: 'https://hudsondigitalsolutions.com/sitemap.xml',
-  }
+  };
 }

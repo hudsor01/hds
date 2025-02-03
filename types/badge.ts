@@ -1,6 +1,6 @@
 // types/badge.ts
-import { VariantProps } from 'class-variance-authority'
-import { HTMLAttributes } from 'react'
+import {VariantProps} from 'class-variance-authority';
+import {HTMLAttributes} from 'react';
 
 // Define the BadgeProps interface
 export interface BadgeProps extends HTMLAttributes<HTMLDivElement>, VariantProps<any> {

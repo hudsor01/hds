@@ -1,9 +1,9 @@
 'use client';
 
-import { ClerkProvider } from '@clerk/nextjs';
-import { dark } from '@clerk/themes';
+import {ClerkProvider} from '@clerk/nextjs';
+import {dark} from '@clerk/themes';
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({children}: {children: React.ReactNode}) {
   return (
     <ClerkProvider
       appearance={{

@@ -1,14 +1,13 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { useTheme } from 'next-themes';
-import { Moon, Sun } from 'react-feather';
-
-import { useEffect, useState } from 'react';
+import {Button} from 'components/ui/button';
+import {useTheme} from 'next-themes';
+import {useEffect, useState} from 'react';
+import {Moon, Sun} from 'react-feather';
 
 export function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme();
+  const {theme, setTheme} = useTheme();
 
   useEffect(() => setMounted(true), []);
 

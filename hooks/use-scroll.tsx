@@ -1,5 +1,5 @@
 // hooks/useScroll.tsx
-import { useEffect, useState } from 'react'
+import {useEffect, useState} from 'react';
 
 /**
  * Custom hook to track scroll position and related information.
@@ -19,13 +19,12 @@ export function useScroll(ref?: React.RefObject<HTMLElement>) {
     const handleScroll = () => {
       if (ref?.current) {
         // If a ref is provided, track the scroll position of the referenced element
-        const { scrollTop, scrollHeight, clientHeight } = ref.current;
+        const {scrollTop, scrollHeight, clientHeight} = ref.current;
         setScrollPosition(scrollTop);
         setIsAtBottom(scrollTop + clientHeight >= scrollHeight);
       } else {
         // Otherwise, track the scroll position of the window
-        const scrollTop =
-          window.pageYOffset || document.documentElement.scrollTop;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const scrollHeight = document.documentElement.scrollHeight;
         const clientHeight = window.innerHeight;
         setScrollPosition(scrollTop);
@@ -47,6 +46,6 @@ export function useScroll(ref?: React.RefObject<HTMLElement>) {
 
   return {
     scrollPosition, // Current scroll position
-    isAtBottom,     // Whether the user has scrolled to the bottom
+    isAtBottom, // Whether the user has scrolled to the bottom
   };
 }

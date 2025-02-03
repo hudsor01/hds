@@ -1,8 +1,8 @@
-'use client'
+'use client';
 
-import { Grid, Paper, Stack, Typography, alpha, useTheme } from '@mui/material'
-import { motion } from 'framer-motion'
-import { DollarSign, FileText, Home, Tool, Users } from 'react-feather'
+import {Grid, Paper, Stack, Typography, alpha, useTheme} from '@mui/material';
+import {motion} from 'framer-motion';
+import {DollarSign, FileText, Home, Tool, Users} from 'react-feather';
 
 const metrics = [
   {
@@ -11,7 +11,7 @@ const metrics = [
     icon: Home,
     color: 'primary' as const,
     percentageChange: 12.5,
-    tooltip: 'Total number of properties under management'
+    tooltip: 'Total number of properties under management',
   },
   {
     title: 'Active Tenants',
@@ -19,7 +19,7 @@ const metrics = [
     icon: Users,
     color: 'success' as const,
     percentageChange: 8.3,
-    tooltip: 'Number of current tenants across all properties'
+    tooltip: 'Number of current tenants across all properties',
   },
   {
     title: 'Maintenance Requests',
@@ -27,7 +27,7 @@ const metrics = [
     icon: Tool,
     color: 'warning' as const,
     percentageChange: -5.2,
-    tooltip: 'Open maintenance requests requiring attention'
+    tooltip: 'Open maintenance requests requiring attention',
   },
   {
     title: 'Active Leases',
@@ -35,7 +35,7 @@ const metrics = [
     icon: FileText,
     color: 'info' as const,
     percentageChange: 15.7,
-    tooltip: 'Number of active lease agreements'
+    tooltip: 'Number of active lease agreements',
   },
   {
     title: 'Monthly Revenue',
@@ -44,12 +44,12 @@ const metrics = [
     color: 'primary' as const,
     percentageChange: 10.2,
     tooltip: 'Total monthly revenue from all properties',
-    formatType: 'currency' as const
-  }
-]
+    formatType: 'currency' as const,
+  },
+];
 
 export function MetricsGrid() {
-  const theme = useTheme()
+  const theme = useTheme();
 
   return (
     <Grid container spacing={2}>
@@ -62,9 +62,9 @@ export function MetricsGrid() {
           lg={3}
           xl={2.4}
           component={motion.div}
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: index * 0.1 }}
+          initial={{opacity: 0, y: 20}}
+          animate={{opacity: 1, y: 0}}
+          transition={{delay: index * 0.1}}
         >
           <Paper
             sx={{
@@ -78,11 +78,11 @@ export function MetricsGrid() {
                 transform: 'translateY(-4px)',
                 boxShadow: theme.shadows[4],
                 borderColor: alpha(theme.palette[metric.color].main, 0.24),
-              }
+              },
             }}
           >
             <Stack spacing={2}>
-              <Stack direction="row" alignItems="center" spacing={2}>
+              <Stack direction='row' alignItems='center' spacing={2}>
                 <Paper
                   sx={{
                     p: 1.5,
@@ -95,7 +95,7 @@ export function MetricsGrid() {
                 </Paper>
                 {metric.percentageChange && (
                   <Typography
-                    variant="body2"
+                    variant='body2'
                     sx={{
                       ml: 'auto',
                       color: metric.percentageChange > 0 ? 'success.main' : 'error.main',
@@ -111,7 +111,7 @@ export function MetricsGrid() {
               </Stack>
 
               <Stack spacing={0.5}>
-                <Typography variant="h4">
+                <Typography variant='h4'>
                   {metric.formatType === 'currency'
                     ? new Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -120,7 +120,7 @@ export function MetricsGrid() {
                       }).format(metric.value)
                     : metric.value}
                 </Typography>
-                <Typography variant="body2" color="text.secondary">
+                <Typography variant='body2' color='text.secondary'>
                   {metric.title}
                 </Typography>
               </Stack>
@@ -129,5 +129,5 @@ export function MetricsGrid() {
         </Grid>
       ))}
     </Grid>
-  )
+  );
 }

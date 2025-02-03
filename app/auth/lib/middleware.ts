@@ -1,8 +1,8 @@
-import { useAuth } from '@clerk/nextjs';
-import type { NextRequest } from 'next/server';
-import { NextResponse } from 'next/server';
+import {useAuth} from '@clerk/nextjs';
+import type {NextRequest} from 'next/server';
+import {NextResponse} from 'next/server';
 
-const { getToken } = useAuth();
+const {getToken} = useAuth();
 
 export async function createMiddleware(request: NextRequest) {
   const token = await getToken();

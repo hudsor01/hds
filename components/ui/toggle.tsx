@@ -1,10 +1,10 @@
 'use client';
 
+import {cn} from '@/lib/utils';
+import {styled, ToggleButton, type ToggleButtonProps} from '@mui/material';
 import * as React from 'react';
-import { styled, ToggleButton, type ToggleButtonProps } from '@mui/material';
-import { cn } from '@/lib/utils';
 
-const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
+const StyledToggleButton = styled(ToggleButton)(({theme}) => ({
   padding: theme.spacing(1, 2),
   borderRadius: theme.shape.borderRadius,
   border: 'none',
@@ -26,7 +26,7 @@ export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
 }
 
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
-  ({ className, pressed, onPressedChange, children, ...props }, ref) => {
+  ({className, pressed, onPressedChange, children, ...props}, ref) => {
     const handleChange = React.useCallback(
       (_: React.MouseEvent<HTMLElement>, selected: boolean) => {
         onPressedChange?.(selected);

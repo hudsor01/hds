@@ -1,12 +1,12 @@
 'use client';
 
-import { X } from 'react-feather';
+import {Button} from './button';
+import {cn} from '@/lib/utils';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { Button } from './button';
+import {X} from 'react-feather';
 
 export const CloseButton = React.forwardRef<HTMLButtonElement, CloseButtonProps>(
-  ({ className, ...props }, ref) => (
+  ({className, ...props}, ref) => (
     <Button
       variant='ghost'
       size='sm'

@@ -1,22 +1,19 @@
 'use client';
 
-import { Button } from '@/components/ui/button'
-import { Card } from '@/components/ui/card'
-import { type Milestone, type TeamMember, type Value } from '@/types/about'
-
-import Image from 'next/image'
-import Link from 'next/link'
-
-import
-  {
-    Apartment,
-    ArrowRight,
-    Lightbulb,
-    People,
-    Security,
-    Timeline,
-    TouchApp,
-  } from '@mui/icons-material'
+import {Button} from '@/components/ui/button';
+import {Card} from '@/components/ui/card';
+import {type Milestone, type TeamMember, type Value} from '@/types/about';
+import {
+  Apartment,
+  ArrowRight,
+  Lightbulb,
+  People,
+  Security,
+  Timeline,
+  TouchApp,
+} from '@mui/icons-material';
+import Image from 'next/image';
+import Link from 'next/link';
 
 // Enhanced values with more property management specific content
 const values: Value[] = [
@@ -140,7 +137,7 @@ export default function AboutPage() {
               <Card
                 key={value.title}
                 className='group relative overflow-hidden p-8 transition-all hover:shadow-lg hover:-translate-y-1'
-                style={{ animationDelay: `${index * 100}ms` }}
+                style={{animationDelay: `${index * 100}ms`}}
               >
                 <div className='absolute inset-0 bg-linear-to-r from-blue-50 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
                 <div className='relative'>
@@ -174,7 +171,7 @@ export default function AboutPage() {
                   className={`relative flex items-center ${
                     index % 2 === 0 ? 'justify-start' : 'justify-end'
                   }`}
-                  style={{ animationDelay: `${index * 200}ms` }}
+                  style={{animationDelay: `${index * 200}ms`}}
                 >
                   <div className='absolute left-1/2 w-4 h-4 rounded-full bg-blue-500 transform -translate-x-1/2' />
                   <Card className={`w-[calc(50%-2rem)] p-6 ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
@@ -203,7 +200,7 @@ export default function AboutPage() {
               <Card
                 key={member.name}
                 className='group relative overflow-hidden transition-all hover:shadow-lg'
-                style={{ animationDelay: `${index * 100}ms` }}
+                style={{animationDelay: `${index * 100}ms`}}
               >
                 <div className='aspect-4/3 relative'>
                   <div className='absolute inset-0 bg-linear-to-t from-gray-900/75 to-transparent z-10' />

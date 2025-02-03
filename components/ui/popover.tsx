@@ -1,11 +1,11 @@
 'use client';
 
+import {cn} from '@/lib/utils';
+import type {PopoverProps as MuiPopoverProps} from '@mui/material';
+import {IconButton, Popover as MuiPopover, styled} from '@mui/material';
 import * as React from 'react';
-import type { PopoverProps as MuiPopoverProps } from '@mui/material';
-import { IconButton, Popover as MuiPopover, styled } from '@mui/material';
-import { cn } from '@/lib/utils';
 
-const StyledPopover = styled(MuiPopover)(({ theme }) => ({
+const StyledPopover = styled(MuiPopover)(({theme}) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[4],
@@ -20,7 +20,7 @@ export interface PopoverProps extends Omit<MuiPopoverProps, 'open'> {
 }
 
 export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(
-  ({ className, children, trigger, onOpenChange, ...props }, ref) => {
+  ({className, children, trigger, onOpenChange, ...props}, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
     const open = Boolean(anchorEl);
 
@@ -67,7 +67,7 @@ Popover.displayName = 'Popover';
 export const PopoverTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <button ref={ref} type='button' className={cn(className)} {...props} />
 ));
 PopoverTrigger.displayName = 'PopoverTrigger';
@@ -75,7 +75,7 @@ PopoverTrigger.displayName = 'PopoverTrigger';
 export const PopoverContent = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <div
     ref={ref}
     className={cn(

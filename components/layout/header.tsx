@@ -1,45 +1,41 @@
-'use client'
+'use client';
 
-import { Avatar, Box, IconButton, Stack, Tooltip, Typography, useMediaQuery } from '@mui/material'
-import { alpha, useTheme } from '@mui/material/styles'
-import { motion } from 'framer-motion'
-import { Bell, Menu } from 'react-feather'
-import { ThemeSwitcher } from '../theme-switcher'
+import {ThemeSwitcher} from '../theme-switcher';
+import {Avatar, Box, IconButton, Stack, Tooltip, Typography, useMediaQuery} from '@mui/material';
+import {alpha, useTheme} from '@mui/material/styles';
+import {motion} from 'framer-motion';
+import {Bell, Menu} from 'react-feather';
 
 interface HeaderProps {
-  onOpenSidebarAction: () => void
+  onOpenSidebarAction: () => void;
 }
 
 const containerVariants = {
-  initial: { y: -20, opacity: 0 },
-  animate: { y: 0, opacity: 1, transition: { duration: 0.3 } }
-}
+  initial: {y: -20, opacity: 0},
+  animate: {y: 0, opacity: 1, transition: {duration: 0.3}},
+};
 
 const itemVariants = {
-  initial: { scale: 0.8, opacity: 0 },
-  animate: { scale: 1, opacity: 1 }
-}
+  initial: {scale: 0.8, opacity: 0},
+  animate: {scale: 1, opacity: 1},
+};
 
-export function Header({ onOpenSidebarAction }: HeaderProps) {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+export function Header({onOpenSidebarAction}: HeaderProps) {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-    >
+    <motion.div variants={containerVariants} initial='initial' animate='animate'>
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           gap: 2,
-          px: { xs: 2, sm: 3 },
+          px: {xs: 2, sm: 3},
           py: 2,
           borderBottom: '1px solid',
           borderColor: 'divider',
-          bgcolor: 'background.paper'
+          bgcolor: 'background.paper',
         }}
       >
         {isMobile && (
@@ -49,7 +45,7 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
               sx={{
                 width: 40,
                 height: 40,
-                color: 'text.primary'
+                color: 'text.primary',
               }}
             >
               <Menu size={20} />
@@ -57,13 +53,9 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
           </motion.div>
         )}
 
-        <Box sx={{ flexGrow: 1 }} />
+        <Box sx={{flexGrow: 1}} />
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={{ xs: 0.5, sm: 2 }}
-        >
+        <Stack direction='row' alignItems='center' spacing={{xs: 0.5, sm: 2}}>
           {/* Theme Toggle */}
           <motion.div variants={itemVariants}>
             <ThemeSwitcher />
@@ -71,7 +63,7 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
 
           {/* Notifications */}
           <motion.div variants={itemVariants}>
-            <Tooltip title="Notifications">
+            <Tooltip title='Notifications'>
               <IconButton
                 sx={{
                   width: 40,
@@ -95,13 +87,13 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
                 transition: 'all 0.2s',
                 '&:hover': {
                   bgcolor: theme => alpha(theme.palette.primary.main, 0.08),
-                }
+                },
               }}
             >
-              <Stack direction="row" alignItems="center" spacing={2}>
+              <Stack direction='row' alignItems='center' spacing={2}>
                 <Avatar
-                  src="/avatar.jpg"
-                  alt="User Avatar"
+                  src='/avatar.jpg'
+                  alt='User Avatar'
                   sx={{
                     width: 32,
                     height: 32,
@@ -109,9 +101,9 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
                     borderColor: 'background.paper',
                   }}
                 />
-                <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                  <Typography variant="subtitle2">John Doe</Typography>
-                  <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                <Box sx={{display: {xs: 'none', sm: 'block'}}}>
+                  <Typography variant='subtitle2'>John Doe</Typography>
+                  <Typography variant='caption' sx={{color: 'text.secondary'}}>
                     Administrator
                   </Typography>
                 </Box>
@@ -121,5 +113,5 @@ export function Header({ onOpenSidebarAction }: HeaderProps) {
         </Stack>
       </Box>
     </motion.div>
-  )
+  );
 }

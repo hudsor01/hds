@@ -1,10 +1,11 @@
 'use client';
 
-import { MaintenanceTicketDetails } from 'components/dialogs/maintenance-ticket-details';
-import { MaintenanceTicketDialog } from 'components/dialogs/maintenance-ticket-dialog';
-import { Button } from 'components/ui/button';
-import { Card } from 'components/ui/card';
-import { AlertTriangle, CheckCircle, Clock, Plus } from 'react-feather';
+import {MaintenanceTicketDetails} from 'components/dialogs/maintenance-ticket-details';
+import {MaintenanceTicketDialog} from 'components/dialogs/maintenance-ticket-dialog';
+import {Button} from 'components/ui/button';
+import {Card} from 'components/ui/card';
+import {useState} from 'react';
+import {AlertTriangle, CheckCircle, Clock, Plus} from 'react-feather';
 import {
   MaintenancePriority,
   MaintenanceStatus,
@@ -12,8 +13,6 @@ import {
   NewMaintenanceTicket,
   UpdateMaintenanceTicket,
 } from 'types/maintenance';
-
-import { useState } from 'react';
 
 // Mock data for development
 const MOCK_TICKETS: MaintenanceTicket[] = [
@@ -73,7 +72,7 @@ export default function MaintenancePage() {
   const handleUpdateTicket = async (data: UpdateMaintenanceTicket) => {
     // TODO: Implement API call
     const updatedTickets = tickets.map(ticket =>
-      ticket.id === data.id ? { ...ticket, ...data, updatedAt: new Date().toISOString() } : ticket,
+      ticket.id === data.id ? {...ticket, ...data, updatedAt: new Date().toISOString()} : ticket,
     );
     setTickets(updatedTickets);
   };

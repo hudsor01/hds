@@ -1,17 +1,17 @@
 'use client';
 
-import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/nextjs';
-import { Home } from 'react-feather';
+import {cn} from '@/lib/utils';
+import {SignedIn, SignedOut, SignInButton, UserButton} from '@clerk/nextjs';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Route } from 'next/types';
-import { cn } from '@/lib/utils';
+import {usePathname} from 'next/navigation';
+import {Route} from 'next/types';
+import {Home} from 'react-feather';
 
-const navigation: Array<{ name: string; href: Route }> = [
-  { name: 'About', href: '/about' },
-  { name: 'Features', href: '/features' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'Contact', href: '/contact' },
+const navigation: Array<{name: string; href: Route}> = [
+  {name: 'About', href: '/about'},
+  {name: 'Features', href: '/features'},
+  {name: 'Pricing', href: '/pricing'},
+  {name: 'Contact', href: '/contact'},
 ];
 
 export default function Navbar() {

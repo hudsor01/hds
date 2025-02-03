@@ -1,11 +1,11 @@
 'use client';
 
+import {cn} from '@/lib/utils';
+import type {MenuItemProps, MenuProps} from '@mui/material';
+import {Divider, Menu, MenuItem, styled} from '@mui/material';
 import * as React from 'react';
-import type { MenuItemProps, MenuProps } from '@mui/material';
-import { Divider, Menu, MenuItem, styled } from '@mui/material';
-import { cn } from '@/lib/utils';
 
-const StyledMenu = styled(Menu)(({ theme }) => ({
+const StyledMenu = styled(Menu)(({theme}) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     minWidth: 180,
@@ -37,7 +37,7 @@ export interface ContextMenuProps extends Omit<MenuProps, 'open'> {
 
 export const ContextMenu = React.memo(
   React.forwardRef<HTMLDivElement, ContextMenuProps>(
-    ({ className, children, trigger, ...props }, ref) => {
+    ({className, children, trigger, ...props}, ref) => {
       const [contextMenu, setContextMenu] = React.useState<{
         mouseX: number;
         mouseY: number;
@@ -71,9 +71,7 @@ export const ContextMenu = React.memo(
             onClose={handleClose}
             anchorReference='anchorPosition'
             anchorPosition={
-              contextMenu !== null
-                ? { top: contextMenu.mouseY, left: contextMenu.mouseX }
-                : undefined
+              contextMenu !== null ? {top: contextMenu.mouseY, left: contextMenu.mouseX} : undefined
             }
             className={cn('', className)}
             {...props}
@@ -100,7 +98,7 @@ export interface ContextMenuItemProps extends MenuItemProps {
 }
 
 export const ContextMenuItem = React.forwardRef<HTMLLIElement, ContextMenuItemProps>(
-  ({ className, inset, ...props }, ref) => (
+  ({className, inset, ...props}, ref) => (
     <MenuItem ref={ref} className={cn(inset && 'pl-8', className)} {...props} />
   ),
 );

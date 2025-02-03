@@ -1,5 +1,7 @@
-import { authMiddleware } from '@clerk/nextjs/server'
+import {authMiddleware} from '@clerk/nextjs';
 
+// This example protects all routes including api/trpc routes
+// Please edit this to allow other routes to be public as needed.
 export default authMiddleware({
   publicRoutes: [
     '/',
@@ -7,21 +9,16 @@ export default authMiddleware({
     '/sign-up(.*)',
     '/api/webhooks/clerk',
     '/api/waitlist',
-    '/forgot-password',
     '/about',
     '/contact',
-    '/features',
     '/pricing',
+    '/features',
+    '/forgot-password',
   ],
-  ignoredRoutes: [
-    '/api/webhooks/clerk',
-  ],
-})
+  ignoredRoutes: ['/api/webhooks/clerk', '/_next/static/(.*)', '/favicon.ico'],
+  debug: process.env.NODE_ENV === 'development',
+});
 
 export const config = {
-  matcher: [
-    '/((?!.+\\.[\\w]+$|_next).*)',
-    '/',
-    '/(api|trpc)(.*)',
-  ],
-}
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],
+};

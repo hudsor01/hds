@@ -1,8 +1,8 @@
 // lib/hooks/use-realtime-updates.ts
-import { toast } from 'sonner';
-import { useEffect } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import {supabase} from '@/lib/supabase';
+import {useQueryClient} from '@tanstack/react-query';
+import {useEffect} from 'react';
+import {toast} from 'sonner';
 
 export function useRealtimeUpdates(table: string, userId: string) {
   const queryClient = useQueryClient();
@@ -19,7 +19,7 @@ export function useRealtimeUpdates(table: string, userId: string) {
           filter: `user_id=eq.${userId}`,
         },
         payload => {
-          queryClient.invalidateQueries({ queryKey: [table] });
+          queryClient.invalidateQueries({queryKey: [table]});
           toast.success(`${table} updated`);
         },
       )

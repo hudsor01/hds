@@ -1,13 +1,15 @@
 // components/auth/enhanced-sign-in.tsx
 'use client';
 
-import { SignIn } from "@clerk/nextjs"
-import Box from '@mui/material/Box'
-import Container from '@mui/material/Container'
-import Paper from '@mui/material/Paper'
-import { styled } from '@mui/material/styles'
+import {SignIn} from '@clerk/nextjs';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import {styled} from '@mui/material/styles';
 
-const StyledAuthContainer = styled(Box)(({ theme }) => ({
+// components/auth/enhanced-sign-in.tsx
+
+const StyledAuthContainer = styled(Box)(({theme}) => ({
   minHeight: '100vh',
   display: 'flex',
   alignItems: 'center',
@@ -19,7 +21,7 @@ const StyledAuthContainer = styled(Box)(({ theme }) => ({
 export function EnhancedSignIn() {
   return (
     <StyledAuthContainer>
-      <Container maxWidth="sm">
+      <Container maxWidth='sm'>
         <Paper
           elevation={0}
           sx={{

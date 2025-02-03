@@ -1,8 +1,8 @@
-import { prisma } from '@/lib/prisma'
-import { getAuth } from '@clerk/nextjs/server'
-import { NextRequest, NextResponse } from 'next/server'
-import Stripe from 'stripe'
-import { z } from 'zod'
+import {prisma} from '@/lib/prisma';
+import {getAuth} from '@clerk/nextjs/server';
+import {NextRequest, NextResponse} from 'next/server';
+import Stripe from 'stripe';
+import {z} from 'zod';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY');
@@ -23,9 +23,9 @@ const createPaymentSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = getAuth(req);
+    const {userId} = getAuth(req);
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse('Unauthorized', {status: 401});
     }
 
     const json = await req.json();
@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!property) {
-      return new NextResponse('Property not found', { status: 404 });
+      return new NextResponse('Property not found', {status: 404});
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
@@ -72,31 +72,36 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return new NextResponse(JSON.stringify(error.errors), { status: 400 });
+      return new NextResponse(JSON.stringify(error.errors), {status: 400});
     }
     console.error('POST /api/payments error:', error);
-    return new NextResponse('Internal Error', { status: 500 });
+    return new NextResponse('Internal Error', {status: 500});
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = getAuth(req);
+    const {userId} = getAuth(req);
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse('Unauthorized', {status: 401});
     }
 
-    const { searchParams } = new URL(req.url);
+    const {searchParams} = new URL(req.url);
     const propertyId = searchParams.get('propertyId');
     const tenantId = searchParams.get('tenantId');
-    const status = searchParams.get('status') as 'Pending' | 'Paid' | 'Overdue' | 'Cancelled' | undefined;
+    const status = searchParams.get('status') as
+      | 'Pending'
+      | 'Paid'
+      | 'Overdue'
+      | 'Cancelled'
+      | undefined;
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
 
     const where = {
-      ...(propertyId && { property_id: propertyId }),
-      ...(tenantId && { tenant_id: tenantId }),
-      ...(status && { status }),
+      ...(propertyId && {property_id: propertyId}),
+      ...(tenantId && {tenant_id: tenantId}),
+      ...(status && {status}),
       property: {
         owner_id: userId,
       },
@@ -115,7 +120,7 @@ export async function GET(req: NextRequest) {
           created_at: 'desc',
         },
       }),
-      prisma.payments.count({ where }),
+      prisma.payments.count({where}),
     ]);
 
     return NextResponse.json({
@@ -125,6 +130,6 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     console.error('GET /api/payments error:', error);
-    return new NextResponse('Internal Error', { status: 500 });
+    return new NextResponse('Internal Error', {status: 500});
   }
 }

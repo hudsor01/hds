@@ -1,11 +1,9 @@
 'use client';
 
-import { MOCK_ANALYTICS_DATA } from '@/auth/lib/constants';
-import { motion } from 'framer-motion';
-
+import {MOCK_ANALYTICS_DATA} from '@/auth/lib/constants';
+import {Box, Container, Grid, Paper, Typography} from '@mui/material';
+import {motion} from 'framer-motion';
 import dynamic from 'next/dynamic';
-
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
 
 const PerformanceChart = dynamic(
   () => import('components/dashboard/performance-chart').then(mod => mod.PerformanceChart),
@@ -35,11 +33,11 @@ export default function AnalyticsPage() {
   } = MOCK_ANALYTICS_DATA;
 
   return (
-    <Container maxWidth='xl' sx={{ py: 4 }}>
+    <Container maxWidth='xl' sx={{py: 4}}>
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{duration: 0.5}}
       >
         <Typography variant='h4' gutterBottom fontWeight='bold'>
           Analytics Dashboard
@@ -48,7 +46,7 @@ export default function AnalyticsPage() {
         <Grid container spacing={3}>
           {/* Financial Performance */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
+            <Paper sx={{p: 3}}>
               <Typography variant='h6' gutterBottom>
                 Financial Performance
               </Typography>
@@ -64,15 +62,15 @@ export default function AnalyticsPage() {
 
           {/* Tenant Activity */}
           <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 3, height: '100%' }}>
+            <Paper sx={{p: 3, height: '100%'}}>
               <Typography variant='h6' gutterBottom>
                 Tenant Activity
               </Typography>
               <DonutChart
                 data={[
-                  { name: 'New Leases', value: tenantActivity.newLeases },
-                  { name: 'Renewals', value: tenantActivity.renewals },
-                  { name: 'Move-outs', value: tenantActivity.moveOuts },
+                  {name: 'New Leases', value: tenantActivity.newLeases},
+                  {name: 'Renewals', value: tenantActivity.renewals},
+                  {name: 'Move-outs', value: tenantActivity.moveOuts},
                 ]}
               />
             </Paper>
@@ -80,7 +78,7 @@ export default function AnalyticsPage() {
 
           {/* Revenue Distribution */}
           <Grid item xs={12} md={6}>
-            <Paper sx={{ p: 3, height: '100%' }}>
+            <Paper sx={{p: 3, height: '100%'}}>
               <Typography variant='h6' gutterBottom>
                 Revenue Distribution
               </Typography>
@@ -95,7 +93,7 @@ export default function AnalyticsPage() {
 
           {/* Property Occupancy */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
+            <Paper sx={{p: 3}}>
               <Typography variant='h6' gutterBottom>
                 Property Occupancy Rates
               </Typography>
@@ -110,13 +108,13 @@ export default function AnalyticsPage() {
 
           {/* Tenant Insights */}
           <Grid item xs={12}>
-            <Paper sx={{ p: 3 }}>
+            <Paper sx={{p: 3}}>
               <Typography variant='h6' gutterBottom>
                 Tenant Insights
               </Typography>
               <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
-                  <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{textAlign: 'center'}}>
                     <Typography variant='h3' color='primary'>
                       {tenantInsights.satisfaction.current}
                     </Typography>
@@ -124,7 +122,7 @@ export default function AnalyticsPage() {
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{textAlign: 'center'}}>
                     <Typography variant='h3' color='success.main'>
                       {tenantInsights.maintenance.avgResolutionTime.completed}
                     </Typography>
@@ -132,7 +130,7 @@ export default function AnalyticsPage() {
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={4}>
-                  <Box sx={{ textAlign: 'center' }}>
+                  <Box sx={{textAlign: 'center'}}>
                     <Typography variant='h3' color='info.main'>
                       {tenantInsights.retention['2024']}%
                     </Typography>

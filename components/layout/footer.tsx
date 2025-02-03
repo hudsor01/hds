@@ -1,12 +1,12 @@
 'use client';
 
-import { Route } from 'next';
+import {Route} from 'next';
 import Link from 'next/link';
 
 const about = [
-  { name: 'About', href: '/about' as Route },
-  { name: 'Property Management System', href: '/features' as Route },
-  { name: 'Our Team', href: '/contact' as Route },
+  {name: 'About', href: '/about' as Route},
+  {name: 'Property Management System', href: '/features' as Route},
+  {name: 'Our Team', href: '/contact' as Route},
 ];
 
 const socialLinks = [

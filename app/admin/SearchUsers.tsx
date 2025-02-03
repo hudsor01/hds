@@ -1,26 +1,26 @@
-'use client'
+'use client';
 
-import { usePathname, useRouter } from 'next/navigation'
+import {usePathname, useRouter} from 'next/navigation';
 
 export const SearchUsers = () => {
-  const router = useRouter()
-  const pathname = usePathname()
+  const router = useRouter();
+  const pathname = usePathname();
 
   return (
     <div>
       <form
-        onSubmit={(e) => {
-          e.preventDefault()
-          const form = e.currentTarget
-          const formData = new FormData(form)
-          const queryTerm = formData.get('search') as string
-          router.push(pathname + '?search=' + queryTerm)
+        onSubmit={e => {
+          e.preventDefault();
+          const form = e.currentTarget;
+          const formData = new FormData(form);
+          const queryTerm = formData.get('search') as string;
+          router.push(pathname + '?search=' + queryTerm);
         }}
       >
-        <label htmlFor="search">Search for users</label>
-        <input id="search" name="search" type="text" />
-        <button type="submit">Submit</button>
+        <label htmlFor='search'>Search for users</label>
+        <input id='search' name='search' type='text' />
+        <button type='submit'>Submit</button>
       </form>
     </div>
-  )
-}
+  );
+};

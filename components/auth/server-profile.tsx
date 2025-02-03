@@ -1,5 +1,5 @@
-import { auth } from '@clerk/nextjs/server';
-import { Box, Typography } from '@mui/material';
+import {auth} from '@clerk/nextjs/server';
+import {Box, Typography} from '@mui/material';
 
 export async function ServerProfile() {
   const session = await auth();

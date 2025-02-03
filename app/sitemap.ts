@@ -8,5 +8,5 @@ export default async function sitemap() {
       url: 'https://hudsondigitalsolutions.com/features',
       lastModified: new Date(),
     },
-  ]
+  ];
 }

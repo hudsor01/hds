@@ -1,20 +1,18 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
-import { Label } from 'components/ui/label';
-import { Select, SelectItem } from 'components/ui/select';
+import type {SelectChangeEvent} from '@mui/material';
+import {Button} from 'components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
+import {Label} from 'components/ui/label';
+import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
-import { AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip } from 'react-feather';
+import {useState} from 'react';
+import {AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip} from 'react-feather';
 import type {
   MaintenanceStatus,
   MaintenanceTicket,
   UpdateMaintenanceTicket,
 } from 'types/maintenance';
-
-import { useState } from 'react';
-
-import type { SelectChangeEvent } from '@mui/material';
 
 interface MaintenanceTicketDetailsProps {
   open: boolean;

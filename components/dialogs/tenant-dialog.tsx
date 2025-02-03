@@ -1,8 +1,9 @@
 'use client';
 
-import { Loader2 } from '-react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from 'components/ui/button';
+import {Loader2} from '-react';
+import {zodResolver} from '@hookform/resolvers/zod';
+import type {SelectChangeEvent} from '@mui/material';
+import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -11,16 +12,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form';
-import { Input } from 'components/ui/input';
-import { Select, SelectItem } from 'components/ui/select';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
+import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from 'components/ui/form';
+import {Input} from 'components/ui/input';
+import {Select, SelectItem} from 'components/ui/select';
+import {useState} from 'react';
+import {useForm} from 'react-hook-form';
+import {toast} from 'sonner';
 import * as z from 'zod';
-
-import { useState } from 'react';
-
-import type { SelectChangeEvent } from '@mui/material';
 
 const tenantFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -45,7 +43,7 @@ interface TenantDialogProps {
     unit: string;
     leaseEnd: string;
   };
-  properties: { id: string; name: string; units: string[] }[];
+  properties: {id: string; name: string; units: string[]}[];
   onSubmitAction: (data: TenantFormValues) => Promise<void>;
 }
 
@@ -104,7 +102,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='name'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
@@ -117,7 +115,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='email'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
@@ -130,7 +128,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='phone'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
@@ -143,7 +141,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='property'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Property</FormLabel>
                   <Select
@@ -169,7 +167,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='unit'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Unit</FormLabel>
                   <Select
@@ -193,7 +191,7 @@ export function TenantDialog({
             <FormField
               control={form.control}
               name='leaseEnd'
-              render={({ field }) => (
+              render={({field}) => (
                 <FormItem>
                   <FormLabel>Lease End Date</FormLabel>
                   <FormControl>

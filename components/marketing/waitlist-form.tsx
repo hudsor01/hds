@@ -1,10 +1,12 @@
 // components/WaitlistForm.tsx
 'use client';
 
-import { Send as SendIcon } from '@mui/icons-material'
-import { Button, IconButton, TextField } from '@mui/material'
-import { useState } from 'react'
-import { toast } from 'sonner'
+import {Send as SendIcon} from '@mui/icons-material';
+import {Button, IconButton, TextField} from '@mui/material';
+import {useState} from 'react';
+import {toast} from 'sonner';
+
+// components/WaitlistForm.tsx
 
 export default function WaitlistForm() {
   const [email, setEmail] = useState('');
@@ -34,28 +36,28 @@ export default function WaitlistForm() {
   };
 
   return (
-    <div className="max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-lg">
-      <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+    <div className='max-w-md w-full mx-auto p-6 bg-white rounded-lg shadow-lg'>
+      <h2 className='text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent'>
         Join Our Waitlist
       </h2>
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} className='space-y-4'>
         <TextField
           fullWidth
-          variant="outlined"
-          label="Email Address"
-          type="email"
+          variant='outlined'
+          label='Email Address'
+          type='email'
           value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          onChange={e => setEmail(e.target.value)}
           required
-          className="bg-gray-50"
+          className='bg-gray-50'
           InputProps={{
             endAdornment: (
               <IconButton
-                type="submit"
+                type='submit'
                 disabled={isLoading}
-                className="text-blue-600"
-                aria-label="Join waitlist"
+                className='text-blue-600'
+                aria-label='Join waitlist'
               >
                 <SendIcon />
               </IconButton>
@@ -65,11 +67,11 @@ export default function WaitlistForm() {
 
         <Button
           fullWidth
-          variant="contained"
-          color="primary"
-          type="submit"
+          variant='contained'
+          color='primary'
+          type='submit'
           disabled={isLoading}
-          className="h-12 text-lg font-semibold"
+          className='h-12 text-lg font-semibold'
           startIcon={!isLoading && <SendIcon />}
         >
           {isLoading ? 'Joining...' : 'Get Early Access'}

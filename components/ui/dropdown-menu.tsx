@@ -1,8 +1,7 @@
 'use client';
 
-import { Check, ChevronRight } from 'react-feather';
-import * as React from 'react';
-import type { MenuItemProps, MenuProps } from '@mui/material';
+import {cn} from '@/lib/utils';
+import type {MenuItemProps, MenuProps} from '@mui/material';
 import {
   Divider,
   IconButton,
@@ -12,9 +11,10 @@ import {
   MenuItem,
   styled,
 } from '@mui/material';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
+import {Check, ChevronRight} from 'react-feather';
 
-const StyledMenu = styled(Menu)(({ theme }) => ({
+const StyledMenu = styled(Menu)(({theme}) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     minWidth: 180,
@@ -32,7 +32,7 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
   },
 }));
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+const StyledMenuItem = styled(MenuItem)(({theme}) => ({
   minHeight: 36,
   padding: '6px 16px',
   '&:hover': {
@@ -52,7 +52,7 @@ export interface DropdownMenuProps extends Omit<MenuProps, 'open'> {
 }
 
 export const DropdownMenu = React.forwardRef<HTMLDivElement, DropdownMenuProps>(
-  ({ className, children, trigger, onOpenChange, ...props }, ref) => {
+  ({className, children, trigger, onOpenChange, ...props}, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -89,7 +89,7 @@ export interface DropdownMenuItemProps extends MenuItemProps {
 }
 
 export const DropdownMenuItem = React.forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ className, children, inset, startIcon, endIcon, ...props }, ref) => (
+  ({className, children, inset, startIcon, endIcon, ...props}, ref) => (
     <StyledMenuItem
       ref={ref}
       className={cn(
@@ -101,7 +101,7 @@ export const DropdownMenuItem = React.forwardRef<HTMLLIElement, DropdownMenuItem
     >
       {startIcon && <ListItemIcon>{startIcon}</ListItemIcon>}
       <ListItemText>{children}</ListItemText>
-      {endIcon && <ListItemIcon sx={{ ml: 'auto' }}>{endIcon}</ListItemIcon>}
+      {endIcon && <ListItemIcon sx={{ml: 'auto'}}>{endIcon}</ListItemIcon>}
     </StyledMenuItem>
   ),
 );
@@ -110,7 +110,7 @@ DropdownMenuItem.displayName = 'DropdownMenuItem';
 export const DropdownMenuSeparator = React.forwardRef<
   HTMLHRElement,
   React.ComponentProps<typeof Divider>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <Divider
     ref={ref}
     component='hr'
@@ -122,8 +122,8 @@ DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
 export const DropdownMenuCheckItem = React.forwardRef<
   HTMLLIElement,
-  DropdownMenuItemProps & { checked?: boolean }
->(({ className, children, checked, ...props }, ref) => (
+  DropdownMenuItemProps & {checked?: boolean}
+>(({className, children, checked, ...props}, ref) => (
   <StyledMenuItem
     ref={ref}
     className={cn(
@@ -133,7 +133,7 @@ export const DropdownMenuCheckItem = React.forwardRef<
     {...props}
   >
     {checked && (
-      <ListItemIcon sx={{ minWidth: 24 }}>
+      <ListItemIcon sx={{minWidth: 24}}>
         <Check className='h-4 w-4' />
       </ListItemIcon>
     )}
@@ -143,7 +143,7 @@ export const DropdownMenuCheckItem = React.forwardRef<
 DropdownMenuCheckItem.displayName = 'DropdownMenuCheckItem';
 
 export const DropdownMenuSubItem = React.forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({ className, children, ...props }, ref) => (
+  ({className, children, ...props}, ref) => (
     <StyledMenuItem
       ref={ref}
       className={cn(

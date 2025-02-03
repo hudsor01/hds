@@ -1,10 +1,8 @@
 'use client';
 
-import { Label } from 'components/ui/label';
-
+import {cn} from '@/lib/utils';
+import {Label} from 'components/ui/label';
 import * as React from 'react';
-
-import { cn } from '@/lib/utils';
 
 interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
   label?: React.ReactNode;
@@ -14,7 +12,7 @@ interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-  ({ className, label, children, helperText, errorText, required, ...props }, ref) => {
+  ({className, label, children, helperText, errorText, required, ...props}, ref) => {
     return (
       <div ref={ref} className={cn('space-y-2', className)} {...props}>
         {label && (

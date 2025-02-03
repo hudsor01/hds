@@ -1,12 +1,12 @@
 'use client';
 
-import HomeIcon from '@mui/icons-material/Home'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Box from '@mui/material/Box'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Typography from '@mui/material/Typography'
-import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
+import HomeIcon from '@mui/icons-material/Home';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import Box from '@mui/material/Box';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Typography from '@mui/material/Typography';
+import Link from 'next/link';
+import {usePathname, useRouter} from 'next/navigation';
 
 export function BreadcrumbNav() {
   const pathname = usePathname();
@@ -20,15 +20,11 @@ export function BreadcrumbNav() {
     const isLast = index === pathSegments.length - 1;
 
     return isLast ? (
-      <Typography key={href} color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
+      <Typography key={href} color='text.primary' sx={{display: 'flex', alignItems: 'center'}}>
         {label}
       </Typography>
     ) : (
-      <Link
-        key={href}
-        href={href}
-        style={{ textDecoration: 'none', color: 'inherit' }}
-      >
+      <Link key={href} href={href} style={{textDecoration: 'none', color: 'inherit'}}>
         <Typography
           sx={{
             display: 'flex',
@@ -46,11 +42,7 @@ export function BreadcrumbNav() {
 
   // Add home link at the beginning
   breadcrumbs.unshift(
-    <Link
-      key="home"
-      href="/dashboard"
-      style={{ textDecoration: 'none', color: 'inherit' }}
-    >
+    <Link key='home' href='/dashboard' style={{textDecoration: 'none', color: 'inherit'}}>
       <Typography
         sx={{
           display: 'flex',
@@ -60,18 +52,15 @@ export function BreadcrumbNav() {
           },
         }}
       >
-        <HomeIcon sx={{ mr: 0.5, fontSize: 20 }} />
+        <HomeIcon sx={{mr: 0.5, fontSize: 20}} />
         Dashboard
       </Typography>
-    </Link>
+    </Link>,
   );
 
   return (
-    <Box sx={{ mb: 3, mt: 1 }}>
-      <Breadcrumbs
-        separator={<NavigateNextIcon fontSize="small" />}
-        aria-label="breadcrumb"
-      >
+    <Box sx={{mb: 3, mt: 1}}>
+      <Breadcrumbs separator={<NavigateNextIcon fontSize='small' />} aria-label='breadcrumb'>
         {breadcrumbs}
       </Breadcrumbs>
     </Box>

@@ -1,15 +1,14 @@
 'use client';
 
-import { Clock, Globe, Laptop, Loader2, Shield, Smartphone, Trash2 } from '-react';
-import { Alert } from 'components/ui/alert';
-import { Button } from 'components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
-import { Separator } from 'components/ui/separator';
-import { format } from 'date-fns';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
-import { toast } from 'sonner';
-
-import { useState } from 'react';
+import {Clock, Globe, Laptop, Loader2, Shield, Smartphone, Trash2} from '-react';
+import {Alert} from 'components/ui/alert';
+import {Button} from 'components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
+import {Separator} from 'components/ui/separator';
+import {format} from 'date-fns';
+import {AnimatePresence, motion, Variants} from 'framer-motion';
+import {useState} from 'react';
+import {toast} from 'sonner';
 
 interface Session {
   id: string;
@@ -22,7 +21,7 @@ interface Session {
 
 // Animation variants
 const containerVariants: Variants = {
-  hidden: { opacity: 0 },
+  hidden: {opacity: 0},
   show: {
     opacity: 1,
     transition: {
@@ -33,7 +32,7 @@ const containerVariants: Variants = {
 };
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
+  hidden: {opacity: 0, y: 20},
   show: {
     opacity: 1,
     y: 0,
@@ -46,7 +45,7 @@ const itemVariants: Variants = {
   exit: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: 0.2 },
+    transition: {duration: 0.2},
   },
 };
 
@@ -123,15 +122,15 @@ export function SessionManager() {
 
   return (
     <>
-      <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+      <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
         <Button variant='outline' onClick={handleOpen} className='flex items-center gap-2'>
           <Shield className='h-4 w-4' />
           Active Sessions
           {sessions.length > 1 && (
             <motion.span
-              initial={{ scale: 0 }}
-              animate={{ scale: 1 }}
-              transition={{ type: 'spring', stiffness: 500, damping: 25 }}
+              initial={{scale: 0}}
+              animate={{scale: 1}}
+              transition={{type: 'spring', stiffness: 500, damping: 25}}
               className='ml-1 rounded-full bg-blue-100 px-2 py-0.5 text-xs font-medium text-blue-800 dark:bg-blue-900 dark:text-blue-300'
             >
               {sessions.length}
@@ -143,9 +142,9 @@ export function SessionManager() {
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogContent className='max-w-3xl'>
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
+            initial={{opacity: 0, y: -20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.3}}
           >
             <DialogHeader>
               <DialogTitle>Active Sessions</DialogTitle>
@@ -163,18 +162,18 @@ export function SessionManager() {
               <Loader2 className='h-8 w-8 animate-spin text-muted-foreground' />
               <motion.p
                 className='text-sm text-muted-foreground'
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2 }}
+                initial={{opacity: 0}}
+                animate={{opacity: 1}}
+                transition={{delay: 0.2}}
               >
                 Loading sessions...
               </motion.p>
             </motion.div>
           ) : sessions.length === 0 ? (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ type: 'spring', stiffness: 300, damping: 25 }}
+              initial={{opacity: 0, y: 20}}
+              animate={{opacity: 1, y: 0}}
+              transition={{type: 'spring', stiffness: 300, damping: 25}}
               className='flex flex-col items-center justify-center py-12 text-center'
             >
               <Globe className='h-12 w-12 text-muted-foreground/50 mb-4' />
@@ -226,7 +225,7 @@ export function SessionManager() {
                       initial='hidden'
                       animate='show'
                       exit='exit'
-                      whileHover={{ scale: 1.01 }}
+                      whileHover={{scale: 1.01}}
                       className={`relative rounded-lg border ${
                         session.current
                           ? 'bg-blue-50/50 dark:bg-blue-950/50 border-blue-200 dark:border-blue-900'
@@ -253,7 +252,7 @@ export function SessionManager() {
                       </div>
 
                       {!session.current && (
-                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                        <motion.div whileHover={{scale: 1.1}} whileTap={{scale: 0.9}}>
                           <Button
                             variant='ghost'
                             size='sm'
@@ -263,11 +262,11 @@ export function SessionManager() {
                           >
                             <motion.div
                               animate={
-                                isRevoking === session.id ? { rotate: 360, scale: [1, 1.1, 1] } : {}
+                                isRevoking === session.id ? {rotate: 360, scale: [1, 1.1, 1]} : {}
                               }
                               transition={{
-                                rotate: { duration: 1, repeat: Infinity, ease: 'linear' },
-                                scale: { duration: 0.5, repeat: Infinity },
+                                rotate: {duration: 1, repeat: Infinity, ease: 'linear'},
+                                scale: {duration: 0.5, repeat: Infinity},
                               }}
                             >
                               {isRevoking === session.id ? (

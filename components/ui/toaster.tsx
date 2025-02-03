@@ -1,7 +1,5 @@
 'use client';
 
-import { useEffect } from 'react';
-import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   Toast,
   ToastClose,
@@ -10,10 +8,12 @@ import {
   ToastTitle,
   ToastViewport,
 } from '@/components/ui/toast';
-import { useToast } from '@/components/ui/use-toast';
+import {useToast} from '@/components/ui/use-toast';
+import {usePathname, useRouter, useSearchParams} from 'next/navigation';
+import {useEffect} from 'react';
 
 export function Toaster() {
-  const { toast, toasts } = useToast();
+  const {toast, toasts} = useToast();
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const router = useRouter();
@@ -36,13 +36,13 @@ export function Toaster() {
       const paramsToRemove = ['error', 'status', 'status_description', 'error_description'];
       paramsToRemove.forEach(param => newSearchParams.delete(param));
       const redirectPath = `${pathname}?${newSearchParams.toString()}`;
-      router.replace(redirectPath, { scroll: false });
+      router.replace(redirectPath, {scroll: false});
     }
   }, [searchParams]);
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({id, title, description, action, ...props}) {
         return (
           <Toast key={id} {...props}>
             <div className='grid gap-1'>

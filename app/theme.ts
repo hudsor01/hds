@@ -1,9 +1,9 @@
-import { createTheme } from '@mui/material/styles'
+import {createTheme} from '@mui/material/styles';
 
 export const theme = createTheme({
   palette: {
-    primary: { main: '#1a237e' },
-    secondary: { main: '#00695c' },
+    primary: {main: '#1a237e'},
+    secondary: {main: '#00695c'},
   },
   typography: {
     fontFamily: 'Inter, system-ui, Avenir, Helvetica, Arial, sans-serif',
@@ -11,8 +11,8 @@ export const theme = createTheme({
   components: {
     MuiButton: {
       styleOverrides: {
-        root: { textTransform: 'none' }
-      }
-    }
-  }
-})
+        root: {textTransform: 'none'},
+      },
+    },
+  },
+});

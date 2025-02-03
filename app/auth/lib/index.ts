@@ -1,4 +1,4 @@
 // auth/lib/index.ts
-import { useAuth, useSignIn, useSignUp } from '@clerk/nextjs';
+import {useAuth, useSignIn, useSignUp} from '@clerk/nextjs';
 
-export { useAuth, useSignIn, useSignUp };
+export {useAuth, useSignIn, useSignUp};

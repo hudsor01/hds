@@ -1,14 +1,14 @@
 'use client';
 
-import { OTPInput, OTPInputContext } from 'input-otp';
-import { Minus } from 'react-feather';
+import {cn} from '@/lib/utils';
+import {OTPInput, OTPInputContext} from 'input-otp';
 import * as React from 'react';
-import { cn } from '@/lib/utils';
+import {Minus} from 'react-feather';
 
 const InputOTP = React.forwardRef<
   React.ElementRef<typeof OTPInput>,
   React.ComponentPropsWithoutRef<typeof OTPInput>
->(({ className, containerClassName, ...props }, ref) => (
+>(({className, containerClassName, ...props}, ref) => (
   <OTPInput
     ref={ref}
     containerClassName={cn('flex items-center gap-2 has-disabled:opacity-50', containerClassName)}
@@ -21,17 +21,17 @@ InputOTP.displayName = 'InputOTP';
 const InputOTPGroup = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
->(({ className, ...props }, ref) => (
+>(({className, ...props}, ref) => (
   <div ref={ref} className={cn('flex items-center', className)} {...props} />
 ));
 InputOTPGroup.displayName = 'InputOTPGroup';
 
 const InputOTPSlot = React.forwardRef<
   React.ElementRef<'div'>,
-  React.ComponentPropsWithoutRef<'div'> & { index: number }
->(({ index, className, ...props }, ref) => {
+  React.ComponentPropsWithoutRef<'div'> & {index: number}
+>(({index, className, ...props}, ref) => {
   const inputOTPContext = React.useContext(OTPInputContext);
-  const { char, hasFakeCaret, isActive } = inputOTPContext.slots[index];
+  const {char, hasFakeCaret, isActive} = inputOTPContext.slots[index];
 
   return (
     <div
@@ -57,11 +57,11 @@ InputOTPSlot.displayName = 'InputOTPSlot';
 const InputOTPSeparator = React.forwardRef<
   React.ElementRef<'div'>,
   React.ComponentPropsWithoutRef<'div'>
->(({ ...props }, ref) => (
+>(({...props}, ref) => (
   <div ref={ref} role='separator' {...props}>
     <Minus />
   </div>
 ));
 InputOTPSeparator.displayName = 'InputOTPSeparator';
 
-export { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot };
+export {InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot};

@@ -1,83 +1,95 @@
-import { clerkMiddleware } from '@clerk/express'
-import { PrismaClient } from '@prisma/client'
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
-import { createServerClient } from '@supabase/ssr'
-import cors from 'cors'
-import express from 'express'
-import rateLimit from 'express-rate-limit'
-import helmet from 'helmet'
-import { cookies, headers } from 'next/headers'
+import {clerkMiddleware} from '@clerk/express';
+import {PrismaClient} from '@prisma/client';
+import {createClient as createSupabaseClient} from '@supabase/supabase-js';
+import cors from 'cors';
+import express from 'express';
 
 const prisma = new PrismaClient();
-const supabase = createServerClient(
+const supabase = createSupabaseClient(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
 const app = express();
 
-// Essential middleware stack
+// Essential middleware stack, including Clerk integration
 app.use(
   clerkMiddleware({
-    // Required for API routes
     publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
     secretKey: process.env.CLERK_SECRET_KEY,
-    // Connect Clerk user ID to Prisma
-    async onUserLoaded(req) {
-      const userId = req.auth.userId;
-      if (userId) {
-        req.user = await prisma.users.findUnique({
-          where: { clerkId: userId }
-        });
-      }
-    }
   }),
-  express.json(),
-  cors({
-    origin: process.env.NEXT_PUBLIC_APP_URL
-  })
 );
 
-// Security middleware
+// Custom middleware to load and attach the Clerk user from Prisma
+app.use(async (req, res, next) => {
+  const userId = req.auth?.userId;
+  if (userId) {
+    req.user = await prisma.users.findUnique({
+      where: {clerkId: userId},
+    });
+  }
+  next();
+});
+
+// Security middleware: Helmet and rate limiting
 app.use(
-  helmet(),
-  rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutes
-    max: 100 // limit each IP to 100 requests per window
-  })
+  express.json(),
+  cors({
+    origin: process.env.NEXT_PUBLIC_APP_URL,
+  }),
 );
+
+// Security middleware: Helmet and rate limiting
+app.use(helmet());
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: 'draft-8',
+  legacyHeaders: false,
+});
 
 // Database health check endpoint
 app.get('/api/db-status', async (req, res) => {
   try {
+    // Simple database query to check Prisma connectivity
     await prisma.$queryRaw`SELECT 1`;
-    await supabase.rpc('version');
-    res.status(200).json({ status: 'healthy' });
+    // Call a stored RPC named 'version' against your Supabase database
+    const {data, error} = await supabase.rpc('version');
+    if (error) throw error;
+    res.status(200).json({status: 'healthy', version: data});
   } catch (error) {
-    res.status(500).json({ status: 'unhealthy' });
+    console.error('DB health check error:', error);
+    res.status(500).json({status: 'unhealthy'});
   }
 });
 
 // Prisma connection management
-prisma.$connect()
+prisma
+  .$connect()
   .then(() => console.log('Prisma connected'))
-  .catch((err) => console.error('Prisma connection error:', err));
+  .catch(err => console.error('Prisma connection error:', err));
 
-// Supabase auth state listener
-supabase.auth.onAuthStateChange((event, session) => {
-  // Sync with Prisma user records
-  if (event === 'SIGNED_IN' && session?.user) {
-    prisma.users.upsert({
-      where: { clerkId: session.user.id },
-      update: {},
-      create: {
-        clerkId: session.user.id,
-        email: session.user.email!
-      }
-    });
-  }
-});
+// Supabase auth state listener (if supported in your Node environment)
+if (supabase.auth && typeof supabase.auth.onAuthStateChange === 'function') {
+  supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session?.user) {
+      prisma.users
+        .upsert({
+          where: {clerkId: session.user.id},
+          update: {},
+          create: {
+            clerkId: session.user.id,
+            email: session.user.email!,
+          },
+        })
+        .catch(err => console.error('Error upserting user on auth state change:', err));
+    }
+  });
+} else {
+  console.warn('supabase.auth.onAuthStateChange is not supported in this environment.');
+}
 
-export const createClient = () => {
-  return createServerComponentClient({ cookies, headers });
-};
+// Export a factory function to access the Supabase client instance
+export const createClient = () => supabase;
+
+export default app;

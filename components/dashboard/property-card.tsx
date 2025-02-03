@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from 'components/ui/card';
-import { Home } from 'react-feather';
+import {Card} from 'components/ui/card';
+import {Home} from 'react-feather';
 
 export interface PropertyCardProps {
   name: string;

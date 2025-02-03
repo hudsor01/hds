@@ -1,8 +1,8 @@
 // app/api/waitlist/route.ts
-import { Resend } from 'resend';
-import { NextResponse } from 'next/server';
-import { createClient } from '@supabase/supabase-js';
-import { prisma } from '@/lib/prisma';
+import {prisma} from '@/lib/prisma';
+import {createClient} from '@supabase/supabase-js';
+import {NextResponse} from 'next/server';
+import {Resend} from 'resend';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -17,11 +17,11 @@ export async function POST(request: Request) {
 
     // Check for existing email
     const existingUser = await prisma.waitlist.findUnique({
-      where: { email: body.email },
+      where: {email: body.email},
     });
 
     if (existingUser) {
-      return NextResponse.json({ error: 'Email already registered' }, { status: 400 });
+      return NextResponse.json({error: 'Email already registered'}, {status: 400});
     }
 
     // Create new waitlist entry
@@ -48,13 +48,13 @@ export async function POST(request: Request) {
       }),
     });
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({success: true});
   } catch (error) {
     console.error('Waitlist error:', error);
-    return NextResponse.json({ error: 'Failed to join waitlist' }, { status: 500 });
+    return NextResponse.json({error: 'Failed to join waitlist'}, {status: 500});
   }
 }
 
-function WelcomeEmail(arg0: { firstName: any; estimatedLaunch: string }) {
+function WelcomeEmail(arg0: {firstName: any; estimatedLaunch: string}) {
   throw new Error('Function not implemented.');
 }

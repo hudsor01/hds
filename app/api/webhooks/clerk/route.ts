@@ -1,90 +1,94 @@
-import { WebhookEvent, type DeletedObjectJSON, type OrganizationJSON, type UserJSON } from '@clerk/nextjs/server'
-import { sql } from '@vercel/postgres'
-import { headers } from 'next/headers'
-import { Webhook } from 'svix'
-
+import {
+  WebhookEvent,
+  type DeletedObjectJSON,
+  type OrganizationJSON,
+  type UserJSON,
+} from '@clerk/nextjs/server';
+import {sql} from '@vercel/postgres';
+import {headers} from 'next/headers';
+import {Webhook} from 'svix';
 
 export async function POST(req: Request) {
-  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
+  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
-    throw new Error('Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env')
+    throw new Error('Please add CLERK_WEBHOOK_SECRET from Clerk Dashboard to .env');
   }
 
   // Get the headers
   const headerPayload = await headers();
-  const svix_id = headerPayload.get("svix-id");
-  const svix_timestamp = headerPayload.get("svix-timestamp");
-  const svix_signature = headerPayload.get("svix-signature");
+  const svix_id = headerPayload.get('svix-id');
+  const svix_timestamp = headerPayload.get('svix-timestamp');
+  const svix_signature = headerPayload.get('svix-signature');
 
   // If there are no headers, error out
   if (!svix_id || !svix_timestamp || !svix_signature) {
     return new Response('Error occured -- no svix headers', {
-      status: 400
-    })
+      status: 400,
+    });
   }
 
   // Get the body
-  const payload = await req.json()
+  const payload = await req.json();
   const body = JSON.stringify(payload);
 
   // Create a new Svix instance with your secret
   const wh = new Webhook(WEBHOOK_SECRET);
 
-  let evt: WebhookEvent
+  let evt: WebhookEvent;
 
   // Verify the payload
   try {
     evt = wh.verify(body, {
-      "svix-id": svix_id,
-      "svix-timestamp": svix_timestamp,
-      "svix-signature": svix_signature,
-    }) as WebhookEvent
+      'svix-id': svix_id,
+      'svix-timestamp': svix_timestamp,
+      'svix-signature': svix_signature,
+    }) as WebhookEvent;
   } catch (err) {
     console.error('Error verifying webhook:', err);
     return new Response('Error occured', {
-      status: 400
-    })
+      status: 400,
+    });
   }
 
   // Handle the webhook
   try {
-    await handleWebhook(evt)
+    await handleWebhook(evt);
 
     return new Response('Webhook processed successfully', {
-      status: 200
-    })
+      status: 200,
+    });
   } catch (err) {
     // Log the error
-    await logWebhookError(evt, err)
+    await logWebhookError(evt, err);
 
     return new Response('Webhook processing failed', {
-      status: 500
-    })
+      status: 500,
+    });
   }
 }
 
 async function handleWebhook(evt: WebhookEvent) {
   // Log the webhook
-  await logWebhook(evt)
+  await logWebhook(evt);
 
   // Handle different webhook types
   switch (evt.type) {
     case 'user.created':
-      await handleUserCreated(evt.data)
+      await handleUserCreated(evt.data);
       break;
     case 'user.updated':
-      await handleUserUpdated(evt.data)
+      await handleUserUpdated(evt.data);
       break;
     case 'user.deleted':
-      await handleUserDeleted(evt.data)
+      await handleUserDeleted(evt.data);
       break;
     // Add organization webhooks if needed
     case 'organization.created':
-      await handleOrganizationCreated(evt.data)
+      await handleOrganizationCreated(evt.data);
       break;
     default:
-      console.log('Unhandled webhook type:', evt.type)
+      console.log('Unhandled webhook type:', evt.type);
   }
 }
 
@@ -104,7 +108,7 @@ async function logWebhook(evt: WebhookEvent) {
       'processed',
       NOW()
     )
-  `
+  `;
 }
 
 async function logWebhookError(evt: WebhookEvent, error: any) {
@@ -124,24 +128,20 @@ async function logWebhookError(evt: WebhookEvent, error: any) {
       ${JSON.stringify(error)},
       NOW()
     )
-  `
+  `;
 }
-function handleUserCreated (data: UserJSON)
-{
-  throw new Error('Function not implemented.')
-}
-
-function handleUserUpdated (data: UserJSON)
-{
-  throw new Error('Function not implemented.')
+function handleUserCreated(data: UserJSON) {
+  throw new Error('Function not implemented.');
 }
 
-function handleUserDeleted (data: DeletedObjectJSON)
-{
-  throw new Error('Function not implemented.')
+function handleUserUpdated(data: UserJSON) {
+  throw new Error('Function not implemented.');
 }
 
-function handleOrganizationCreated (data: OrganizationJSON)
-{
-  throw new Error('Function not implemented.')
+function handleUserDeleted(data: DeletedObjectJSON) {
+  throw new Error('Function not implemented.');
+}
+
+function handleOrganizationCreated(data: OrganizationJSON) {
+  throw new Error('Function not implemented.');
 }

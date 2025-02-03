@@ -1,34 +1,34 @@
 'use client';
 
-import { Bell, Box, Home, LogOut, Menu, Settings, Tool, Users, X } from 'react-feather';
-import { useState } from 'react';
+import {cn} from '../app/auth/lib/utils';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { cn } from '../app/auth/lib/utils';
+import {usePathname} from 'next/navigation';
+import {useState} from 'react';
+import {Bell, Box, Home, LogOut, Menu, Settings, Tool, Users, X} from 'react-feather';
 
 const mainNavItems = [
   {
-    href: { pathname: '/dashboard' },
+    href: {pathname: '/dashboard'},
     label: 'Dashboard',
     icon: Home,
   },
   {
-    href: { pathname: '/dashboard/properties' },
+    href: {pathname: '/dashboard/properties'},
     label: 'Properties',
     icon: Box,
   },
   {
-    href: { pathname: '/dashboard/tenants' },
+    href: {pathname: '/dashboard/tenants'},
     label: 'Tenants',
     icon: Users,
   },
   {
-    href: { pathname: '/dashboard/maintenance' },
+    href: {pathname: '/dashboard/maintenance'},
     label: 'Maintenance',
     icon: Tool,
   },
   {
-    href: { pathname: '/dashboard/analytics' },
+    href: {pathname: '/dashboard/analytics'},
     label: 'Analytics',
     icon: Settings,
   },

@@ -1,59 +1,47 @@
 // components/properties/property-listing.tsx
 'use client';
 
-import { useProperties } from '@/hooks/use-properties'
-import AddIcon from '@mui/icons-material/Add'
-import GridViewIcon from '@mui/icons-material/GridView'
-import ViewListIcon from '@mui/icons-material/ViewList'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import { useState } from 'react'
-import { PropertyFilters } from './property-filters'
-import { PropertyGrid } from './property-grid'
-import { PropertyTable } from './property-table'
+import {PropertyFilters} from './property-filters';
+import {PropertyGrid} from './property-grid';
+import {PropertyTable} from './property-table';
+import {useProperties} from '@/hooks/use-properties';
+import AddIcon from '@mui/icons-material/Add';
+import GridViewIcon from '@mui/icons-material/GridView';
+import ViewListIcon from '@mui/icons-material/ViewList';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import Tab from '@mui/material/Tab';
+import Tabs from '@mui/material/Tabs';
+import {useState} from 'react';
+
+// components/properties/property-listing.tsx
 
 export function PropertyListing() {
   const [view, setView] = useState<'grid' | 'table'>('grid');
-  const { data: properties, isLoading } = useProperties();
+  const {data: properties, isLoading} = useProperties();
 
   return (
     <Box>
-      <Box sx={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        mb: 3
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          mb: 3,
+        }}
+      >
         <Box>
           <h1>Properties</h1>
           <PropertyFilters />
         </Box>
 
-        <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-          <Tabs
-            value={view}
-            onChange={(_, newValue) => setView(newValue)}
-            sx={{ mr: 2 }}
-          >
-            <Tab
-              icon={<GridViewIcon />}
-              value="grid"
-              aria-label="grid view"
-            />
-            <Tab
-              icon={<ViewListIcon />}
-              value="table"
-              aria-label="table view"
-            />
+        <Box sx={{display: 'flex', gap: 2, alignItems: 'center'}}>
+          <Tabs value={view} onChange={(_, newValue) => setView(newValue)} sx={{mr: 2}}>
+            <Tab icon={<GridViewIcon />} value='grid' aria-label='grid view' />
+            <Tab icon={<ViewListIcon />} value='table' aria-label='table view' />
           </Tabs>
 
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            href="/properties/new"
-          >
+          <Button variant='contained' startIcon={<AddIcon />} href='/properties/new'>
             Add Property
           </Button>
         </Box>

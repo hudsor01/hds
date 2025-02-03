@@ -1,17 +1,8 @@
 'use client';
 
-import { useUser } from '@/app/auth/lib/auth/config';
-import { supabase } from '@/app/auth/lib/supabase';
-import { useDashboardCrud } from '@/app/hooks/use-dashboard-crud';
-import { PropertyDialog } from 'components/dialogs/property-dialog';
-import { motion } from 'framer-motion';
-import { Edit2, Plus, Search, Trash2 } from 'react-feather';
-import type { Property, PropertyCardData } from 'types/properties';
-
-import { useEffect, useState } from 'react';
-
-import Image from 'next/image';
-
+import {useUser} from '@/app/auth/lib/auth/config';
+import {supabase} from '@/app/auth/lib/supabase';
+import {useDashboardCrud} from '@/app/hooks/use-dashboard-crud';
 import {
   Box,
   Button,
@@ -25,21 +16,27 @@ import {
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import { alpha, useTheme } from '@mui/material/styles';
+import {alpha, useTheme} from '@mui/material/styles';
+import {PropertyDialog} from 'components/dialogs/property-dialog';
+import {motion} from 'framer-motion';
+import Image from 'next/image';
+import {useEffect, useState} from 'react';
+import {Edit2, Plus, Search, Trash2} from 'react-feather';
+import type {Property, PropertyCardData} from 'types/properties';
 
 const containerVariants = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  initial: {opacity: 0},
+  animate: {opacity: 1, transition: {staggerChildren: 0.1}},
 };
 
 const itemVariants = {
-  initial: { y: 20, opacity: 0 },
-  animate: { y: 0, opacity: 1 },
+  initial: {y: 20, opacity: 0},
+  animate: {y: 0, opacity: 1},
 };
 
 export default function PropertiesPage() {
   const theme = useTheme();
-  const { user } = useUser();
+  const {user} = useUser();
   const [properties, setProperties] = useState<PropertyCardData[]>([]);
   const [search, setSearch] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
@@ -49,7 +46,7 @@ export default function PropertiesPage() {
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const { data, error } = await supabase.from('properties').select('*, units(*)');
+        const {data, error} = await supabase.from('properties').select('*, units(*)');
 
         if (error) throw error;
 
@@ -82,7 +79,7 @@ export default function PropertiesPage() {
     setOpenDialog(true);
   };
 
-  const { remove: deleteProperty, loading: deleteLoading } = useDashboardCrud<Property>({
+  const {remove: deleteProperty, loading: deleteLoading} = useDashboardCrud<Property>({
     table: 'properties',
     onSuccess: () => {
       setProperties(prev => prev.filter(p => p.id !== selectedProperty?.id));
@@ -143,7 +140,7 @@ export default function PropertiesPage() {
   return (
     <motion.div variants={containerVariants} initial='initial' animate='animate'>
       {/* Header */}
-      <Box sx={{ mb: 4 }}>
+      <Box sx={{mb: 4}}>
         <Typography variant='h4' gutterBottom>
           Properties
         </Typography>
@@ -152,10 +149,10 @@ export default function PropertiesPage() {
 
       {/* Actions */}
       <Stack
-        direction={{ xs: 'column', sm: 'row' }}
+        direction={{xs: 'column', sm: 'row'}}
         spacing={2}
-        alignItems={{ xs: 'stretch', sm: 'center' }}
-        sx={{ mb: 3 }}
+        alignItems={{xs: 'stretch', sm: 'center'}}
+        sx={{mb: 3}}
       >
         <TextField
           value={search}
@@ -168,7 +165,7 @@ export default function PropertiesPage() {
               </InputAdornment>
             ),
           }}
-          sx={{ flex: 1 }}
+          sx={{flex: 1}}
         />
         <Button
           variant='contained'
@@ -177,7 +174,7 @@ export default function PropertiesPage() {
             setSelectedProperty(undefined);
             setOpenDialog(true);
           }}
-          sx={{ minWidth: 200 }}
+          sx={{minWidth: 200}}
         >
           Add Property
         </Button>
@@ -198,7 +195,7 @@ export default function PropertiesPage() {
             alt='No properties'
             width={180}
             height={180}
-            style={{ marginBottom: 16, opacity: 0.7 }}
+            style={{marginBottom: 16, opacity: 0.7}}
           />
           <Typography variant='h6' paragraph>
             No properties found
@@ -223,12 +220,12 @@ export default function PropertiesPage() {
                   }}
                 >
                   {/* Property Image */}
-                  <Box sx={{ pt: '75%', position: 'relative' }}>
+                  <Box sx={{pt: '75%', position: 'relative'}}>
                     <Image
                       src={property.image}
                       alt={property.title}
                       fill
-                      style={{ objectFit: 'cover' }}
+                      style={{objectFit: 'cover'}}
                     />
                     <Chip
                       label={property.status}
@@ -243,15 +240,15 @@ export default function PropertiesPage() {
                   </Box>
 
                   {/* Property Details */}
-                  <Box sx={{ p: 3 }}>
+                  <Box sx={{p: 3}}>
                     <Typography variant='subtitle1' noWrap paragraph>
                       {property.title}
                     </Typography>
-                    <Typography variant='body2' color='text.secondary' noWrap sx={{ mb: 2 }}>
+                    <Typography variant='body2' color='text.secondary' noWrap sx={{mb: 2}}>
                       {property.address}
                     </Typography>
 
-                    <Stack direction='row' alignItems='center' spacing={3} sx={{ mb: 2 }}>
+                    <Stack direction='row' alignItems='center' spacing={3} sx={{mb: 2}}>
                       <Stack direction='row' alignItems='center' spacing={1}>
                         <Typography variant='subtitle1'>${property.price}</Typography>
                         <Typography variant='caption' color='text.secondary'>
@@ -314,7 +311,7 @@ export default function PropertiesPage() {
         property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
         onSubmitAction={async data => {
           try {
-            const { create, update } = useDashboardCrud<Property>({
+            const {create, update} = useDashboardCrud<Property>({
               table: 'properties',
               onSuccess: result => {
                 setProperties(prev => {

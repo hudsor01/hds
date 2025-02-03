@@ -1,15 +1,12 @@
 'use client';
 
-import { Icon } from 'components/ui/icon';
-
+import {cn} from '@/lib/utils';
+import type {SelectProps as MuiSelectProps} from '@mui/material';
+import {FormControl, MenuItem, Select as MuiSelect, styled} from '@mui/material';
+import {Icon} from 'components/ui/icon';
 import * as React from 'react';
 
-import type { SelectProps as MuiSelectProps } from '@mui/material';
-import { FormControl, MenuItem, Select as MuiSelect, styled } from '@mui/material';
-
-import { cn } from '@/lib/utils';
-
-const StyledSelect = styled(MuiSelect)(({ theme }) => ({
+const StyledSelect = styled(MuiSelect)(({theme}) => ({
   '& .MuiOutlinedInput-notchedOutline': {
     borderColor: 'rgba(0, 0, 0, 0.12)',
   },
@@ -30,7 +27,7 @@ export interface SelectProps extends Omit<MuiSelectProps, 'variant'> {
 
 const Select = React.memo(
   React.forwardRef<HTMLSelectElement, SelectProps>(
-    ({ className, children, placeholder, ...props }, ref) => (
+    ({className, children, placeholder, ...props}, ref) => (
       <FormControl fullWidth>
         <StyledSelect
           ref={ref}
@@ -65,7 +62,7 @@ const Select = React.memo(
 Select.displayName = 'Select';
 
 const SelectItem = React.forwardRef<HTMLLIElement, React.ComponentProps<typeof MenuItem>>(
-  ({ className, children, ...props }, ref) => (
+  ({className, children, ...props}, ref) => (
     <MenuItem
       ref={ref}
       className={cn(
@@ -80,6 +77,6 @@ const SelectItem = React.forwardRef<HTMLLIElement, React.ComponentProps<typeof M
 );
 SelectItem.displayName = 'SelectItem';
 
-export { Select, SelectItem };
+export {Select, SelectItem};
 
 export default Select;

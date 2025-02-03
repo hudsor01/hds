@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress';
+import CircularProgress, {CircularProgressProps} from '@mui/material/CircularProgress';
 import Typography from '@mui/material/Typography';
 
 interface SpinnerProps extends CircularProgressProps {
@@ -19,7 +19,7 @@ const Spinner = ({
   ...props
 }: SpinnerProps) => {
   return (
-    <Box sx={{ position: 'relative', display: 'inline-flex', ...sx }}>
+    <Box sx={{position: 'relative', display: 'inline-flex', ...sx}}>
       <CircularProgress
         variant={variant}
         value={variant === 'determinate' ? value : undefined}
@@ -45,7 +45,7 @@ const Spinner = ({
           <Typography
             variant='caption'
             component='div'
-            sx={{ color: 'text.secondary', fontSize: `${Number(size) * 0.25}px` }}
+            sx={{color: 'text.secondary', fontSize: `${Number(size) * 0.25}px`}}
           >{`${Math.round(value)}%`}</Typography>
         </Box>
       )}

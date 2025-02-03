@@ -1,14 +1,14 @@
 // lib/rate-limit.ts
-import { Redis } from '@upstash/redis'
+import {Redis} from '@upstash/redis';
 
 export class RateLimiter {
-  private redis: Redis
+  private redis: Redis;
 
   async isRateLimited(key: string, limit: number, window: number): Promise<boolean> {
-    const current = await this.redis.incr(key)
+    const current = await this.redis.incr(key);
     if (current === 1) {
-      await this.redis.expire(key, window)
+      await this.redis.expire(key, window);
     }
-    return current > limit
+    return current > limit;
   }
 }

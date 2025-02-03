@@ -1,18 +1,16 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import {createRouteHandlerClient} from '@supabase/auth-helpers-nextjs';
+import {cookies} from 'next/headers';
+import {NextResponse} from 'next/server';
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string; expenseId: string } }
-) {
+export async function GET(request: Request, {params}: {params: {id: string; expenseId: string}}) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient({cookies});
 
     // Get expense with property details
-    const { data: expense, error } = await supabase
+    const {data: expense, error} = await supabase
       .from('expenses')
-      .select(`
+      .select(
+        `
         *,
         property:properties (
           id,
@@ -23,36 +21,31 @@ export async function GET(
           id,
           unit_number
         )
-      `)
+      `,
+      )
       .eq('id', params.expenseId)
       .eq('property_id', params.id)
-      .single()
+      .single();
 
-    if (error) throw error
+    if (error) throw error;
 
     if (!expense) {
-      return NextResponse.json({ error: 'Expense not found' }, { status: 404 })
+      return NextResponse.json({error: 'Expense not found'}, {status: 404});
     }
 
-    return NextResponse.json(expense)
+    return NextResponse.json(expense);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error fetching expense' },
-      { status: 500 }
-    )
+    return NextResponse.json({error: 'Error fetching expense'}, {status: 500});
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string; expenseId: string } }
-) {
+export async function PATCH(request: Request, {params}: {params: {id: string; expenseId: string}}) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
-    const json = await request.json()
+    const supabase = createRouteHandlerClient({cookies});
+    const json = await request.json();
 
     // Update expense
-    const { data: expense, error } = await supabase
+    const {data: expense, error} = await supabase
       .from('expenses')
       .update({
         category: json.category,
@@ -60,11 +53,12 @@ export async function PATCH(
         date: json.date,
         description: json.description,
         status: json.status,
-        paid_at: json.status === 'paid' ? new Date().toISOString() : null
+        paid_at: json.status === 'paid' ? new Date().toISOString() : null,
       })
       .eq('id', params.expenseId)
       .eq('property_id', params.id)
-      .select(`
+      .select(
+        `
         *,
         property:properties (
           id,
@@ -75,40 +69,35 @@ export async function PATCH(
           id,
           unit_number
         )
-      `)
-      .single()
+      `,
+      )
+      .single();
 
-    if (error) throw error
+    if (error) throw error;
 
-    return NextResponse.json(expense)
+    return NextResponse.json(expense);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error updating expense' },
-      { status: 500 }
-    )
+    return NextResponse.json({error: 'Error updating expense'}, {status: 500});
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string; expenseId: string } }
+  {params}: {params: {id: string; expenseId: string}},
 ) {
   try {
-    const supabase = createRouteHandlerClient({ cookies })
+    const supabase = createRouteHandlerClient({cookies});
 
-    const { error } = await supabase
+    const {error} = await supabase
       .from('expenses')
       .delete()
       .eq('id', params.expenseId)
-      .eq('property_id', params.id)
+      .eq('property_id', params.id);
 
-    if (error) throw error
+    if (error) throw error;
 
-    return new NextResponse(null, { status: 204 })
+    return new NextResponse(null, {status: 204});
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error deleting expense' },
-      { status: 500 }
-    )
+    return NextResponse.json({error: 'Error deleting expense'}, {status: 500});
   }
 }

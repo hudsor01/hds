@@ -1,10 +1,10 @@
 // components/common/confirm-dialog.tsx
-import Button from '@mui/material/Button'
-import Dialog from '@mui/material/Dialog'
-import DialogActions from '@mui/material/DialogActions'
-import DialogContent from '@mui/material/DialogContent'
-import DialogTitle from '@mui/material/DialogTitle'
-import Typography from '@mui/material/Typography'
+import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogTitle from '@mui/material/DialogTitle';
+import Typography from '@mui/material/Typography';
 
 interface ConfirmDialogProps {
   open: boolean;
@@ -33,12 +33,7 @@ export function ConfirmDialog({
         <Button onClick={onCancel} disabled={isLoading}>
           Cancel
         </Button>
-        <Button
-          onClick={onConfirm}
-          color="error"
-          disabled={isLoading}
-          autoFocus
-        >
+        <Button onClick={onConfirm} color='error' disabled={isLoading} autoFocus>
           Delete
         </Button>
       </DialogActions>

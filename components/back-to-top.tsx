@@ -1,14 +1,13 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { motion, useScroll } from 'framer-motion';
+import {Button} from 'components/ui/button';
+import {motion, useScroll} from 'framer-motion';
+import {useEffect, useState} from 'react';
 import * as feather from 'react-feather';
-
-import { useEffect, useState } from 'react';
 
 export function BackToTop() {
   const [show, setShow] = useState(false);
-  const { scrollY } = useScroll();
+  const {scrollY} = useScroll();
 
   useEffect(() => {
     return scrollY.onChange(latest => {
@@ -17,15 +16,15 @@ export function BackToTop() {
   }, [scrollY]);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({top: 0, behavior: 'smooth'});
   };
 
   return (
     <motion.div
       className='fixed bottom-8 right-8'
-      initial={{ opacity: 0 }}
-      animate={{ opacity: show ? 1 : 0 }}
-      transition={{ duration: 0.2 }}
+      initial={{opacity: 0}}
+      animate={{opacity: show ? 1 : 0}}
+      transition={{duration: 0.2}}
     >
       <Button
         variant='outline'

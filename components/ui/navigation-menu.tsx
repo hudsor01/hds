@@ -1,11 +1,11 @@
 'use client';
 
-import * as React from 'react';
-import type { Route } from 'next';
-import type { LinkProps } from 'next/link';
+import {cn} from '@/lib/utils';
+import {Menu as MuiMenu, MenuItem as MuiMenuItem} from '@mui/material';
+import type {Route} from 'next';
+import type {LinkProps} from 'next/link';
 import Link from 'next/link';
-import { Menu as MuiMenu, MenuItem as MuiMenuItem } from '@mui/material';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 
 interface NavigationMenuProps extends React.HTMLAttributes<HTMLElement> {
   items: Array<{
@@ -22,7 +22,7 @@ interface MenuItemLinkProps extends LinkProps<string> {
 }
 
 const MenuItemLink = React.forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
-  ({ href, className, children, ...props }, ref) => (
+  ({href, className, children, ...props}, ref) => (
     <Link ref={ref} href={href} className={className} {...props}>
       {children}
     </Link>
@@ -30,7 +30,7 @@ const MenuItemLink = React.forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
 );
 MenuItemLink.displayName = 'MenuItemLink';
 
-export function NavigationMenu({ className, items, ...props }: NavigationMenuProps) {
+export function NavigationMenu({className, items, ...props}: NavigationMenuProps) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
 

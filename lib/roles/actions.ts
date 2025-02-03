@@ -1,9 +1,9 @@
 'use server';
 
-import { useOrganizationList, useUser } from '@clerk/nextjs';
+import {useOrganizationList, useUser} from '@clerk/nextjs';
 
 export async function createOrganization(name: string) {
-  const { user } = useUser();
+  const {user} = useUser();
 
   return useOrganizationList();
 }

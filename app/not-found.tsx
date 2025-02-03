@@ -1,6 +1,5 @@
-import { Circle } from 'react-feather';
-
 import Link from 'next/link';
+import {Circle} from 'react-feather';
 
 export default function NotFound() {
   return (

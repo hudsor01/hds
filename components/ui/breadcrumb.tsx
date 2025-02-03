@@ -1,12 +1,12 @@
 'use client';
 
-import { ChevronRight } from 'react-feather';
+import {cn} from '@/lib/utils';
+import type {BreadcrumbsProps as MuiBreadcrumbsProps} from '@mui/material';
+import {Link, Breadcrumbs as MuiBreadcrumbs, styled, Typography} from '@mui/material';
 import * as React from 'react';
-import type { BreadcrumbsProps as MuiBreadcrumbsProps } from '@mui/material';
-import { Link, Breadcrumbs as MuiBreadcrumbs, styled, Typography } from '@mui/material';
-import { cn } from '@/lib/utils';
+import {ChevronRight} from 'react-feather';
 
-const StyledBreadcrumbs = styled(MuiBreadcrumbs)(({ theme }) => ({
+const StyledBreadcrumbs = styled(MuiBreadcrumbs)(({theme}) => ({
   '& .MuiBreadcrumbs-separator': {
     margin: theme.spacing(0, 1),
   },
@@ -24,7 +24,7 @@ export interface BreadcrumbsProps extends MuiBreadcrumbsProps {
 }
 
 export const Breadcrumbs = React.forwardRef<HTMLDivElement, BreadcrumbsProps>(
-  ({ className, items, ...props }, ref) => (
+  ({className, items, ...props}, ref) => (
     <StyledBreadcrumbs
       ref={ref}
       separator={<ChevronRight size={16} />}

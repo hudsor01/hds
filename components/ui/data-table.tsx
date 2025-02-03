@@ -1,6 +1,6 @@
-import Box from '@mui/material/Box'
-import LinearProgress from '@mui/material/LinearProgress'
-import { DataGrid, type GridColDef, type GridSlotsComponent } from '@mui/x-data-grid'
+import Box from '@mui/material/Box';
+import LinearProgress from '@mui/material/LinearProgress';
+import {DataGrid, type GridColDef, type GridSlotsComponent} from '@mui/x-data-grid';
 
 interface DataTableProps {
   columns: GridColDef[];
@@ -9,14 +9,9 @@ interface DataTableProps {
   pageSize?: number;
 }
 
-export function DataTable({
-  columns,
-  rows,
-  loading = false,
-  pageSize = 10
-}: DataTableProps) {
+export function DataTable({columns, rows, loading = false, pageSize = 10}: DataTableProps) {
   return (
-    <Box sx={{ width: '100%', height: 400 }}>
+    <Box sx={{width: '100%', height: 400}}>
       <DataGrid
         rows={rows}
         columns={columns}

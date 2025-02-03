@@ -1,7 +1,10 @@
 // lib/api-client.ts
 
 export class APIError extends Error {
-  constructor(public status: number, message: string) {
+  constructor(
+    public status: number,
+    message: string,
+  ) {
     super(message);
   }
 }
@@ -9,10 +12,7 @@ export class APIError extends Error {
 async function handleResponse(response: Response) {
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
-    throw new APIError(
-      response.status,
-      error.message || 'An error occurred'
-    );
+    throw new APIError(response.status, error.message || 'An error occurred');
   }
   return response.json();
 }

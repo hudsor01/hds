@@ -1,9 +1,9 @@
-import { useAuth } from '@clerk/nextjs';
-import { roleSchema } from '@/lib/db/schema/roles';
-import { prisma } from '../lib/prisma';
+import {prisma} from '../lib/prisma';
+import {roleSchema} from '@/lib/db/schema/roles';
+import {useAuth} from '@clerk/nextjs';
 
 export async function checkRole(requiredRole: string[], organizationId: string) {
-  const { userId } = useAuth();
+  const {userId} = useAuth();
   console.log('Current Clerk userId:', userId);
 
   if (!userId) {

@@ -1,8 +1,8 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { motion } from 'framer-motion';
-import { Mail, MapPin, Phone } from 'react-feather';
+import {Button} from 'components/ui/button';
+import {motion} from 'framer-motion';
+import {Mail, MapPin, Phone} from 'react-feather';
 
 const contactInfo = [
   {
@@ -36,14 +36,14 @@ export default function ContactPage() {
         <div className='mx-auto max-w-7xl px-6 py-24 sm:py-32 lg:px-8'>
           <motion.div
             className='mx-auto max-w-2xl text-center'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{duration: 0.5}}
           >
             <motion.h2
               className='text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl'
-              initial={{ scale: 0.95 }}
-              animate={{ scale: 1 }}
+              initial={{scale: 0.95}}
+              animate={{scale: 1}}
               transition={{
                 type: 'spring',
                 stiffness: 400,
@@ -58,9 +58,9 @@ export default function ContactPage() {
             </motion.h2>
             <motion.p
               className='mt-6 text-lg leading-8 text-gray-600'
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
+              initial={{opacity: 0}}
+              animate={{opacity: 1}}
+              transition={{delay: 0.2}}
             >
               Have questions? We'd love to hear from you. Send us a message and we'll respond as
               soon as possible.
@@ -73,7 +73,7 @@ export default function ContactPage() {
               <motion.div
                 className='flex flex-col gap-8'
                 variants={{
-                  hidden: { opacity: 0 },
+                  hidden: {opacity: 0},
                   show: {
                     opacity: 1,
                     transition: {
@@ -90,17 +90,17 @@ export default function ContactPage() {
                     href={item.link}
                     className='relative overflow-hidden rounded-2xl p-6 shadow-lg group bg-white'
                     variants={{
-                      hidden: { opacity: 0, x: -20 },
-                      show: { opacity: 1, x: 0 },
+                      hidden: {opacity: 0, x: -20},
+                      show: {opacity: 1, x: 0},
                     }}
-                    whileHover={{ scale: 1.02 }}
-                    transition={{ type: 'spring', stiffness: 300 }}
+                    whileHover={{scale: 1.02}}
+                    transition={{type: 'spring', stiffness: 300}}
                   >
                     <motion.div
                       className='absolute inset-0 bg-linear-to-r from-blue-500/10 to-indigo-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300'
                       initial={false}
-                      animate={{ opacity: [0, 0.1, 0] }}
-                      transition={{ duration: 2, repeat: Infinity }}
+                      animate={{opacity: [0, 0.1, 0]}}
+                      transition={{duration: 2, repeat: Infinity}}
                     />
                     <div className='relative flex items-center gap-4'>
                       <div className='shrink-0'>
@@ -121,16 +121,16 @@ export default function ContactPage() {
               {/* Contact Form */}
               <motion.div
                 className='rounded-2xl bg-white p-8 shadow-lg'
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.4 }}
+                initial={{opacity: 0, x: 20}}
+                animate={{opacity: 1, x: 0}}
+                transition={{delay: 0.4}}
               >
                 <form className='space-y-8'>
                   <div className='space-y-6'>
                     <motion.div
                       className='grid grid-cols-1 gap-6 sm:grid-cols-2'
                       variants={{
-                        hidden: { opacity: 0 },
+                        hidden: {opacity: 0},
                         show: {
                           opacity: 1,
                           transition: {
@@ -196,7 +196,7 @@ export default function ContactPage() {
                       </div>
                     </motion.div>
                   </div>
-                  <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
+                  <motion.div whileHover={{scale: 1.02}} whileTap={{scale: 0.98}}>
                     <Button
                       className='w-full shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40'
                       size='lg'
@@ -212,15 +212,15 @@ export default function ContactPage() {
           {/* Map Section */}
           <motion.div
             className='mt-16 rounded-2xl overflow-hidden shadow-lg'
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.6 }}
+            initial={{opacity: 0, y: 20}}
+            animate={{opacity: 1, y: 0}}
+            transition={{delay: 0.6}}
           >
             <iframe
               src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d53684.90367312405!2d-96.75296276572265!3d33.019481!2d-96.6993871!3d33.0195261!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x864c22fb4b0c9487%3A0x608b1e5b7db11f30!2sPlano%2C%20TX%2075074!5e0!3m2!1sen!2sus!4v1709764537159!5m2!1sen!2sus'
               width='100%'
               height='450'
-              style={{ border: 0 }}
+              style={{border: 0}}
               allowFullScreen
               loading='lazy'
               referrerPolicy='no-referrer-when-downgrade'

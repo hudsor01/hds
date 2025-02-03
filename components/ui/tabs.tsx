@@ -1,8 +1,8 @@
 'use client';
 
-import { Box, Tab as MuiTab, Tabs as MuiTabs, SxProps, Theme } from '@mui/material'
-import { styled } from '@mui/material/styles'
-import { forwardRef, ReactElement, ReactNode, SyntheticEvent } from 'react'
+import {Box, Tab as MuiTab, Tabs as MuiTabs, SxProps, Theme} from '@mui/material';
+import {styled} from '@mui/material/styles';
+import {forwardRef, ReactElement, ReactNode, SyntheticEvent} from 'react';
 
 interface TabPanelProps {
   children?: ReactNode;
@@ -14,26 +14,24 @@ interface TabPanelProps {
 }
 
 const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(
-  { children, value, index, keepMounted = false, ...props },
+  {children, value, index, keepMounted = false, ...props},
   ref,
 ) {
   return (
     <div
       ref={ref}
-      role="tabpanel"
+      role='tabpanel'
       hidden={!keepMounted && value !== index}
       id={`tabpanel-${index}`}
       aria-labelledby={`tab-${index}`}
       {...props}
     >
-      {(keepMounted || value === index) && (
-        <Box sx={{ p: 3, ...props.sx }}>{children}</Box>
-      )}
+      {(keepMounted || value === index) && <Box sx={{p: 3, ...props.sx}}>{children}</Box>}
     </div>
   );
 });
 
-const StyledTabs = styled(MuiTabs)(({ theme }) => ({
+const StyledTabs = styled(MuiTabs)(({theme}) => ({
   '& .MuiTabs-indicator': {
     backgroundColor: theme.palette.primary.main,
     height: 3,
@@ -43,7 +41,7 @@ const StyledTabs = styled(MuiTabs)(({ theme }) => ({
   },
 }));
 
-const StyledTab = styled(MuiTab)(({ theme }) => ({
+const StyledTab = styled(MuiTab)(({theme}) => ({
   textTransform: 'none',
   minWidth: 0,
   minHeight: 48,
@@ -98,14 +96,14 @@ export function Tabs({
   className,
 }: TabsProps) {
   return (
-    <Box sx={{ width: '100%', ...sx }} className={className}>
+    <Box sx={{width: '100%', ...sx}} className={className}>
       <StyledTabs
         value={value}
         onChange={onChangeAction}
         variant={variant}
         centered={centered}
         scrollButtons={variant === 'scrollable' ? 'auto' : undefined}
-        aria-label="tabs navigation"
+        aria-label='tabs navigation'
       >
         {items.map((item, index) => (
           <StyledTab
@@ -121,13 +119,7 @@ export function Tabs({
       </StyledTabs>
 
       {items.map((item, index) => (
-        <TabPanel
-          key={index}
-          value={value}
-          index={index}
-          keepMounted={keepMounted}
-          sx={tabPanelSx}
-        >
+        <TabPanel key={index} value={value} index={index} keepMounted={keepMounted} sx={tabPanelSx}>
           {item.content}
         </TabPanel>
       ))}

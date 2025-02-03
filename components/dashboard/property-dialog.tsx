@@ -1,11 +1,10 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import type { Property } from 'types/property';
-
-import { useState } from 'react';
+import {Button} from 'components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
+import {Input} from 'components/ui/input';
+import {useState} from 'react';
+import type {Property} from 'types/property';
 
 interface PropertyDialogProps {
   open: boolean;
@@ -28,7 +27,7 @@ export function PropertyDialog({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     await onSubmitAction(formData);
-    setFormData({ name: '', address: '' });
+    setFormData({name: '', address: ''});
   };
 
   return (
@@ -42,7 +41,7 @@ export function PropertyDialog({
             <Input
               placeholder='Property Name'
               value={formData.name}
-              onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={e => setFormData(prev => ({...prev, name: e.target.value}))}
               required
             />
           </div>
@@ -50,7 +49,7 @@ export function PropertyDialog({
             <Input
               placeholder='Address'
               value={formData.address}
-              onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))}
+              onChange={e => setFormData(prev => ({...prev, address: e.target.value}))}
               required
             />
           </div>

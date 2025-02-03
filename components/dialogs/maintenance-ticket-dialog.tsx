@@ -1,25 +1,19 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Select, SelectItem } from 'components/ui/select';
+import type {SelectChangeEvent} from '@mui/material';
+import {Button} from 'components/ui/button';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
+import {Input} from 'components/ui/input';
+import {Label} from 'components/ui/label';
+import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
-import type {
-  MaintenancePriority,
-  MaintenanceTicket,
-  NewMaintenanceTicket,
-} from 'types/maintenance';
-
-import { useState } from 'react';
-
-import type { SelectChangeEvent } from '@mui/material';
+import {useState} from 'react';
+import type {MaintenancePriority, MaintenanceTicket, NewMaintenanceTicket} from 'types/maintenance';
 
 interface Property {
   id: string;
   name: string;
-  units: { id: string; number: string }[];
+  units: {id: string; number: string}[];
 }
 
 // Mock data for development
@@ -28,18 +22,18 @@ const MOCK_PROPERTIES: Property[] = [
     id: 'prop1',
     name: 'Sunset Apartments',
     units: [
-      { id: 'unit1', number: '1A' },
-      { id: 'unit2', number: '1B' },
-      { id: 'unit3', number: '2A' },
+      {id: 'unit1', number: '1A'},
+      {id: 'unit2', number: '1B'},
+      {id: 'unit3', number: '2A'},
     ],
   },
   {
     id: 'prop2',
     name: 'Ocean View Complex',
     units: [
-      { id: 'unit4', number: '101' },
-      { id: 'unit5', number: '102' },
-      { id: 'unit6', number: '103' },
+      {id: 'unit4', number: '101'},
+      {id: 'unit5', number: '102'},
+      {id: 'unit6', number: '103'},
     ],
   },
 ];

@@ -1,7 +1,7 @@
 'use client';
 
-import * as React from 'react';
-import type { RadioGroupProps as MuiRadioGroupProps } from '@mui/material';
+import {cn} from '@/lib/utils';
+import type {RadioGroupProps as MuiRadioGroupProps} from '@mui/material';
 import {
   FormControl,
   FormControlLabel,
@@ -9,9 +9,9 @@ import {
   RadioGroup as MuiRadioGroup,
   styled,
 } from '@mui/material';
-import { cn } from '@/lib/utils';
+import * as React from 'react';
 
-const StyledRadio = styled(MuiRadio)(({ theme }) => ({
+const StyledRadio = styled(MuiRadio)(({theme}) => ({
   padding: theme.spacing(1),
   '& .MuiSvgIcon-root': {
     fontSize: 20,
@@ -30,7 +30,7 @@ export interface RadioGroupProps extends Omit<MuiRadioGroupProps, 'defaultValue'
 }
 
 export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
-  ({ className, defaultValue, value, onChange, onValueChange, children, ...props }, ref) => {
+  ({className, defaultValue, value, onChange, onValueChange, children, ...props}, ref) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(event, event.target.value);
@@ -62,7 +62,7 @@ export interface RadioGroupItemProps extends React.ComponentProps<typeof MuiRadi
 }
 
 export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItemProps>(
-  ({ className, label, ...props }, ref) => (
+  ({className, label, ...props}, ref) => (
     <FormControlLabel
       control={
         <StyledRadio

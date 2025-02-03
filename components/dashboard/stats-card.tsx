@@ -1,7 +1,7 @@
 'use client';
 
-import { Card } from 'components/ui/card';
-import type { Icon } from 'react-feather';
+import {Card} from 'components/ui/card';
+import type {Icon} from 'react-feather';
 
 export interface StatsCardProps {
   icon: Icon;
@@ -13,7 +13,7 @@ export interface StatsCardProps {
   };
 }
 
-export function StatsCard({ icon: Icon, label, value, trend }: StatsCardProps): React.ReactElement {
+export function StatsCard({icon: Icon, label, value, trend}: StatsCardProps): React.ReactElement {
   return (
     <Card className='flex items-center space-x-4 p-4'>
       <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10'>

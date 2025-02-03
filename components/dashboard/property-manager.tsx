@@ -1,16 +1,11 @@
 'use client';
 
-import { Plus } from 'react-feather';
-import { toast } from 'sonner';
-
-import { useEffect, useState } from 'react';
-
-import { PropertyDialog } from '@/components/dashboard/property-dialog';
-import { Button } from '@/components/ui/button';
-
-import { useDashboardCrud } from '@/hooks/use-dashboard-crud';
-import { useDashboardUpdates } from '@/hooks/use-dashboard-updates';
-
+import {CrudContainer} from './crud-container';
+import {PropertyCard} from './property-card';
+import {PropertyDialog} from '@/components/dashboard/property-dialog';
+import {Button} from '@/components/ui/button';
+import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
+import {useDashboardUpdates} from '@/hooks/use-dashboard-updates';
 import type {
   CreatePropertyInput,
   Property,
@@ -18,9 +13,9 @@ import type {
   PropertyUnit,
   UpdatePropertyInput,
 } from '@/types/properties';
-
-import { CrudContainer } from './crud-container';
-import { PropertyCard } from './property-card';
+import {useEffect, useState} from 'react';
+import {Plus} from 'react-feather';
+import {toast} from 'sonner';
 
 type PropertyWithoutIdAndUnits = Omit<Property, 'id' | 'units'>;
 
@@ -29,7 +24,7 @@ export function PropertyManager() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
 
-  const { create, update, remove, getAll, loading } = useDashboardCrud<
+  const {create, update, remove, getAll, loading} = useDashboardCrud<
     Property,
     PropertyWithoutIdAndUnits
   >({

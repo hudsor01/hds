@@ -1,9 +1,8 @@
 'use client';
 
-import { PropertyCard } from 'components/dashboard/property-card';
-import { Plus } from 'react-feather';
-
-import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
+import {Box, Button, Container, Grid, Stack, Typography} from '@mui/material';
+import {PropertyCard} from 'components/dashboard/property-card';
+import {Plus} from 'react-feather';
 
 // Mock data for testing
 const mockProperties = [
@@ -67,7 +66,7 @@ export default function PropertiesPage() {
 
         {/* Properties Grid */}
         <Grid container spacing={4}>
-          {mockProperties.map(({ id, ...property }) => (
+          {mockProperties.map(({id, ...property}) => (
             <Grid item xs={12} md={6} lg={4} key={id}>
               <PropertyCard {...property} />
             </Grid>

@@ -1,14 +1,13 @@
 'use client';
 
-import { Button } from 'components/ui/button';
-
-import { useEffect } from 'react';
+import {Button} from 'components/ui/button';
+import {useEffect} from 'react';
 
 export default function Error({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
+  error: Error & {digest?: string};
   reset: () => void;
 }) {
   useEffect(() => {

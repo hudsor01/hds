@@ -1,7 +1,7 @@
-'use client'
+'use client';
 
-import React, { CSSProperties, FC, ReactNode } from 'react'
-import { cn } from "../../lib/utils"
+import {cn} from '../../lib/utils';
+import React, {CSSProperties, FC, ReactNode} from 'react';
 
 interface AnimatedShinyTextProps {
   children: ReactNode;
@@ -18,20 +18,21 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
     <p
       style={
         {
-          "--shimmer-width": `${shimmerWidth}px`,
+          '--shimmer-width': `${shimmerWidth}px`,
         } as CSSProperties
       }
       className={cn(
-        "mx-auto max-w-md text-yellow-100/45",
+        'mx-auto max-w-md text-yellow-100/45',
 
         // Shimmer effect
-        "animate-shimmer bg-clip-text bg-no-repeat [background-position:0_0] [background-size:var(--shimmer-width)_100%] [transition:background-position_1s_cubic-bezier(.6,.6,0,1)_infinite]",
+        'animate-shimmer bg-clip-text bg-no-repeat [background-position:0_0] [background-size:var(--shimmer-width)_100%] [transition:background-position_1s_cubic-bezier(.6,.6,0,1)_infinite]',
 
         // Shimmer gradient
-        "bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent dark:via-yellow-300",
+        'bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent dark:via-yellow-300',
 
         className,
-      )}>
+      )}
+    >
       {children}
     </p>
   );

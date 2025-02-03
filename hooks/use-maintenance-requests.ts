@@ -1,5 +1,5 @@
-import { createCrudHooks } from '@/lib/hooks/use-crud'
-import { type MaintenanceRequest } from '@/types'
+import {createCrudHooks} from '@/lib/hooks/use-crud';
+import {type MaintenanceRequest} from '@/types';
 
 export const {
   useList: useMaintenanceRequests,

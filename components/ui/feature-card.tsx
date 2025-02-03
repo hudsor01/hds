@@ -1,11 +1,10 @@
 'use client';
 
-import { Icon } from '-react';
-import { Card } from 'components/ui/card';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from 'components/ui/tooltip';
-import { motion, useInView } from 'framer-motion';
-
-import { useEffect, useRef } from 'react';
+import {Icon} from '-react';
+import {Card} from 'components/ui/card';
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from 'components/ui/tooltip';
+import {motion, useInView} from 'framer-motion';
+import {useEffect, useRef} from 'react';
 
 interface FeatureCardProps {
   title: string;
@@ -15,15 +14,9 @@ interface FeatureCardProps {
   onView?: () => void;
 }
 
-export function FeatureCard({
-  title,
-  description,
-  icon: Icon,
-  delay = 0,
-  onView,
-}: FeatureCardProps) {
+export function FeatureCard({title, description, icon: Icon, delay = 0, onView}: FeatureCardProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, {once: true});
 
   useEffect(() => {
     if (isInView && onView) {
@@ -37,10 +30,10 @@ export function FeatureCard({
         <TooltipTrigger>
           <motion.div
             ref={ref}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay }}
-            viewport={{ once: true }}
+            initial={{opacity: 0, y: 20}}
+            whileInView={{opacity: 1, y: 0}}
+            transition={{duration: 0.5, delay}}
+            viewport={{once: true}}
           >
             <Card className='group relative overflow-hidden p-6 transition-colors hover:bg-accent'>
               <div className='space-y-4'>

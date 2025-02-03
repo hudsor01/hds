@@ -1,17 +1,15 @@
 'use client';
 
-import { CalendarIcon, Check } from '-react';
-import { Button } from 'components/ui/button';
-import { Calendar } from 'components/ui/calendar';
-import { Command, CommandGroup, CommandItem } from 'components/ui/command';
-import { Popover, PopoverContent, PopoverTrigger } from 'components/ui/popover';
-import { Separator } from 'components/ui/separator';
-import { format, startOfYear, subDays, subMonths } from 'date-fns';
-import { DateRange } from 'react-day-picker';
-
+import {CalendarIcon, Check} from '-react';
+import {cn} from '@/lib/utils';
+import {Button} from 'components/ui/button';
+import {Calendar} from 'components/ui/calendar';
+import {Command, CommandGroup, CommandItem} from 'components/ui/command';
+import {Popover, PopoverContent, PopoverTrigger} from 'components/ui/popover';
+import {Separator} from 'components/ui/separator';
+import {format, startOfYear, subDays, subMonths} from 'date-fns';
 import * as React from 'react';
-
-import { cn } from '@/lib/utils';
+import {DateRange} from 'react-day-picker';
 
 interface DateRangePickerProps {
   value: DateRange;
@@ -57,7 +55,7 @@ const presets = [
   },
 ];
 
-export function DateRangePicker({ value, onChangeAction, className }: DateRangePickerProps) {
+export function DateRangePicker({value, onChangeAction, className}: DateRangePickerProps) {
   const [isOpen, setIsOpen] = React.useState(false);
 
   return (

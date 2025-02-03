@@ -1,7 +1,7 @@
 'use client';
 
-import { Loader2, Shield } from '-react';
-import { Button } from 'components/ui/button';
+import {Loader2, Shield} from '-react';
+import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,
@@ -9,12 +9,10 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { toast } from 'sonner';
-
-import { useState } from 'react';
-
+import {Input} from 'components/ui/input';
 import Image from 'next/image';
+import {useState} from 'react';
+import {toast} from 'sonner';
 
 export function TwoFactorSetup() {
   const [isOpen, setIsOpen] = useState(false);
@@ -49,8 +47,8 @@ export function TwoFactorSetup() {
       setIsLoading(true);
       const response = await fetch('/api/auth/2fa/verify', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: verificationCode }),
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({token: verificationCode}),
       });
       const data = await response.json();
 
