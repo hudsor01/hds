@@ -29,9 +29,62 @@ model User {
   @@schema("public")
 }
 
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model properties {
+  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                 String
+  address              String
+  city                 String
+  state                String
+  zip                  String
+  owner_id             String?                @db.Uuid
+  manager_id           String?                @db.Uuid
+  status               String                 @default("active")
+  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
+  type                 String                 @default("Residential")
+  rent_amount          Decimal                @db.Decimal(10, 2)
+  amenities            String[]               @default([])
+  images               String[]               @default([])
+  bathrooms            Int?
+  bedrooms             Int?
+  size                 Int?
+  user_id              String?                @db.Uuid
+
+  // Relations
+  user User? @relation("UserProperties", fields: [user_id], references: [id])
+  maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
+
+  tenants Tenancy[] @relation("PropertyTenants")
+
+  @@index([owner_id], map: "idx_properties_owner")
+  @@schema("public")
+}
+
+model maintenance_requests {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  title       String
+  description String
+  status      String?   @default("PENDING")
+  priority    String?   @default("MEDIUM")
+  property_id String?   @db.Uuid
+  tenant_id   String?   @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+
+  // Relations
+  tenant     Tenancy?    @relation("UserMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
+  properties properties? @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
+
+  @@index([status])
+  @@index([property_id])
+  @@index([tenant_id])
+  @@schema("public")
+}
+
 model Tenancy {
   id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  unitId           String    @map("unit_id") @db.Uuid
+  property_id      String    @db.Uuid
   firstName        String    @map("first_name")
   lastName         String    @map("last_name")
   email            String
@@ -43,11 +96,16 @@ model Tenancy {
   documents        Json[]    @default([])
   createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
   updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
-  user             User      @relation("UserTenancies", fields: [user_id], references: [id])
-  user_id          String
+  user_id          String    @db.Uuid
+
+  // Relations
+  user                 User                   @relation("UserTenancies", fields: [user_id], references: [id])
+  property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
+  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
   @@index([status])
-  @@index([unitId])
+  @@index([property_id])
+  @@index([email])
   @@map("tenants")
   @@schema("public")
 }
@@ -173,24 +231,7 @@ model login_history {
   @@schema("public")
 }
 
-model maintenance_requests {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  title       String
-  description String
-  status      String?   @default("PENDING")
-  priority    String?   @default("MEDIUM")
-  property_id String?   @db.Uuid
-  created_at  DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
-  tenant_id   String?   @db.Uuid
 
-  // Relations
-  tenant         Tenancy?   @relation("UserMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
-
-  properties properties? @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
-
-  @@schema("public")
-}
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model message_threads {
@@ -302,35 +343,7 @@ model profiles {
   @@schema("public")
 }
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model properties {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                 String
-  address              String
-  city                 String
-  state                String
-  zip                  String
-  owner_id             String?                @db.Uuid
-  manager_id           String?                @db.Uuid
-  status               String                 @default("active")
-  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  type                 String                 @default("Residential")
-  rent_amount          Decimal                @db.Decimal(10, 2)
-  amenities            String[]               @default([])
-  images               String[]               @default([])
-  bathrooms            Int?
-  bedrooms             Int?
-  size                 Int?
-  user_id              String?                @db.Uuid
 
-  // Relations
-  user User? @relation("UserProperties", fields: [user_id], references: [id])
-  maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
-
-  @@index([owner_id], map: "idx_properties_owner")
-  @@schema("public")
-}
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model rent_payments {
