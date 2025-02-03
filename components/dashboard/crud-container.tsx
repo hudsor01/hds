@@ -3,9 +3,6 @@
 import { useProtectedRoute } from '@/hooks/use-protected-route'
 import Spinner from 'components/ui/spinner'
 import type { BaseCrudItem, CrudContainerProps } from '../../types/crud-types'
-
-
-
 export function CrudContainer<T extends BaseCrudItem>({
   title,
   children,

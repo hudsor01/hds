@@ -1,10 +1,12 @@
 import { clerkMiddleware } from '@clerk/express'
 import { PrismaClient } from '@prisma/client'
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { createServerClient } from '@supabase/ssr'
 import cors from 'cors'
 import express from 'express'
 import rateLimit from 'express-rate-limit'
 import helmet from 'helmet'
+import { cookies, headers } from 'next/headers'
 
 const prisma = new PrismaClient();
 const supabase = createServerClient(
@@ -24,7 +26,7 @@ app.use(
     async onUserLoaded(req) {
       const userId = req.auth.userId;
       if (userId) {
-        req.user = await prisma.user.findUnique({
+        req.user = await prisma.users.findUnique({
           where: { clerkId: userId }
         });
       }
@@ -65,7 +67,7 @@ prisma.$connect()
 supabase.auth.onAuthStateChange((event, session) => {
   // Sync with Prisma user records
   if (event === 'SIGNED_IN' && session?.user) {
-    prisma.user.upsert({
+    prisma.users.upsert({
       where: { clerkId: session.user.id },
       update: {},
       create: {
@@ -76,4 +78,6 @@ supabase.auth.onAuthStateChange((event, session) => {
   }
 });
 
-// ... rest of endpoints ...
+export const createClient = () => {
+  return createServerComponentClient({ cookies, headers });
+};

@@ -19,7 +19,8 @@ export async function getCurrentUserId(): Promise<string | null> {
 
 export async function updateUserMetadata(userId: string, metadata: Record<string, any>) {
   try {
-    const user = await clerkClient.users.updateUser(userId, {
+    const client = await clerkClient()
+    const user = await client.users.updateUser(userId, {
       privateMetadata: metadata
     })
     return user
@@ -39,7 +40,8 @@ export async function getUserRole(): Promise<UserRole> {
 
 export async function updateUserRole(userId: string, role: UserRole) {
   try {
-    await clerkClient.users.updateUser(userId, {
+    const client = await clerkClient()
+    await client.users.updateUser(userId, {
       privateMetadata: { role }
     })
   } catch (error) {
@@ -50,7 +52,8 @@ export async function updateUserRole(userId: string, role: UserRole) {
 
 export async function syncUserWithDatabase(userId: string) {
   try {
-    const user = await clerkClient.users.getUser(userId)
+    const client = await clerkClient()
+    const user = await client.users.getUser(userId)
     if (!user) return null
 
     // Add any database sync logic here
