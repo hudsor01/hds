@@ -6,11 +6,11 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public"]
+  schemas  = ["public", "auth"]
 }
 
 model User {
-  id                  String   @id @default(dbgenerated("uuid_generate_v4()"))
+  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   clerkId             String   @unique
   role                String   @default("USER")
   name                String?
@@ -21,12 +21,11 @@ model User {
   stripe_customer_id  String?
   subscription_status String?
 
-  // Relations (remove duplicates)
+  // Relations
   properties           properties[]           @relation("UserProperties")
   tenancies            Tenancy[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
-
-  @@map("Users")
+  @@map("users")
   @@schema("public")
 }
 
@@ -183,12 +182,12 @@ model maintenance_requests {
   property_id String?   @db.Uuid
   created_at  DateTime? @default(now()) @db.Timestamptz(6)
   updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  tenant_id   String?   @db.Uuid
 
-  // Relations (only define ONCE)
-  user         User   @relation("UserMaintenanceRequests", fields: [requester_id], references: [id], onDelete: Cascade)
-  requester_id String
+  // Relations
+  tenant         Tenancy?   @relation("UserMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
 
-  properties properties? @relation(fields: [property_id], references: [id])
+  properties properties? @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
 
   @@schema("public")
 }
@@ -311,7 +310,7 @@ model properties {
   city                 String
   state                String
   zip                  String
-  owner_id             String                 @db.Uuid
+  owner_id             String?                @db.Uuid
   manager_id           String?                @db.Uuid
   status               String                 @default("active")
   created_at           DateTime?              @default(now()) @db.Timestamptz(6)
@@ -323,9 +322,11 @@ model properties {
   bathrooms            Int?
   bedrooms             Int?
   size                 Int?
-  maintenance_requests maintenance_requests[]
-  user_id              String
-  User                 User     @relation(fields: [user_id], references: [id])
+  user_id              String?                @db.Uuid
+
+  // Relations
+  user User? @relation("UserProperties", fields: [user_id], references: [id])
+  maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
 
   @@index([owner_id], map: "idx_properties_owner")
   @@schema("public")
@@ -661,6 +662,8 @@ enum AuditAction {
   PASSWORD_RESET
   EMAIL_CHANGE
   ROLE_CHANGE
+
+  @@schema("public")
 }
 
 enum EntityType {
@@ -670,6 +673,8 @@ enum EntityType {
   PAYMENT
   MAINTENANCE
   DOCUMENT
+
+  @@schema("public")
 }
 
 enum UserRole {
@@ -679,6 +684,8 @@ enum UserRole {
   MAINTENANCE
   TENANT
   USER
+
+  @@schema("public")
 }
 
 enum MessageStatus {
@@ -686,12 +693,16 @@ enum MessageStatus {
   DELIVERED
   READ
   FAILED
+
+  @@schema("public")
 }
 
 enum NotificationStatus {
   UNREAD
   READ
   ARCHIVED
+
+  @@schema("public")
 }
 
 enum ToolType {
@@ -731,6 +742,8 @@ enum image_job_priority {
   low
   medium
   high
+
+  @@schema("public")
 }
 
 enum image_job_status {
@@ -738,6 +751,8 @@ enum image_job_status {
   processing
   completed
   failed
+
+  @@schema("public")
 }
 
 enum invoice_status {
@@ -867,17 +882,4 @@ enum Role {
   TENANT
   USER
   @@schema("public")
-}
-
-model secrets {
-  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name        String?
-  secret      String
-  description String   @default("")
-  key_id      String?  @db.Uuid
-  created_at  DateTime @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime @default(now()) @db.Timestamptz(6)
-
-  @@schema("vault")
-  @@index([name], map: "secrets_name_idx")
 }
