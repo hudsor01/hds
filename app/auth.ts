@@ -11,25 +11,28 @@ const isPublicRoute = createRouteMatcher([
   '/api/webhook',
 ]);
 
-export default clerkMiddleware((auth, req) => {
+export default clerkMiddleware(async (auth, req) => {
   if (!isPublicRoute(req)) {
-    auth().protect();
+    const authData = await auth();
+    if (!authData.userId) {
+      return authData.redirectToSignIn({ returnBackUrl: req.url });
+    }
+  }
+
+  const authData = await auth();
+  if (!authData.userId) {
+    // Handle unauthenticated case, e.g., redirect or throw an error
+    throw new Error("User not authenticated");
   }
 
   // Role assignment logic
-  if (auth().userId) {
-    try {
-      const clerk = await clerkClient();
-      const user = await clerk.users.getUser(auth().userId);
-      const metadata = user.privateMetadata as { role?: string };
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(authData.userId);
+  const metadata = user.privateMetadata as { role?: string };
 
-      if (!metadata.role) {
-       clerk.users.updateUserMetadata(auth().userId, {
-          privateMetadata: { ...metadata, role: "OWNER" },
-        });
-      }
-    } catch (error) {
-      console.error("Error setting user role:", error);
-    }
+  if (!metadata.role) {
+   clerk.users.updateUserMetadata(authData.userId, {
+      privateMetadata: { ...metadata, role: "OWNER" },
+    });
   }
 });

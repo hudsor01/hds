@@ -1,4 +1,4 @@
-// components/dashboard/activity-timeline.tsx
+import { Activity, ActivityType } from '@/types/database.types'
 import BuildIcon from '@mui/icons-material/Build'
 import HomeIcon from '@mui/icons-material/Home'
 import PaymentIcon from '@mui/icons-material/Payment'
@@ -16,17 +16,6 @@ import CardHeader from '@mui/material/CardHeader'
 import Typography from '@mui/material/Typography'
 import { format } from 'date-fns'
 import { useState } from 'react'
-
-type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant';
-
-interface Activity {
-  id: string;
-  type: ActivityType;
-  title: string;
-  description: string;
-  timestamp: Date;
-  metadata?: Record<string, any>;
-}
 
 function getActivityIcon(type: ActivityType) {
   switch (type) {

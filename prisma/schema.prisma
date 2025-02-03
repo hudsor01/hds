@@ -9,8 +9,8 @@ datasource db {
   schemas  = ["hds"]
 }
 
-model users {
-  id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+model Users {
+  id                  String   @id @default(uuid()) @db.Uuid
   clerkId             String   @unique
   role                String   @default("USER")
   name                String?
@@ -20,6 +20,7 @@ model users {
   updated_at          DateTime @updatedAt @db.Timestamptz(6)
   stripe_customer_id  String?
   subscription_status String?
+  user_id             String?  @db.Uuid
 
   // Relations
   properties           properties[]           @relation("UserProperties")
@@ -32,7 +33,7 @@ model users {
 }
 
 model maintenance_requests {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   title       String
   description String
   status      String?   @default("PENDING")
@@ -41,10 +42,12 @@ model maintenance_requests {
   tenant_id   String?   @db.Uuid
   created_at  DateTime? @default(now()) @db.Timestamptz(6)
   updated_at  DateTime? @default(now()) @db.Timestamptz(6)
+  user_id     String?   @db.Uuid
 
   // Relations
   tenant     tenants?    @relation("TenantMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
   properties properties? @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
+  user       Users?      @relation("UserMaintenanceRequests", fields: [user_id], references: [id])
 
   @@schema("hds")
   @@index([status])
@@ -53,7 +56,7 @@ model maintenance_requests {
 }
 
 model tenants {
-  id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id               String    @id @default(uuid()) @db.Uuid
   property_id      String    @db.Uuid
   first_name       String
   last_name        String
@@ -69,7 +72,7 @@ model tenants {
   user_id          String    @db.Uuid
 
   // Relations
-  user                 users                  @relation("UserTenancies", fields: [user_id], references: [id])
+  uuser                 Users                  @relation("UserTenancies", fields: [user_id], references: [id])
   property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("TenantMaintenanceRequests")
 
@@ -80,7 +83,7 @@ model tenants {
 }
 
 model properties {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String    @id @default(uuid()) @db.Uuid
   name         String
   address      String
   city         String
@@ -101,7 +104,7 @@ model properties {
   user_id      String?   @db.Uuid
 
   // Relations
-  user                 users?                 @relation("UserProperties", fields: [user_id], references: [id])
+  User                 Users?                 @relation("UserProperties", fields: [user_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
   tenants             tenants[]              @relation("PropertyTenancies")
 
@@ -130,7 +133,7 @@ model Account {
 }
 
 model Documents {
-  id          String    @id(map: "documents_pkey") @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id(map: "documents_pkey") @default(uuid()) @db.Uuid
   name        String
   description String?
   url         String
@@ -147,7 +150,7 @@ model Documents {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model email_templates {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   name       String    @db.VarChar(255)
   subject    String    @db.VarChar(255)
   body       String
@@ -163,7 +166,7 @@ model email_templates {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model expenses {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   property_id String    @db.Uuid
   category    String
   amount      Decimal   @db.Decimal(10, 2)
@@ -181,7 +184,7 @@ model expenses {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model ip_blacklist {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   ip_address String    @unique @db.Inet
   reason     String
   added_by   String?   @db.Uuid
@@ -195,7 +198,7 @@ model ip_blacklist {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model leases {
-  user_id       String    @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id       String    @id @default(uuid()) @db.Uuid
   tenant_id     String
   property_id   String
   type          LeaseType
@@ -221,7 +224,7 @@ model leases {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model login_history {
-  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id             String    @id @default(uuid()) @db.Uuid
   user_id        String?   @db.Uuid
   ip_address     String?   @db.VarChar(45)
   user_agent     String?
@@ -236,7 +239,7 @@ model login_history {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model message_threads {
-  id              String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id              String    @id @default(uuid()) @db.Uuid
   subject         String
   last_message_id String?   @db.Uuid
   participants    String[]  @db.Uuid
@@ -250,7 +253,7 @@ model message_threads {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model messages {
-  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id           String    @id @default(uuid()) @db.Uuid
   sender_id    String    @db.Uuid
   recipient_id String    @db.Uuid
   subject      String?
@@ -271,9 +274,9 @@ model messages {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model notifications {
-  id         String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id         String            @id @default(uuid()) @db.Uuid
   user_id    String            @db.Uuid
-  type       notification_type
+  type       NotificationType
   title      String
   message    String
   data       Json?             @default("{}")
@@ -298,7 +301,7 @@ model organizations {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model password_reset_requests {
-  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   user_id    String?   @db.Uuid
   token      String
   expires_at DateTime  @db.Timestamptz(6)
@@ -312,14 +315,14 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  user_id     String         @id @default(dbgenerated("auth.uid()")) @db.Uuid
+  user_id     String         @id @default(uuid()) @db.Uuid
   lease_id    String
   tenant_id   String
   property_id String
   amount      Decimal
   due_date    DateTime
   paid_date   DateTime?
-  status      paymentstatus  @default(Pending)
+  status      PaymentStatus
   method      PaymentMethod?
   reference   String?
   created_at  DateTime       @default(now()) @db.Timestamptz(6)
@@ -348,7 +351,7 @@ model profiles {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model rent_payments {
-  id             String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id             String    @id @default(uuid()) @db.Uuid
   property_id    String    @db.Uuid
   unit_id        String    @db.Uuid
   tenant_id      String    @db.Uuid
@@ -356,7 +359,7 @@ model rent_payments {
   due_date       DateTime  @db.Date
   paid_date      DateTime? @db.Date
   status         String    @default("pending")
-  payment_method String?
+  PaymentMethod String?
   invoice_number String?
   transaction_id String?
   late_fee       Decimal?  @default(0) @db.Decimal(10, 2)
@@ -372,7 +375,7 @@ model rent_payments {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model security_audit_log {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id            String    @id @default(uuid()) @db.Uuid
   user_id       String?   @db.Uuid
   event_type    String
   resource_type String
@@ -394,7 +397,7 @@ model security_audit_log {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model subscriptions {
-  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id           String    @id @default(uuid()) @db.Uuid
   user_id      String?   @db.Uuid
   product_id   String
   status       String
@@ -412,7 +415,7 @@ model subscriptions {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model system_configurations {
-  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   key         String    @unique @db.VarChar(255)
   value       Json
   description String?
@@ -424,7 +427,7 @@ model system_configurations {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model units {
-  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   property_id String    @db.Uuid
   unit_number String
   floor_plan  String?
@@ -444,7 +447,7 @@ model units {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model user_activity_logs {
-  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id         String    @id @default(uuid()) @db.Uuid
   user_id    String?   @db.Uuid
   action     String
   entity     String
@@ -520,7 +523,7 @@ model user_settings {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model waitlist_attempts {
-  id         String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id         String   @id @default(uuid()) @db.Uuid
   identifier String
   created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
 
@@ -535,10 +538,9 @@ model schema_migrations {
   @@schema("hds")
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model users {
-  id                          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  id                          String    @id @default(uuid()) @db.Uuid
   email                       String
   encrypted_password          String
   email_confirmed_at          DateTime? @db.Timestamptz(6)
@@ -598,10 +600,10 @@ model verification_tokens {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model organization_members {
-  id              String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id              String    @id @default(uuid()) @db.Uuid
   created_at      DateTime  @default(dbgenerated("(now() AT TIME ZONE 'utc'::text)")) @db.Timestamptz(6)
-  organization_id String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  user_id         String    @unique @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  organization_id String    @unique @default(uuid()) @db.Uuid
+  user_id         String    @unique @default(uuid()) @db.Uuid
   role            String?   @default("'member'")
   updated_at      DateTime? @default(now()) @db.Timestamp(6)
 
@@ -610,13 +612,13 @@ model organization_members {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model Activity {
-  userId      String       @default(dbgenerated("auth.uid()")) @db.Uuid
+  userId      String       @default(uuid()) @db.Uuid
   type        ActivityType
   entityType  EntityType
   entityId    String
   description String
   createdAt   DateTime?    @default(now()) @db.Timestamptz(6)
-  id          String       @id(map: "activities_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id          String       @id(map: "activities_pkey") @default(uuid()) @db.Uuid
 
   @@index([type], map: "activities_type_idx")
   @@schema("hds")
@@ -624,9 +626,9 @@ model Activity {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model AdminAuditLog {
-  id         String      @id(map: "admin_audit_logs_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  id         String      @id(map: "admin_audit_logs_pkey") @default(uuid()) @db.Uuid
   userId     String?     @db.Uuid
-  entityType entity_type
+  entityType EntityType
   entityId   String?     @db.Uuid
   oldValues  Json?
   newValues  Json?
@@ -636,32 +638,38 @@ model AdminAuditLog {
 
   @@schema("hds")
 }
-
+// System & User Management
 enum ActivityType {
   CREATE
   UPDATE
   DELETE
   LOGIN
   LOGOUT
-
   @@schema("hds")
 }
 
-enum LeaseType {
-  FIXED_TERM
-  MONTH_TO_MONTH
-  WEEKLY
-  YEARLY
-
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PROPERTY_MANAGER
+  PROPERTY_OWNER
+  MAINTENANCE
+  TENANT
+  USER
   @@schema("hds")
 }
 
-enum TenantStatus {
-  ACTIVE
-  INACTIVE
-  PENDING
-  REJECTED
-
+enum EntityType {
+  USER
+  PROPERTY
+  TENANT
+  LEASE
+  PAYMENT
+  MAINTENANCE
+  DOCUMENT
+  SETTINGS
+  EMAIL_TEMPLATE
+  ROUTE
   @@schema("hds")
 }
 
@@ -676,38 +684,100 @@ enum AuditAction {
   PASSWORD_RESET
   EMAIL_CHANGE
   ROLE_CHANGE
-
   @@schema("hds")
 }
 
-enum EntityType {
-  PROPERTY
-  TENANT
-  LEASE
-  PAYMENT
+// Property & Tenant Management
+enum PropertyType {
+  SINGLE_FAMILY
+  MULTI_FAMILY
+  APARTMENT
+  CONDO
+  TOWNHOUSE
+  COMMERCIAL
+  INDUSTRIAL
+  LAND
+  @@schema("hds")
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  OCCUPIED
+  VACANT
   MAINTENANCE
-  DOCUMENT
-
+  RENOVATION
+  OFF_MARKET
   @@schema("hds")
 }
 
-enum UserRole {
-  SUPER_ADMIN
-  ADMIN
-  PROPERTY_MANAGER
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  REJECTED
+  @@schema("hds")
+}
+
+enum LeaseType {
+  FIXED_TERM
+  MONTH_TO_MONTH
+  WEEKLY
+  YEARLY
+  @@schema("hds")
+}
+
+// Payments & Invoices
+enum PaymentStatus {
+  PENDING
+  PAID
+  PARTIAL
+  LATE
+  OVERDUE
+  CANCELLED
+  REFUNDED
+  @@schema("hds")
+}
+
+enum PaymentMethod {
+  CASH
+  CHECK
+  CREDIT_CARD
+  BANK_TRANSFER
+  OTHER
+  @@schema("hds")
+}
+
+enum PaymentType {
+  RENT
+  SECURITY_DEPOSIT
+  LATE_FEE
   MAINTENANCE
-  TENANT
-  USER
-
+  UTILITIES
+  OTHER
   @@schema("hds")
 }
 
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+  @@schema("hds")
+}
+
+enum InvoiceTemplateType {
+  STANDARD
+  CUSTOM
+  @@schema("hds")
+}
+
+// Communication & Notifications
 enum MessageStatus {
   SENT
   DELIVERED
   READ
   FAILED
-
   @@schema("hds")
 }
 
@@ -715,185 +785,47 @@ enum NotificationStatus {
   UNREAD
   READ
   ARCHIVED
-
   @@schema("hds")
 }
 
-enum ToolType {
-  property_manager
-  project_manager
-  image_optimizer
-  document_manager
-
-  @@schema("hds")
-}
-
-enum PaymentMethod {
-  CREDIT_CARD
-  BANK_TRANSFER
-  CASH
-  CHECK
-
-  @@schema("hds")
-}
-
-enum entity_type {
-  USER
-  PROPERTY
-  TENANT
+enum NotificationType {
+  SYSTEM
   MAINTENANCE
   PAYMENT
   LEASE
-  DOCUMENT
-  SETTINGS
-  EMAIL_TEMPLATE
-  ROUTE
-
+  MESSAGE
+  ALERT
   @@schema("hds")
 }
 
-enum image_job_priority {
-  low
-  medium
-  high
-
+// Maintenance & Requests
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
   @@schema("hds")
 }
 
-enum image_job_status {
-  pending
-  processing
-  completed
-  failed
-
-  @@schema("hds")
-}
-
-enum invoice_status {
-  draft
-  pending
-  paid
-  overdue
-  cancelled
-
-  @@schema("hds")
-}
-
-enum invoice_template_type {
-  standard
-  custom
-
-  @@schema("hds")
-}
-
-enum notification_type {
-  system
-  maintenance
-  payment
-  lease
-  message
-  alert
-
-  @@schema("hds")
-}
-
-enum payment_status {
-  pending
-  paid
-  partial
-  late
-  overdue
-  cancelled
-  refunded
-
-  @@schema("hds")
-}
-
-enum paymentcategory {
-  RENT
-  SECURITY_DEPOSIT
-  LATE_FEE
-  MAINTENANCE
-  UTILITIES
-  OTHER
-
-  @@schema("hds")
-}
-
-enum paymentmethod {
-  CASH
-  CHECK
-  CREDIT_CARD
-  BANK_TRANSFER
-  OTHER
-  @@schema("hds")
-}
-
-enum paymentstatus {
-  Pending
-  Paid
-  Overdue
-  Cancelled
-  @@schema("hds")
-}
-
-enum paymenttype {
-  Rent
-  Deposit
-  Maintenance
-  Other
-
-  @@schema("hds")
-}
-
-enum property_status {
-  available
-  occupied
-  maintenance
-  renovation
-  off_market
-  @@schema("hds")
-}
-
-enum property_type {
-  single_family
-  multi_family
-  apartment
-  condo
-  townhouse
-  commercial
-  industrial
-  land
-  @@schema("hds")
-}
-
-enum propertystatus {
-  Occupied
-  Vacant
-  Maintenance
-  @@schema("hds")
-}
-
-enum propertytype {
-  Residential
-  Commercial
-  Industrial
-  @@schema("hds")
-}
-
-enum request_status {
-  pending
-  approved
-  rejected
-  @@schema("hds")
-}
-
-enum Role {
-  ADMIN
+// Tools & Jobs
+enum ToolType {
   PROPERTY_MANAGER
-  PROPERTY_OWNER
-  MAINTENANCE
-  TENANT
-  USER
+  PROJECT_MANAGER
+  IMAGE_OPTIMIZER
+  DOCUMENT_MANAGER
+  @@schema("hds")
+}
+
+enum ImageJobPriority {
+  LOW
+  MEDIUM
+  HIGH
+  @@schema("hds")
+}
+
+enum ImageJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
   @@schema("hds")
 }

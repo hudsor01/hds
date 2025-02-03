@@ -9,11 +9,18 @@ export function SignInButton() {
   return (
     <Button
       variant="contained"
-      onClick={() => signIn.create({
-        redirectUrl: '/dashboard'
-      })}
+      onClick={() => {
+        if (!signIn) {
+          console.error("signIn is undefined");
+          return;
+        }
+        signIn.create({
+          strategy: "email_link",
+          identifier: "user@example.com",
+          redirectUrl: "/dashboard"
+        });
+      }}
     >
       Sign In
     </Button>
-  )
 }

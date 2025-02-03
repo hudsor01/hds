@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 import { Role } from '@prisma/client'
 
 export async function getUserByClerkId(clerkId: string) {
-  const user = await prisma.user.findUnique({
+  const user = await prisma.users.findUnique({
     where: {
       clerkId: clerkId,
     },
@@ -10,7 +10,7 @@ export async function getUserByClerkId(clerkId: string) {
       id: true,
       email: true,
       role: true,
-      createdAt: true,
+      created_at: true,
       properties: {
         select: {
           id: true,
@@ -28,7 +28,7 @@ export async function createUser(data: {
   email: string;
   role?: Role;
 }) {
-  return prisma.user.create({
+  return prisma.users.create({
     data: {
       clerkId: data.clerkId,
       email: data.email,

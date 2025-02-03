@@ -1,3 +1,5 @@
+import type { EmailTemplate } from '../components/emails/templates'
+
 export type Json =
   | string
   | number
@@ -5,6 +7,18 @@ export type Json =
   | null
   | { [key: string]: Json | undefined }
   | Json[]
+
+export type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant';
+
+export interface Activity {
+  id: string;
+  type: ActivityType;
+  title: string;
+  description: string;
+  timestamp: Date;
+  metadata?: Record<string, any>;
+}
+
 
 export interface Database {
   public: {

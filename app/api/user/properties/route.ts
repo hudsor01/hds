@@ -1,8 +1,9 @@
-import { auth } from '@clerk/nextjs'
+import { auth } from '@clerk/nextjs/server'
+import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const { userId } = auth()
+  const { userId } = await auth()
 
   if (!userId) {
     return new NextResponse(
