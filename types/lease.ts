@@ -21,6 +21,12 @@ export interface Lease {
   updatedAt: Date;
 }
 
+export interface LeaseRenewalData {
+  newEndDate: Date;
+  newRentAmount?: number;
+  additionalTerms?: string;
+}
+
 interface LeaseDocument {
   id: string;
   type: 'lease_agreement' | 'addendum' | 'termination_notice';

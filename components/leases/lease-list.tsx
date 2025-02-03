@@ -5,7 +5,7 @@ import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
+import {DataGrid, GridColDef, GridRenderCellParams, GridValueFormatter} from '@mui/x-data-grid';
 import {format} from 'date-fns';
 
 export function LeaseList() {
@@ -48,7 +48,7 @@ export function LeaseList() {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: params => formatCurrency(params.value),
+      valueFormatter: (params: GridValueFormatter<number>) => formatCurrency(params.value),
     },
     {
       field: 'startDate',

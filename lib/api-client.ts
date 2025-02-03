@@ -1,4 +1,5 @@
 // lib/api-client.ts
+import axios from 'axios';
 
 export class APIError extends Error {
   constructor(
@@ -19,36 +20,27 @@ async function handleResponse(response: Response) {
 
 export const apiClient = {
   async get<T>(url: string): Promise<T> {
-    const response = await fetch(url);
-    return handleResponse(response);
+    const response = await axios.get<T>(url);
+    return response.data;
   },
 
   async post<T>(url: string, data: any): Promise<T> {
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return handleResponse(response);
+    const response = await axios.post<T>(url, data);
+    return response.data;
   },
 
   async put<T>(url: string, data: any): Promise<T> {
-    const response = await fetch(url, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-    return handleResponse(response);
+    const response = await axios.put<T>(url, data);
+    return response.data;
   },
 
-  async delete(url: string): Promise<void> {
-    const response = await fetch(url, {
-      method: 'DELETE',
-    });
-    return handleResponse(response);
+  async patch<T>(url: string, data: any): Promise<T> {
+    const response = await axios.patch<T>(url, data);
+    return response.data;
+  },
+
+  async delete<T>(url: string): Promise<T> {
+    const response = await axios.delete<T>(url);
+    return response.data;
   },
 };

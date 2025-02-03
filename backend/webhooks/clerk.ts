@@ -7,7 +7,11 @@ const router = express.Router();
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 // Verify webhook signature
-const verifyClerkWebhook = (req: express.Request, res: express.Response, next: NextFunction) => {
+const verifyClerkWebhook = (
+  req: express.Request,
+  res: express.Response,
+  next: NextFunction,
+): void => {
   const evt = req.body;
   const headers = req.headers;
   const svix_id = headers['svix-id'] as string;
@@ -15,7 +19,8 @@ const verifyClerkWebhook = (req: express.Request, res: express.Response, next: N
   const svix_signature = headers['svix-signature'] as string;
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return res.status(400).json({error: 'Missing webhook headers'});
+    res.status(400).json({error: 'Missing webhook headers'});
+    return;
   }
 
   // Verify webhook (implementation depends on your webhook library)
@@ -23,7 +28,8 @@ const verifyClerkWebhook = (req: express.Request, res: express.Response, next: N
     // Verify signature here
     next();
   } catch (err) {
-    return res.status(401).json({error: 'Invalid webhook signature'});
+    res.status(401).json({error: 'Invalid webhook signature'});
+    return;
   }
 };
 
@@ -141,3 +147,5 @@ interface WebhookUser {
   last_name: string;
   created_at: number;
 }
+
+export default verifyClerkWebhook;

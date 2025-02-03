@@ -1,8 +1,15 @@
+import {sendEmail} from '../components/emails/templates/emails';
+
+interface WebhookUser {
+  id: string;
+  email_addresses: {email_address: string}[];
+  first_name: string;
+  last_name: string;
+}
+
 export const notifyAdminsOfNewUser = async (userData: WebhookUser) => {
-  // Send email to admins
-  await sendEmail({
-    to: process.env.ADMIN_EMAIL,
-    subject: 'New User Registration',
+  // Send email to admins by passing three arguments separately
+  await sendEmail(process.env.ADMIN_EMAIL as string, 'New User Registration', {
     template: 'admin-new-user',
     data: {
       userId: userData.id,

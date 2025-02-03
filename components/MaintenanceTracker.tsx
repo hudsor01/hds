@@ -92,7 +92,7 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
               <div>
                 <h3 className='font-medium'>{request.title}</h3>
                 <p className='text-sm text-gray-500'>
-                  {new Date(request.created_at).toLocaleDateString()}
+                  {new Date(request.createdAt).toLocaleDateString()}
                 </p>
               </div>
               <Badge
