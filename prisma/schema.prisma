@@ -1,12 +1,12 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["multiSchema"]
+  previewFeatures = ["postgresqlExtensions", "multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public"]
+  schemas  = ["public", "auth", "vault"]
 }
 
 model User {
@@ -328,10 +328,10 @@ model properties {
   bedrooms             Int?
   size                 Int?
   maintenance_requests maintenance_requests[]
-  user                 User                   @relation("UserProperties", fields: [user_id], references: [id])
   user_id              String
 
-  @@index([owner_id])
+  @@relation("UserProperties", fields: [user_id], references: [id])
+  @@index([owner_id], map: "idx_properties_owner")
   @@schema("public")
 }
 
@@ -676,13 +676,6 @@ enum UserRole {
   USER
 }
 
-enum LeaseStatus {
-  ACTIVE
-  PENDING
-  EXPIRED
-  TERMINATED
-}
-
 enum MessageStatus {
   SENT
   DELIVERED
@@ -843,4 +836,17 @@ enum Role {
   MAINTENANCE
   TENANT
   USER
+}
+
+model secrets {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String?
+  secret      String
+  description String   @default("")
+  key_id      String?  @db.Uuid
+  created_at  DateTime @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime @default(now()) @db.Timestamptz(6)
+
+  @@schema("vault")
+  @@index([name], map: "secrets_name_idx")
 }
