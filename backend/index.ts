@@ -1,7 +1,7 @@
 // backend/index.ts
 import { clerkClient } from '@clerk/nextjs/server'
 import express from 'express'
-import { requireAuth } from './middleware/auth'
+import { requireAuth } from './webhooks/middleware/auth'
 
 const app = express()
 
@@ -17,12 +17,19 @@ app.get('/api/protected', requireAuth, (req, res) => {
 })
 
 // Role-based routes
-app.get('/api/admin', requireAuth, async (req, res) => {
-  const user = await clerkClient.users.getUser(req.auth.userId)
-
-  if (user.publicMetadata.role !== 'admin') {
-    return res.status(403).json({ error: 'Not authorized' })
+app.get('/api/admin', requireAuth, async (req, res): Promise<void> => {
+  if (!req.auth.userId) {
+    res.status(401).json({ error: 'Unauthorized' });
+    return;
   }
 
-  res.json({ message: 'Admin route' })
+  const clerk = await clerkClient();
+  const user = await clerk.users.getUser(req.auth.userId);
+
+  if (user.publicMetadata.role !== 'admin') {
+    res.status(403).json({ error: 'Not authorized' });
+    return;
+  }
+
+  res.json({ message: 'Admin route' });
 })

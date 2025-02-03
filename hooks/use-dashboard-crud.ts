@@ -1,19 +1,8 @@
-import { supabase } from '@/app/auth/lib/supabase';
-import { toast } from 'sonner';
+import { supabase } from '@/app/auth/lib/supabase'
+import { Entity, UseDashboardCrudOptions } from '@/types/crud-types'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
-import { useState } from 'react';
-
-interface Entity {
-  id: string;
-  [key: string]: any;
-}
-
-interface UseDashboardCrudOptions<T extends Entity> {
-  table: string;
-  select?: string;
-  onSuccess?: (data: T) => void;
-  onError?: (error: Error) => void;
-}
 
 export function useDashboardCrud<T extends Entity>(options: UseDashboardCrudOptions<T>) {
   const { table, select = '*', onSuccess, onError } = options;

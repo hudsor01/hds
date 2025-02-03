@@ -1,30 +1,14 @@
 'use client';
 
-import Spinner from 'components/ui/spinner';
+import { useProtectedRoute } from '@/hooks/use-protected-route'
+import Spinner from 'components/ui/spinner'
+import type { BaseCrudItem, CrudContainerProps } from '../../types/crud-types'
 
-import type { ReactNode } from 'react';
 
-import { useProtectedRoute } from '@/hooks/use-protected-route';
-
-interface BaseCrudItem {
-  id: string;
-  [key: string]: unknown;
-}
-
-interface CrudContainerProps<T extends BaseCrudItem> {
-  table: string;
-  title: string;
-  children: ReactNode;
-  onItemCreated?: (item: T) => void;
-  loading?: boolean;
-  className?: string;
-}
 
 export function CrudContainer<T extends BaseCrudItem>({
-  table,
   title,
   children,
-  onItemCreated,
   loading = false,
   className = '',
 }: CrudContainerProps<T>) {

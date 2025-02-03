@@ -1,37 +1,52 @@
 import { prisma } from '@/lib/prisma'
-import { auth, currentUser } from '@clerk/nextjs/server'
+import { currentUser } from '@clerk/nextjs/server'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
-    const authObj = await auth();
-    const userId = authObj.userId;
+    const user = await currentUser()
 
-    if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+    if (!user) {
+      return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const clerkUser = await currentUser();
-
-    // Get additional user data from Prisma
     const dbUser = await prisma.users.findUnique({
-      where: { clerkId: clerkUser?.id },
+      where: { clerkId: user.id },
       select: {
         id: true,
         subscription_status: true,
-        email: true
+        email: true,
+        stripe_customer_id: true,
       }
-    });
+    })
+
+    if (!dbUser) {
+      // Create user in database if they don't exist
+      const newUser = await prisma.users.create({
+        data: {
+          clerkId: user.id,
+          email: user.emailAddresses[0]?.emailAddress || '',
+          name: `${user.firstName} ${user.lastName}`.trim(),
+        }
+      })
+      return NextResponse.json({
+        clerkId: user.id,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        emailAddress: user.emailAddresses[0]?.emailAddress,
+        dbUser: newUser
+      })
+    }
 
     return NextResponse.json({
-      id: clerkUser?.id,
-      firstName: clerkUser?.firstName,
-      lastName: clerkUser?.lastName,
-      email: clerkUser?.emailAddresses[0]?.emailAddress,
+      clerkId: user.id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      emailAddress: user.emailAddresses[0]?.emailAddress,
       ...dbUser
-    });
+    })
   } catch (error) {
-    console.error('Error fetching user:', error);
-    return new NextResponse('Internal Server Error', { status: 500 });
+    console.error('Error in user route:', error)
+    return new NextResponse('Internal Server Error', { status: 500 })
   }
 }

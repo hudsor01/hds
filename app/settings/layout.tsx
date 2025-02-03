@@ -1,7 +1,6 @@
-// app/settings/layout.tsx
+import { ProfileSection } from '@/components/settings/profile-section'
+import { SecuritySettings } from '@/components/settings/security'
 import { SettingsSidebar } from '@/components/settings/sidebar'
-import { ProfileSection } from '../../components/settings/profile-section'
-import { SecuritySettings } from '../../components/settings/security'
 
 export default function SettingsLayout({
   children,

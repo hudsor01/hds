@@ -1,7 +1,8 @@
-import { WebhookEvent } from '@clerk/nextjs/server'
+import { WebhookEvent, type DeletedObjectJSON, type OrganizationJSON, type UserJSON } from '@clerk/nextjs/server'
 import { sql } from '@vercel/postgres'
 import { headers } from 'next/headers'
 import { Webhook } from 'svix'
+
 
 export async function POST(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
   }
 
   // Get the headers
-  const headerPayload = headers();
+  const headerPayload = await headers();
   const svix_id = headerPayload.get("svix-id");
   const svix_timestamp = headerPayload.get("svix-timestamp");
   const svix_signature = headerPayload.get("svix-signature");
@@ -124,4 +125,23 @@ async function logWebhookError(evt: WebhookEvent, error: any) {
       NOW()
     )
   `
+}
+function handleUserCreated (data: UserJSON)
+{
+  throw new Error('Function not implemented.')
+}
+
+function handleUserUpdated (data: UserJSON)
+{
+  throw new Error('Function not implemented.')
+}
+
+function handleUserDeleted (data: DeletedObjectJSON)
+{
+  throw new Error('Function not implemented.')
+}
+
+function handleOrganizationCreated (data: OrganizationJSON)
+{
+  throw new Error('Function not implemented.')
 }

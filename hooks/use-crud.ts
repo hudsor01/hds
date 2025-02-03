@@ -1,15 +1,8 @@
 // lib/hooks/use-crud.ts
 import { apiClient } from '@/lib/api-client'
+import { CrudOptions } from '@/types/crud-types'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
-
-interface CrudOptions<T> {
-  resourceName: string;
-  endpoint: string;
-  onCreateSuccess?: (data: T) => void;
-  onUpdateSuccess?: (data: T) => void;
-  onDeleteSuccess?: () => void;
-}
 
 export function createCrudHooks<T extends { id: string | number }>({
   resourceName,
