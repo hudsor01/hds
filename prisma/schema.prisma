@@ -6,10 +6,10 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "auth"]
+  schemas  = ["hds"]
 }
 
-model User {
+model users {
   id                  String   @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   clerkId             String   @unique
   role                String   @default("USER")
@@ -23,42 +23,12 @@ model User {
 
   // Relations
   properties           properties[]           @relation("UserProperties")
-  tenancies            Tenancy[]              @relation("UserTenancies")
+  tenants              tenants[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
-  @@map("users")
-  @@schema("public")
-}
 
-/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model properties {
-  id                   String                 @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
-  name                 String
-  address              String
-  city                 String
-  state                String
-  zip                  String
-  owner_id             String?                @db.Uuid
-  manager_id           String?                @db.Uuid
-  status               String                 @default("active")
-  created_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  updated_at           DateTime?              @default(now()) @db.Timestamptz(6)
-  type                 String                 @default("Residential")
-  rent_amount          Decimal                @db.Decimal(10, 2)
-  amenities            String[]               @default([])
-  images               String[]               @default([])
-  bathrooms            Int?
-  bedrooms             Int?
-  size                 Int?
-  user_id              String?                @db.Uuid
-
-  // Relations
-  user User? @relation("UserProperties", fields: [user_id], references: [id])
-  maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
-
-  tenants Tenancy[] @relation("PropertyTenants")
-
-  @@index([owner_id], map: "idx_properties_owner")
-  @@schema("public")
+  @@schema("hds")
+  @@index([email])
+  @@index([clerkId])
 }
 
 model maintenance_requests {
@@ -73,41 +43,72 @@ model maintenance_requests {
   updated_at  DateTime? @default(now()) @db.Timestamptz(6)
 
   // Relations
-  tenant     Tenancy?    @relation("UserMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
+  tenant     tenants?    @relation("TenantMaintenanceRequests", fields: [tenant_id], references: [id], onDelete: Cascade)
   properties properties? @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
 
+  @@schema("hds")
   @@index([status])
   @@index([property_id])
   @@index([tenant_id])
-  @@schema("public")
 }
 
-model Tenancy {
+model tenants {
   id               String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   property_id      String    @db.Uuid
-  firstName        String    @map("first_name")
-  lastName         String    @map("last_name")
+  first_name       String
+  last_name        String
   email            String
   phone            String?
   status           String    @default("active")
-  moveInDate       DateTime? @map("move_in_date") @db.Date
-  moveOutDate      DateTime? @map("move_out_date") @db.Date
-  emergencyContact Json?     @default("{}") @map("emergency_contact")
+  move_in_date     DateTime? @db.Date
+  move_out_date    DateTime? @db.Date
+  emergency_contact Json?     @default("{}")
   documents        Json[]    @default([])
-  createdAt        DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
-  updatedAt        DateTime? @default(now()) @updatedAt @map("updated_at") @db.Timestamptz(6)
+  created_at       DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at       DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
   user_id          String    @db.Uuid
 
   // Relations
-  user                 User                   @relation("UserTenancies", fields: [user_id], references: [id])
+  user                 users                  @relation("UserTenancies", fields: [user_id], references: [id])
   property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
-  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
+  maintenance_requests maintenance_requests[] @relation("TenantMaintenanceRequests")
 
+  @@schema("hds")
   @@index([status])
   @@index([property_id])
   @@index([email])
-  @@map("tenants")
-  @@schema("public")
+}
+
+model properties {
+  id           String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name         String
+  address      String
+  city         String
+  state        String
+  zip          String
+  owner_id     String?   @db.Uuid
+  manager_id   String?   @db.Uuid
+  status       String    @default("active")
+  created_at   DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  type         String    @default("Residential")
+  rent_amount  Decimal   @db.Decimal(10, 2)
+  amenities    String[]  @default([])
+  images       String[]  @default([])
+  bathrooms    Int?
+  bedrooms     Int?
+  size         Int?
+  user_id      String?   @db.Uuid
+
+  // Relations
+  user                 users?                 @relation("UserProperties", fields: [user_id], references: [id])
+  maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
+  tenants             tenants[]              @relation("PropertyTenancies")
+
+  @@schema("hds")
+  @@index([owner_id], map: "idx_properties_owner")
+  @@index([status])
+  @@index([user_id])
 }
 
 model Account {
@@ -125,7 +126,7 @@ model Account {
   sessionState      String? @map("session_state")
 
   @@unique([provider, providerAccountId])
-  @@schema("public")
+  @@schema("hds")
 }
 
 model Documents {
@@ -141,7 +142,7 @@ model Documents {
   createdAt   DateTime? @default(now()) @db.Timestamptz(6)
   updatedAt   DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -157,7 +158,7 @@ model email_templates {
   created_at DateTime? @default(now()) @db.Timestamptz(6)
   updated_at DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -175,7 +176,7 @@ model expenses {
 
   @@index([category])
   @@index([property_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -189,7 +190,7 @@ model ip_blacklist {
 
   @@index([expires_at], map: "ip_blacklist_expires_idx")
   @@index([ip_address], map: "ip_blacklist_ip_idx")
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -215,7 +216,7 @@ model leases {
   @@index([tenant_id])
   @@index([type])
   @@index([user_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -228,7 +229,7 @@ model login_history {
   failure_reason String?
   created_at     DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 
@@ -244,7 +245,7 @@ model message_threads {
 
   @@index([created_at])
   @@index([participants], type: Gin)
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -265,7 +266,7 @@ model messages {
   @@index([recipient_id])
   @@index([sender_id])
   @@index([thread_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -283,7 +284,7 @@ model notifications {
   @@index([created_at])
   @@index([type])
   @@index([user_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 model organizations {
@@ -292,7 +293,7 @@ model organizations {
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @default(now()) @db.Timestamp(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -306,7 +307,7 @@ model password_reset_requests {
 
   @@index([expires_at], map: "password_reset_expires_at_idx")
   @@index([token], map: "password_reset_token_idx")
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -333,14 +334,14 @@ model payments {
   @@index([tenant_id], map: "payments_tenantId_idx")
   @@index([tenant_id])
   @@index([user_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model profiles {
   user_id    String    @id @unique(map: "profiles_id_key")
   /// RLS_ENABLED
-  @@schema("public")
+  @@schema("hds")
 }
 
 
@@ -366,7 +367,7 @@ model rent_payments {
   @@index([due_date])
   @@index([property_id])
   @@index([tenant_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -388,7 +389,7 @@ model security_audit_log {
   @@index([event_type], map: "security_audit_event_type_idx")
   @@index([resource_type, resource_id], map: "security_audit_resource_idx")
   @@index([user_id], map: "security_audit_user_id_idx")
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -406,7 +407,7 @@ model subscriptions {
   @@index([product_id])
   @@index([status])
   @@index([user_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -418,7 +419,7 @@ model system_configurations {
   updated_by  String?   @db.Uuid
   updated_at  DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -438,7 +439,7 @@ model units {
 
   @@unique([property_id, unit_number])
   @@index([property_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -456,7 +457,7 @@ model user_activity_logs {
   @@index([action])
   @@index([created_at])
   @@index([user_id])
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -479,7 +480,7 @@ model user_profiles {
 
   @@index([email])
   @@map("user_profiles")
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -497,7 +498,7 @@ model user_security_settings {
   login_notifications     Boolean?  @default(true)
   updated_at              DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -514,7 +515,7 @@ model user_settings {
   created_at            DateTime? @default(now()) @db.Timestamptz(6)
   updated_at            DateTime? @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -525,13 +526,13 @@ model waitlist_attempts {
 
   @@index([created_at], map: "idx_waitlist_attempts_created_at")
   @@index([identifier], map: "idx_waitlist_attempts_identifier")
-  @@schema("public")
+  @@schema("hds")
 }
 
 model schema_migrations {
   version String @id @unique(map: "schema_migrations_version_idx") @db.VarChar(14)
 
-  @@schema("auth")
+  @@schema("hds")
 }
 
 /// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
@@ -583,7 +584,7 @@ model users {
   @@index([email])
   @@index([email], map: "users_email_idx_auth")
   @@index([phone])
-  @@schema("auth")
+  @@schema("hds")
 }
 
 model verification_tokens {
@@ -592,7 +593,7 @@ model verification_tokens {
   expires    DateTime @db.Timestamptz(6)
 
   @@id([identifier, token])
-  @@schema("auth")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -604,7 +605,7 @@ model organization_members {
   role            String?   @default("'member'")
   updated_at      DateTime? @default(now()) @db.Timestamp(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -618,7 +619,7 @@ model Activity {
   id          String       @id(map: "activities_pkey") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
 
   @@index([type], map: "activities_type_idx")
-  @@schema("public")
+  @@schema("hds")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -633,7 +634,7 @@ model AdminAuditLog {
   userAgent  String?
   createdAt  DateTime?   @default(now()) @db.Timestamptz(6)
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum ActivityType {
@@ -643,7 +644,7 @@ enum ActivityType {
   LOGIN
   LOGOUT
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum LeaseType {
@@ -652,7 +653,7 @@ enum LeaseType {
   WEEKLY
   YEARLY
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum TenantStatus {
@@ -661,7 +662,7 @@ enum TenantStatus {
   PENDING
   REJECTED
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum AuditAction {
@@ -676,7 +677,7 @@ enum AuditAction {
   EMAIL_CHANGE
   ROLE_CHANGE
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum EntityType {
@@ -687,7 +688,7 @@ enum EntityType {
   MAINTENANCE
   DOCUMENT
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum UserRole {
@@ -698,7 +699,7 @@ enum UserRole {
   TENANT
   USER
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum MessageStatus {
@@ -707,7 +708,7 @@ enum MessageStatus {
   READ
   FAILED
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum NotificationStatus {
@@ -715,7 +716,7 @@ enum NotificationStatus {
   READ
   ARCHIVED
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum ToolType {
@@ -724,7 +725,7 @@ enum ToolType {
   image_optimizer
   document_manager
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum PaymentMethod {
@@ -733,7 +734,7 @@ enum PaymentMethod {
   CASH
   CHECK
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum entity_type {
@@ -748,7 +749,7 @@ enum entity_type {
   EMAIL_TEMPLATE
   ROUTE
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum image_job_priority {
@@ -756,7 +757,7 @@ enum image_job_priority {
   medium
   high
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum image_job_status {
@@ -765,7 +766,7 @@ enum image_job_status {
   completed
   failed
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum invoice_status {
@@ -775,14 +776,14 @@ enum invoice_status {
   overdue
   cancelled
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum invoice_template_type {
   standard
   custom
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum notification_type {
@@ -793,7 +794,7 @@ enum notification_type {
   message
   alert
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum payment_status {
@@ -805,7 +806,7 @@ enum payment_status {
   cancelled
   refunded
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum paymentcategory {
@@ -816,7 +817,7 @@ enum paymentcategory {
   UTILITIES
   OTHER
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum paymentmethod {
@@ -825,7 +826,7 @@ enum paymentmethod {
   CREDIT_CARD
   BANK_TRANSFER
   OTHER
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum paymentstatus {
@@ -833,7 +834,7 @@ enum paymentstatus {
   Paid
   Overdue
   Cancelled
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum paymenttype {
@@ -842,7 +843,7 @@ enum paymenttype {
   Maintenance
   Other
 
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum property_status {
@@ -851,7 +852,7 @@ enum property_status {
   maintenance
   renovation
   off_market
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum property_type {
@@ -863,28 +864,28 @@ enum property_type {
   commercial
   industrial
   land
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum propertystatus {
   Occupied
   Vacant
   Maintenance
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum propertytype {
   Residential
   Commercial
   Industrial
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum request_status {
   pending
   approved
   rejected
-  @@schema("public")
+  @@schema("hds")
 }
 
 enum Role {
@@ -894,5 +895,5 @@ enum Role {
   MAINTENANCE
   TENANT
   USER
-  @@schema("public")
+  @@schema("hds")
 }
