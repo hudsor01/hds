@@ -19,8 +19,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "~/*": ["./*"]
+      "@/*": ["./*"]
     },
     "baseUrl": "."
   },
@@ -32,7 +31,9 @@
     ".next/types/**/*.ts",
     "components/**/*",
     "hooks/**/*",
-    "app/**/*"
+    "app/**/*",
+    "types/**/*.d.ts",
+    "utils"
   ],
   "exclude": ["node_modules"]
 }

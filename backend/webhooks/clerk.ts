@@ -1,6 +1,5 @@
-import {WebhookEvent} from '@clerk/clerk-sdk-node';
 import {sql} from '@vercel/postgres';
-import express from 'express';
+import express, {NextFunction} from 'express';
 
 const router = express.Router();
 
@@ -8,11 +7,7 @@ const router = express.Router();
 const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
 // Verify webhook signature
-const verifyClerkWebhook = (
-  req: express.Request,
-  res: express.Response,
-  next: express.Function,
-) => {
+const verifyClerkWebhook = (req: express.Request, res: express.Response, next: NextFunction) => {
   const evt = req.body;
   const headers = req.headers;
   const svix_id = headers['svix-id'] as string;

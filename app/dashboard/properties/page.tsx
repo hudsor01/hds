@@ -1,8 +1,8 @@
 'use client';
 
-import {useUser} from '@/app/auth/lib/auth/config';
-import {supabase} from '@/app/auth/lib/supabase';
-import {useDashboardCrud} from '@/app/hooks/use-dashboard-crud';
+import {supabase, useUser} from '@/app/auth/lib/auth/config';
+import {PropertyDialog} from '@/components/properties/property-dialog';
+import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
 import {
   Box,
   Button,
@@ -17,7 +17,6 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import {alpha, useTheme} from '@mui/material/styles';
-import {PropertyDialog} from 'components/dialogs/property-dialog';
 import {motion} from 'framer-motion';
 import Image from 'next/image';
 import {useEffect, useState} from 'react';

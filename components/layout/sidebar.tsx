@@ -1,12 +1,11 @@
-// components/layout/sidebar.tsx
 'use client';
 
+import BuildIcon from '@mui/icons-material/Build';
+import TrendingUpOutlinedIcon from '@mui/icons-material/TrendingUpOutlined';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {useState} from 'react';
 import {ChevronLeft, ChevronRight, Folder, Home, Users} from 'react-feather';
-
-// components/layout/sidebar.tsx
 
 export function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -16,8 +15,8 @@ export function Sidebar() {
     {name: 'Dashboard', href: '/dashboard', icon: Home},
     {name: 'Properties', href: '/dashboard/properties', icon: Home},
     {name: 'Tenants', href: '/dashboard/tenants', icon: Users},
-    {name: 'Maintenance', href: '/dashboard/maintenance', icon: Wrench},
-    {name: 'Financials', href: '/dashboard/financials', icon: ChartBar},
+    {name: 'Maintenance', href: '/dashboard/maintenance', icon: BuildIcon},
+    {name: 'Financials', href: '/dashboard/financials', icon: TrendingUpOutlinedIcon},
     {name: 'Documents', href: '/dashboard/documents', icon: Folder},
   ];
 
@@ -73,7 +72,7 @@ export function Sidebar() {
                 ${pathname === '/settings' ? 'bg-gray-100' : ''}
                 ${isCollapsed ? 'justify-center' : ''}`}
             >
-              <Wrench className='h-5 w-5 flex-shrink-0' />
+              <BuildIcon className='h-5 w-5 flex-shrink-0' />
               {!isCollapsed && <span className='ml-3 text-sm font-medium'>Settings</span>}
             </Link>
           </div>

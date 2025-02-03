@@ -1,6 +1,5 @@
 import {UserRole} from '@/types/roles';
-import {auth, clerkClient, currentUser} from '@clerk/nextjs/server';
-import type {ClerkAPIResponseError} from '@clerk/types';
+import {auth, clerkClient, currentUser, type User} from '@clerk/nextjs/server';
 
 export async function getClerkUser(): Promise<User | null> {
   try {
@@ -18,14 +17,13 @@ export async function getCurrentUserId(): Promise<string | null> {
 
 export async function updateUserMetadata(userId: string, metadata: Record<string, any>) {
   try {
-    const user = await clerkClient.users.updateUser(userId, {
+    const client = await clerkClient();
+    const user = await client.users.updateUser(userId, {
       privateMetadata: metadata,
     });
     return user;
-  } catch (error) {
-    if (error instanceof ClerkAPIResponseError) {
-      console.error('Clerk API error:', error.message);
-    }
+  } catch (error: unknown) {
+    console.error('Clerk API error:', error);
     throw error;
   }
 }
@@ -40,28 +38,26 @@ export async function getUserRole(): Promise<UserRole> {
 
 export async function updateUserRole(userId: string, role: UserRole) {
   try {
-    await clerkClient.users.updateUser(userId, {
+    const client = await clerkClient();
+    await client.users.updateUser(userId, {
       privateMetadata: {role},
     });
-  } catch (error) {
-    if (error instanceof ClerkAPIResponseError) {
-      console.error('Clerk API error:', error.message);
-    }
+  } catch (error: unknown) {
+    console.error('Clerk API error:', error);
     throw error;
   }
 }
 
 export async function syncUserWithDatabase(userId: string) {
   try {
-    const user = await clerkClient.users.getUser(userId);
+    const client = await clerkClient();
+    const user = await client.users.getUser(userId);
     if (!user) return null;
 
     // Add any database sync logic here
     return user;
-  } catch (error) {
-    if (error instanceof ClerkAPIResponseError) {
-      console.error('Clerk API error:', error.message);
-    }
+  } catch (error: unknown) {
+    console.error('Clerk API error:', error);
     throw error;
   }
 }

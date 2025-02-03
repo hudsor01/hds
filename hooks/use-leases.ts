@@ -1,6 +1,9 @@
 // hooks/use-leases.ts
+import {apiClient} from '@/lib/api-client';
 import {createCrudHooks} from '@/lib/hooks/use-crud';
-import {type Lease} from '@/types';
+import type {Lease} from '@/types/lease';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
+import {toast} from 'sonner';
 
 export const {
   useList: useLeases,

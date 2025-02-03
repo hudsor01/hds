@@ -1,14 +1,6 @@
-'use client';
-
 import {supabase} from '@/lib/supabase';
+import type {UseDashboardUpdatesProps} from '@/types/database.types';
 import {useCallback, useEffect} from 'react';
-
-interface UseDashboardUpdatesProps {
-  table: string;
-  select?: string;
-  onUpdate: (data: any) => void;
-  onDelete: (id: string) => void;
-}
 
 export function useDashboardUpdates({
   table,

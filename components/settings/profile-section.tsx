@@ -5,10 +5,22 @@ import {Button} from '@/components/ui/button';
 import {Card} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {useUser} from '@clerk/nextjs';
-import {useState} from 'react';
+import React, {useState} from 'react';
 import {toast} from 'sonner';
 
 // components/settings/profile-section.tsx
+
+// Define the skeleton component
+function ProfileSectionSkeleton() {
+  return (
+    <Card className='p-6'>
+      <div className='animate-pulse space-y-4'>
+        <div className='h-4 bg-gray-300 rounded w-1/3'></div>
+        <div className='h-4 bg-gray-300 rounded w-2/3'></div>
+      </div>
+    </Card>
+  );
+}
 
 export function ProfileSection() {
   const {user, isLoaded} = useUser();

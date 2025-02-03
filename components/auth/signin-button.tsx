@@ -1,26 +1,27 @@
-'use client'
+'use client';
 
-import { useSignIn } from '@clerk/nextjs'
-import { Button } from '@mui/material'
+import {useSignIn} from '@clerk/nextjs';
+import {Button} from '@mui/material';
 
 export function SignInButton() {
-  const { signIn } = useSignIn()
+  const {signIn} = useSignIn();
 
   return (
     <Button
-      variant="contained"
+      variant='contained'
       onClick={() => {
         if (!signIn) {
-          console.error("signIn is undefined");
+          console.error('signIn is undefined');
           return;
         }
         signIn.create({
-          strategy: "email_link",
-          identifier: "user@example.com",
-          redirectUrl: "/dashboard"
+          strategy: 'email_link',
+          identifier: 'user@example.com',
+          redirectUrl: '/dashboard',
         });
       }}
     >
       Sign In
     </Button>
+  );
 }

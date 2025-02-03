@@ -4,6 +4,13 @@ export type Json = string | number | boolean | null | {[key: string]: Json | und
 
 export type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant';
 
+export interface UseDashboardUpdatesProps {
+  table: string;
+  select?: string;
+  onUpdate: (data: any) => void;
+  onDelete: (id: string) => void;
+}
+
 export interface Activity {
   id: string;
   type: ActivityType;

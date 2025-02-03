@@ -103,7 +103,7 @@ export default function TenantsPage() {
                   </span>
                 </td>
                 <td className='px-6 py-4 whitespace-nowrap text-right text-sm font-medium'>
-                  <Button variant='ghost' className='text-blue-600 hover:text-blue-900'>
+                  <Button variant='outline' className='text-blue-600 hover:text-blue-900'>
                     ...
                   </Button>
                 </td>

@@ -9,6 +9,8 @@ import {useEffect, useState} from 'react';
 
 // components/MaintenanceTracker.tsx
 
+// components/MaintenanceTracker.tsx
+
 interface MaintenanceRequest {
   id: string;
   title: string;
@@ -108,9 +110,9 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
               <Badge
                 variant={
                   request.status === 'completed'
-                    ? 'success'
+                    ? 'secondary'
                     : request.status === 'in_progress'
-                      ? 'warning'
+                      ? 'outline'
                       : 'default'
                 }
               >

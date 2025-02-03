@@ -1,8 +1,12 @@
+import {CustomRequest} from '@/types/users';
 import {clerkMiddleware} from '@clerk/express';
 import {PrismaClient} from '@prisma/client';
 import {createClient as createSupabaseClient} from '@supabase/supabase-js';
 import cors from 'cors';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
+import helmet from 'helmet';
+import 'index.d.ts';
 
 const prisma = new PrismaClient();
 const supabase = createSupabaseClient(
@@ -22,11 +26,12 @@ app.use(
 
 // Custom middleware to load and attach the Clerk user from Prisma
 app.use(async (req, res, next) => {
-  const userId = req.auth?.userId;
+  const userId = (req as CustomRequest).auth?.userId;
   if (userId) {
-    req.user = await prisma.users.findUnique({
-      where: {clerkId: userId},
-    });
+    (req as CustomRequest).user =
+      (await prisma.users.findUnique({
+        where: {clerkId: userId},
+      })) ?? undefined;
   }
   next();
 });
