@@ -1,12 +1,12 @@
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["postgresqlExtensions", "multiSchema"]
+  previewFeatures = ["multiSchema"]
 }
 
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  schemas  = ["public", "auth", "vault"]
+  schemas  = ["public"]
 }
 
 model User {
@@ -26,7 +26,7 @@ model User {
   tenancies            Tenancy[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
-  @@map("users")
+  @@map("Users")
   @@schema("public")
 }
 
@@ -298,12 +298,8 @@ model payments {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model profiles {
-  user_id    String    @id @unique(map: "profiles_id_key") @default(dbgenerated("auth.uid()")) @db.Uuid
-  full_name  String
-  email      String    @unique
-  phone      String?
-  created_at DateTime? @default(now()) @db.Timestamptz(6)
-
+  user_id    String    @id @unique(map: "profiles_id_key")
+  /// RLS_ENABLED
   @@schema("public")
 }
 
@@ -329,8 +325,8 @@ model properties {
   size                 Int?
   maintenance_requests maintenance_requests[]
   user_id              String
+  User                 User     @relation(fields: [user_id], references: [id])
 
-  @@relation("UserProperties", fields: [user_id], references: [id])
   @@index([owner_id], map: "idx_properties_owner")
   @@schema("public")
 }
@@ -469,6 +465,7 @@ model user_profiles {
 
   @@index([email])
   @@map("user_profiles")
+  @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -572,6 +569,7 @@ model users {
   @@index([email])
   @@index([email], map: "users_email_idx_auth")
   @@index([phone])
+  @@schema("auth")
 }
 
 model verification_tokens {
@@ -580,6 +578,7 @@ model verification_tokens {
   expires    DateTime @db.Timestamptz(6)
 
   @@id([identifier, token])
+  @@schema("auth")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
@@ -629,6 +628,8 @@ enum ActivityType {
   DELETE
   LOGIN
   LOGOUT
+
+  @@schema("public")
 }
 
 enum LeaseType {
@@ -636,6 +637,8 @@ enum LeaseType {
   MONTH_TO_MONTH
   WEEKLY
   YEARLY
+
+  @@schema("public")
 }
 
 enum TenantStatus {
@@ -643,6 +646,8 @@ enum TenantStatus {
   INACTIVE
   PENDING
   REJECTED
+
+  @@schema("public")
 }
 
 enum AuditAction {
@@ -694,6 +699,8 @@ enum ToolType {
   project_manager
   image_optimizer
   document_manager
+
+  @@schema("public")
 }
 
 enum PaymentMethod {
@@ -701,6 +708,8 @@ enum PaymentMethod {
   BANK_TRANSFER
   CASH
   CHECK
+
+  @@schema("public")
 }
 
 enum entity_type {
@@ -714,6 +723,8 @@ enum entity_type {
   SETTINGS
   EMAIL_TEMPLATE
   ROUTE
+
+  @@schema("public")
 }
 
 enum image_job_priority {
@@ -735,11 +746,15 @@ enum invoice_status {
   paid
   overdue
   cancelled
+
+  @@schema("public")
 }
 
 enum invoice_template_type {
   standard
   custom
+
+  @@schema("public")
 }
 
 enum notification_type {
@@ -749,6 +764,8 @@ enum notification_type {
   lease
   message
   alert
+
+  @@schema("public")
 }
 
 enum payment_status {
@@ -759,6 +776,8 @@ enum payment_status {
   overdue
   cancelled
   refunded
+
+  @@schema("public")
 }
 
 enum paymentcategory {
@@ -768,6 +787,8 @@ enum paymentcategory {
   MAINTENANCE
   UTILITIES
   OTHER
+
+  @@schema("public")
 }
 
 enum paymentmethod {
@@ -776,6 +797,7 @@ enum paymentmethod {
   CREDIT_CARD
   BANK_TRANSFER
   OTHER
+  @@schema("public")
 }
 
 enum paymentstatus {
@@ -783,6 +805,7 @@ enum paymentstatus {
   Paid
   Overdue
   Cancelled
+  @@schema("public")
 }
 
 enum paymenttype {
@@ -790,6 +813,8 @@ enum paymenttype {
   Deposit
   Maintenance
   Other
+
+  @@schema("public")
 }
 
 enum property_status {
@@ -798,6 +823,7 @@ enum property_status {
   maintenance
   renovation
   off_market
+  @@schema("public")
 }
 
 enum property_type {
@@ -809,24 +835,28 @@ enum property_type {
   commercial
   industrial
   land
+  @@schema("public")
 }
 
 enum propertystatus {
   Occupied
   Vacant
   Maintenance
+  @@schema("public")
 }
 
 enum propertytype {
   Residential
   Commercial
   Industrial
+  @@schema("public")
 }
 
 enum request_status {
   pending
   approved
   rejected
+  @@schema("public")
 }
 
 enum Role {
@@ -836,6 +866,7 @@ enum Role {
   MAINTENANCE
   TENANT
   USER
+  @@schema("public")
 }
 
 model secrets {
