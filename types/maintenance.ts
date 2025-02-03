@@ -1,7 +1,6 @@
 export type MaintenanceRequest = {
   id: string;
-  propertyId: string;
-  unitId?: string;
+  propertyId?: string;
   tenantId?: string;
   title: string;
   description: string;

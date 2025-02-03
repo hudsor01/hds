@@ -1,23 +1,11 @@
-// components/MaintenanceTracker.tsx
 'use client';
 
 import {Badge} from '@/components/ui/badge';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
 import {useToast} from '@/components/ui/use-toast';
+import {MaintenanceRequest} from '@/types/maintenance';
 import {createClient} from '@supabase/supabase-js';
 import {useEffect, useState} from 'react';
-
-// components/MaintenanceTracker.tsx
-
-// components/MaintenanceTracker.tsx
-
-interface MaintenanceRequest {
-  id: string;
-  title: string;
-  status: 'pending' | 'in_progress' | 'completed';
-  created_at: string;
-  property_id: string;
-}
 
 export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
