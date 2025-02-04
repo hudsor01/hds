@@ -1,18 +1,7 @@
+import {SignUp} from '@/components/forms/signup-form';
+import UpdatePassword from '@/components/forms/update-password';
 import Logo from '@/components/icons/Logo';
-import EmailSignIn from '@/components/ui/AuthForms/EmailSignIn';
-import ForgotPassword from '@/components/ui/AuthForms/ForgotPassword';
-import OauthSignIn from '@/components/ui/AuthForms/OauthSignIn';
-import PasswordSignIn from '@/components/ui/AuthForms/PasswordSignIn';
-import Separator from '@/components/ui/AuthForms/Separator';
-import SignUp from '@/components/ui/AuthForms/Signup';
-import UpdatePassword from '@/components/ui/AuthForms/UpdatePassword';
-import Card from '@/components/ui/Card';
-import {
-  getAuthTypes,
-  getViewTypes,
-  getDefaultSignInView,
-  getRedirectMethod,
-} from '@/utils/auth-helpers/settings';
+import {Card} from '@/components/ui/card';
 import {createClient} from '@/utils/supabase/server';
 import {cookies} from 'next/headers';
 import {redirect} from 'next/navigation';
@@ -25,8 +14,8 @@ export default async function SignIn({
   searchParams: {disable_button: boolean};
 }) {
   const {allowOauth, allowEmail, allowPassword} = getAuthTypes();
-  const viewTypes = getViewTypes();
-  const redirectMethod = getRedirectMethod();
+  const viewTypes = viewTypes();
+  const redirectMethod = redirectMethod();
 
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string;
@@ -101,4 +90,11 @@ export default async function SignIn({
       </div>
     </div>
   );
+}
+function getAuthTypes(): {allowOauth: any; allowEmail: any; allowPassword: any} {
+  throw new Error('Function not implemented.');
+}
+
+function getDefaultSignInView(preferredSignInView: any): string {
+  throw new Error('Function not implemented.');
 }

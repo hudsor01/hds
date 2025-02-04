@@ -1,7 +1,7 @@
 'use client';
 
 import {ThemeMetadata} from '../components/theme-metadata';
-import theme from './theme';
+import {theme} from './theme';
 import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import {AuthProvider} from 'components/providers/auth-provider';

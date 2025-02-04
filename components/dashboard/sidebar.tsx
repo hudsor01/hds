@@ -1,7 +1,7 @@
 'use client';
 
+import type {routes} from '../../app/routes';
 import {cn} from '@/lib/utils';
-import {routes} from '@/routes';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {Box, DollarSign, FileText, Home, Settings, Tool, Users} from 'react-feather';
