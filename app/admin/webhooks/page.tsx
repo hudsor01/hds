@@ -1,4 +1,4 @@
-import {WebhookLogGrid} from './webhook-log-grid';
+import {WebhookLogGrid} from '@/app/admin/webhooks/webhook-log-grid';
 import type {WebhookLog} from '@/types/webhooks';
 import {sql} from '@vercel/postgres';
 

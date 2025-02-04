@@ -1,6 +1,6 @@
 'use client';
 
-import type {PropertyStats} from '@/auth/lib/types/dashboard';
+import type {PropertyStats} from '@/types/dashboard';
 import {Box, Card, Grid, Tooltip, Typography} from '@mui/material';
 import {alpha, useTheme} from '@mui/material/styles';
 import {motion} from 'framer-motion';

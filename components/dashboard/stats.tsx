@@ -1,6 +1,6 @@
 // components/dashboard/stats.tsx
 import {Card} from '@/components/ui/card';
-import {Home, User, Wrench} from 'react-feather';
+import {DollarSign, Home, Tool, User} from 'react-feather';
 
 export function DashboardStats() {
   return (
@@ -23,14 +23,14 @@ export function DashboardStats() {
         title='Pending Maintenance'
         value='3'
         trend='2 urgent'
-        icon={Wrench}
+        icon={Tool}
         trendDirection='down'
       />
       <StatCard
         title='Monthly Revenue'
         value='$15,750'
         trend='+12% from last month'
-        icon={Banknotes}
+        icon={DollarSign}
         trendDirection='up'
       />
     </div>

@@ -141,7 +141,7 @@ export async function GET(request: AnalyticsRequest): Promise<Response> {
   const {searchParams} = new URL(request.url);
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
-  const template = searchParams.get('template');
+  const template = searchParams.get('template') || undefined;
 
   const stats = await analyticsDB.getStats({
     startDate: startDate ? new Date(startDate) : undefined,

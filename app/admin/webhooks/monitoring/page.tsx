@@ -1,4 +1,6 @@
-import {Card, Grid, Typography} from '@mui/material';
+import {Button, Card, Chip, Grid, Typography} from '@mui/material';
+import type {DataGrid} from '@mui/x-data-grid';
+import {sql} from '@vercel/postgres';
 
 async function getWebhookStats() {
   const {rows} = await sql`
@@ -16,6 +18,26 @@ async function getWebhookStats() {
 
 export default async function WebhookMonitoring() {
   const stats = await getWebhookStats();
+
+  function calculateSuccessRate(stats: any): import('react').ReactNode {
+    throw new Error('Function not implemented.');
+  }
+
+  function calculateTotalEvents(stats: any): import('react').ReactNode {
+    throw new Error('Function not implemented.');
+  }
+
+  function transformStatsForGrid(stats: any) {
+    throw new Error('Function not implemented.');
+  }
+
+  function getFailedEvents(stats: any) {
+    throw new Error('Function not implemented.');
+  }
+
+  function retryWebhook(row: any) {
+    throw new Error('Function not implemented.');
+  }
 
   return (
     <div className='p-6'>

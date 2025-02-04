@@ -1,12 +1,37 @@
-// app/api/health/route.ts
+import {emailService} from '@/lib/email';
+import {prisma} from '@/lib/prisma';
+
+async function checkDatabase() {
+  try {
+    await prisma.$queryRaw`SELECT 1`;
+    return 'healthy';
+  } catch (error) {
+    return 'unhealthy';
+  }
+}
+
+async function checkEmailService() {
+  try {
+    await emailService.sendWelcome('test@example.com');
+    return 'healthy';
+  } catch (error) {
+    return 'unhealthy';
+  }
+}
+
 export async function GET() {
   const health = {
     uptime: process.uptime(),
     database: await checkDatabase(),
-    redis: await checkRedis(),
     email: await checkEmailService(),
     timestamp: Date.now(),
   };
 
-  return Response.json(health);
+  const isHealthy = Object.values(health).every(
+    status => status === 'healthy' || typeof status === 'number',
+  );
+
+  return Response.json(health, {
+    status: isHealthy ? 200 : 503,
+  });
 }

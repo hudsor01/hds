@@ -1,6 +1,6 @@
 'use client';
 
-import {SessionProvider} from '@clerk/nextjs';
+import {ClerkProvider} from '@clerk/nextjs';
 import type {ReactNode} from 'react';
 
 export interface AuthProviderProps {
@@ -8,5 +8,5 @@ export interface AuthProviderProps {
 }
 
 export function AuthProvider({children}: AuthProviderProps) {
-  return <SessionProvider>{children}</SessionProvider>;
+  return <ClerkProvider>{children}</ClerkProvider>;
 }

@@ -33,6 +33,16 @@ export interface RecentActivity {
 }
 
 export interface PropertyStats {
+  totalProperties: number;
+  percentageChanges: {
+    properties: number;
+    tenants: number;
+    revenue: number;
+    occupancy: number;
+  };
+  activeTenants: number;
+  monthlyRevenue: number;
+  occupancyRate: number;
   overview: {
     totalProperties: number;
     occupiedUnits: number;
