@@ -12,11 +12,10 @@ export const PAYMENT_FREQUENCY = {
 } as const;
 
 export type Lease = {
+  tenant: any;
   id: string;
   propertyId: string;
   propertyName: string;
-  unitId: string;
-  unitNumber: string;
   tenantId: string;
   tenantName: string;
   startDate: Date;
@@ -25,12 +24,26 @@ export type Lease = {
   securityDeposit: number;
   paymentFrequency: keyof typeof PAYMENT_FREQUENCY;
   status: keyof typeof LEASE_STATUS;
-  documents: Array<{
-    id: string;
-    name: string;
-    url: string;
-    uploadedAt: Date;
-  }>;
+  documents: LeaseDocument[];
   createdAt: Date;
   updatedAt: Date;
+  termsAccepted: boolean;
+  utilityResponsibilities: {
+    electricity: 'tenant' | 'landlord';
+    water: 'tenant' | 'landlord';
+    gas: 'tenant' | 'landlord';
+    internet: 'tenant' | 'landlord';
+  };
 };
+
+export interface LeaseDocument {
+  id: string;
+  type: 'lease_agreement' | 'addendum' | 'termination_notice';
+  url: string;
+  uploadedAt: Date;
+}
+
+export interface LeaseFormProps {
+  initialData?: Partial<Lease>;
+  onSuccess?: () => void;
+}

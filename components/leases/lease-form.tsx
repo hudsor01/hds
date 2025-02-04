@@ -1,5 +1,5 @@
+import type {LeaseFormProps} from '../../types/leases';
 import {useCreateLease, useUpdateLease} from '@/hooks/use-leases';
-import {type Lease} from '@/types';
 import {zodResolver} from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -26,11 +26,6 @@ const leaseSchema = z.object({
 });
 
 type LeaseFormData = z.infer<typeof leaseSchema>;
-
-interface LeaseFormProps {
-  initialData?: Partial<Lease>;
-  onSuccess?: () => void;
-}
 
 export function LeaseForm({initialData, onSuccess}: LeaseFormProps) {
   const createLease = useCreateLease();
@@ -146,8 +141,6 @@ export function LeaseForm({initialData, onSuccess}: LeaseFormProps) {
             )}
           />
         </Grid>
-
-        {/* Add remaining form fields */}
 
         <Grid item xs={12}>
           <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>

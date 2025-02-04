@@ -1,11 +1,12 @@
+// components/emails/welcome.tsx
 import {EmailTemplate} from '@/components/emails/template';
 
 export default function WelcomeEmail({email}: {email: string}) {
   return (
     <EmailTemplate>
       <h1>Welcome to Property Pro!</h1>
-      <p>Thanks for joining our waitlist.</p>
-      <p>We'll notify you when early access is available.</p>
+      <p>Thank you for joining our waitlist.</p>
+      <p>We will notify you when early access is available.</p>
     </EmailTemplate>
   );
 }

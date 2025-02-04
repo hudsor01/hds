@@ -1,6 +1,7 @@
 import {sql} from '@vercel/postgres';
 
 interface WaitlistEntry {
+  position: number;
   id: string;
   email: string;
   createdAt: Date;
@@ -27,7 +28,7 @@ export const waitlistDB = {
      VALUES (${email})
      RETURNING *
    `;
-    return rows[0];
+    return rows[0] as WaitlistEntry;
   },
 
   async getAll(): Promise<WaitlistEntry[]> {
@@ -35,7 +36,7 @@ export const waitlistDB = {
      SELECT * FROM waitlist
      ORDER BY created_at DESC
    `;
-    return rows;
+    return rows as WaitlistEntry[];
   },
 
   async exists(email: string): Promise<boolean> {
@@ -44,6 +45,21 @@ export const waitlistDB = {
      WHERE email = ${email}
    `;
     return rows.length > 0;
+  },
+};
+
+export const analyticsDB = {
+  getStats: async ({
+    startDate,
+    endDate,
+    template,
+  }: {
+    startDate?: Date;
+    endDate?: Date;
+    template?: string;
+  }) => {
+    // Implement your analytics logic here.
+    return []; // Replace with actual stats data.
   },
 };
 

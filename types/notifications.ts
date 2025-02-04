@@ -1,6 +1,6 @@
 import {sendEmail} from '../components/emails/templates/emails';
 
-interface WebhookUser {
+export interface WebhookUser {
   id: string;
   email_addresses: {email_address: string}[];
   first_name: string;

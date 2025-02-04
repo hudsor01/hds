@@ -1,8 +1,5 @@
-// hooks/use-tenants.ts
-import type {Tenant} from './types/tenant';
 import {createCrudHooks} from '@/hooks/use-crud';
-
-// Changed to relative path
+import type {Tenant} from '@/types/tenant';
 
 export const {
   useList: useTenants,

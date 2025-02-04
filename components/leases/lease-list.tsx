@@ -1,34 +1,35 @@
 import {LeaseActions} from './lease-actions';
 import {useLeases} from '@/hooks/use-leases';
 import {formatCurrency} from '@/lib/utils';
+import type {Lease} from '@/types/leases';
 import AddIcon from '@mui/icons-material/Add';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Chip from '@mui/material/Chip';
-import {DataGrid, GridColDef, GridRenderCellParams, GridValueFormatter} from '@mui/x-data-grid';
+import {DataGrid, GridColDef, GridRenderCellParams} from '@mui/x-data-grid';
 import {format} from 'date-fns';
 
 export function LeaseList() {
   const {data: leases, isLoading} = useLeases();
 
-  const columns: GridColDef[] = [
+  const columns: GridColDef<Lease>[] = [
     {
       field: 'propertyId',
       headerName: 'Property',
       width: 200,
-      valueGetter: params => params.row.property?.name || 'N/A',
+      valueGetter: ({row}: {row: Lease}) => row.propertyName || 'N/A',
     },
     {
       field: 'tenantId',
       headerName: 'Tenant',
       width: 200,
-      valueGetter: params => params.row.tenant?.name || 'N/A',
+      valueGetter: ({row}: {row: Lease}) => row.tenantName || 'N/A',
     },
     {
       field: 'status',
       headerName: 'Status',
       width: 130,
-      renderCell: (params: GridRenderCellParams) => (
+      renderCell: (params: GridRenderCellParams<Lease>) => (
         <Chip
           label={params.value}
           color={
@@ -48,26 +49,26 @@ export function LeaseList() {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: (params: GridValueFormatter<number>) => formatCurrency(params.value),
+      valueFormatter: ({value}) => formatCurrency(value as number),
     },
     {
       field: 'startDate',
       headerName: 'Start Date',
       width: 130,
-      valueFormatter: params => format(new Date(params.value), 'MM/dd/yyyy'),
+      valueFormatter: ({value}) => format(new Date(value as string), 'MM/dd/yyyy'),
     },
     {
       field: 'endDate',
       headerName: 'End Date',
       width: 130,
-      valueFormatter: params => format(new Date(params.value), 'MM/dd/yyyy'),
+      valueFormatter: ({value}) => format(new Date(value as string), 'MM/dd/yyyy'),
     },
     {
       field: 'actions',
       headerName: 'Actions',
       width: 100,
       sortable: false,
-      renderCell: params => (
+      renderCell: (params: GridRenderCellParams<Lease>) => (
         <LeaseActions leaseId={params.row.id} leaseStatus={params.row.status} />
       ),
     },
@@ -81,7 +82,7 @@ export function LeaseList() {
         </Button>
       </Box>
 
-      <DataGrid
+      <DataGrid<Lease>
         rows={leases || []}
         columns={columns}
         loading={isLoading}

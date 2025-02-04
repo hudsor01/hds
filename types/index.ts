@@ -1,3 +1,4 @@
 export {};
 
-export type {Lease} from './lease';
+export type {Lease} from './leases';
+export type {MaintenanceRequest} from './maintenance-request';

@@ -1,4 +1,3 @@
-// types/badge.ts
 import {VariantProps} from 'class-variance-authority';
 import {HTMLAttributes} from 'react';
 
