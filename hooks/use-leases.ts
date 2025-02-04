@@ -27,7 +27,7 @@ export function useLeaseActions(leaseId: string) {
   const queryClient = useQueryClient();
 
   const terminate = useMutation({
-    mutationFn: async () => apiClient.post(`/api/leases/${leaseId}/terminate`),
+    mutationFn: async () => apiClient.post(`/api/leases/${leaseId}/terminate`, {}),
     onSuccess: () => {
       queryClient.invalidateQueries({queryKey: ['leases']});
       toast.success('Lease terminated successfully');

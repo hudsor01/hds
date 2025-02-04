@@ -1,4 +1,3 @@
-// lib/api-client.ts
 import axios from 'axios';
 
 export class APIError extends Error {
