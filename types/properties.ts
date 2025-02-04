@@ -78,6 +78,11 @@ export type PropertyStats = {
   };
 };
 
+export interface PropertyTableProps {
+  properties: Property[];
+  isLoading: boolean;
+}
+
 export interface CreatePropertyInput {
   name: string;
   address: string;

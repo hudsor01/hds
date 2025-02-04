@@ -1,16 +1,17 @@
-// components/properties/property-table.tsx
+import {PropertyTableProps} from '../../types/properties';
 import {formatCurrency} from '@/lib/utils';
-import {type Property} from '@/types';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import {Typography} from '@mui/material';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import {DataGrid, type GridColDef, GridToolbar} from '@mui/x-data-grid';
-
-interface PropertyTableProps {
-  properties: Property[];
-  isLoading: boolean;
-}
+import {
+  DataGrid,
+  type GridColDef,
+  GridToolbar,
+  type GridValueFormatterParams,
+  type GridValueGetterParams,
+} from '@mui/x-data-grid';
 
 export function PropertyTable({properties, isLoading}: PropertyTableProps) {
   const columns: GridColDef[] = [
@@ -51,13 +52,13 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: params => formatCurrency(params.value),
+      valueFormatter: (params: GridValueFormatterParams) => formatCurrency(params.value),
     },
     {
       field: 'tenants',
       headerName: 'Tenants',
       width: 130,
-      valueGetter: params => params.row.tenants?.length || 0,
+      valueGetter: (params: GridValueGetterParams) => params.row.tenants?.length || 0,
     },
     {
       field: 'actions',
@@ -77,8 +78,8 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       rows={properties}
       columns={columns}
       loading={isLoading}
-      components={{
-        Toolbar: GridToolbar,
+      slots={{
+        toolbar: GridToolbar,
       }}
       initialState={{
         pagination: {
