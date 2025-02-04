@@ -1,5 +1,5 @@
 import {prisma} from '@/lib/prisma';
-import {Role} from '@prisma/client';
+import {UserRole} from '@/types/roles';
 
 export async function getUserByClerkId(clerkId: string) {
   const user = await prisma.users.findUnique({
@@ -23,7 +23,7 @@ export async function getUserByClerkId(clerkId: string) {
   return user;
 }
 
-export async function createUser(data: {clerkId: string; email: string; role?: Role}) {
+export async function createUser(data: {clerkId: string; email: string; role?: UserRole}) {
   return prisma.users.create({
     data: {
       clerkId: data.clerkId,

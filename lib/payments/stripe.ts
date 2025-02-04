@@ -1,6 +1,7 @@
-import { redirect } from 'next/navigation'
-import Stripe from 'stripe'
-import  from '@/lib/db/schema/roles'
+import {getUser} from '../../app/auth';
+import type {Team} from '@/types/team';
+import {redirect} from 'next/navigation';
+import Stripe from 'stripe';
 
 // Single Stripe instance with complete configuration
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -12,13 +13,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   },
 });
 
-export async function createCheckoutSession({
-  team,
-  priceId,
-}: {
-  team: Team | null;
-  priceId: string;
-}) {
+export async function createCheckoutSession({team, priceId}: {team: Team | null; priceId: string}) {
   const user = await getUser();
 
   if (!team || !user) {
@@ -111,7 +106,7 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
   const subscriptionId = subscription.id;
   const status = subscription.status;
 
-  const team = await getTeamByStripeCustomerId(customerId);
+  const team = getTeamByStripeCustomerId(customerId);
 
   if (!team) {
     console.error('Team not found for Stripe customer:', customerId);
@@ -120,14 +115,14 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
 
   if (status === 'active' || status === 'trialing') {
     const plan = subscription.items.data[0]?.plan;
-    await updateTeamSubscription(team.id, {
+    updateTeamSubscription(team.id, {
       stripeSubscriptionId: subscriptionId,
       stripeProductId: plan?.product as string,
       planName: (plan?.product as Stripe.Product).name,
       subscriptionStatus: status,
     });
   } else if (status === 'canceled' || status === 'unpaid') {
-    await updateTeamSubscription(team.id, {
+    updateTeamSubscription(team.id, {
       stripeSubscriptionId: null,
       stripeProductId: null,
       planName: null,
@@ -166,4 +161,20 @@ export async function getStripeProducts() {
     defaultPriceId:
       typeof product.default_price === 'string' ? product.default_price : product.default_price?.id,
   }));
+}
+
+function getTeamByStripeCustomerId(customerId: string): Team | null {
+  throw new Error('Function not implemented.');
+}
+
+function updateTeamSubscription(
+  id: any,
+  data: {
+    stripeSubscriptionId: string | null;
+    stripeProductId: string | null;
+    planName: string | null;
+    subscriptionStatus: 'active' | 'trialing';
+  },
+) {
+  throw new Error('Function not implemented.');
 }

@@ -1,5 +1,5 @@
-import {createCrudHooks} from '@/lib/hooks/use-crud';
-import {type Property} from '@/types';
+import {createCrudHooks} from '@/hooks/use-crud';
+import {type Property} from '@/types/properties';
 
 export const {
   useList: useProperties,

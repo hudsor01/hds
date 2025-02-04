@@ -1,5 +1,4 @@
-// lib/store/use-property-store.ts
-import {Property} from '@/lib/types';
+import {Property} from '@/types/properties';
 import {create} from 'zustand';
 
 interface PropertyStore {

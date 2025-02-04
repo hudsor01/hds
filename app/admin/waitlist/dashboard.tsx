@@ -1,4 +1,3 @@
-// app/admin/waitlist/dashboard.tsx
 import {EmailTemplate} from '@/components/emails/templates';
 import {
   Box,
@@ -13,7 +12,7 @@ import {
   Tabs,
 } from '@mui/material';
 import {DataGrid} from '@mui/x-data-grid';
-import {useState} from 'react';
+import {useState, type SetStateAction} from 'react';
 
 const columns = [
   {field: 'email', headerName: 'Email', width: 250},
@@ -24,7 +23,7 @@ const columns = [
     field: 'actions',
     headerName: 'Actions',
     width: 200,
-    renderCell: params => (
+    renderCell: (params: {row: {email: any}}) => (
       <Button onClick={() => handleSendEmail(params.row.email)}>Send Email</Button>
     ),
   },
@@ -68,7 +67,7 @@ export function WaitlistDashboard() {
         rows={waitlistEntries}
         columns={columns}
         checkboxSelection
-        onSelectionModelChange={ids => setSelectedUsers(ids)}
+        onSelectionModelChange={(ids: SetStateAction<never[]>) => setSelectedUsers(ids)}
       />
 
       <Dialog open={emailDialog} onClose={() => setEmailDialog(false)}>
@@ -90,4 +89,15 @@ export function WaitlistDashboard() {
       </Dialog>
     </Box>
   );
+}
+function handleSendEmail(email: any): void {
+  throw new Error('Function not implemented.');
+}
+
+function sendEmail(userId: never, emailTemplate: EmailTemplate, arg2: {position: any}): any {
+  throw new Error('Function not implemented.');
+}
+
+function getWaitlistPosition(userId: never) {
+  throw new Error('Function not implemented.');
 }
