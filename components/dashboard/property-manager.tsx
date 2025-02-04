@@ -6,13 +6,7 @@ import {PropertyDialog} from '@/components/dashboard/property-dialog';
 import {Button} from '@/components/ui/button';
 import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
 import {useDashboardUpdates} from '@/hooks/use-dashboard-updates';
-import type {
-  CreatePropertyInput,
-  Property,
-  PropertyStatus,
-  PropertyUnit,
-  UpdatePropertyInput,
-} from '@/types/properties';
+import type {Property, PropertyStatus, PropertyUnit, UpdatePropertyInput} from '@/types/properties';
 import {useEffect, useState} from 'react';
 import {Plus} from 'react-feather';
 import {toast} from 'sonner';
@@ -88,7 +82,7 @@ export function PropertyManager() {
     return units?.length || 0;
   };
 
-  const handleSubmitProperty = async (data: CreatePropertyInput) => {
+  const handleSubmitProperty = async (data: Omit<Property, 'id' | 'units'>): Promise<void> => {
     try {
       if (selectedProperty) {
         const updateData: UpdatePropertyInput = {
@@ -109,7 +103,7 @@ export function PropertyManager() {
           createdAt: new Date(),
           updatedAt: new Date(),
         };
-        await create(newPropertyData);
+        await create({...newPropertyData, units: []});
       }
       setDialogOpen(false);
       toast.success(`Property ${selectedProperty ? 'updated' : 'created'} successfully`);

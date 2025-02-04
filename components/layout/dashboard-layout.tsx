@@ -2,8 +2,8 @@
 
 import {DashboardSideNav} from '../dashboard/side-nav';
 import {BreadcrumbNav} from '../navigation/breadcrumbs';
-import {NotificationsMenu} from '../notifications/notifications-menu';
-import {UserButton} from '@clerk/nextjs';
+import {NotificationsMenu} from '../notifications/notification-menu';
+import {SignedIn, SignedOut, SignIn, UserButton} from '@clerk/nextjs';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import AppBar from '@mui/material/AppBar';
 import Badge from '@mui/material/Badge';
@@ -31,17 +31,21 @@ export function DashboardLayout({children}: {children: React.ReactNode}) {
               <NotificationsIcon />
             </Badge>
           </IconButton>
-          <UserButton
-            afterSignOutUrl='/sign-in'
-            appearance={{
-              elements: {
-                avatarBox: {
-                  width: 40,
-                  height: 40,
+          <SignedIn>
+            <UserButton
+              appearance={{
+                elements: {
+                  avatarBox: {
+                    width: 40,
+                    height: 40,
+                  },
                 },
-              },
-            }}
-          />
+              }}
+            />
+          </SignedIn>
+          <SignedOut>
+            <SignIn />
+          </SignedOut>
         </Toolbar>
       </AppBar>
 

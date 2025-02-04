@@ -173,7 +173,7 @@ function updateTeamSubscription(
     stripeSubscriptionId: string | null;
     stripeProductId: string | null;
     planName: string | null;
-    subscriptionStatus: 'active' | 'trialing';
+    subscriptionStatus: 'active' | 'trialing' | 'canceled' | 'unpaid';
   },
 ) {
   throw new Error('Function not implemented.');

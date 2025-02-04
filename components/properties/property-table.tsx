@@ -1,17 +1,12 @@
-import {PropertyTableProps} from '../../types/properties';
+import {BaseDataGrid} from '@/components/common/data-grid';
 import {formatCurrency} from '@/lib/utils';
+import {PropertyTableProps} from '@/types/properties';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Typography} from '@mui/material';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import {
-  DataGrid,
-  type GridColDef,
-  GridToolbar,
-  type GridValueFormatterParams,
-  type GridValueGetterParams,
-} from '@mui/x-data-grid';
+import {type GridColDef, type GridValueGetterParams} from '@mui/x-data-grid';
 
 export function PropertyTable({properties, isLoading}: PropertyTableProps) {
   const columns: GridColDef[] = [
@@ -52,7 +47,7 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: (params: GridValueFormatterParams) => formatCurrency(params.value),
+      valueFormatter: ({value}) => formatCurrency(value as number),
     },
     {
       field: 'tenants',
@@ -65,7 +60,7 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       headerName: 'Actions',
       width: 100,
       sortable: false,
-      renderCell: params => (
+      renderCell: () => (
         <IconButton>
           <MoreVertIcon />
         </IconButton>
@@ -73,30 +68,5 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
     },
   ];
 
-  return (
-    <DataGrid
-      rows={properties}
-      columns={columns}
-      loading={isLoading}
-      slots={{
-        toolbar: GridToolbar,
-      }}
-      initialState={{
-        pagination: {
-          paginationModel: {
-            pageSize: 10,
-          },
-        },
-      }}
-      pageSizeOptions={[10, 25, 50]}
-      checkboxSelection
-      disableRowSelectionOnClick
-      sx={{
-        '& .MuiDataGrid-cell': {
-          borderBottom: 1,
-          borderColor: 'divider',
-        },
-      }}
-    />
-  );
+  return <BaseDataGrid data={properties} columns={columns} isLoading={isLoading} pageSize={10} />;
 }
