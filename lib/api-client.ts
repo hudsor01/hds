@@ -9,7 +9,7 @@ export class APIError extends Error {
   }
 }
 
-async function handleResponse(response: Response) {
+async function handleResponse(response: Response): Promise<unknown> {
   if (!response.ok) {
     const error = await response.json().catch(() => ({}));
     throw new APIError(response.status, error.message || 'An error occurred');
@@ -23,17 +23,17 @@ export const apiClient = {
     return response.data;
   },
 
-  async post<T>(url: string, data: any): Promise<T> {
+  async post<T>(url: string, data: unknown): Promise<T> {
     const response = await axios.post<T>(url, data);
     return response.data;
   },
 
-  async put<T>(url: string, data: any): Promise<T> {
+  async put<T>(url: string, data: unknown): Promise<T> {
     const response = await axios.put<T>(url, data);
     return response.data;
   },
 
-  async patch<T>(url: string, data: any): Promise<T> {
+  async patch<T>(url: string, data: unknown): Promise<T> {
     const response = await axios.patch<T>(url, data);
     return response.data;
   },

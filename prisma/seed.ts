@@ -4,12 +4,13 @@ const prisma = new PrismaClient();
 
 async function main() {
   // Create a test user first
-  const user = await prisma.user.create({
+  const user = await prisma.users.create({
     data: {
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscriptionStatus: 'active',
+      subscription_status: 'active',
+      clerkId: 'test-clerk-id',
     },
   });
 
@@ -31,16 +32,17 @@ async function main() {
   });
 
   // Create a test tenant
-  await prisma.tenancy.create({
+  await prisma.tenants.create({
     data: {
-      unitId: property.id,
-      firstName: 'John',
-      lastName: 'Doe',
+      property_id: property.id,
+      user_id: user.id,
+      first_name: 'John',
+      last_name: 'Doe',
       email: 'john@example.com',
       phone: '555-0123',
       status: 'ACTIVE',
-      moveInDate: new Date(),
-      emergencyContact: {
+      move_in_date: new Date(),
+      emergency_contact: {
         name: 'Jane Doe',
         phone: '555-0124',
         relationship: 'Spouse',

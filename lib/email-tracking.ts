@@ -1,3 +1,5 @@
+import {sql} from '@vercel/postgres';
+
 export const emailTrackingService = {
   async createPixel(emailId: string) {
     return `${process.env.NEXT_PUBLIC_URL}/api/track/email/${emailId}.png`;

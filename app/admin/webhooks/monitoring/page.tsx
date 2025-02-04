@@ -1,9 +1,16 @@
 import {Button, Card, Chip, Grid, Typography} from '@mui/material';
-import type {DataGrid} from '@mui/x-data-grid';
+import {DataGrid} from '@mui/x-data-grid';
 import {sql} from '@vercel/postgres';
 
+interface WebhookStat {
+  event_type: string;
+  status: string;
+  count: number;
+  last_received: string;
+}
+
 async function getWebhookStats() {
-  const {rows} = await sql`
+  const {rows} = await sql<WebhookStat>`
     SELECT
       event_type,
       status,
@@ -19,24 +26,66 @@ async function getWebhookStats() {
 export default async function WebhookMonitoring() {
   const stats = await getWebhookStats();
 
-  function calculateSuccessRate(stats: any): import('react').ReactNode {
-    throw new Error('Function not implemented.');
+  function calculateSuccessRate(stats: WebhookStat[]): number {
+    const total = stats.reduce((sum, stat) => sum + Number(stat.count), 0);
+    const successful = stats
+      .filter(stat => stat.status === 'success')
+      .reduce((sum, stat) => sum + Number(stat.count), 0);
+    return total ? Math.round((successful / total) * 100) : 0;
   }
 
-  function calculateTotalEvents(stats: any): import('react').ReactNode {
-    throw new Error('Function not implemented.');
+  function calculateTotalEvents(stats: WebhookStat[]): number {
+    return stats.reduce((sum, stat) => sum + Number(stat.count), 0);
   }
 
-  function transformStatsForGrid(stats: any) {
-    throw new Error('Function not implemented.');
+  function transformStatsForGrid(stats: WebhookStat[]) {
+    return Object.entries(
+      stats.reduce(
+        (acc, stat) => {
+          if (!acc[stat.event_type]) {
+            acc[stat.event_type] = {
+              id: stat.event_type,
+              type: stat.event_type,
+              count: 0,
+              success: 0,
+              lastReceived: stat.last_received,
+            };
+          }
+          acc[stat.event_type].count += Number(stat.count);
+          if (stat.status === 'success') {
+            acc[stat.event_type].success += Number(stat.count);
+          }
+          return acc;
+        },
+        {} as Record<string, any>,
+      ),
+    ).map(([_, data]) => ({
+      ...data,
+      success: Math.round((data.success / data.count) * 100),
+    }));
   }
 
-  function getFailedEvents(stats: any) {
-    throw new Error('Function not implemented.');
+  function getFailedEvents(stats: WebhookStat[]) {
+    return stats
+      .filter(stat => stat.status !== 'success')
+      .map(stat => ({
+        id: `${stat.event_type}-${stat.status}`,
+        type: stat.event_type,
+        error: stat.status,
+        created_at: stat.last_received,
+      }));
   }
 
-  function retryWebhook(row: any) {
-    throw new Error('Function not implemented.');
+  async function retryWebhook(row: {type: string; id: string}) {
+    try {
+      await fetch('/api/webhooks/retry', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({eventType: row.type, id: row.id}),
+      });
+    } catch (error) {
+      console.error('Failed to retry webhook:', error);
+    }
   }
 
   return (
@@ -77,22 +126,23 @@ export default async function WebhookMonitoring() {
                   field: 'success',
                   headerName: 'Success Rate',
                   width: 150,
-                  renderCell: params => (
-                    <Chip
-                      label={`${params.value}%`}
-                      color={params.value > 95 ? 'success' : 'warning'}
-                    />
+                  renderCell: ({value}) => (
+                    <Chip label={`${value}%`} color={value > 95 ? 'success' : 'warning'} />
                   ),
                 },
                 {
                   field: 'lastReceived',
                   headerName: 'Last Received',
                   width: 200,
-                  valueFormatter: params => new Date(params.value).toLocaleString(),
+                  valueFormatter: ({value}) => new Date(value).toLocaleString(),
                 },
               ]}
               autoHeight
-              pageSize={5}
+              initialState={{
+                pagination: {
+                  paginationModel: {pageSize: 5},
+                },
+              }}
             />
           </Card>
         </Grid>
@@ -112,25 +162,25 @@ export default async function WebhookMonitoring() {
                   field: 'created_at',
                   headerName: 'Time',
                   width: 200,
-                  valueFormatter: params => new Date(params.value).toLocaleString(),
+                  valueFormatter: ({value}) => new Date(value).toLocaleString(),
                 },
                 {
                   field: 'actions',
                   headerName: 'Actions',
                   width: 150,
-                  renderCell: params => (
-                    <Button
-                      variant='contained'
-                      size='small'
-                      onClick={() => retryWebhook(params.row)}
-                    >
+                  renderCell: ({row}) => (
+                    <Button variant='contained' size='small' onClick={() => retryWebhook(row)}>
                       Retry
                     </Button>
                   ),
                 },
               ]}
               autoHeight
-              pageSize={5}
+              initialState={{
+                pagination: {
+                  paginationModel: {pageSize: 5},
+                },
+              }}
             />
           </Card>
         </Grid>

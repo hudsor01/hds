@@ -1,3 +1,4 @@
+import {EmailMetricsTable} from '@/components/analytics/EmailMetricsTable';
 import {Box, Card, CardContent, CardHeader, Grid} from '@mui/material';
 import {BarChart, LineChart} from '@mui/x-charts';
 
@@ -11,11 +12,7 @@ export default async function AnalyticsPage() {
           <Card>
             <CardHeader title='Signups Over Time' />
             <CardContent>
-              <LineChart
-                data={stats.signups}
-                xAxis={[{data: stats.dates}]}
-                series={[{data: stats.counts}]}
-              />
+              <LineChart xAxis={[{data: stats.dates}]} series={[{data: stats.counts}]} />
             </CardContent>
           </Card>
         </Grid>
@@ -25,7 +22,6 @@ export default async function AnalyticsPage() {
             <CardHeader title='Email Performance' />
             <CardContent>
               <BarChart
-                data={stats.emails}
                 xAxis={[{data: ['Sent', 'Opened', 'Clicked']}]}
                 series={[{data: [stats.sent, stats.opened, stats.clicked]}]}
               />
@@ -39,4 +35,26 @@ export default async function AnalyticsPage() {
       </Grid>
     </Box>
   );
+}
+
+async function getWaitlistStats(): Promise<{
+  emails: any[];
+  sent: number;
+  opened: number;
+  clicked: number;
+  signups: any[];
+  dates: any[];
+  counts: any[];
+  emailMetrics: any;
+}> {
+  return {
+    emails: [],
+    sent: 100,
+    opened: 80,
+    clicked: 40,
+    signups: [],
+    dates: [],
+    counts: [],
+    emailMetrics: [],
+  };
 }

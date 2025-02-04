@@ -20,7 +20,6 @@ export async function checkPermission(
       user_id: userId,
     },
     select: {
-      id: true,
       name: true,
       user_id: true,
     },
