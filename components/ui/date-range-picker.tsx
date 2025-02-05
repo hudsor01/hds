@@ -64,7 +64,7 @@ export function DateRangePicker({value, onChangeAction, className}: DateRangePic
 
   return (
     <div className={cn('grid gap-2', className)}>
-      <Popover open={isOpen} onOpenChange={setIsOpen}>
+      <Popover></Popover>
         <PopoverTrigger>
           <Button
             variant='outline'
@@ -84,7 +84,7 @@ export function DateRangePicker({value, onChangeAction, className}: DateRangePic
             )}
           </Button>
         </PopoverTrigger>
-        <PopoverContent className='w-auto p-0' align='start'>
+        <PopoverContent className='w-auto p-0'></PopoverContent>
           <div className='flex'>
             <Command className='w-[200px] border-r'>
               <CommandGroup heading='Quick ranges'>

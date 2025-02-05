@@ -1,86 +1,91 @@
 import {BaseQueryParams, BaseResponse} from '@/types/common';
-import axios from 'axios';
 import {NextApiRequest, NextApiResponse} from 'next';
 import {ZodError, ZodSchema} from 'zod';
 
-type AxiosRequestConfig = axios.AxiosRequestConfig;
-type AxiosError = axios.AxiosError;
+export type ApiError = {
+  message: string;
+  code?: string;
+  status?: number;
+};
+
+export type ApiResponse<T> = {
+  data: T;
+  error: ApiError | null;
+};
 
 // API client configuration
-const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 
-// Request interceptor
-apiClient.interceptors.request.use(
-  (config: AxiosRequestConfig) => {
-    // Add auth token if available
-    const token = localStorage.getItem('token');
-    if (token && config.headers) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  error => Promise.reject(error),
-);
+// Fetch wrapper with error handling
+async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
+  try {
+    const response = await fetch(input, {
+      ...init,
+      headers: {
+        'Content-Type': 'application/json',
+        ...getAuthHeader(),
+        ...init?.headers,
+      },
+    });
 
-// Response interceptor
-apiClient.interceptors.response.use(
-  response => response,
-  (error: AxiosError) => {
-    if (error.response?.status === 401) {
-      // Handle unauthorized
-      window.location.href = '/login';
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({message: 'An error occurred'}));
+      throw new Error(error.message || `HTTP error! status: ${response.status}`);
     }
-    return Promise.reject(error);
-  },
-);
+
+    return response;
+  } catch (error) {
+    throw handleError(error);
+  }
+}
+
+// Auth header helper
+function getAuthHeader(): HeadersInit {
+  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  return token ? {Authorization: `Bearer ${token}`} : {};
+}
 
 // Generic API functions
 export async function fetchData<T>(
   endpoint: string,
   params?: BaseQueryParams,
-  config?: AxiosRequestConfig,
 ): Promise<BaseResponse<T>> {
-  const {data} = await apiClient.get<BaseResponse<T>>(endpoint, {
-    params,
-    ...config,
-  });
-  return data;
+  const queryString = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
+  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}${queryString}`);
+  return response.json();
 }
 
-export async function createData<T>(
-  endpoint: string,
-  payload: unknown,
-  config?: AxiosRequestConfig,
-): Promise<BaseResponse<T>> {
-  const {data} = await apiClient.post<BaseResponse<T>>(endpoint, payload, config);
-  return data;
+export async function createData<T>(endpoint: string, payload: unknown): Promise<BaseResponse<T>> {
+  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}`, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  });
+  return response.json();
 }
 
 export async function updateData<T>(
   endpoint: string,
   id: string | number,
   payload: unknown,
-  config?: AxiosRequestConfig,
 ): Promise<BaseResponse<T>> {
-  const {data} = await apiClient.put<BaseResponse<T>>(`${endpoint}/${id}`, payload, config);
-  return data;
+  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
+    method: 'PUT',
+    body: JSON.stringify(payload),
+  });
+  return response.json();
 }
 
 export async function deleteData<T>(
   endpoint: string,
   id: string | number,
-  config?: AxiosRequestConfig,
 ): Promise<BaseResponse<T>> {
-  const {data} = await apiClient.delete<BaseResponse<T>>(`${endpoint}/${id}`, config);
-  return data;
+  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
+    method: 'DELETE',
+  });
+  return response.json();
 }
 
-// API Middleware
+// API Middleware for Next.js API routes
 export const withValidation = <T>(schema: ZodSchema<T>) => {
   return async (req: NextApiRequest) => {
     try {
@@ -109,15 +114,66 @@ export const withErrorHandler = <T>(
 };
 
 // Error handling
-export function handleApiError(error: unknown): string {
-  if (error instanceof AxiosError) {
-    return error.response?.data?.message || error.message;
-  }
+function handleError(error: unknown): ApiError {
   if (error instanceof Error) {
-    return error.message;
+    return {
+      message: error.message,
+      code: 'ERROR',
+    };
   }
-  return 'An unexpected error occurred';
+  return {
+    message: 'An unexpected error occurred',
+    code: 'UNKNOWN_ERROR',
+  };
 }
 
-// Export configured client
-export {apiClient};
+// API client for use in components
+export const api = {
+  async get<T>(endpoint: string, params?: BaseQueryParams): Promise<ApiResponse<T>> {
+    try {
+      const response = await fetchData<T>(endpoint, params);
+      return {data: response.data as T, error: null};
+    } catch (error) {
+      return {
+        data: {} as T,
+        error: handleError(error),
+      };
+    }
+  },
+
+  async post<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
+    try {
+      const response = await createData<T>(endpoint, data);
+      return {data: response.data as T, error: null};
+    } catch (error) {
+      return {
+        data: {} as T,
+        error: handleError(error),
+      };
+    }
+  },
+
+  async put<T>(endpoint: string, id: string | number, data: unknown): Promise<ApiResponse<T>> {
+    try {
+      const response = await updateData<T>(endpoint, id, data);
+      return {data: response.data as T, error: null};
+    } catch (error) {
+      return {
+        data: {} as T,
+        error: handleError(error),
+      };
+    }
+  },
+
+  async delete<T>(endpoint: string, id: string | number): Promise<ApiResponse<T>> {
+    try {
+      const response = await deleteData<T>(endpoint, id);
+      return {data: response.data as T, error: null};
+    } catch (error) {
+      return {
+        data: {} as T,
+        error: handleError(error),
+      };
+    }
+  },
+};

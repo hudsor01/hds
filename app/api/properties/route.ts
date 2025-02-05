@@ -1,218 +1,142 @@
-import {prisma} from '@/prisma/seed';
-import {getAuth} from '@clerk/nextjs/server';
+import {supabase} from '@/lib/supabase';
+import {auth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';
 
-// Schema for property validation
+// Validation schema for property creation/updates
 const propertySchema = z.object({
-  name: z.string().min(1, 'Property name is required'),
-  address: z.string().min(1, 'Property address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(2, 'State is required').max(2, 'State must be 2 characters'),
-  zip: z.string().min(5, 'ZIP code must be at least 5 characters'),
-  rent_amount: z.number().positive('Rent amount must be greater than 0'),
-  type: z.enum(['Residential', 'Commercial', 'Industrial']).default('Residential'),
-  status: z.enum(['available', 'rented', 'maintenance', 'inactive']).default('available'),
-  images: z.array(z.string().url('Invalid image URL')).optional(),
-  amenities: z.array(z.string()).optional(),
-  description: z.string().optional(),
+  address: z.string().min(1, 'Address is required'),
+  type: z.enum(['apartment', 'house', 'condo']),
+  bedrooms: z.number().min(0),
+  bathrooms: z.number().min(0),
+  square_feet: z.number().min(0),
 });
-
-// Schema for property updates (all fields optional)
-const updatePropertySchema = propertySchema.partial();
-
-// Error handler utility
-const handleError = (error: unknown) => {
-  console.error('Property API Error:', error);
-  if (error instanceof z.ZodError) {
-    return NextResponse.json({error: error.errors}, {status: 400});
-  }
-  return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
-};
-
-export async function POST(req: NextRequest) {
-  try {
-    const {userId} = getAuth(req);
-    if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
-    }
-
-    const json = await req.json();
-    const body = propertySchema.parse(json);
-
-    const property = await prisma.properties.create({
-      data: {
-        ...body,
-        owner_id: userId,
-      },
-      include: {
-        maintenance_requests: true,
-        leases: {
-          include: {
-            tenant: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(property);
-  } catch (error) {
-    return handleError(error);
-  }
-}
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
-    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10')));
-    const status = searchParams.get('status');
+    const searchParams = req.nextUrl.searchParams;
     const type = searchParams.get('type');
-    const search = searchParams.get('search');
+    const query = supabase
+      .from('properties')
+      .select('*')
+      .eq('owner_id', userId)
+      .order('created_at', {ascending: false});
 
-    const where = {
-      owner_id: userId,
-      ...(status && {status}),
-      ...(type && {type}),
-      ...(search && {
-        OR: [
-          {name: {contains: search, mode: 'insensitive'}},
-          {address: {contains: search, mode: 'insensitive'}},
-          {city: {contains: search, mode: 'insensitive'}},
-        ],
-      }),
-    };
+    if (type) {
+      query.eq('type', type);
+    }
 
-    const [properties, total] = await Promise.all([
-      prisma.properties.findMany({
-        where,
-        include: {
-          maintenance_requests: true,
-          leases: {
-            include: {
-              tenant: true,
-            },
-          },
-        },
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          created_at: 'desc',
-        },
-      }),
-      prisma.properties.count({where}),
-    ]);
+    const {data: properties, error} = await query;
 
-    return NextResponse.json({
-      properties,
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
-    });
+    if (error) {
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    return NextResponse.json({data: properties});
   } catch (error) {
-    return handleError(error);
+    console.error('Error fetching properties:', error);
+    return NextResponse.json({error: 'Failed to fetch properties'}, {status: 500});
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const json = await req.json();
-    const {id, ...updateData} = json;
+    const body = await req.json();
+    const validatedData = propertySchema.parse(body);
+
+    const {data: property, error} = await supabase
+      .from('properties')
+      .insert([{...validatedData, owner_id: userId}])
+      .select()
+      .single();
+
+    if (error) {
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    return NextResponse.json({data: property}, {status: 201});
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error creating property:', error);
+    return NextResponse.json({error: 'Failed to create property'}, {status: 500});
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const {userId} = await auth();
+    if (!userId) {
+      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+    }
+
+    const body = await req.json();
+    const {id, ...updateData} = body;
 
     if (!id) {
       return NextResponse.json({error: 'Property ID is required'}, {status: 400});
     }
 
-    const body = updatePropertySchema.parse(updateData);
+    const validatedData = propertySchema.partial().parse(updateData);
 
-    // Verify ownership
-    const existingProperty = await prisma.properties.findUnique({
-      where: {id, owner_id: userId},
-    });
+    const {data: property, error} = await supabase
+      .from('properties')
+      .update(validatedData)
+      .eq('id', id)
+      .eq('owner_id', userId)
+      .select()
+      .single();
 
-    if (!existingProperty) {
+    if (error) {
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    if (!property) {
       return NextResponse.json({error: 'Property not found'}, {status: 404});
     }
 
-    const property = await prisma.properties.update({
-      where: {id},
-      data: body,
-      include: {
-        maintenance_requests: true,
-        leases: {
-          include: {
-            tenant: true,
-          },
-        },
-      },
-    });
-
-    return NextResponse.json(property);
+    return NextResponse.json({data: property});
   } catch (error) {
-    return handleError(error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error updating property:', error);
+    return NextResponse.json({error: 'Failed to update property'}, {status: 500});
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const id = searchParams.get('id');
-
+    const id = req.nextUrl.searchParams.get('id');
     if (!id) {
       return NextResponse.json({error: 'Property ID is required'}, {status: 400});
     }
 
-    // Verify ownership
-    const existingProperty = await prisma.properties.findUnique({
-      where: {id, owner_id: userId},
-    });
+    const {error} = await supabase.from('properties').delete().eq('id', id).eq('owner_id', userId);
 
-    if (!existingProperty) {
-      return NextResponse.json({error: 'Property not found'}, {status: 404});
+    if (error) {
+      return NextResponse.json({error: error.message}, {status: 500});
     }
 
-    // Check for active leases
-    const activeLeases = await prisma.leases.count({
-      where: {
-        property_id: id,
-        status: 'active',
-      },
-    });
-
-    if (activeLeases > 0) {
-      return NextResponse.json({error: 'Cannot delete property with active leases'}, {status: 400});
-    }
-
-    await prisma.properties.delete({
-      where: {id},
-    });
-
-    return NextResponse.json({success: true});
+    return NextResponse.json({success: true}, {status: 200});
   } catch (error) {
-    return handleError(error);
+    console.error('Error deleting property:', error);
+    return NextResponse.json({error: 'Failed to delete property'}, {status: 500});
   }
-}
-
-function createRouteHandlerClient(arg0: {
-  cookies: () => Promise<
-    import('next/dist/server/web/spec-extension/adapters/request-cookies').ReadonlyRequestCookies
-  >;
-}) {
-  throw new Error('Function not implemented.');
 }

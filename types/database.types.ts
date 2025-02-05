@@ -75,6 +75,51 @@ export interface Activity {
   metadata?: Record<string, any>;
 }
 
+export interface Lease {
+  id: string;
+  property_id: string;
+  tenant_id: string;
+  start_date: string;
+  end_date: string;
+  rent_amount: number;
+  status: 'active' | 'pending' | 'expired';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MaintenanceRequest {
+  id: string;
+  property_id: string;
+  tenant_id: string;
+  description: string;
+  priority: 'low' | 'medium' | 'high';
+  status: 'open' | 'in_progress' | 'completed';
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Property {
+  id: string;
+  owner_id: string;
+  address: string;
+  type: 'apartment' | 'house' | 'condo';
+  bedrooms: number;
+  bathrooms: number;
+  square_feet: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Tenant {
+  id: string;
+  user_id: string;
+  name: string;
+  email: string;
+  phone: string;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Database {
   public: {
     Tables: {
@@ -123,108 +168,15 @@ export interface Database {
       };
 
       properties: {
-        Row: {
-          id: UUID;
-          name: string;
-          address: string;
-          city: string;
-          state: string;
-          zip: string;
-          type: string;
-          status: PropertyStatus;
-          rent_amount: Money;
-          amenities: string[];
-          images: ImageUrl[];
-          bathrooms: number | null;
-          bedrooms: number | null;
-          size: number | null;
-          owner_id: UUID;
-          created_at: Timestamp;
-          updated_at: Timestamp;
-          metadata: Json | null;
-        };
-        Insert: {
-          id?: UUID;
-          name: string;
-          address: string;
-          city: string;
-          state: string;
-          zip: string;
-          type: string;
-          status?: PropertyStatus;
-          rent_amount: Money;
-          amenities?: string[];
-          images?: ImageUrl[];
-          bathrooms?: number | null;
-          bedrooms?: number | null;
-          size?: number | null;
-          owner_id: UUID;
-          created_at?: Timestamp;
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
-        Update: {
-          name?: string;
-          address?: string;
-          city?: string;
-          state?: string;
-          zip?: string;
-          type?: string;
-          status?: PropertyStatus;
-          rent_amount?: Money;
-          amenities?: string[];
-          images?: ImageUrl[];
-          bathrooms?: number | null;
-          bedrooms?: number | null;
-          size?: number | null;
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
+        Row: Property;
+        Insert: Omit<Property, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Property, 'id'>>;
       };
 
       leases: {
-        Row: {
-          id: UUID;
-          property_id: UUID;
-          tenant_id: UUID;
-          type: string;
-          status: LeaseStatus;
-          start_date: Timestamp;
-          end_date: Timestamp | null;
-          rent_amount: Money;
-          deposit_amount: Money;
-          payment_day: number;
-          documents: DocumentUrl[];
-          created_at: Timestamp;
-          updated_at: Timestamp;
-          metadata: Json | null;
-        };
-        Insert: {
-          id?: UUID;
-          property_id: UUID;
-          tenant_id: UUID;
-          type: string;
-          status?: LeaseStatus;
-          start_date: Timestamp;
-          end_date?: Timestamp | null;
-          rent_amount: Money;
-          deposit_amount: Money;
-          payment_day: number;
-          documents?: DocumentUrl[];
-          created_at?: Timestamp;
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
-        Update: {
-          status?: LeaseStatus;
-          end_date?: Timestamp | null;
-          rent_amount?: Money;
-          deposit_amount?: Money;
-          payment_day?: number;
-          documents?: DocumentUrl[];
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
+        Row: Lease;
+        Insert: Omit<Lease, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Lease, 'id'>>;
       };
 
       payments: {
@@ -270,56 +222,15 @@ export interface Database {
       };
 
       maintenance_requests: {
-        Row: {
-          id: UUID;
-          property_id: UUID;
-          tenant_id: UUID | null;
-          title: string;
-          description: string;
-          status: MaintenanceStatus;
-          priority: MaintenancePriority;
-          category: string | null;
-          assigned_to: UUID | null;
-          images: ImageUrl[];
-          cost: Money | null;
-          scheduled_date: Timestamp | null;
-          completed_date: Timestamp | null;
-          created_at: Timestamp;
-          updated_at: Timestamp;
-          metadata: Json | null;
-        };
-        Insert: {
-          id?: UUID;
-          property_id: UUID;
-          tenant_id?: UUID | null;
-          title: string;
-          description: string;
-          status?: MaintenanceStatus;
-          priority?: MaintenancePriority;
-          category?: string | null;
-          assigned_to?: UUID | null;
-          images?: ImageUrl[];
-          cost?: Money | null;
-          scheduled_date?: Timestamp | null;
-          completed_date?: Timestamp | null;
-          created_at?: Timestamp;
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
-        Update: {
-          title?: string;
-          description?: string;
-          status?: MaintenanceStatus;
-          priority?: MaintenancePriority;
-          category?: string | null;
-          assigned_to?: UUID | null;
-          images?: ImageUrl[];
-          cost?: Money | null;
-          scheduled_date?: Timestamp | null;
-          completed_date?: Timestamp | null;
-          updated_at?: Timestamp;
-          metadata?: Json | null;
-        };
+        Row: MaintenanceRequest;
+        Insert: Omit<MaintenanceRequest, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<MaintenanceRequest, 'id'>>;
+      };
+
+      tenants: {
+        Row: Tenant;
+        Insert: Omit<Tenant, 'id' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Tenant, 'id'>>;
       };
     };
 
