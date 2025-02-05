@@ -1,6 +1,5 @@
 import {BaseQueryParams, BaseResponse} from '@/types/common';
-import type {AxiosError, AxiosRequestConfig} from 'axios';
-import axios from 'axios';
+import axios, {AxiosError} from 'axios';
 import {NextApiRequest, NextApiResponse} from 'next';
 import {ZodError, ZodSchema} from 'zod';
 
