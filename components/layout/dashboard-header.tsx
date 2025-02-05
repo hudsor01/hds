@@ -1,12 +1,18 @@
 import {UserButton} from '@clerk/nextjs';
-import {AppBar, Box, IconButton, Toolbar} from '@mui/material';
-import {Menu} from 'react-feather';
+import {AppBar, Box, IconButton, Toolbar, Tooltip} from '@mui/material';
+import {ChevronLeft, ChevronRight, Menu} from 'react-feather';
 
 interface DashboardHeaderProps {
   onSidebarOpen: () => void;
+  onSidebarToggle: () => void;
+  sidebarCollapsed: boolean;
 }
 
-export function DashboardHeader({onSidebarOpen}: DashboardHeaderProps) {
+export function DashboardHeader({
+  onSidebarOpen,
+  onSidebarToggle,
+  sidebarCollapsed,
+}: DashboardHeaderProps) {
   return (
     <AppBar
       position='fixed'
@@ -25,6 +31,18 @@ export function DashboardHeader({onSidebarOpen}: DashboardHeaderProps) {
           }}
         >
           <Menu />
+        </IconButton>
+
+        <IconButton
+          onClick={onSidebarToggle}
+          sx={{
+            marginRight: 2,
+            display: {xs: 'none', lg: 'block'},
+          }}
+        >
+          <Tooltip title={sidebarCollapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
+            {sidebarCollapsed ? <ChevronRight /> : <ChevronLeft />}
+          </Tooltip>
         </IconButton>
 
         <Box sx={{flexGrow: 1}} />

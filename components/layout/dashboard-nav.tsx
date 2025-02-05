@@ -1,7 +1,19 @@
-import {Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText} from '@mui/material';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+} from '@mui/material';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {BarChart2, Home, Settings, Users} from 'react-feather';
+
+interface DashboardNavProps {
+  collapsed: boolean;
+}
 
 const items = [
   {
@@ -26,7 +38,7 @@ const items = [
   },
 ];
 
-export function DashboardNav() {
+export function DashboardNav({collapsed}: DashboardNavProps) {
   const pathname = usePathname();
 
   return (
@@ -42,20 +54,30 @@ export function DashboardNav() {
                 href={item.path}
                 style={{width: '100%', textDecoration: 'none', color: 'inherit'}}
               >
-                <ListItemButton selected={isActive}>
-                  <ListItemIcon>
-                    <Icon className={isActive ? 'text-primary' : 'text-muted-foreground'} />
-                  </ListItemIcon>
-                  <ListItemText
-                    primary={item.title}
+                <Tooltip title={collapsed ? item.title : ''} placement='right'>
+                  <ListItemButton
+                    selected={isActive}
                     sx={{
-                      '& .MuiListItemText-primary': {
-                        color: isActive ? 'primary.main' : 'text.secondary',
-                        fontWeight: isActive ? 600 : 400,
-                      },
+                      justifyContent: collapsed ? 'center' : 'flex-start',
+                      py: collapsed ? 2 : 1,
                     }}
-                  />
-                </ListItemButton>
+                  >
+                    <ListItemIcon sx={{minWidth: collapsed ? 0 : 40, mr: collapsed ? 0 : 2}}>
+                      <Icon className={isActive ? 'text-primary' : 'text-muted-foreground'} />
+                    </ListItemIcon>
+                    {!collapsed && (
+                      <ListItemText
+                        primary={item.title}
+                        sx={{
+                          '& .MuiListItemText-primary': {
+                            color: isActive ? 'primary.main' : 'text.secondary',
+                            fontWeight: isActive ? 600 : 400,
+                          },
+                        }}
+                      />
+                    )}
+                  </ListItemButton>
+                </Tooltip>
               </Link>
             </ListItem>
           );

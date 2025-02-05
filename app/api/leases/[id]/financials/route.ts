@@ -5,7 +5,7 @@ import {NextResponse} from 'next/server';
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 
-function createRouteHandlerClient({cookies}: {cookies: () => ReturnType<typeof cookies>}) {
+function createRouteHandlerClient({cookies: reqCookies}: {cookies: any}) {
   // Create and return the Supabase client instance.
   return createClient(supabaseUrl, supabaseAnonKey);
 }

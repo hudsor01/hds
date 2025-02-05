@@ -1,8 +1,11 @@
 'use client';
 
 import {Card} from '@/components/ui/card';
-import {Box, Container, Grid, Typography} from '@mui/material';
+import LoadingButton from '@mui/lab/LoadingButton';
+import {Box, Container, Grid, TextField, Typography} from '@mui/material';
+import {useState} from 'react';
 import {Mail, MapPin, Phone} from 'react-feather';
+import {toast} from 'sonner';
 
 const contactInfo = [
   {
@@ -22,7 +25,58 @@ const contactInfo = [
   },
 ];
 
+interface ContactFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  phone: string;
+  message: string;
+}
+
+const initialFormData: ContactFormData = {
+  firstName: '',
+  lastName: '',
+  email: '',
+  phone: '',
+  message: '',
+};
+
 export default function ContactPage() {
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to submit form');
+      }
+
+      toast.success('Message sent successfully!');
+      setFormData(initialFormData);
+    } catch (error) {
+      toast.error('Failed to send message. Please try again.');
+      console.error('Error submitting form:', error);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const {name, value} = e.target;
+    setFormData(prev => ({...prev, [name]: value}));
+  };
+
   return (
     <Box className='min-h-screen bg-gradient-to-b from-background to-muted/20 py-20'>
       <Container maxWidth='lg'>
@@ -59,7 +113,86 @@ export default function ContactPage() {
           })}
         </Grid>
 
-        <Card className='w-full p-6'>
+        <Card className='max-w-2xl mx-auto p-8'>
+          <Box component='form' onSubmit={handleSubmit} className='space-y-6'>
+            <Grid container spacing={3}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label='First Name'
+                  fullWidth
+                  required
+                  name='firstName'
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  label='Last Name'
+                  fullWidth
+                  required
+                  name='lastName'
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label='Email'
+                  type='email'
+                  fullWidth
+                  required
+                  name='email'
+                  value={formData.email}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label='Phone'
+                  fullWidth
+                  name='phone'
+                  type='tel'
+                  value={formData.phone}
+                  onChange={handleChange}
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  label='Message'
+                  multiline
+                  rows={4}
+                  fullWidth
+                  required
+                  name='message'
+                  value={formData.message}
+                  onChange={handleChange}
+                />
+              </Grid>
+            </Grid>
+
+            <Box className='flex justify-end'>
+              <LoadingButton
+                type='submit'
+                variant='contained'
+                size='large'
+                loading={isSubmitting}
+                sx={{
+                  width: {xs: '100%', sm: 'auto'},
+                  minWidth: 200,
+                  height: 48,
+                  borderRadius: 2,
+                  textTransform: 'none',
+                  fontSize: '1.1rem',
+                }}
+              >
+                Send Message
+              </LoadingButton>
+            </Box>
+          </Box>
+        </Card>
+
+        <Card className='w-full p-6 mt-16'>
           <Box className='aspect-video relative'>
             <iframe
               src='https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1832416846336!2d-73.98784532342246!3d40.75479597138413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b30eac9f%3A0xaca05ca48ab0c3a!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1709701234567!5m2!1sen!2sus'

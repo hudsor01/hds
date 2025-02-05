@@ -1,5 +1,6 @@
-import {prisma} from '@/lib/prisma';
+import {prisma} from '@/prisma/seed';
 import {getAuth} from '@clerk/nextjs/server';
+import {PaymentStatus} from '@prisma/client';
 import {NextRequest, NextResponse} from 'next/server';
 import Stripe from 'stripe';
 import {z} from 'zod';
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest) {
     }
 
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: Math.round(body.amount * 100), // Convert to cents
+      amount: Math.round(body.amount * 100),
       currency: 'usd',
       metadata: {
         tenantId: body.tenantId,
@@ -58,7 +59,7 @@ export async function POST(req: NextRequest) {
         tenant_id: body.tenantId,
         property_id: body.propertyId,
         reference: paymentIntent.id,
-        status: 'Pending',
+        status: 'PENDING',
         user_id: userId,
         lease_id: body.leaseId || '',
         due_date: body.dueDate ? new Date(body.dueDate) : new Date(),
@@ -98,10 +99,13 @@ export async function GET(req: NextRequest) {
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '10');
 
+    // Convert query status to uppercase and cast it as PaymentStatus.
+    const normalizedStatus = status ? (status.toUpperCase() as PaymentStatus) : undefined;
+
     const where = {
       ...(propertyId && {property_id: propertyId}),
       ...(tenantId && {tenant_id: tenantId}),
-      ...(status && {status}),
+      ...(normalizedStatus && {status: normalizedStatus}),
       property: {
         owner_id: userId,
       },
@@ -110,10 +114,6 @@ export async function GET(req: NextRequest) {
     const [payments, total] = await Promise.all([
       prisma.payments.findMany({
         where,
-        include: {
-          tenant: true,
-          property: true,
-        },
         skip: (page - 1) * limit,
         take: limit,
         orderBy: {
