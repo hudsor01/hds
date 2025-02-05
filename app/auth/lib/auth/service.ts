@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/prisma';
+import {prisma} from '@/prisma/seed';
 import type {Session} from '@/types/database.types';
 import {nanoid} from 'nanoid';
 

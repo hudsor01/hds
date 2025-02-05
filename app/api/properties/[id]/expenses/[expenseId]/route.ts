@@ -1,10 +1,8 @@
-import {createRouteHandlerClient} from '@supabase/auth-helpers-nextjs';
-import {cookies} from 'next/headers';
 import {NextResponse} from 'next/server';
 
 export async function GET(request: Request, {params}: {params: {id: string; expenseId: string}}) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient();
 
     // Get expense with property details
     const {data: expense, error} = await supabase
@@ -41,7 +39,7 @@ export async function GET(request: Request, {params}: {params: {id: string; expe
 
 export async function PATCH(request: Request, {params}: {params: {id: string; expenseId: string}}) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient();
     const json = await request.json();
 
     // Update expense
@@ -86,7 +84,7 @@ export async function DELETE(
   {params}: {params: {id: string; expenseId: string}},
 ) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient();
 
     const {error} = await supabase
       .from('expenses')
@@ -100,4 +98,7 @@ export async function DELETE(
   } catch (error) {
     return NextResponse.json({error: 'Error deleting expense'}, {status: 500});
   }
+}
+function createRouteHandlerClient() {
+  throw new Error('Function not implemented.');
 }

@@ -3,8 +3,10 @@
 import {AuthGuard} from '@/components/auth/auth-guard';
 import {DashboardHeader} from '@/components/layout/dashboard-header';
 import {DashboardNav} from '@/components/layout/dashboard-nav';
-import {Box, Drawer, Stack, useMediaQuery, useTheme} from '@mui/material';
-import {useState} from 'react';
+import {useUser} from '@clerk/nextjs';
+import {Box, Drawer, useMediaQuery, useTheme} from '@mui/material';
+import {useRouter} from 'next/navigation';
+import {useEffect, useState} from 'react';
 
 const SIDEBAR_WIDTH = 280;
 
@@ -17,6 +19,19 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
+  const {user, isLoaded} = useUser();
+  const router = useRouter();
+
+  // Check if user needs onboarding
+  useEffect(() => {
+    if (isLoaded && user) {
+      const needsOnboarding =
+        !user.firstName || !user.lastName || !user.publicMetadata?.onboardingCompleted;
+      if (needsOnboarding) {
+        router.push('/onboarding');
+      }
+    }
+  }, [isLoaded, user, router]);
 
   const handleSidebarToggle = () => {
     setSidebarCollapsed(!sidebarCollapsed);
@@ -24,7 +39,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
 
   return (
     <AuthGuard>
-      <Box sx={{display: 'flex', minHeight: '100vh'}}>
+      <Box sx={{display: 'flex', minHeight: '100vh', overflow: 'hidden'}}>
         <DashboardHeader
           onSidebarOpen={() => setSidebarOpen(true)}
           onSidebarToggle={handleSidebarToggle}
@@ -34,10 +49,14 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
         <Box
           component='nav'
           sx={{
+            position: 'fixed',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            zIndex: theme.zIndex.drawer,
             width: {
               lg: sidebarCollapsed ? 80 : SIDEBAR_WIDTH,
             },
-            flexShrink: {lg: 0},
             transition: theme.transitions.create('width', {
               duration: theme.transitions.duration.standard,
             }),
@@ -49,8 +68,9 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
               sx={{
                 display: {xs: 'none', lg: 'block'},
                 '& .MuiDrawer-paper': {
-                  width: sidebarCollapsed ? 80 : SIDEBAR_WIDTH,
-                  boxSizing: 'border-box',
+                  position: 'static',
+                  width: 'auto',
+                  height: '100%',
                   borderRight: '1px solid',
                   borderColor: 'divider',
                   transition: theme.transitions.create('width', {
@@ -60,7 +80,15 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
                 },
               }}
             >
-              <Box sx={{px: sidebarCollapsed ? 1 : 2, py: 3}}>
+              <Box sx={{height: 64}} /> {/* Header spacing */}
+              <Box
+                sx={{
+                  px: sidebarCollapsed ? 1 : 2,
+                  py: 3,
+                  height: 'calc(100% - 64px)',
+                  overflow: 'auto',
+                }}
+              >
                 <DashboardNav collapsed={sidebarCollapsed} />
               </Box>
             </Drawer>
@@ -79,6 +107,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
                 },
               }}
             >
+              <Box sx={{height: 64}} /> {/* Header spacing */}
               <Box sx={{px: 2, py: 3}}>
                 <DashboardNav collapsed={false} />
               </Box>
@@ -90,20 +119,19 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
           component='main'
           sx={{
             flexGrow: 1,
-            py: 8,
-            px: 2,
-            width: {
-              lg: `calc(100% - ${sidebarCollapsed ? 80 : SIDEBAR_WIDTH}px)`,
+            minHeight: '100vh',
+            pt: '64px', // Header height
+            ml: {
+              xs: 0,
+              lg: sidebarCollapsed ? '80px' : `${SIDEBAR_WIDTH}px`,
             },
-            transition: theme.transitions.create(['width', 'margin'], {
+            transition: theme.transitions.create('margin', {
               duration: theme.transitions.duration.standard,
             }),
+            overflow: 'auto',
           }}
         >
-          <Stack spacing={3}>
-            <Box sx={{height: 64}} />
-            {children}
-          </Stack>
+          <Box sx={{p: 3}}>{children}</Box>
         </Box>
       </Box>
     </AuthGuard>

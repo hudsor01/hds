@@ -10,13 +10,13 @@ export async function POST() {
   }
 
   try {
-    const existingUser = await prisma.user.findFirst({
+    const existingUser = await prisma.users.findFirst({
       where: {
         id: userId,
       },
       select: {
         id: true,
-        subscriptionStatus: true,
+        subscription_status: true,
       },
     });
 
@@ -24,17 +24,17 @@ export async function POST() {
       return new NextResponse('User not found', {status: 404});
     }
 
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await prisma.users.update({
       where: {
         id: existingUser.id,
       },
       data: {
-        subscriptionStatus: 'trialing',
+        subscription_status: 'trialing',
         trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
       },
       select: {
         id: true,
-        subscriptionStatus: true,
+        subscription_status: true,
         trialEndsAt: true,
       },
     });

@@ -1,12 +1,17 @@
 'use client';
 
-import {createClerkSupabaseClient} from '@/utils/supabase';
+import {Button} from '@/components/ui/buttons/button';
+import {Card} from '@/components/ui/card';
 import {useUser} from '@clerk/nextjs';
 import {
   Box,
-  Button,
   Container,
-  Paper,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Step,
   StepLabel,
   Stepper,
@@ -15,141 +20,269 @@ import {
 } from '@mui/material';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
+import {toast} from 'sonner';
 
-const steps = ['Basic Information', 'Property Details', 'Preferences'];
+const steps = ['Personal Information', 'Property Details', 'Preferences'];
+
+interface OnboardingData {
+  firstName: string;
+  lastName: string;
+  state: string;
+  propertyCount: string;
+  propertyTypes: string[];
+  managementStyle: string;
+}
+
+const initialData: OnboardingData = {
+  firstName: '',
+  lastName: '',
+  state: '',
+  propertyCount: '',
+  propertyTypes: [],
+  managementStyle: '',
+};
+
+const states = [
+  'AL',
+  'AK',
+  'AZ',
+  'AR',
+  'CA',
+  'CO',
+  'CT',
+  'DE',
+  'FL',
+  'GA',
+  'HI',
+  'ID',
+  'IL',
+  'IN',
+  'IA',
+  'KS',
+  'KY',
+  'LA',
+  'ME',
+  'MD',
+  'MA',
+  'MI',
+  'MN',
+  'MS',
+  'MO',
+  'MT',
+  'NE',
+  'NV',
+  'NH',
+  'NJ',
+  'NM',
+  'NY',
+  'NC',
+  'ND',
+  'OH',
+  'OK',
+  'OR',
+  'PA',
+  'RI',
+  'SC',
+  'SD',
+  'TN',
+  'TX',
+  'UT',
+  'VT',
+  'VA',
+  'WA',
+  'WV',
+  'WI',
+  'WY',
+];
+
+const propertyTypes = [
+  'Single Family Home',
+  'Multi-Family Home',
+  'Apartment Building',
+  'Condominium',
+  'Townhouse',
+  'Commercial Property',
+];
+
+const managementStyles = [
+  'Hands-on (Self-managed)',
+  'Partially delegated',
+  'Fully delegated to property manager',
+];
 
 export default function OnboardingPage() {
-  const {user} = useUser();
-  const router = useRouter();
   const [activeStep, setActiveStep] = useState(0);
-  const [formData, setFormData] = useState({
-    fullName: user?.fullName || '',
-    phoneNumber: '',
-    companyName: '',
-    propertyType: '',
-    numberOfProperties: '',
-    preferredContactMethod: '',
-  });
+  const [formData, setFormData] = useState<OnboardingData>(initialData);
+  const {user, isLoaded} = useUser();
+  const router = useRouter();
 
-  const handleNext = () => {
-    setActiveStep(prevStep => prevStep + 1);
+  const handleNext = async () => {
+    if (activeStep === steps.length - 1) {
+      try {
+        // Update user metadata
+        await user?.update({
+          firstName: formData.firstName,
+          lastName: formData.lastName,
+          unsafeMetadata: {
+            state: formData.state,
+            propertyCount: formData.propertyCount,
+            propertyTypes: formData.propertyTypes,
+            managementStyle: formData.managementStyle,
+            onboardingCompleted: true,
+          },
+        });
+
+        toast.success('Profile updated successfully!');
+        router.push('/dashboard');
+      } catch (error) {
+        toast.error('Failed to update profile. Please try again.');
+        console.error('Error updating profile:', error);
+      }
+    } else {
+      setActiveStep(prevStep => prevStep + 1);
+    }
   };
 
   const handleBack = () => {
     setActiveStep(prevStep => prevStep - 1);
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleTextChange =
+    (field: keyof OnboardingData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+    };
 
-    try {
-      const supabase = createClerkSupabaseClient();
+  const handleSelectChange =
+    (field: keyof OnboardingData) => (event: SelectChangeEvent<string | string[]>) => {
+      setFormData(prev => ({
+        ...prev,
+        [field]: event.target.value,
+      }));
+    };
 
-      // Save onboarding data to Supabase
-      const {error} = await supabase.from('user_profiles').insert([
-        {
-          user_id: user?.id,
-          ...formData,
-        },
-      ]);
-
-      if (error) throw error;
-
-      // Update user metadata in Clerk
-      await user?.update({
-        firstName: formData.fullName.split(' ')[0],
-        lastName: formData.fullName.split(' ').slice(1).join(' '),
-        unsafeMetadata: {
-          phoneNumber: formData.phoneNumber,
-          companyName: formData.companyName,
-        },
-      });
-
-      // Redirect to dashboard
-      router.push('/dashboard');
-    } catch (err) {
-      console.error('Onboarding error:', err);
+  const isStepValid = () => {
+    switch (activeStep) {
+      case 0:
+        return formData.firstName && formData.lastName;
+      case 1:
+        return formData.state && formData.propertyCount;
+      case 2:
+        return formData.propertyTypes.length > 0 && formData.managementStyle;
+      default:
+        return true;
     }
   };
 
-  const renderStepContent = (step: number) => {
+  const getStepContent = (step: number) => {
     switch (step) {
       case 0:
         return (
           <Box className='space-y-4'>
             <TextField
               fullWidth
-              label='Full Name'
-              value={formData.fullName}
-              onChange={e => setFormData({...formData, fullName: e.target.value})}
-              className='bg-background'
+              label='First Name'
+              value={formData.firstName}
+              onChange={handleTextChange('firstName')}
+              required
             />
             <TextField
               fullWidth
-              label='Phone Number'
-              value={formData.phoneNumber}
-              onChange={e => setFormData({...formData, phoneNumber: e.target.value})}
-              className='bg-background'
-            />
-            <TextField
-              fullWidth
-              label='Company Name'
-              value={formData.companyName}
-              onChange={e => setFormData({...formData, companyName: e.target.value})}
-              className='bg-background'
+              label='Last Name'
+              value={formData.lastName}
+              onChange={handleTextChange('lastName')}
+              required
             />
           </Box>
         );
       case 1:
         return (
           <Box className='space-y-4'>
-            <TextField
-              fullWidth
-              label='Property Type'
-              value={formData.propertyType}
-              onChange={e => setFormData({...formData, propertyType: e.target.value})}
-              className='bg-background'
-            />
-            <TextField
-              fullWidth
-              label='Number of Properties'
-              type='number'
-              value={formData.numberOfProperties}
-              onChange={e => setFormData({...formData, numberOfProperties: e.target.value})}
-              className='bg-background'
-            />
+            <FormControl fullWidth required>
+              <InputLabel>State</InputLabel>
+              <Select value={formData.state} label='State' onChange={handleSelectChange('state')}>
+                {states.map(state => (
+                  <MenuItem key={state} value={state}>
+                    {state}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <FormControl fullWidth required>
+              <InputLabel>Number of Properties</InputLabel>
+              <Select
+                value={formData.propertyCount}
+                label='Number of Properties'
+                onChange={handleSelectChange('propertyCount')}
+              >
+                {['1-5', '6-10', '11-20', '21-50', '50+'].map(count => (
+                  <MenuItem key={count} value={count}>
+                    {count}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         );
       case 2:
         return (
           <Box className='space-y-4'>
-            <TextField
-              fullWidth
-              label='Preferred Contact Method'
-              value={formData.preferredContactMethod}
-              onChange={e => setFormData({...formData, preferredContactMethod: e.target.value})}
-              className='bg-background'
-            />
+            <FormControl fullWidth required>
+              <InputLabel>Property Types</InputLabel>
+              <Select
+                multiple
+                value={formData.propertyTypes}
+                label='Property Types'
+                onChange={handleSelectChange('propertyTypes')}
+              >
+                {propertyTypes.map(type => (
+                  <MenuItem key={type} value={type}>
+                    {type}
+                  </MenuItem>
+                ))}
+              </Select>
+              <FormHelperText>Select all that apply</FormHelperText>
+            </FormControl>
+            <FormControl fullWidth required>
+              <InputLabel>Management Style</InputLabel>
+              <Select
+                value={formData.managementStyle}
+                label='Management Style'
+                onChange={handleSelectChange('managementStyle')}
+              >
+                {managementStyles.map(style => (
+                  <MenuItem key={style} value={style}>
+                    {style}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
           </Box>
         );
       default:
-        return null;
+        return 'Unknown step';
     }
   };
 
+  if (!isLoaded) {
+    return null;
+  }
+
   return (
-    <Container maxWidth='md' className='min-h-screen py-12 px-4 sm:px-6 lg:px-8'>
-      <Paper elevation={3} className='p-8 space-y-8 hover-card'>
-        <Box className='text-center'>
-          <Typography variant='h4' component='h1' className='gradient-text font-bold'>
-            Complete Your Profile
+    <Container maxWidth='md' className='min-h-screen py-12'>
+      <Card className='p-8'>
+        <Box className='text-center mb-8'>
+          <Typography variant='h4' component='h1' className='font-bold mb-2'>
+            Welcome to HDS
           </Typography>
-          <Typography variant='body1' className='mt-2 text-muted-foreground'>
-            Help us personalize your experience
+          <Typography variant='body1' color='text.secondary'>
+            Let's set up your profile to get started
           </Typography>
         </Box>
 
-        <Stepper activeStep={activeStep} className='py-8'>
+        <Stepper activeStep={activeStep} className='mb-8'>
           {steps.map(label => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
@@ -157,26 +290,17 @@ export default function OnboardingPage() {
           ))}
         </Stepper>
 
-        <form onSubmit={activeStep === steps.length - 1 ? handleSubmit : undefined}>
-          {renderStepContent(activeStep)}
+        <Box className='mb-8'>{getStepContent(activeStep)}</Box>
 
-          <Box className='mt-8 flex justify-between'>
-            <Button disabled={activeStep === 0} onClick={handleBack} className='btn-outline'>
-              Back
-            </Button>
-
-            {activeStep === steps.length - 1 ? (
-              <Button type='submit' variant='contained' className='btn-primary'>
-                Complete
-              </Button>
-            ) : (
-              <Button onClick={handleNext} variant='contained' className='btn-primary'>
-                Next
-              </Button>
-            )}
-          </Box>
-        </form>
-      </Paper>
+        <Box className='flex justify-between'>
+          <Button onClick={handleBack} disabled={activeStep === 0} variant='outline'>
+            Back
+          </Button>
+          <Button onClick={handleNext} disabled={!isStepValid()} variant='default'>
+            {activeStep === steps.length - 1 ? 'Complete' : 'Next'}
+          </Button>
+        </Box>
+      </Card>
     </Container>
   );
 }
