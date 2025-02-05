@@ -2,6 +2,61 @@ import type {EmailTemplate} from '../components/emails/templates';
 
 export type Json = string | number | boolean | null | {[key: string]: Json | undefined} | Json[];
 
+// Common types
+export type Timestamp = string;
+export type UUID = string;
+export type Money = number;
+export type Email = string;
+export type PhoneNumber = string;
+export type ImageUrl = string;
+export type DocumentUrl = string;
+
+// Status enums
+export enum UserStatus {
+  ACTIVE = 'active',
+  INACTIVE = 'inactive',
+  SUSPENDED = 'suspended',
+  PENDING = 'pending',
+}
+
+export enum PropertyStatus {
+  AVAILABLE = 'available',
+  OCCUPIED = 'occupied',
+  MAINTENANCE = 'maintenance',
+  INACTIVE = 'inactive',
+}
+
+export enum LeaseStatus {
+  DRAFT = 'draft',
+  PENDING = 'pending',
+  ACTIVE = 'active',
+  TERMINATED = 'terminated',
+  EXPIRED = 'expired',
+  RENEWED = 'renewed',
+}
+
+export enum PaymentStatus {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  REFUNDED = 'refunded',
+  CANCELLED = 'cancelled',
+}
+
+export enum MaintenanceStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+}
+
+export enum MaintenancePriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  EMERGENCY = 'emergency',
+}
+
 export type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant';
 
 export interface UseDashboardUpdatesProps {
@@ -23,182 +78,264 @@ export interface Activity {
 export interface Database {
   public: {
     Tables: {
+      users: {
+        Row: {
+          id: UUID;
+          email: Email;
+          full_name: string | null;
+          avatar_url: ImageUrl | null;
+          role: string;
+          status: UserStatus;
+          created_at: Timestamp;
+          updated_at: Timestamp;
+          last_login: Timestamp | null;
+          preferences: Json | null;
+          stripe_customer_id: string | null;
+          subscription_status: string | null;
+        };
+        Insert: {
+          id?: UUID;
+          email: Email;
+          full_name?: string | null;
+          avatar_url?: ImageUrl | null;
+          role?: string;
+          status?: UserStatus;
+          created_at?: Timestamp;
+          updated_at?: Timestamp;
+          last_login?: Timestamp | null;
+          preferences?: Json | null;
+          stripe_customer_id?: string | null;
+          subscription_status?: string | null;
+        };
+        Update: {
+          id?: UUID;
+          email?: Email;
+          full_name?: string | null;
+          avatar_url?: ImageUrl | null;
+          role?: string;
+          status?: UserStatus;
+          updated_at?: Timestamp;
+          last_login?: Timestamp | null;
+          preferences?: Json | null;
+          stripe_customer_id?: string | null;
+          subscription_status?: string | null;
+        };
+      };
+
       properties: {
         Row: {
-          id: string;
+          id: UUID;
           name: string;
           address: string;
           city: string;
           state: string;
           zip: string;
-          owner_id: string;
-          manager_id: string | null;
-          status: 'available' | 'occupied' | 'maintenance' | 'renovation' | 'off_market';
           type: string;
-          rent_amount: number;
+          status: PropertyStatus;
+          rent_amount: Money;
           amenities: string[];
-          images: string[];
+          images: ImageUrl[];
           bathrooms: number | null;
           bedrooms: number | null;
           size: number | null;
-          created_at: string;
-          updated_at: string;
+          owner_id: UUID;
+          created_at: Timestamp;
+          updated_at: Timestamp;
+          metadata: Json | null;
         };
         Insert: {
-          id?: string;
+          id?: UUID;
           name: string;
           address: string;
           city: string;
           state: string;
           zip: string;
-          owner_id: string;
-          manager_id?: string | null;
-          status?: 'available' | 'occupied' | 'maintenance' | 'renovation' | 'off_market';
-          type?: string;
-          rent_amount: number;
+          type: string;
+          status?: PropertyStatus;
+          rent_amount: Money;
           amenities?: string[];
-          images?: string[];
+          images?: ImageUrl[];
           bathrooms?: number | null;
           bedrooms?: number | null;
           size?: number | null;
-          created_at?: string;
-          updated_at?: string;
+          owner_id: UUID;
+          created_at?: Timestamp;
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
         Update: {
-          id?: string;
           name?: string;
           address?: string;
           city?: string;
           state?: string;
           zip?: string;
-          owner_id?: string;
-          manager_id?: string | null;
-          status?: 'available' | 'occupied' | 'maintenance' | 'renovation' | 'off_market';
           type?: string;
-          rent_amount?: number;
+          status?: PropertyStatus;
+          rent_amount?: Money;
           amenities?: string[];
-          images?: string[];
+          images?: ImageUrl[];
           bathrooms?: number | null;
           bedrooms?: number | null;
           size?: number | null;
-          created_at?: string;
-          updated_at?: string;
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
       };
-      maintenance_requests: {
+
+      leases: {
         Row: {
-          id: string;
-          title: string;
-          description: string;
-          status: string;
-          priority: string;
-          property_id: string | null;
-          requester_id: string;
-          created_at: string;
-          updated_at: string;
+          id: UUID;
+          property_id: UUID;
+          tenant_id: UUID;
+          type: string;
+          status: LeaseStatus;
+          start_date: Timestamp;
+          end_date: Timestamp | null;
+          rent_amount: Money;
+          deposit_amount: Money;
+          payment_day: number;
+          documents: DocumentUrl[];
+          created_at: Timestamp;
+          updated_at: Timestamp;
+          metadata: Json | null;
         };
         Insert: {
-          id?: string;
-          title: string;
-          description: string;
-          status?: string;
-          priority?: string;
-          property_id?: string | null;
-          requester_id: string;
-          created_at?: string;
-          updated_at?: string;
+          id?: UUID;
+          property_id: UUID;
+          tenant_id: UUID;
+          type: string;
+          status?: LeaseStatus;
+          start_date: Timestamp;
+          end_date?: Timestamp | null;
+          rent_amount: Money;
+          deposit_amount: Money;
+          payment_day: number;
+          documents?: DocumentUrl[];
+          created_at?: Timestamp;
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
         Update: {
-          id?: string;
-          title?: string;
-          description?: string;
-          status?: string;
-          priority?: string;
-          property_id?: string | null;
-          requester_id?: string;
-          created_at?: string;
-          updated_at?: string;
+          status?: LeaseStatus;
+          end_date?: Timestamp | null;
+          rent_amount?: Money;
+          deposit_amount?: Money;
+          payment_day?: number;
+          documents?: DocumentUrl[];
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
       };
+
       payments: {
         Row: {
-          user_id: string;
-          lease_id: string;
-          tenant_id: string;
-          property_id: string | null;
-          amount: number;
-          due_date: string;
-          paid_date: string | null;
-          status: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled';
-          method: 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'CHECK' | null;
-          reference: string | null;
-          created_at: string;
+          id: UUID;
+          lease_id: UUID;
+          tenant_id: UUID;
+          amount: Money;
+          status: PaymentStatus;
+          type: string;
+          payment_method: string | null;
+          payment_intent_id: string | null;
+          stripe_charge_id: string | null;
+          description: string | null;
+          created_at: Timestamp;
+          processed_at: Timestamp | null;
+          metadata: Json | null;
         };
         Insert: {
-          user_id: string;
-          lease_id: string;
-          tenant_id: string;
-          property_id?: string | null;
-          amount: number;
-          due_date: string;
-          paid_date?: string | null;
-          status?: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled';
-          method?: 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'CHECK' | null;
-          reference?: string | null;
-          created_at?: string;
+          id?: UUID;
+          lease_id: UUID;
+          tenant_id: UUID;
+          amount: Money;
+          status?: PaymentStatus;
+          type: string;
+          payment_method?: string | null;
+          payment_intent_id?: string | null;
+          stripe_charge_id?: string | null;
+          description?: string | null;
+          created_at?: Timestamp;
+          processed_at?: Timestamp | null;
+          metadata?: Json | null;
         };
         Update: {
-          user_id?: string;
-          lease_id?: string;
-          tenant_id?: string;
-          property_id?: string | null;
-          amount?: number;
-          due_date?: string;
-          paid_date?: string | null;
-          status?: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled';
-          method?: 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'CHECK' | null;
-          reference?: string | null;
-          created_at?: string;
+          status?: PaymentStatus;
+          payment_method?: string | null;
+          payment_intent_id?: string | null;
+          stripe_charge_id?: string | null;
+          description?: string | null;
+          processed_at?: Timestamp | null;
+          metadata?: Json | null;
         };
       };
-      tasks: {
+
+      maintenance_requests: {
         Row: {
-          id: number;
-          name: string;
-          user_id: string;
-          created_at: string;
+          id: UUID;
+          property_id: UUID;
+          tenant_id: UUID | null;
+          title: string;
+          description: string;
+          status: MaintenanceStatus;
+          priority: MaintenancePriority;
+          category: string | null;
+          assigned_to: UUID | null;
+          images: ImageUrl[];
+          cost: Money | null;
+          scheduled_date: Timestamp | null;
+          completed_date: Timestamp | null;
+          created_at: Timestamp;
+          updated_at: Timestamp;
+          metadata: Json | null;
         };
         Insert: {
-          id?: number;
-          name: string;
-          user_id?: string;
-          created_at?: string;
+          id?: UUID;
+          property_id: UUID;
+          tenant_id?: UUID | null;
+          title: string;
+          description: string;
+          status?: MaintenanceStatus;
+          priority?: MaintenancePriority;
+          category?: string | null;
+          assigned_to?: UUID | null;
+          images?: ImageUrl[];
+          cost?: Money | null;
+          scheduled_date?: Timestamp | null;
+          completed_date?: Timestamp | null;
+          created_at?: Timestamp;
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
         Update: {
-          id?: number;
-          name?: string;
-          user_id?: string;
-          created_at?: string;
+          title?: string;
+          description?: string;
+          status?: MaintenanceStatus;
+          priority?: MaintenancePriority;
+          category?: string | null;
+          assigned_to?: UUID | null;
+          images?: ImageUrl[];
+          cost?: Money | null;
+          scheduled_date?: Timestamp | null;
+          completed_date?: Timestamp | null;
+          updated_at?: Timestamp;
+          metadata?: Json | null;
         };
       };
     };
-    Views: {
-      [_ in never]: never;
-    };
-    Functions: {
-      requesting_user_id: {
-        Args: Record<PropertyKey, never>;
-        Returns: string;
-      };
-    };
+
+    Views: Record<string, never>;
+
+    Functions: Record<string, never>;
+
     Enums: {
-      property_status: 'available' | 'occupied' | 'maintenance' | 'renovation' | 'off_market';
-      payment_status: 'Pending' | 'Paid' | 'Overdue' | 'Cancelled';
-      payment_method: 'CREDIT_CARD' | 'BANK_TRANSFER' | 'CASH' | 'CHECK';
+      user_status: UserStatus;
+      property_status: PropertyStatus;
+      lease_status: LeaseStatus;
+      payment_status: PaymentStatus;
+      maintenance_status: MaintenanceStatus;
+      maintenance_priority: MaintenancePriority;
     };
-    CompositeTypes: {
-      [_ in never]: never;
-    };
+    CompositeTypes: Record<string, never>;
   };
 }
 

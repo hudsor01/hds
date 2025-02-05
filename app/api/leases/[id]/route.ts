@@ -1,8 +1,8 @@
-import {prisma} from '@/lib/db/prisma/prisma';
+import {prisma} from '@/lib/prisma/prisma';
 import {getAuth} from '@clerk/nextjs/server';
-import {NextResponse} from 'next/server';
+import {NextRequest, NextResponse} from 'next/server';
 
-export async function GET(request: Request, {params}: {params: {id: string}}) {
+export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
   try {
     const {userId} = getAuth(request);
     if (!userId) {
@@ -13,9 +13,19 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
       where: {
         user_id: params.id,
       },
-      include: {
-        tenant: true,
-        property: true,
+      select: {
+        user_id: true,
+        tenant_id: true,
+        property_id: true,
+        type: true,
+        start_date: true,
+        end_date: true,
+        rent_amount: true,
+        depositAmount: true,
+        payment_day: true,
+        documents: true,
+        created_at: true,
+        status: true,
       },
     });
 
@@ -29,7 +39,7 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
   }
 }
 
-export async function PATCH(request: Request, {params}: {params: {id: string}}) {
+export async function PATCH(request: NextRequest, {params}: {params: {id: string}}) {
   try {
     const {userId} = getAuth(request);
     if (!userId) {
@@ -47,9 +57,19 @@ export async function PATCH(request: Request, {params}: {params: {id: string}}) 
         user_id: params.id,
       },
       data: json,
-      include: {
-        tenant: true,
-        property: true,
+      select: {
+        user_id: true,
+        tenant_id: true,
+        property_id: true,
+        type: true,
+        start_date: true,
+        end_date: true,
+        rent_amount: true,
+        depositAmount: true,
+        payment_day: true,
+        documents: true,
+        created_at: true,
+        status: true,
       },
     });
 
@@ -59,7 +79,7 @@ export async function PATCH(request: Request, {params}: {params: {id: string}}) 
   }
 }
 
-export async function DELETE(request: Request, {params}: {params: {id: string}}) {
+export async function DELETE(request: NextRequest, {params}: {params: {id: string}}) {
   try {
     const {userId} = getAuth(request);
     if (!userId) {

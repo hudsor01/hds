@@ -9,6 +9,7 @@ export const paymentSchema = z.object({
   description: z.string().optional(),
 });
 
+// Common payment types
 export type PaymentRequest = z.infer<typeof paymentSchema>;
 
 export interface PaymentResponse {
@@ -35,4 +36,35 @@ export interface PaymentRecord {
   payment_intent_id: string;
   error_message?: string;
   processed_at?: Date;
+}
+
+// Payment history filters
+export interface PaymentHistoryFilters {
+  leaseId?: string;
+  status?: PaymentStatus;
+  startDate?: Date;
+  endDate?: Date;
+  paymentType?: PaymentType;
+}
+
+// Payment summary
+export interface PaymentSummary {
+  totalPaid: number;
+  totalDue: number;
+  balance: number;
+  lastPaymentDate?: Date;
+  nextPaymentDue?: Date;
+}
+
+// Stripe-specific payment types
+export interface StripePaymentMetadata extends PaymentMetadata {
+  userId: string;
+  customerEmail?: string;
+}
+
+export interface StripeWebhookPayload {
+  type: string;
+  data: {
+    object: Record<string, any>;
+  };
 }

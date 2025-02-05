@@ -1,5 +1,6 @@
-import {prisma} from '@/lib/db/prisma/prisma';
+import {prisma} from '@/lib/prisma/prisma';
 import {getAuth} from '@clerk/nextjs/server';
+import {PaymentStatus, PaymentType} from '@prisma/client';
 import {NextRequest, NextResponse} from 'next/server';
 
 export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
@@ -14,9 +15,14 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
       where: {
         user_id: params.id,
       },
-      include: {
-        property: true,
-        tenant: true,
+      select: {
+        tenant_id: true,
+        property_id: true,
+        start_date: true,
+        end_date: true,
+        rent_amount: true,
+        depositAmount: true,
+        status: true,
       },
     });
 
@@ -28,9 +34,22 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
     const payments = await prisma.payments.findMany({
       where: {
         tenant_id: lease.tenant_id,
+        payment_type: {
+          in: [PaymentType.RENT, PaymentType.DEPOSIT],
+        },
+        payment_status: {
+          in: [PaymentStatus.COMPLETED],
+        },
       },
       orderBy: {
         created_at: 'desc',
+      },
+      select: {
+        payment_amount: true,
+        payment_type: true,
+        payment_status: true,
+        created_at: true,
+        processed_at: true,
       },
     });
 

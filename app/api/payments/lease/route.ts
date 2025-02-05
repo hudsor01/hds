@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/db/prisma/prisma';
+import {prisma} from '@/lib/db';
 import {createPaymentIntent, createStripeCustomer} from '@/lib/stripe';
 import {paymentSchema, type PaymentRecord} from '@/types/payments';
 import {getAuth} from '@clerk/nextjs/server';
@@ -20,9 +20,9 @@ export async function POST(req: NextRequest) {
       where: {
         user_id: body.leaseId,
       },
-      include: {
-        property: true,
-        tenant: true,
+      select: {
+        tenant_id: true,
+        property_id: true,
       },
     });
 
@@ -30,7 +30,18 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({error: 'Lease not found'}, {status: 404});
     }
 
-    const {tenant} = lease;
+    // Get tenant details
+    const tenant = await prisma.tenants.findUnique({
+      where: {id: lease.tenant_id},
+      select: {
+        id: true,
+        email: true,
+        first_name: true,
+        last_name: true,
+        stripe_customer_id: true,
+      },
+    });
+
     if (!tenant) {
       return NextResponse.json({error: 'Tenant not found'}, {status: 404});
     }
@@ -116,6 +127,7 @@ export async function GET(req: NextRequest) {
     // Verify lease belongs to user
     const lease = await prisma.leases.findUnique({
       where: {user_id: leaseId},
+      select: {tenant_id: true},
     });
 
     if (!lease) {
@@ -123,7 +135,7 @@ export async function GET(req: NextRequest) {
     }
 
     const where = {
-      lease_id: leaseId,
+      tenant_id: lease.tenant_id,
       ...(status && {status}),
       ...(startDate &&
         endDate && {

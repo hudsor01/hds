@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/db/prisma/prisma';
+import {prisma} from '@/lib/db';
 import {stripe} from '@/lib/stripe';
 import type {PaymentRecord} from '@/types/payments';
 import {PaymentStatus, PaymentType} from '@prisma/client';
@@ -41,7 +41,7 @@ export async function POST(req: Request) {
             payment_intent_id: paymentIntent.id,
           },
           data: {
-            payment_status: PaymentStatus.PAID,
+            payment_status: PaymentStatus.COMPLETED,
             processed_at: new Date(),
           },
         });
@@ -109,7 +109,7 @@ export async function POST(req: Request) {
             const paymentRecord: PaymentRecord = {
               tenant_id: tenant.id,
               payment_amount: invoice.amount_paid / 100,
-              payment_status: PaymentStatus.PAID,
+              payment_status: PaymentStatus.COMPLETED,
               payment_type: PaymentType.SUBSCRIPTION,
               description: `Subscription payment for period ${new Date(invoice.period_start * 1000).toLocaleDateString()} - ${new Date(invoice.period_end * 1000).toLocaleDateString()}`,
               payment_intent_id: invoice.payment_intent as string,
