@@ -344,3 +344,10 @@ export interface WaitlistStats {
   growthRate: number;
   emailMetrics: Record<EmailTemplate, EmailStats>;
 }
+
+export interface Session {
+  id: string;
+  userId: string;
+  sessionToken: string;
+  expires: Date;
+}

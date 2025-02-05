@@ -1,24 +1,14 @@
 import {clerkMiddleware} from '@clerk/nextjs/server';
-import {NextResponse} from 'next/server';
 
-const publicPaths = ['/', '/sign-in', '/sign-up'];
-
-export default clerkMiddleware(req => {
-  const {auth} = req;
-  const {pathname} = req.nextUrl;
-
-  if (publicPaths.some(path => pathname === path)) {
-    return NextResponse.next();
-  }
-
-  if (!auth?.userId) {
-    const signInUrl = new URL('/sign-in', req.url);
-    return NextResponse.redirect(signInUrl);
-  }
-
-  return NextResponse.next();
-});
-
+export default clerkMiddleware(
+  (auth, req) => {
+    // Custom logic for debugging
+  },
+  {debug: process.env.NODE_ENV === 'development'},
+);
 export const config = {
-  matcher: ['/((?!.*\\.[a-zA-Z0-9]+$|_next).*)'],
+  matcher: [
+    '/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)',
+    '/(api|trpc)(.*)',
+  ],
 };
