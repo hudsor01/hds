@@ -41,8 +41,6 @@ Button.displayName = 'Button';
 
 export {Button, buttonVariants};
 
-export {MuiButton as Button};
-
 export interface LoadingButtonProps extends ButtonProps {
   loading?: boolean;
 }
