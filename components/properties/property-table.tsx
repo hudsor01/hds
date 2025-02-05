@@ -1,6 +1,6 @@
 import {BaseDataGrid} from '@/components/common/data-grid';
 import {formatCurrency} from '@/lib/utils';
-import {PropertyTableProps} from '@/types/properties';
+import {PropertyTableProps} from '@/types/property';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import {Typography} from '@mui/material';
 import Box from '@mui/material/Box';

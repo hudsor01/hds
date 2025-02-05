@@ -1,5 +1,4 @@
-import {createRouteHandlerClient} from '@supabase/auth-helpers-nextjs';
-import {cookies} from 'next/headers';
+import {createClient} from '@supabase/supabase-js';
 import {NextResponse} from 'next/server';
 
 export async function GET(request: Request, {params}: {params: {id: string}}) {
@@ -9,7 +8,10 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
       searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString();
     const endDate = searchParams.get('endDate') || new Date().toISOString();
 
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
 
     // First verify access to the property
     const {data: property, error: propertyError} = await supabase
@@ -65,7 +67,10 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
 
 export async function POST(request: Request, {params}: {params: {id: string}}) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    );
     const json = await request.json();
 
     // First verify access to the property

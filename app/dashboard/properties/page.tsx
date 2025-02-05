@@ -2,6 +2,7 @@
 
 import {supabase, useUser} from '@/app/auth/lib/auth/config';
 import {PropertyDialog} from '@/components/properties/property-dialog';
+import type {Property, PropertyCardData} from '@/types/property';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -23,7 +24,6 @@ import {alpha, useTheme} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import Image from 'next/image';
 import {useEffect, useState} from 'react';
-import type {Property, PropertyCardData} from 'types/properties';
 
 const containerVariants = {
   initial: {opacity: 0},

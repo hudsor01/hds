@@ -27,8 +27,6 @@ model Users {
   tenants              tenants[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
-  sessions Session[]
-
   @@schema("hds")
   @@index([email])
   @@index([clerkId])
@@ -58,23 +56,26 @@ model maintenance_requests {
 }
 
 model tenants {
-  id               String    @id @default(uuid()) @db.Uuid
-  property_id      String    @db.Uuid
-  first_name       String
-  last_name        String
-  email            String
-  phone            String?
-  status           String    @default("active")
-  move_in_date     DateTime? @db.Date
-  move_out_date    DateTime? @db.Date
-  emergency_contact Json?     @default("{}")
-  documents        Json[]    @default([])
-  created_at       DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
-  user_id          String    @db.Uuid
+  id                  String    @id @default(uuid()) @db.Uuid
+  property_id         String    @db.Uuid
+  first_name          String
+  last_name           String
+  email               String
+  phone               String?
+  status              String    @default("active")
+  move_in_date        DateTime? @db.Date
+  move_out_date       DateTime? @db.Date
+  emergency_contact   Json?     @default("{}")
+  documents           Json[]    @default([])
+  created_at          DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at          DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
+  user_id             String    @db.Uuid
+  stripe_customer_id  String?   @unique
+  subscription_status String?
+  payments            payments[]
 
   // Relations
-  uuser                 Users                  @relation("UserTenancies", fields: [user_id], references: [id])
+  users                 Users                  @relation("UserTenancies", fields: [user_id], references: [id])
   property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("TenantMaintenanceRequests")
 
@@ -317,28 +318,22 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  user_id     String         @id @default(uuid()) @db.Uuid
-  lease_id    String
-  tenant_id   String
-  property_id String
-  amount      Decimal
-  due_date    DateTime
-  paid_date   DateTime?
-  status      PaymentStatus
-  method      PaymentMethod?
-  reference   String?
-  created_at  DateTime       @default(now()) @db.Timestamptz(6)
+  id                String        @id @default(uuid())
+  tenant_id         String
+  payment_amount    Float
+  payment_status    PaymentStatus @default(PENDING)
+  payment_type      PaymentType
+  description       String?
+  payment_intent_id String?      @unique
+  error_message     String?
+  processed_at      DateTime?
+  created_at        DateTime      @default(now())
+  updated_at        DateTime      @updatedAt
+  tenant            tenants       @relation(fields: [tenant_id], references: [id])
 
-  @@index([created_at])
-  @@index([due_date])
-  @@index([lease_id], map: "payments_leaseId_idx")
-  @@index([property_id], map: "payments_propertyId_idx")
-  @@index([property_id])
-  @@index([status, created_at])
-  @@index([status])
-  @@index([tenant_id], map: "payments_tenantId_idx")
   @@index([tenant_id])
-  @@index([user_id])
+  @@index([payment_intent_id])
+  @@index([payment_status])
   @@schema("hds")
 }
 
@@ -352,10 +347,9 @@ model profiles {
 
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
-model rent_payments {
+model rent_payment {
   id             String    @id @default(uuid()) @db.Uuid
   property_id    String    @db.Uuid
-  unit_id        String    @db.Uuid
   tenant_id      String    @db.Uuid
   amount         Decimal   @db.Decimal(10, 2)
   due_date       DateTime  @db.Date
@@ -734,11 +728,14 @@ enum LeaseType {
 enum PaymentStatus {
   PENDING
   PAID
-  PARTIAL
-  LATE
-  OVERDUE
+  COMPLETED
+  FAILED
   CANCELLED
   REFUNDED
+  OVERDUE
+  LATE
+  PARTIAL
+
   @@schema("hds")
 }
 
@@ -753,11 +750,14 @@ enum PaymentMethod {
 
 enum PaymentType {
   RENT
-  SECURITY_DEPOSIT
+  DEPOSIT
+  SUBSCRIPTION
   LATE_FEE
   MAINTENANCE
   UTILITIES
+  SECURITY_DEPOSIT
   OTHER
+
   @@schema("hds")
 }
 
@@ -834,12 +834,23 @@ enum ImageJobStatus {
   @@schema("hds")
 }
 
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  UNPAID
+
+  @@schema("hds")
+}
+
 model Session {
   id           String   @id @default(uuid())
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.Uuid
   expires      DateTime
-
   user         users    @relation(fields: [userId], references: [id])
 
   @@schema("hds")

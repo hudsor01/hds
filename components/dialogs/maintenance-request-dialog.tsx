@@ -2,6 +2,7 @@
 
 import {PRIORITY_LABELS, PRIORITY_LEVELS} from '@/auth/lib/constants';
 import {Button} from '@/components/ui/buttons/button';
+import type {Property} from '@/types/property';
 import type {SelectChangeEvent} from '@mui/material';
 import {
   Dialog,
@@ -21,7 +22,6 @@ import type {
   NewMaintenanceRequest,
   UpdateMaintenanceRequest,
 } from 'types/maintenance';
-import type {Property} from 'types/properties';
 
 interface MaintenanceRequestDialogProps {
   open: boolean;

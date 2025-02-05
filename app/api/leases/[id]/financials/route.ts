@@ -1,57 +1,56 @@
-import {createClient} from '@supabase/supabase-js';
-import {cookies} from 'next/headers';
-import {NextResponse} from 'next/server';
+import {prisma} from '@/lib/db/prisma/prisma';
+import {getAuth} from '@clerk/nextjs/server';
+import {NextRequest, NextResponse} from 'next/server';
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
-
-function createRouteHandlerClient({cookies: reqCookies}: {cookies: any}) {
-  // Create and return the Supabase client instance.
-  return createClient(supabaseUrl, supabaseAnonKey);
-}
-
-export async function GET(request: Request, {params}: {params: {id: string}}) {
+export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const {userId} = getAuth(request);
+    if (!userId) {
+      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+    }
 
     // First verify access to the lease
-    const {data: lease, error: leaseError} = await supabase
-      .from('leases')
-      .select(
-        `
-        *,
-        unit:units (
-          *,
-          property:properties (
-            id,
-            organization_id
-          )
-        )
-      `,
-      )
-      .eq('id', params.id)
-      .single();
+    const lease = await prisma.leases.findUnique({
+      where: {
+        user_id: params.id,
+      },
+      include: {
+        property: true,
+        tenant: true,
+      },
+    });
 
-    if (leaseError || !lease) {
+    if (!lease) {
       return NextResponse.json({error: 'Lease not found'}, {status: 404});
     }
 
     // Calculate lease financials
-    const {data: financials, error} = await supabase.rpc('calculate_lease_financials', {
-      p_lease_id: params.id,
+    const payments = await prisma.payments.findMany({
+      where: {
+        tenant_id: lease.tenant_id,
+      },
+      orderBy: {
+        created_at: 'desc',
+      },
     });
 
-    if (error) throw error;
+    const totalPaid = payments.reduce((sum, payment) => sum + payment.payment_amount, 0);
+    const totalDue = Number(lease.rent_amount) * 12; // Assuming yearly calculation
+    const balance = totalDue - totalPaid;
 
     return NextResponse.json({
       lease_details: {
-        unit_number: lease.unit.unit_number,
-        property_id: lease.unit.property.id,
+        property_id: lease.property_id,
         start_date: lease.start_date,
         end_date: lease.end_date,
         status: lease.status,
       },
-      financials,
+      financials: {
+        total_paid: totalPaid,
+        total_due: totalDue,
+        balance,
+        payment_history: payments,
+      },
     });
   } catch (error) {
     return NextResponse.json({error: 'Error calculating lease financials'}, {status: 500});

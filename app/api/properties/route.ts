@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/prisma';
+import {prisma} from '@/prisma/seed';
 import {getAuth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';

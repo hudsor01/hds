@@ -1,4 +1,4 @@
-import {Property} from '@/types/properties';
+import {Property} from '@/types/property';
 import {create} from 'zustand';
 
 interface PropertyStore {

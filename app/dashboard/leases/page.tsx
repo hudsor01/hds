@@ -1,12 +1,12 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
+import type {Property} from '@/types/property';
 import LeaseDialog from 'components/dialogs/lease-dialog';
 import {useState} from 'react';
 import {Edit, Plus, Trash} from 'react-feather';
 import type {Lease} from 'types/leases';
 import {LEASE_STATUS} from 'types/leases';
-import type {Property} from 'types/properties';
 
 // Mock data for initial development
 const mockProperties: Property[] = [

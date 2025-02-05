@@ -6,7 +6,7 @@ import {PropertyDialog} from '@/components/dashboard/property-dialog';
 import {Button} from '@/components/ui/buttons/button';
 import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
 import {useDashboardUpdates} from '@/hooks/use-dashboard-updates';
-import type {Property, PropertyStatus, PropertyUnit, UpdatePropertyInput} from '@/types/properties';
+import type {Property, PropertyStatus, PropertyUnit, UpdatePropertyInput} from '@/types/property';
 import {useEffect, useState} from 'react';
 import {Plus} from 'react-feather';
 import {toast} from 'sonner';
