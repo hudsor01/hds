@@ -27,7 +27,7 @@ CREATE TYPE "payment_method" AS ENUM (
 
 -- Create properties table
 CREATE TABLE "properties" (
-  "id" UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  "id" UUID DEFAULT gen_random_uuid PRIMARY KEY,
   "name" TEXT NOT NULL,
   "address" TEXT NOT NULL,
   "city" TEXT NOT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE "properties" (
 
 -- Create maintenance_requests table
 CREATE TABLE "maintenance_requests" (
-  "id" UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+  "id" UUID DEFAULT gen_random_uuid PRIMARY KEY,
   "title" TEXT NOT NULL,
   "description" TEXT NOT NULL,
   "status" TEXT DEFAULT 'PENDING',

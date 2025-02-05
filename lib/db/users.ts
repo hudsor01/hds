@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/prisma';
+import {prisma} from './prisma/prisma';
 import {UserRole} from '@/types/roles';
 
 export async function getUserByClerkId(clerkId: string) {
@@ -11,12 +11,12 @@ export async function getUserByClerkId(clerkId: string) {
       email: true,
       role: true,
       created_at: true,
-      properties: {
-        select: {
-          id: true,
-          name: true,
-        },
-      },
+      updated_at: true,
+      clerkId: true,
+      name: true,
+      image: true,
+      stripe_customer_id: true,
+      subscription_status: true,
     },
   });
 

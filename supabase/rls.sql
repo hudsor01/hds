@@ -1,6 +1,6 @@
 -- Create organizations table
 CREATE TABLE organizations (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     name VARCHAR(255) NOT NULL,
     subscription_status VARCHAR(50) NOT NULL DEFAULT 'active'
@@ -8,7 +8,7 @@ CREATE TABLE organizations (
 
 -- Create organization members table
 CREATE TABLE organization_members (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     organization_id UUID NOT NULL REFERENCES organizations(id) ON DELETE CASCADE,
     user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,

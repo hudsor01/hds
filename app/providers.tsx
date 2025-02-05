@@ -4,7 +4,7 @@ import theme from './theme';
 import createEmotionCache from '@/lib/utils/createEmotionCache';
 import {CacheProvider} from '@emotion/react';
 import CssBaseline from '@mui/material/CssBaseline';
-import {ThemeProvider as MuiThemeProvider} from '@mui/material/styles';
+import {ThemeProvider} from '@mui/material/styles';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
 
 const clientSideEmotionCache = createEmotionCache();
@@ -12,12 +12,12 @@ const clientSideEmotionCache = createEmotionCache();
 export function Providers({children}: {children: React.ReactNode}) {
   return (
     <CacheProvider value={clientSideEmotionCache}>
-      <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
-        <MuiThemeProvider theme={theme}>
+      <ThemeProvider theme={theme}>
+        <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
           <CssBaseline />
           {children}
-        </MuiThemeProvider>
-      </NextThemesProvider>
+        </NextThemesProvider>
+      </ThemeProvider>
     </CacheProvider>
   );
 }

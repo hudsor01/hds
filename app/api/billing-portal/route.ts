@@ -1,4 +1,3 @@
-import {stripe} from '@/auth/lib/stripe';
 import type {Session} from '@clerk/nextjs/server';
 import {auth} from '@clerk/nextjs/server';
 import {NextResponse} from 'next/server';

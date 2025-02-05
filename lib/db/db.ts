@@ -58,8 +58,7 @@ export const analyticsDB = {
     endDate?: Date;
     template?: string;
   }) => {
-    // Implement your analytics logic here.
-    return []; // Replace with actual stats data.
+    return [];
   },
 };
 

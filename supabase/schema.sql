@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Properties table
 CREATE TABLE properties (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     name VARCHAR(255) NOT NULL,
     address VARCHAR(255) NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE properties (
 
 -- Units table
 CREATE TABLE units (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     property_id UUID NOT NULL REFERENCES properties(id) ON DELETE CASCADE,
     unit_number VARCHAR(50) NOT NULL,
@@ -32,7 +32,7 @@ CREATE TABLE units (
 
 -- Tenants table
 CREATE TABLE tenants (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     first_name VARCHAR(100) NOT NULL,
     last_name VARCHAR(100) NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE tenants (
 
 -- Leases table
 CREATE TABLE leases (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     unit_id UUID NOT NULL REFERENCES units(id) ON DELETE CASCADE,
     tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
@@ -59,7 +59,7 @@ CREATE TABLE leases (
 
 -- Maintenance Requests table
 CREATE TABLE maintenance_requests (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid,
     created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc', NOW()),
     unit_id UUID NOT NULL REFERENCES units(id) ON DELETE CASCADE,
     tenant_id UUID NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,

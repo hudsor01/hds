@@ -19,7 +19,7 @@ CREATE TYPE "public"."request_status" AS ENUM ('pending', 'approved', 'rejected'
 
 -- CreateTable
 CREATE TABLE "public"."users" (
-    "id" TEXT NOT NULL DEFAULT uuid_generate_v4(),
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid,
     "name" TEXT,
     "email" TEXT NOT NULL,
     "image" TEXT,
@@ -35,7 +35,7 @@ CREATE TABLE "public"."users" (
 
 -- CreateTable
 CREATE TABLE "public"."tenants" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "unit_id" UUID NOT NULL,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
@@ -72,7 +72,7 @@ CREATE TABLE "public"."Account" (
 
 -- CreateTable
 CREATE TABLE "public"."Documents" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "name" TEXT NOT NULL,
     "description" TEXT,
     "url" TEXT NOT NULL,
@@ -105,7 +105,7 @@ CREATE TABLE "public"."email_templates" (
 
 -- CreateTable
 CREATE TABLE "public"."expenses" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "property_id" UUID NOT NULL,
     "category" TEXT NOT NULL,
     "amount" DECIMAL(10,2) NOT NULL,
@@ -164,7 +164,7 @@ CREATE TABLE "public"."login_history" (
 
 -- CreateTable
 CREATE TABLE "public"."maintenance_requests" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "title" TEXT NOT NULL,
     "description" TEXT NOT NULL,
     "status" TEXT DEFAULT 'PENDING',
@@ -179,7 +179,7 @@ CREATE TABLE "public"."maintenance_requests" (
 
 -- CreateTable
 CREATE TABLE "public"."message_threads" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "subject" TEXT NOT NULL,
     "last_message_id" UUID,
     "participants" UUID[],
@@ -191,7 +191,7 @@ CREATE TABLE "public"."message_threads" (
 
 -- CreateTable
 CREATE TABLE "public"."messages" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "sender_id" UUID NOT NULL,
     "recipient_id" UUID NOT NULL,
     "subject" TEXT,
@@ -208,7 +208,7 @@ CREATE TABLE "public"."messages" (
 
 -- CreateTable
 CREATE TABLE "public"."notifications" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "user_id" UUID NOT NULL,
     "type" "public"."notification_type" NOT NULL,
     "title" TEXT NOT NULL,
@@ -273,7 +273,7 @@ CREATE TABLE "public"."profiles" (
 
 -- CreateTable
 CREATE TABLE "public"."properties" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "name" TEXT NOT NULL,
     "address" TEXT NOT NULL,
     "city" TEXT NOT NULL,
@@ -297,7 +297,7 @@ CREATE TABLE "public"."properties" (
 
 -- CreateTable
 CREATE TABLE "public"."rent_payments" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "property_id" UUID NOT NULL,
     "unit_id" UUID NOT NULL,
     "tenant_id" UUID NOT NULL,
@@ -361,7 +361,7 @@ CREATE TABLE "public"."system_configurations" (
 
 -- CreateTable
 CREATE TABLE "public"."units" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "property_id" UUID NOT NULL,
     "unit_number" TEXT NOT NULL,
     "floor_plan" TEXT,
@@ -379,7 +379,7 @@ CREATE TABLE "public"."units" (
 
 -- CreateTable
 CREATE TABLE "public"."user_activity_logs" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "user_id" UUID,
     "action" TEXT NOT NULL,
     "entity" TEXT NOT NULL,
@@ -449,7 +449,7 @@ CREATE TABLE "public"."user_settings" (
 
 -- CreateTable
 CREATE TABLE "public"."waitlist_attempts" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "identifier" TEXT NOT NULL,
     "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT timezone('utc'::text, now()),
 
@@ -465,7 +465,7 @@ CREATE TABLE "auth"."schema_migrations" (
 
 -- CreateTable
 CREATE TABLE "auth"."users" (
-    "id" UUID NOT NULL DEFAULT uuid_generate_v4(),
+    "id" UUID NOT NULL DEFAULT gen_random_uuid,
     "email" TEXT NOT NULL,
     "encrypted_password" TEXT NOT NULL,
     "email_confirmed_at" TIMESTAMPTZ(6),

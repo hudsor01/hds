@@ -1,6 +1,6 @@
 'use client';
 
-import {cn} from '@/lib/utils/utils';
+import {cn} from '@/lib/utils';
 import MuiButton, {ButtonProps as MuiButtonProps} from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import {type VariantProps, cva} from 'class-variance-authority';

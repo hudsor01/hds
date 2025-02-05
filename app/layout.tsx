@@ -1,11 +1,5 @@
 import './globals.css';
 import {Providers} from './providers';
-import theme from './theme';
-import createEmotionCache from '@/lib/utils/createEmotionCache';
-import {ClerkProvider} from '@clerk/nextjs';
-import {CacheProvider} from '@emotion/react';
-import CssBaseline from '@mui/material/CssBaseline';
-import {ThemeProvider} from '@mui/material/styles';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
 import type {Metadata} from 'next';
@@ -18,18 +12,12 @@ const roboto = Roboto({
   display: 'swap',
 });
 
-// Client-side cache, shared for the whole session of the user in the browser.
-const clientSideEmotionCache = createEmotionCache();
-
 export const metadata: Metadata = {
   title: 'HDS - Healthcare Data System',
   description: 'Modern healthcare data management system',
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
-  // Use the client-side emotion cache internally
-  const emotionCache = clientSideEmotionCache;
-
   return (
     <html lang='en' suppressHydrationWarning>
       <head>
@@ -37,19 +25,12 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <link rel='icon' href='/favicon.ico' />
       </head>
       <body className={roboto.className}>
-        <CacheProvider value={emotionCache}>
-          <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <ClerkProvider>
-              <Providers>
-                {children}
-                <Toaster position='top-center' expand={true} richColors />
-              </Providers>
-            </ClerkProvider>
-            <Analytics />
-            <SpeedInsights />
-          </ThemeProvider>
-        </CacheProvider>
+        <Providers>
+          {children}
+          <Toaster position='top-center' expand={true} richColors />
+        </Providers>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

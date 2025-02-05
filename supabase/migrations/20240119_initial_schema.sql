@@ -3,7 +3,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 -- Properties table
 CREATE TABLE IF NOT EXISTS public.properties (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid,
   created_at timestamptz NOT NULL DEFAULT now(),
   name text NOT NULL,
   address text NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS public.properties (
 
 -- Sessions table
 CREATE TABLE IF NOT EXISTS public.sessions (
-  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid,
   user_id uuid NOT NULL,
   session_token text NOT NULL UNIQUE,
   expires timestamptz NOT NULL,
