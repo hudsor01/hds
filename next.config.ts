@@ -1,17 +1,26 @@
 import type {NextConfig} from 'next';
 
 const nextConfig: NextConfig = {
-  reactStrictMode: true,
-  typescript: {
-    ignoreBuildErrors: true,
-    tsconfigPath: './tsconfig.json',
+  modularizeImports: {
+    '@mui/icons-material': {
+      transform: '@mui/icons-material/{{member}}',
+    },
   },
   experimental: {
+    optimizePackageImports: ['@mui/icons-material', '@mui/material'],
     serverActions: {
       bodySizeLimit: '2mb',
       allowedOrigins: ['localhost:3000'],
     },
   },
+  compiler: {
+    emotion: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+    tsconfigPath: './tsconfig.json',
+  },
+  reactStrictMode: true,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

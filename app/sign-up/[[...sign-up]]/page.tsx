@@ -13,7 +13,7 @@ export default function SignUpPage() {
             Create Your Account
           </Typography>
           <Typography variant='body1' className='mt-2 text-muted-foreground'>
-            Join us and start managing your properties
+            Join us to manage your properties efficiently
           </Typography>
         </Box>
 

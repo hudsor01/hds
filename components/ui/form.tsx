@@ -1,9 +1,10 @@
-import {EnhancedButton} from '@/components/ui/enhanced-btn';
+import {Button} from './buttons/button';
 import {Input} from '@/components/ui/input';
-import {containerVariants, itemVariants} from '@/lib/animation-variants';
+import {containerVariants, itemVariants} from '@/lib/utils/animations/animation-variants';
 import {motion} from 'framer-motion';
 import Link from 'next/link';
 import {ChangeEvent} from 'react';
+import {GitHub, X} from 'react-feather';
 
 interface FormProps {
   name: string;
@@ -41,28 +42,21 @@ export default function Form({
         />
       </motion.div>
       <motion.div variants={itemVariants}>
-        <EnhancedButton
-          variant='expandIcon'
-          Icon={FaArrowRightLong}
-          onClick={handleSubmit}
-          iconPlacement='right'
-          className='mt-2 w-full'
-          disabled={loading}
-        >
+        <Button variant='default' onClick={handleSubmit} disabled={loading}>
           {loading ? 'Loading...' : 'Join Waitlist!'}
-        </EnhancedButton>
+        </Button>
       </motion.div>
       <motion.div
         variants={itemVariants}
         className='mt-4 flex w-full items-center justify-center gap-1 text-muted-foreground'
       >
         <p>For any queries, reach out at </p>
-        <Link href='https://x.com/blakssh' rel='noopener noreferrer' target='_blank'>
-          <FaXTwitter className='h-4 w-4 transition-all duration-200 ease-linear hover:text-yellow-200' />
+        <Link href='https://x.com/dickswayze' rel='noopener noreferrer' target='_blank'>
+          <X className='h-4 w-4 transition-all duration-200 ease-linear hover:text-yellow-200' />
         </Link>
         or
-        <Link href='https://github.com/lakshaybhushan' rel='noopener noreferrer' target='_blank'>
-          <FaGithub className='ml-0.5 h-5 w-5 transition-all duration-200 ease-linear hover:text-yellow-200' />
+        <Link href='https://github.com/hudsor01' rel='noopener noreferrer' target='_blank'>
+          <GitHub className='ml-0.5 h-5 w-5 transition-all duration-200 ease-linear hover:text-yellow-200' />
         </Link>
       </motion.div>
     </motion.div>

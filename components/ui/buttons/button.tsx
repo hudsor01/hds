@@ -1,7 +1,7 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import MuiButton from '@mui/material/Button';
+import {cn} from '@/lib/utils/utils';
+import MuiButton, {ButtonProps as MuiButtonProps} from '@mui/material/Button';
 import CircularProgress from '@mui/material/CircularProgress';
 import {type VariantProps, cva} from 'class-variance-authority';
 import {type ButtonHTMLAttributes, forwardRef} from 'react';
@@ -41,7 +41,7 @@ Button.displayName = 'Button';
 
 export {Button, buttonVariants};
 
-export interface LoadingButtonProps extends ButtonProps {
+export interface LoadingButtonProps extends MuiButtonProps {
   loading?: boolean;
 }
 

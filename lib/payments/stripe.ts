@@ -1,9 +1,9 @@
 import {getUser} from '../../app/auth';
 import type {Team} from '@/types/team';
+import {createClient} from '@supabase/supabase-js';
 import {redirect} from 'next/navigation';
 import Stripe from 'stripe';
 
-// Single Stripe instance with complete configuration
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-01-27.acacia',
   typescript: true,
@@ -13,8 +13,12 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   },
 });
 
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+const supabase = createClient(supabaseUrl, supabaseKey);
+
 export async function createCheckoutSession({team, priceId}: {team: Team | null; priceId: string}) {
-  const user = await getUser();
+  const user = await getUser(supabase);
 
   if (!team || !user) {
     redirect(`/sign-up?redirect=checkout&priceId=${priceId}`);

@@ -1,7 +1,7 @@
-import {SignIn} from '@clerk/nextjs';
+import {SignUp} from '@clerk/nextjs';
 import {Box, Container, Paper, Typography} from '@mui/material';
 
-export default function SignInPage() {
+export default function SignUpPage() {
   return (
     <Container
       maxWidth='sm'
@@ -10,14 +10,14 @@ export default function SignInPage() {
       <Paper elevation={3} className='w-full p-8 space-y-8 hover-card'>
         <Box className='text-center'>
           <Typography variant='h4' component='h1' className='gradient-text font-bold'>
-            Welcome Back
+            Create Your Account
           </Typography>
           <Typography variant='body1' className='mt-2 text-muted-foreground'>
-            Sign in to your account to continue
+            Join us and start managing your properties
           </Typography>
         </Box>
 
-        <SignIn
+        <SignUp
           appearance={{
             elements: {
               rootBox: 'w-full',
