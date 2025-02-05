@@ -1,3 +1,4 @@
+import {Input} from '@/components/ui/input';
 import {getFieldError} from '@/lib/forms/use-form';
 import {
   FormControl,
@@ -52,7 +53,7 @@ export function FormSelect({name, label, options, ...props}: SelectFieldProps) {
       render={({field}) => (
         <FormControl fullWidth error={!!error}>
           <InputLabel>{label}</InputLabel>
-          <Select {...field} {...props} label={label}>
+          <Select variant='filled' {...field} {...props} label={label}>
             {options.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
@@ -120,7 +121,7 @@ export function FormCheckbox({name, label, ...props}: CheckboxFieldProps) {
       render={({field}) => (
         <FormControl error={!!error}>
           <label>
-            <input type='checkbox' {...field} {...props} checked={field.value} />
+            <Input type='checkbox' {...field} {...props} checked={field.value} />
             {label}
           </label>
           {error && <FormHelperText>{error}</FormHelperText>}

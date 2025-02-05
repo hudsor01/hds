@@ -1,46 +1,63 @@
 'use client';
 
-import {SignIn} from '@clerk/nextjs';
+import {FormInput} from '@/components/forms/form-fields';
+import {FormContainer} from '@/components/forms/form-provider';
+import {signInSchema} from '@/lib/validations/schemas';
+import {useSignIn} from '@clerk/nextjs';
+import {Button, Stack} from '@mui/material';
+import {useRouter} from 'next/navigation';
+import {useState} from 'react';
+import {z} from 'zod';
+
+type SignInFormData = z.infer<typeof signInSchema>;
 
 export function LoginForm() {
+  const {signIn} = useSignIn();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (data: SignInFormData) => {
+    if (!signIn) return;
+
+    setIsLoading(true);
+    try {
+      const result = await signIn.create({
+        identifier: data.email,
+        password: data.password,
+      });
+
+      if (result.status === 'complete') {
+        router.push('/dashboard');
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+      throw new Error('Failed to sign in');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
-    <SignIn
-      appearance={{
-        elements: {
-          rootBox: 'w-full',
-          card: 'w-full max-w-md mx-auto shadow-lg rounded-lg bg-background',
-          headerTitle: 'text-2xl font-bold text-foreground',
-          headerSubtitle: 'text-muted-foreground',
-          socialButtonsBlockButton: 'hover:bg-muted',
-          formButtonPrimary:
-            'bg-primary text-primary-foreground hover:opacity-90 transition-all duration-200',
-          formFieldInput: 'bg-background border border-input',
-          footerAction: 'text-primary hover:text-primary/90',
-          dividerLine: 'bg-border',
-          dividerText: 'text-muted-foreground bg-background px-2',
-          otpCodeFieldInput: 'bg-background border border-input text-foreground',
-          alertText: 'text-destructive',
-          socialButtonsIconButton: 'hover:bg-muted transition-colors',
-          socialButtonsProviderIcon: 'w-5 h-5',
-          formFieldLabelRow: 'text-foreground',
-          identityPreviewText: 'text-muted-foreground',
-        },
-        variables: {
-          colorPrimary: 'hsl(var(--primary))',
-          colorBackground: 'hsl(var(--background))',
-          colorText: 'hsl(var(--foreground))',
-          colorInputBackground: 'hsl(var(--background))',
-          colorInputText: 'hsl(var(--foreground))',
-          fontFamily: 'var(--font-sans)',
-          borderRadius: 'var(--radius)',
-        },
-      }}
-      routing='path'
-      path='/sign-in'
-      signUpUrl='/sign-up'
-      fallbackRedirectUrl='/dashboard'
-      forceRedirectUrl='/dashboard'
-      afterSignInUrl='/dashboard'
-    />
+    <FormContainer schema={signInSchema} onSubmit={handleSubmit}>
+      <Stack spacing={3}>
+        <FormInput
+          name='email'
+          label='Email'
+          type='email'
+          autoComplete='email'
+          disabled={isLoading}
+        />
+        <FormInput
+          name='password'
+          label='Password'
+          type='password'
+          autoComplete='current-password'
+          disabled={isLoading}
+        />
+        <Button type='submit' variant='contained' disabled={isLoading} fullWidth>
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </Button>
+      </Stack>
+    </FormContainer>
   );
 }
