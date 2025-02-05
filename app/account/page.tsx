@@ -30,7 +30,7 @@ export default async function Account() {
       <div className='p-4'>
         <CustomerPortalForm subscription={subscription} />
         <NameForm userName={userDetails?.full_name ?? ''} />
-        <EmailForm userEmail={user.email} />
+        <EmailForm userEmail={(user.unsafeMetadata as Record<string, string>)?.email ?? ''} />
       </div>
     </section>
   );
