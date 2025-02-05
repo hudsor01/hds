@@ -1,9 +1,8 @@
-import {FormInput} from '@/components/shared/forms/form-fields';
-import {FormContainer} from '@/components/shared/forms/form-provider';
+import {FormInput} from '@/components/forms/form-fields';
+import {FormContainer} from '@/components/forms/form-provider';
 import {signInSchema} from '@/lib/validations/schemas';
 import {useSignIn} from '@clerk/nextjs';
-import {LoadingButton} from '@mui/lab';
-import {Stack} from '@mui/material';
+import {Button, Stack} from '@mui/material';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';
 import {z} from 'zod';
@@ -53,9 +52,9 @@ export function LoginForm() {
           autoComplete='current-password'
           disabled={isLoading}
         />
-        <LoadingButton type='submit' variant='contained' loading={isLoading} fullWidth>
+        <Button type='submit' variant='contained' loading={isLoading} fullWidth>
           Sign In
-        </LoadingButton>
+        </Button>
       </Stack>
     </FormContainer>
   );

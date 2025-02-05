@@ -1,23 +1,22 @@
-import {FormInput, FormSelect} from '@/components/shared/forms/form-fields';
-import {FormContainer} from '@/components/shared/forms/form-provider';
+import {FormInput, FormSelect} from '@/components/forms/form-fields';
+import {FormContainer} from '@/components/forms/form-provider';
 import {useCreateProperty} from '@/hooks/data';
 import {propertySchema} from '@/lib/validations/schemas';
-import {LoadingButton} from '@mui/lab';
-import {Stack} from '@mui/material';
+import {Button, Stack} from '@mui/material';
 import {z} from 'zod';
 
-const propertyTypes = [
+const propertyTypes: Array<{label: string; value: string}> = [
   {label: 'Apartment', value: 'APARTMENT'},
   {label: 'House', value: 'HOUSE'},
   {label: 'Condo', value: 'CONDO'},
   {label: 'Commercial', value: 'COMMERCIAL'},
-] as const;
+];
 
-const propertyStatus = [
+const propertyStatus: Array<{label: string; value: string}> = [
   {label: 'Vacant', value: 'VACANT'},
   {label: 'Occupied', value: 'OCCUPIED'},
   {label: 'Maintenance', value: 'MAINTENANCE'},
-] as const;
+];
 
 type PropertyFormData = z.infer<typeof propertySchema>;
 
@@ -46,9 +45,9 @@ export function PropertyForm() {
         />
         <FormSelect name='status' label='Status' options={propertyStatus} />
         <FormInput name='description' label='Description' multiline rows={4} />
-        <LoadingButton type='submit' variant='contained' loading={isPending} fullWidth>
+        <Button type='submit' variant='contained' disabled={isPending} fullWidth>
           Create Property
-        </LoadingButton>
+        </Button>
       </Stack>
     </FormContainer>
   );

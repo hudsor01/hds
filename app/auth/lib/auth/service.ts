@@ -1,5 +1,5 @@
 import {prisma} from '@/lib/prisma';
-import type {Session} from '@prisma/client';
+import type {Session} from '@/types/database.types';
 import {nanoid} from 'nanoid';
 
 export type {Session};

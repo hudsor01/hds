@@ -27,6 +27,8 @@ model Users {
   tenants              tenants[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
 
+  sessions Session[]
+
   @@schema("hds")
   @@index([email])
   @@index([clerkId])
@@ -581,6 +583,8 @@ model users {
   expires_at                  Int?
   email_verified              DateTime? @db.Timestamp(6)
 
+  sessions Session[]
+
   @@unique([provider, provider_account_id], map: "users_provider_account_unique")
   @@index([email_verified], map: "idx_users_email_verified")
   @@index([email])
@@ -827,5 +831,16 @@ enum ImageJobStatus {
   PROCESSING
   COMPLETED
   FAILED
+  @@schema("hds")
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+
+  user         users    @relation(fields: [userId], references: [id])
+
   @@schema("hds")
 }
