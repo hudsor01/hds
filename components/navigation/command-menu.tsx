@@ -1,3 +1,4 @@
+import type {CommandMenuProps} from '@/types/command-menu';
 import {
   Box,
   Dialog,
@@ -6,28 +7,14 @@ import {
   InputAdornment,
   List,
   ListItem,
+  ListItemButton,
   ListItemIcon,
   ListItemText,
   TextField,
 } from '@mui/material';
-import {Search, X} from 'lucide-react';
 import {useRouter} from 'next/navigation';
 import {useEffect, useState} from 'react';
-
-interface CommandItem {
-  id: string;
-  title: string;
-  description?: string;
-  icon?: React.ReactNode;
-  shortcut?: string[];
-  action: () => void;
-}
-
-interface CommandMenuProps {
-  items: CommandItem[];
-  open: boolean;
-  onClose: () => void;
-}
+import {Search, X} from 'react-feather';
 
 export function CommandMenu({items, open, onClose}: CommandMenuProps) {
   const [search, setSearch] = useState('');
@@ -115,61 +102,62 @@ export function CommandMenu({items, open, onClose}: CommandMenuProps) {
 
         <List sx={{py: 0}}>
           {filteredItems.map((item, index) => (
-            <ListItem
-              key={item.id}
-              onClick={() => {
-                item.action();
-                onClose();
-              }}
-              selected={index === selectedIndex}
-              sx={{
-                cursor: 'pointer',
-                '&:hover': {
-                  bgcolor: 'action.hover',
-                },
-                '&.Mui-selected': {
-                  bgcolor: 'primary.light',
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  item.action();
+                  onClose();
+                }}
+                selected={index === selectedIndex}
+                sx={{
+                  cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: 'primary.light',
+                    bgcolor: 'action.hover',
                   },
-                },
-              }}
-            >
-              {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-              <ListItemText
-                primary={item.title}
-                secondary={item.description}
-                primaryTypographyProps={{
-                  variant: 'subtitle2',
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.light',
+                    '&:hover': {
+                      bgcolor: 'primary.light',
+                    },
+                  },
                 }}
-                secondaryTypographyProps={{
-                  variant: 'caption',
-                }}
-              />
-              {item.shortcut && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    gap: 0.5,
-                    ml: 2,
+              >
+                {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+                <ListItemText
+                  primary={item.title}
+                  secondary={item.description}
+                  primaryTypographyProps={{
+                    variant: 'subtitle2',
                   }}
-                >
-                  {item.shortcut.map((key, i) => (
-                    <Box
-                      key={i}
-                      sx={{
-                        px: 1,
-                        py: 0.5,
-                        borderRadius: 1,
-                        bgcolor: 'action.selected',
-                        fontSize: '0.75rem',
-                      }}
-                    >
-                      {key}
-                    </Box>
-                  ))}
-                </Box>
-              )}
+                  secondaryTypographyProps={{
+                    variant: 'caption',
+                  }}
+                />
+                {item.shortcut && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      gap: 0.5,
+                      ml: 2,
+                    }}
+                  >
+                    {item.shortcut.map((key, i) => (
+                      <Box
+                        key={i}
+                        sx={{
+                          px: 1,
+                          py: 0.5,
+                          borderRadius: 1,
+                          bgcolor: 'action.selected',
+                          fontSize: '0.75rem',
+                        }}
+                      >
+                        {key}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </ListItemButton>
             </ListItem>
           ))}
         </List>
