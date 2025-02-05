@@ -1,5 +1,5 @@
-import {SignUp} from '@/components/forms/signup-form';
-import UpdatePassword from '@/components/forms/update-password';
+import {SignUp} from '@/components/features/auth/signup-form';
+import {UpdatePassword} from '@/components/features/auth/update-password';
 import Logo from '@/components/icons/Logo';
 import {Card} from '@/components/ui/card';
 import {createClient} from '@/utils/supabase/server';

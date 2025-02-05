@@ -1,23 +1,23 @@
-import {FormInput, FormSelect} from '@/components/forms/form-fields';
-import {FormContainer} from '@/components/forms/form-provider';
-import {Button} from '@/components/ui/buttons';
+import {FormInput, FormSelect} from '@/components/shared/forms/form-fields';
+import {FormContainer} from '@/components/shared/forms/form-provider';
 import {useCreateProperty} from '@/hooks/data';
 import {propertySchema} from '@/lib/validations/schemas';
+import {LoadingButton} from '@mui/lab';
 import {Stack} from '@mui/material';
 import {z} from 'zod';
 
-const propertyTypes: {label: string; value: string}[] = [
+const propertyTypes = [
   {label: 'Apartment', value: 'APARTMENT'},
   {label: 'House', value: 'HOUSE'},
   {label: 'Condo', value: 'CONDO'},
   {label: 'Commercial', value: 'COMMERCIAL'},
-];
+] as const;
 
-const propertyStatus: {label: string; value: string}[] = [
+const propertyStatus = [
   {label: 'Vacant', value: 'VACANT'},
   {label: 'Occupied', value: 'OCCUPIED'},
   {label: 'Maintenance', value: 'MAINTENANCE'},
-];
+] as const;
 
 type PropertyFormData = z.infer<typeof propertySchema>;
 
@@ -42,17 +42,13 @@ export function PropertyForm() {
           name='rentAmount'
           label='Monthly Rent'
           type='number'
-          InputProps={{inputProps: {min: 0, step: 0.01}}}
+          inputProps={{min: 0, step: 0.01}}
         />
-        <FormSelect
-          name='status'
-          label='Status'
-          options={propertyStatus as {label: string; value: string}[]}
-        />
+        <FormSelect name='status' label='Status' options={propertyStatus} />
         <FormInput name='description' label='Description' multiline rows={4} />
-        <Button type='submit' variant='contained' loading={isPending} fullWidth>
+        <LoadingButton type='submit' variant='contained' loading={isPending} fullWidth>
           Create Property
-        </Button>
+        </LoadingButton>
       </Stack>
     </FormContainer>
   );

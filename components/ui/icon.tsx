@@ -1,38 +1,34 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import {useEffect, useRef} from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import GitHubIcon from '@mui/icons-material/GitHub';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import MailIcon from '@mui/icons-material/Mail';
 
-interface IconProps extends React.HTMLAttributes<HTMLSpanElement> {
-  name: string;
-  size?: number;
-  strokeWidth?: number;
+// Add other MUI icons as needed in the mapping below
+
+const iconMapping = {
+  'chevron-down': KeyboardArrowDownIcon,
+  Heart: FavoriteIcon,
+  Mail: MailIcon,
+  GitHub: GitHubIcon,
+  AlertCircle: ErrorOutlineIcon,
+  Check: CheckCircleIcon,
+  // Map additional lucide icon names to their @mui/icons-material equivalents here
+};
+
+export interface IconProps {
+  name: keyof typeof iconMapping;
+  className?: string;
 }
 
-export function Icon({name, size = 24, strokeWidth = 2, className, ...props}: IconProps) {
-  const iconRef = useRef<HTMLSpanElement>(null);
-
-  useEffect(() => {
-    async function loadIcon() {
-      try {
-        const icon = await import(`@heroicons/react/24/outline/${name}.js`);
-        if (iconRef.current) {
-          iconRef.current.innerHTML = icon.default;
-        }
-      } catch (error) {
-        console.error(`Failed to load icon: ${name}`, error);
-      }
-    }
-
-    void loadIcon();
-  }, [name]);
-
-  return (
-    <span
-      ref={iconRef}
-      className={cn('inline-block', className)}
-      style={{width: size, height: size}}
-      {...props}
-    />
-  );
+export function Icon({name, className}: IconProps) {
+  const Component = iconMapping[name];
+  if (!Component) {
+    console.warn(`Icon "${name}" not found.`);
+    return null;
+  }
+  return <Component className={className} />;
 }

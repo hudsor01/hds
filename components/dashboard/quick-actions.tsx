@@ -1,37 +1,40 @@
 'use client';
 
+import AddIcon from '@mui/icons-material/Add';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import PeopleIcon from '@mui/icons-material/People';
+import SettingsIcon from '@mui/icons-material/Settings';
 import {Box, Card, Stack, Typography, alpha, useTheme} from '@mui/material';
 import {motion} from 'framer-motion';
 import type {Route} from 'next';
 import Link from 'next/link';
-import {DollarSign, Plus, Settings, Users} from 'react-feather';
 
 const actions = [
   {
     title: 'Add Property',
     description: 'List a new property in your portfolio',
-    icon: Plus,
+    icon: AddIcon,
     color: 'primary',
     href: '/dashboard/properties/new' as Route,
   },
   {
     title: 'Manage Tenants',
     description: 'View and manage your tenants',
-    icon: Users,
+    icon: PeopleIcon,
     color: 'success',
     href: '/dashboard/tenants' as Route,
   },
   {
     title: 'Process Payments',
     description: 'Handle rent payments and invoices',
-    icon: DollarSign,
+    icon: AttachMoneyIcon,
     color: 'info',
     href: '/dashboard/payments' as Route,
   },
   {
     title: 'Settings',
     description: 'Configure your account settings',
-    icon: Settings,
+    icon: SettingsIcon,
     color: 'warning',
     href: '/dashboard/settings' as Route,
   },

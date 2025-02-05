@@ -1,6 +1,6 @@
 import {useScroll} from '@/hooks/ui';
+import {ArrowUpward} from '@mui/icons-material';
 import {Button, ButtonProps} from '@mui/material';
-import {ArrowUp} from 'lucide-react';
 import {useEffect, useState} from 'react';
 
 // Back to Top Button
@@ -26,7 +26,7 @@ export function BackToTopButton() {
         transition: 'all 0.2s',
       }}
     >
-      <ArrowUp />
+      <ArrowUpward />
     </Button>
   );
 }

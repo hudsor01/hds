@@ -2,7 +2,10 @@
 
 import {supabase, useUser} from '@/app/auth/lib/auth/config';
 import {PropertyDialog} from '@/components/properties/property-dialog';
-import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
+import AddIcon from '@mui/icons-material/Add';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import SearchIcon from '@mui/icons-material/Search';
 import {
   Box,
   Button,
@@ -20,7 +23,6 @@ import {alpha, useTheme} from '@mui/material/styles';
 import {motion} from 'framer-motion';
 import Image from 'next/image';
 import {useEffect, useState} from 'react';
-import {Edit2, Plus, Search, Trash2} from 'react-feather';
 import type {Property, PropertyCardData} from 'types/properties';
 
 const containerVariants = {
@@ -160,7 +162,7 @@ export default function PropertiesPage() {
           InputProps={{
             startAdornment: (
               <InputAdornment position='start'>
-                <Search size={20} />
+                <SearchIcon />
               </InputAdornment>
             ),
           }}
@@ -168,7 +170,7 @@ export default function PropertiesPage() {
         />
         <Button
           variant='contained'
-          startIcon={<Plus size={20} />}
+          startIcon={<AddIcon />}
           onClick={() => {
             setSelectedProperty(undefined);
             setOpenDialog(true);
@@ -276,7 +278,7 @@ export default function PropertiesPage() {
                             },
                           }}
                         >
-                          <Edit2 size={16} />
+                          <EditIcon />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title='Delete'>
@@ -291,7 +293,7 @@ export default function PropertiesPage() {
                             },
                           }}
                         >
-                          <Trash2 size={16} />
+                          <DeleteIcon />
                         </IconButton>
                       </Tooltip>
                     </Stack>

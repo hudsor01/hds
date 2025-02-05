@@ -1,17 +1,15 @@
 'use client';
 
-import {WaitlistForm} from 'components/forms/waitlist-form';
+import {WaitlistForm} from '@/components/features/marketing/waitlist-form';
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
+import BuildIcon from '@mui/icons-material/Build';
+import BusinessIcon from '@mui/icons-material/Business';
+import PeopleIcon from '@mui/icons-material/People';
+import StorefrontIcon from '@mui/icons-material/Storefront';
+import VpnKeyIcon from '@mui/icons-material/VpnKey';
 import {Card} from 'components/ui/card';
 import {motion} from 'framer-motion';
 import Image from 'next/image';
-import {
-  BuildingOfficeIcon,
-  BuildingStorefrontIcon,
-  ClipboardDocumentCheckIcon,
-  Key,
-  Users,
-  WrenchIcon,
-} from 'react-feather';
 
 // Animation variants
 const fadeInUp = {
@@ -31,36 +29,36 @@ const staggerChildren = {
 // Features data
 const features = [
   {
-    icon: <BuildingOfficeIcon className='w-6 h-6' />,
+    icon: <BusinessIcon className='w-6 h-6' />,
     title: 'Property Owners',
     description:
       'Streamline your property portfolio management with powerful analytics and automated workflows.',
   },
   {
-    icon: <BuildingStorefrontIcon className='w-6 h-6' />,
+    icon: <StorefrontIcon className='w-6 h-6' />,
     title: 'Property Managers',
     description: 'Manage multiple properties effortlessly with our comprehensive management suite.',
   },
   {
-    icon: <Key className='w-6 h-6' />,
+    icon: <VpnKeyIcon className='w-6 h-6' />,
     title: 'Tenants',
     description:
       'Easy rent payments, maintenance requests, and communication with property managers.',
   },
   {
-    icon: <ClipboardDocumentCheckIcon className='w-6 h-6' />,
+    icon: <AssignmentTurnedInIcon className='w-6 h-6' />,
     title: 'Applicants',
     description:
       'Streamlined application process with real-time status updates and document management.',
   },
   {
-    icon: <WrenchIcon className='w-6 h-6' />,
+    icon: <BuildIcon className='w-6 h-6' />,
     title: 'Vendors',
     description:
       'Simplified job assignments, scheduling, and payment processing for maintenance work.',
   },
   {
-    icon: <Users className='w-6 h-6' />,
+    icon: <PeopleIcon className='w-6 h-6' />,
     title: 'Real Estate Agents',
     description: 'Seamless property listings, tenant matching, and commission tracking.',
   },

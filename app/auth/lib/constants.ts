@@ -1,5 +1,11 @@
 import {routes} from '../../routes';
-import {Box, DollarSign, FileText, Home, Settings, Tool, Users} from 'react-feather';
+import ApartmentIcon from '@mui/icons-material/Apartment';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import BuildIcon from '@mui/icons-material/Build';
+import DescriptionIcon from '@mui/icons-material/Description';
+import HomeIcon from '@mui/icons-material/Home';
+import PeopleIcon from '@mui/icons-material/People';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 export const USER_ROLES = {
   ADMIN: 'ADMIN',
@@ -34,13 +40,13 @@ export const PRIORITY_LEVELS = {
 export type PriorityLevel = (typeof PRIORITY_LEVELS)[keyof typeof PRIORITY_LEVELS];
 
 export const navItems = [
-  {name: 'Dashboard', href: routes.dashboard, icon: Home},
-  {name: 'Properties', href: routes.properties.index, icon: Box},
-  {name: 'Tenants', href: routes.tenants.index, icon: Users},
-  {name: 'Leases', href: routes.leases.index, icon: FileText},
-  {name: 'Finances', href: routes.finances.index, icon: DollarSign},
-  {name: 'Maintenance', href: routes.maintenance.index, icon: Tool},
-  {name: 'Settings', href: routes.settings, icon: Settings},
+  {name: 'Dashboard', href: routes.dashboard, icon: HomeIcon},
+  {name: 'Properties', href: routes.properties.index, icon: ApartmentIcon},
+  {name: 'Tenants', href: routes.tenants.index, icon: PeopleIcon},
+  {name: 'Leases', href: routes.leases.index, icon: DescriptionIcon},
+  {name: 'Finances', href: routes.finances.index, icon: AttachMoneyIcon},
+  {name: 'Maintenance', href: routes.maintenance.index, icon: BuildIcon},
+  {name: 'Settings', href: routes.settings, icon: SettingsIcon},
 ];
 
 export const ACTIVITY_FILTERS = [
