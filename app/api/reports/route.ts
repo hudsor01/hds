@@ -7,6 +7,8 @@ const calculateOccupancyRate = (totalUnits: number, occupiedUnits: number) => {
   return totalUnits === 0 ? 0 : (occupiedUnits / totalUnits) * 100;
 };
 
+const propertyName = request.property.name;
+
 export async function GET(req: NextRequest) {
   try {
     const {userId} = getAuth(req);

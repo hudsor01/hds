@@ -1,6 +1,5 @@
 'use client';
 
-import {Loader2, Shield} from '-react';
 import {Button} from '@/components/ui/buttons/button';
 import {
   Dialog,
@@ -8,10 +7,11 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from 'components/ui/dialog';
-import {Input} from 'components/ui/input';
+} from '@/components/ui/dialog';
+import {Input} from '@/components/ui/input';
 import Image from 'next/image';
 import {useState} from 'react';
+import {Loader2, Shield} from 'react-feather';
 import {toast} from 'sonner';
 
 export function TwoFactorSetup() {

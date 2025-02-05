@@ -1,4 +1,4 @@
-import type {LeaseFormProps} from '../../types/leases';
+import type {LeaseFormProps} from '../../types/lease';
 import {useCreateLease, useUpdateLease} from '@/hooks/use-leases';
 import {zodResolver} from '@hookform/resolvers/zod';
 import Box from '@mui/material/Box';

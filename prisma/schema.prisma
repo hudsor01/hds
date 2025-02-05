@@ -70,12 +70,12 @@ model tenants {
   created_at          DateTime? @default(now()) @db.Timestamptz(6)
   updated_at          DateTime? @default(now()) @updatedAt @db.Timestamptz(6)
   user_id             String    @db.Uuid
-  stripe_customer_id  String?   @unique
+  stripe_customer_id  String?   @unique @db.Text
   subscription_status String?
   payments            payments[]
 
   // Relations
-  users                 Users                  @relation("UserTenancies", fields: [user_id], references: [id])
+  users                Users                  @relation("UserTenancies", fields: [user_id], references: [id])
   property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("TenantMaintenanceRequests")
 
@@ -86,34 +86,35 @@ model tenants {
 }
 
 model properties {
-  id           String    @id @default(uuid()) @db.Uuid
-  name         String
-  address      String
-  city         String
-  state        String
-  zip          String
-  owner_id     String?   @db.Uuid
-  manager_id   String?   @db.Uuid
-  status       String    @default("active")
-  created_at   DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
-  type         String    @default("Residential")
-  rent_amount  Decimal   @db.Decimal(10, 2)
-  amenities    String[]  @default([])
-  images       String[]  @default([])
-  bathrooms    Int?
-  bedrooms     Int?
-  size         Int?
-  user_id      String?   @db.Uuid
+  id              String    @id @default(uuid()) @db.Uuid
+  name            String
+  address         String
+  city            String
+  state           String
+  zip             String
+  owner_id        String?   @db.Uuid
+  manager_id      String?   @db.Uuid
+  property_status String    @default("active")
+  created_at      DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime? @default(now()) @db.Timestamptz(6)
+  property_type   String    @default("Residential")
+  rent_amount     Decimal   @db.Decimal(10, 2)
+  amenities       String[]  @default([])
+  images          String[]  @default([])
+  bathrooms       Int?
+  bedrooms        Int?
+  size            Int?
+  user_id         String?   @db.Uuid
 
   // Relations
   User                 Users?                 @relation("UserProperties", fields: [user_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
   tenants             tenants[]              @relation("PropertyTenancies")
+  leases              leases[]               @relation("PropertyLeases")
 
+  @@index([property_status])
   @@schema("hds")
   @@index([owner_id], map: "idx_properties_owner")
-  @@index([status])
   @@index([user_id])
 }
 
@@ -203,8 +204,8 @@ model ip_blacklist {
 model leases {
   user_id       String    @id @default(uuid()) @db.Uuid
   tenant_id     String
-  property_id   String
-  type          LeaseType
+  property_id   String    @db.Uuid
+  lease_type    LeaseType
   start_date    DateTime
   end_date      DateTime?
   rent_amount   Decimal
@@ -214,13 +215,16 @@ model leases {
   created_at    DateTime  @default(now()) @db.Timestamptz(6)
   status        String?   @default("Pending")
 
+  // Relations
+  property properties @relation("PropertyLeases", fields: [property_id], references: [id])
+
   @@index([created_at])
   @@index([end_date])
   @@index([property_id], map: "leases_propertyId_idx")
   @@index([start_date])
   @@index([tenant_id], map: "leases_tenantId_idx")
   @@index([tenant_id])
-  @@index([type])
+  @@index([lease_type])
   @@index([user_id])
   @@schema("hds")
 }
@@ -318,23 +322,20 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  id                String        @id @default(uuid())
-  tenant_id         String
-  payment_amount    Float
-  payment_status    PaymentStatus @default(PENDING)
-  payment_type      PaymentType
-  description       String?
-  payment_intent_id String?      @unique
-  error_message     String?
-  processed_at      DateTime?
-  created_at        DateTime      @default(now())
-  updated_at        DateTime      @updatedAt
-  tenant            tenants       @relation(fields: [tenant_id], references: [id])
+  id                String    @id @default(uuid()) @db.Uuid
+  payment_intent_id String?   @unique @db.Text
+  tenant_id         String    @db.Uuid
+  amount            Decimal   @db.Decimal(10, 2)
+  status            String
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @updatedAt @db.Timestamptz(6)
 
-  @@index([tenant_id])
-  @@index([payment_intent_id])
-  @@index([payment_status])
+  // Relations
+  tenant            tenants   @relation(fields: [tenant_id], references: [id])
+
   @@schema("hds")
+  @@index([status])
+  @@index([tenant_id])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.

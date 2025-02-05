@@ -1,5 +1,6 @@
 'use client';
 
+import {PublicLayout} from '@/components/layout/public-layout';
 import {Button} from '@/components/ui/buttons/button';
 import {Card} from '@/components/ui/card';
 import {type Milestone, type TeamMember, type Value} from '@/types/about';
@@ -99,170 +100,172 @@ const milestones: Milestone[] = [
 
 export default function HomePage() {
   return (
-    <div className='flex min-h-screen flex-col'>
-      {/* Hero Section */}
-      <section className='relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 sm:py-32'>
-        <div className='absolute inset-0 bg-[linear-gradient(to_right,#f0f7ff_1px,transparent_1px),linear-gradient(to_bottom,#f0f7ff_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]' />
-
-        <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='flex flex-col lg:flex-row items-center justify-between gap-16'>
-            <div className='flex-1 text-center lg:text-left'>
-              <h1 className='text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight'>
-                <span className='text-pastel-blue-500 block mb-2'>Simplify</span>
-                <span className='text-slate-800'>Property Management</span>
-              </h1>
-              <p className='mt-6 text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0'>
-                Modern property management solution that streamlines your operations, enhances
-                tenant satisfaction, and maximizes your property's potential.
-              </p>
-              <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
-                <Link href='/sign-up'>
-                  <Button className='w-full sm:w-auto bg-pastel-blue-500 hover:bg-pastel-blue-600 text-white px-6 py-3'>
-                    Get Started
-                  </Button>
-                </Link>
-                <Link href='/features'>
-                  <Button variant='outline' className='w-full sm:w-auto px-6 py-3'>
-                    Learn More
-                  </Button>
-                </Link>
+    <PublicLayout>
+      <div className='flex min-h-screen flex-col'>
+        {/* Hero Section */}
+        <section className='relative py-20 sm:py-32'>
+          <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <div className='flex flex-col lg:flex-row items-center justify-between gap-16'>
+              <div className='flex-1 text-center lg:text-left'>
+                <h1 className='text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight'>
+                  <span className='text-pastel-blue-500 block mb-2'>Simplify</span>
+                  <span className='text-slate-800'>Property Management</span>
+                </h1>
+                <p className='mt-6 text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0'>
+                  Modern property management solution that streamlines your operations, enhances
+                  tenant satisfaction, and maximizes your property's potential.
+                </p>
+                <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
+                  <Link href='/sign-up'>
+                    <Button className='w-full sm:w-auto bg-pastel-blue-500 hover:bg-pastel-blue-600 text-white px-6 py-3'>
+                      Get Started
+                    </Button>
+                  </Link>
+                  <Link href='/features'>
+                    <Button variant='outline' className='w-full sm:w-auto px-6 py-3'>
+                      Learn More
+                    </Button>
+                  </Link>
+                </div>
               </div>
-            </div>
 
-            <div className='flex-1 relative w-full max-w-2xl lg:max-w-none'>
-              <div className='relative w-full aspect-[4/3] overflow-hidden rounded-xl shadow-2xl ring-1 ring-slate-200'>
-                <Image
-                  src='/dashboard-preview.png'
-                  alt='Dashboard Preview'
-                  fill
-                  className='object-cover'
-                  priority
-                />
-              </div>
-              <div className='absolute -bottom-6 -left-6 -right-6 -top-6 rounded-[calc(2rem+1px)] bg-gradient-to-b from-pastel-blue-500/20 to-white/20 ring-1 ring-pastel-blue-200/30 [mask-image:linear-gradient(to_bottom,white_60%,transparent)] -z-10' />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values Section */}
-      <section className='py-16 sm:py-24'>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='text-center mb-16'>
-            <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
-              Our Values
-            </h2>
-            <p className='mt-4 text-lg text-gray-600'>Building the future of property management</p>
-          </div>
-          <div className='grid grid-cols-1 gap-8 sm:grid-cols-3'>
-            {values.map((value, index) => (
-              <Card
-                key={value.title}
-                className='group relative overflow-hidden p-8 transition-all hover:shadow-lg hover:-translate-y-1'
-                style={{animationDelay: `${index * 100}ms`}}
-              >
-                <div className='absolute inset-0 bg-linear-to-r from-blue-50 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
-                <div className='relative'>
-                  <value.icon
-                    className={`h-12 w-12 ${value.color} mb-4 transform transition-transform group-hover:scale-110`}
+              <div className='flex-1 relative w-full max-w-2xl lg:max-w-none'>
+                <div className='relative w-full aspect-[4/3] overflow-hidden rounded-xl shadow-2xl ring-1 ring-slate-200'>
+                  <Image
+                    src='/dashboard-preview.png'
+                    alt='Dashboard Preview'
+                    fill
+                    className='object-cover'
+                    priority
                   />
-                  <h3 className='text-xl font-semibold text-gray-900'>{value.title}</h3>
-                  <p className='mt-4 text-gray-600'>{value.description}</p>
                 </div>
-              </Card>
-            ))}
+                <div className='absolute -bottom-6 -left-6 -right-6 -top-6 rounded-[calc(2rem+1px)] bg-gradient-to-b from-pastel-blue-500/20 to-white/20 ring-1 ring-pastel-blue-200/30 [mask-image:linear-gradient(to_bottom,white_60%,transparent)] -z-10' />
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Timeline Section */}
-      <section className='relative overflow-hidden bg-gray-50 py-16 sm:py-24'>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='text-center mb-16'>
-            <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
-              Our Journey
-            </h2>
-            <p className='mt-4 text-lg text-gray-600'>Key milestones in our growth story</p>
-          </div>
-          <div className='relative'>
-            <div className='absolute left-1/2 h-full w-0.5 bg-blue-200 transform -translate-x-1/2' />
-            <div className='space-y-12'>
-              {milestones.map((milestone, index) => (
-                <div
-                  key={milestone.year}
-                  className={`relative flex items-center ${
-                    index % 2 === 0 ? 'justify-start' : 'justify-end'
-                  }`}
-                  style={{animationDelay: `${index * 200}ms`}}
+        {/* Values Section */}
+        <section className='py-16 sm:py-24'>
+          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <div className='text-center mb-16'>
+              <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
+                Our Values
+              </h2>
+              <p className='mt-4 text-lg text-gray-600'>
+                Building the future of property management
+              </p>
+            </div>
+            <div className='grid grid-cols-1 gap-8 sm:grid-cols-3'>
+              {values.map((value, index) => (
+                <Card
+                  key={value.title}
+                  className='group relative overflow-hidden p-8 transition-all hover:shadow-lg hover:-translate-y-1'
+                  style={{animationDelay: `${index * 100}ms`}}
                 >
-                  <div className='absolute left-1/2 w-4 h-4 rounded-full bg-blue-500 transform -translate-x-1/2' />
-                  <Card className={`w-[calc(50%-2rem)] p-6 ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
-                    <div className='font-bold text-blue-600 text-lg'>{milestone.year}</div>
-                    <h3 className='text-xl font-semibold mt-2'>{milestone.title}</h3>
-                    <p className='mt-2 text-gray-600'>{milestone.description}</p>
-                  </Card>
-                </div>
+                  <div className='absolute inset-0 bg-linear-to-r from-blue-50 to-transparent opacity-0 transition-opacity group-hover:opacity-100' />
+                  <div className='relative'>
+                    <value.icon
+                      className={`h-12 w-12 ${value.color} mb-4 transform transition-transform group-hover:scale-110`}
+                    />
+                    <h3 className='text-xl font-semibold text-gray-900'>{value.title}</h3>
+                    <p className='mt-4 text-gray-600'>{value.description}</p>
+                  </div>
+                </Card>
               ))}
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Team Section */}
-      <section className='py-16 sm:py-24'>
-        <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-          <div className='text-center mb-16'>
-            <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
-              Our Team
-            </h2>
-            <p className='mt-4 text-lg text-gray-600'>Meet the people behind Property Manager</p>
-          </div>
-          <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
-            {team.map((member, index) => (
-              <Card
-                key={member.name}
-                className='group relative overflow-hidden transition-all hover:shadow-lg'
-                style={{animationDelay: `${index * 100}ms`}}
-              >
-                <div className='aspect-4/3 relative'>
-                  <div className='absolute inset-0 bg-linear-to-t from-gray-900/75 to-transparent z-10' />
-                  <Image src={member.image} alt={member.name} fill className='object-cover' />
-                </div>
-                <div className='relative p-6'>
-                  <h3 className='text-xl font-semibold'>{member.name}</h3>
-                  <p className='text-blue-500 mt-1'>{member.role}</p>
-                  <p className='mt-4 text-gray-600'>{member.bio}</p>
-                </div>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className='relative overflow-hidden bg-blue-600 py-16 sm:py-24'>
-        <div className='absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4rem_4rem]' />
-        <div className='relative'>
+        {/* Timeline Section */}
+        <section className='relative overflow-hidden bg-gray-50 py-16 sm:py-24'>
           <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-            <div className='text-center'>
-              <h2 className='text-3xl font-bold tracking-tight text-white sm:text-4xl'>
-                Join us in revolutionizing property management
+            <div className='text-center mb-16'>
+              <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
+                Our Journey
               </h2>
-              <p className='mx-auto mt-4 max-w-2xl text-lg text-blue-100'>
-                Experience the future of property management with our innovative platform.
-              </p>
-              <div className='mt-8 flex justify-center'>
-                <Link href='/dashboard' className='flex items-center'>
-                  <Button className='bg-white text-blue-600 hover:bg-blue-50'>
-                    Get Started Now
-                    <ArrowRight className='ml-2 h-4 w-4' />
-                  </Button>
-                </Link>
+              <p className='mt-4 text-lg text-gray-600'>Key milestones in our growth story</p>
+            </div>
+            <div className='relative'>
+              <div className='absolute left-1/2 h-full w-0.5 bg-blue-200 transform -translate-x-1/2' />
+              <div className='space-y-12'>
+                {milestones.map((milestone, index) => (
+                  <div
+                    key={milestone.year}
+                    className={`relative flex items-center ${
+                      index % 2 === 0 ? 'justify-start' : 'justify-end'
+                    }`}
+                    style={{animationDelay: `${index * 200}ms`}}
+                  >
+                    <div className='absolute left-1/2 w-4 h-4 rounded-full bg-blue-500 transform -translate-x-1/2' />
+                    <Card className={`w-[calc(50%-2rem)] p-6 ${index % 2 === 0 ? 'mr-8' : 'ml-8'}`}>
+                      <div className='font-bold text-blue-600 text-lg'>{milestone.year}</div>
+                      <h3 className='text-xl font-semibold mt-2'>{milestone.title}</h3>
+                      <p className='mt-2 text-gray-600'>{milestone.description}</p>
+                    </Card>
+                  </div>
+                ))}
               </div>
             </div>
           </div>
-        </div>
-      </section>
-    </div>
+        </section>
+
+        {/* Team Section */}
+        <section className='py-16 sm:py-24'>
+          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+            <div className='text-center mb-16'>
+              <h2 className='text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl'>
+                Our Team
+              </h2>
+              <p className='mt-4 text-lg text-gray-600'>Meet the people behind Property Manager</p>
+            </div>
+            <div className='grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3'>
+              {team.map((member, index) => (
+                <Card
+                  key={member.name}
+                  className='group relative overflow-hidden transition-all hover:shadow-lg'
+                  style={{animationDelay: `${index * 100}ms`}}
+                >
+                  <div className='aspect-4/3 relative'>
+                    <div className='absolute inset-0 bg-linear-to-t from-gray-900/75 to-transparent z-10' />
+                    <Image src={member.image} alt={member.name} fill className='object-cover' />
+                  </div>
+                  <div className='relative p-6'>
+                    <h3 className='text-xl font-semibold'>{member.name}</h3>
+                    <p className='text-blue-500 mt-1'>{member.role}</p>
+                    <p className='mt-4 text-gray-600'>{member.bio}</p>
+                  </div>
+                </Card>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* CTA Section */}
+        <section className='relative overflow-hidden bg-blue-600 py-16 sm:py-24'>
+          <div className='absolute inset-0 bg-[linear-gradient(to_right,rgba(255,255,255,0.1)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,255,255,0.1)_1px,transparent_1px)] bg-[size:4rem_4rem]' />
+          <div className='relative'>
+            <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+              <div className='text-center'>
+                <h2 className='text-3xl font-bold tracking-tight text-white sm:text-4xl'>
+                  Join us in revolutionizing property management
+                </h2>
+                <p className='mx-auto mt-4 max-w-2xl text-lg text-blue-100'>
+                  Experience the future of property management with our innovative platform.
+                </p>
+                <div className='mt-8 flex justify-center'>
+                  <Link href='/dashboard' className='flex items-center'>
+                    <Button className='bg-white text-blue-600 hover:bg-blue-50'>
+                      Get Started Now
+                      <ArrowRight className='ml-2 h-4 w-4' />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </PublicLayout>
   );
 }

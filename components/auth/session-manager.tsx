@@ -1,13 +1,13 @@
 'use client';
 
-import {Clock, Globe, Laptop, Loader2, Shield, Smartphone, Trash2} from '-react';
+import {Alert} from '@/components/ui/alert';
 import {Button} from '@/components/ui/buttons/button';
-import {Alert} from 'components/ui/alert';
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
-import {Separator} from 'components/ui/separator';
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from '@/components/ui/dialog';
+import {Separator} from '@/components/ui/separator';
 import {format} from 'date-fns';
 import {AnimatePresence, motion, Variants} from 'framer-motion';
 import {useState} from 'react';
+import {Clock, Globe, Laptop, Loader2, Shield, Smartphone, Trash2} from 'react-feather';
 import {toast} from 'sonner';
 
 interface Session {

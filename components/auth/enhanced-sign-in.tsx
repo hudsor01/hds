@@ -1,4 +1,3 @@
-// components/auth/enhanced-sign-in.tsx
 'use client';
 
 import {SignIn} from '@clerk/nextjs';
@@ -6,8 +5,6 @@ import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
 import Paper from '@mui/material/Paper';
 import {styled} from '@mui/material/styles';
-
-// components/auth/enhanced-sign-in.tsx
 
 const StyledAuthContainer = styled(Box)(({theme}) => ({
   minHeight: '100vh',

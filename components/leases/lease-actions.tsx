@@ -1,5 +1,5 @@
 import {useLeaseActions} from '@/hooks/use-leases';
-import {LEASE_STATUS} from '@/types/leases';
+import {LEASE_STATUS} from '@/types/lease';
 import {IconButton, Menu, MenuItem} from '@mui/material';
 import {useState} from 'react';
 import {MoreVertical} from 'react-feather';

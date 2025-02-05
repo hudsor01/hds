@@ -1,6 +1,6 @@
 'use client';
 
-import {signOut} from '@/auth';
+import {signOut} from '@clerk/nextjs';
 import {useTransition} from 'react';
 
 interface SignOutButtonProps {

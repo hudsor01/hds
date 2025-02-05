@@ -1,14 +1,14 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
+import type {Lease} from '@/types/lease';
+import {LEASE_STATUS, PAYMENT_FREQUENCY} from '@/types/lease';
 import type {Property} from '@/types/property';
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
 import {Input} from 'components/ui/input';
 import {Label} from 'components/ui/label';
 import {Select} from 'components/ui/select';
 import {useState} from 'react';
-import type {Lease} from 'types/leases';
-import {LEASE_STATUS, PAYMENT_FREQUENCY} from 'types/leases';
 
 interface LeaseDialogProps {
   open: boolean;
