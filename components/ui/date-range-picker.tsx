@@ -1,19 +1,23 @@
 'use client';
 
-import {CalendarIcon, Check} from '-react';
+import {Popover, PopoverContent, PopoverTrigger} from '../dialogs/popover';
 import {Button} from '@/components/ui/buttons/button';
 import {cn} from '@/lib/utils';
 import {Calendar} from 'components/ui/calendar';
 import {Command, CommandGroup, CommandItem} from 'components/ui/command';
-import {Popover, PopoverContent, PopoverTrigger} from 'components/ui/popover';
 import {Separator} from 'components/ui/separator';
 import {format, startOfYear, subDays, subMonths} from 'date-fns';
 import * as React from 'react';
-import {DateRange} from 'react-day-picker';
+import {Calendar as CalendarIcon, Check} from 'react-feather';
 
 interface DateRangePickerProps {
-  value: DateRange;
-  onChangeAction: (range: DateRange) => void;
+  value:
+    | {
+        from?: Date;
+        to?: Date;
+      }
+    | undefined;
+  onChangeAction: (range: {from?: Date; to?: Date} | undefined) => void;
   className?: string;
 }
 
@@ -110,7 +114,9 @@ export function DateRangePicker({value, onChangeAction, className}: DateRangePic
                 mode='range'
                 defaultMonth={value?.from}
                 selected={value}
-                onSelect={(range: DateRange | undefined) => onChangeAction(range ?? value)}
+                onSelect={(range: {from?: Date; to?: Date} | undefined) =>
+                  onChangeAction(range ?? value)
+                }
                 numberOfMonths={2}
                 required={false}
               />

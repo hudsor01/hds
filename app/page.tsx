@@ -2,7 +2,7 @@
 
 import {PublicLayout} from '@/components/layout/public-layout';
 import {Button} from '@/components/ui/buttons/button';
-import {Card} from '@/components/ui/card';
+import {Card} from '@/components/ui/cards/card';
 import {type Milestone, type TeamMember, type Value} from '@/types/about';
 import {
   Apartment,

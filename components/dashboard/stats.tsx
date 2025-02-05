@@ -1,5 +1,5 @@
 // components/dashboard/stats.tsx
-import {Card} from '@/components/ui/card';
+import {Card} from '@/components/ui/cards/card';
 import {DollarSign, Home, Tool, User} from 'react-feather';
 
 export function DashboardStats() {

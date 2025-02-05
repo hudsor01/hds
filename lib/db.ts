@@ -308,3 +308,4 @@ export const disconnect = async () => {
 export const connect = async () => {
   await prisma.$connect();
 };
+export {createClient};

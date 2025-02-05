@@ -1,8 +1,8 @@
-import {SignUp} from '@/components/features/auth/signup-form';
-import {UpdatePassword} from '@/components/features/auth/update-password';
+'use client';
+
 import Logo from '@/components/icons/Logo';
-import {Card} from '@/components/ui/card';
-import {createClient} from '@/utils/supabase/server';
+import {Card} from '@/components/ui/cards/card';
+import {createClient} from '@/lib/db';
 import {cookies} from 'next/headers';
 import {redirect} from 'next/navigation';
 
@@ -14,8 +14,8 @@ export default async function SignIn({
   searchParams: {disable_button: boolean};
 }) {
   const {allowOauth, allowEmail, allowPassword} = getAuthTypes();
-  const viewTypes = viewTypes();
-  const redirectMethod = redirectMethod();
+  const viewTypes: string[] = getViewTypes();
+  const redirectMethod: (url: string) => void = handleRedirect;
 
   // Declare 'viewProp' and initialize with the default value
   let viewProp: string;
@@ -91,10 +91,19 @@ export default async function SignIn({
     </div>
   );
 }
+
 function getAuthTypes(): {allowOauth: any; allowEmail: any; allowPassword: any} {
   throw new Error('Function not implemented.');
 }
 
 function getDefaultSignInView(preferredSignInView: any): string {
   throw new Error('Function not implemented.');
+}
+
+function getViewTypes(): string[] {
+  return ['password_signin', 'email_signin', 'forgot_password', 'update_password', 'signup'];
+}
+
+function handleRedirect(url: string): void {
+  return redirect(url);
 }

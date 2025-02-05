@@ -144,26 +144,27 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function PUT(req: NextRequest) {
   try {
     const {userId} = getAuth(req);
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const json = await req.json();
-    const {id, ...updateData} = json;
+    const {searchParams} = new URL(req.url);
+    const id = searchParams.get('id');
 
     if (!id) {
       return NextResponse.json({error: 'Lease ID is required'}, {status: 400});
     }
 
-    const body = updateLeaseSchema.parse(updateData);
+    const json = await req.json();
+    const body = updateLeaseSchema.parse(json);
 
     // Verify lease belongs to user
     const existingLease = await prisma.leases.findUnique({
       where: {
-        user_id: id,
+        user_id: userId,
       },
     });
 
@@ -171,7 +172,7 @@ export async function PATCH(req: NextRequest) {
       return NextResponse.json({error: 'Lease not found'}, {status: 404});
     }
 
-    // If property_id or tenant_id is being updated, verify ownership
+    // Additional verifications if updating tenant or property
     if (body.property_id || body.tenant_id) {
       const [property, tenant] = await Promise.all([
         body.property_id
@@ -202,7 +203,7 @@ export async function PATCH(req: NextRequest) {
     }
 
     const lease = await prisma.leases.update({
-      where: {user_id: id},
+      where: {user_id: userId},
       data: body,
     });
 
@@ -228,7 +229,9 @@ export async function DELETE(req: NextRequest) {
 
     // Verify lease belongs to user
     const existingLease = await prisma.leases.findUnique({
-      where: {user_id: id},
+      where: {
+        user_id: userId,
+      },
     });
 
     if (!existingLease) {
@@ -244,7 +247,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     await prisma.leases.delete({
-      where: {user_id: id},
+      where: {user_id: userId},
     });
 
     return NextResponse.json({success: true});

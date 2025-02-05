@@ -2,6 +2,7 @@
 
 import {Button} from '@/components/ui/buttons/button';
 import {cn} from '@/lib/utils';
+import type {PricingCardProps} from '@/types/mui';
 import {
   Card,
   CardContent,
@@ -9,19 +10,8 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from 'components/ui/card';
+} from 'components/ui/cards/card';
 import {Check} from 'react-feather';
-
-interface PricingCardProps {
-  title: string;
-  description: string;
-  price: string;
-  duration: string;
-  features: string[];
-  highlighted?: boolean;
-  buttonText: string;
-  onSubscribe: () => void;
-}
 
 export function PricingCard({
   title,

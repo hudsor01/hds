@@ -1,6 +1,6 @@
 'use client';
 
-import {Card} from '@/components/ui/card';
+import {Card} from '@/components/ui/cards/card';
 import {Box, Container, Grid, Typography} from '@mui/material';
 import {
   BarChart,

@@ -1,12 +1,11 @@
+import {supabase} from '../../lib/db';
 import {getSubscription, getUser, getUserDetails} from '../auth';
 import CustomerPortalForm from '@/components/forms/CustomerPortalForm';
 import EmailForm from '@/components/forms/EmailForm';
 import NameForm from '@/components/forms/NameForm';
-import {createClient} from '@/utils/supabase/server';
 import {redirect} from 'next/navigation';
 
 export default async function Account() {
-  const supabase = createClient();
   const [user, userDetails, subscription] = await Promise.all([
     getUser(supabase),
     getUserDetails(supabase),

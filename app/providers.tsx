@@ -3,21 +3,26 @@
 import theme from './theme';
 import createEmotionCache from '@/lib/utils/createEmotionCache';
 import {CacheProvider} from '@emotion/react';
-import CssBaseline from '@mui/material/CssBaseline';
-import {ThemeProvider} from '@mui/material/styles';
+import {CssBaseline, ThemeProvider} from '@mui/material';
+import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {ThemeProvider as NextThemesProvider} from 'next-themes';
+import {useState} from 'react';
 
 const clientSideEmotionCache = createEmotionCache();
 
 export function Providers({children}: {children: React.ReactNode}) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
-    <CacheProvider value={clientSideEmotionCache}>
-      <ThemeProvider theme={theme}>
-        <NextThemesProvider attribute='class' defaultTheme='system' enableSystem>
-          <CssBaseline />
-          {children}
+    <QueryClientProvider client={queryClient}>
+      <CacheProvider value={clientSideEmotionCache}>
+        <NextThemesProvider attribute='class' defaultTheme='light' enableSystem>
+          <ThemeProvider theme={theme}>
+            <CssBaseline />
+            {children}
+          </ThemeProvider>
         </NextThemesProvider>
-      </ThemeProvider>
-    </CacheProvider>
+      </CacheProvider>
+    </QueryClientProvider>
   );
 }

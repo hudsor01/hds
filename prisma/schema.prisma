@@ -322,16 +322,16 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  id                String    @id @default(uuid()) @db.Uuid
-  payment_intent_id String?   @unique @db.Text
-  tenant_id         String    @db.Uuid
-  amount            Decimal   @db.Decimal(10, 2)
+  id                String   @id @default(uuid()) @db.Uuid
+  payment_intent_id String?  @unique @db.Text
+  tenant_id         String   @db.Uuid
+  amount            Decimal  @db.Decimal(10, 2)
   status            String
-  created_at        DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime  @updatedAt @db.Timestamptz(6)
+  created_at        DateTime @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime @updatedAt @db.Timestamptz(6)
 
   // Relations
-  tenant            tenants   @relation(fields: [tenant_id], references: [id])
+  tenant tenants @relation(fields: [tenant_id], references: [id])
 
   @@schema("hds")
   @@index([status])

@@ -1,7 +1,7 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
-import {Card} from '@/components/ui/card';
+import {Card} from '@/components/ui/cards/card';
 import {useUser} from '@clerk/nextjs';
 import {
   Box,

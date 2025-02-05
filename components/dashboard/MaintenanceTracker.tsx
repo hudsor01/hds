@@ -1,7 +1,7 @@
 'use client';
 
 import {Badge} from '@/components/ui/badge';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/cards/card';
 import {useToast} from '@/hooks/use-toast';
 import {MaintenanceRequest} from '@/types/maintenance';
 import {createClient} from '@supabase/supabase-js';

@@ -7,7 +7,7 @@ import BusinessIcon from '@mui/icons-material/Business';
 import PeopleIcon from '@mui/icons-material/People';
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import {Card} from 'components/ui/card';
+import {Card} from 'components/ui/cards/card';
 import {motion} from 'framer-motion';
 import Image from 'next/image';
 

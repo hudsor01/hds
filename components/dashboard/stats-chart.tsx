@@ -1,6 +1,6 @@
 'use client';
 
-import {Card} from 'components/ui/card';
+import {Card} from 'components/ui/cards/card';
 import {Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis} from 'recharts';
 
 interface StatsChartProps {

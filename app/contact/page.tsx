@@ -1,6 +1,6 @@
 'use client';
 
-import {Card} from '@/components/ui/card';
+import {Card} from '@/components/ui/cards/card';
 import LoadingButton from '@mui/lab/LoadingButton';
 import {Box, Container, Grid, TextField, Typography} from '@mui/material';
 import {useState} from 'react';
