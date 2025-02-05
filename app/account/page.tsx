@@ -1,7 +1,7 @@
-import CustomerPortalForm from '@/components/ui/AccountForms/CustomerPortalForm';
-import EmailForm from '@/components/ui/AccountForms/EmailForm';
-import NameForm from '@/components/ui/AccountForms/NameForm';
-import {getUserDetails, getSubscription, getUser} from '@/utils/supabase/queries';
+import {getSubscription, getUser, getUserDetails} from '../auth';
+import CustomerPortalForm from '@/components/forms/CustomerPortalForm';
+import EmailForm from '@/components/forms/EmailForm';
+import NameForm from '@/components/forms/NameForm';
 import {createClient} from '@/utils/supabase/server';
 import {redirect} from 'next/navigation';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from './button';
+import {Button} from './buttons/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,7 +10,7 @@ import {
 } from './dropdown-menu';
 import {Laptop, Moon, Sun} from 'lucide-react';
 import {useTheme} from 'next-themes';
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 
 export function ThemeSwitcher() {
   const [mounted, setMounted] = useState(false);

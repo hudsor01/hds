@@ -1,6 +1,8 @@
 'use client';
 
 import {cn} from '@/lib/utils';
+import MuiButton from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
 import {type VariantProps, cva} from 'class-variance-authority';
 import {type ButtonHTMLAttributes, forwardRef} from 'react';
 
@@ -38,3 +40,17 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 Button.displayName = 'Button';
 
 export {Button, buttonVariants};
+
+export {MuiButton as Button};
+
+export interface LoadingButtonProps extends ButtonProps {
+  loading?: boolean;
+}
+
+export function LoadingButton({loading, children, ...props}: LoadingButtonProps) {
+  return (
+    <MuiButton {...props} disabled={loading || props.disabled}>
+      {loading ? <CircularProgress size={24} /> : children}
+    </MuiButton>
+  );
+}

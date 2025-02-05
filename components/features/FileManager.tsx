@@ -1,12 +1,16 @@
 // components/FileManager.tsx
 'use client';
 
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card';
-import {useToast} from '@/components/ui/use-toast';
+import {useToast} from '@/hooks/use-toast';
 import {createClient} from '@supabase/supabase-js';
 import {File, Trash2, Upload} from 'lucide-react';
 import {useState} from 'react';
+
+// components/FileManager.tsx
+
+// components/FileManager.tsx
 
 // components/FileManager.tsx
 

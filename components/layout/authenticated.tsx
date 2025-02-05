@@ -1,14 +1,14 @@
 'use client';
 
+import {Toaster} from '@/components/feedback/toaster';
+import {Button} from '@/components/ui/buttons/button';
 import {usePerformance} from '@/hooks/use-performance';
 import {usePreferencesSync} from '@/hooks/use-preferences-sync';
 import {cn} from '@/lib/utils';
 import {routes} from '@/routes';
 import {PreferencesMenu} from 'components/preferences-menu';
 import {ThemeSwitcher} from 'components/theme-switcher';
-import {Button} from 'components/ui/button';
 import {Sheet, SheetContent, SheetTrigger} from 'components/ui/sheet';
-import {Toaster} from 'components/ui/toaster';
 import type {Route} from 'next';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';

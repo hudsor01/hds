@@ -1,7 +1,7 @@
 'use client';
 
 import {signIn} from '@/auth';
-import {Button} from 'components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 
 export default function SignIn() {
   return (

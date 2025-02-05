@@ -1,12 +1,14 @@
 // components/settings/profile-section.tsx
 'use client';
 
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {Card} from '@/components/ui/card';
 import {Input} from '@/components/ui/input';
 import {useUser} from '@clerk/nextjs';
 import React, {useState} from 'react';
 import {toast} from 'sonner';
+
+// components/settings/profile-section.tsx
 
 // components/settings/profile-section.tsx
 

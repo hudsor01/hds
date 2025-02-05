@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {Card} from '@/components/ui/card';
 import {type Milestone, type TeamMember, type Value} from '@/types/about';
 import {

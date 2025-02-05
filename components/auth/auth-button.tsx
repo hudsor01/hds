@@ -1,7 +1,7 @@
 'use client';
 
 import {signOut} from '../../app/auth/lib/auth/auth';
-import {Button} from '@/components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {useSession} from '@clerk/nextjs';
 
 export function AuthButton() {

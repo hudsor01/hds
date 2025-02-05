@@ -1,8 +1,8 @@
 'use client';
 
+import {Button} from '@/components/ui/buttons/button';
 import {useSession} from '@clerk/nextjs';
 import {loadStripe} from '@stripe/stripe-js';
-import {Button} from 'components/ui/button';
 import type {Route} from 'next';
 import {useRouter} from 'next/navigation';
 import {useState} from 'react';

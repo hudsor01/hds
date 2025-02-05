@@ -1,8 +1,8 @@
 'use client';
 
 import {PRIORITY_LABELS, PRIORITY_LEVELS} from '@/auth/lib/constants';
+import {Button} from '@/components/ui/buttons/button';
 import type {SelectChangeEvent} from '@mui/material';
-import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,

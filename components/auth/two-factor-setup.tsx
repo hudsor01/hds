@@ -1,7 +1,7 @@
 'use client';
 
 import {Loader2, Shield} from '-react';
-import {Button} from 'components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {
   Dialog,
   DialogContent,

@@ -4,8 +4,6 @@ import {containerVariants, itemVariants} from '@/lib/animation-variants';
 import {motion} from 'framer-motion';
 import Link from 'next/link';
 import {ChangeEvent} from 'react';
-import {FaGithub, FaXTwitter} from 'react-icons/fa6';
-import {FaArrowRightLong} from 'react-icons/fa6';
 
 interface FormProps {
   name: string;

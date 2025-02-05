@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from 'components/ui/button';
+import {Button} from '@/components/ui/buttons/button';
 import {Input} from 'components/ui/input';
 import Textarea from 'components/ui/textarea';
 import {motion} from 'framer-motion';

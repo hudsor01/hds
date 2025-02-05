@@ -1,5 +1,5 @@
 import WelcomeTemplate from '../../../emails';
-import {ratelimit} from '@/lib/ratelimit';
+import {ratelimit} from '../../../lib/ratelimit';
 import {render} from '@react-email/render';
 import {NextRequest, NextResponse} from 'next/server';
 import {Resend} from 'resend';
@@ -7,7 +7,10 @@ import {Resend} from 'resend';
 const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(request: NextRequest) {
-  const ip = request.ip ?? '127.0.0.1';
+  // Get the client's IP address from headers (x-forwarded-for may contain a comma-separated list)
+  const forwardedFor = request.headers.get('x-forwarded-for');
+  const ip = forwardedFor ? forwardedFor.split(',')[0].trim() : '127.0.0.1';
+
   const result = await ratelimit.limit(ip);
 
   if (!result.success) {

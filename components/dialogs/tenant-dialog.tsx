@@ -1,9 +1,9 @@
 'use client';
 
 import {Loader2} from '-react';
+import {Button} from '@/components/ui/buttons/button';
 import {zodResolver} from '@hookform/resolvers/zod';
 import type {SelectChangeEvent} from '@mui/material';
-import {Button} from 'components/ui/button';
 import {
   Dialog,
   DialogContent,

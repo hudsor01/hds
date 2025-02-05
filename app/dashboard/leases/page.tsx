@@ -1,7 +1,7 @@
 'use client';
 
+import {Button} from '@/components/ui/buttons/button';
 import LeaseDialog from 'components/dialogs/lease-dialog';
-import {Button} from 'components/ui/button';
 import {useState} from 'react';
 import {Edit, Plus, Trash} from 'react-feather';
 import type {Lease} from 'types/leases';
