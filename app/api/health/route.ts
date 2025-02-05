@@ -1,5 +1,5 @@
-import {emailService} from '@/lib/email';
-import {prisma} from '@/lib/prisma';
+import {emailService} from '@/lib/utils/email';
+import {prisma} from '@/prisma/seed';
 
 async function checkDatabase() {
   try {

@@ -1,23 +1,25 @@
+import {SvgIconComponent} from '@mui/icons-material';
+
 export interface TeamMember {
   name: string;
   role: string;
   bio: string;
   image: string;
-  linkedin?: string;
-  achievements?: string[];
+  linkedin: string;
+  achievements: string[];
 }
 
 export interface Milestone {
   year: string;
   title: string;
   description: string;
-  icon: any; // MUI icon component type
+  icon: SvgIconComponent;
   metric: string;
 }
 
 export interface Value {
   title: string;
   description: string;
-  icon: any; // MUI icon component type
+  icon: SvgIconComponent;
   color: string;
 }

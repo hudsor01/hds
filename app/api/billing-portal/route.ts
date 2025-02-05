@@ -1,3 +1,4 @@
+import {getStripe} from '../../../utils/stripe/client';
 import type {Session} from '@clerk/nextjs/server';
 import {auth} from '@clerk/nextjs/server';
 import {NextResponse} from 'next/server';
@@ -15,7 +16,8 @@ export async function POST() {
     return NextResponse.json({error: 'No Stripe customer ID found'}, {status: 400});
   }
 
-  const portalSession = await stripe.billingPortal.sessions.create({
+  const stripe = await getStripe();
+  const portalSession = await (stripe as any).billingPortal.sessions.create({
     customer: session.user.stripe_customer_id,
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`,
   });

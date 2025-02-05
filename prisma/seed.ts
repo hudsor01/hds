@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client';
 
-const prisma = new PrismaClient();
+export const prisma = new PrismaClient();
 
 async function main() {
   // Create a test user first
@@ -18,12 +18,12 @@ async function main() {
   const property = await prisma.properties.create({
     data: {
       name: 'Test Property',
-      address: '123 Test Street',
-      city: 'Test City',
-      state: 'CA',
-      zip: '12345',
+      address: '3604 Steven Drive',
+      city: 'Plano',
+      state: 'Texas',
+      zip: '75023',
       type: 'Residential',
-      rent_amount: 1500,
+      rent_amount: 2800,
       owner_id: user.id,
       status: 'active',
       amenities: [],
@@ -36,16 +36,16 @@ async function main() {
     data: {
       property_id: property.id,
       user_id: user.id,
-      first_name: 'John',
-      last_name: 'Doe',
-      email: 'john@example.com',
-      phone: '555-0123',
+      first_name: 'Alicia',
+      last_name: 'Douglass',
+      email: 'alicia@loishouseinplano.com',
+      phone: '972-208-2863',
       status: 'ACTIVE',
       move_in_date: new Date(),
       emergency_contact: {
-        name: 'Jane Doe',
-        phone: '555-0124',
-        relationship: 'Spouse',
+        name: 'Lois Greer',
+        phone: '214-316-2911',
+        relationship: 'Mother',
       },
       documents: [],
     },

@@ -6,9 +6,9 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 export const emailService = {
   async sendWelcome(email: string) {
     return resend.emails.send({
-      from: 'welcome@yourapp.com',
+      from: 'info@hudsondigitalsolutions.com',
       to: email,
-      subject: 'Welcome to the Property Pro Waitlist!',
+      subject: 'Welcome to the Hudson Digital Property Management Waitlist!',
       react: WelcomeEmail({email}),
     });
   },

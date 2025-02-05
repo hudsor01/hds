@@ -51,7 +51,24 @@ export default function Navbar() {
             </SignInButton>
           </SignedOut>
           <SignedIn>
-            <UserButton afterSignOutUrl='/' />
+            <Link
+              href='/dashboard'
+              className='text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
+            >
+              Dashboard
+            </Link>
+            <UserButton
+              afterSignOutUrl='/'
+              appearance={{
+                elements: {
+                  avatarBox: 'w-8 h-8',
+                  userButtonPopoverCard: 'w-64',
+                  userButtonPopoverActionButton: 'text-sm',
+                  userButtonPopoverActionButtonText: 'text-sm',
+                  userButtonPopoverFooter: 'hidden',
+                },
+              }}
+            />
           </SignedIn>
         </div>
       </div>

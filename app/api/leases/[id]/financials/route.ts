@@ -1,6 +1,14 @@
-import {createRouteHandlerClient} from '@supabase/auth-helpers-nextjs';
+import {createClient} from '@supabase/supabase-js';
 import {cookies} from 'next/headers';
 import {NextResponse} from 'next/server';
+
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+function createRouteHandlerClient({cookies}: {cookies: () => ReturnType<typeof cookies>}) {
+  // Create and return the Supabase client instance.
+  return createClient(supabaseUrl, supabaseAnonKey);
+}
 
 export async function GET(request: Request, {params}: {params: {id: string}}) {
   try {
