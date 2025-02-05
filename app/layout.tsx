@@ -1,3 +1,5 @@
+'use client';
+
 import './globals.css';
 import {Providers} from './providers';
 import theme from './theme';
@@ -9,7 +11,6 @@ import CssBaseline from '@mui/material/CssBaseline';
 import {ThemeProvider} from '@mui/material/styles';
 import {Analytics} from '@vercel/analytics/react';
 import {SpeedInsights} from '@vercel/speed-insights/next';
-import {Metadata} from 'next';
 import {Roboto} from 'next/font/google';
 import Link from 'next/link';
 import React from 'react';
@@ -23,11 +24,6 @@ const roboto = Roboto({
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
-
-export const metadata: Metadata = {
-  title: 'HDS - Property Management System',
-  description: 'Modern property management solution for real estate professionals',
-};
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
   const emotionCache = clientSideEmotionCache;

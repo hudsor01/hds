@@ -101,23 +101,45 @@ export default function HomePage() {
   return (
     <div className='flex min-h-screen flex-col'>
       {/* Hero Section */}
-      <section className='relative overflow-hidden bg-linear-to-b from-blue-50 via-white to-blue-50 py-24 sm:py-32'>
+      <section className='relative overflow-hidden bg-gradient-to-b from-white to-gray-50 py-20 sm:py-32'>
         <div className='absolute inset-0 bg-[linear-gradient(to_right,#f0f7ff_1px,transparent_1px),linear-gradient(to_bottom,#f0f7ff_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_110%)]' />
-        <div className='absolute inset-x-0 top-0 h-96 bg-linear-to-br from-blue-100 to-purple-100 blur-3xl opacity-50 -z-10' />
-        <div className='relative'>
-          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-            <div className='text-center'>
-              <h1 className='animate-fade-up text-5xl font-bold tracking-tight text-gray-900 sm:text-6xl'>
-                Our Mission is to
-                <br />
-                <span className='bg-linear-to-r from-blue-600 via-blue-500 to-blue-400 bg-clip-text text-transparent'>
-                  Transform Property Management
-                </span>
+
+        <div className='relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
+          <div className='flex flex-col lg:flex-row items-center justify-between gap-16'>
+            <div className='flex-1 text-center lg:text-left'>
+              <h1 className='text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight'>
+                <span className='text-pastel-blue-500 block mb-2'>Simplify</span>
+                <span className='text-slate-800'>Property Management</span>
               </h1>
-              <p className='mx-auto mt-8 max-w-2xl text-xl leading-8 text-gray-600 animate-fade-up [animation-delay:200ms]'>
-                We are building the future of property management software, making it easier for
-                property managers to focus on what matters most - their properties and tenants.
+              <p className='mt-6 text-lg text-slate-600 max-w-2xl mx-auto lg:mx-0'>
+                Modern property management solution that streamlines your operations, enhances
+                tenant satisfaction, and maximizes your property's potential.
               </p>
+              <div className='mt-10 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start'>
+                <Link href='/sign-up'>
+                  <Button className='w-full sm:w-auto bg-pastel-blue-500 hover:bg-pastel-blue-600 text-white px-6 py-3'>
+                    Get Started
+                  </Button>
+                </Link>
+                <Link href='/features'>
+                  <Button variant='outline' className='w-full sm:w-auto px-6 py-3'>
+                    Learn More
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className='flex-1 relative w-full max-w-2xl lg:max-w-none'>
+              <div className='relative w-full aspect-[4/3] overflow-hidden rounded-xl shadow-2xl ring-1 ring-slate-200'>
+                <Image
+                  src='/dashboard-preview.png'
+                  alt='Dashboard Preview'
+                  fill
+                  className='object-cover'
+                  priority
+                />
+              </div>
+              <div className='absolute -bottom-6 -left-6 -right-6 -top-6 rounded-[calc(2rem+1px)] bg-gradient-to-b from-pastel-blue-500/20 to-white/20 ring-1 ring-pastel-blue-200/30 [mask-image:linear-gradient(to_bottom,white_60%,transparent)] -z-10' />
             </div>
           </div>
         </div>

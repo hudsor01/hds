@@ -1,7 +1,10 @@
 import {BaseQueryParams, BaseResponse} from '@/types/common';
-import axios, {AxiosError} from 'axios';
+import axios from 'axios';
 import {NextApiRequest, NextApiResponse} from 'next';
 import {ZodError, ZodSchema} from 'zod';
+
+type AxiosRequestConfig = axios.AxiosRequestConfig;
+type AxiosError = axios.AxiosError;
 
 // API client configuration
 const apiClient = axios.create({

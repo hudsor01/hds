@@ -5,7 +5,6 @@ import {SignedIn, SignedOut, SignInButton, UserButton} from '@clerk/nextjs';
 import Link from 'next/link';
 import {usePathname} from 'next/navigation';
 import {Route} from 'next/types';
-import {Home} from 'react-feather';
 
 const navigation: Array<{name: string; href: Route}> = [
   {name: 'About', href: '/about'},
@@ -21,7 +20,7 @@ export default function Navbar() {
     <header className='sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur-sm supports-backdrop-filter:bg-background/60'>
       <div className='container flex h-14 items-center justify-between'>
         <Link href='/' className='ml-4 flex items-center space-x-2'>
-          <Home size={24} className='text-current' />
+          <img src='/hds-logo.jpg' alt='HDS Logo' className='h-8 w-auto' />
           <span className='hidden font-bold sm:inline-block'>HDS</span>
         </Link>
 
@@ -52,7 +51,7 @@ export default function Navbar() {
           </SignedOut>
           <SignedIn>
             <Link
-              href='/dashboard'
+              href='/app/dashboard'
               className='text-sm font-medium text-muted-foreground hover:text-foreground transition-colors'
             >
               Dashboard

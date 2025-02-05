@@ -152,7 +152,7 @@ export async function GET(req: NextRequest) {
             },
           },
           include: {
-            properties: true,
+            property: true,
           },
         });
 
@@ -176,8 +176,8 @@ export async function GET(req: NextRequest) {
 
         const requestsByProperty = maintenanceRequests.reduce(
           (acc, request) => {
-            if (request.properties) {
-              const propertyName = request.properties.name;
+            if (request.property) {
+              const propertyName = request.property.name;
               acc[propertyName] = (acc[propertyName] || 0) + 1;
             }
             return acc;
