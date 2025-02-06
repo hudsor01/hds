@@ -1,4 +1,3 @@
-// components/auth/SignUpForm.tsx
 'use client';
 
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -18,10 +17,6 @@ import {
 import React from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {z} from 'zod';
-
-// components/auth/SignUpForm.tsx
-
-// components/auth/SignUpForm.tsx
 
 const signUpSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),

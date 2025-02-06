@@ -1,4 +1,3 @@
-// components/auth/UpdatePasswordForm.tsx
 'use client';
 
 import {zodResolver} from '@hookform/resolvers/zod';
@@ -8,10 +7,6 @@ import {Alert, Box, Collapse, Paper, TextField, Typography} from '@mui/material'
 import React from 'react';
 import {Controller, useForm} from 'react-hook-form';
 import {z} from 'zod';
-
-// components/auth/UpdatePasswordForm.tsx
-
-// components/auth/UpdatePasswordForm.tsx
 
 const updatePasswordSchema = z
   .object({
@@ -27,10 +22,10 @@ const updatePasswordSchema = z
 type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
 
 interface UpdatePasswordFormProps {
-  onSubmit: (data: UpdatePasswordFormValues) => Promise<void>;
+  onSubmitAction: (data: UpdatePasswordFormValues) => Promise<void>;
 }
 
-export const UpdatePasswordForm = ({onSubmit}: UpdatePasswordFormProps) => {
+export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) => {
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState(false);
 
@@ -46,7 +41,7 @@ export const UpdatePasswordForm = ({onSubmit}: UpdatePasswordFormProps) => {
   const handleFormSubmit = async (data: UpdatePasswordFormValues) => {
     try {
       setError(null);
-      await onSubmit(data);
+      await onSubmitAction(data);
       setSuccess(true);
       reset();
     } catch (err) {

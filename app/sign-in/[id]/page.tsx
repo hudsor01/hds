@@ -1,10 +1,10 @@
 'use client';
 
-import {EmailSignIn} from '@/components/auth/email-sign-in';
-import {PasswordSignIn} from '@/components/auth/password-sign-in';
-import {SignUp} from '@/components/auth/sign-up';
+import {EmailSignIn} from '@/components/forms/auth/email-sign-in';
 import {ForgotPassword} from '@/components/forms/auth/forgot-password';
 import {OauthSignIn} from '@/components/forms/auth/oauth-sign-in';
+import {PasswordSignIn} from '@/components/forms/auth/password-sign-in';
+import {SignUp} from '@/components/forms/auth/sign-up';
 import {UpdatePassword} from '@/components/forms/auth/update-password';
 import Logo from '@/components/icons/Logo';
 import {Card} from '@/components/ui/cards/card';
