@@ -1,257 +1,244 @@
-import {prisma} from '@/lib/prisma';
-import {getAuth} from '@clerk/nextjs/server';
-import {LeaseType} from '@prisma/client';
+import {supabase} from '@/lib/supabase';
+import {auth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';
 
-// Schema for lease validation
 const leaseSchema = z.object({
   tenant_id: z.string().uuid('Invalid tenant ID'),
   property_id: z.string().uuid('Invalid property ID'),
-  type: z.nativeEnum(LeaseType),
-  start_date: z.coerce.date(),
-  end_date: z.coerce.date().optional(),
-  rent_amount: z.number().positive('Rent amount must be greater than 0'),
-  depositAmount: z.number().positive('Deposit amount must be greater than 0'),
+  lease_type: z.enum(['FIXED_TERM', 'MONTH_TO_MONTH', 'WEEKLY', 'YEARLY']),
+  start_date: z.string().datetime(),
+  end_date: z.string().datetime().optional(),
+  rent_amount: z.number().positive('Rent amount must be positive'),
+  depositAmount: z.number().positive('Deposit amount must be positive'),
   payment_day: z.number().min(1).max(31),
-  documents: z.array(z.string().url('Invalid document URL')).default([]),
-  status: z.enum(['Pending', 'Active', 'Terminated', 'Expired']).default('Pending'),
+  documents: z.array(z.string()).default([]),
+  lease_status: z.enum(['Pending', 'Active', 'Terminated', 'Expired']).default('Pending'),
 });
 
-// Schema for lease updates (all fields optional)
-const updateLeaseSchema = leaseSchema.partial();
-
-// Error handler utility
-const handleError = (error: unknown) => {
-  console.error('Lease API Error:', error);
-  if (error instanceof z.ZodError) {
-    return NextResponse.json({error: error.errors}, {status: 400});
-  }
-  return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
-};
-
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const json = await req.json();
-    const body = leaseSchema.parse(json);
+    const searchParams = req.nextUrl.searchParams;
+    const property_id = searchParams.get('property_id');
+    const tenant_id = searchParams.get('tenant_id');
+    const status = searchParams.get('status');
 
-    // Verify property ownership and tenant relationship
-    const [property, tenant] = await Promise.all([
-      prisma.properties.findUnique({
-        where: {
-          id: body.property_id,
-          user_id: userId,
-        },
-      }),
-      prisma.tenants.findUnique({
-        where: {
-          id: body.tenant_id,
-          user_id: userId,
-        },
-      }),
-    ]);
+    let query = supabase
+      .from('leases')
+      .select('*, properties(*), tenants(*)')
+      .eq('user_id', userId);
 
-    if (!property) {
+    if (property_id) {
+      query = query.eq('property_id', property_id);
+    }
+
+    if (tenant_id) {
+      query = query.eq('tenant_id', tenant_id);
+    }
+
+    if (status) {
+      query = query.eq('lease_status', status);
+    }
+
+    const {data: leases, error} = await query;
+
+    if (error) {
+      console.error('Error fetching leases:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    return NextResponse.json({data: leases});
+  } catch (error) {
+    console.error('Error in lease GET route:', error);
+    return NextResponse.json({error: 'Failed to fetch leases'}, {status: 500});
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const {userId} = await auth();
+    if (!userId) {
+      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+    }
+
+    const body = await req.json();
+    const validatedData = leaseSchema.parse(body);
+
+    // Verify property ownership and tenant association
+    const {data: property, error: propertyError} = await supabase
+      .from('properties')
+      .select('id')
+      .eq('id', validatedData.property_id)
+      .eq('user_id', userId)
+      .single();
+
+    if (propertyError || !property) {
       return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
     }
 
-    if (!tenant) {
+    const {data: tenant, error: tenantError} = await supabase
+      .from('tenants')
+      .select('id')
+      .eq('id', validatedData.tenant_id)
+      .eq('user_id', userId)
+      .single();
+
+    if (tenantError || !tenant) {
       return NextResponse.json({error: 'Tenant not found or unauthorized'}, {status: 404});
     }
 
     // Check for existing active leases for this property
-    const existingLease = await prisma.leases.findFirst({
-      where: {
-        property_id: body.property_id,
-        status: 'Active',
-        end_date: {
-          gt: new Date(),
-        },
-      },
-    });
+    const {data: existingLeases, error: leaseCheckError} = await supabase
+      .from('leases')
+      .select('id')
+      .eq('property_id', validatedData.property_id)
+      .eq('lease_status', 'Active');
 
-    if (existingLease) {
+    if (leaseCheckError) {
+      return NextResponse.json({error: 'Error checking existing leases'}, {status: 500});
+    }
+
+    if (existingLeases && existingLeases.length > 0) {
       return NextResponse.json({error: 'Property already has an active lease'}, {status: 400});
     }
 
-    const lease = await prisma.leases.create({
-      data: {
-        ...body,
-        user_id: userId,
-      },
-    });
+    const {data: lease, error} = await supabase
+      .from('leases')
+      .insert([{...validatedData, user_id: userId}])
+      .select()
+      .single();
 
-    return NextResponse.json(lease);
-  } catch (error) {
-    return handleError(error);
-  }
-}
-
-export async function GET(req: NextRequest) {
-  try {
-    const {userId} = getAuth(req);
-    if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+    if (error) {
+      console.error('Error creating lease:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
     }
 
-    const {searchParams} = new URL(req.url);
-    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
-    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10')));
-    const status = searchParams.get('status') as
-      | 'Pending'
-      | 'Active'
-      | 'Terminated'
-      | 'Expired'
-      | null;
-    const propertyId = searchParams.get('propertyId');
-    const tenantId = searchParams.get('tenantId');
-    const type = searchParams.get('type') as LeaseType | null;
-
-    const where = {
-      user_id: userId,
-      ...(status && {status}),
-      ...(propertyId && {property_id: propertyId}),
-      ...(tenantId && {tenant_id: tenantId}),
-      ...(type && {type}),
-    };
-
-    const [leases, total] = await Promise.all([
-      prisma.leases.findMany({
-        where,
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          created_at: 'desc',
-        },
-      }),
-      prisma.leases.count({where}),
+    // Create notification for new lease
+    await supabase.from('notifications').insert([
+      {
+        user_id: userId,
+        type: 'LEASE',
+        title: 'New Lease Created',
+        message: `A new lease has been created for property ID: ${validatedData.property_id}`,
+      },
     ]);
 
-    return NextResponse.json({
-      leases,
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
-    });
+    return NextResponse.json({data: lease}, {status: 201});
   } catch (error) {
-    return handleError(error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error in lease POST route:', error);
+    return NextResponse.json({error: 'Failed to create lease'}, {status: 500});
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const id = searchParams.get('id');
+    const body = await req.json();
+    const {id, ...updateData} = body;
 
     if (!id) {
       return NextResponse.json({error: 'Lease ID is required'}, {status: 400});
     }
 
-    const json = await req.json();
-    const body = updateLeaseSchema.parse(json);
+    const validatedData = leaseSchema.partial().parse(updateData);
 
-    // Verify lease belongs to user
-    const existingLease = await prisma.leases.findUnique({
-      where: {
-        user_id: userId,
-      },
-    });
+    // Verify lease ownership
+    const {data: existingLease, error: leaseCheckError} = await supabase
+      .from('leases')
+      .select('id')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
 
-    if (!existingLease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+    if (leaseCheckError || !existingLease) {
+      return NextResponse.json({error: 'Lease not found or unauthorized'}, {status: 404});
     }
 
-    // Additional verifications if updating tenant or property
-    if (body.property_id || body.tenant_id) {
-      const [property, tenant] = await Promise.all([
-        body.property_id
-          ? prisma.properties.findUnique({
-              where: {
-                id: body.property_id,
-                user_id: userId,
-              },
-            })
-          : null,
-        body.tenant_id
-          ? prisma.tenants.findUnique({
-              where: {
-                id: body.tenant_id,
-                user_id: userId,
-              },
-            })
-          : null,
+    const {data: lease, error} = await supabase
+      .from('leases')
+      .update(validatedData)
+      .eq('id', id)
+      .eq('user_id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating lease:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    // Create notification for lease update
+    if (validatedData.lease_status) {
+      await supabase.from('notifications').insert([
+        {
+          user_id: userId,
+          type: 'LEASE',
+          title: 'Lease Updated',
+          message: `Lease status updated to ${validatedData.lease_status}`,
+        },
       ]);
-
-      if (body.property_id && !property) {
-        return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
-      }
-
-      if (body.tenant_id && !tenant) {
-        return NextResponse.json({error: 'Tenant not found or unauthorized'}, {status: 404});
-      }
     }
 
-    const lease = await prisma.leases.update({
-      where: {user_id: userId},
-      data: body,
-    });
-
-    return NextResponse.json(lease);
+    return NextResponse.json({data: lease});
   } catch (error) {
-    return handleError(error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error in lease PUT route:', error);
+    return NextResponse.json({error: 'Failed to update lease'}, {status: 500});
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const id = searchParams.get('id');
-
+    const id = req.nextUrl.searchParams.get('id');
     if (!id) {
       return NextResponse.json({error: 'Lease ID is required'}, {status: 400});
     }
 
-    // Verify lease belongs to user
-    const existingLease = await prisma.leases.findUnique({
-      where: {
-        user_id: userId,
-      },
-    });
+    // Verify lease ownership and status
+    const {data: lease, error: leaseCheckError} = await supabase
+      .from('leases')
+      .select('lease_status')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
 
-    if (!existingLease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+    if (leaseCheckError || !lease) {
+      return NextResponse.json({error: 'Lease not found or unauthorized'}, {status: 404});
     }
 
-    // Only allow deletion of non-active leases
-    if (existingLease.status === 'Active') {
-      return NextResponse.json(
-        {error: 'Cannot delete an active lease. Please terminate it first.'},
-        {status: 400},
-      );
+    if (lease.lease_status === 'Active') {
+      return NextResponse.json({error: 'Cannot delete an active lease'}, {status: 400});
     }
 
-    await prisma.leases.delete({
-      where: {user_id: userId},
-    });
+    const {error} = await supabase.from('leases').delete().eq('id', id).eq('user_id', userId);
 
-    return NextResponse.json({success: true});
+    if (error) {
+      console.error('Error deleting lease:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    return NextResponse.json({message: 'Lease deleted successfully'}, {status: 200});
   } catch (error) {
-    return handleError(error);
+    console.error('Error in lease DELETE route:', error);
+    return NextResponse.json({error: 'Failed to delete lease'}, {status: 500});
   }
 }

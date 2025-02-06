@@ -1,7 +1,10 @@
+import {prisma} from '@/lib/prisma';
 import {supabase} from '@/lib/supabase';
 import {auth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';
+
+export const revalidate = 3600
 
 // Validation schema for property creation/updates
 const propertySchema = z.object({
@@ -13,6 +16,10 @@ const propertySchema = z.object({
 });
 
 export async function GET(req: NextRequest) {
+  const properties = await prisma.properties.findMany();
+  return NextResponse.json({properties});
+}
+
   try {
     const {userId} = await auth();
     if (!userId) {
@@ -38,12 +45,6 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({data: properties});
-  } catch (error) {
-    console.error('Error fetching properties:', error);
-    return NextResponse.json({error: 'Failed to fetch properties'}, {status: 500});
-  }
-}
-
 export async function POST(req: NextRequest) {
   try {
     const {userId} = await auth();

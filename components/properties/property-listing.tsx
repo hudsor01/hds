@@ -1,4 +1,3 @@
-// components/properties/property-listing.tsx
 'use client';
 
 import {PropertyFilters} from './property-filters';
@@ -13,8 +12,6 @@ import Button from '@mui/material/Button';
 import Tab from '@mui/material/Tab';
 import Tabs from '@mui/material/Tabs';
 import {useState} from 'react';
-
-// components/properties/property-listing.tsx
 
 export function PropertyListing() {
   const [view, setView] = useState<'grid' | 'table'>('grid');

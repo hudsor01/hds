@@ -1,241 +1,187 @@
-import {prisma} from '@/lib/prisma';
-import {getAuth} from '@clerk/nextjs/server';
+import {supabase} from '@/lib/supabase';
+import {auth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';
 
-// Schema for tenant validation
+// Validation schema for tenant creation/updates
 const tenantSchema = z.object({
   first_name: z.string().min(1, 'First name is required'),
   last_name: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().optional(),
   property_id: z.string().uuid('Invalid property ID'),
-  status: z.enum(['active', 'inactive', 'pending']).default('active'),
+  tenant_status: z.enum(['active', 'inactive', 'pending']).default('pending'),
   move_in_date: z.string().datetime().optional(),
   move_out_date: z.string().datetime().optional(),
-  emergency_contact: z
-    .object({
-      name: z.string().min(1, 'Emergency contact name is required'),
-      phone: z.string().min(10, 'Emergency contact phone must be at least 10 digits'),
-      relationship: z.string().min(1, 'Relationship is required'),
-    })
-    .optional(),
-  documents: z.array(z.string().url('Invalid document URL')).optional(),
+  emergency_contact: z.record(z.string(), z.any()).optional(),
+  documents: z.array(z.any()).optional(),
 });
-
-// Schema for tenant updates (all fields optional)
-const updateTenantSchema = tenantSchema.partial();
-
-// Error handler utility
-const handleError = (error: unknown) => {
-  console.error('Tenant API Error:', error);
-  if (error instanceof z.ZodError) {
-    return NextResponse.json({error: error.errors}, {status: 400});
-  }
-  return NextResponse.json({error: 'Internal Server Error'}, {status: 500});
-};
-
-export async function POST(req: NextRequest) {
-  try {
-    const {userId} = getAuth(req);
-    if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
-    }
-
-    const json = await req.json();
-    const body = tenantSchema.parse(json);
-
-    // Verify property ownership
-    const property = await prisma.properties.findUnique({
-      where: {
-        id: body.property_id,
-        user_id: userId,
-      },
-    });
-
-    if (!property) {
-      return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
-    }
-
-    const tenant = await prisma.tenants.create({
-      data: {
-        ...body,
-        user_id: userId,
-        emergency_contact: body.emergency_contact || {},
-        documents: body.documents || [],
-      },
-      include: {
-        property: true,
-        maintenance_requests: true,
-      },
-    });
-
-    return NextResponse.json(tenant);
-  } catch (error) {
-    return handleError(error);
-  }
-}
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
-    const limit = Math.min(50, Math.max(1, parseInt(searchParams.get('limit') || '10')));
+    const searchParams = req.nextUrl.searchParams;
+    const property_id = searchParams.get('property_id');
     const status = searchParams.get('status');
-    const search = searchParams.get('search');
-    const propertyId = searchParams.get('propertyId');
 
-    const where = {
-      user_id: userId,
-      ...(status && {status}),
-      ...(propertyId && {property_id: propertyId}),
-      ...(search && {
-        OR: [
-          {first_name: {contains: search}},
-          {last_name: {contains: search}},
-          {email: {contains: search}},
-        ],
-      }),
-    };
+    let query = supabase.from('tenants').select('*, properties(*)').eq('user_id', userId);
 
-    const [tenants, total] = await Promise.all([
-      prisma.tenants.findMany({
-        where,
-        include: {
-          property: true,
-          maintenance_requests: true,
-        },
-        skip: (page - 1) * limit,
-        take: limit,
-        orderBy: {
-          created_at: 'desc',
-        },
-      }),
-      prisma.tenants.count({where}),
-    ]);
+    if (property_id) {
+      query = query.eq('property_id', property_id);
+    }
 
-    return NextResponse.json({
-      tenants,
-      total,
-      pages: Math.ceil(total / limit),
-      currentPage: page,
-      limit,
-    });
+    if (status) {
+      query = query.eq('tenant_status', status);
+    }
+
+    const {data: tenants, error} = await query;
+
+    if (error) {
+      console.error('Error fetching tenants:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    return NextResponse.json({data: tenants});
   } catch (error) {
-    return handleError(error);
+    console.error('Error in tenant GET route:', error);
+    return NextResponse.json({error: 'Failed to fetch tenants'}, {status: 500});
   }
 }
 
-export async function PATCH(req: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const json = await req.json();
-    const {id, ...updateData} = json;
+    const body = await req.json();
+    const validatedData = tenantSchema.parse(body);
+
+    // Verify that the property belongs to the user
+    const {data: property, error: propertyError} = await supabase
+      .from('properties')
+      .select('id')
+      .eq('id', validatedData.property_id)
+      .eq('user_id', userId)
+      .single();
+
+    if (propertyError || !property) {
+      return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
+    }
+
+    const {data: tenant, error} = await supabase
+      .from('tenants')
+      .insert([{...validatedData, user_id: userId}])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating tenant:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    // Create notification for new tenant
+    await supabase.from('notifications').insert([
+      {
+        user_id: userId,
+        type: 'TENANT',
+        title: 'New Tenant Added',
+        message: `${validatedData.first_name} ${validatedData.last_name} has been added as a tenant.`,
+      },
+    ]);
+
+    return NextResponse.json({data: tenant}, {status: 201});
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error in tenant POST route:', error);
+    return NextResponse.json({error: 'Failed to create tenant'}, {status: 500});
+  }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const {userId} = await auth();
+    if (!userId) {
+      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+    }
+
+    const body = await req.json();
+    const {id, ...updateData} = body;
 
     if (!id) {
       return NextResponse.json({error: 'Tenant ID is required'}, {status: 400});
     }
 
-    const body = updateTenantSchema.parse(updateData);
+    const validatedData = tenantSchema.partial().parse(updateData);
 
-    // Verify tenant belongs to user
-    const existingTenant = await prisma.tenants.findUnique({
-      where: {
-        id,
-        user_id: userId,
-      },
-    });
+    const {data: tenant, error} = await supabase
+      .from('tenants')
+      .update(validatedData)
+      .eq('id', id)
+      .eq('user_id', userId)
+      .select()
+      .single();
 
-    if (!existingTenant) {
+    if (error) {
+      console.error('Error updating tenant:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
+    }
+
+    if (!tenant) {
       return NextResponse.json({error: 'Tenant not found'}, {status: 404});
     }
 
-    // If property_id is being updated, verify ownership
-    if (body.property_id) {
-      const property = await prisma.properties.findUnique({
-        where: {
-          id: body.property_id,
-          user_id: userId,
-        },
-      });
-
-      if (!property) {
-        return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
-      }
-    }
-
-    const tenant = await prisma.tenants.update({
-      where: {id},
-      data: {
-        ...body,
-        emergency_contact: body.emergency_contact || undefined,
-        documents: body.documents || undefined,
-      },
-      include: {
-        property: true,
-        maintenance_requests: true,
-      },
-    });
-
-    return NextResponse.json(tenant);
+    return NextResponse.json({data: tenant});
   } catch (error) {
-    return handleError(error);
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+    }
+    console.error('Error in tenant PUT route:', error);
+    return NextResponse.json({error: 'Failed to update tenant'}, {status: 500});
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const {userId} = await auth();
     if (!userId) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    const {searchParams} = new URL(req.url);
-    const id = searchParams.get('id');
-
+    const id = req.nextUrl.searchParams.get('id');
     if (!id) {
       return NextResponse.json({error: 'Tenant ID is required'}, {status: 400});
     }
 
-    // Verify tenant belongs to user
-    const existingTenant = await prisma.tenants.findUnique({
-      where: {
-        id,
-        user_id: userId,
-      },
-    });
+    // First check if tenant exists and belongs to user
+    const {data: tenant, error: fetchError} = await supabase
+      .from('tenants')
+      .select('id')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single();
 
-    if (!existingTenant) {
-      return NextResponse.json({error: 'Tenant not found'}, {status: 404});
+    if (fetchError || !tenant) {
+      return NextResponse.json({error: 'Tenant not found or unauthorized'}, {status: 404});
     }
 
-    // Check for active leases
-    const activeLeases = await prisma.leases.count({
-      where: {
-        tenant_id: id,
-        status: 'Pending',
-      },
-    });
+    const {error} = await supabase.from('tenants').delete().eq('id', id).eq('user_id', userId);
 
-    if (activeLeases > 0) {
-      return NextResponse.json({error: 'Cannot delete tenant with active leases'}, {status: 400});
+    if (error) {
+      console.error('Error deleting tenant:', error);
+      return NextResponse.json({error: error.message}, {status: 500});
     }
 
-    await prisma.tenants.delete({
-      where: {id},
-    });
-
-    return NextResponse.json({success: true});
+    return NextResponse.json({message: 'Tenant deleted successfully'}, {status: 200});
   } catch (error) {
-    return handleError(error);
+    console.error('Error in tenant DELETE route:', error);
+    return NextResponse.json({error: 'Failed to delete tenant'}, {status: 500});
   }
 }

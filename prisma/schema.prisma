@@ -28,6 +28,7 @@ model users {
   properties           properties[]           @relation("UserProperties")
   tenants              tenants[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
+  payments            payments[]             @relation("UserPayments")
   sessions            Session[]
 
   @@schema("public")
@@ -53,6 +54,7 @@ model properties {
   User                 users                  @relation("UserProperties", fields: [user_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
   tenants             tenants[]              @relation("PropertyTenancies")
+  payments            payments[]             @relation("PropertyPayments")
   leases              leases[]               @relation("PropertyLeases")
 
   @@schema("public")
@@ -311,26 +313,28 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  id                String   @id @default(uuid()) @db.Uuid
-  payment_intent_id String?  @unique @db.Text
-  tenant_id         String   @db.Uuid
-  property_id       String   @db.Uuid
-  lease_id          String   @db.Uuid
-  payment_amount    Decimal  @db.Decimal(10, 2)
-  payment_status    String
+  id                String    @id @default(uuid()) @db.Uuid
+  tenant_id         String    @db.Uuid
+  property_id       String    @db.Uuid
+  payment_amount    Decimal   @db.Decimal(10, 2)
   payment_type      String
   payment_method    String
-  payment_date      DateTime @db.Date
+  payment_date      DateTime  @db.Date
+  payment_status    String    @default("PENDING")
   payment_notes     String?
-  created_at        DateTime @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime @default(now()) @db.Timestamptz(6)
+  created_at        DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
+  user_id           String    @db.Uuid
 
   // Relations
-  tenant tenants @relation(fields: [tenant_id], references: [id])
+  tenant    tenants    @relation(fields: [tenant_id], references: [id])
+  property  properties @relation("PropertyPayments", fields: [property_id], references: [id])
+  user      users      @relation("UserPayments", fields: [user_id], references: [id])
 
   @@schema("public")
   @@index([payment_status])
   @@index([tenant_id])
+  @@index([property_id])
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
