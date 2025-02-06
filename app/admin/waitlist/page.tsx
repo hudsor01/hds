@@ -1,4 +1,3 @@
-// app/admin/waitlist/page.tsx
 import {waitlistDB} from '@/lib/db';
 import {Box, Button, Typography} from '@mui/material';
 import {DataGrid} from '@mui/x-data-grid';

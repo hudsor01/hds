@@ -21,7 +21,7 @@ export function PricingCard({
   features,
   highlighted = false,
   buttonText,
-  onSubscribe,
+  onSubscribeAction,
 }: PricingCardProps) {
   return (
     <Card
@@ -57,7 +57,7 @@ export function PricingCard({
       </CardContent>
       <CardFooter>
         <Button
-          onClick={onSubscribe}
+          onClick={onSubscribeAction}
           className={cn(
             'w-full transition-colors',
             highlighted ? 'bg-primary text-primary-foreground hover:bg-primary/90' : '',
