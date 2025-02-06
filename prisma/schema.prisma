@@ -6,11 +6,12 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
   schemas  = ["public", "auth", "admin"]
 }
 
 // Core User Model
-model Users {
+model users {
   id                  String    @id @default(uuid()) @db.Uuid
   clerkId             String    @unique
   role                String    @default("USER")
@@ -27,6 +28,7 @@ model Users {
   properties           properties[]           @relation("UserProperties")
   tenants              tenants[]              @relation("UserTenancies")
   maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
+  sessions            Session[]
 
   @@schema("public")
   @@index([email])
@@ -48,9 +50,10 @@ model properties {
   user_id         String    @db.Uuid
 
   // Relations
-  User                 Users                  @relation("UserProperties", fields: [user_id], references: [id])
+  User                 users                  @relation("UserProperties", fields: [user_id], references: [id])
   maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
   tenants             tenants[]              @relation("PropertyTenancies")
+  leases              leases[]               @relation("PropertyLeases")
 
   @@schema("public")
   @@index([property_status])
@@ -69,7 +72,7 @@ model maintenance_requests {
 
   // Relations
   property properties @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
-  user     Users      @relation("UserMaintenanceRequests", fields: [user_id], references: [id])
+  user     users      @relation("UserMaintenanceRequests", fields: [user_id], references: [id])
 
   @@schema("public")
   @@index([property_id])
@@ -93,8 +96,9 @@ model tenants {
   user_id             String    @db.Uuid
 
   // Relations
-  User                 Users                  @relation("UserTenancies", fields: [user_id], references: [id])
+  User                 users                  @relation("UserTenancies", fields: [user_id], references: [id])
   property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
+  payments             payments[]
 
   @@schema("public")
   @@index([tenant_status])
@@ -783,9 +787,9 @@ enum SubscriptionStatus {
 model Session {
   id           String   @id @default(uuid())
   sessionToken String   @unique
-  userId       String   @db.Uuid
+  user_id      String   @db.Uuid
   expires      DateTime
-  user         Users    @relation(fields: [userId], references: [id])
+  users        users    @relation(fields: [user_id], references: [id])
 
   @@schema("public")
 }
