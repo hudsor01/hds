@@ -1,47 +1,26 @@
 'use client';
 
-import {getWaitlistEntries} from '@/lib/waitlist';
-import {Box, Button, Typography} from '@mui/material';
-import {DataGrid} from '@mui/x-data-grid';
+import {Box, Container, Typography} from '@mui/material';
+import dynamic from 'next/dynamic';
 
-const columns = [
-  {field: 'email', headerName: 'Email', width: 300},
-  {
-    field: 'createdAt',
-    headerName: 'Joined',
-    width: 200,
-    valueFormatter: (params: {value: string}) => new Date(params.value).toLocaleString(),
-  },
-  {field: 'status', headerName: 'Status', width: 130},
-];
+// Dynamically import the dashboard to reduce initial bundle size
+const WaitlistDashboard = dynamic(() => import('./dashboard'), {
+  loading: () => <div>Loading dashboard...</div>,
+});
 
-export default async function AdminPage() {
-  const entries = await getWaitlistEntries();
-
+export default function WaitlistAdminPage() {
   return (
-    <Box sx={{p: 4}}>
-      <Typography variant='h4' sx={{mb: 4}}>
-        Waitlist Management
-      </Typography>
+    <Container maxWidth='lg'>
+      <Box sx={{mb: 4}}>
+        <Typography variant='h4' gutterBottom>
+          Waitlist Management
+        </Typography>
+        <Typography color='text.secondary'>
+          Monitor and manage your waitlist performance and user engagement
+        </Typography>
+      </Box>
 
-      <DataGrid
-        rows={entries}
-        columns={columns}
-        initialState={{
-          sorting: {
-            sortModel: [{field: 'createdAt', sort: 'desc'}],
-          },
-        }}
-        slots={{
-          toolbar: () => (
-            <Box sx={{p: 2}}>
-              <Button variant='contained' color='primary'>
-                Export List
-              </Button>
-            </Box>
-          ),
-        }}
-      />
-    </Box>
+      <WaitlistDashboard />
+    </Container>
   );
 }

@@ -126,15 +126,14 @@ declare global {
 // Prisma Client Extensions
 declare module '@prisma/client' {
   interface PrismaClient {
-    $extends: {
+    $extends<T = {}>(extension: {
       model: {
         [ModelName in Prisma.ModelName]: {
-          softDelete?: (where: any) => Promise<any>;
-          restore?: (where: any) => Promise<any>;
-          findWithDeleted?: (args: any) => Promise<any>;
+          softDelete?: (where: unknown) => Promise<unknown>;
+          restore?: (where: unknown) => Promise<unknown>;
         };
       };
-    };
+    }): PrismaClient & T;
   }
 }
 

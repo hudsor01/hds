@@ -2,6 +2,11 @@
 
 import {PRIORITY_LABELS, PRIORITY_LEVELS} from '@/auth/lib/constants';
 import {Button} from '@/components/ui/buttons/button';
+import type {
+  MaintenanceRequest,
+  NewMaintenanceRequest,
+  UpdateMaintenanceRequest,
+} from '@/types/maintenance_requests';
 import type {Property} from '@/types/property';
 import type {SelectChangeEvent} from '@mui/material';
 import {
@@ -17,11 +22,6 @@ import {Label} from 'components/ui/label';
 import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
 import {useState} from 'react';
-import type {
-  MaintenanceRequest,
-  NewMaintenanceRequest,
-  UpdateMaintenanceRequest,
-} from 'types/maintenance';
 
 interface MaintenanceRequestDialogProps {
   open: boolean;

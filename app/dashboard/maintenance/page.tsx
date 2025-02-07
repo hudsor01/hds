@@ -1,18 +1,18 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
-import {MaintenanceTicketDetails} from 'components/dialogs/maintenance-ticket-details';
-import {MaintenanceTicketDialog} from 'components/dialogs/maintenance-ticket-dialog';
-import {Card} from 'components/ui/cards/card';
-import {useState} from 'react';
-import {AlertTriangle, CheckCircle, Clock, Plus} from 'react-feather';
 import {
   MaintenancePriority,
   MaintenanceStatus,
   MaintenanceTicket,
   NewMaintenanceTicket,
   UpdateMaintenanceTicket,
-} from 'types/maintenance';
+} from '@/types/maintenance_requests';
+import {MaintenanceTicketDetails} from 'components/dialogs/maintenance-ticket-details';
+import {MaintenanceTicketDialog} from 'components/dialogs/maintenance-ticket-dialog';
+import {Card} from 'components/ui/cards/card';
+import {useState} from 'react';
+import {AlertTriangle, CheckCircle, Clock, Plus} from 'react-feather';
 
 // Mock data for development
 const MOCK_TICKETS: MaintenanceTicket[] = [

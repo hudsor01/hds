@@ -1,6 +1,11 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
+import type {
+  MaintenancePriority,
+  MaintenanceTicket,
+  NewMaintenanceTicket,
+} from '@/types/maintenance_requests';
 import type {SelectChangeEvent} from '@mui/material';
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
 import {Input} from 'components/ui/input';
@@ -8,7 +13,6 @@ import {Label} from 'components/ui/label';
 import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
 import {useState} from 'react';
-import type {MaintenancePriority, MaintenanceTicket, NewMaintenanceTicket} from 'types/maintenance';
 
 interface Property {
   id: string;

@@ -73,27 +73,21 @@ export async function getCurrentUser() {
   return await currentUser();
 }
 
-export async function getUserRole(): Promise<UserRole> {
-  const user = await getCurrentUser();
-  if (!user) return 'USER';
-  const metadata = user.privateMetadata as {role?: UserRole};
-  return metadata.role || 'USER';
+export async function getUserRole(userId: string): Promise<UserRole> {
+  const user = await clerkClient.users.getUser(userId);
+  return (user.privateMetadata?.role as UserRole) || 'USER';
 }
 
-export async function setUserRole(userId: string, role: UserRole) {
-  const user = await currentUser();
-  if (!user) throw new Error('No user found');
-
-  // Merge the new role with the existing metadata
-  const newMetadata = {
-    ...user.privateMetadata,
-    role,
-  };
-
-  const client = await clerkClient();
-  await client.users.updateUser(userId, {
-    privateMetadata: newMetadata,
+export async function updateUserRole(userId: string, role: UserRole) {
+  await clerkClient.users.updateUser(userId, {
+    privateMetadata: {role},
   });
+}
+
+export async function requireAuth() {
+  const {userId} = await getAuth();
+  if (!userId) throw new Error('Unauthorized');
+  return userId;
 }
 
 // Auth hooks

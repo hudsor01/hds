@@ -1,15 +1,51 @@
 import {prisma} from '@/lib/prisma';
-import {
-  WebhookEvent,
-  type DeletedObjectJSON,
-  type OrganizationJSON,
-  type UserJSON,
-} from '@clerk/nextjs/server';
+import {WebhookEvent, type DeletedObjectJSON, type OrganizationJSON} from '@clerk/nextjs/server';
 import {sql} from '@vercel/postgres';
 import {headers} from 'next/headers';
 import {Webhook} from 'svix';
 
 export async function POST(req: Request) {
+  // Verify webhook
+  const evt = await verifyWebhook(req);
+  if (!evt.success) return evt.response;
+
+  // Handle webhook events
+  switch (evt.data.type) {
+    case 'user.created':
+      await handleUserCreated(evt.data);
+      break;
+    case 'user.updated':
+      await handleUserUpdated(evt.data);
+      break;
+  }
+
+  return new Response('Webhook processed', {status: 200});
+}
+
+async function handleUserCreated(data: WebhookEvent) {
+  await prisma.users.create({
+    data: {
+      clerkId: data.data.id,
+      email: data.data.email_addresses[0]?.email_address,
+      name: `${data.data.first_name} ${data.data.last_name}`,
+      role: data.data.private_metadata?.role || 'USER',
+    },
+  });
+}
+
+async function handleUserUpdated(data: WebhookEvent) {
+  throw new Error('Function not implemented.');
+}
+
+function handleUserDeleted(data: DeletedObjectJSON) {
+  throw new Error('Function not implemented.');
+}
+
+function handleOrganizationCreated(data: OrganizationJSON) {
+  throw new Error('Function not implemented.');
+}
+
+async function verifyWebhook(req: Request) {
   const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
 
   if (!WEBHOOK_SECRET) {
@@ -22,7 +58,10 @@ export async function POST(req: Request) {
   const svix_signature = headerPayload.get('svix-signature');
 
   if (!svix_id || !svix_timestamp || !svix_signature) {
-    return new Response('Missing svix headers', {status: 400});
+    return {
+      success: false,
+      response: new Response('Missing svix headers', {status: 400}),
+    };
   }
 
   const payload = await req.json();
@@ -37,47 +76,16 @@ export async function POST(req: Request) {
       'svix-signature': svix_signature,
     }) as WebhookEvent;
 
-    const eventType = evt.type;
-
-    if (eventType === 'user.created') {
-      await prisma.users.create({
-        data: {
-          clerkId: evt.data.id,
-          email: evt.data.email_addresses[0]?.email_address,
-          name: `${evt.data.first_name} ${evt.data.last_name}`,
-          role: 'USER',
-        },
-      });
-    }
-
-    return new Response('Webhook processed', {status: 200});
+    return {
+      success: true,
+      data: evt,
+    };
   } catch (err) {
     console.error('Error verifying webhook:', err);
-    return new Response('Webhook verification failed', {status: 400});
-  }
-}
-
-async function handleWebhook(evt: WebhookEvent) {
-  // Log the webhook
-  await logWebhook(evt);
-
-  // Handle different webhook types
-  switch (evt.type) {
-    case 'user.created':
-      await handleUserCreated(evt.data);
-      break;
-    case 'user.updated':
-      await handleUserUpdated(evt.data);
-      break;
-    case 'user.deleted':
-      await handleUserDeleted(evt.data);
-      break;
-    // Add organization webhooks if needed
-    case 'organization.created':
-      await handleOrganizationCreated(evt.data);
-      break;
-    default:
-      console.log('Unhandled webhook type:', evt.type);
+    return {
+      success: false,
+      response: new Response('Webhook verification failed', {status: 400}),
+    };
   }
 }
 
@@ -118,20 +126,4 @@ async function logWebhookError(evt: WebhookEvent, error: any) {
       NOW()
     )
   `;
-}
-
-function handleUserCreated(data: UserJSON) {
-  throw new Error('Function not implemented.');
-}
-
-function handleUserUpdated(data: UserJSON) {
-  throw new Error('Function not implemented.');
-}
-
-function handleUserDeleted(data: DeletedObjectJSON) {
-  throw new Error('Function not implemented.');
-}
-
-function handleOrganizationCreated(data: OrganizationJSON) {
-  throw new Error('Function not implemented.');
 }

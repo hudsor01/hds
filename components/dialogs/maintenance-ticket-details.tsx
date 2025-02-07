@@ -1,6 +1,11 @@
 'use client';
 
 import {Button} from '@/components/ui/buttons/button';
+import type {
+  MaintenanceStatus,
+  MaintenanceTicket,
+  UpdateMaintenanceTicket,
+} from '@/types/maintenance_requests';
 import type {SelectChangeEvent} from '@mui/material';
 import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
 import {Label} from 'components/ui/label';
@@ -8,11 +13,6 @@ import {Select, SelectItem} from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
 import {useState} from 'react';
 import {AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip} from 'react-feather';
-import type {
-  MaintenanceStatus,
-  MaintenanceTicket,
-  UpdateMaintenanceTicket,
-} from 'types/maintenance';
 
 interface MaintenanceTicketDetailsProps {
   open: boolean;

@@ -1,147 +1,187 @@
 'use client';
 
-import {EmailTemplate} from '@/components/emails/templates';
-import {
-  Box,
-  Button,
-  Card,
-  Dialog,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Select,
-  Tab,
-  Tabs,
-} from '@mui/material';
-import {DataGrid} from '@mui/x-data-grid';
+import {getWaitlistStats} from '@/lib/services/waitlist-analytics';
+import type {WaitlistStats} from '@/types/waitlist-analytics';
+import {Box, Card, CardContent, Container, Grid, Tab, Tabs, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
 import {useState} from 'react';
+import {
+  Area,
+  AreaChart,
+  Bar,
+  BarChart,
+  CartesianGrid,
+  ResponsiveContainer,
+  Tooltip,
+  XAxis,
+  YAxis,
+} from 'recharts';
 
-// Define the waitlist entry type (modify as needed to match your API response)
-interface WaitlistEntry {
-  id: number | string;
-  email: string;
-  createdAt: string;
-  status: string;
-  lastEmailSent?: string;
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
 }
 
-const columns = [
-  {field: 'email', headerName: 'Email', width: 250},
-  {field: 'createdAt', headerName: 'Joined', width: 200},
-  {field: 'status', headerName: 'Status', width: 130},
-  {field: 'lastEmailSent', headerName: 'Last Email', width: 200},
-  {
-    field: 'actions',
-    headerName: 'Actions',
-    width: 200,
-    renderCell: (params: {row: {email: any}}) => (
-      <Button onClick={() => handleSendEmail(params.row.email)}>Send Email</Button>
-    ),
-  },
-];
-
-export function WaitlistDashboard() {
-  const [selectedUsers, setSelectedUsers] = useState<(string | number)[]>([]);
-  const [emailDialog, setEmailDialog] = useState(false);
-  const [emailTemplate, setEmailTemplate] = useState<EmailTemplate>(EmailTemplate.WELCOME);
-
-  // Fetch data with TanStack Query
-  const {
-    data: waitlistEntries,
-    isLoading,
-    error,
-  } = useQuery<WaitlistEntry[]>({
-    queryKey: ['waitlistEntries'],
-    queryFn: async () => {
-      const res = await fetch('/api/waitlist');
-      if (!res.ok) {
-        throw new Error('Failed to fetch waitlist entries');
-      }
-      return res.json() as Promise<WaitlistEntry[]>;
-    },
-  });
-
-  const handleBulkEmail = async () => {
-    await Promise.all(
-      selectedUsers.map(userId =>
-        sendEmail(userId, emailTemplate, {position: getWaitlistPosition(userId)}),
-      ),
-    );
-    setEmailDialog(false);
-  };
-
-  if (isLoading) {
-    return <Box sx={{p: 4}}>Loading...</Box>;
-  }
-
-  if (error) {
-    return <Box sx={{p: 4}}>Error loading waitlist entries</Box>;
-  }
+function TabPanel(props: TabPanelProps) {
+  const {children, value, index, ...other} = props;
 
   return (
-    <Box sx={{p: 4}}>
-      <Card sx={{mb: 4}}>
-        <Tabs value={0}>
-          <Tab label='All Users' />
-          <Tab label='Early Access' />
-          <Tab label='Pending' />
-        </Tabs>
-      </Card>
-
-      <Box sx={{mb: 3}}>
-        <Button
-          variant='contained'
-          disabled={!selectedUsers.length}
-          onClick={() => setEmailDialog(true)}
-        >
-          Email Selected ({selectedUsers.length})
-        </Button>
-      </Box>
-
-      <DataGrid
-        rows={waitlistEntries || []}
-        columns={columns}
-        checkboxSelection
-        onRowSelectionModelChange={ids => setSelectedUsers(ids as (string | number)[])}
-      />
-
-      <Dialog open={emailDialog} onClose={() => setEmailDialog(false)}>
-        <Box sx={{p: 3, width: 400}}>
-          <FormControl fullWidth>
-            <InputLabel>Email Template</InputLabel>
-            <Select
-              value={emailTemplate}
-              onChange={e => setEmailTemplate(e.target.value as EmailTemplate)}
-            >
-              <MenuItem value={EmailTemplate.WELCOME}>Welcome</MenuItem>
-              <MenuItem value={EmailTemplate.EARLY_ACCESS}>Early Access</MenuItem>
-              <MenuItem value={EmailTemplate.SPOT_AVAILABLE}>Spot Available</MenuItem>
-              <MenuItem value={EmailTemplate.LAUNCH_REMINDER}>Launch Reminder</MenuItem>
-            </Select>
-          </FormControl>
-
-          <Button fullWidth variant='contained' onClick={handleBulkEmail} sx={{mt: 2}}>
-            Send Emails
-          </Button>
-        </Box>
-      </Dialog>
-    </Box>
+    <div
+      role='tabpanel'
+      hidden={value !== index}
+      id={`waitlist-tabpanel-${index}`}
+      aria-labelledby={`waitlist-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{py: 3}}>{children}</Box>}
+    </div>
   );
 }
 
-function handleSendEmail(email: any): void {
-  throw new Error('Function not implemented.');
-}
+export default function WaitlistDashboard() {
+  const [tabValue, setTabValue] = useState(0);
+  const [dateRange, setDateRange] = useState('30d');
 
-function sendEmail(
-  userId: string | number,
-  emailTemplate: EmailTemplate,
-  arg2: {position: any},
-): any {
-  throw new Error('Function not implemented.');
-}
+  const {data: stats, isLoading} = useQuery<WaitlistStats>({
+    queryKey: ['waitlist-stats', dateRange],
+    queryFn: () => getWaitlistStats(),
+  });
 
-function getWaitlistPosition(userId: string | number) {
-  throw new Error('Function not implemented.');
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  if (!stats) {
+    return <div>No data available</div>;
+  }
+
+  return (
+    <Container maxWidth='lg'>
+      <Box sx={{mb: 4}}>
+        <Typography variant='h4' gutterBottom>
+          Waitlist Dashboard
+        </Typography>
+        <Typography color='text.secondary'>Monitor and manage your waitlist performance</Typography>
+      </Box>
+
+      <Grid container spacing={3} sx={{mb: 4}}>
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color='text.secondary' gutterBottom>
+                Total Signups
+              </Typography>
+              <Typography variant='h4'>{stats.conversion.total_signups}</Typography>
+              <Typography variant='body2' color='text.secondary'>
+                {stats.daily[0]?.signups || 0} today
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color='text.secondary' gutterBottom>
+                Conversion Rate
+              </Typography>
+              <Typography variant='h4'>{stats.conversion.rate.toFixed(1)}%</Typography>
+              <Typography variant='body2' color='text.secondary'>
+                of {stats.conversion.total_views} views
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color='text.secondary' gutterBottom>
+                Total Referrals
+              </Typography>
+              <Typography variant='h4'>
+                {stats.referrals.reduce((sum, ref) => sum + ref.referral_count, 0)}
+              </Typography>
+              <Typography variant='body2' color='text.secondary'>
+                from {stats.referrals.length} referrers
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+
+        <Grid item xs={12} sm={6} md={3}>
+          <Card>
+            <CardContent>
+              <Typography color='text.secondary' gutterBottom>
+                Sources
+              </Typography>
+              <Typography variant='h4'>{stats.sources.length}</Typography>
+              <Typography variant='body2' color='text.secondary'>
+                active channels
+              </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+
+      <Card>
+        <Box sx={{borderBottom: 1, borderColor: 'divider'}}>
+          <Tabs value={tabValue} onChange={(e, v) => setTabValue(v)}>
+            <Tab label='Growth' />
+            <Tab label='Referrals' />
+            <Tab label='Sources' />
+          </Tabs>
+        </Box>
+
+        <TabPanel value={tabValue} index={0}>
+          <Box sx={{height: 300}}>
+            <ResponsiveContainer>
+              <AreaChart data={stats.daily}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='date' />
+                <YAxis />
+                <Tooltip />
+                <Area
+                  type='monotone'
+                  dataKey='signups'
+                  stroke='#007FFF'
+                  fill='#007FFF'
+                  fillOpacity={0.1}
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </Box>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={1}>
+          <Box sx={{height: 300}}>
+            <ResponsiveContainer>
+              <BarChart data={stats.referrals}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='referrer_email' />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey='referral_count' fill='#007FFF' />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+        </TabPanel>
+
+        <TabPanel value={tabValue} index={2}>
+          <Box sx={{height: 300}}>
+            <ResponsiveContainer>
+              <BarChart data={stats.sources}>
+                <CartesianGrid strokeDasharray='3 3' />
+                <XAxis dataKey='name' />
+                <YAxis />
+                <Tooltip />
+                <Bar dataKey='count' fill='#007FFF' />
+              </BarChart>
+            </ResponsiveContainer>
+          </Box>
+        </TabPanel>
+      </Card>
+    </Container>
+  );
 }

@@ -1,93 +1,103 @@
 'use client';
 
-import {createClerkSupabaseClient} from '@/utils/supabase';
-import {Box, Button, Container, Paper, TextField, Typography} from '@mui/material';
-import {useState} from 'react';
+import {FadeIn} from '@/components/animations/fade-in';
+import {WaitlistForm} from '@/components/forms/waitlist-form';
+import {gradientStyles} from '@/utils/styles';
+import {Box, Container, Typography} from '@mui/material';
+import {motion} from 'framer-motion';
+
+const features = [
+  {
+    title: 'Property Management',
+    description: 'Streamline your property management with our intuitive dashboard.',
+  },
+  {
+    title: 'Payment Processing',
+    description: 'Accept rent payments with multiple payment methods.',
+  },
+  {
+    title: 'Tenant Portal',
+    description: 'Give your tenants a modern portal to manage their lease.',
+  },
+  {
+    title: 'Maintenance Tracking',
+    description: 'Track and manage maintenance requests efficiently.',
+  },
+];
 
 export default function WaitlistPage() {
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
-  const [error, setError] = useState('');
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError('');
-
-    try {
-      const supabase = createClerkSupabaseClient();
-      const {error} = await supabase.from('waitlist').insert([{email, status: 'pending'}]);
-
-      if (error) throw error;
-      setSubmitted(true);
-    } catch (err) {
-      setError('Failed to join waitlist. Please try again.');
-      console.error('Waitlist error:', err);
-    }
-  };
-
-  if (submitted) {
-    return (
-      <Container
-        maxWidth='sm'
-        className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'
-      >
-        <Paper elevation={3} className='w-full p-8 space-y-8 hover-card animate-fade-in'>
-          <Box className='text-center'>
-            <Typography variant='h4' component='h1' className='gradient-text font-bold'>
-              Thank You!
-            </Typography>
-            <Typography variant='body1' className='mt-4 text-muted-foreground'>
-              We've added you to our waitlist. We'll notify you when we launch!
-            </Typography>
-          </Box>
-        </Paper>
-      </Container>
-    );
-  }
-
   return (
-    <Container
-      maxWidth='sm'
-      className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'
-    >
-      <Paper elevation={3} className='w-full p-8 space-y-8 hover-card'>
-        <Box className='text-center'>
-          <Typography variant='h4' component='h1' className='gradient-text font-bold'>
-            Join the Waitlist
-          </Typography>
-          <Typography variant='body1' className='mt-2 text-muted-foreground'>
-            Be the first to know when we launch
-          </Typography>
-        </Box>
-
-        <form onSubmit={handleSubmit} className='mt-8 space-y-6'>
-          <TextField
-            fullWidth
-            label='Email address'
-            variant='outlined'
-            type='email'
-            required
-            value={email}
-            onChange={e => setEmail(e.target.value)}
-            className='bg-background'
-          />
-
-          {error && (
-            <Typography color='error' className='text-sm mt-2'>
-              {error}
-            </Typography>
-          )}
-
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            className='btn-primary rounded-md py-3'
+    <Container maxWidth='lg' sx={{py: {xs: 8, md: 12}}}>
+      <Box sx={{textAlign: 'center', mb: 8}}>
+        <FadeIn delay={0.2}>
+          <Typography
+            variant='h1'
+            sx={{
+              fontSize: {xs: '2.5rem', md: '3.5rem'},
+              fontWeight: 700,
+              mb: 2,
+              ...gradientStyles.text,
+            }}
           >
-            Join Waitlist
-          </Button>
-        </form>
-      </Paper>
+            Modern Property Management
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.4}>
+          <Typography
+            variant='h2'
+            sx={{
+              fontSize: {xs: '1.5rem', md: '2rem'},
+              fontWeight: 500,
+              color: 'text.secondary',
+              mb: 4,
+            }}
+          >
+            Join the waitlist for early access
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.6}>
+          <WaitlistForm />
+        </FadeIn>
+      </Box>
+
+      <motion.div
+        initial={{opacity: 0, y: 20}}
+        animate={{opacity: 1, y: 0}}
+        transition={{delay: 0.8}}
+      >
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: {xs: '1fr', md: 'repeat(2, 1fr)'},
+            gap: 4,
+          }}
+        >
+          {features.map((feature, index) => (
+            <Box
+              key={feature.title}
+              sx={{
+                p: 4,
+                borderRadius: 2,
+                border: '1px solid',
+                borderColor: 'divider',
+                transition: 'all 0.2s',
+                '&:hover': {
+                  transform: 'translateY(-4px)',
+                  boxShadow: 2,
+                  borderColor: 'primary.main',
+                },
+              }}
+            >
+              <Typography variant='h6' gutterBottom>
+                {feature.title}
+              </Typography>
+              <Typography color='text.secondary'>{feature.description}</Typography>
+            </Box>
+          ))}
+        </Box>
+      </motion.div>
     </Container>
   );
 }

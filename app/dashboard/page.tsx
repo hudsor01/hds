@@ -1,7 +1,9 @@
 'use client';
 
 import {Card} from '@/components/ui/cards/card';
+import {auth} from '@clerk/nextjs';
 import {Box, Container, Grid, Typography} from '@mui/material';
+import {redirect} from 'next/navigation';
 import {BarChart2, DollarSign, Home as HomeIcon, Users} from 'react-feather';
 
 const stats = [
@@ -35,7 +37,13 @@ const stats = [
   },
 ];
 
-export default function DashboardPage() {
+export default async function DashboardPage() {
+  const {userId} = await auth();
+
+  if (!userId) {
+    redirect('/sign-in');
+  }
+
   return (
     <Container maxWidth='xl' className='py-6'>
       <Box className='mb-8'>

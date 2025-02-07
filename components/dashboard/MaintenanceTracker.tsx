@@ -3,7 +3,7 @@
 import {Badge} from '@/components/ui/badge';
 import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/cards/card';
 import {useToast} from '@/hooks/use-toast';
-import {MaintenanceRequest} from '@/types/maintenance';
+import {MaintenanceRequest} from '@/types/maintenance_requests';
 import {createClient} from '@supabase/supabase-js';
 import {useEffect, useState} from 'react';
 
