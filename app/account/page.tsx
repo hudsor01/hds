@@ -1,14 +1,16 @@
-import {supabase} from '../../lib/db';
-import {getSubscription, getUser, getUserDetails} from '../auth';
-import CustomerPortalForm from '@/components/forms/CustomerPortalForm';
-import EmailForm from '@/components/forms/EmailForm';
-import NameForm from '@/components/forms/NameForm';
-import {redirect} from 'next/navigation';
-
+'use client'
+import CustomerPortalForm from '@/components/forms/CustomerPortalForm'
+import EmailForm from '@/components/forms/EmailForm'
+import NameForm from '@/components/forms/NameForm'
+import { supabase } from '@/lib/db'
+import { getSubscription, getUser } from '@/utils/supabase/server'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import { redirect } from 'next/navigation'
+import type { Database } from '../../types/database.types'
 export default async function Account() {
   const [user, userDetails, subscription] = await Promise.all([
     getUser(supabase),
-    getUserDetails(supabase),
+    userDetails(supabase),
     getSubscription(supabase),
   ]);
 
@@ -33,4 +35,8 @@ export default async function Account() {
       </div>
     </section>
   );
+}
+function getUser (supabase: SupabaseClient<Database, "public", any>): any
+{
+  throw new Error('Function not implemented.')
 }

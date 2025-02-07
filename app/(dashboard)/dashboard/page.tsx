@@ -2,7 +2,6 @@
 
 import AnalyticsChart from '@/components/analytics/AnalyticsChart';
 import MetricCard from '@/components/analytics/MetricCard';
-import {useRoleBasedAccess} from '@/hooks/use-auth';
 import {api} from '@/lib/api';
 import type {
   FinancialMetrics,
@@ -13,73 +12,98 @@ import type {
 } from '@/types/analytics';
 import {Grid, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
+import {useEffect, useState} from 'react';
 import {DollarSign, Home, Tool, Users} from 'react-feather';
 
 const REFETCH_INTERVAL = 30000; // 30 seconds
 
-export default function DashboardPage() {
-  const {role, permissions} = useRoleBasedAccess();
+// Fetch metrics based on role
+const {data: propertyMetrics, isLoading: loadingProperties} = useQuery<{data: PropertyMetrics}>({
+  queryKey: ['analytics', 'properties', role],
+  queryFn: () => api.get('/api/analytics/properties'),
+  enabled: permissions.canViewAllProperties || role === 'TENANT',
+  refetchInterval: REFETCH_INTERVAL,
+});
 
-  // Fetch metrics based on role
-  const {data: propertyMetrics, isLoading: loadingProperties} = useQuery<{data: PropertyMetrics}>({
-    queryKey: ['analytics', 'properties', role],
-    queryFn: () => api.get('/api/analytics/properties'),
-    enabled: permissions.canViewAllProperties || role === 'TENANT',
-    refetchInterval: REFETCH_INTERVAL,
-  });
+const {data: tenantMetrics, isLoading: loadingTenants} = useQuery<{data: TenantMetrics}>({
+  queryKey: ['analytics', 'tenants', role],
+  queryFn: () => api.get('/api/analytics/tenants'),
+  enabled: permissions.canViewAllTenants || role === 'TENANT',
+  refetchInterval: REFETCH_INTERVAL,
+});
 
-  const {data: tenantMetrics, isLoading: loadingTenants} = useQuery<{data: TenantMetrics}>({
-    queryKey: ['analytics', 'tenants', role],
-    queryFn: () => api.get('/api/analytics/tenants'),
-    enabled: permissions.canViewAllTenants || role === 'TENANT',
-    refetchInterval: REFETCH_INTERVAL,
-  });
+const {data: financialMetrics, isLoading: loadingFinances} = useQuery<{data: FinancialMetrics}>({
+  queryKey: ['analytics', 'finances', role],
+  queryFn: () => api.get('/api/analytics/finances'),
+  enabled: permissions.canViewAllPayments || role === 'TENANT',
+  refetchInterval: REFETCH_INTERVAL,
+});
 
-  const {data: financialMetrics, isLoading: loadingFinances} = useQuery<{data: FinancialMetrics}>({
-    queryKey: ['analytics', 'finances', role],
-    queryFn: () => api.get('/api/analytics/finances'),
-    enabled: permissions.canViewAllPayments || role === 'TENANT',
-    refetchInterval: REFETCH_INTERVAL,
-  });
+const {data: maintenanceMetrics, isLoading: loadingMaintenance} = useQuery<{
+  data: MaintenanceMetrics;
+}>({
+  queryKey: ['analytics', 'maintenance', role],
+  queryFn: () => api.get('/api/analytics/maintenance'),
+  enabled: permissions.canViewAllProperties || role === 'TENANT',
+  refetchInterval: REFETCH_INTERVAL,
+});
 
-  const {data: maintenanceMetrics, isLoading: loadingMaintenance} = useQuery<{
-    data: MaintenanceMetrics;
-  }>({
-    queryKey: ['analytics', 'maintenance', role],
-    queryFn: () => api.get('/api/analytics/maintenance'),
-    enabled: permissions.canViewAllProperties || role === 'TENANT',
-    refetchInterval: REFETCH_INTERVAL,
-  });
+const {data: trends} = useQuery<{data: TimeSeriesData[]}>({
+  queryKey: ['analytics', 'trends', role],
+  queryFn: () => api.get('/api/analytics/trends?trend_metric=revenue'),
+  enabled: permissions.canViewReports || role === 'TENANT',
+  refetchInterval: REFETCH_INTERVAL,
+});
 
-  const {data: trends} = useQuery<{data: TimeSeriesData[]}>({
-    queryKey: ['analytics', 'trends', role],
-    queryFn: () => api.get('/api/analytics/trends?trend_metric=revenue'),
-    enabled: permissions.canViewReports || role === 'TENANT',
-    refetchInterval: REFETCH_INTERVAL,
-  });
+// Customize metrics based on role
+const getMetricTitle = () => {
+  switch (role) {
+    case 'TENANT':
+      return 'My Property';
+    case 'LANDLORD':
+      return 'My Properties';
+    default:
+      return 'Total Properties';
+  }
+};
 
-  // Customize metrics based on role
-  const getMetricTitle = () => {
-    switch (role) {
-      case 'TENANT':
-        return 'My Property';
-      case 'LANDLORD':
-        return 'My Properties';
-      default:
-        return 'Total Properties';
-    }
-  };
+const getFinancialTitle = () => {
+  switch (role) {
+    case 'TENANT':
+      return 'Total Payments';
+    case 'LANDLORD':
+      return 'Total Revenue';
+    default:
+      return 'Monthly Revenue';
+  }
+};
 
-  const getFinancialTitle = () => {
-    switch (role) {
-      case 'TENANT':
-        return 'Total Payments';
-      case 'LANDLORD':
-        return 'Total Revenue';
-      default:
-        return 'Monthly Revenue';
-    }
-  };
+export const useRoleBasedAccess = () => {
+  const [role, setRole] = useState<UserRole | null>(null);
+  const [permissions, setPermissions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchUserRoleAndPermissions = async () => {
+      const user = supabase.auth.user();
+
+      if (user) {
+        const {data, error} = await supabase
+          .from('profiles')
+          .select('role, permissions')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error('Error fetching user role and permissions:', error);
+        } else {
+          setRole(data.role as UserRole);
+          setPermissions(data.permissions || []);
+        }
+      }
+    };
+
+    fetchUserRoleAndPermissions();
+  }, []);
 
   return (
     <div>
@@ -188,4 +212,4 @@ export default function DashboardPage() {
       )}
     </div>
   );
-}
+};
