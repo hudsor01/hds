@@ -1,4 +1,4 @@
-import {Prisma} from '@prisma/client';
+import { Prisma } from '@prisma/client'
 
 declare global {
   namespace PrismaJson {
@@ -43,7 +43,7 @@ declare global {
         website: string;
         created_at: string;
         updated_at: string;
-      },
+      };
       tenant: {
         id: string;
         first_name: string;
@@ -148,6 +148,8 @@ declare global {
         url: string;
         uploaded_at: string;
       };
+    };
+
     /**
      * Tenant-related JSON types
      */
@@ -254,7 +256,7 @@ declare global {
 // Prisma Client Extensions
 declare module '@prisma/client' {
   interface PrismaClient {
-    $extends<T = {}>(extension: {
+    $customExtensions<T = {}>(extension: {
       model: {
         [ModelName in Prisma.ModelName]: {
           softDelete?: (where: unknown) => Promise<unknown>;
@@ -265,4 +267,4 @@ declare module '@prisma/client' {
   }
 }
 
-export {};
+export { }
