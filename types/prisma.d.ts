@@ -148,8 +148,9 @@ declare global {
         url: string;
         uploaded_at: string;
       };
-
-    // Tenant-related JSON types
+    /**
+     * Tenant-related JSON types
+     */
     type TenantJson = {
       id: string;
       first_name: string;

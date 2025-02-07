@@ -1,10 +1,10 @@
 'use client';
 
-import {FadeIn} from '@/components/animations/fade-in';
-import {WaitlistForm} from '@/components/forms/waitlist-form';
-import {gradientStyles} from '@/utils/styles';
-import {Box, Container, Typography} from '@mui/material';
-import {motion} from 'framer-motion';
+import { FadeIn } from '@/components/animations/fade-in';
+import { WaitlistForm } from '@/components/forms/waitlist-form';
+import { gradientStyles } from '@/utils/styles';
+import { Box, Container, Typography } from '@mui/material';
+import { motion } from 'framer-motion';
 
 const features = [
   {

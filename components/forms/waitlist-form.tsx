@@ -1,12 +1,12 @@
-import {Button} from '@/components/ui/buttons/button';
-import {trackWaitlistEvent} from '@/lib/services/waitlist-analytics';
-import type {WaitlistEventType} from '@/types/waitlist-analytics';
-import {gradientStyles} from '@/utils/styles';
-import {Box, TextField} from '@mui/material';
-import {useSearchParams} from 'next/navigation';
-import {useState} from 'react';
-import {ArrowRight, Check} from 'react-feather';
-import {toast} from 'sonner';
+import { Button } from '@/components/ui/buttons/button';
+import { trackWaitlistEvent } from '@/lib/services/waitlist-analytics';
+import type { WaitlistEventType } from '@/types/waitlist-analytics';
+import { gradientStyles } from '@/utils/styles';
+import { Box, TextField } from '@mui/material';
+import { useSearchParams } from 'next/navigation';
+import { useState } from 'react';
+import { ArrowRight, Check } from 'react-feather';
+import { toast } from 'sonner';
 
 interface WaitlistFormProps {
   onSuccess?: () => void;
