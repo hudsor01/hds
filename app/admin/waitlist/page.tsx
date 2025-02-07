@@ -1,3 +1,6 @@
+'use client';
+
+import {waitlistDB} from '@/lib/waitlist';
 import {Box, Button, Typography} from '@mui/material';
 import {DataGrid} from '@mui/x-data-grid';
 

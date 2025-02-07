@@ -1,9 +1,9 @@
-import {createClientSupabaseClient} from '@/lib/supabase/client';
+import {createClient} from '@/utils/supabase';
 import {NextResponse} from 'next/server';
 
 export async function GET(request: Request, {params}: {params: {id: string; expenseId: string}}) {
   try {
-    const supabase = createClientSupabaseClient();
+    const supabase = createClient();
 
     // Get expense with property details
     const {data: expense, error} = await supabase

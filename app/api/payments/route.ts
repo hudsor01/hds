@@ -4,7 +4,11 @@ import {NextRequest, NextResponse} from 'next/server';
 import Stripe from 'stripe';
 import {z} from 'zod';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
+if (!stripeSecretKey) {
+  throw new Error('STRIPE_SECRET_KEY environment variable is not defined.');
+}
+const stripe = new Stripe(stripeSecretKey, {
   apiVersion: '2025-01-27.acacia',
 });
 
