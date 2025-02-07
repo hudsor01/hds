@@ -1,15 +1,25 @@
-// app/api/waitlist/route.ts
-import {prisma} from '@/lib/prisma';
-import {createClient} from '@supabase/supabase-js';
-import {NextResponse} from 'next/server';
-import {Resend} from 'resend';
-
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_KEY!,
-);
+import { prisma } from '@/lib/prisma'
+import { createClient } from '@/utils/supabase/server'
+import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
+import { Resend } from 'resend'
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+export async function GET(req: NextRequest) {
+  const supabase = await createClient(cookies());
+
+  try {
+    const { data, error } = await supabase.from('waitlist').select('*');
+
+    if (error) throw error;
+
+    return NextResponse.json({ data });
+  } catch (error) {
+    console.error('Error fetching waitlist:', error);
+    return NextResponse.json({ error: 'Failed to fetch waitlist' }, { status: 500 });
+  }
+}
 
 export async function POST(request: Request) {
   try {

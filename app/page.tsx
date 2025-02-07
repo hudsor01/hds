@@ -1,5 +1,7 @@
 'use client';
 
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
 import {PublicLayout} from '@/components/layout/public-layout';
 import {Button} from '@/components/ui/buttons/button';
 import {Card} from '@/components/ui/cards/card';
@@ -98,8 +100,20 @@ const milestones: Milestone[] = [
   },
 ];
 
-export default function HomePage() {
+export default async function HomePage() {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const { data: todos } = await supabase.from('todos').select()
+
   return (
+      <ul>
+        {todos?.map((todo) => (
+          <li>{todo}</li>
+        ))}
+    </ul>
+  )
+}
     <PublicLayout>
       <div className='flex min-h-screen flex-col'>
         {/* Hero Section */}
