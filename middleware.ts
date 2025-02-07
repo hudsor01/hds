@@ -1,22 +1,22 @@
-import {rateLimitMiddleware} from '@/middleware/rate-limit';
-import {RedirectToSignIn, getAuth} from '@clerk/nextjs';
-import type {NextFetchEvent, NextRequest} from 'next/server';
-import {NextResponse} from 'next/server';
+import {authMiddleware} from '@clerk/nextjs';
 
-export default async function middleware(request: NextRequest, event: NextFetchEvent) {
-  // Apply rate limiting first
-  const rateLimitResponse = await rateLimitMiddleware(request);
-  if (rateLimitResponse.status === 429) {
-    return rateLimitResponse;
-  }
-  const {userId} = getAuth(request);
+export default authMiddleware({
+  // Public routes that don't require authentication
+  publicRoutes: [
+    '/',
+    '/sign-in*',
+    '/sign-up*',
+    '/api/webhook/clerk',
+    '/api/waitlist',
+    '/pricing',
+    '/contact',
+    '/features',
+    '/mvp',
+  ],
 
-  if (!userId && !request.url.includes('/sign-in')) {
-    return RedirectToSignIn({redirectUrl: request.url});
-  }
-
-  return NextResponse.next();
-}
+  // Routes that can be accessed while signed out, but still have clerk session context
+  ignoredRoutes: ['/api/webhook/clerk'],
+});
 
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],

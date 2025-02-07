@@ -1,3 +1,5 @@
+import type {UserRole} from './auth';
+
 export interface EmailMetric {
   template: string;
   sent: number;
@@ -71,4 +73,5 @@ export interface AnalyticsQuery {
   property_id?: string;
   group_by?: string;
   metrics?: string[];
+  role?: UserRole;
 }

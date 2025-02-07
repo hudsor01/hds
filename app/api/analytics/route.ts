@@ -1,4 +1,5 @@
 import {getAnalyticsDashboard} from '@/lib/services/analytics';
+import {supabase} from '@/lib/supabase';
 import {auth} from '@clerk/nextjs/server';
 import {NextRequest, NextResponse} from 'next/server';
 import {z} from 'zod';
@@ -23,6 +24,17 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
+    // Get user role
+    const {data: user, error: userError} = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+    }
+
     // Parse and validate query parameters
     const searchParams = req.nextUrl.searchParams;
     const query = {
@@ -36,8 +48,8 @@ export async function GET(req: NextRequest) {
 
     const validatedQuery = analyticsQuerySchema.parse(query);
 
-    // Generate cache key
-    const cacheKey = `${userId}-${JSON.stringify(validatedQuery)}`;
+    // Generate cache key including role and user ID for proper isolation
+    const cacheKey = `${userId}-${user.role}-${JSON.stringify(validatedQuery)}`;
     const now = Date.now();
 
     // Check cache
@@ -46,8 +58,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({data: cached.data, cached: true});
     }
 
-    // Get fresh data
-    const analytics = await getAnalyticsDashboard(userId, validatedQuery);
+    // Get fresh data with role context
+    const analytics = await getAnalyticsDashboard(userId, {
+      ...validatedQuery,
+      role: user.role,
+    });
 
     // Update cache
     analyticsCache.set(cacheKey, {
@@ -81,14 +96,28 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
+    // Get user role
+    const {data: user, error: userError} = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+    }
+
     const body = await req.json();
     const validatedQuery = analyticsQuerySchema.parse(body);
 
-    // Force refresh data
-    const analytics = await getAnalyticsDashboard(userId, validatedQuery);
+    // Force refresh data with role context
+    const analytics = await getAnalyticsDashboard(userId, {
+      ...validatedQuery,
+      role: user.role,
+    });
 
     // Update cache
-    const cacheKey = `${userId}-${JSON.stringify(validatedQuery)}`;
+    const cacheKey = `${userId}-${user.role}-${JSON.stringify(validatedQuery)}`;
     analyticsCache.set(cacheKey, {
       data: analytics,
       timestamp: Date.now(),
@@ -113,10 +142,26 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({error: 'Unauthorized'}, {status: 401});
     }
 
-    // Clear all cache entries for this user
-    for (const [key] of analyticsCache.entries()) {
-      if (key.startsWith(userId)) {
-        analyticsCache.delete(key);
+    // Get user role
+    const {data: user, error: userError} = await supabase
+      .from('users')
+      .select('role')
+      .eq('id', userId)
+      .single();
+
+    if (userError) {
+      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+    }
+
+    // Only allow admins to clear all cache
+    if (user.role === 'ADMIN') {
+      analyticsCache.clear();
+    } else {
+      // Clear only user's cache entries
+      for (const [key] of analyticsCache.entries()) {
+        if (key.startsWith(`${userId}-${user.role}`)) {
+          analyticsCache.delete(key);
+        }
       }
     }
 

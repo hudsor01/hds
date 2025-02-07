@@ -1,5 +1,6 @@
 'use client';
 
+import {useRoleBasedAccess} from '@/hooks/use-auth';
 import {usePaymentHistory} from '@/hooks/use-payment';
 import type {ApiResponse} from '@/lib/api';
 import {
@@ -39,15 +40,18 @@ interface Payment {
     first_name: string;
     last_name: string;
   };
+  late_fee?: number;
+  late_days?: number;
 }
 
 const PAYMENT_TYPES = ['RENT', 'DEPOSIT', 'LATE_FEE', 'MAINTENANCE', 'UTILITIES', 'OTHER'];
 const PAYMENT_STATUSES = ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED'];
 
 export default function PaymentHistory({propertyId, tenantId}: PaymentHistoryProps) {
+  const {role, permissions} = useRoleBasedAccess();
   const [filters, setFilters] = useState({
     property_id: propertyId,
-    tenant_id: tenantId,
+    tenant_id: tenantId || (role === 'TENANT' ? 'current' : ''),
     payment_type: '',
     payment_status: '',
     start_date: '',
@@ -74,26 +78,28 @@ export default function PaymentHistory({propertyId, tenantId}: PaymentHistoryPro
   return (
     <Box>
       <Typography variant='h6' gutterBottom>
-        Payment History
+        {role === 'TENANT' ? 'My Payment History' : 'Payment History'}
       </Typography>
 
       <Card sx={{mb: 3, p: 2}}>
         <Box sx={{display: 'flex', gap: 2, flexWrap: 'wrap'}}>
-          <FormControl size='small' sx={{minWidth: 150}}>
-            <InputLabel>Payment Type</InputLabel>
-            <Select
-              value={filters.payment_type}
-              label='Payment Type'
-              onChange={e => handleFilterChange('payment_type', e.target.value)}
-            >
-              <MenuItem value=''>All</MenuItem>
-              {PAYMENT_TYPES.map(type => (
-                <MenuItem key={type} value={type}>
-                  {type.replace('_', ' ')}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
+          {permissions.canViewAllProperties && (
+            <FormControl size='small' sx={{minWidth: 150}}>
+              <InputLabel>Payment Type</InputLabel>
+              <Select
+                value={filters.payment_type}
+                label='Payment Type'
+                onChange={e => handleFilterChange('payment_type', e.target.value)}
+              >
+                <MenuItem value=''>All</MenuItem>
+                {PAYMENT_TYPES.map(type => (
+                  <MenuItem key={type} value={type}>
+                    {type.replace('_', ' ')}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
 
           <FormControl size='small' sx={{minWidth: 150}}>
             <InputLabel>Status</InputLabel>
@@ -138,21 +144,31 @@ export default function PaymentHistory({propertyId, tenantId}: PaymentHistoryPro
               <TableCell>Date</TableCell>
               <TableCell>Type</TableCell>
               <TableCell>Amount</TableCell>
+              {permissions.canViewAllProperties && (
+                <>
+                  <TableCell>Late Fee</TableCell>
+                  <TableCell>Total</TableCell>
+                </>
+              )}
               <TableCell>Status</TableCell>
-              <TableCell>Property</TableCell>
-              <TableCell>Tenant</TableCell>
+              {permissions.canViewAllProperties && (
+                <>
+                  <TableCell>Property</TableCell>
+                  <TableCell>Tenant</TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={6} align='center'>
+                <TableCell colSpan={permissions.canViewAllProperties ? 8 : 4} align='center'>
                   Loading...
                 </TableCell>
               </TableRow>
             ) : payments.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} align='center'>
+                <TableCell colSpan={permissions.canViewAllProperties ? 8 : 4} align='center'>
                   No payments found
                 </TableCell>
               </TableRow>
@@ -162,13 +178,28 @@ export default function PaymentHistory({propertyId, tenantId}: PaymentHistoryPro
                   <TableCell>{new Date(payment.payment_date).toLocaleDateString()}</TableCell>
                   <TableCell>{payment.payment_type.replace('_', ' ')}</TableCell>
                   <TableCell>${payment.payment_amount.toFixed(2)}</TableCell>
+                  {permissions.canViewAllProperties && (
+                    <>
+                      <TableCell>
+                        {payment.late_fee ? `$${payment.late_fee.toFixed(2)}` : '-'}
+                        {payment.late_days ? ` (${payment.late_days} days)` : ''}
+                      </TableCell>
+                      <TableCell>
+                        ${((payment.payment_amount || 0) + (payment.late_fee || 0)).toFixed(2)}
+                      </TableCell>
+                    </>
+                  )}
                   <TableCell>{payment.payment_status.replace('_', ' ')}</TableCell>
-                  <TableCell>{payment.property?.name || '-'}</TableCell>
-                  <TableCell>
-                    {payment.tenant
-                      ? `${payment.tenant.first_name} ${payment.tenant.last_name}`
-                      : '-'}
-                  </TableCell>
+                  {permissions.canViewAllProperties && (
+                    <>
+                      <TableCell>{payment.property?.name || '-'}</TableCell>
+                      <TableCell>
+                        {payment.tenant
+                          ? `${payment.tenant.first_name} ${payment.tenant.last_name}`
+                          : '-'}
+                      </TableCell>
+                    </>
+                  )}
                 </TableRow>
               ))
             )}
