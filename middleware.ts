@@ -1,24 +1,22 @@
-import {authMiddleware, redirectToSignIn} from '@clerk/nextjs';
+import {rateLimitMiddleware} from '@/middleware/rate-limit';
+import {RedirectToSignIn, getAuth} from '@clerk/nextjs';
+import type {NextFetchEvent, NextRequest} from 'next/server';
 import {NextResponse} from 'next/server';
 
-export default authMiddleware({
-  publicRoutes: ['/', '/sign-in', '/sign-up', '/pricing', '/about', '/contact'],
-  afterAuth(auth, req) {
-    // Handle users who aren't authenticated
-    if (!auth.userId && !auth.isPublicRoute) {
-      return redirectToSignIn({returnBackUrl: req.url});
-    }
+export default async function middleware(request: NextRequest, event: NextFetchEvent) {
+  // Apply rate limiting first
+  const rateLimitResponse = await rateLimitMiddleware(request);
+  if (rateLimitResponse.status === 429) {
+    return rateLimitResponse;
+  }
+  const {userId} = getAuth(request);
 
-    // If the user is signed in and trying to access a public route
-    // redirect them to the dashboard
-    if (auth.userId && auth.isPublicRoute) {
-      const dashboard = new URL('/dashboard', req.url);
-      return NextResponse.redirect(dashboard);
-    }
+  if (!userId && !request.url.includes('/sign-in')) {
+    return RedirectToSignIn({redirectUrl: request.url});
+  }
 
-    return NextResponse.next();
-  },
-});
+  return NextResponse.next();
+}
 
 export const config = {
   matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)'],

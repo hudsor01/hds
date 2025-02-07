@@ -1,6 +1,6 @@
 'use client';
 
-import {waitlistDB} from '@/lib/waitlist';
+import {getWaitlistEntries} from '@/lib/waitlist';
 import {Box, Button, Typography} from '@mui/material';
 import {DataGrid} from '@mui/x-data-grid';
 
@@ -16,7 +16,7 @@ const columns = [
 ];
 
 export default async function AdminPage() {
-  const entries = await waitlistDB.getAll();
+  const entries = await getWaitlistEntries();
 
   return (
     <Box sx={{p: 4}}>

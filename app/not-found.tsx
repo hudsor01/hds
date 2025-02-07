@@ -1,25 +1,88 @@
+'use client';
+
+import {FadeIn} from '@/components/animations/fade-in';
+import {Box, Button, Container, Typography} from '@mui/material';
 import Link from 'next/link';
-import {Circle} from 'react-feather';
+import {Home, Search} from 'react-feather';
 
 export default function NotFound() {
   return (
-    <div className='flex items-center justify-center min-h-[100dvh]'>
-      <div className='max-w-md space-y-8 p-4 text-center'>
-        <div className='flex justify-center'>
-          <Circle className='size-12 text-orange-500' />
-        </div>
-        <h1 className='text-4xl font-bold text-gray-900 tracking-tight'>Page Not Found</h1>
-        <p className='text-base text-gray-500'>
-          The page you are looking for might have been removed, had its name changed, or is
-          temporarily unavailable.
-        </p>
-        <Link
-          href='/'
-          className='max-w-48 mx-auto flex justify-center py-2 px-4 border border-gray-300 rounded-full shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500'
-        >
-          Back to Home
-        </Link>
-      </div>
-    </div>
+    <Container maxWidth='md'>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          textAlign: 'center',
+          py: 8,
+        }}
+      >
+        <FadeIn delay={0.2}>
+          <Typography
+            variant='h1'
+            sx={{
+              fontSize: '8rem',
+              fontWeight: 700,
+              background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 2,
+            }}
+          >
+            404
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.4}>
+          <Typography variant='h4' gutterBottom>
+            Page Not Found
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.6}>
+          <Typography variant='body1' color='text.secondary' sx={{maxWidth: 'sm', mb: 4}}>
+            The page you're looking for doesn't exist or has been moved. Let's get you back on
+            track.
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.8}>
+          <Box sx={{display: 'flex', gap: 2}}>
+            <Link href='/dashboard' passHref style={{textDecoration: 'none'}}>
+              <Button
+                variant='contained'
+                startIcon={<Home size={20} />}
+                sx={{
+                  background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                  '&:hover': {
+                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                  },
+                }}
+              >
+                Back to Dashboard
+              </Button>
+            </Link>
+            <Link href='/search' passHref style={{textDecoration: 'none'}}>
+              <Button
+                variant='outlined'
+                startIcon={<Search size={20} />}
+                sx={{
+                  borderColor: '#007FFF',
+                  color: '#007FFF',
+                  '&:hover': {
+                    borderColor: '#0059B2',
+                    color: '#0059B2',
+                  },
+                }}
+              >
+                Search Properties
+              </Button>
+            </Link>
+          </Box>
+        </FadeIn>
+      </Box>
+    </Container>
   );
 }

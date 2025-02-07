@@ -8,10 +8,8 @@ export interface WaitlistEntry {
   status: string;
 }
 
-export const waitlistDB = {
-  getAll: async () => {
-    return await prisma.waitlist.findMany({
-      orderBy: {created_at: 'desc'},
-    });
-  },
-} as const;
+export const getWaitlistEntries = async () => {
+  return await prisma.waitlist.findMany({
+    orderBy: {created_at: 'desc'},
+  });
+};
