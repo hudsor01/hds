@@ -32,6 +32,10 @@ export interface Property {
   updatedAt: Date;
 }
 
+export interface PropertyListProps {
+  properties: Property[];
+}
+
 export interface PropertyUnit {
   id: string;
   number: string;

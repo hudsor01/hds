@@ -6,8 +6,10 @@ import { supabase } from '@/lib/db'
 import { getSubscription, getUser } from '@/utils/supabase/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
+import React from 'react'
 import type { Database } from '../../types/database.types'
-export default async function Account() {
+
+const AccountPage: React.FC = async () => {
   const [user, userDetails, subscription] = await Promise.all([
     getUser(supabase),
     userDetails(supabase),
@@ -36,6 +38,9 @@ export default async function Account() {
     </section>
   );
 }
+
+export default AccountPage;
+
 function getUser (supabase: SupabaseClient<Database, "public", any>): any
 {
   throw new Error('Function not implemented.')

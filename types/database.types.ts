@@ -1,6 +1,12 @@
-import type {EmailTemplate} from '../components/emails/templates';
+import type { EmailTemplate } from '../components/emails/templates'
 
-export type Json = string | number | boolean | null | {[key: string]: Json | undefined} | Json[];
+export type Json =
+  | string
+  | number
+  | boolean
+  | null
+  | { [key: string]: Json | undefined }
+  | Json[]
 
 // Common types
 export type Timestamp = string;
@@ -120,7 +126,7 @@ export interface Tenant {
   updated_at: string;
 }
 
-export interface Database {
+export type Database = {
   public: {
     Tables: {
       users: {
@@ -232,11 +238,43 @@ export interface Database {
         Insert: Omit<Tenant, 'id' | 'created_at' | 'updated_at'>;
         Update: Partial<Omit<Tenant, 'id'>>;
       };
+
+      waitlist: {
+        Row: {
+          id: string;
+          email: string;
+          name: string;
+          position: number;
+          status: 'pending' | 'invited' | 'joined';
+          referral_code: string | null;
+          referred_by: string | null;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['waitlist']['Row'], 'id' | 'position' | 'status' | 'referral_code' | 'created_at' | 'updated_at'>;
+        Update: Partial<Omit<Database['public']['Tables']['waitlist']['Row'], 'id'>>;
+      };
+
+      waitlist_events: {
+        Row: {
+          id: string;
+          waitlist_id: string;
+          event_type: 'status_change' | 'position_change' | 'referral';
+          event_data: Json;
+          created_at: string;
+        };
+        Insert: Omit<Database['public']['Tables']['waitlist_events']['Row'], 'id' | 'created_at'>;
+        Update: never;
+      };
     };
 
-    Views: Record<string, never>;
+    Views: {
+      [_ in never]: never;
+    };
 
-    Functions: Record<string, never>;
+    Functions: {
+      [_ in never]: never;
+    };
 
     Enums: {
       user_status: UserStatus;
@@ -248,7 +286,10 @@ export interface Database {
     };
     CompositeTypes: Record<string, never>;
   };
-}
+};
+
+// Helper type to reference tables directly
+export type DatabaseTables = Database['public']['Tables'];
 
 type PublicSchema = Database[Extract<keyof Database, 'public'>];
 

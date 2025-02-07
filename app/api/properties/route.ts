@@ -1,8 +1,8 @@
-import {prisma} from '@/lib/prisma';
-import {supabase} from '@/lib/supabase';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { prisma } from '@/lib/prisma'
+import { supabase } from '@/lib/supabase'
+import { NextApiRequest, NextApiResponse } from 'next'
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 export const revalidate = 3600
 
@@ -20,31 +20,6 @@ export async function GET(req: NextRequest) {
   return NextResponse.json({properties});
 }
 
-  try {
-    const {userId} = await auth();
-    if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
-    }
-
-    const searchParams = req.nextUrl.searchParams;
-    const type = searchParams.get('type');
-    const query = supabase
-      .from('properties')
-      .select('*')
-      .eq('owner_id', userId)
-      .order('created_at', {ascending: false});
-
-    if (type) {
-      query.eq('type', type);
-    }
-
-    const {data: properties, error} = await query;
-
-    if (error) {
-      return NextResponse.json({error: error.message}, {status: 500});
-    }
-
-    return NextResponse.json({data: properties});
 export async function POST(req: NextRequest) {
   try {
     const {userId} = await auth();
@@ -139,5 +114,15 @@ export async function DELETE(req: NextRequest) {
   } catch (error) {
     console.error('Error deleting property:', error);
     return NextResponse.json({error: 'Failed to delete property'}, {status: 500});
+  }
+}
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method === 'GET') {
+    // Handle GET request
+    res.status(200).json({ message: 'Properties API' });
+  } else {
+    res.setHeader('Allow', ['GET']);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }

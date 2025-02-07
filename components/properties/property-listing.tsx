@@ -1,9 +1,9 @@
 'use client';
 
+import {useProperties} from '../../hooks/data';
 import {PropertyFilters} from './property-filters';
 import {PropertyGrid} from './property-grid';
 import {PropertyTable} from './property-table';
-import {useProperties} from '@/hooks/use-properties';
 import AddIcon from '@mui/icons-material/Add';
 import GridViewIcon from '@mui/icons-material/GridView';
 import ViewListIcon from '@mui/icons-material/ViewList';
@@ -45,9 +45,9 @@ export function PropertyListing() {
       </Box>
 
       {view === 'grid' ? (
-        <PropertyGrid properties={properties} isLoading={isLoading} />
+        <PropertyGrid properties={properties?.data ?? []} isLoading={isLoading} />
       ) : (
-        <PropertyTable properties={properties} isLoading={isLoading} />
+        <PropertyTable properties={properties?.data} isLoading={isLoading} />
       )}
     </Box>
   );
