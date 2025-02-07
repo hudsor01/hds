@@ -1,4 +1,4 @@
-import {prisma} from './db';
+import {prisma} from '@/lib/db';
 
 export interface WaitlistEntry {
   id: string;
@@ -8,14 +8,10 @@ export interface WaitlistEntry {
   status: string;
 }
 
-export class WaitlistDB {
-  async getAll(): Promise<WaitlistEntry[]> {
-    return prisma.waitlist.findMany({
-      orderBy: {
-        created_at: 'desc',
-      },
+export const waitlistDB = {
+  getAll: async () => {
+    return await prisma.waitlist.findMany({
+      orderBy: {created_at: 'desc'},
     });
-  }
-}
-
-export const waitlistDB = new WaitlistDB();
+  },
+} as const;
