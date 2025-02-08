@@ -11,6 +11,11 @@ import
     TouchApp
   } from '@mui/icons-material'
 import React from 'react'
+import {Box, Button, Container, Grid, Typography} from '@mui/material';
+import {ArrowForward} from '@mui/icons-material';
+import Link from 'next/link';
+import {routes} from './routes';
+import {FadeIn} from '@/components/animations/fade-in';
 
 // Enhanced values with more property management specific content
 const values: Value[] = [
@@ -94,13 +99,94 @@ const milestones: Milestone[] = [
   },
 ];
 
-const HomePage: React.FC = () => {
+export default function HomePage() {
   return (
-    <div>
-      <h1>Home Page</h1>
-      {/* Your component code here */}
-    </div>
-  );
-};
+    <Container maxWidth="lg">
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minHeight: '100vh',
+          py: 8,
+        }}
+      >
+        <FadeIn delay={0.2}>
+          <Typography
+            variant="h1"
+            align="center"
+            sx={{
+              fontSize: {xs: '2.5rem', md: '4rem'},
+              fontWeight: 700,
+              background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              mb: 2,
+            }}
+          >
+            Property Management
+            <br />
+            Made Simple
+          </Typography>
+        </FadeIn>
 
-export default HomePage;
+        <FadeIn delay={0.4}>
+          <Typography
+            variant="h2"
+            align="center"
+            color="text.secondary"
+            sx={{
+              fontSize: {xs: '1.25rem', md: '1.5rem'},
+              maxWidth: 'md',
+              mb: 6,
+            }}
+          >
+            Streamline your property management with our comprehensive solution.
+            From tenant screening to maintenance tracking, we've got you covered.
+          </Typography>
+        </FadeIn>
+
+        <FadeIn delay={0.6}>
+          <Grid container spacing={3} justifyContent="center">
+            <Grid item>
+              <Link href={routes.auth.signIn} passHref style={{textDecoration: 'none'}}>
+                <Button
+                  variant="contained"
+                  size="large"
+                  endIcon={<ArrowForward />}
+                  sx={{
+                    background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                    '&:hover': {
+                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                    },
+                  }}
+                >
+                  Get Started
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item>
+              <Link href={routes.features} passHref style={{textDecoration: 'none'}}>
+                <Button
+                  variant="outlined"
+                  size="large"
+                  sx={{
+                    borderColor: '#007FFF',
+                    color: '#007FFF',
+                    '&:hover': {
+                      borderColor: '#0059B2',
+                      color: '#0059B2',
+                    },
+                  }}
+                >
+                  Learn More
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
+        </FadeIn>
+      </Box>
+    </Container>
+  );
+}

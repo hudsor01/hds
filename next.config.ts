@@ -3,7 +3,6 @@ import type {WebpackConfigContext} from 'next/dist/server/config-shared';
 import type {Configuration as WebpackConfig} from 'webpack';
 
 const nextConfig: NextConfig = {
-  extends: ['next/core-web-vitals'],
   modularizeImports: {
     '@mui/icons-material': {
       transform: '@mui/icons-material/{{member}}',

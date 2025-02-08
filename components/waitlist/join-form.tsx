@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { TextField, Button, Alert, CircularProgress } from '@mui/material'
-import { Mail, User, Link as LinkIcon } from 'feather-icons-react'
+import { Mail, User, Link as LinkIcon } from 'react-feather'
 import type { WaitlistJoinRequest, WaitlistJoinResponse } from '@/types/waitlist'
 
 interface JoinFormProps {

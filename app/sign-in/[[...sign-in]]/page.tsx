@@ -1,7 +1,13 @@
+'use client';
 
 import { Box, Container, Paper, Typography } from '@mui/material'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
 export default function SignInPage() {
+  const supabase = createClientComponentClient();
+
   return (
     <Container
       maxWidth='sm'
@@ -17,19 +23,26 @@ export default function SignInPage() {
           </Typography>
         </Box>
 
-        <SignIn
+        <Auth
+          supabaseClient={supabase}
           appearance={{
-            elements: {
-              rootBox: 'w-full',
-              card: 'shadow-none p-0 w-full',
-              headerTitle: 'hidden',
-              headerSubtitle: 'hidden',
-              socialButtonsBlockButton: 'hover:opacity-80 transition-opacity',
-              formButtonPrimary: 'btn-primary rounded-md',
-              formFieldInput: 'bg-background border-input',
-              footer: 'hidden',
+            theme: ThemeSupa,
+            variables: {
+              default: {
+                colors: {
+                  brand: '#007FFF',
+                  brandAccent: '#0059B2',
+                },
+              },
+            },
+            className: {
+              container: 'w-full',
+              button: 'w-full rounded-md',
+              input: 'rounded-md bg-background border-input',
             },
           }}
+          providers={['google', 'github']}
+          redirectTo={`${window.location.origin}/auth/callback`}
         />
       </Paper>
     </Container>
