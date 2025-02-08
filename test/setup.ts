@@ -33,11 +33,11 @@ beforeAll(async () => {
     }
 
     // Verify we're authenticated
-    const { data: { user }, error: getUserError } = await supabase.auth.getUser();
+    const { data: { user }, error: getCurrentUserError } = await supabase.auth.getCurrentUser();
 
-    if (getUserError) {
-      console.error('Error getting user:', getUserError);
-      throw getUserError;
+    if (getCurrentUserError) {
+      console.error('Error getting user:', getCurrentUserError);
+      throw getCurrentUserError;
     }
 
     if (!user) {

@@ -1,32 +1,32 @@
 /** @type {import('prettier').Config} */
 module.exports = {
-  printWidth: 80, // Keep your preferred line length
-  semi: true, // Keep your preference for semicolons
-  singleQuote: true, // Keep your preference for single quotes
-  trailingComma: 'all', // Keep your preference for trailing commas
-  tabWidth: 2, // Keep your preferred tab width
-  endOfLine: 'auto', // Keep your preference for end of line
+  printWidth: 80,
+  semi: true,
+  singleQuote: true,
+  trailingComma: 'all',
+  tabWidth: 2,
+  endOfLine: 'auto',
   plugins: ['prettier-plugin-tailwindcss'],
-  tailwindConfig: './tailwind.config.ts', // Important: Link to your Tailwind config
+  tailwindConfig: './tailwind.config.ts',
   overrides: [
     {
-      files: ['*.json', '.prettierrc', '.eslintrc'], // JSON files
+      files: ['*.json', '.prettierrc', '.eslintrc'],
       options: {
-        parser: 'json', // Use the JSON parser for JSON files
-        tabWidth: 2, // Consistent tab width
+        parser: 'json',
+        tabWidth: 2,
       },
     },
     {
-      files: ['*.md'], // Markdown files
+      files: ['*.md'],
       options: {
-        parser: 'markdown', // Use the Markdown parser
-        proseWrap: 'always', // Wrap prose for readability
+        parser: 'markdown',
+        proseWrap: 'always',
       },
     },
     {
-      files: ['*.yaml', '*.yml'], // YAML files
+      files: ['*.yaml', '*.yml'],
       options: {
-        parser: 'yaml', // Use the YAML parser
+        parser: 'yaml',
         tabWidth: 2,
       },
     },

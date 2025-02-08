@@ -28,14 +28,14 @@ export async function updateSession(request: NextRequest) {
   )
 
   // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
+  // supabase.auth.getCurrentUser(). A simple mistake could make it very hard to debug
   // issues with users being randomly logged out.
 
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
+  // IMPORTANT: DO NOT REMOVE auth.getCurrentUser()
 
   const {
     data: { user },
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getCurrentUser()
 
   if (
     !user &&

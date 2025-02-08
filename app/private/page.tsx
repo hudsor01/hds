@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 export default async function PrivatePage() {
   const supabase = await createClient();
 
-  const { data, error } = await supabase.auth.getUser();
+  const { data, error } = await supabase.auth.getCurrentUser();
   if (error || !data?.user) {
     redirect('/login');
   }

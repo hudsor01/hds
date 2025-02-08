@@ -69,7 +69,7 @@ export default async function SignIn({
   // Check authentication status
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getCurrentUser();
 
   if (user && viewType !== 'update_password') {
     return redirect('/');

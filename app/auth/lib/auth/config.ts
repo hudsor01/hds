@@ -39,7 +39,7 @@ export function useUser() {
 
   useEffect(() => {
     // Get initial user
-    void supabase.auth.getUser().then(({ data: { user } }) => {
+    void supabase.auth.getCurrentUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
     });

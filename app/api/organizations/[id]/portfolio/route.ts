@@ -16,7 +16,7 @@ export async function GET(
       .from('organization_members')
       .select('role')
       .eq('organization_id', params.id)
-      .eq('user_id', (await supabase.auth.getUser()).data.user?.id)
+      .eq('user_id', (await supabase.auth.getCurrentUser()).data.user?.id)
       .single();
 
     if (membershipError || !membership) {

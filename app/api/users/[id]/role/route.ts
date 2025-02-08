@@ -9,7 +9,7 @@ export async function GET(
   if (!userId)
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const user = await db.users.getUser(params.id);
+  const user = await db.users.getCurrentUser(params.id);
   const role = user.privateMetadata?.role || 'USER';
 
   return NextResponse.json({ role });

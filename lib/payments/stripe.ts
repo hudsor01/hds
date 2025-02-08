@@ -2,7 +2,7 @@ import type { Team } from '@/types/team';
 import { createClient } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import Stripe from 'stripe';
-import { getUser } from '../../app/auth';
+import { getCurrentUser } from '../../app/auth';
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-01-27.acacia',
@@ -24,7 +24,7 @@ export async function createCheckoutSession({
   team: Team | null;
   priceId: string;
 }) {
-  const user = await getUser(supabase);
+  const user = await getCurrentUser(supabase);
 
   if (!team || !user) {
     redirect(`/sign-up?redirect=checkout&priceId=${priceId}`);

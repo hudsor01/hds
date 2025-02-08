@@ -1,6 +1,7 @@
 import {UserRole} from '@/types/roles';
 import {NextRequest, NextResponse} from 'next/server';
-import { prisma } from '@/lib/prisma/prisma'; // Import prisma
+import { prisma } from '@/lib/prisma/prisma';
+import { db } from '@/lib/db';
 
 interface ExtendedUserResource extends UserResource {
   privateMetadata?: {role?: UserRole; permissions?: string[]};
@@ -17,7 +18,7 @@ export async function checkRole(
       return new NextResponse('Unauthorized', {status: 401});
     }
 
-    const user = await currentUser();
+    const user = await getCurrentUser();
     if (!user) {
       return new NextResponse('Unauthorized', {status: 401});
     }
@@ -47,7 +48,7 @@ export async function checkPermission(
       return new NextResponse('Unauthorized', {status: 401});
     }
 
-    const user = await currentUser();
+    const user = await getCurrentUser();
     if (!user) {
       return new NextResponse('Unauthorized', {status: 401});
     }
@@ -68,16 +69,16 @@ export async function checkPermission(
 
 // Auth utilities
 export async function getCurrentUser() {
-  return await currentUser();
+  return await getCurrentUser();
 }
 
-export async function getUserRole(userId: string): Promise<UserRole> {
-  const user = await prisma.users.getUser(userId); // Use prisma
+export async function getCurrentUserRole(userId: string): Promise<UserRole> {
+  const user = await prisma.users.getCurrentUser(userId); // Use prisma
   return (user.privateMetadata?.role as UserRole) || 'USER';
 }
 
 export async function updateUserRole(userId: string, role: UserRole) {
-  await .users.updateUser(userId, {
+  await db.users.updateUser(userId, {
     privateMetadata: {role},
   });
 }
@@ -102,4 +103,13 @@ export function useAuth() {
     permissions: metadata.permissions || [],
     checkPermission: (permission: string) => metadata.permissions?.includes(permission) || false,
   };
+}
+function getAuth (): { userId: any } | PromiseLike<{ userId: any }>
+{
+  throw new Error('Function not implemented.')
+}
+
+function useUser (): { isLoaded: any; isSignedIn: any; user: any }
+{
+  throw new Error('Function not implemented.')
 }

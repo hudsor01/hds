@@ -3,7 +3,7 @@ import CustomerPortalForm from '@/components/forms/CustomerPortalForm';
 import EmailForm from '@/components/forms/EmailForm';
 import NameForm from '@/components/forms/NameForm';
 import { supabase } from '@/lib/db';
-import { getSubscription, getUser } from '@/utils/supabase/server';
+import { getSubscription, getCurrentUser } from '@/utils/supabase/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
 import { redirect } from 'next/navigation';
 import React from 'react';
@@ -11,7 +11,7 @@ import type { Database } from '../../types/database.types';
 
 const AccountPage: React.FC = async () => {
   const [user, userDetails, subscription] = await Promise.all([
-    getUser(supabase),
+    getCurrentUser(supabase),
     userDetails(supabase),
     getSubscription(supabase),
   ]);
@@ -47,6 +47,6 @@ const AccountPage: React.FC = async () => {
 
 export default AccountPage;
 
-function getUser(supabase: SupabaseClient<Database, 'public', any>): any {
+function getCurrentUser(supabase: SupabaseClient<Database, 'public', any>): any {
   throw new Error('Function not implemented.');
 }

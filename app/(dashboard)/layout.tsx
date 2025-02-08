@@ -13,7 +13,7 @@ import { Suspense } from 'react'
 export default function DashboardLayout({children}: {children: React.ReactNode}) {
   const supabase = await createClient()
 
-  const {data, error } = await supabase.auth.getUser()
+  const {data, error } = await supabase.auth.getCurrentUser()
   if (error || !data.user) {
     redirect('/login')
   }

@@ -33,7 +33,7 @@ export async function signOut() {
   }
 }
 
-export async function getUserProfile() {
+export async function getCurrentUserProfile() {
   const session = await getSession();
   if (!session) return null;
 

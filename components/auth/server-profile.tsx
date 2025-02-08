@@ -5,7 +5,7 @@ export async function ServerProfile() {
   const supabase = await createClient();
   const {
     data: { user },
-  } = await supabase.auth.getUser();
+  } = await supabase.auth.getCurrentUser();
 
   if (!user) {
     return (
