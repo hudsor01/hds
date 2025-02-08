@@ -1,4 +1,4 @@
-import { ForgotPasswordForm } from '@/components/forms/auth/ForgotPasswordForm';
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm';
 import { Box, Container, Typography } from '@mui/material';
 import { type Metadata } from 'next';
 

@@ -12,7 +12,9 @@ export default async function AdminDashboard(params: {
 
   const query = (await params.searchParams).search;
 
-  const users = query ? (await client.users.getCurrentUserList({ query })).data : [];
+  const users = query
+    ? (await client.users.getCurrentUserList({ query })).data
+    : [];
 
   return (
     <>

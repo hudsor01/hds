@@ -1,18 +1,18 @@
 'use client';
 
-import { useAuth } from '@/app/auth/hooks/use-auth';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useAuth } from '@/components/providers/auth-provider';
 
 export function useProtectedRoute() {
-  const { isAuthenticated, isLoading } = useAuth();
+  const { user, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
+    if (!isLoading && !user) {
       router.push('/login');
     }
-  }, [isAuthenticated, isLoading, router]);
+  }, [user, isLoading, router]);
 
-  return { isLoading };
+  return { user, isLoading };
 }

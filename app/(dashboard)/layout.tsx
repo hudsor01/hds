@@ -1,54 +1,62 @@
 'use client';
 
-import ErrorBoundary from '@/components/error/error-boundary'
-import { SidebarNav } from '@/components/layout/sidebar-nav'
-import LoadingState from '@/components/loading/loading-state'
+import { Box } from '@mui/material';
+import { Suspense } from 'react';
+import LoadingState from '@/components/loading/loading-state';
+import { SidebarNav } from '@/components/layout/sidebar-nav';
+import { useEffect } from 'react';
+import { createClient } from '@/utils/supabase/client';
+import { useRouter } from 'next/navigation';
 
-import { Box } from '@mui/material'
-import { supabase } from '@/lib/supabase'
-import { redirect } from 'next/navigation'
-import { Auth } from '@supabase/auth-ui-react'
-import { Suspense } from 'react'
+export default function DashboardLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const supabase = createClient();
 
-export default function DashboardLayout({children}: {children: React.ReactNode}) {
-  const supabase = await createClient()
+  useEffect(() => {
+    const checkAuth = async () => {
+      const {
+        data: { session },
+        error,
+      } = await supabase.auth.getSession();
 
-  const {data, error } = await supabase.auth.getCurrentUser()
-  if (error || !data.user) {
-    redirect('/login')
-  }
+      if (error || !session) {
+        router.push('/login');
+      }
+    };
 
-  if (!isLoaded) {
-    return <LoadingState fullPage message='Loading authentication...' />;
-  }
+    checkAuth();
 
-  if (!isSignedIn) {
-    redirect('/sign-in');
-  }
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_OUT' || !session) {
+        router.push('/login');
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [router]);
 
   return (
-    <Box sx={{display: 'flex', minHeight: '100vh'}}>
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <SidebarNav />
       <Box
-        component='main'
+        component="main"
         sx={{
           flexGrow: 1,
           p: 3,
-          width: {sm: `calc(100% - 240px)`},
-          ml: {sm: '240px'},
+          width: { sm: `calc(100% - 240px)` },
+          ml: { sm: '240px' },
           overflow: 'auto',
         }}
       >
-        <ErrorBoundary
-          error={new Error('Something went wrong')}
-          reset={() => window.location.reload()}
-          render={() => (
-            <Suspense fallback={<LoadingState message="Loading content..." />}>
-              {children}
-            </Suspense>
-          )}
-        />
-        </ErrorBoundary>
+        <Suspense fallback={<LoadingState />}>{children}</Suspense>
       </Box>
     </Box>
   );

@@ -2,12 +2,16 @@ import { UserRole } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { createClient } from '@/utils/supabase/server';
+import { User as SupabaseUser } from '@supabase/supabase-js';
 
 interface User {
   id: string;
   role: UserRole;
   email: string;
   name: string | null;
+  metadata?: {
+    permissions?: string[];
+  };
 }
 
 // Role-based access control
@@ -43,7 +47,7 @@ export async function checkPermission(
       return new NextResponse('Unauthorized', { status: 401 });
     }
 
-    const userPermissions = user.permissions || [];
+    const userPermissions = user.metadata?.permissions || [];
     if (!userPermissions.includes(permission)) {
       return new NextResponse('Forbidden', { status: 403 });
     }
@@ -58,9 +62,12 @@ export async function checkPermission(
 // Auth utilities
 export async function getCurrentUser(): Promise<User | null> {
   const supabase = await createClient();
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
 
-  if (!user) return null;
+  if (error || !user) return null;
 
   const dbUser = await prisma.users.findUnique({
     where: { id: user.id },
@@ -79,6 +86,7 @@ export async function getCurrentUser(): Promise<User | null> {
     role: dbUser.role as UserRole,
     email: dbUser.email,
     name: dbUser.name,
+    metadata: user.user_metadata,
   };
 }
 
@@ -91,8 +99,16 @@ export async function getCurrentUserRole(userId: string): Promise<UserRole> {
 }
 
 export async function updateUserRole(userId: string, role: UserRole) {
+  const supabase = await createClient();
+
+  // Update role in Prisma
   await prisma.users.update({
     where: { id: userId },
+    data: { role },
+  });
+
+  // Update role in Supabase user metadata
+  await supabase.auth.updateUser({
     data: { role },
   });
 }

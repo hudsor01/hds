@@ -47,6 +47,8 @@ const AccountPage: React.FC = async () => {
 
 export default AccountPage;
 
-function getCurrentUser(supabase: SupabaseClient<Database, 'public', any>): any {
+function getCurrentUser(
+  supabase: SupabaseClient<Database, 'public', any>,
+): any {
   throw new Error('Function not implemented.');
 }

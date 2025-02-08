@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma/prisma';
-
+import { createClient } from '@/utils/supabase/server';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(
@@ -7,8 +7,13 @@ export async function GET(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -50,8 +55,13 @@ export async function PATCH(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
@@ -97,8 +107,13 @@ export async function DELETE(
   { params }: { params: { id: string } },
 ) {
   try {
-    const { userId } = getAuth(request);
-    if (!userId) {
+    const supabase = await createClient();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 

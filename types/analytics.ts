@@ -50,7 +50,7 @@ export interface MaintenanceMetrics {
 }
 
 export interface TimeSeriesData {
-  timestamp: string;
+  date: string;
   value: number;
 }
 
@@ -74,4 +74,27 @@ export interface AnalyticsQuery {
   group_by?: string;
   metrics?: string[];
   role?: UserRole;
+}
+
+export type UserRole = 'ADMIN' | 'LANDLORD' | 'TENANT';
+
+export interface PropertyMetrics {
+  total_properties: number;
+}
+
+export interface TenantMetrics {
+  active_tenants: number;
+}
+
+export interface FinancialMetrics {
+  total_revenue: number;
+}
+
+export interface MaintenanceMetrics {
+  open_work_orders: number;
+}
+
+export interface TimeSeriesData {
+  date: string;
+  value: number;
 }

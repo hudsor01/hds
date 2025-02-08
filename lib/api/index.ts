@@ -1,6 +1,8 @@
 import { BaseQueryParams, BaseResponse } from '@/types/common';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { ZodError, ZodSchema } from 'zod';
+import { createClient } from '@/utils/supabase/server';
+import axios from 'axios';
 
 export type ApiError = {
   message: string;
@@ -19,11 +21,18 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || '';
 // Fetch wrapper with error handling
 async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
   try {
+    const supabase = await createClient();
+    const {
+      data: { session },
+    } = await supabase.auth.getSession();
+
     const response = await fetch(input, {
       ...init,
       headers: {
         'Content-Type': 'application/json',
-        ...getAuthHeader(),
+        ...(session?.access_token
+          ? { Authorization: `Bearer ${session.access_token}` }
+          : {}),
         ...init?.headers,
       },
     });
@@ -41,13 +50,6 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
   } catch (error) {
     throw handleError(error);
   }
-}
-
-// Auth header helper
-function getAuthHeader(): HeadersInit {
-  const token =
-    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 // Generic API functions
@@ -208,4 +210,18 @@ export const api = {
       };
     }
   },
+};
+
+export const apiClient = axios.create({
+  baseURL: '/api',
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+export const handleApiError = (error: unknown) => {
+  if (axios.isAxiosError(error)) {
+    return error.response?.data?.message || 'An error occurred';
+  }
+  return 'An unexpected error occurred';
 };
