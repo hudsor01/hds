@@ -1,13 +1,19 @@
+'use client'
+
 import { Container, Typography } from '@mui/material';
 import SignInForm from '@/components/auth/sign-in-form';
-import { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Sign In | Property Manager',
-  description: 'Sign in to your Property Manager account',
-};
+import { useSearchParams, useRouter } from 'next/navigation';
+import { getRedirectUrl } from '@/utils/auth-redirect';
 
 export default function SignInPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const redirectUrl = getRedirectUrl(searchParams);
+
+  const handleSuccess = () => {
+    router.push(redirectUrl);
+  };
+
   return (
     <Container maxWidth="sm" sx={{ py: 8 }}>
       <Typography variant="h4" align="center" gutterBottom>
@@ -21,7 +27,7 @@ export default function SignInPage() {
       >
         Sign in to your account to continue
       </Typography>
-      <SignInForm />
+      <SignInForm onSuccess={handleSuccess} />
     </Container>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useAuth } from '@/components/providers/auth-provider';
 import {
   Alert,
   Box,
@@ -15,13 +16,15 @@ import Link from 'next/link';
 import { Google } from '@mui/icons-material';
 
 interface SignInFormProps {
+  onSuccess?: () => void;
   redirectTo?: string;
 }
 
-export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
+export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormProps) {
   const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -29,33 +32,24 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
-      const response = await fetch('/auth/sign-in', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to sign in');
-      }
-
+      const { error } = await signIn(formData.email, formData.password);
+      if (error) throw error;
+      onSuccess?.();
       router.push(redirectTo);
       router.refresh();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+    } catch (error) {
+      setError(error instanceof Error ? error.message : 'Failed to sign in');
     } finally {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setIsLoading(true);
+    setLoading(true);
     setError(null);
 
     try {
@@ -72,7 +66,7 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
       window.location.href = data.url;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
@@ -103,7 +97,7 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
       <Button
         onClick={handleGoogleSignIn}
         variant="outlined"
-        disabled={isLoading}
+        disabled={loading}
         startIcon={<Google />}
         sx={{
           height: 48,
@@ -115,7 +109,7 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
           },
         }}
       >
-        {isLoading ? <CircularProgress size={24} /> : 'Continue with Google'}
+        {loading ? <CircularProgress size={24} /> : 'Continue with Google'}
       </Button>
 
       <Box sx={{ my: 2, display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -149,7 +143,7 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
       <Button
         type="submit"
         variant="contained"
-        disabled={isLoading}
+        disabled={loading}
         sx={{
           height: 48,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
@@ -158,7 +152,7 @@ export default function SignInForm({ redirectTo = '/' }: SignInFormProps) {
           },
         }}
       >
-        {isLoading ? <CircularProgress size={24} /> : 'Sign In'}
+        {loading ? <CircularProgress size={24} /> : 'Sign In'}
       </Button>
 
       <Box sx={{ mt: 2, textAlign: 'center' }}>

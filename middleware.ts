@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { createRedirectUrl, isPublicPath } from '@/utils/auth-redirect'
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -35,42 +36,24 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { session }, error } = await supabase.auth.getSession()
+  const { data: { user }, error } = await supabase.auth.getUser()
 
-  // If there's no session and the request is for a protected route
-  if ((!session || error) && isProtectedRoute(request.nextUrl.pathname)) {
-    const redirectUrl = new URL('/sign-in', request.url)
-    redirectUrl.searchParams.set('redirect', request.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
+  // Handle auth redirects
+  const isPublic = isPublicPath(request.nextUrl.pathname)
+  const isAuthed = !!user && !error
+
+  // If the user is not authenticated and trying to access a protected route
+  if (!isAuthed && !isPublic) {
+    const redirectUrl = createRedirectUrl(request.nextUrl.pathname)
+    return NextResponse.redirect(new URL(redirectUrl, request.url))
+  }
+
+  // If the user is authenticated and trying to access auth pages
+  if (isAuthed && ['/sign-in', '/sign-up', '/forgot-password'].includes(request.nextUrl.pathname)) {
+    return NextResponse.redirect(new URL('/dashboard', request.url))
   }
 
   return response
-}
-
-// Helper to check if a route should be protected
-function isProtectedRoute(pathname: string): boolean {
-  const publicRoutes = [
-    '/sign-in',
-    '/sign-up',
-    '/forgot-password',
-    '/auth/callback',
-    '/',
-    '/about',
-    '/contact',
-    '/pricing',
-  ]
-
-  // Allow public routes and static files
-  if (
-    publicRoutes.includes(pathname) ||
-    pathname.startsWith('/_next') ||
-    pathname.startsWith('/api/public') ||
-    pathname.includes('.')
-  ) {
-    return false
-  }
-
-  return true
 }
 
 export const config = {
