@@ -1,2 +1,2 @@
-# latest lts version
-lts/*
+# .nvmrc
+22.13.1
