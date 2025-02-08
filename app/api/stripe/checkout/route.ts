@@ -1,16 +1,29 @@
-import { stripe } from '@lib/payments/stripe';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/server';
+import { stripe } from '@/lib/stripe';
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
+import type Stripe from 'stripe';
+import { prisma } from '@/lib/prisma';
+
+const checkoutSchema = z.object({
+  session_id: z.string(),
+});
 
 export async function GET(request: NextRequest) {
-  const searchParams = request.nextUrl.searchParams;
-  const sessionId = searchParams.get('session_id');
-
-  if (!sessionId) {
-    return NextResponse.redirect(new URL('/pricing', request.url));
-  }
-
   try {
-    const session = await stripe.checkout.sessions.retrieve(sessionId, {
+    const searchParams = request.nextUrl.searchParams;
+    const result = checkoutSchema.safeParse({
+      session_id: searchParams.get('session_id'),
+    });
+
+    if (!result.success) {
+      return NextResponse.redirect(new URL('/pricing', request.url));
+    }
+
+    const { session_id } = result.data;
+
+    // Retrieve the checkout session
+    const session = await stripe.checkout.sessions.retrieve(session_id, {
       expand: ['customer', 'subscription'],
     });
 
@@ -28,65 +41,67 @@ export async function GET(request: NextRequest) {
       throw new Error('No subscription found for this session.');
     }
 
+    // Get subscription details
     const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
       expand: ['items.data.price.product'],
     });
 
     const plan = subscription.items.data[0]?.price;
-
-    if (!plan) {
-      throw new Error('No plan found for this subscription.');
+    if (!plan || typeof plan.product === 'string') {
+      throw new Error('Invalid plan data from Stripe.');
     }
 
-    const productId = (plan.product as Stripe.Product).id;
+    const product = plan.product as Stripe.Product;
 
-    if (!productId) {
-      throw new Error('No product ID found for this subscription.');
+    // Get user from session
+    const supabase = await createClient();
+    const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+    if (authError || !user) {
+      throw new Error('User not authenticated.');
     }
 
-    const userId = session.client_reference_id;
-    if (!userId) {
-      throw new Error("No user ID found in session's client_reference_id.");
-    }
+    // Update user subscription in database
+    await prisma.subscriptions.upsert({
+      where: {
+        user_id_product_id: {
+          user_id: user.id,
+          product_id: product.id,
+        },
+      },
+      update: {
+        stripe_customer_id: customerId,
+        stripe_subscription_id: subscriptionId,
+        subscription_status: subscription.status,
+        subscription_type: product.name,
+        active_until: new Date(subscription.current_period_end * 1000),
+        updated_at: new Date(),
+      },
+      create: {
+        user_id: user.id,
+        product_id: product.id,
+        stripe_customer_id: customerId,
+        stripe_subscription_id: subscriptionId,
+        subscription_status: subscription.status,
+        subscription_type: product.name,
+        active_until: new Date(subscription.current_period_end * 1000),
+      },
+    });
 
-    const user = await db
-      .select()
-      .from(userId)
-      .where(eq(userId, Number(userId)))
-      .limit(1);
+    // Update user metadata
+    await supabase.auth.updateUser({
+      data: {
+        stripe_customer_id: customerId,
+        subscription_status: subscription.status,
+        subscription_type: product.name,
+      },
+    });
 
-    if (user.length === 0) {
-      throw new Error('User not found in database.');
-    }
-
-    const userTeam = await db
-      .select({
-        teamId: teamMembers.teamId,
-      })
-      .from(teamMembers)
-      .where(eq(teamMembers.userId, user[0].id))
-      .limit(1);
-
-    if (userTeam.length === 0) {
-      throw new Error('User is not associated with any team.');
-    }
-
-    await db
-      .update(teams)
-      .set({
-        stripeCustomerId: customerId,
-        stripeSubscriptionId: subscriptionId,
-        stripeProductId: productId,
-        planName: (plan.product as Stripe.Product).name,
-        subscriptionStatus: subscription.status,
-        updatedAt: new Date(),
-      })
-      .where(eq(teams.id, userTeam[0].teamId));
-
-    await setSession(user[0]);
     return NextResponse.redirect(new URL('/dashboard', request.url));
   } catch (error) {
-    console.error('Error handling successful checkout:', error);
-    return NextResponse.redirect(new URL('/error', request.url));
+    console.error('Error handling checkout:', error);
+    return NextResponse.redirect(
+      new URL('/error?message=subscription-failed', request.url),
+    );
   }
 }

@@ -1,4 +1,4 @@
-import type { UserRole } from './auth';
+import type { UserRole } from '@/utils/roles';
 
 export interface EmailMetric {
   template: string;
@@ -12,41 +12,38 @@ export type EmailMetricsProps = {
   data: EmailMetric[];
 };
 
+export interface Trend {
+  value: number;
+  direction: 'up' | 'down' | 'neutral';
+}
+
 export interface PropertyMetrics {
-  total_properties: number;
-  occupancy_rate: number;
-  avg_rent: number;
-  total_revenue: number;
-  properties_by_type: Record<string, number>;
-  properties_by_status: Record<string, number>;
+  total: number;
+  active: number;
+  vacant: number;
+  trend?: Trend;
 }
 
 export interface TenantMetrics {
-  total_tenants: number;
-  active_tenants: number;
-  move_ins_this_month: number;
-  move_outs_this_month: number;
-  tenants_by_status: Record<string, number>;
-  lease_renewals_due: number;
+  total: number;
+  active: number;
+  pending: number;
+  trend?: Trend;
 }
 
 export interface FinancialMetrics {
-  total_revenue: number;
-  total_expenses: number;
-  net_income: number;
-  revenue_by_type: Record<string, number>;
-  expenses_by_category: Record<string, number>;
-  payment_collection_rate: number;
-  outstanding_balance: number;
+  revenue: number;
+  expenses: number;
+  profit: number;
+  trend?: Trend;
 }
 
 export interface MaintenanceMetrics {
-  total_work_orders: number;
-  open_work_orders: number;
-  avg_completion_time: number;
-  work_orders_by_priority: Record<string, number>;
-  work_orders_by_status: Record<string, number>;
-  maintenance_cost_by_property: Record<string, number>;
+  total: number;
+  open: number;
+  inProgress: number;
+  completed: number;
+  trend?: Trend;
 }
 
 export interface TimeSeriesData {
@@ -77,24 +74,3 @@ export interface AnalyticsQuery {
 }
 
 export type UserRole = 'ADMIN' | 'LANDLORD' | 'TENANT';
-
-export interface PropertyMetrics {
-  total_properties: number;
-}
-
-export interface TenantMetrics {
-  active_tenants: number;
-}
-
-export interface FinancialMetrics {
-  total_revenue: number;
-}
-
-export interface MaintenanceMetrics {
-  open_work_orders: number;
-}
-
-export interface TimeSeriesData {
-  date: string;
-  value: number;
-}

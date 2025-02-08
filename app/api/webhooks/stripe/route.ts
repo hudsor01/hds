@@ -1,180 +1,96 @@
-import { prisma } from '@/lib/db';
-import { stripe } from '@/lib/stripe';
-import type { PaymentRecord } from '@/types/payments';
-import { PaymentStatus, PaymentType } from '@prisma/client';
-import { headers } from 'next/headers';
+import { getHeaders } from '@/utils/headers';
 import { NextResponse } from 'next/server';
-import Stripe from 'stripe';
+import { stripe } from '@/lib/stripe';
+import { prisma } from '@/lib/prisma';
+import type Stripe from 'stripe';
 
-export async function POST(req: Request) {
+if (!process.env.STRIPE_WEBHOOK_SECRET) {
+  throw new Error('Missing STRIPE_WEBHOOK_SECRET environment variable');
+}
+
+export async function POST(request: Request) {
+  const body = await request.text();
+  const headersList = await getHeaders();
+  const signature = headersList.get('stripe-signature');
+
+  if (!signature) {
+    return new NextResponse('No signature', { status: 400 });
+  }
+
   try {
-    const body = await req.text();
-    const headersList = await headers();
-    const signature = headersList.get('stripe-signature');
-
-    if (!signature) {
-      return new NextResponse('Missing stripe-signature header', {
-        status: 400,
-      });
-    }
-
-    const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
-    if (!webhookSecret) {
-      return new NextResponse('Missing webhook secret', { status: 500 });
-    }
-
-    let event: Stripe.Event;
-
-    try {
-      event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-    } catch (err) {
-      console.error('Webhook signature verification failed:', err);
-      return new NextResponse('Webhook signature verification failed', {
-        status: 400,
-      });
-    }
+    const event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET,
+    );
 
     switch (event.type) {
-      case 'payment_intent.succeeded': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        const { leaseId, paymentType } = paymentIntent.metadata;
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const customerId = subscription.customer as string;
+        const subscriptionId = subscription.id;
+        const status = subscription.status;
 
-        // Update payment record
-        await prisma.payments.updateMany({
+        // Update subscription in database
+        await prisma.subscriptions.updateMany({
           where: {
-            payment_intent_id: paymentIntent.id,
+            stripe_customer_id: customerId,
+            stripe_subscription_id: subscriptionId,
           },
           data: {
-            payment_status: PaymentStatus.COMPLETED,
-            processed_at: new Date(),
-          },
-        });
-
-        // Update lease payment status if it's a rent payment
-        if (paymentType === PaymentType.RENT) {
-          await prisma.leases.update({
-            where: {
-              user_id: leaseId,
-            },
-            data: {
-              status: 'PAID',
-            },
-          });
-        }
-
-        break;
-      }
-
-      case 'payment_intent.payment_failed': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
-
-        // Update payment record
-        await prisma.payments.updateMany({
-          where: {
-            payment_intent_id: paymentIntent.id,
-          },
-          data: {
-            payment_status: PaymentStatus.FAILED,
-            error_message: paymentIntent.last_payment_error?.message,
+            subscription_status: status,
+            active_until: new Date(subscription.current_period_end * 1000),
+            updated_at: new Date(),
           },
         });
 
         break;
       }
 
-      case 'payment_intent.canceled': {
-        const paymentIntent = event.data.object as Stripe.PaymentIntent;
+      case 'customer.deleted': {
+        const customer = event.data.object as Stripe.Customer;
 
-        // Update payment record
-        await prisma.payments.updateMany({
-          where: {
-            payment_intent_id: paymentIntent.id,
-          },
+        // Remove customer data from subscriptions
+        await prisma.subscriptions.updateMany({
+          where: { stripe_customer_id: customer.id },
           data: {
-            payment_status: PaymentStatus.CANCELLED,
+            stripe_customer_id: null,
+            stripe_subscription_id: null,
+            subscription_status: 'cancelled',
+            updated_at: new Date(),
           },
         });
 
         break;
       }
 
-      case 'invoice.payment_succeeded': {
-        const invoice = event.data.object as Stripe.Invoice;
-
-        // Record the invoice payment
-        if (invoice.subscription) {
-          const tenant = await prisma.tenants.findFirst({
-            where: {
-              stripe_customer_id: invoice.customer as string,
-            },
-          });
-
-          if (tenant) {
-            const paymentRecord: PaymentRecord = {
-              tenant_id: tenant.id,
-              payment_amount: invoice.amount_paid / 100,
-              payment_status: PaymentStatus.COMPLETED,
-              payment_type: PaymentType.SUBSCRIPTION,
-              description: `Subscription payment for period ${new Date(invoice.period_start * 1000).toLocaleDateString()} - ${new Date(invoice.period_end * 1000).toLocaleDateString()}`,
-              payment_intent_id: invoice.payment_intent as string,
-              processed_at: new Date(),
-            };
-
-            await prisma.payments.create({ data: paymentRecord });
-          }
-        }
-
-        break;
-      }
-
+      case 'invoice.payment_succeeded':
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
+        const status = event.type === 'invoice.payment_succeeded' ? 'active' : 'past_due';
 
-        // Record the failed payment
         if (invoice.subscription) {
-          const tenant = await prisma.tenants.findFirst({
-            where: {
-              stripe_customer_id: invoice.customer as string,
+          await prisma.subscriptions.updateMany({
+            where: { stripe_subscription_id: invoice.subscription as string },
+            data: {
+              subscription_status: status,
+              updated_at: new Date(),
             },
           });
-
-          if (tenant) {
-            const paymentRecord: PaymentRecord = {
-              tenant_id: tenant.id,
-              payment_amount: invoice.amount_due / 100,
-              payment_status: PaymentStatus.FAILED,
-              payment_type: PaymentType.SUBSCRIPTION,
-              description: 'Failed subscription payment',
-              payment_intent_id: invoice.payment_intent as string,
-              error_message: (invoice as any).last_payment_error?.message,
-            };
-
-            await prisma.payments.create({ data: paymentRecord });
-
-            // Update tenant subscription status
-            await prisma.tenants.update({
-              where: {
-                id: tenant.id,
-              },
-              data: {
-                subscription_status: 'PAST_DUE',
-              },
-            });
-          }
         }
 
         break;
       }
-
-      default:
-        return new NextResponse(`Unsupported event type: ${event.type}`, {
-          status: 400,
-        });
     }
 
-    return new NextResponse('Webhook processed successfully', { status: 200 });
+    return new NextResponse(null, { status: 200 });
   } catch (error) {
-    console.error('Webhook processing error:', error);
-    return new NextResponse('Webhook processing failed', { status: 500 });
+    console.error('Error handling Stripe webhook:', error);
+    return new NextResponse(
+      'Webhook error: ' + (error instanceof Error ? error.message : 'Unknown error'),
+      { status: 400 },
+    );
   }
 }
