@@ -1,7 +1,7 @@
 'use client';
 
-import type {AlertColor} from '@mui/material';
-import {create} from 'zustand';
+import type { AlertColor } from '@mui/material';
+import { create } from 'zustand';
 
 export interface Notification {
   id: string;
@@ -17,14 +17,17 @@ interface NotificationStore {
   removeNotification: (id: string) => void;
 }
 
-export const useNotification = create<NotificationStore>(set => ({
+export const useNotification = create<NotificationStore>((set) => ({
   notifications: [],
-  addNotification: notification =>
-    set(state => ({
-      notifications: [...state.notifications, {...notification, id: Math.random().toString()}],
+  addNotification: (notification) =>
+    set((state) => ({
+      notifications: [
+        ...state.notifications,
+        { ...notification, id: Math.random().toString() },
+      ],
     })),
-  removeNotification: id =>
-    set(state => ({
-      notifications: state.notifications.filter(n => n.id !== id),
+  removeNotification: (id) =>
+    set((state) => ({
+      notifications: state.notifications.filter((n) => n.id !== id),
     })),
 }));

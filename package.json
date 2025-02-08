@@ -2,7 +2,7 @@
   "name": "hds",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
+  "type": "commonjs",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
@@ -73,7 +73,6 @@
     "react-hook-form": "^7.54.2",
     "react-intl": "^7.1.5",
     "react-resizable-panels": "2.1.7",
-    "react-tooltip": "^5.28.0",
     "react-use": "^17.6.0",
     "recharts": "^2.15.1",
     "resend": "^4.1.2",

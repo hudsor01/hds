@@ -1,20 +1,29 @@
 'use client';
 
-import {zodResolver} from '@hookform/resolvers/zod';
-import {Lock as LockIcon} from '@mui/icons-material';
-import {LoadingButton} from '@mui/lab';
-import {Alert, Box, Collapse, Paper, TextField, Typography} from '@mui/material';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Lock as LockIcon } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+import {
+  Alert,
+  Box,
+  Collapse,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
 import React from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {z} from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const updatePasswordSchema = z
   .object({
-    currentPassword: z.string().min(8, 'Password must be at least 8 characters'),
+    currentPassword: z
+      .string()
+      .min(8, 'Password must be at least 8 characters'),
     newPassword: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
-  .refine(data => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
   });
@@ -25,7 +34,9 @@ interface UpdatePasswordFormProps {
   onSubmitAction: (data: UpdatePasswordFormValues) => Promise<void>;
 }
 
-export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) => {
+export const UpdatePasswordForm = ({
+  onSubmitAction,
+}: UpdatePasswordFormProps) => {
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState(false);
 
@@ -33,7 +44,7 @@ export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) =>
     control,
     handleSubmit,
     reset,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm<UpdatePasswordFormValues>({
     resolver: zodResolver(updatePasswordSchema),
   });
@@ -50,37 +61,41 @@ export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) =>
   };
 
   return (
-    <Paper elevation={3} sx={{p: 4, maxWidth: 400, mx: 'auto'}}>
-      <Typography variant='h5' gutterBottom>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto' }}>
+      <Typography variant="h5" gutterBottom>
         Update Password
       </Typography>
 
       <Collapse in={!!error || success}>
         {error && (
-          <Alert severity='error' sx={{mb: 2}}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
         {success && (
-          <Alert severity='success' sx={{mb: 2}}>
+          <Alert severity="success" sx={{ mb: 2 }}>
             Password updated successfully
           </Alert>
         )}
       </Collapse>
 
-      <Box component='form' onSubmit={handleSubmit(handleFormSubmit)} noValidate>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        noValidate
+      >
         <Controller
-          name='currentPassword'
+          name="currentPassword"
           control={control}
-          defaultValue=''
-          render={({field}) => (
+          defaultValue=""
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              label='Current Password'
-              type='password'
+              label="Current Password"
+              type="password"
               error={!!errors.currentPassword}
               helperText={errors.currentPassword?.message}
             />
@@ -88,17 +103,17 @@ export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) =>
         />
 
         <Controller
-          name='newPassword'
+          name="newPassword"
           control={control}
-          defaultValue=''
-          render={({field}) => (
+          defaultValue=""
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              label='New Password'
-              type='password'
+              label="New Password"
+              type="password"
               error={!!errors.newPassword}
               helperText={errors.newPassword?.message}
             />
@@ -106,17 +121,17 @@ export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) =>
         />
 
         <Controller
-          name='confirmPassword'
+          name="confirmPassword"
           control={control}
-          defaultValue=''
-          render={({field}) => (
+          defaultValue=""
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              label='Confirm New Password'
-              type='password'
+              label="Confirm New Password"
+              type="password"
               error={!!errors.confirmPassword}
               helperText={errors.confirmPassword?.message}
             />
@@ -124,13 +139,13 @@ export const UpdatePasswordForm = ({onSubmitAction}: UpdatePasswordFormProps) =>
         />
 
         <LoadingButton
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
           loading={isSubmitting}
-          loadingPosition='start'
+          loadingPosition="start"
           startIcon={<LockIcon />}
-          sx={{mt: 3}}
+          sx={{ mt: 3 }}
         >
           Update Password
         </LoadingButton>

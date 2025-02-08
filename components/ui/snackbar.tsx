@@ -1,5 +1,5 @@
 import Button from '@mui/material/Button';
-import Snackbar, {type SnackbarCloseReason} from '@mui/material/Snackbar';
+import Snackbar, { type SnackbarCloseReason } from '@mui/material/Snackbar';
 import * as React from 'react';
 
 export default function AutohideSnackbar() {
@@ -9,7 +9,10 @@ export default function AutohideSnackbar() {
     setOpen(true);
   };
 
-  const handleClose = (event: React.SyntheticEvent | Event, reason?: SnackbarCloseReason) => {
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: SnackbarCloseReason,
+  ) => {
     if (reason === 'clickaway') {
       return;
     }
@@ -24,7 +27,7 @@ export default function AutohideSnackbar() {
         open={open}
         autoHideDuration={5000}
         onClose={handleClose}
-        message='This Snackbar will be dismissed in 5 seconds.'
+        message="This Snackbar will be dismissed in 5 seconds."
       />
     </div>
   );

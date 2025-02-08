@@ -1,6 +1,16 @@
-import {useApiDelete, useApiMutation, useApiQuery, useApiUpdate} from '../api/use-api';
-import type {BaseQueryParams} from '@/types/common';
-import type {Lease, MaintenanceRequest, Property, Tenant} from '@/types/database.types';
+import {
+  useApiDelete,
+  useApiMutation,
+  useApiQuery,
+  useApiUpdate,
+} from '../api/use-api';
+import type { BaseQueryParams } from '@/types/common';
+import type {
+  Lease,
+  MaintenanceRequest,
+  Property,
+  Tenant,
+} from '@/types/database.types';
 
 // Properties hooks
 export function useProperties(params?: BaseQueryParams) {
@@ -75,7 +85,9 @@ export function useMaintenanceRequest(id: string) {
 }
 
 export function useCreateMaintenanceRequest() {
-  return useApiMutation<MaintenanceRequest, Omit<MaintenanceRequest, 'id'>>('/api/maintenance');
+  return useApiMutation<MaintenanceRequest, Omit<MaintenanceRequest, 'id'>>(
+    '/api/maintenance',
+  );
 }
 
 export function useUpdateMaintenanceRequest() {

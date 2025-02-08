@@ -1,43 +1,49 @@
-import { Card, CardContent, Typography, Chip, LinearProgress } from '@mui/material'
-import FeatherIcon from 'feather-icons-react'
-import type { WaitlistEntry } from '@/types/waitlist'
+import {
+  Card,
+  CardContent,
+  Typography,
+  Chip,
+  LinearProgress,
+} from '@mui/material';
+import FeatherIcon from 'feather-icons-react';
+import type { WaitlistEntry } from '@/types/waitlist';
 
 interface StatusCardProps {
-  entry: WaitlistEntry
-  totalCount: number
+  entry: WaitlistEntry;
+  totalCount: number;
 }
 
 export default function StatusCard({ entry, totalCount }: StatusCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'VERIFIED':
-        return 'success'
+        return 'success';
       case 'PENDING':
-        return 'warning'
+        return 'warning';
       case 'BLOCKED':
-        return 'error'
+        return 'error';
       default:
-        return 'default'
+        return 'default';
     }
-  }
+  };
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'VERIFIED':
-        return 'check-circle'
+        return 'check-circle';
       case 'PENDING':
-        return 'clock'
+        return 'clock';
       case 'BLOCKED':
-        return 'x-circle'
+        return 'x-circle';
       default:
-        return 'help-circle'
+        return 'help-circle';
     }
-  }
+  };
 
-  const progress = ((totalCount - entry.position + 1) / totalCount) * 100
+  const progress = ((totalCount - entry.position + 1) / totalCount) * 100;
 
   return (
-    <Card className="w-full max-w-2xl mx-auto">
+    <Card className="mx-auto w-full max-w-2xl">
       <CardContent className="space-y-4">
         <div className="flex items-center justify-between">
           <Typography variant="h6" component="h2">
@@ -52,7 +58,7 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
         </div>
 
         <div className="mt-4">
-          <div className="flex justify-between mb-1">
+          <div className="mb-1 flex justify-between">
             <Typography variant="body2" color="textSecondary">
               Position {entry.position} of {totalCount}
             </Typography>
@@ -67,22 +73,24 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
           />
         </div>
 
-        <div className="flex items-center mt-4 text-gray-600">
+        <div className="mt-4 flex items-center text-gray-600">
           <FeatherIcon icon="mail" size={16} className="mr-2" />
           <Typography variant="body2">{entry.email}</Typography>
         </div>
 
         {entry.referral_code && (
-          <div className="mt-4 p-4 bg-gray-50 rounded-lg">
+          <div className="mt-4 rounded-lg bg-gray-50 p-4">
             <Typography variant="subtitle2" className="mb-2">
               Your Referral Code
             </Typography>
-            <div className="flex items-center justify-between bg-white p-2 rounded border">
+            <div className="flex items-center justify-between rounded border bg-white p-2">
               <Typography variant="body2" className="font-mono">
                 {entry.referral_code}
               </Typography>
               <button
-                onClick={() => navigator.clipboard.writeText(entry.referral_code!)}
+                onClick={() =>
+                  navigator.clipboard.writeText(entry.referral_code!)
+                }
                 className="text-blue-600 hover:text-blue-800"
               >
                 <FeatherIcon icon="copy" size={16} />
@@ -100,7 +108,7 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
               {entry.referrals.map((referral) => (
                 <div
                   key={referral.email}
-                  className="flex items-center justify-between p-2 bg-gray-50 rounded"
+                  className="flex items-center justify-between rounded bg-gray-50 p-2"
                 >
                   <Typography variant="body2">{referral.email}</Typography>
                   <Chip
@@ -115,5 +123,5 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
         )}
       </CardContent>
     </Card>
-  )
+  );
 }

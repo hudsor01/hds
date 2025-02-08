@@ -1,11 +1,15 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {CheckboxProps as MuiCheckboxProps} from '@mui/material';
-import {FormControlLabel, Checkbox as MuiCheckbox, styled} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { CheckboxProps as MuiCheckboxProps } from '@mui/material';
+import {
+  FormControlLabel,
+  Checkbox as MuiCheckbox,
+  styled,
+} from '@mui/material';
 import * as React from 'react';
 
-const StyledCheckbox = styled(MuiCheckbox)(({theme}) => ({
+const StyledCheckbox = styled(MuiCheckbox)(({ theme }) => ({
   padding: theme.spacing(0.5),
   '& .MuiSvgIcon-root': {
     fontSize: 20,
@@ -18,14 +22,26 @@ const StyledCheckbox = styled(MuiCheckbox)(({theme}) => ({
   },
 }));
 
-export interface CheckboxProps extends Omit<MuiCheckboxProps, 'defaultChecked'> {
+export interface CheckboxProps
+  extends Omit<MuiCheckboxProps, 'defaultChecked'> {
   label?: React.ReactNode;
   defaultChecked?: boolean;
   onCheckedChange?: (checked: boolean) => void;
 }
 
 export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
-  ({className, label, defaultChecked, checked, onChange, onCheckedChange, ...props}, ref) => {
+  (
+    {
+      className,
+      label,
+      defaultChecked,
+      checked,
+      onChange,
+      onCheckedChange,
+      ...props
+    },
+    ref,
+  ) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(event, event.target.checked);
@@ -41,7 +57,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         checked={checked}
         onChange={handleChange}
         className={cn(
-          'h-4 w-4 rounded-sm border border-primary shadow-sm focus:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          'focus:outline-hidden h-4 w-4 rounded-sm border border-primary shadow-sm focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
           className,
         )}
         {...props}

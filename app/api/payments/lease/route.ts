@@ -1,14 +1,14 @@
-import { prisma } from '@/lib/db'
-import { createPaymentIntent, createStripeCustomer } from '@/lib/stripe'
-import { paymentSchema, type PaymentRecord } from '@/types/payments'
-import { PaymentStatus } from '@prisma/client'
-import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/db';
+import { createPaymentIntent, createStripeCustomer } from '@/lib/stripe';
+import { paymentSchema, type PaymentRecord } from '@/types/payments';
+import { PaymentStatus } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const { userId } = getAuth(req);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const json = await req.json();
@@ -26,12 +26,12 @@ export async function POST(req: NextRequest) {
     });
 
     if (!lease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+      return NextResponse.json({ error: 'Lease not found' }, { status: 404 });
     }
 
     // Get tenant details
     const tenant = await prisma.tenants.findUnique({
-      where: {id: lease.tenant_id},
+      where: { id: lease.tenant_id },
       select: {
         id: true,
         email: true,
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!tenant) {
-      return NextResponse.json({error: 'Tenant not found'}, {status: 404});
+      return NextResponse.json({ error: 'Tenant not found' }, { status: 404 });
     }
 
     let stripeCustomerId = tenant.stripe_customer_id;
@@ -60,8 +60,8 @@ export async function POST(req: NextRequest) {
 
       // Update tenant with Stripe customer ID
       await prisma.tenants.update({
-        where: {id: tenant.id},
-        data: {stripe_customer_id: customer.id},
+        where: { id: tenant.id },
+        data: { stripe_customer_id: customer.id },
       });
     }
 
@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
       payment_intent_id: paymentIntent.id,
     };
 
-    await prisma.payments.create({data: paymentRecord});
+    await prisma.payments.create({ data: paymentRecord });
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
@@ -95,8 +95,11 @@ export async function POST(req: NextRequest) {
   } catch (error) {
     console.error('Payment API Error:', error);
     return NextResponse.json(
-      {error: error instanceof Error ? error.message : 'Error processing payment'},
-      {status: 500},
+      {
+        error:
+          error instanceof Error ? error.message : 'Error processing payment',
+      },
+      { status: 500 },
     );
   }
 }
@@ -104,12 +107,12 @@ export async function POST(req: NextRequest) {
 // Get payment history for a lease
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const { userId } = getAuth(req);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const {searchParams} = new URL(req.url);
+    const { searchParams } = new URL(req.url);
     const leaseId = searchParams.get('leaseId');
     const status = searchParams.get('status');
     const startDate = searchParams.get('startDate')
@@ -120,22 +123,25 @@ export async function GET(req: NextRequest) {
       : undefined;
 
     if (!leaseId) {
-      return NextResponse.json({error: 'Lease ID is required'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Lease ID is required' },
+        { status: 400 },
+      );
     }
 
     // Verify lease belongs to user
     const lease = await prisma.leases.findUnique({
-      where: {user_id: leaseId},
-      select: {tenant_id: true},
+      where: { user_id: leaseId },
+      select: { tenant_id: true },
     });
 
     if (!lease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+      return NextResponse.json({ error: 'Lease not found' }, { status: 404 });
     }
 
     const where = {
       tenant_id: lease.tenant_id,
-      ...(status && {status}),
+      ...(status && { status }),
       ...(startDate &&
         endDate && {
           created_at: {
@@ -155,6 +161,9 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(payments);
   } catch (error) {
     console.error('Payment History API Error:', error);
-    return NextResponse.json({error: 'Error fetching payment history'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error fetching payment history' },
+      { status: 500 },
+    );
   }
 }

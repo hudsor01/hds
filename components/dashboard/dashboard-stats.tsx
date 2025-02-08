@@ -1,29 +1,29 @@
 'use client';
 
-import type {PropertyStats} from '@/types/dashboard';
-import {Box, Card, Grid, Tooltip, Typography} from '@mui/material';
-import {alpha, useTheme} from '@mui/material/styles';
-import {motion} from 'framer-motion';
-import {Box as BoxIcon, DollarSign, TrendingUp, Users} from 'react-feather';
+import type { PropertyStats } from '@/types/dashboard';
+import { Box, Card, Grid, Tooltip, Typography } from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
+import { Box as BoxIcon, DollarSign, TrendingUp, Users } from 'react-feather';
 
 interface DashboardStatsProps {
   stats: PropertyStats;
 }
 
 const cardVariants = {
-  initial: {scale: 0.96, opacity: 0},
-  animate: {scale: 1, opacity: 1},
-  hover: {scale: 1.02, transition: {duration: 0.2}},
-  tap: {scale: 0.98},
+  initial: { scale: 0.96, opacity: 0 },
+  animate: { scale: 1, opacity: 1 },
+  hover: { scale: 1.02, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 },
 };
 
 const iconVariants = {
-  initial: {rotate: -10, scale: 0.9},
-  animate: {rotate: 0, scale: 1},
-  hover: {rotate: 5, scale: 1.1, transition: {duration: 0.2}},
+  initial: { rotate: -10, scale: 0.9 },
+  animate: { rotate: 0, scale: 1 },
+  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
 };
 
-export function DashboardStats({stats}: DashboardStatsProps) {
+export function DashboardStats({ stats }: DashboardStatsProps) {
   const theme = useTheme();
 
   const items = [
@@ -70,22 +70,22 @@ export function DashboardStats({stats}: DashboardStatsProps) {
   ] as const;
 
   return (
-    <Grid container spacing={{xs: 2, sm: 3}}>
+    <Grid container spacing={{ xs: 2, sm: 3 }}>
       {items.map((item, index) => (
         <Grid key={item.title} item xs={12} sm={6} md={3}>
-          <Tooltip title={item.description} arrow placement='top'>
+          <Tooltip title={item.description} arrow placement="top">
             <motion.div
               variants={cardVariants}
-              initial='initial'
-              animate='animate'
-              whileHover='hover'
-              whileTap='tap'
-              transition={{delay: index * 0.1}}
+              initial="initial"
+              animate="animate"
+              whileHover="hover"
+              whileTap="tap"
+              transition={{ delay: index * 0.1 }}
             >
               <Card
                 sx={{
-                  px: {xs: 2, sm: 3},
-                  py: {xs: 3, sm: 4},
+                  px: { xs: 2, sm: 3 },
+                  py: { xs: 3, sm: 4 },
                   height: '100%',
                   display: 'flex',
                   flexDirection: 'column',
@@ -116,23 +116,23 @@ export function DashboardStats({stats}: DashboardStatsProps) {
                     boxShadow: `0 2px 10px 0 ${alpha(theme.palette[item.color].main, 0.3)}`,
                   }}
                 >
-                  <item.icon width={24} height={24} color='#fff' />
+                  <item.icon width={24} height={24} color="#fff" />
                 </motion.div>
 
                 <Typography
-                  variant='h4'
+                  variant="h4"
                   sx={{
                     mb: 1,
                     fontWeight: 700,
                     color: theme.palette[item.color].dark,
-                    fontSize: {xs: '1.5rem', sm: '1.75rem'},
+                    fontSize: { xs: '1.5rem', sm: '1.75rem' },
                   }}
                 >
                   {item.value}
                 </Typography>
 
                 <Typography
-                  variant='subtitle2'
+                  variant="subtitle2"
                   sx={{
                     mb: 1,
                     opacity: 0.8,
@@ -145,9 +145,9 @@ export function DashboardStats({stats}: DashboardStatsProps) {
 
                 <Box
                   component={motion.div}
-                  initial={{opacity: 0, y: 10}}
-                  animate={{opacity: 1, y: 0}}
-                  transition={{delay: index * 0.1 + 0.2}}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.1 + 0.2 }}
                   sx={{
                     mt: 'auto',
                     display: 'flex',
@@ -160,7 +160,8 @@ export function DashboardStats({stats}: DashboardStatsProps) {
                     height={16}
                     style={{
                       marginRight: 4,
-                      transform: item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
+                      transform:
+                        item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
                       color:
                         item.percentageChange >= 0
                           ? theme.palette.success.main
@@ -168,11 +169,14 @@ export function DashboardStats({stats}: DashboardStatsProps) {
                     }}
                   />
                   <Typography
-                    component='span'
-                    variant='subtitle2'
+                    component="span"
+                    variant="subtitle2"
                     sx={{
                       fontWeight: 600,
-                      color: item.percentageChange >= 0 ? 'success.main' : 'error.main',
+                      color:
+                        item.percentageChange >= 0
+                          ? 'success.main'
+                          : 'error.main',
                     }}
                   >
                     {Math.abs(item.percentageChange)}%

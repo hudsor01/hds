@@ -1,12 +1,12 @@
 'use client';
 
-import {Box, Button, Container, Typography} from '@mui/material';
+import { Box, Button, Container, Typography } from '@mui/material';
 import Link from 'next/link';
-import {LogIn, Shield} from 'react-feather';
+import { LogIn, Shield } from 'react-feather';
 
 export default function UnauthorizedPage() {
   return (
-    <Container maxWidth='md'>
+    <Container maxWidth="md">
       <Box
         sx={{
           display: 'flex',
@@ -26,7 +26,7 @@ export default function UnauthorizedPage() {
           }}
         />
         <Typography
-          variant='h2'
+          variant="h2"
           sx={{
             fontWeight: 700,
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
@@ -37,22 +37,27 @@ export default function UnauthorizedPage() {
         >
           Access Denied
         </Typography>
-        <Typography variant='h6' gutterBottom>
+        <Typography variant="h6" gutterBottom>
           You don't have permission to access this page
         </Typography>
-        <Typography variant='body1' color='text.secondary' sx={{maxWidth: 'sm', mb: 4}}>
-          Please sign in with an account that has the necessary permissions, or contact your
-          administrator for access.
+        <Typography
+          variant="body1"
+          color="text.secondary"
+          sx={{ maxWidth: 'sm', mb: 4 }}
+        >
+          Please sign in with an account that has the necessary permissions, or
+          contact your administrator for access.
         </Typography>
-        <Box sx={{display: 'flex', gap: 2}}>
-          <Link href='/sign-in' passHref style={{textDecoration: 'none'}}>
+        <Box sx={{ display: 'flex', gap: 2 }}>
+          <Link href="/sign-in" passHref style={{ textDecoration: 'none' }}>
             <Button
-              variant='contained'
+              variant="contained"
               startIcon={<LogIn size={20} />}
               sx={{
                 background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                 '&:hover': {
-                  background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                  background:
+                    'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                 },
               }}
             >
@@ -60,8 +65,8 @@ export default function UnauthorizedPage() {
             </Button>
           </Link>
           <Button
-            variant='outlined'
-            href='mailto:support@example.com'
+            variant="outlined"
+            href="mailto:support@example.com"
             sx={{
               borderColor: '#007FFF',
               color: '#007FFF',

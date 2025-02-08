@@ -11,7 +11,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {useState} from 'react';
+import { useState } from 'react';
 
 export function SecuritySettings() {
   const [settings, setSettings] = useState({
@@ -23,18 +23,20 @@ export function SecuritySettings() {
   });
 
   const handleSwitchChange =
-    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSettings(prev => ({
+    (field: keyof typeof settings) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setSettings((prev) => ({
         ...prev,
         [field]: event.target.checked,
       }));
     };
 
   const handleNumberChange =
-    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    (field: keyof typeof settings) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = parseInt(event.target.value, 10);
       if (!isNaN(value)) {
-        setSettings(prev => ({
+        setSettings((prev) => ({
           ...prev,
           [field]: value,
         }));
@@ -42,66 +44,75 @@ export function SecuritySettings() {
     };
 
   return (
-    <Box sx={{p: 3}}>
-      <Typography variant='h6' gutterBottom>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h6" gutterBottom>
         Security Settings
       </Typography>
-      <Typography variant='body2' color='text.secondary' sx={{mb: 3}}>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Manage your security preferences and account protection
       </Typography>
 
-      <FormGroup sx={{gap: 4}}>
+      <FormGroup sx={{ gap: 4 }}>
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Two-Factor Authentication
           </Typography>
-          <FormControl component='fieldset'>
+          <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Switch checked={settings.twoFactor} onChange={handleSwitchChange('twoFactor')} />
+                  <Switch
+                    checked={settings.twoFactor}
+                    onChange={handleSwitchChange('twoFactor')}
+                  />
                 }
-                label='Enable two-factor authentication'
+                label="Enable two-factor authentication"
               />
             </FormGroup>
-            <FormHelperText>Add an extra layer of security to your account</FormHelperText>
+            <FormHelperText>
+              Add an extra layer of security to your account
+            </FormHelperText>
           </FormControl>
         </Box>
 
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Session Management
           </Typography>
-          <FormControl fullWidth sx={{mb: 2}}>
+          <FormControl fullWidth sx={{ mb: 2 }}>
             <TextField
-              label='Session Timeout (minutes)'
-              type='number'
+              label="Session Timeout (minutes)"
+              type="number"
               value={settings.sessionTimeout}
               onChange={handleNumberChange('sessionTimeout')}
-              size='small'
-              inputProps={{min: 5, max: 120}}
+              size="small"
+              inputProps={{ min: 5, max: 120 }}
             />
-            <FormHelperText>Automatically log out after period of inactivity</FormHelperText>
+            <FormHelperText>
+              Automatically log out after period of inactivity
+            </FormHelperText>
           </FormControl>
 
           <FormControl fullWidth>
             <TextField
-              label='Password Expiry (days)'
-              type='number'
+              label="Password Expiry (days)"
+              type="number"
               value={settings.passwordExpiry}
               onChange={handleNumberChange('passwordExpiry')}
-              size='small'
-              inputProps={{min: 30, max: 365}}
+              size="small"
+              inputProps={{ min: 30, max: 365 }}
             />
-            <FormHelperText>Require password change after specified period</FormHelperText>
+            <FormHelperText>
+              Require password change after specified period
+            </FormHelperText>
           </FormControl>
         </Box>
 
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Login Notifications
           </Typography>
-          <FormControl component='fieldset'>
+          <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
                 control={
@@ -110,7 +121,7 @@ export function SecuritySettings() {
                     onChange={handleSwitchChange('loginNotifications')}
                   />
                 }
-                label='Notify me of new login attempts'
+                label="Notify me of new login attempts"
               />
               <FormControlLabel
                 control={
@@ -119,7 +130,7 @@ export function SecuritySettings() {
                     onChange={handleSwitchChange('deviceHistory')}
                   />
                 }
-                label='Keep device login history'
+                label="Keep device login history"
               />
             </FormGroup>
             <FormHelperText>
@@ -128,11 +139,11 @@ export function SecuritySettings() {
           </FormControl>
         </Box>
 
-        <Box sx={{mt: 2}}>
-          <Button variant='contained' color='primary'>
+        <Box sx={{ mt: 2 }}>
+          <Button variant="contained" color="primary">
             Save Security Settings
           </Button>
-          <Button variant='outlined' color='error' sx={{ml: 2}}>
+          <Button variant="outlined" color="error" sx={{ ml: 2 }}>
             Reset to Defaults
           </Button>
         </Box>

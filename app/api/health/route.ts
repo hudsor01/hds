@@ -1,5 +1,5 @@
-import {emailService} from '@/lib/utils/email';
-import {prisma} from '@/prisma/seed';
+import { emailService } from '@/lib/utils/email';
+import { prisma } from '@/prisma/seed';
 
 async function checkDatabase() {
   try {
@@ -28,7 +28,7 @@ export async function GET() {
   };
 
   const isHealthy = Object.values(health).every(
-    status => status === 'healthy' || typeof status === 'number',
+    (status) => status === 'healthy' || typeof status === 'number',
   );
 
   return Response.json(health, {

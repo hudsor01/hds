@@ -15,7 +15,9 @@ export type NewMaintenanceRequest = Omit<
   'id' | 'status' | 'createdAt' | 'updatedAt'
 >;
 
-export type UpdateMaintenanceRequest = Partial<MaintenanceRequest> & {id: string};
+export type UpdateMaintenanceRequest = Partial<MaintenanceRequest> & {
+  id: string;
+};
 
 export type MaintenanceTicket = MaintenanceRequest & {
   propertyName: string;
@@ -39,7 +41,9 @@ export type NewMaintenanceTicket = Omit<
   'id' | 'status' | 'createdAt' | 'updatedAt'
 >;
 
-export type UpdateMaintenanceTicket = Partial<MaintenanceTicket> & {id: string};
+export type UpdateMaintenanceTicket = Partial<MaintenanceTicket> & {
+  id: string;
+};
 
 export type MaintenanceStatus = MaintenanceRequest['status'];
 export type MaintenancePriority = MaintenanceRequest['priority'];

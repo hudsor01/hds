@@ -16,9 +16,9 @@ const filterSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -58,9 +58,15 @@ export async function GET(req: NextRequest) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error fetching payment history:', error);
-    return NextResponse.json({error: 'Failed to fetch payment history'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to fetch payment history' },
+      { status: 500 },
+    );
   }
 }

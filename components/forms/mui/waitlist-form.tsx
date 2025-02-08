@@ -1,7 +1,7 @@
 // components/ui/waitlist-form.tsx
 import LoadingButton from '@mui/lab/LoadingButton';
-import {Alert, Box, Snackbar, TextField} from '@mui/material';
-import {useState} from 'react';
+import { Alert, Box, Snackbar, TextField } from '@mui/material';
+import { useState } from 'react';
 
 export function WaitlistForm() {
   const [email, setEmail] = useState('');
@@ -17,8 +17,8 @@ export function WaitlistForm() {
     try {
       const res = await fetch('/api/mail', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({email}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
       });
 
       if (!res.ok) throw new Error('Submission failed');
@@ -33,28 +33,42 @@ export function WaitlistForm() {
   };
 
   return (
-    <Box component='form' onSubmit={handleSubmit} sx={{maxWidth: 400, mx: 'auto'}}>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ maxWidth: 400, mx: 'auto' }}
+    >
       <TextField
         fullWidth
-        label='Email Address'
-        type='email'
-        variant='outlined'
+        label="Email Address"
+        type="email"
+        variant="outlined"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         required
-        sx={{mb: 2}}
+        sx={{ mb: 2 }}
       />
 
-      <LoadingButton fullWidth loading={loading} variant='contained' type='submit' sx={{py: 1.5}}>
+      <LoadingButton
+        fullWidth
+        loading={loading}
+        variant="contained"
+        type="submit"
+        sx={{ py: 1.5 }}
+      >
         Join Waitlist
       </LoadingButton>
 
-      <Snackbar open={showSuccess} autoHideDuration={6000} onClose={() => setShowSuccess(false)}>
-        <Alert severity='success'>Thanks for joining the waitlist!</Alert>
+      <Snackbar
+        open={showSuccess}
+        autoHideDuration={6000}
+        onClose={() => setShowSuccess(false)}
+      >
+        <Alert severity="success">Thanks for joining the waitlist!</Alert>
       </Snackbar>
 
       {error && (
-        <Alert severity='error' sx={{mt: 2}}>
+        <Alert severity="error" sx={{ mt: 2 }}>
           {error}
         </Alert>
       )}

@@ -1,4 +1,4 @@
-import {Icon} from 'react-feather';
+import { Icon } from 'react-feather';
 
 export interface FeatureCardProps {
   title: string;

@@ -1,5 +1,5 @@
-import { prisma } from '@/lib/prisma'
-import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server';
 
 // Helper function to calculate occupancy rate
 const calculateOccupancyRate = (totalUnits: number, occupiedUnits: number) => {
@@ -10,12 +10,12 @@ const propertyName = request.property.name;
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = getAuth(req);
+    const { userId } = getAuth(req);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    const {searchParams} = new URL(req.url);
+    const { searchParams } = new URL(req.url);
     const reportType = searchParams.get('type');
     const startDate = searchParams.get('startDate')
       ? new Date(searchParams.get('startDate')!)
@@ -29,8 +29,8 @@ export async function GET(req: NextRequest) {
         // Get financial metrics
         const [properties, leases, expenses] = await Promise.all([
           prisma.properties.findMany({
-            where: {user_id: userId},
-            select: {rent_amount: true},
+            where: { user_id: userId },
+            select: { rent_amount: true },
           }),
           prisma.leases.findMany({
             where: {
@@ -65,9 +65,18 @@ export async function GET(req: NextRequest) {
           (sum, prop) => sum + Number(prop.rent_amount),
           0,
         );
-        const actualIncome = leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0);
-        const totalDeposits = leases.reduce((sum, lease) => sum + Number(lease.depositAmount), 0);
-        const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0);
+        const actualIncome = leases.reduce(
+          (sum, lease) => sum + Number(lease.rent_amount),
+          0,
+        );
+        const totalDeposits = leases.reduce(
+          (sum, lease) => sum + Number(lease.depositAmount),
+          0,
+        );
+        const totalExpenses = expenses.reduce(
+          (sum, expense) => sum + Number(expense.amount),
+          0,
+        );
 
         // Group expenses by category
         const expensesByCategory = expenses.reduce(
@@ -85,9 +94,12 @@ export async function GET(req: NextRequest) {
           totalDeposits,
           totalExpenses,
           netIncome: actualIncome - totalExpenses,
-          occupancyRate: calculateOccupancyRate(properties.length, leases.length),
+          occupancyRate: calculateOccupancyRate(
+            properties.length,
+            leases.length,
+          ),
           expensesByCategory,
-          period: {startDate, endDate},
+          period: { startDate, endDate },
         });
       }
 
@@ -95,7 +107,7 @@ export async function GET(req: NextRequest) {
         // Get occupancy metrics
         const [properties, activeLeases] = await Promise.all([
           prisma.properties.findMany({
-            where: {user_id: userId},
+            where: { user_id: userId },
             include: {
               leases: {
                 where: {
@@ -127,18 +139,27 @@ export async function GET(req: NextRequest) {
             }
             acc[type].total++;
             acc[type].occupied += property.leases.length > 0 ? 1 : 0;
-            acc[type].rate = calculateOccupancyRate(acc[type].total, acc[type].occupied);
+            acc[type].rate = calculateOccupancyRate(
+              acc[type].total,
+              acc[type].occupied,
+            );
             return acc;
           },
-          {} as Record<string, {total: number; occupied: number; rate: number}>,
+          {} as Record<
+            string,
+            { total: number; occupied: number; rate: number }
+          >,
         );
 
         return NextResponse.json({
           totalProperties: properties.length,
           occupiedProperties: activeLeases.length,
-          overallOccupancyRate: calculateOccupancyRate(properties.length, activeLeases.length),
+          overallOccupancyRate: calculateOccupancyRate(
+            properties.length,
+            activeLeases.length,
+          ),
           occupancyByPropertyType,
-          period: {startDate, endDate},
+          period: { startDate, endDate },
         });
       }
 
@@ -191,7 +212,7 @@ export async function GET(req: NextRequest) {
           requestsByStatus,
           requestsByPriority,
           requestsByProperty,
-          period: {startDate, endDate},
+          period: { startDate, endDate },
         });
       }
 
@@ -230,12 +251,13 @@ export async function GET(req: NextRequest) {
 
         const upcomingRenewals = leases
           .filter(
-            lease =>
+            (lease) =>
               lease.status === 'Active' &&
               lease.end_date &&
-              new Date(lease.end_date) <= new Date(new Date().setMonth(new Date().getMonth() + 2)),
+              new Date(lease.end_date) <=
+                new Date(new Date().setMonth(new Date().getMonth() + 2)),
           )
-          .map(lease => ({
+          .map((lease) => ({
             leaseId: lease.user_id,
             propertyName: lease.property.name,
             endDate: lease.end_date,
@@ -247,16 +269,23 @@ export async function GET(req: NextRequest) {
           leasesByType,
           upcomingRenewals,
           averageLeaseAmount:
-            leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) / leases.length,
-          period: {startDate, endDate},
+            leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) /
+            leases.length,
+          period: { startDate, endDate },
         });
       }
 
       default:
-        return NextResponse.json({error: 'Invalid report type'}, {status: 400});
+        return NextResponse.json(
+          { error: 'Invalid report type' },
+          { status: 400 },
+        );
     }
   } catch (error) {
     console.error('Reports API Error:', error);
-    return NextResponse.json({error: 'Error generating report'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error generating report' },
+      { status: 500 },
+    );
   }
 }

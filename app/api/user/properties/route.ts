@@ -1,12 +1,13 @@
-
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
 
 export async function GET() {
-  const {userId} = await auth();
+  const { userId } = await auth();
 
   if (!userId) {
-    return new NextResponse(JSON.stringify({error: 'Unauthorized'}), {status: 401});
+    return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+      status: 401,
+    });
   }
 
   // Fetch user's properties
@@ -15,5 +16,5 @@ export async function GET() {
     WHERE user_id = ${userId}
   `;
 
-  return NextResponse.json({properties});
+  return NextResponse.json({ properties });
 }

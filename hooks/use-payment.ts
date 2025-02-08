@@ -1,8 +1,8 @@
-import type {ApiResponse} from '@/lib/api';
-import {api} from '@/lib/api';
-import type {PaymentMethod} from '@stripe/stripe-js';
-import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {toast} from 'sonner';
+import type { ApiResponse } from '@/lib/api';
+import { api } from '@/lib/api';
+import type { PaymentMethod } from '@stripe/stripe-js';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface Payment {
   id: string;
@@ -48,7 +48,7 @@ export function useAddPaymentMethod() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['payment-methods']});
+      queryClient.invalidateQueries({ queryKey: ['payment-methods'] });
       toast.success('Payment method added successfully');
     },
     onError: (error: Error) => {
@@ -62,12 +62,15 @@ export function useRemovePaymentMethod() {
 
   return useMutation({
     mutationFn: async (paymentMethodId: string) => {
-      const response = await api.delete('/api/payments/methods', paymentMethodId);
+      const response = await api.delete(
+        '/api/payments/methods',
+        paymentMethodId,
+      );
       if (response.error) throw new Error(response.error.message);
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['payment-methods']});
+      queryClient.invalidateQueries({ queryKey: ['payment-methods'] });
       toast.success('Payment method removed successfully');
     },
     onError: (error: Error) => {
@@ -94,7 +97,7 @@ export function useSetupRecurringPayment() {
       return response.data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({queryKey: ['recurring-payments']});
+      queryClient.invalidateQueries({ queryKey: ['recurring-payments'] });
       toast.success('Recurring payment set up successfully');
     },
     onError: (error: Error) => {

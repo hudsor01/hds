@@ -1,6 +1,6 @@
 'use client';
 
-import {api} from '@/lib/api';
+import { api } from '@/lib/api';
 import {
   Box,
   Button,
@@ -11,9 +11,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {useQuery} from '@tanstack/react-query';
-import {useState} from 'react';
-import {toast} from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface RecurringPaymentFormProps {
   propertyId: string;
@@ -33,7 +33,7 @@ export default function RecurringPaymentForm({
   const [paymentDay, setPaymentDay] = useState('1');
   const [amount, setAmount] = useState('');
 
-  const {data: paymentMethods} = useQuery({
+  const { data: paymentMethods } = useQuery({
     queryKey: ['payment-methods'],
     queryFn: () => api.get('/api/payments/methods'),
   });
@@ -61,7 +61,9 @@ export default function RecurringPaymentForm({
       });
 
       if (response.error) {
-        toast.error(response.error.message || 'Failed to set up recurring payment');
+        toast.error(
+          response.error.message || 'Failed to set up recurring payment',
+        );
         return;
       }
 
@@ -76,43 +78,52 @@ export default function RecurringPaymentForm({
   };
 
   return (
-    <Box component='form' onSubmit={handleSubmit} sx={{width: '100%', maxWidth: 400}}>
-      <Typography variant='h6' gutterBottom>
+    <Box
+      component="form"
+      onSubmit={handleSubmit}
+      sx={{ width: '100%', maxWidth: 400 }}
+    >
+      <Typography variant="h6" gutterBottom>
         Set Up Recurring Payment
       </Typography>
 
-      <Box sx={{display: 'flex', flexDirection: 'column', gap: 2, mb: 3}}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, mb: 3 }}>
         <TextField
-          label='Amount'
-          type='number'
+          label="Amount"
+          type="number"
           value={amount}
-          onChange={e => setAmount(e.target.value)}
+          onChange={(e) => setAmount(e.target.value)}
           required
-          inputProps={{min: 0, step: 0.01}}
+          inputProps={{ min: 0, step: 0.01 }}
           fullWidth
         />
 
         <FormControl fullWidth required>
           <InputLabel>Frequency</InputLabel>
-          <Select value={frequency} onChange={e => setFrequency(e.target.value)}>
-            <MenuItem value='weekly'>Weekly</MenuItem>
-            <MenuItem value='monthly'>Monthly</MenuItem>
-            <MenuItem value='yearly'>Yearly</MenuItem>
+          <Select
+            value={frequency}
+            onChange={(e) => setFrequency(e.target.value)}
+          >
+            <MenuItem value="weekly">Weekly</MenuItem>
+            <MenuItem value="monthly">Monthly</MenuItem>
+            <MenuItem value="yearly">Yearly</MenuItem>
           </Select>
         </FormControl>
 
         <TextField
-          label='Payment Day'
-          type='number'
+          label="Payment Day"
+          type="number"
           value={paymentDay}
-          onChange={e => setPaymentDay(e.target.value)}
+          onChange={(e) => setPaymentDay(e.target.value)}
           required
           inputProps={{
             min: frequency === 'weekly' ? 0 : 1,
             max: frequency === 'weekly' ? 6 : 31,
           }}
           helperText={
-            frequency === 'weekly' ? '0 = Sunday, 6 = Saturday' : 'Day of the month (1-31)'
+            frequency === 'weekly'
+              ? '0 = Sunday, 6 = Saturday'
+              : 'Day of the month (1-31)'
           }
           fullWidth
         />
@@ -121,7 +132,7 @@ export default function RecurringPaymentForm({
           <InputLabel>Payment Method</InputLabel>
           <Select
             value={selectedPaymentMethod}
-            onChange={e => setSelectedPaymentMethod(e.target.value)}
+            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
           >
             {paymentMethods?.data?.map((method: any) => (
               <MenuItem key={method.id} value={method.id}>
@@ -132,15 +143,15 @@ export default function RecurringPaymentForm({
         </FormControl>
       </Box>
 
-      <Box sx={{display: 'flex', gap: 2, justifyContent: 'flex-end'}}>
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
         {onCancel && (
           <Button onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
         )}
         <Button
-          type='submit'
-          variant='contained'
+          type="submit"
+          variant="contained"
           disabled={isLoading}
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',

@@ -1,4 +1,4 @@
-import type {GridColDef} from '@mui/x-data-grid';
+import type { GridColDef } from '@mui/x-data-grid';
 
 export interface BaseEntity {
   id: string | number;

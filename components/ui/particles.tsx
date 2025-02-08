@@ -1,6 +1,6 @@
 'use client';
 
-import React, {useEffect, useRef, useState, useCallback} from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 
 interface MousePosition {
   x: number;
@@ -15,7 +15,7 @@ function MousePosition(): MousePosition {
 
   useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
-      setMousePosition({x: event.clientX, y: event.clientY});
+      setMousePosition({ x: event.clientX, y: event.clientY });
     };
 
     window.addEventListener('mousemove', handleMouseMove);
@@ -69,8 +69,8 @@ const Particles: React.FC<ParticlesProps> = ({
   const context = useRef<CanvasRenderingContext2D | null>(null);
   const circles = useRef<any[]>([]);
   const mousePosition = MousePosition();
-  const mouse = useRef<{x: number; y: number}>({x: 0, y: 0});
-  const canvasSize = useRef<{w: number; h: number}>({w: 0, h: 0});
+  const mouse = useRef<{ x: number; y: number }>({ x: 0, y: 0 });
+  const canvasSize = useRef<{ w: number; h: number }>({ w: 0, h: 0 });
   const dpr = typeof window !== 'undefined' ? window.devicePixelRatio : 1;
 
   const [quantity, setQuantity] = useState(quantityDesktop);
@@ -122,7 +122,7 @@ const Particles: React.FC<ParticlesProps> = ({
   const onMouseMove = () => {
     if (canvasRef.current) {
       const rect = canvasRef.current.getBoundingClientRect();
-      const {w, h} = canvasSize.current;
+      const { w, h } = canvasSize.current;
       const x = mousePosition.x - rect.left - w / 2;
       const y = mousePosition.y - rect.top - h / 2;
       const inside = x < w / 2 && x > -w / 2 && y < h / 2 && y > -h / 2;
@@ -188,7 +188,7 @@ const Particles: React.FC<ParticlesProps> = ({
 
   const drawCircle = (circle: Circle, update = false) => {
     if (context.current) {
-      const {x, y, translateX, translateY, size, alpha} = circle;
+      const { x, y, translateX, translateY, size, alpha } = circle;
       context.current.translate(translateX, translateY);
       context.current.beginPath();
       context.current.arc(x, y, size, 0, 2 * Math.PI);
@@ -204,7 +204,12 @@ const Particles: React.FC<ParticlesProps> = ({
 
   const clearContext = () => {
     if (context.current) {
-      context.current.clearRect(0, 0, canvasSize.current.w, canvasSize.current.h);
+      context.current.clearRect(
+        0,
+        0,
+        canvasSize.current.w,
+        canvasSize.current.h,
+      );
     }
   };
 
@@ -224,7 +229,8 @@ const Particles: React.FC<ParticlesProps> = ({
     start2: number,
     end2: number,
   ): number => {
-    const remapped = ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
+    const remapped =
+      ((value - start1) * (end2 - start2)) / (end1 - start1) + start2;
     return remapped > 0 ? remapped : 0;
   };
 
@@ -238,7 +244,9 @@ const Particles: React.FC<ParticlesProps> = ({
         canvasSize.current.h - circle.y - circle.translateY - circle.size,
       ];
       const closestEdge = edge.reduce((a, b) => Math.min(a, b));
-      const remapClosestEdge = parseFloat(remapValue(closestEdge, 0, 20, 0, 1).toFixed(2));
+      const remapClosestEdge = parseFloat(
+        remapValue(closestEdge, 0, 20, 0, 1).toFixed(2),
+      );
       if (remapClosestEdge > 1) {
         circle.alpha += 0.02;
         if (circle.alpha > circle.targetAlpha) {
@@ -250,9 +258,11 @@ const Particles: React.FC<ParticlesProps> = ({
       circle.x += circle.dx + vx;
       circle.y += circle.dy + vy;
       circle.translateX +=
-        (mouse.current.x / (staticity / circle.magnetism) - circle.translateX) / ease;
+        (mouse.current.x / (staticity / circle.magnetism) - circle.translateX) /
+        ease;
       circle.translateY +=
-        (mouse.current.y / (staticity / circle.magnetism) - circle.translateY) / ease;
+        (mouse.current.y / (staticity / circle.magnetism) - circle.translateY) /
+        ease;
 
       drawCircle(circle, true);
 
@@ -274,9 +284,9 @@ const Particles: React.FC<ParticlesProps> = ({
     <div
       className={`${className} fixed inset-0 -z-[100]`}
       ref={canvasContainerRef}
-      aria-hidden='true'
+      aria-hidden="true"
     >
-      <canvas ref={canvasRef} style={{width: '100vw', height: '100vh'}} />
+      <canvas ref={canvasRef} style={{ width: '100vw', height: '100vh' }} />
     </div>
   );
 };

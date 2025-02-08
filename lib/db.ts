@@ -1,6 +1,11 @@
-import type { Database } from '@/types/database.types'
-import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
-import { createClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/database.types';
+import {
+  PaymentStatus,
+  PaymentType,
+  Prisma,
+  PrismaClient,
+} from '@prisma/client';
+import { createClient } from '@supabase/supabase-js';
 
 // Prisma Client Initialization
 declare global {
@@ -8,11 +13,15 @@ declare global {
 }
 
 const prismaClientOptions: Prisma.PrismaClientOptions = {
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  log:
+    process.env.NODE_ENV === 'development'
+      ? ['query', 'error', 'warn']
+      : ['error'],
   errorFormat: 'pretty' as const,
 };
 
-export const prisma = globalThis.prisma || new PrismaClient(prismaClientOptions);
+export const prisma =
+  globalThis.prisma || new PrismaClient(prismaClientOptions);
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
@@ -34,10 +43,12 @@ export const handlePrismaError = (error: unknown) => {
       code: isPrismaError ? mapPrismaErrorToHttpStatus(error) : 500,
     };
   }
-  return {error: 'An unexpected error occurred', code: 500};
+  return { error: 'An unexpected error occurred', code: 500 };
 };
 
-const mapPrismaErrorToHttpStatus = (error: Prisma.PrismaClientKnownRequestError): number => {
+const mapPrismaErrorToHttpStatus = (
+  error: Prisma.PrismaClientKnownRequestError,
+): number => {
   switch (error.code) {
     case 'P2002': // Unique constraint violation
       return 409;
@@ -89,21 +100,21 @@ export async function getPaginatedResults<T>(
 export const payments = {
   getByTenant: async (tenantId: string) => {
     return prisma.payments.findMany({
-      where: {tenant_id: tenantId},
-      orderBy: {created_at: 'desc'},
+      where: { tenant_id: tenantId },
+      orderBy: { created_at: 'desc' },
     });
   },
 
   getByLease: async (leaseId: string) => {
     const lease = await prisma.leases.findUnique({
-      where: {user_id: leaseId},
+      where: { user_id: leaseId },
     });
 
     if (!lease) return [];
 
     return prisma.payments.findMany({
-      where: {tenant_id: lease.tenant_id},
-      orderBy: {created_at: 'desc'},
+      where: { tenant_id: lease.tenant_id },
+      orderBy: { created_at: 'desc' },
     });
   },
 
@@ -118,8 +129,8 @@ export const payments = {
   ) => {
     const where = {
       tenant_id: tenantId,
-      ...(params.status && {payment_status: params.status}),
-      ...(params.type && {payment_type: params.type}),
+      ...(params.status && { payment_status: params.status }),
+      ...(params.type && { payment_type: params.type }),
       ...(params.startDate &&
         params.endDate && {
           created_at: {
@@ -133,11 +144,11 @@ export const payments = {
       (skip, take) =>
         prisma.payments.findMany({
           where,
-          orderBy: {created_at: 'desc'},
+          orderBy: { created_at: 'desc' },
           skip,
           take,
         }),
-      () => prisma.payments.count({where}),
+      () => prisma.payments.count({ where }),
       params,
     );
   },
@@ -147,7 +158,7 @@ export const payments = {
 export const leases = {
   getWithDetails: async (leaseId: string) => {
     return prisma.leases.findUnique({
-      where: {user_id: leaseId},
+      where: { user_id: leaseId },
       select: {
         user_id: true,
         tenant_id: true,
@@ -186,7 +197,7 @@ export const leases = {
         payment_day: true,
         lease_status: true,
       },
-      orderBy: {start_date: 'desc'},
+      orderBy: { start_date: 'desc' },
     });
   },
 };
@@ -195,7 +206,7 @@ export const leases = {
 export const properties = {
   getWithDetails: async (propertyId: string) => {
     return prisma.properties.findUnique({
-      where: {id: propertyId},
+      where: { id: propertyId },
       select: {
         id: true,
         name: true,
@@ -247,13 +258,13 @@ export const properties = {
   ) => {
     const where: Prisma.propertiesWhereInput = {
       user_id: userId,
-      ...(params.status && {status: params.status}),
-      ...(params.type && {type: params.type}),
+      ...(params.status && { status: params.status }),
+      ...(params.type && { type: params.type }),
       ...(params.search && {
         OR: [
-          {name: {contains: params.search}},
-          {address: {contains: params.search}},
-          {city: {contains: params.search}},
+          { name: { contains: params.search } },
+          { address: { contains: params.search } },
+          { city: { contains: params.search } },
         ],
       }),
     };
@@ -280,7 +291,7 @@ export const properties = {
               },
             },
             maintenance_requests: {
-              where: {status: 'PENDING'},
+              where: { status: 'PENDING' },
               select: {
                 id: true,
                 title: true,
@@ -289,11 +300,11 @@ export const properties = {
               },
             },
           },
-          orderBy: {created_at: 'desc'},
+          orderBy: { created_at: 'desc' },
           skip,
           take,
         }),
-      () => prisma.properties.count({where}),
+      () => prisma.properties.count({ where }),
       params,
     );
   },
@@ -307,4 +318,4 @@ export const disconnect = async () => {
 export const connect = async () => {
   await prisma.$connect();
 };
-export { createClient }
+export { createClient };

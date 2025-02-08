@@ -1,25 +1,25 @@
-import {BaseDataGrid} from '@/components/common/data-grid';
-import {formatCurrency} from '@/lib/utils';
-import {PropertyTableProps} from '@/types/property';
+import { BaseDataGrid } from '@/components/common/data-grid';
+import { formatCurrency } from '@/lib/utils';
+import { PropertyTableProps } from '@/types/property';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import Box from '@mui/material/Box';
 import Chip from '@mui/material/Chip';
 import IconButton from '@mui/material/IconButton';
-import {type GridColDef, type GridValueGetterParams} from '@mui/x-data-grid';
+import { type GridColDef, type GridValueGetterParams } from '@mui/x-data-grid';
 
-export function PropertyTable({properties, isLoading}: PropertyTableProps) {
+export function PropertyTable({ properties, isLoading }: PropertyTableProps) {
   const columns: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Property',
       width: 250,
-      renderCell: params => (
+      renderCell: (params) => (
         <Box>
-          <Typography variant='body2' component='div'>
+          <Typography variant="body2" component="div">
             {params.row.name}
           </Typography>
-          <Typography variant='caption' color='text.secondary'>
+          <Typography variant="caption" color="text.secondary">
             {params.row.address}
           </Typography>
         </Box>
@@ -29,7 +29,7 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       field: 'status',
       headerName: 'Status',
       width: 130,
-      renderCell: params => (
+      renderCell: (params) => (
         <Chip
           label={params.value}
           color={
@@ -39,7 +39,7 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
                 ? 'error'
                 : 'warning'
           }
-          size='small'
+          size="small"
         />
       ),
     },
@@ -47,13 +47,14 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: ({value}) => formatCurrency(value as number),
+      valueFormatter: ({ value }) => formatCurrency(value as number),
     },
     {
       field: 'tenants',
       headerName: 'Tenants',
       width: 130,
-      valueGetter: (params: GridValueGetterParams) => params.row.tenants?.length || 0,
+      valueGetter: (params: GridValueGetterParams) =>
+        params.row.tenants?.length || 0,
     },
     {
       field: 'actions',
@@ -68,5 +69,12 @@ export function PropertyTable({properties, isLoading}: PropertyTableProps) {
     },
   ];
 
-  return <BaseDataGrid data={properties} columns={columns} isLoading={isLoading} pageSize={10} />;
+  return (
+    <BaseDataGrid
+      data={properties}
+      columns={columns}
+      isLoading={isLoading}
+      pageSize={10}
+    />
+  );
 }

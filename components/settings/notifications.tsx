@@ -9,7 +9,7 @@ import {
   Switch,
   Typography,
 } from '@mui/material';
-import {useState} from 'react';
+import { useState } from 'react';
 
 export function NotificationSettings() {
   const [settings, setSettings] = useState({
@@ -32,7 +32,7 @@ export function NotificationSettings() {
   const handleChange =
     (category: keyof typeof settings, setting: string) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSettings(prev => ({
+      setSettings((prev) => ({
         ...prev,
         [category]: {
           ...prev[category],
@@ -42,20 +42,20 @@ export function NotificationSettings() {
     };
 
   return (
-    <Box sx={{p: 3}}>
-      <Typography variant='h6' gutterBottom>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h6" gutterBottom>
         Notification Settings
       </Typography>
-      <Typography variant='body2' color='text.secondary' sx={{mb: 3}}>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
         Choose how you want to be notified about activity
       </Typography>
 
-      <FormGroup sx={{gap: 4}}>
+      <FormGroup sx={{ gap: 4 }}>
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Email Notifications
           </Typography>
-          <FormControl component='fieldset'>
+          <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
                 control={
@@ -64,7 +64,7 @@ export function NotificationSettings() {
                     onChange={handleChange('email', 'marketing')}
                   />
                 }
-                label='Marketing emails'
+                label="Marketing emails"
               />
               <FormControlLabel
                 control={
@@ -73,7 +73,7 @@ export function NotificationSettings() {
                     onChange={handleChange('email', 'security')}
                   />
                 }
-                label='Security alerts'
+                label="Security alerts"
               />
               <FormControlLabel
                 control={
@@ -82,7 +82,7 @@ export function NotificationSettings() {
                     onChange={handleChange('email', 'updates')}
                   />
                 }
-                label='Product updates'
+                label="Product updates"
               />
             </FormGroup>
             <FormHelperText>Receive notifications via email</FormHelperText>
@@ -90,10 +90,10 @@ export function NotificationSettings() {
         </Box>
 
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Push Notifications
           </Typography>
-          <FormControl component='fieldset'>
+          <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
                 control={
@@ -102,7 +102,7 @@ export function NotificationSettings() {
                     onChange={handleChange('push', 'newMessages')}
                   />
                 }
-                label='New messages'
+                label="New messages"
               />
               <FormControlLabel
                 control={
@@ -111,7 +111,7 @@ export function NotificationSettings() {
                     onChange={handleChange('push', 'newActivity')}
                   />
                 }
-                label='Activity updates'
+                label="Activity updates"
               />
               <FormControlLabel
                 control={
@@ -120,18 +120,20 @@ export function NotificationSettings() {
                     onChange={handleChange('push', 'reminders')}
                   />
                 }
-                label='Reminders'
+                label="Reminders"
               />
             </FormGroup>
-            <FormHelperText>Receive push notifications on your device</FormHelperText>
+            <FormHelperText>
+              Receive push notifications on your device
+            </FormHelperText>
           </FormControl>
         </Box>
 
         <Box>
-          <Typography variant='subtitle2' gutterBottom>
+          <Typography variant="subtitle2" gutterBottom>
             Desktop Notifications
           </Typography>
-          <FormControl component='fieldset'>
+          <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
                 control={
@@ -140,7 +142,7 @@ export function NotificationSettings() {
                     onChange={handleChange('desktop', 'alerts')}
                   />
                 }
-                label='Desktop alerts'
+                label="Desktop alerts"
               />
               <FormControlLabel
                 control={
@@ -149,10 +151,12 @@ export function NotificationSettings() {
                     onChange={handleChange('desktop', 'sounds')}
                   />
                 }
-                label='Notification sounds'
+                label="Notification sounds"
               />
             </FormGroup>
-            <FormHelperText>Configure desktop notification preferences</FormHelperText>
+            <FormHelperText>
+              Configure desktop notification preferences
+            </FormHelperText>
           </FormControl>
         </Box>
       </FormGroup>

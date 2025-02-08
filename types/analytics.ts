@@ -1,4 +1,4 @@
-import type {UserRole} from './auth';
+import type { UserRole } from './auth';
 
 export interface EmailMetric {
   template: string;

@@ -1,6 +1,6 @@
 'use client';
 
-import {api} from '@/lib/api';
+import { api } from '@/lib/api';
 import {
   Box,
   Button,
@@ -16,9 +16,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import {useQuery} from '@tanstack/react-query';
-import {useState} from 'react';
-import {toast} from 'sonner';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -27,17 +27,17 @@ interface TabPanelProps {
 }
 
 function TabPanel(props: TabPanelProps) {
-  const {children, value, index, ...other} = props;
+  const { children, value, index, ...other } = props;
 
   return (
     <div
-      role='tabpanel'
+      role="tabpanel"
       hidden={value !== index}
       id={`settings-tabpanel-${index}`}
       aria-labelledby={`settings-tab-${index}`}
       {...other}
     >
-      {value === index && <Box sx={{p: 3}}>{children}</Box>}
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
   );
 }
@@ -46,12 +46,12 @@ export default function SettingsPage() {
   const [tabValue, setTabValue] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  const {data: userSettings} = useQuery({
+  const { data: userSettings } = useQuery({
     queryKey: ['settings', 'user'],
     queryFn: () => api.get('/api/settings?type=user'),
   });
 
-  const {data: securitySettings} = useQuery({
+  const { data: securitySettings } = useQuery({
     queryKey: ['settings', 'security'],
     queryFn: () => api.get('/api/settings?type=security'),
   });
@@ -111,15 +111,15 @@ export default function SettingsPage() {
   };
 
   return (
-    <div className='container mx-auto p-4'>
-      <Typography variant='h4' component='h1' gutterBottom>
+    <div className="container mx-auto p-4">
+      <Typography variant="h4" component="h1" gutterBottom>
         Settings
       </Typography>
 
-      <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 3}}>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 3 }}>
         <Tabs value={tabValue} onChange={handleTabChange}>
-          <Tab label='User Settings' />
-          <Tab label='Security Settings' />
+          <Tab label="User Settings" />
+          <Tab label="Security Settings" />
         </Tabs>
       </Box>
 
@@ -127,106 +127,112 @@ export default function SettingsPage() {
         <Card>
           <CardContent>
             <form onSubmit={handleUserSettingsSubmit}>
-              <div className='grid gap-6'>
+              <div className="grid gap-6">
                 <TextField
-                  name='theme'
-                  label='Theme'
+                  name="theme"
+                  label="Theme"
                   select
                   fullWidth
                   defaultValue={userSettings?.data?.theme || 'light'}
                 >
-                  <MenuItem value='light'>Light</MenuItem>
-                  <MenuItem value='dark'>Dark</MenuItem>
-                  <MenuItem value='system'>System</MenuItem>
+                  <MenuItem value="light">Light</MenuItem>
+                  <MenuItem value="dark">Dark</MenuItem>
+                  <MenuItem value="system">System</MenuItem>
                 </TextField>
 
                 <TextField
-                  name='language'
-                  label='Language'
+                  name="language"
+                  label="Language"
                   select
                   fullWidth
                   defaultValue={userSettings?.data?.language || 'en'}
                 >
-                  <MenuItem value='en'>English</MenuItem>
-                  <MenuItem value='es'>Spanish</MenuItem>
-                  <MenuItem value='fr'>French</MenuItem>
+                  <MenuItem value="en">English</MenuItem>
+                  <MenuItem value="es">Spanish</MenuItem>
+                  <MenuItem value="fr">French</MenuItem>
                 </TextField>
 
                 <TextField
-                  name='currency'
-                  label='Currency'
+                  name="currency"
+                  label="Currency"
                   select
                   fullWidth
                   defaultValue={userSettings?.data?.currency || 'USD'}
                 >
-                  <MenuItem value='USD'>USD ($)</MenuItem>
-                  <MenuItem value='EUR'>EUR (€)</MenuItem>
-                  <MenuItem value='GBP'>GBP (£)</MenuItem>
+                  <MenuItem value="USD">USD ($)</MenuItem>
+                  <MenuItem value="EUR">EUR (€)</MenuItem>
+                  <MenuItem value="GBP">GBP (£)</MenuItem>
                 </TextField>
 
                 <TextField
-                  name='date_format'
-                  label='Date Format'
+                  name="date_format"
+                  label="Date Format"
                   select
                   fullWidth
                   defaultValue={userSettings?.data?.date_format || 'MM/DD/YYYY'}
                 >
-                  <MenuItem value='MM/DD/YYYY'>MM/DD/YYYY</MenuItem>
-                  <MenuItem value='DD/MM/YYYY'>DD/MM/YYYY</MenuItem>
-                  <MenuItem value='YYYY-MM-DD'>YYYY-MM-DD</MenuItem>
+                  <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>
+                  <MenuItem value="DD/MM/YYYY">DD/MM/YYYY</MenuItem>
+                  <MenuItem value="YYYY-MM-DD">YYYY-MM-DD</MenuItem>
                 </TextField>
 
                 <TextField
-                  name='time_format'
-                  label='Time Format'
+                  name="time_format"
+                  label="Time Format"
                   select
                   fullWidth
                   defaultValue={userSettings?.data?.time_format || '12h'}
                 >
-                  <MenuItem value='12h'>12-hour</MenuItem>
-                  <MenuItem value='24h'>24-hour</MenuItem>
+                  <MenuItem value="12h">12-hour</MenuItem>
+                  <MenuItem value="24h">24-hour</MenuItem>
                 </TextField>
 
-                <FormControl component='fieldset'>
+                <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
                       control={
                         <Switch
-                          name='notifications_enabled'
-                          defaultChecked={userSettings?.data?.notifications_enabled}
+                          name="notifications_enabled"
+                          defaultChecked={
+                            userSettings?.data?.notifications_enabled
+                          }
                         />
                       }
-                      label='Enable Notifications'
+                      label="Enable Notifications"
                     />
                     <FormControlLabel
                       control={
                         <Switch
-                          name='email_notifications'
-                          defaultChecked={userSettings?.data?.email_notifications}
+                          name="email_notifications"
+                          defaultChecked={
+                            userSettings?.data?.email_notifications
+                          }
                         />
                       }
-                      label='Email Notifications'
+                      label="Email Notifications"
                     />
                     <FormControlLabel
                       control={
                         <Switch
-                          name='sms_notifications'
+                          name="sms_notifications"
                           defaultChecked={userSettings?.data?.sms_notifications}
                         />
                       }
-                      label='SMS Notifications'
+                      label="SMS Notifications"
                     />
                   </FormGroup>
                 </FormControl>
 
                 <Button
-                  type='submit'
-                  variant='contained'
+                  type="submit"
+                  variant="contained"
                   disabled={loading}
                   sx={{
-                    background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                    background:
+                      'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                      background:
+                        'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                     },
                   }}
                 >
@@ -242,65 +248,73 @@ export default function SettingsPage() {
         <Card>
           <CardContent>
             <form onSubmit={handleSecuritySettingsSubmit}>
-              <div className='grid gap-6'>
-                <FormControl component='fieldset'>
+              <div className="grid gap-6">
+                <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
                       control={
                         <Switch
-                          name='two_factor_enabled'
-                          defaultChecked={securitySettings?.data?.two_factor_enabled}
+                          name="two_factor_enabled"
+                          defaultChecked={
+                            securitySettings?.data?.two_factor_enabled
+                          }
                         />
                       }
-                      label='Enable Two-Factor Authentication'
+                      label="Enable Two-Factor Authentication"
                     />
                   </FormGroup>
                 </FormControl>
 
                 <TextField
-                  name='two_factor_method'
-                  label='Two-Factor Method'
+                  name="two_factor_method"
+                  label="Two-Factor Method"
                   select
                   fullWidth
-                  defaultValue={securitySettings?.data?.two_factor_method || 'EMAIL'}
+                  defaultValue={
+                    securitySettings?.data?.two_factor_method || 'EMAIL'
+                  }
                   disabled={!securitySettings?.data?.two_factor_enabled}
                 >
-                  <MenuItem value='EMAIL'>Email</MenuItem>
-                  <MenuItem value='SMS'>SMS</MenuItem>
-                  <MenuItem value='AUTHENTICATOR'>Authenticator App</MenuItem>
+                  <MenuItem value="EMAIL">Email</MenuItem>
+                  <MenuItem value="SMS">SMS</MenuItem>
+                  <MenuItem value="AUTHENTICATOR">Authenticator App</MenuItem>
                 </TextField>
 
                 <TextField
-                  name='max_sessions'
-                  label='Maximum Active Sessions'
-                  type='number'
+                  name="max_sessions"
+                  label="Maximum Active Sessions"
+                  type="number"
                   fullWidth
                   defaultValue={securitySettings?.data?.max_sessions || 5}
-                  inputProps={{min: 1, max: 10}}
+                  inputProps={{ min: 1, max: 10 }}
                 />
 
-                <FormControl component='fieldset'>
+                <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
                       control={
                         <Switch
-                          name='login_notifications'
-                          defaultChecked={securitySettings?.data?.login_notifications}
+                          name="login_notifications"
+                          defaultChecked={
+                            securitySettings?.data?.login_notifications
+                          }
                         />
                       }
-                      label='Login Notifications'
+                      label="Login Notifications"
                     />
                   </FormGroup>
                 </FormControl>
 
                 <Button
-                  type='submit'
-                  variant='contained'
+                  type="submit"
+                  variant="contained"
                   disabled={loading}
                   sx={{
-                    background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                    background:
+                      'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                      background:
+                        'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                     },
                   }}
                 >

@@ -1,12 +1,15 @@
-import { prisma } from '@/lib/prisma/prisma'
-import { PaymentStatus, PaymentType } from '@prisma/client'
-import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma/prisma';
+import { PaymentStatus, PaymentType } from '@prisma/client';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const {userId} = getAuth(request);
+    const { userId } = getAuth(request);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // First verify access to the lease
@@ -26,7 +29,7 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
     });
 
     if (!lease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+      return NextResponse.json({ error: 'Lease not found' }, { status: 404 });
     }
 
     // Calculate lease financials
@@ -52,7 +55,10 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
       },
     });
 
-    const totalPaid = payments.reduce((sum, payment) => sum + payment.payment_amount, 0);
+    const totalPaid = payments.reduce(
+      (sum, payment) => sum + payment.payment_amount,
+      0,
+    );
     const totalDue = Number(lease.rent_amount) * 12; // Assuming yearly calculation
     const balance = totalDue - totalPaid;
 
@@ -71,6 +77,9 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
       },
     });
   } catch (error) {
-    return NextResponse.json({error: 'Error calculating lease financials'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error calculating lease financials' },
+      { status: 500 },
+    );
   }
 }

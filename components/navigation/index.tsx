@@ -1,4 +1,4 @@
-import {useAuth} from '@/lib/auth';
+import { useAuth } from '@/lib/auth';
 import {
   AppBar,
   Box,
@@ -14,8 +14,8 @@ import {
   useTheme,
 } from '@mui/material';
 import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {ReactNode, useState} from 'react';
+import { usePathname } from 'next/navigation';
+import { ReactNode, useState } from 'react';
 
 // Navigation Item
 interface NavItem {
@@ -32,21 +32,22 @@ interface NavigationProps {
 }
 
 // Main Navigation
-export function MainNavigation({items, logo}: NavigationProps) {
+export function MainNavigation({ items, logo }: NavigationProps) {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
   const [mobileOpen, setMobileOpen] = useState(false);
   const pathname = usePathname();
-  const {isAuthenticated, role} = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
   const filteredItems = items.filter(
-    item =>
-      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole),
+    (item) =>
+      (!item.requiresAuth || isAuthenticated) &&
+      (!item.requiredRole || role === item.requiredRole),
   );
 
   const navContent = (
     <List>
-      {filteredItems.map(item => (
+      {filteredItems.map((item) => (
         <ListItem
           key={item.href}
           component={Link}
@@ -73,16 +74,20 @@ export function MainNavigation({items, logo}: NavigationProps) {
 
   return (
     <>
-      <AppBar position='sticky' color='default' elevation={0}>
+      <AppBar position="sticky" color="default" elevation={0}>
         <Toolbar>
           {isMobile && (
-            <IconButton edge='start' onClick={() => setMobileOpen(true)} sx={{mr: 2}}>
+            <IconButton
+              edge="start"
+              onClick={() => setMobileOpen(true)}
+              sx={{ mr: 2 }}
+            >
               <Menu />
             </IconButton>
           )}
           {logo}
           {!isMobile && (
-            <Stack direction='row' spacing={2} sx={{ml: 'auto'}}>
+            <Stack direction="row" spacing={2} sx={{ ml: 'auto' }}>
               {navContent}
             </Stack>
           )}
@@ -91,7 +96,7 @@ export function MainNavigation({items, logo}: NavigationProps) {
 
       {isMobile && (
         <Drawer
-          anchor='left'
+          anchor="left"
           open={mobileOpen}
           onClose={() => setMobileOpen(false)}
           sx={{
@@ -101,10 +106,10 @@ export function MainNavigation({items, logo}: NavigationProps) {
             },
           }}
         >
-          <Box sx={{p: 2}}>
+          <Box sx={{ p: 2 }}>
             <IconButton
               onClick={() => setMobileOpen(false)}
-              sx={{mb: 2, ml: 'auto', display: 'block'}}
+              sx={{ mb: 2, ml: 'auto', display: 'block' }}
             >
               <X />
             </IconButton>
@@ -121,18 +126,19 @@ interface SidebarProps extends NavigationProps {
   width?: number;
 }
 
-export function Sidebar({items, logo, width = 280}: SidebarProps) {
+export function Sidebar({ items, logo, width = 280 }: SidebarProps) {
   const pathname = usePathname();
-  const {isAuthenticated, role} = useAuth();
+  const { isAuthenticated, role } = useAuth();
 
   const filteredItems = items.filter(
-    item =>
-      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole),
+    (item) =>
+      (!item.requiresAuth || isAuthenticated) &&
+      (!item.requiredRole || role === item.requiredRole),
   );
 
   return (
     <Drawer
-      variant='permanent'
+      variant="permanent"
       sx={{
         width,
         flexShrink: 0,
@@ -145,9 +151,9 @@ export function Sidebar({items, logo, width = 280}: SidebarProps) {
       }}
     >
       <Toolbar>{logo}</Toolbar>
-      <Box sx={{overflow: 'auto'}}>
+      <Box sx={{ overflow: 'auto' }}>
         <List>
-          {filteredItems.map(item => (
+          {filteredItems.map((item) => (
             <ListItem
               key={item.href}
               component={Link}

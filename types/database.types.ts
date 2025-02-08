@@ -1,4 +1,4 @@
-import type { EmailTemplate } from '../components/emails/templates'
+import type { EmailTemplate } from '../components/emails/templates';
 
 export type Json =
   | string
@@ -6,7 +6,7 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 // Common types
 export type Timestamp = string;
@@ -251,8 +251,18 @@ export type Database = {
           created_at: string;
           updated_at: string;
         };
-        Insert: Omit<Database['public']['Tables']['waitlist']['Row'], 'id' | 'position' | 'status' | 'referral_code' | 'created_at' | 'updated_at'>;
-        Update: Partial<Omit<Database['public']['Tables']['waitlist']['Row'], 'id'>>;
+        Insert: Omit<
+          Database['public']['Tables']['waitlist']['Row'],
+          | 'id'
+          | 'position'
+          | 'status'
+          | 'referral_code'
+          | 'created_at'
+          | 'updated_at'
+        >;
+        Update: Partial<
+          Omit<Database['public']['Tables']['waitlist']['Row'], 'id'>
+        >;
       };
 
       waitlist_events: {
@@ -263,7 +273,10 @@ export type Database = {
           event_data: Json;
           created_at: string;
         };
-        Insert: Omit<Database['public']['Tables']['waitlist_events']['Row'], 'id' | 'created_at'>;
+        Insert: Omit<
+          Database['public']['Tables']['waitlist_events']['Row'],
+          'id' | 'created_at'
+        >;
         Update: never;
       };
     };
@@ -296,20 +309,22 @@ type PublicSchema = Database[Extract<keyof Database, 'public'>];
 export type Tables<
   PublicTableNameOrOptions extends
     | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
-    | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
         Database[PublicTableNameOrOptions['schema']]['Views'])
     : never = never,
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
       Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R;
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] & PublicSchema['Views'])
-    ? (PublicSchema['Tables'] & PublicSchema['Views'])[PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] &
+        PublicSchema['Views'])
+    ? (PublicSchema['Tables'] &
+        PublicSchema['Views'])[PublicTableNameOrOptions] extends {
         Row: infer R;
       }
       ? R
@@ -317,11 +332,13 @@ export type Tables<
     : never;
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never,
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I;
     }
@@ -336,11 +353,13 @@ export type TablesInsert<
     : never;
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | {schema: keyof Database},
-  TableName extends PublicTableNameOrOptions extends {schema: keyof Database}
+  PublicTableNameOrOptions extends
+    | keyof PublicSchema['Tables']
+    | { schema: keyof Database },
+  TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never,
-> = PublicTableNameOrOptions extends {schema: keyof Database}
+> = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U;
     }
@@ -355,11 +374,13 @@ export type TablesUpdate<
     : never;
 
 export type Enums<
-  PublicEnumNameOrOptions extends keyof PublicSchema['Enums'] | {schema: keyof Database},
-  EnumName extends PublicEnumNameOrOptions extends {schema: keyof Database}
+  PublicEnumNameOrOptions extends
+    | keyof PublicSchema['Enums']
+    | { schema: keyof Database },
+  EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
     : never = never,
-> = PublicEnumNameOrOptions extends {schema: keyof Database}
+> = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
@@ -368,13 +389,13 @@ export type Enums<
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
     | keyof PublicSchema['CompositeTypes']
-    | {schema: keyof Database},
+    | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database;
   }
     ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
-> = PublicCompositeTypeNameOrOptions extends {schema: keyof Database}
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
   ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
   : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
     ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]

@@ -1,4 +1,4 @@
-import {supabase} from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import type {
   AnalyticsDashboard,
   AnalyticsQuery,
@@ -8,10 +8,12 @@ import type {
   TenantMetrics,
   TimeSeriesData,
 } from '@/types/analytics';
-import {endOfMonth, startOfMonth, subMonths} from 'date-fns';
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns';
 
-export async function getPropertyMetrics(userId: string): Promise<PropertyMetrics> {
-  const {data: properties, error} = await supabase
+export async function getPropertyMetrics(
+  userId: string,
+): Promise<PropertyMetrics> {
+  const { data: properties, error } = await supabase
     .from('properties')
     .select('*')
     .eq('user_id', userId);
@@ -19,8 +21,13 @@ export async function getPropertyMetrics(userId: string): Promise<PropertyMetric
   if (error) throw error;
 
   const total = properties.length;
-  const occupied = properties.filter(p => p.property_status === 'OCCUPIED').length;
-  const totalRent = properties.reduce((sum, p) => sum + Number(p.rent_amount), 0);
+  const occupied = properties.filter(
+    (p) => p.property_status === 'OCCUPIED',
+  ).length;
+  const totalRent = properties.reduce(
+    (sum, p) => sum + Number(p.rent_amount),
+    0,
+  );
 
   const byType = properties.reduce(
     (acc, p) => {
@@ -53,20 +60,23 @@ export async function getTenantMetrics(userId: string): Promise<TenantMetrics> {
   const startOfThisMonth = startOfMonth(now);
   const endOfThisMonth = endOfMonth(now);
 
-  const {data: tenants, error} = await supabase.from('tenants').select('*').eq('user_id', userId);
+  const { data: tenants, error } = await supabase
+    .from('tenants')
+    .select('*')
+    .eq('user_id', userId);
 
   if (error) throw error;
 
   const total = tenants.length;
-  const active = tenants.filter(t => t.tenant_status === 'ACTIVE').length;
+  const active = tenants.filter((t) => t.tenant_status === 'ACTIVE').length;
   const moveIns = tenants.filter(
-    t =>
+    (t) =>
       t.move_in_date &&
       new Date(t.move_in_date) >= startOfThisMonth &&
       new Date(t.move_in_date) <= endOfThisMonth,
   ).length;
   const moveOuts = tenants.filter(
-    t =>
+    (t) =>
       t.move_out_date &&
       new Date(t.move_out_date) >= startOfThisMonth &&
       new Date(t.move_out_date) <= endOfThisMonth,
@@ -90,11 +100,13 @@ export async function getTenantMetrics(userId: string): Promise<TenantMetrics> {
   };
 }
 
-export async function getFinancialMetrics(userId: string): Promise<FinancialMetrics> {
+export async function getFinancialMetrics(
+  userId: string,
+): Promise<FinancialMetrics> {
   const startDate = startOfMonth(subMonths(new Date(), 1));
   const endDate = endOfMonth(new Date());
 
-  const {data: payments, error: paymentsError} = await supabase
+  const { data: payments, error: paymentsError } = await supabase
     .from('payments')
     .select('*')
     .eq('user_id', userId)
@@ -103,7 +115,7 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
 
   if (paymentsError) throw paymentsError;
 
-  const {data: expenses, error: expensesError} = await supabase
+  const { data: expenses, error: expensesError } = await supabase
     .from('expenses')
     .select('*')
     .eq('created_by', userId)
@@ -112,12 +124,16 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
 
   if (expensesError) throw expensesError;
 
-  const totalRevenue = payments.reduce((sum, p) => sum + Number(p.payment_amount), 0);
+  const totalRevenue = payments.reduce(
+    (sum, p) => sum + Number(p.payment_amount),
+    0,
+  );
   const totalExpenses = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
   const revenueByType = payments.reduce(
     (acc, p) => {
-      acc[p.payment_type] = (acc[p.payment_type] || 0) + Number(p.payment_amount);
+      acc[p.payment_type] =
+        (acc[p.payment_type] || 0) + Number(p.payment_amount);
       return acc;
     },
     {} as Record<string, number>,
@@ -132,7 +148,9 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
   );
 
   const expectedPayments = payments.length;
-  const receivedPayments = payments.filter(p => p.payment_status === 'COMPLETED').length;
+  const receivedPayments = payments.filter(
+    (p) => p.payment_status === 'COMPLETED',
+  ).length;
 
   return {
     total_revenue: totalRevenue,
@@ -140,13 +158,17 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
     net_income: totalRevenue - totalExpenses,
     revenue_by_type: revenueByType,
     expenses_by_category: expensesByCategory,
-    payment_collection_rate: expectedPayments ? (receivedPayments / expectedPayments) * 100 : 0,
+    payment_collection_rate: expectedPayments
+      ? (receivedPayments / expectedPayments) * 100
+      : 0,
     outstanding_balance: 0, // TODO: Implement outstanding balance calculation
   };
 }
 
-export async function getMaintenanceMetrics(userId: string): Promise<MaintenanceMetrics> {
-  const {data: workOrders, error} = await supabase
+export async function getMaintenanceMetrics(
+  userId: string,
+): Promise<MaintenanceMetrics> {
+  const { data: workOrders, error } = await supabase
     .from('work_orders')
     .select('*')
     .eq('user_id', userId);
@@ -155,10 +177,10 @@ export async function getMaintenanceMetrics(userId: string): Promise<Maintenance
 
   const total = workOrders.length;
   const open = workOrders.filter(
-    wo => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED',
+    (wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED',
   ).length;
 
-  const completedOrders = workOrders.filter(wo => wo.status === 'COMPLETED');
+  const completedOrders = workOrders.filter((wo) => wo.status === 'COMPLETED');
   const avgCompletionTime =
     completedOrders.length > 0
       ? completedOrders.reduce((sum, wo) => {
@@ -188,7 +210,8 @@ export async function getMaintenanceMetrics(userId: string): Promise<Maintenance
 
   const costByProperty = workOrders.reduce(
     (acc, wo) => {
-      acc[wo.property_id] = (acc[wo.property_id] || 0) + Number(wo.actual_cost || 0);
+      acc[wo.property_id] =
+        (acc[wo.property_id] || 0) + Number(wo.actual_cost || 0);
       return acc;
     },
     {} as Record<string, number>,
@@ -219,14 +242,17 @@ export async function getAnalyticsDashboard(
   userId: string,
   query?: AnalyticsQuery,
 ): Promise<AnalyticsDashboard> {
-  const [propertyMetrics, tenantMetrics, financialMetrics, maintenanceMetrics] = await Promise.all([
-    getPropertyMetrics(userId),
-    getTenantMetrics(userId),
-    getFinancialMetrics(userId),
-    getMaintenanceMetrics(userId),
-  ]);
+  const [propertyMetrics, tenantMetrics, financialMetrics, maintenanceMetrics] =
+    await Promise.all([
+      getPropertyMetrics(userId),
+      getTenantMetrics(userId),
+      getFinancialMetrics(userId),
+      getMaintenanceMetrics(userId),
+    ]);
 
-  const startDate = query?.start_date ? new Date(query.start_date) : subMonths(new Date(), 12);
+  const startDate = query?.start_date
+    ? new Date(query.start_date)
+    : subMonths(new Date(), 12);
   const endDate = query?.end_date ? new Date(query.end_date) : new Date();
 
   const [revenueTrend, occupancyTrend, expensesTrend] = await Promise.all([

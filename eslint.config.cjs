@@ -1,3 +1,11 @@
+const { FlatCompat } = require('@eslint/eslintrc');
+const js = require('@eslint/js');
+const nextPlugin = require('@next/eslint-plugin-next');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const tsParser = require('@typescript-eslint/parser');
+
+const compat = new FlatCompat();
+
 module.exports = [
   {
     ignores: [
@@ -8,20 +16,23 @@ module.exports = [
       'dist/**'
     ],
   },
+  js.configs.recommended,
+  ...compat.extends('plugin:@typescript-eslint/recommended'),
   {
     // Custom configuration for all JS/TS files
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: '@typescript-eslint/parser',
+      parser: 'tsParser',
       parserOptions: {
         ecmaVersion: 2020,
-        sourceType: 'module',
+        sourceType: 'commonjs',
         ecmaFeatures: { jsx: true },
         project: './tsconfig.json',
       },
     },
     plugins: {
-      '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
+      '@typescript-eslint': tsPlugin,
+      'next': nextPlugin,
       react: require('eslint-plugin-react'),
       'react-hooks': require('eslint-plugin-react-hooks'),
       prettier: require('eslint-plugin-prettier'),

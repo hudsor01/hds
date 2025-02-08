@@ -1,6 +1,6 @@
-import {supabase} from '@/lib/supabase';
-import type {UseDashboardUpdatesProps} from '@/types/database.types';
-import {useCallback, useEffect} from 'react';
+import { supabase } from '@/lib/supabase';
+import type { UseDashboardUpdatesProps } from '@/types/database.types';
+import { useCallback, useEffect } from 'react';
 
 export function useDashboardUpdates({
   table,
@@ -18,7 +18,7 @@ export function useDashboardUpdates({
           schema: 'public',
           table,
         },
-        payload => {
+        (payload) => {
           const data = payload.new;
           onUpdate(data);
         },
@@ -30,7 +30,7 @@ export function useDashboardUpdates({
           schema: 'public',
           table,
         },
-        payload => {
+        (payload) => {
           const id = payload.old.id;
           onDelete(id);
         },

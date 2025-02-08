@@ -1,11 +1,11 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {SliderProps as MuiSliderProps} from '@mui/material';
-import {Slider as MuiSlider, styled} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { SliderProps as MuiSliderProps } from '@mui/material';
+import { Slider as MuiSlider, styled } from '@mui/material';
 import * as React from 'react';
 
-const StyledSlider = styled(MuiSlider)(({theme}) => ({
+const StyledSlider = styled(MuiSlider)(({ theme }) => ({
   height: 4,
   '& .MuiSlider-thumb': {
     width: 16,
@@ -44,7 +44,7 @@ export interface SliderProps extends MuiSliderProps {
 }
 
 export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
-  ({className, onValueChange, onChange, ...props}, ref) => {
+  ({ className, onValueChange, onChange, ...props }, ref) => {
     const handleChange = React.useCallback(
       (_: Event, value: number | number[], activeThumb: number) => {
         onChange?.(_ as any, value, activeThumb);
@@ -56,7 +56,10 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
     return (
       <StyledSlider
         ref={ref}
-        className={cn('relative flex w-full touch-none select-none items-center', className)}
+        className={cn(
+          'relative flex w-full touch-none select-none items-center',
+          className,
+        )}
         onChange={handleChange}
         {...props}
       />

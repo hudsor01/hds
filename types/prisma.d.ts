@@ -267,4 +267,4 @@ declare module '@prisma/client' {
   }
 }
 
-export { };
+export {};

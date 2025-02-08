@@ -13,9 +13,9 @@ const paymentIntentSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
@@ -35,9 +35,15 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error creating payment intent:', error);
-    return NextResponse.json({error: 'Failed to create payment intent'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to create payment intent' },
+      { status: 500 },
+    );
   }
 }

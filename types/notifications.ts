@@ -1,8 +1,8 @@
-import {sendEmail} from '../components/emails/templates/emails';
+import { sendEmail } from '../components/emails/templates/emails';
 
 export interface WebhookUser {
   id: string;
-  email_addresses: {email_address: string}[];
+  email_addresses: { email_address: string }[];
   first_name: string;
   last_name: string;
 }

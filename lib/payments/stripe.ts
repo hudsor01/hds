@@ -1,8 +1,8 @@
-import type { Team } from '@/types/team'
-import { createClient } from '@supabase/supabase-js'
-import { redirect } from 'next/navigation'
-import Stripe from 'stripe'
-import { getUser } from '../../app/auth'
+import type { Team } from '@/types/team';
+import { createClient } from '@supabase/supabase-js';
+import { redirect } from 'next/navigation';
+import Stripe from 'stripe';
+import { getUser } from '../../app/auth';
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2025-01-27.acacia',
@@ -17,7 +17,13 @@ const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-export async function createCheckoutSession({team, priceId}: {team: Team | null; priceId: string}) {
+export async function createCheckoutSession({
+  team,
+  priceId,
+}: {
+  team: Team | null;
+  priceId: string;
+}) {
   const user = await getUser(supabase);
 
   if (!team || !user) {
@@ -82,7 +88,7 @@ export async function createCustomerPortalSession(team: Team) {
           products: [
             {
               product: product.id,
-              prices: prices.data.map(price => price.id),
+              prices: prices.data.map((price) => price.id),
             },
           ],
         },
@@ -91,7 +97,13 @@ export async function createCustomerPortalSession(team: Team) {
           mode: 'at_period_end',
           cancellation_reason: {
             enabled: true,
-            options: ['too_expensive', 'missing_features', 'switched_service', 'unused', 'other'],
+            options: [
+              'too_expensive',
+              'missing_features',
+              'switched_service',
+              'unused',
+              'other',
+            ],
           },
         },
       },
@@ -105,7 +117,9 @@ export async function createCustomerPortalSession(team: Team) {
   });
 }
 
-export async function handleSubscriptionChange(subscription: Stripe.Subscription) {
+export async function handleSubscriptionChange(
+  subscription: Stripe.Subscription,
+) {
   const customerId = subscription.customer as string;
   const subscriptionId = subscription.id;
   const status = subscription.status;
@@ -142,9 +156,10 @@ export async function getStripePrices() {
     type: 'recurring',
   });
 
-  return prices.data.map(price => ({
+  return prices.data.map((price) => ({
     id: price.id,
-    productId: typeof price.product === 'string' ? price.product : price.product.id,
+    productId:
+      typeof price.product === 'string' ? price.product : price.product.id,
     unitAmount: price.unit_amount,
     currency: price.currency,
     interval: price.recurring?.interval,
@@ -158,12 +173,14 @@ export async function getStripeProducts() {
     expand: ['data.default_price'],
   });
 
-  return products.data.map(product => ({
+  return products.data.map((product) => ({
     id: product.id,
     name: product.name,
     description: product.description,
     defaultPriceId:
-      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id,
+      typeof product.default_price === 'string'
+        ? product.default_price
+        : product.default_price?.id,
   }));
 }
 
@@ -182,7 +199,6 @@ function updateTeamSubscription(
 ) {
   throw new Error('Function not implemented.');
 }
-
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('Missing STRIPE_SECRET_KEY environment variable');
@@ -206,7 +222,11 @@ export interface CreatePaymentIntentParams {
   metadata: Record<string, string>;
 }
 
-export const createStripeCustomer = async ({email, name, metadata}: CreateCustomerParams) => {
+export const createStripeCustomer = async ({
+  email,
+  name,
+  metadata,
+}: CreateCustomerParams) => {
   return stripe.customers.create({
     email,
     name,
@@ -245,7 +265,10 @@ export const retrieveCustomer = async (customerId: string) => {
   return stripe.customers.retrieve(customerId);
 };
 
-export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams) => {
+export const updateCustomer = async (
+  customerId: string,
+  data: Stripe.CustomerUpdateParams,
+) => {
   return stripe.customers.update(customerId, data);
 };
 
@@ -266,7 +289,7 @@ export const createSubscription = async (
 ) => {
   return stripe.subscriptions.create({
     customer: customerId,
-    items: [{price: priceId}],
+    items: [{ price: priceId }],
     metadata,
   });
 };

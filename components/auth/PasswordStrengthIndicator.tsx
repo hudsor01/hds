@@ -1,13 +1,15 @@
 'use client';
 
-import {motion} from 'framer-motion';
-import {useEffect, useState} from 'react';
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
 
 interface PasswordStrengthProps {
   password: string;
 }
 
-export function PasswordStrengthIndicator({password}: PasswordStrengthProps): React.ReactElement {
+export function PasswordStrengthIndicator({
+  password,
+}: PasswordStrengthProps): React.ReactElement {
   const [strength, setStrength] = useState(0);
   const [feedback, setFeedback] = useState('');
 
@@ -32,7 +34,14 @@ export function PasswordStrengthIndicator({password}: PasswordStrengthProps): Re
     setStrength(newStrength);
 
     // Set feedback based on strength
-    const feedbackMessages = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
+    const feedbackMessages = [
+      'Very weak',
+      'Weak',
+      'Fair',
+      'Good',
+      'Strong',
+      'Very strong',
+    ];
     setFeedback(feedbackMessages[newStrength] || 'Very weak');
   }, [password]);
 
@@ -46,19 +55,19 @@ export function PasswordStrengthIndicator({password}: PasswordStrengthProps): Re
   ][strength];
 
   return (
-    <div className='space-y-2'>
-      <div className='h-2 w-full bg-gray-200 rounded-full overflow-hidden'>
+    <div className="space-y-2">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
         <motion.div
           className={`h-full ${strengthColor}`}
-          initial={{width: 0}}
-          animate={{width: `${(strength / 5) * 100}%`}}
-          transition={{duration: 0.3}}
+          initial={{ width: 0 }}
+          animate={{ width: `${(strength / 5) * 100}%` }}
+          transition={{ duration: 0.3 }}
         />
       </div>
       <motion.p
-        className='text-sm text-gray-600'
-        initial={{opacity: 0}}
-        animate={{opacity: 1}}
+        className="text-sm text-gray-600"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         key={feedback}
       >
         Password strength: {feedback}

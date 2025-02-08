@@ -1,5 +1,5 @@
-import {Input} from '@/components/ui/input';
-import {getFieldError} from '@/lib/forms/use-form';
+import { Input } from '@/components/ui/input';
+import { getFieldError } from '@/lib/forms/use-form';
 import {
   FormControl,
   FormHelperText,
@@ -9,17 +9,17 @@ import {
   TextField,
   TextFieldProps,
 } from '@mui/material';
-import {Controller, useFormContext} from 'react-hook-form';
+import { Controller, useFormContext } from 'react-hook-form';
 
 interface FormFieldProps extends Omit<TextFieldProps, 'name'> {
   name: string;
   label: string;
 }
 
-export function FormInput({name, label, ...props}: FormFieldProps) {
+export function FormInput({ name, label, ...props }: FormFieldProps) {
   const {
     register,
-    formState: {errors},
+    formState: { errors },
   } = useFormContext();
   const error = getFieldError(name, errors);
 
@@ -36,13 +36,18 @@ export function FormInput({name, label, ...props}: FormFieldProps) {
 }
 
 interface SelectFieldProps extends FormFieldProps {
-  options: Array<{label: string; value: string | number}>;
+  options: Array<{ label: string; value: string | number }>;
 }
 
-export function FormSelect({name, label, options, ...props}: SelectFieldProps) {
+export function FormSelect({
+  name,
+  label,
+  options,
+  ...props
+}: SelectFieldProps) {
   const {
     control,
-    formState: {errors},
+    formState: { errors },
   } = useFormContext();
   const error = getFieldError(name, errors);
 
@@ -50,11 +55,11 @@ export function FormSelect({name, label, options, ...props}: SelectFieldProps) {
     <Controller
       name={name}
       control={control}
-      render={({field}) => (
+      render={({ field }) => (
         <FormControl fullWidth error={!!error}>
           <InputLabel>{label}</InputLabel>
-          <Select variant='filled' {...field} {...props} label={label}>
-            {options.map(option => (
+          <Select variant="filled" {...field} {...props} label={label}>
+            {options.map((option) => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -72,10 +77,16 @@ interface DateFieldProps extends FormFieldProps {
   maxDate?: Date;
 }
 
-export function FormDatePicker({name, label, minDate, maxDate, ...props}: DateFieldProps) {
+export function FormDatePicker({
+  name,
+  label,
+  minDate,
+  maxDate,
+  ...props
+}: DateFieldProps) {
   const {
     control,
-    formState: {errors},
+    formState: { errors },
   } = useFormContext();
   const error = getFieldError(name, errors);
 
@@ -83,16 +94,16 @@ export function FormDatePicker({name, label, minDate, maxDate, ...props}: DateFi
     <Controller
       name={name}
       control={control}
-      render={({field}) => (
+      render={({ field }) => (
         <TextField
           {...field}
           {...props}
-          type='date'
+          type="date"
           label={label}
           error={!!error}
           helperText={error}
           fullWidth
-          InputLabelProps={{shrink: true}}
+          InputLabelProps={{ shrink: true }}
           inputProps={{
             min: minDate?.toISOString().split('T')[0],
             max: maxDate?.toISOString().split('T')[0],
@@ -107,10 +118,10 @@ interface CheckboxFieldProps extends Omit<FormFieldProps, 'label'> {
   label: React.ReactNode;
 }
 
-export function FormCheckbox({name, label, ...props}: CheckboxFieldProps) {
+export function FormCheckbox({ name, label, ...props }: CheckboxFieldProps) {
   const {
     control,
-    formState: {errors},
+    formState: { errors },
   } = useFormContext();
   const error = getFieldError(name, errors);
 
@@ -118,10 +129,15 @@ export function FormCheckbox({name, label, ...props}: CheckboxFieldProps) {
     <Controller
       name={name}
       control={control}
-      render={({field}) => (
+      render={({ field }) => (
         <FormControl error={!!error}>
           <label>
-            <Input type='checkbox' {...field} {...props} checked={field.value} />
+            <Input
+              type="checkbox"
+              {...field}
+              {...props}
+              checked={field.value}
+            />
             {label}
           </label>
           {error && <FormHelperText>{error}</FormHelperText>}

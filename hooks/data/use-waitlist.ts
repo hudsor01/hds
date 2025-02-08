@@ -7,7 +7,8 @@ type WaitlistInsert = Database['public']['Tables']['waitlist']['Insert'];
 
 const WAITLIST_KEYS = {
   all: ['waitlist'] as const,
-  position: (email: string) => [...WAITLIST_KEYS.all, 'position', email] as const,
+  position: (email: string) =>
+    [...WAITLIST_KEYS.all, 'position', email] as const,
   status: (email: string) => [...WAITLIST_KEYS.all, 'status', email] as const,
 };
 

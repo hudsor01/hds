@@ -1,9 +1,9 @@
-import {prisma} from '@/lib/db';
-import {stripe} from '@/lib/stripe';
-import type {PaymentRecord} from '@/types/payments';
-import {PaymentStatus, PaymentType} from '@prisma/client';
-import {headers} from 'next/headers';
-import {NextResponse} from 'next/server';
+import { prisma } from '@/lib/db';
+import { stripe } from '@/lib/stripe';
+import type { PaymentRecord } from '@/types/payments';
+import { PaymentStatus, PaymentType } from '@prisma/client';
+import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
 export async function POST(req: Request) {
@@ -13,12 +13,14 @@ export async function POST(req: Request) {
     const signature = headersList.get('stripe-signature');
 
     if (!signature) {
-      return new NextResponse('Missing stripe-signature header', {status: 400});
+      return new NextResponse('Missing stripe-signature header', {
+        status: 400,
+      });
     }
 
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
     if (!webhookSecret) {
-      return new NextResponse('Missing webhook secret', {status: 500});
+      return new NextResponse('Missing webhook secret', { status: 500 });
     }
 
     let event: Stripe.Event;
@@ -27,13 +29,15 @@ export async function POST(req: Request) {
       event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
-      return new NextResponse('Webhook signature verification failed', {status: 400});
+      return new NextResponse('Webhook signature verification failed', {
+        status: 400,
+      });
     }
 
     switch (event.type) {
       case 'payment_intent.succeeded': {
         const paymentIntent = event.data.object as Stripe.PaymentIntent;
-        const {leaseId, paymentType} = paymentIntent.metadata;
+        const { leaseId, paymentType } = paymentIntent.metadata;
 
         // Update payment record
         await prisma.payments.updateMany({
@@ -116,7 +120,7 @@ export async function POST(req: Request) {
               processed_at: new Date(),
             };
 
-            await prisma.payments.create({data: paymentRecord});
+            await prisma.payments.create({ data: paymentRecord });
           }
         }
 
@@ -145,7 +149,7 @@ export async function POST(req: Request) {
               error_message: (invoice as any).last_payment_error?.message,
             };
 
-            await prisma.payments.create({data: paymentRecord});
+            await prisma.payments.create({ data: paymentRecord });
 
             // Update tenant subscription status
             await prisma.tenants.update({
@@ -168,9 +172,9 @@ export async function POST(req: Request) {
         });
     }
 
-    return new NextResponse('Webhook processed successfully', {status: 200});
+    return new NextResponse('Webhook processed successfully', { status: 200 });
   } catch (error) {
     console.error('Webhook processing error:', error);
-    return new NextResponse('Webhook processing failed', {status: 500});
+    return new NextResponse('Webhook processing failed', { status: 500 });
   }
 }

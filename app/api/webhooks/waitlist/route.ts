@@ -27,7 +27,10 @@ export async function POST(req: Request) {
   try {
     if (!WEBHOOK_SECRET) {
       console.error('Missing WAITLIST_WEBHOOK_SECRET');
-      return NextResponse.json({error: 'Webhook secret not configured'}, {status: 500});
+      return NextResponse.json(
+        { error: 'Webhook secret not configured' },
+        { status: 500 },
+      );
     }
 
     // Get the webhook signature from headers
@@ -39,8 +42,15 @@ export async function POST(req: Request) {
     };
 
     // Validate webhook signature
-    if (!svixHeaders['svix-id'] || !svixHeaders['svix-timestamp'] || !svixHeaders['svix-signature']) {
-      return NextResponse.json({error: 'Missing webhook signature'}, {status: 401});
+    if (
+      !svixHeaders['svix-id'] ||
+      !svixHeaders['svix-timestamp'] ||
+      !svixHeaders['svix-signature']
+    ) {
+      return NextResponse.json(
+        { error: 'Missing webhook signature' },
+        { status: 401 },
+      );
     }
 
     // Create Webhook instance for verification
@@ -51,17 +61,23 @@ export async function POST(req: Request) {
       wh.verify(JSON.stringify(payload), svixHeaders);
     } catch (err) {
       console.error('Webhook signature verification failed:', err);
-      return NextResponse.json({error: 'Invalid webhook signature'}, {status: 401});
+      return NextResponse.json(
+        { error: 'Invalid webhook signature' },
+        { status: 401 },
+      );
     }
 
     // Validate webhook payload
     const result = webhookSchema.safeParse(payload);
     if (!result.success) {
       console.error('Invalid webhook payload:', result.error);
-      return NextResponse.json({error: 'Invalid webhook payload'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Invalid webhook payload' },
+        { status: 400 },
+      );
     }
 
-    const {type, data} = result.data;
+    const { type, data } = result.data;
 
     // Process webhook based on type
     switch (type) {
@@ -84,14 +100,19 @@ export async function POST(req: Request) {
         console.warn('Unhandled webhook type:', type);
     }
 
-    return NextResponse.json({success: true});
+    return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error processing webhook:', error);
-    return NextResponse.json({error: 'Internal server error'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 },
+    );
   }
 }
 
-async function handleWaitlistJoined(data: z.infer<typeof webhookSchema>['data']) {
+async function handleWaitlistJoined(
+  data: z.infer<typeof webhookSchema>['data'],
+) {
   await supabase.from('waitlist_events').insert([
     {
       email: data.email,
@@ -102,7 +123,9 @@ async function handleWaitlistJoined(data: z.infer<typeof webhookSchema>['data'])
   ]);
 }
 
-async function handleWaitlistVerified(data: z.infer<typeof webhookSchema>['data']) {
+async function handleWaitlistVerified(
+  data: z.infer<typeof webhookSchema>['data'],
+) {
   await supabase.from('waitlist_events').insert([
     {
       email: data.email,
@@ -113,7 +136,9 @@ async function handleWaitlistVerified(data: z.infer<typeof webhookSchema>['data'
   ]);
 }
 
-async function handleWaitlistReferred(data: z.infer<typeof webhookSchema>['data']) {
+async function handleWaitlistReferred(
+  data: z.infer<typeof webhookSchema>['data'],
+) {
   await supabase.from('waitlist_events').insert([
     {
       email: data.email,
@@ -124,7 +149,9 @@ async function handleWaitlistReferred(data: z.infer<typeof webhookSchema>['data'
   ]);
 }
 
-async function handlePositionUpdated(data: z.infer<typeof webhookSchema>['data']) {
+async function handlePositionUpdated(
+  data: z.infer<typeof webhookSchema>['data'],
+) {
   await supabase.from('waitlist_events').insert([
     {
       email: data.email,
@@ -135,7 +162,9 @@ async function handlePositionUpdated(data: z.infer<typeof webhookSchema>['data']
   ]);
 }
 
-async function handleStatusChanged(data: z.infer<typeof webhookSchema>['data']) {
+async function handleStatusChanged(
+  data: z.infer<typeof webhookSchema>['data'],
+) {
   await supabase.from('waitlist_events').insert([
     {
       email: data.email,

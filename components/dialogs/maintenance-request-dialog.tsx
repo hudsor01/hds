@@ -1,14 +1,14 @@
 'use client';
 
-import {PRIORITY_LABELS, PRIORITY_LEVELS} from '@/auth/lib/constants';
-import {Button} from '@/components/ui/buttons/button';
+import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/auth/lib/constants';
+import { Button } from '@/components/ui/buttons/button';
 import type {
   MaintenanceRequest,
   NewMaintenanceRequest,
   UpdateMaintenanceRequest,
 } from '@/types/maintenance_requests';
-import type {Property} from '@/types/property';
-import type {SelectChangeEvent} from '@mui/material';
+import type { Property } from '@/types/property';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Dialog,
   DialogContent,
@@ -17,11 +17,11 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import {Input} from 'components/ui/input';
-import {Label} from 'components/ui/label';
-import {Select, SelectItem} from 'components/ui/select';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+import { Select, SelectItem } from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
-import {useState} from 'react';
+import { useState } from 'react';
 
 interface MaintenanceRequestDialogProps {
   open: boolean;
@@ -41,7 +41,9 @@ export function MaintenanceRequestDialog(
   props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps,
 ) {
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(props.request?.propertyId || '');
+  const [selectedProperty, setSelectedProperty] = useState(
+    props.request?.propertyId || '',
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -74,14 +76,17 @@ export function MaintenanceRequestDialog(
     }
   };
 
-  const selectedPropertyUnits = props.properties.find(p => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits =
+    props.properties.find((p) => p.id === selectedProperty)?.units || [];
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChangeAction}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {props.request ? 'Edit Maintenance Request' : 'New Maintenance Request'}
+            {props.request
+              ? 'Edit Maintenance Request'
+              : 'New Maintenance Request'}
           </DialogTitle>
           <DialogDescription>
             {props.request
@@ -89,19 +94,19 @@ export function MaintenanceRequestDialog(
               : 'Submit a new maintenance request.'}
           </DialogDescription>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          <div className='grid gap-4'>
-            <div className='space-y-2'>
-              <Label htmlFor='propertyId'>Property</Label>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="propertyId">Property</Label>
               <Select
-                name='propertyId'
+                name="propertyId"
                 defaultValue={props.request?.propertyId}
                 onChange={(event: SelectChangeEvent<unknown>) => {
                   setSelectedProperty(event.target.value as string);
                 }}
-                placeholder='Select a property'
+                placeholder="Select a property"
               >
-                {props.properties.map(property => (
+                {props.properties.map((property) => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>
@@ -109,15 +114,15 @@ export function MaintenanceRequestDialog(
               </Select>
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='unitId'>Unit</Label>
+            <div className="space-y-2">
+              <Label htmlFor="unitId">Unit</Label>
               <Select
-                name='unitId'
+                name="unitId"
                 defaultValue={props.request?.unitId}
                 disabled={!selectedProperty}
-                placeholder='Select a unit'
+                placeholder="Select a unit"
               >
-                {selectedPropertyUnits.map(unit => (
+                {selectedPropertyUnits.map((unit) => (
                   <SelectItem key={unit.id} value={unit.id}>
                     Unit {unit.number}
                   </SelectItem>
@@ -125,27 +130,32 @@ export function MaintenanceRequestDialog(
               </Select>
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='title'>Title</Label>
-              <Input id='title' name='title' defaultValue={props.request?.title} required />
+            <div className="space-y-2">
+              <Label htmlFor="title">Title</Label>
+              <Input
+                id="title"
+                name="title"
+                defaultValue={props.request?.title}
+                required
+              />
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='description'>Description</Label>
+            <div className="space-y-2">
+              <Label htmlFor="description">Description</Label>
               <Textarea
-                id='description'
-                name='description'
+                id="description"
+                name="description"
                 defaultValue={props.request?.description}
                 required
               />
             </div>
 
-            <div className='space-y-2'>
-              <Label htmlFor='priority'>Priority</Label>
+            <div className="space-y-2">
+              <Label htmlFor="priority">Priority</Label>
               <Select
-                name='priority'
+                name="priority"
                 defaultValue={props.request?.priority}
-                placeholder='Select priority level'
+                placeholder="Select priority level"
               >
                 {Object.entries(PRIORITY_LEVELS).map(([key, value]) => (
                   <SelectItem key={key} value={key}>
@@ -157,8 +167,12 @@ export function MaintenanceRequestDialog(
           </div>
 
           <DialogFooter>
-            <Button type='submit' disabled={isLoading}>
-              {isLoading ? 'Saving...' : props.request ? 'Save Changes' : 'Submit Request'}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading
+                ? 'Saving...'
+                : props.request
+                  ? 'Save Changes'
+                  : 'Submit Request'}
             </Button>
           </DialogFooter>
         </form>

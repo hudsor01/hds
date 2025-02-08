@@ -1,8 +1,8 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import {motion, useAnimationControls} from 'framer-motion';
-import {useEffect} from 'react';
+import { cn } from '@/lib/utils';
+import { motion, useAnimationControls } from 'framer-motion';
+import { useEffect } from 'react';
 
 export const ShimmerButton = ({
   children,
@@ -21,7 +21,7 @@ export const ShimmerButton = ({
   useEffect(() => {
     const animateShimmer = async () => {
       await controls.start({
-        transition: {duration: 0},
+        transition: { duration: 0 },
         backgroundPosition: '-100% 0',
       });
       controls.start({
@@ -49,7 +49,7 @@ export const ShimmerButton = ({
       {/* Animated shimmer layer */}
       <motion.div
         animate={controls}
-        className='absolute inset-0 pointer-events-none'
+        className="pointer-events-none absolute inset-0"
         style={{
           background: `linear-gradient(
             120deg,
@@ -62,10 +62,10 @@ export const ShimmerButton = ({
       />
 
       {/* Hover overlay */}
-      <div className='absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-10' />
+      <div className="absolute inset-0 bg-white opacity-0 transition-opacity duration-300 hover:opacity-10" />
 
       {/* Content */}
-      <span className='relative z-10'>{children}</span>
+      <span className="relative z-10">{children}</span>
     </button>
   );
 };

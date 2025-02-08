@@ -10,26 +10,33 @@ interface FormLayoutProps {
   actions?: React.ReactNode;
 }
 
-export function FormLayout({title, description, children, actions}: FormLayoutProps) {
+export function FormLayout({
+  title,
+  description,
+  children,
+  actions,
+}: FormLayoutProps) {
   return (
     <Paper>
-      <Box sx={{p: 3}}>
-        <Typography variant='h5' component='h1' gutterBottom>
+      <Box sx={{ p: 3 }}>
+        <Typography variant="h5" component="h1" gutterBottom>
           {title}
         </Typography>
         {description && (
-          <Typography color='text.secondary' sx={{mb: 3}}>
+          <Typography color="text.secondary" sx={{ mb: 3 }}>
             {description}
           </Typography>
         )}
-        <Divider sx={{my: 3}} />
-        <Box component='form' noValidate autoComplete='off'>
+        <Divider sx={{ my: 3 }} />
+        <Box component="form" noValidate autoComplete="off">
           {children}
         </Box>
         {actions && (
           <>
-            <Divider sx={{my: 3}} />
-            <Box sx={{display: 'flex', justifyContent: 'flex-end', gap: 2}}>{actions}</Box>
+            <Divider sx={{ my: 3 }} />
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
+              {actions}
+            </Box>
           </>
         )}
       </Box>

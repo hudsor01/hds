@@ -1,17 +1,28 @@
 'use client';
 
-import {zodResolver} from '@hookform/resolvers/zod';
-import {Email as EmailIcon} from '@mui/icons-material';
-import {LoadingButton} from '@mui/lab';
-import {Alert, Box, Collapse, Link, Paper, TextField, Typography} from '@mui/material';
-import {AnimatePresence, motion} from 'framer-motion';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { Email as EmailIcon } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
+import {
+  Alert,
+  Box,
+  Collapse,
+  Link,
+  Paper,
+  TextField,
+  Typography,
+} from '@mui/material';
+import { AnimatePresence, motion } from 'framer-motion';
 import React from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {z} from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 // Schema for form validation
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  email: z
+    .string()
+    .min(1, 'Email is required')
+    .email('Please enter a valid email address'),
 });
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>;
@@ -21,7 +32,10 @@ interface ForgotPasswordFormProps {
   redirectToLogin?: () => void;
 }
 
-export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFormProps) => {
+export const ForgotPasswordForm = ({
+  onSubmit,
+  redirectToLogin,
+}: ForgotPasswordFormProps) => {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
   const [success, setSuccess] = React.useState(false);
@@ -29,7 +43,7 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
     reset,
   } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
@@ -50,7 +64,9 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
       setSuccess(true);
       reset(); // Clear form after successful submission
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An unexpected error occurred');
+      setError(
+        err instanceof Error ? err.message : 'An unexpected error occurred',
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -59,9 +75,9 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
   return (
     <Paper
       component={motion.div}
-      initial={{opacity: 0, y: 20}}
-      animate={{opacity: 1, y: 0}}
-      transition={{duration: 0.3}}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
       elevation={3}
       sx={{
         p: 4,
@@ -71,18 +87,23 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
         mt: 4,
       }}
     >
-      <Typography variant='h5' component='h2' gutterBottom align='center'>
+      <Typography variant="h5" component="h2" gutterBottom align="center">
         Reset Your Password
       </Typography>
 
-      <Typography color='text.secondary' align='center' sx={{mb: 3}}>
-        Enter your email address and we'll send you instructions to reset your password.
+      <Typography color="text.secondary" align="center" sx={{ mb: 3 }}>
+        Enter your email address and we'll send you instructions to reset your
+        password.
       </Typography>
 
       <AnimatePresence>
         {error && (
           <Collapse in={!!error}>
-            <Alert severity='error' onClose={() => setError(null)} sx={{mb: 2}}>
+            <Alert
+              severity="error"
+              onClose={() => setError(null)}
+              sx={{ mb: 2 }}
+            >
               {error}
             </Alert>
           </Collapse>
@@ -90,26 +111,35 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
 
         {success && (
           <Collapse in={success}>
-            <Alert severity='success' onClose={() => setSuccess(false)} sx={{mb: 2}}>
+            <Alert
+              severity="success"
+              onClose={() => setSuccess(false)}
+              sx={{ mb: 2 }}
+            >
               Check your email for password reset instructions.
             </Alert>
           </Collapse>
         )}
       </AnimatePresence>
 
-      <Box component='form' onSubmit={handleSubmit(handleFormSubmit)} noValidate sx={{mt: 1}}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        noValidate
+        sx={{ mt: 1 }}
+      >
         <Controller
-          name='email'
+          name="email"
           control={control}
-          render={({field}) => (
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              id='email'
-              label='Email Address'
-              autoComplete='email'
+              id="email"
+              label="Email Address"
+              autoComplete="email"
               autoFocus
               error={!!errors.email}
               helperText={errors.email?.message}
@@ -129,24 +159,24 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
         />
 
         <LoadingButton
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
           loading={isSubmitting}
-          loadingPosition='start'
+          loadingPosition="start"
           startIcon={<EmailIcon />}
-          sx={{mt: 3, mb: 2}}
+          sx={{ mt: 3, mb: 2 }}
         >
           Send Reset Instructions
         </LoadingButton>
 
         {redirectToLogin && (
-          <Box sx={{textAlign: 'center'}}>
+          <Box sx={{ textAlign: 'center' }}>
             <Link
-              component='button'
-              variant='body2'
+              component="button"
+              variant="body2"
               onClick={redirectToLogin}
-              sx={{cursor: 'pointer'}}
+              sx={{ cursor: 'pointer' }}
             >
               Back to Login
             </Link>
@@ -157,4 +187,4 @@ export const ForgotPasswordForm = ({onSubmit, redirectToLogin}: ForgotPasswordFo
   );
 };
 
-export type {ForgotPasswordFormProps};
+export type { ForgotPasswordFormProps };

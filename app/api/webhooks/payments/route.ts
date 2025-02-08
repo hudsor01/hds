@@ -1,4 +1,4 @@
-import {NextRequest, NextResponse} from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(request: NextRequest) {
   try {
@@ -6,7 +6,7 @@ export async function POST(request: NextRequest) {
 
     // Add CORS headers
     return NextResponse.json(
-      {success: true},
+      { success: true },
       {
         status: 200,
         headers: {
@@ -17,6 +17,6 @@ export async function POST(request: NextRequest) {
       },
     );
   } catch (error) {
-    return NextResponse.json({error: 'Invalid payload'}, {status: 400});
+    return NextResponse.json({ error: 'Invalid payload' }, { status: 400 });
   }
 }

@@ -1,9 +1,7 @@
 'use client';
 
-
-
 export function ProtectedComponent() {
-  const {isLoaded, isSignedIn, userId} = useAuth();
+  const { isLoaded, isSignedIn, userId } = useAuth();
 
   if (!isLoaded) {
     return <div>Loading...</div>;

@@ -6,7 +6,10 @@ import { z } from 'zod';
 
 // Cache analytics data for 5 minutes
 const CACHE_TTL = 5 * 60 * 1000;
-const analyticsCache = new Map<string, {data: any; timestamp: number; query: string}>();
+const analyticsCache = new Map<
+  string,
+  { data: any; timestamp: number; query: string }
+>();
 
 const analyticsQuerySchema = z.object({
   date_range: z.enum(['week', 'month', 'quarter', 'year', 'custom']).optional(),
@@ -19,20 +22,23 @@ const analyticsQuerySchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get user role
-    const {data: user, error: userError} = await supabase
+    const { data: user, error: userError } = await supabase
       .from('users')
       .select('role')
       .eq('id', userId)
       .single();
 
     if (userError) {
-      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+      return NextResponse.json(
+        { error: 'Failed to fetch user role' },
+        { status: 500 },
+      );
     }
 
     // Parse and validate query parameters
@@ -55,7 +61,7 @@ export async function GET(req: NextRequest) {
     // Check cache
     const cached = analyticsCache.get(cacheKey);
     if (cached && now - cached.timestamp < CACHE_TTL) {
-      return NextResponse.json({data: cached.data, cached: true});
+      return NextResponse.json({ data: cached.data, cached: true });
     }
 
     // Get fresh data with role context
@@ -78,33 +84,42 @@ export async function GET(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({data: analytics, cached: false});
+    return NextResponse.json({ data: analytics, cached: false });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error in analytics GET route:', error);
-    return NextResponse.json({error: 'Failed to fetch analytics'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to fetch analytics' },
+      { status: 500 },
+    );
   }
 }
 
 // Endpoint to refresh analytics data
 export async function POST(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get user role
-    const {data: user, error: userError} = await supabase
+    const { data: user, error: userError } = await supabase
       .from('users')
       .select('role')
       .eq('id', userId)
       .single();
 
     if (userError) {
-      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+      return NextResponse.json(
+        { error: 'Failed to fetch user role' },
+        { status: 500 },
+      );
     }
 
     const body = await req.json();
@@ -124,33 +139,42 @@ export async function POST(req: NextRequest) {
       query: JSON.stringify(validatedQuery),
     });
 
-    return NextResponse.json({data: analytics, refreshed: true});
+    return NextResponse.json({ data: analytics, refreshed: true });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error in analytics POST route:', error);
-    return NextResponse.json({error: 'Failed to refresh analytics'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to refresh analytics' },
+      { status: 500 },
+    );
   }
 }
 
 // Endpoint to clear analytics cache
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     // Get user role
-    const {data: user, error: userError} = await supabase
+    const { data: user, error: userError } = await supabase
       .from('users')
       .select('role')
       .eq('id', userId)
       .single();
 
     if (userError) {
-      return NextResponse.json({error: 'Failed to fetch user role'}, {status: 500});
+      return NextResponse.json(
+        { error: 'Failed to fetch user role' },
+        { status: 500 },
+      );
     }
 
     // Only allow admins to clear all cache
@@ -165,9 +189,12 @@ export async function DELETE(req: NextRequest) {
       }
     }
 
-    return NextResponse.json({message: 'Analytics cache cleared'});
+    return NextResponse.json({ message: 'Analytics cache cleared' });
   } catch (error) {
     console.error('Error in analytics DELETE route:', error);
-    return NextResponse.json({error: 'Failed to clear analytics cache'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to clear analytics cache' },
+      { status: 500 },
+    );
   }
 }

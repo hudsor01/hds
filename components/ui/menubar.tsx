@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 
-const StyledMenu = styled(Menu)(({theme}) => ({
+const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     minWidth: 180,
@@ -19,7 +19,7 @@ const StyledMenu = styled(Menu)(({theme}) => ({
   },
 }));
 
-const StyledMenuItem = styled(MenuItem)(({theme}) => ({
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   fontSize: '0.875rem',
   padding: theme.spacing(1, 2),
   '&:hover': {
@@ -34,7 +34,7 @@ export interface MenubarProps extends Omit<MenuProps, 'open'> {
 }
 
 const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
-  ({className, trigger, open, onOpenChange, children, ...props}, ref) => {
+  ({ className, trigger, open, onOpenChange, children, ...props }, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
       setAnchorEl(event.currentTarget);
@@ -47,7 +47,12 @@ const Menubar = React.forwardRef<HTMLDivElement, MenubarProps>(
 
     return (
       <>
-        <Button onClick={handleClick} className={className} variant='text' color='inherit'>
+        <Button
+          onClick={handleClick}
+          className={className}
+          variant="text"
+          color="inherit"
+        >
           {trigger}
         </Button>
         <StyledMenu
@@ -70,12 +75,17 @@ export interface MenubarItemProps extends MenuItemProps {
 }
 
 const MenubarItem = React.forwardRef<HTMLLIElement, MenubarItemProps>(
-  ({className, children, inset, ...props}, ref) => (
-    <StyledMenuItem ref={ref} className={className} sx={inset ? {pl: 8} : undefined} {...props}>
+  ({ className, children, inset, ...props }, ref) => (
+    <StyledMenuItem
+      ref={ref}
+      className={className}
+      sx={inset ? { pl: 8 } : undefined}
+      {...props}
+    >
       {children}
     </StyledMenuItem>
   ),
 );
 MenubarItem.displayName = 'MenubarItem';
 
-export {Menubar, MenubarItem};
+export { Menubar, MenubarItem };

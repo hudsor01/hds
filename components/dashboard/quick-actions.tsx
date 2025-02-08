@@ -4,9 +4,9 @@ import AddIcon from '@mui/icons-material/Add';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
-import {Box, Card, Stack, Typography, alpha, useTheme} from '@mui/material';
-import {motion} from 'framer-motion';
-import type {Route} from 'next';
+import { Box, Card, Stack, Typography, alpha, useTheme } from '@mui/material';
+import { motion } from 'framer-motion';
+import type { Route } from 'next';
 import Link from 'next/link';
 
 const actions = [
@@ -41,7 +41,7 @@ const actions = [
 ] as const;
 
 const containerVariants = {
-  hidden: {opacity: 0},
+  hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
@@ -51,8 +51,8 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: {opacity: 0, y: 20},
-  show: {opacity: 1, y: 0},
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
 };
 
 export function QuickActions() {
@@ -64,25 +64,25 @@ export function QuickActions() {
       sx={{
         height: '100%',
         bgcolor: 'background.default',
-        p: {xs: 2, sm: 3},
+        p: { xs: 2, sm: 3 },
       }}
     >
       <Typography
-        variant='h6'
+        variant="h6"
         sx={{
           mb: 3,
           fontWeight: 600,
-          fontSize: {xs: '1rem', sm: '1.25rem'},
+          fontSize: { xs: '1rem', sm: '1.25rem' },
         }}
       >
         Quick Actions
       </Typography>
 
-      <motion.div variants={containerVariants} initial='hidden' animate='show'>
+      <motion.div variants={containerVariants} initial="hidden" animate="show">
         <Stack spacing={2}>
-          {actions.map(action => (
+          {actions.map((action) => (
             <motion.div key={action.title} variants={itemVariants}>
-              <Link href={action.href} style={{textDecoration: 'none'}}>
+              <Link href={action.href} style={{ textDecoration: 'none' }}>
                 <Card
                   sx={{
                     p: 2,
@@ -99,7 +99,7 @@ export function QuickActions() {
                     },
                   }}
                 >
-                  <Stack direction='row' spacing={2} alignItems='center'>
+                  <Stack direction="row" spacing={2} alignItems="center">
                     <Box
                       sx={{
                         width: 40,
@@ -114,9 +114,9 @@ export function QuickActions() {
                     >
                       <action.icon size={20} />
                     </Box>
-                    <Box sx={{flex: 1}}>
+                    <Box sx={{ flex: 1 }}>
                       <Typography
-                        variant='subtitle2'
+                        variant="subtitle2"
                         sx={{
                           fontWeight: 600,
                           color: 'text.primary',
@@ -126,7 +126,7 @@ export function QuickActions() {
                         {action.title}
                       </Typography>
                       <Typography
-                        variant='body2'
+                        variant="body2"
                         sx={{
                           color: 'text.secondary',
                           fontSize: '0.8125rem',

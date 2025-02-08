@@ -1,15 +1,28 @@
 'use client';
 
-import type {WebhookEventType, WebhookLog, WebhookPayload} from '@/types/webhooks';
-import {Button, Chip, Dialog, DialogContent, DialogTitle} from '@mui/material';
-import {DataGrid, GridToolbar} from '@mui/x-data-grid';
-import {useState} from 'react';
+import type {
+  WebhookEventType,
+  WebhookLog,
+  WebhookPayload,
+} from '@/types/webhooks';
+import {
+  Button,
+  Chip,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+} from '@mui/material';
+import { DataGrid, GridToolbar } from '@mui/x-data-grid';
+import { useState } from 'react';
 
 interface WebhookLogGridProps {
   logs: WebhookLog[];
 }
 
-const EVENT_TYPE_COLORS: Record<string, 'info' | 'success' | 'warning' | 'error'> = {
+const EVENT_TYPE_COLORS: Record<
+  string,
+  'info' | 'success' | 'warning' | 'error'
+> = {
   'user.created': 'success',
   'user.updated': 'info',
   'user.deleted': 'error',
@@ -20,8 +33,10 @@ const EVENT_TYPE_COLORS: Record<string, 'info' | 'success' | 'warning' | 'error'
   'organization.deleted': 'error',
 };
 
-export function WebhookLogGrid({logs}: WebhookLogGridProps) {
-  const [selectedPayload, setSelectedPayload] = useState<WebhookPayload | null>(null);
+export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
+  const [selectedPayload, setSelectedPayload] = useState<WebhookPayload | null>(
+    null,
+  );
   const [isModalOpen, setModalOpen] = useState(false);
 
   return (
@@ -33,11 +48,13 @@ export function WebhookLogGrid({logs}: WebhookLogGridProps) {
             field: 'event_type',
             headerName: 'Event',
             width: 200,
-            renderCell: ({value}) => (
+            renderCell: ({ value }) => (
               <Chip
                 label={value}
-                color={EVENT_TYPE_COLORS[value as WebhookEventType] || 'default'}
-                size='small'
+                color={
+                  EVENT_TYPE_COLORS[value as WebhookEventType] || 'default'
+                }
+                size="small"
               />
             ),
           },
@@ -45,17 +62,18 @@ export function WebhookLogGrid({logs}: WebhookLogGridProps) {
             field: 'created_at',
             headerName: 'Time',
             width: 200,
-            valueFormatter: ({value}) => new Date(value as string).toLocaleString(),
+            valueFormatter: ({ value }) =>
+              new Date(value as string).toLocaleString(),
           },
           {
             field: 'success',
             headerName: 'Status',
             width: 100,
-            renderCell: ({value}) => (
+            renderCell: ({ value }) => (
               <Chip
                 label={value ? 'Success' : 'Failed'}
                 color={value ? 'success' : 'error'}
-                size='small'
+                size="small"
               />
             ),
           },
@@ -63,10 +81,10 @@ export function WebhookLogGrid({logs}: WebhookLogGridProps) {
             field: 'payload',
             headerName: 'Data',
             width: 300,
-            renderCell: ({value}) => (
+            renderCell: ({ value }) => (
               <Button
-                variant='outlined'
-                size='small'
+                variant="outlined"
+                size="small"
                 onClick={() => {
                   setSelectedPayload(JSON.parse(value as string));
                   setModalOpen(true);
@@ -79,7 +97,7 @@ export function WebhookLogGrid({logs}: WebhookLogGridProps) {
         ]}
         autoHeight
         disableRowSelectionOnClick
-        slots={{toolbar: GridToolbar}}
+        slots={{ toolbar: GridToolbar }}
         slotProps={{
           toolbar: {
             showQuickFilter: true,
@@ -87,18 +105,23 @@ export function WebhookLogGrid({logs}: WebhookLogGridProps) {
         }}
         initialState={{
           pagination: {
-            paginationModel: {pageSize: 10},
+            paginationModel: { pageSize: 10 },
           },
           sorting: {
-            sortModel: [{field: 'created_at', sort: 'desc'}],
+            sortModel: [{ field: 'created_at', sort: 'desc' }],
           },
         }}
       />
 
-      <Dialog open={isModalOpen} onClose={() => setModalOpen(false)} maxWidth='md' fullWidth>
+      <Dialog
+        open={isModalOpen}
+        onClose={() => setModalOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
         <DialogTitle>Webhook Payload</DialogTitle>
         <DialogContent>
-          <pre className='bg-gray-50 p-4 rounded-md overflow-auto'>
+          <pre className="overflow-auto rounded-md bg-gray-50 p-4">
             {JSON.stringify(selectedPayload, null, 2)}
           </pre>
         </DialogContent>

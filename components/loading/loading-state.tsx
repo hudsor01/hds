@@ -1,6 +1,6 @@
 'use client';
 
-import {Box, CircularProgress, Container, Typography} from '@mui/material';
+import { Box, CircularProgress, Container, Typography } from '@mui/material';
 
 interface LoadingStateProps {
   message?: string;
@@ -24,11 +24,11 @@ export default function LoadingState({
       <CircularProgress
         size={40}
         sx={{
-          color: theme => theme.palette.primary.main,
+          color: (theme) => theme.palette.primary.main,
           mb: 2,
         }}
       />
-      <Typography color='text.secondary'>{message}</Typography>
+      <Typography color="text.secondary">{message}</Typography>
     </Box>
   );
 
@@ -42,7 +42,7 @@ export default function LoadingState({
           right: 0,
           bottom: 0,
           bgcolor: 'background.default',
-          zIndex: theme => theme.zIndex.modal - 1,
+          zIndex: (theme) => theme.zIndex.modal - 1,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -53,5 +53,5 @@ export default function LoadingState({
     );
   }
 
-  return <Container maxWidth='md'>{content}</Container>;
+  return <Container maxWidth="md">{content}</Container>;
 }

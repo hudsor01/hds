@@ -1,11 +1,10 @@
 'use client';
 
-
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export function AuthGuard({children}: {children: React.ReactNode}) {
-  const {isLoaded, isSignedIn} = useAuth();
+export function AuthGuard({ children }: { children: React.ReactNode }) {
+  const { isLoaded, isSignedIn } = useAuth();
   const router = useRouter();
 
   useEffect(() => {

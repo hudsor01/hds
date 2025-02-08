@@ -1,5 +1,5 @@
 import '@mui/material/styles';
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react';
 
 declare module '@mui/material/styles' {
   interface BreakpointOverrides {

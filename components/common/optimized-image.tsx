@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
 interface OptimizedImageProps {
   src: string;
@@ -28,7 +28,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   // Calculate srcSet based on device sizes
   const generateSrcSet = () => {
     const widths = [640, 750, 828, 1080, 1200, 1920];
-    return widths.map(w => `${src}?w=${w} ${w}w`).join(', ');
+    return widths.map((w) => `${src}?w=${w} ${w}w`).join(', ');
   };
 
   return (
@@ -41,11 +41,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         priority={priority}
         quality={90}
         sizes={sizes}
-        className={`
-          transition-opacity duration-300
-          ${loading ? 'opacity-0' : 'opacity-100'}
-          ${error ? 'hidden' : 'block'}
-        `}
+        className={`transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'} ${error ? 'hidden' : 'block'} `}
         onLoadStart={() => setLoading(true)}
         onLoad={() => setLoading(false)}
         onError={() => {
@@ -55,11 +51,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         loading={priority ? 'eager' : 'lazy'}
       />
 
-      {loading && !error && <div className='absolute inset-0 bg-gray-200 animate-pulse' />}
+      {loading && !error && (
+        <div className="absolute inset-0 animate-pulse bg-gray-200" />
+      )}
 
       {error && (
-        <div className='absolute inset-0 flex items-center justify-center bg-gray-100'>
-          <span className='text-gray-500'>Failed to load image</span>
+        <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
+          <span className="text-gray-500">Failed to load image</span>
         </div>
       )}
     </div>

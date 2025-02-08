@@ -1,5 +1,6 @@
 import {UserRole} from '@/types/roles';
 import {NextRequest, NextResponse} from 'next/server';
+import { prisma } from '@/lib/prisma/prisma'; // Import prisma
 
 interface ExtendedUserResource extends UserResource {
   privateMetadata?: {role?: UserRole; permissions?: string[]};
@@ -71,7 +72,7 @@ export async function getCurrentUser() {
 }
 
 export async function getUserRole(userId: string): Promise<UserRole> {
-  const user = await .users.getUser(userId);
+  const user = await prisma.users.getUser(userId); // Use prisma
   return (user.privateMetadata?.role as UserRole) || 'USER';
 }
 

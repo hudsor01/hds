@@ -9,14 +9,14 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 
-const StyledRadio = styled(MuiRadio)(({theme}) => ({
+const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
   '&.Mui-checked': {
     color: theme.palette.primary.main,
   },
 }));
 
-const StyledFormControlLabel = styled(FormControlLabel)(({theme}) => ({
+const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   margin: 0,
   '& .MuiFormControlLabel-label': {
     fontSize: '0.875rem',
@@ -30,7 +30,7 @@ export interface RadioGroupProps
 }
 
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
-  ({className, defaultValue, children, ...props}, ref) => {
+  ({ className, defaultValue, children, ...props }, ref) => {
     return (
       <FormControl ref={ref} className={className}>
         <MuiRadioGroup defaultValue={defaultValue} {...props}>
@@ -47,7 +47,7 @@ export interface RadioProps extends React.ComponentProps<typeof StyledRadio> {
 }
 
 const Radio = React.forwardRef<HTMLButtonElement, RadioProps>(
-  ({className, label, ...props}, ref) => {
+  ({ className, label, ...props }, ref) => {
     const radio = <StyledRadio ref={ref} className={className} {...props} />;
     if (label) {
       return <StyledFormControlLabel control={radio} label={label} />;
@@ -57,4 +57,4 @@ const Radio = React.forwardRef<HTMLButtonElement, RadioProps>(
 );
 Radio.displayName = 'Radio';
 
-export {Radio, RadioGroup};
+export { Radio, RadioGroup };

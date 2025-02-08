@@ -6,9 +6,9 @@ type EventOptions = {
 };
 
 export function useAnalytics() {
-  const trackEvent = ({name, properties}: EventOptions) => {
+  const trackEvent = ({ name, properties }: EventOptions) => {
     va.track(name, properties);
   };
 
-  return {trackEvent};
+  return { trackEvent };
 }

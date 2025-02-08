@@ -1,4 +1,4 @@
-import type {Metadata} from 'next';
+import type { Metadata } from 'next';
 
 interface GenerateMetadataOptions {
   title: string;
@@ -39,7 +39,7 @@ export function generateMetadata({
       card: 'summary_large_image',
       title: fullTitle,
       description: description || baseDescription,
-      ...(ogImage && {images: [ogImage]}),
+      ...(ogImage && { images: [ogImage] }),
     },
     ...(noIndex && {
       robots: {

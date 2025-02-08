@@ -1,6 +1,6 @@
 'use client';
 
-import {cn} from '@/lib/utils';
+import { cn } from '@/lib/utils';
 import * as React from 'react';
 
 interface InputElementProps {
@@ -9,11 +9,11 @@ interface InputElementProps {
 }
 
 const InputLeftElement = React.forwardRef<HTMLDivElement, InputElementProps>(
-  ({children, className}, ref) => (
+  ({ children, className }, ref) => (
     <div
       ref={ref}
       className={cn(
-        'absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none',
+        'pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3',
         className,
       )}
     >
@@ -24,8 +24,14 @@ const InputLeftElement = React.forwardRef<HTMLDivElement, InputElementProps>(
 InputLeftElement.displayName = 'InputLeftElement';
 
 const InputRightElement = React.forwardRef<HTMLDivElement, InputElementProps>(
-  ({children, className}, ref) => (
-    <div ref={ref} className={cn('absolute inset-y-0 right-0 flex items-center pr-3', className)}>
+  ({ children, className }, ref) => (
+    <div
+      ref={ref}
+      className={cn(
+        'absolute inset-y-0 right-0 flex items-center pr-3',
+        className,
+      )}
+    >
       {children}
     </div>
   ),
@@ -37,7 +43,7 @@ interface InputGroupProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
-  ({className, children, ...props}, ref) => (
+  ({ className, children, ...props }, ref) => (
     <div ref={ref} className={cn('relative w-full', className)} {...props}>
       {children}
     </div>
@@ -45,4 +51,4 @@ const InputGroup = React.forwardRef<HTMLDivElement, InputGroupProps>(
 );
 InputGroup.displayName = 'InputGroup';
 
-export {InputGroup, InputLeftElement, InputRightElement};
+export { InputGroup, InputLeftElement, InputRightElement };

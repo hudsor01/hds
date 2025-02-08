@@ -1,42 +1,41 @@
 'use client';
 
-import './globals.css'
-import React, { useState, useEffect } from 'react'
-import type { NextPage } from 'next'
-import { useRouter } from 'next/navigation'
-import { createClient } from '@supabase/supabase-js'
-import { Auth } from '@supabase/auth-ui-react'
-import { ThemeSupa } from '@supabase/auth-ui-shared'
+import './globals.css';
+import React, { useState, useEffect } from 'react';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/navigation';
+import { createClient } from '@supabase/supabase-js';
+import { Auth } from '@supabase/auth-ui-react';
+import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-)
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+);
 
 export default function App() {
-    const [session, setSession] = useState(null)
+  const [session, setSession] = useState(null);
 
-    useEffect(() => {
-      supabase.auth.getSession().then(({ data: { session } }) => {
-        setSession(session)
-      })
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
 
-      const {
-        data: { subscription },
-      } = supabase.auth.onAuthStateChange((_event, session) => {
-        setSession(session)
-      })
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
-      return () => subscription.unsubscribe()
-    }, [])
+    return () => subscription.unsubscribe();
+  }, []);
 
-    if (!session) {
-      return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
-    }
-    else {
-      return (<div>Logged in!</div>)
-    }
+  if (!session) {
+    return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
+  } else {
+    return <div>Logged in!</div>;
   }
+}
 
 const ForgotPasswordPage: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -68,11 +67,11 @@ const ForgotPasswordPage: NextPage = () => {
         strategy: 'reset_password_email_code',
         identifier: email,
       })
-      .then(_ => {
+      .then((_) => {
         setSuccessfulCreation(true);
         setError('');
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('error', err.errors[0].longMessage);
         setError(err.errors[0].longMessage);
       });
@@ -89,7 +88,7 @@ const ForgotPasswordPage: NextPage = () => {
         code,
         password,
       })
-      .then(result => {
+      .then((result) => {
         // Check if 2FA is required
         if (result.status === 'needs_second_factor') {
           setSecondFactor(true);
@@ -97,13 +96,13 @@ const ForgotPasswordPage: NextPage = () => {
         } else if (result.status === 'complete') {
           // Set the active session to
           // the newly created session (user is now signed in)
-          setActive({session: result.createdSessionId});
+          setActive({ session: result.createdSessionId });
           setError('');
         } else {
           console.log(result);
         }
       })
-      .catch(err => {
+      .catch((err) => {
         console.error('error', err.errors[0].longMessage);
         setError(err.errors[0].longMessage);
       });
@@ -127,12 +126,12 @@ const ForgotPasswordPage: NextPage = () => {
       >
         {!successfulCreation && (
           <>
-            <label htmlFor='email'>Provide your email address</label>
+            <label htmlFor="email">Provide your email address</label>
             <input
-              type='email'
-              placeholder='e.g john@doe.com'
+              type="email"
+              placeholder="e.g john@doe.com"
               value={email}
-              onChange={e => setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
             />
 
             <button>Send password reset code</button>
@@ -142,20 +141,30 @@ const ForgotPasswordPage: NextPage = () => {
 
         {successfulCreation && (
           <>
-            <label htmlFor='password'>Enter your new password</label>
-            <input type='password' value={password} onChange={e => setPassword(e.target.value)} />
+            <label htmlFor="password">Enter your new password</label>
+            <input
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-            <label htmlFor='password'>
+            <label htmlFor="password">
               Enter the password reset code that was sent to your email
             </label>
-            <input type='text' value={code} onChange={e => setCode(e.target.value)} />
+            <input
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+            />
 
             <button>Reset</button>
             {error && <p>{error}</p>}
           </>
         )}
 
-        {secondFactor && <p>2FA is required, but this UI does not handle that</p>}
+        {secondFactor && (
+          <p>2FA is required, but this UI does not handle that</p>
+        )}
       </form>
     </div>
   );

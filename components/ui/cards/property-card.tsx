@@ -1,7 +1,7 @@
 'use client';
 
-import {Card} from 'components/ui/cards/card';
-import {Home} from 'react-feather';
+import { Card } from 'components/ui/cards/card';
+import { Home } from 'react-feather';
 
 export interface PropertyCardProps {
   name: string;
@@ -19,22 +19,22 @@ export function PropertyCard({
   occupancy,
 }: PropertyCardProps): React.ReactElement {
   return (
-    <Card className='flex items-center space-x-4 p-4'>
-      <div className='flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100'>
-        <Home className='h-6 w-6 text-blue-600' />
+    <Card className="flex items-center space-x-4 p-4">
+      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
+        <Home className="h-6 w-6 text-blue-600" />
       </div>
-      <div className='flex-1 space-y-1'>
-        <h3 className='font-medium'>{name}</h3>
-        <p className='text-sm text-muted-foreground'>{address}</p>
+      <div className="flex-1 space-y-1">
+        <h3 className="font-medium">{name}</h3>
+        <p className="text-sm text-muted-foreground">{address}</p>
       </div>
-      <div className='flex items-center space-x-4'>
-        <div className='text-right'>
-          <p className='text-sm font-medium'>{units}</p>
-          <p className='text-xs text-muted-foreground'>Total Units</p>
+      <div className="flex items-center space-x-4">
+        <div className="text-right">
+          <p className="text-sm font-medium">{units}</p>
+          <p className="text-xs text-muted-foreground">Total Units</p>
         </div>
-        <div className='text-right'>
-          <p className='text-sm font-medium'>{occupancy}</p>
-          <p className='text-xs text-muted-foreground'>Occupancy</p>
+        <div className="text-right">
+          <p className="text-sm font-medium">{occupancy}</p>
+          <p className="text-xs text-muted-foreground">Occupancy</p>
         </div>
       </div>
     </Card>

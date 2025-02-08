@@ -1,6 +1,11 @@
-import {apiClient, handleApiError} from '@/lib/api';
-import {BaseQueryParams, BaseResponse} from '@/types/common';
-import {useMutation, useQuery, useQueryClient, UseQueryOptions} from '@tanstack/react-query';
+import { apiClient, handleApiError } from '@/lib/api';
+import { BaseQueryParams, BaseResponse } from '@/types/common';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  UseQueryOptions,
+} from '@tanstack/react-query';
 
 interface UseCrudOptions<T> {
   onSuccess?: (data: T) => void;
@@ -17,7 +22,9 @@ export function useApiQuery<T>(
     queryKey: [endpoint, params],
     queryFn: async () => {
       try {
-        const response = await apiClient.get<BaseResponse<T>>(endpoint, {params});
+        const response = await apiClient.get<BaseResponse<T>>(endpoint, {
+          params,
+        });
         return response.data;
       } catch (error) {
         throw new Error(handleApiError(error));
@@ -36,14 +43,17 @@ export function useApiMutation<T, TVariables = unknown>(
   return useMutation({
     mutationFn: async (variables: TVariables) => {
       try {
-        const response = await apiClient.post<BaseResponse<T>>(endpoint, variables);
+        const response = await apiClient.post<BaseResponse<T>>(
+          endpoint,
+          variables,
+        );
         return response.data;
       } catch (error) {
         throw new Error(handleApiError(error));
       }
     },
-    onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [endpoint]});
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
       options?.onSuccess?.(data.data);
     },
     onError: (error: Error) => {
@@ -59,16 +69,22 @@ export function useApiUpdate<T, TVariables = unknown>(
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async ({id, ...data}: TVariables & {id: string | number}) => {
+    mutationFn: async ({
+      id,
+      ...data
+    }: TVariables & { id: string | number }) => {
       try {
-        const response = await apiClient.put<BaseResponse<T>>(`${endpoint}/${id}`, data);
+        const response = await apiClient.put<BaseResponse<T>>(
+          `${endpoint}/${id}`,
+          data,
+        );
         return response.data;
       } catch (error) {
         throw new Error(handleApiError(error));
       }
     },
-    onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [endpoint]});
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
       options?.onSuccess?.(data.data);
     },
     onError: (error: Error) => {
@@ -83,14 +99,16 @@ export function useApiDelete<T>(endpoint: string, options?: UseCrudOptions<T>) {
   return useMutation({
     mutationFn: async (id: string | number) => {
       try {
-        const response = await apiClient.delete<BaseResponse<T>>(`${endpoint}/${id}`);
+        const response = await apiClient.delete<BaseResponse<T>>(
+          `${endpoint}/${id}`,
+        );
         return response.data;
       } catch (error) {
         throw new Error(handleApiError(error));
       }
     },
-    onSuccess: data => {
-      queryClient.invalidateQueries({queryKey: [endpoint]});
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [endpoint] });
       options?.onSuccess?.(data.data);
     },
     onError: (error: Error) => {

@@ -1,16 +1,18 @@
 'use client';
 
-import {cn} from '../../app/lib/utils';
-import {Dialog, DialogContent} from '@mui/material';
+import { cn } from '../../app/lib/utils';
+import { Dialog, DialogContent } from '@mui/material';
 import * as React from 'react';
-import {X} from 'react-feather';
+import { X } from 'react-feather';
 
 interface SheetContextValue {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-const SheetContext = React.createContext<SheetContextValue | undefined>(undefined);
+const SheetContext = React.createContext<SheetContextValue | undefined>(
+  undefined,
+);
 
 function useSheet() {
   const context = React.useContext(SheetContext);
@@ -27,7 +29,10 @@ interface SheetProps extends Omit<React.ComponentProps<typeof Dialog>, 'open'> {
 }
 
 const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
-  ({children, open = false, onOpenChange, onClose, side = 'right', ...props}, ref) => {
+  (
+    { children, open = false, onOpenChange, onClose, side = 'right', ...props },
+    ref,
+  ) => {
     const [isOpen, setIsOpen] = React.useState(open);
 
     React.useEffect(() => {
@@ -47,7 +52,7 @@ const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
       <SheetContext.Provider
         value={{
           open: isOpen,
-          onOpenChange: o => {
+          onOpenChange: (o) => {
             setIsOpen(o);
             onOpenChange?.(o);
           },
@@ -83,10 +88,15 @@ Sheet.displayName = 'Sheet';
 const SheetTrigger = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({children, ...props}, ref) => {
-  const {onOpenChange} = useSheet();
+>(({ children, ...props }, ref) => {
+  const { onOpenChange } = useSheet();
   return (
-    <button type='button' ref={ref} onClick={() => onOpenChange(true)} {...props}>
+    <button
+      type="button"
+      ref={ref}
+      onClick={() => onOpenChange(true)}
+      {...props}
+    >
       {children}
     </button>
   );
@@ -96,23 +106,23 @@ SheetTrigger.displayName = 'SheetTrigger';
 const SheetClose = React.forwardRef<
   HTMLButtonElement,
   React.ButtonHTMLAttributes<HTMLButtonElement>
->(({className, onClick, ...props}, ref) => {
-  const {onOpenChange} = useSheet();
+>(({ className, onClick, ...props }, ref) => {
+  const { onOpenChange } = useSheet();
   return (
     <button
       ref={ref}
-      type='button'
+      type="button"
       className={cn(
-        'absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-hidden focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+        'focus:outline-hidden absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
         className,
       )}
-      onClick={e => {
+      onClick={(e) => {
         onClick?.(e);
         onOpenChange(false);
       }}
       {...props}
     >
-      <X className='h-4 w-4' />
+      <X className="h-4 w-4" />
     </button>
   );
 });
@@ -120,8 +130,10 @@ SheetClose.displayName = 'SheetClose';
 
 const SheetContent = React.forwardRef<
   HTMLDivElement,
-  React.ComponentProps<typeof DialogContent> & {position?: 'left' | 'right' | 'top' | 'bottom'}
->(({children, className, position = 'right', ...props}, ref) => (
+  React.ComponentProps<typeof DialogContent> & {
+    position?: 'left' | 'right' | 'top' | 'bottom';
+  }
+>(({ children, className, position = 'right', ...props }, ref) => (
   <DialogContent
     ref={ref}
     className={cn('relative p-6', className)}
@@ -144,40 +156,57 @@ const SheetContent = React.forwardRef<
 ));
 SheetContent.displayName = 'SheetContent';
 
-const SheetHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({className, ...props}, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex flex-col space-y-2 text-center sm:text-left', className)}
-      {...props}
-    />
-  ),
-);
+const SheetHeader = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'flex flex-col space-y-2 text-center sm:text-left',
+      className,
+    )}
+    {...props}
+  />
+));
 SheetHeader.displayName = 'SheetHeader';
 
-const SheetFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({className, ...props}, ref) => (
-    <div
-      ref={ref}
-      className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
-      {...props}
-    />
-  ),
-);
+const SheetFooter = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => (
+  <div
+    ref={ref}
+    className={cn(
+      'flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2',
+      className,
+    )}
+    {...props}
+  />
+));
 SheetFooter.displayName = 'SheetFooter';
 
-const SheetTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
-  ({className, ...props}, ref) => (
-    <h3 ref={ref} className={cn('text-lg font-semibold text-foreground', className)} {...props} />
-  ),
-);
+const SheetTitle = React.forwardRef<
+  HTMLHeadingElement,
+  React.HTMLAttributes<HTMLHeadingElement>
+>(({ className, ...props }, ref) => (
+  <h3
+    ref={ref}
+    className={cn('text-lg font-semibold text-foreground', className)}
+    {...props}
+  />
+));
 SheetTitle.displayName = 'SheetTitle';
 
 const SheetDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
->(({className, ...props}, ref) => (
-  <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+>(({ className, ...props }, ref) => (
+  <p
+    ref={ref}
+    className={cn('text-sm text-muted-foreground', className)}
+    {...props}
+  />
 ));
 SheetDescription.displayName = 'SheetDescription';
 

@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,11 +12,11 @@ export function PreferencesMenu() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button variant='ghost' size='icon'>
-          <span className='sr-only'>Open preferences menu</span>
+        <Button variant="ghost" size="icon">
+          <span className="sr-only">Open preferences menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align='end'>
+      <DropdownMenuContent align="end">
         <DropdownMenuItem>Profile Settings</DropdownMenuItem>
         <DropdownMenuItem>Notifications</DropdownMenuItem>
       </DropdownMenuContent>

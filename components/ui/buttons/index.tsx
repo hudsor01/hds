@@ -1,11 +1,11 @@
-import {useScroll} from '@/hooks/ui';
-import {ArrowUpward} from '@mui/icons-material';
-import {Button, ButtonProps} from '@mui/material';
-import {useEffect, useState} from 'react';
+import { useScroll } from '@/hooks/ui';
+import { ArrowUpward } from '@mui/icons-material';
+import { Button, ButtonProps } from '@mui/material';
+import { useEffect, useState } from 'react';
 
 // Back to Top Button
 export function BackToTopButton() {
-  const {scrolled, scrollToTop} = useScroll(100);
+  const { scrolled, scrollToTop } = useScroll(100);
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -36,9 +36,13 @@ interface SubmitButtonProps extends ButtonProps {
   loading?: boolean;
 }
 
-export function SubmitButton({loading, children, ...props}: SubmitButtonProps) {
+export function SubmitButton({
+  loading,
+  children,
+  ...props
+}: SubmitButtonProps) {
   return (
-    <Button type='submit' disabled={loading} {...props}>
+    <Button type="submit" disabled={loading} {...props}>
       {loading ? 'Submitting...' : children}
     </Button>
   );
@@ -50,7 +54,11 @@ interface ThemeToggleProps extends ButtonProps {
   onToggle: () => void;
 }
 
-export function ThemeToggleButton({theme, onToggle, ...props}: ThemeToggleProps) {
+export function ThemeToggleButton({
+  theme,
+  onToggle,
+  ...props
+}: ThemeToggleProps) {
   return (
     <Button onClick={onToggle} {...props}>
       {theme === 'light' ? '🌙' : '☀️'}

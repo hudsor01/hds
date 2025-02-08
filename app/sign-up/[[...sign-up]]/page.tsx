@@ -1,18 +1,21 @@
-
-import { Box, Container, Paper, Typography } from '@mui/material'
+import { Box, Container, Paper, Typography } from '@mui/material';
 
 export default function SignUpPage() {
   return (
     <Container
-      maxWidth='sm'
-      className='min-h-screen flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8'
+      maxWidth="sm"
+      className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8"
     >
-      <Paper elevation={3} className='w-full p-8 space-y-8 hover-card'>
-        <Box className='text-center'>
-          <Typography variant='h4' component='h1' className='gradient-text font-bold'>
+      <Paper elevation={3} className="hover-card w-full space-y-8 p-8">
+        <Box className="text-center">
+          <Typography
+            variant="h4"
+            component="h1"
+            className="gradient-text font-bold"
+          >
             Create Your Account
           </Typography>
-          <Typography variant='body1' className='mt-2 text-muted-foreground'>
+          <Typography variant="body1" className="mt-2 text-muted-foreground">
             Join us to manage your properties efficiently
           </Typography>
         </Box>

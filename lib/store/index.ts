@@ -1,5 +1,5 @@
-import {create} from 'zustand';
-import {devtools, persist} from 'zustand/middleware';
+import { create } from 'zustand';
+import { devtools, persist } from 'zustand/middleware';
 
 // UI Store
 interface UIState {
@@ -13,14 +13,15 @@ interface UIState {
 export const useUIStore = create<UIState>()(
   devtools(
     persist(
-      set => ({
+      (set) => ({
         theme: 'system',
         sidebarOpen: false,
-        setTheme: theme => set({theme}),
-        toggleSidebar: () => set(state => ({sidebarOpen: !state.sidebarOpen})),
-        setSidebarOpen: open => set({sidebarOpen: open}),
+        setTheme: (theme) => set({ theme }),
+        toggleSidebar: () =>
+          set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+        setSidebarOpen: (open) => set({ sidebarOpen: open }),
       }),
-      {name: 'ui-store'},
+      { name: 'ui-store' },
     ),
   ),
 );
@@ -38,7 +39,10 @@ interface UserPreferences {
 
 interface PreferencesState {
   preferences: UserPreferences;
-  setPreference: <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => void;
+  setPreference: <K extends keyof UserPreferences>(
+    key: K,
+    value: UserPreferences[K],
+  ) => void;
   setNotificationPreference: (
     type: keyof UserPreferences['notifications'],
     enabled: boolean,
@@ -48,7 +52,7 @@ interface PreferencesState {
 export const usePreferencesStore = create<PreferencesState>()(
   devtools(
     persist(
-      set => ({
+      (set) => ({
         preferences: {
           notifications: {
             email: true,
@@ -59,11 +63,11 @@ export const usePreferencesStore = create<PreferencesState>()(
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         },
         setPreference: (key, value) =>
-          set(state => ({
-            preferences: {...state.preferences, [key]: value},
+          set((state) => ({
+            preferences: { ...state.preferences, [key]: value },
           })),
         setNotificationPreference: (type, enabled) =>
-          set(state => ({
+          set((state) => ({
             preferences: {
               ...state.preferences,
               notifications: {
@@ -73,7 +77,7 @@ export const usePreferencesStore = create<PreferencesState>()(
             },
           })),
       }),
-      {name: 'preferences-store'},
+      { name: 'preferences-store' },
     ),
   ),
 );
@@ -97,7 +101,7 @@ interface DashboardState {
 }
 
 export const useDashboardStore = create<DashboardState>()(
-  devtools(set => ({
+  devtools((set) => ({
     selectedPropertyId: null,
     selectedTenantId: null,
     filters: {
@@ -105,11 +109,11 @@ export const useDashboardStore = create<DashboardState>()(
       type: [],
       dateRange: [null, null],
     },
-    setSelectedProperty: id => set({selectedPropertyId: id}),
-    setSelectedTenant: id => set({selectedTenantId: id}),
+    setSelectedProperty: (id) => set({ selectedPropertyId: id }),
+    setSelectedTenant: (id) => set({ selectedTenantId: id }),
     setFilter: (key, value) =>
-      set(state => ({
-        filters: {...state.filters, [key]: value},
+      set((state) => ({
+        filters: { ...state.filters, [key]: value },
       })),
     resetFilters: () =>
       set({

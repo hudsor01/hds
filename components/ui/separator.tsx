@@ -1,11 +1,11 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {DividerProps as MuiDividerProps} from '@mui/material';
-import {Divider as MuiDivider, styled} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { DividerProps as MuiDividerProps } from '@mui/material';
+import { Divider as MuiDivider, styled } from '@mui/material';
 import * as React from 'react';
 
-const StyledDivider = styled(MuiDivider)(({theme}) => ({
+const StyledDivider = styled(MuiDivider)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   '&.MuiDivider-vertical': {
     margin: theme.spacing(0, 1),
@@ -15,7 +15,7 @@ const StyledDivider = styled(MuiDivider)(({theme}) => ({
 export type SeparatorProps = MuiDividerProps;
 
 export const Separator = React.forwardRef<HTMLHRElement, SeparatorProps>(
-  ({className, orientation = 'horizontal', ...props}, ref) => (
+  ({ className, orientation = 'horizontal', ...props }, ref) => (
     <StyledDivider
       ref={ref}
       orientation={orientation}

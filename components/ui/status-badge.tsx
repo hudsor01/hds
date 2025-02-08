@@ -1,4 +1,4 @@
-import {cn} from '@/lib/utils';
+import { cn } from '@/lib/utils';
 
 type StatusType =
   | 'pending'
@@ -30,7 +30,7 @@ const statusStyles: Record<StatusType, string> = {
   low: 'bg-blue-100 text-blue-800 border-blue-200',
 };
 
-export function StatusBadge({status, className}: StatusBadgeProps) {
+export function StatusBadge({ status, className }: StatusBadgeProps) {
   const formattedStatus = status.replace('_', ' ').toLowerCase();
 
   return (

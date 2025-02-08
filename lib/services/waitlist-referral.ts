@@ -12,7 +12,7 @@ export class WaitlistReferralService {
   static async generateReferralCode(): Promise<string> {
     while (true) {
       const code = nanoid(this.REFERRAL_CODE_LENGTH);
-      const {data, error} = await supabase
+      const { data, error } = await supabase
         .from('waitlist')
         .select('referral_code')
         .eq('referral_code', code)
@@ -30,27 +30,27 @@ export class WaitlistReferralService {
   static async processReferral(
     newUserEmail: string,
     referralCode: string,
-  ): Promise<{success: boolean; referrerEmail?: string}> {
+  ): Promise<{ success: boolean; referrerEmail?: string }> {
     // Find referrer
-    const {data: referrer, error: referrerError} = await supabase
+    const { data: referrer, error: referrerError } = await supabase
       .from('waitlist')
       .select('email, position')
       .eq('referral_code', referralCode)
       .single();
 
     if (referrerError || !referrer) {
-      return {success: false};
+      return { success: false };
     }
 
     // Update new user with referral info
-    const {error: updateError} = await supabase
+    const { error: updateError } = await supabase
       .from('waitlist')
-      .update({referred_by: referrer.email})
+      .update({ referred_by: referrer.email })
       .eq('email', newUserEmail);
 
     if (updateError) {
       console.error('Error updating referral:', updateError);
-      return {success: false};
+      return { success: false };
     }
 
     // Boost referrer's position
@@ -70,10 +70,10 @@ export class WaitlistReferralService {
         },
       ]);
 
-      return {success: true, referrerEmail: referrer.email};
+      return { success: true, referrerEmail: referrer.email };
     } catch (error) {
       console.error('Error processing referral bonus:', error);
-      return {success: false};
+      return { success: false };
     }
   }
 
@@ -90,38 +90,41 @@ export class WaitlistReferralService {
       status: string;
     }>;
   }> {
-    const [{count: totalReferrals}, {data: referralEvents}] = await Promise.all([
-      supabase
-        .from('waitlist')
-        .select('*', {count: 'exact', head: true})
-        .eq('referred_by', email),
-      supabase
-        .from('waitlist_events')
-        .select('*')
-        .eq('email', email)
-        .eq('type', 'referral_bonus'),
-    ]);
+    const [{ count: totalReferrals }, { data: referralEvents }] =
+      await Promise.all([
+        supabase
+          .from('waitlist')
+          .select('*', { count: 'exact', head: true })
+          .eq('referred_by', email),
+        supabase
+          .from('waitlist_events')
+          .select('*')
+          .eq('email', email)
+          .eq('type', 'referral_bonus'),
+      ]);
 
     const positionsGained = referralEvents?.reduce(
       (total, event) => total + (event.metadata?.position_change || 0),
       0,
     );
 
-    const {data: referralHistory} = await supabase
+    const { data: referralHistory } = await supabase
       .from('waitlist')
       .select('email, created_at, status')
       .eq('referred_by', email)
-      .order('created_at', {ascending: false});
+      .order('created_at', { ascending: false });
 
     return {
       totalReferrals: totalReferrals || 0,
-      activeReferrals: referralHistory?.filter(r => r.status === 'active').length || 0,
+      activeReferrals:
+        referralHistory?.filter((r) => r.status === 'active').length || 0,
       positionsGained: positionsGained || 0,
-      referralHistory: referralHistory?.map(r => ({
-        referredEmail: r.email,
-        date: r.created_at,
-        status: r.status,
-      })) || [],
+      referralHistory:
+        referralHistory?.map((r) => ({
+          referredEmail: r.email,
+          date: r.created_at,
+          status: r.status,
+        })) || [],
     };
   }
 
@@ -135,7 +138,7 @@ export class WaitlistReferralService {
       positionsGained: number;
     }>
   > {
-    const {data: referrers, error} = await supabase.rpc('get_top_referrers', {
+    const { data: referrers, error } = await supabase.rpc('get_top_referrers', {
       limit_count: limit,
     });
 

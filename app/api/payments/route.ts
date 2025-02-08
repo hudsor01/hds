@@ -17,8 +17,21 @@ const paymentSchema = z.object({
   property_id: z.string().uuid('Invalid property ID'),
   lease_id: z.string().uuid('Invalid lease ID'),
   payment_amount: z.number().positive('Payment amount must be positive'),
-  payment_type: z.enum(['RENT', 'DEPOSIT', 'LATE_FEE', 'MAINTENANCE', 'UTILITIES', 'OTHER']),
-  payment_method: z.enum(['CASH', 'CHECK', 'CREDIT_CARD', 'BANK_TRANSFER', 'OTHER']),
+  payment_type: z.enum([
+    'RENT',
+    'DEPOSIT',
+    'LATE_FEE',
+    'MAINTENANCE',
+    'UTILITIES',
+    'OTHER',
+  ]),
+  payment_method: z.enum([
+    'CASH',
+    'CHECK',
+    'CREDIT_CARD',
+    'BANK_TRANSFER',
+    'OTHER',
+  ]),
   payment_date: z.string().datetime(),
   payment_notes: z.string().optional(),
   payment_status: z
@@ -28,9 +41,9 @@ const paymentSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -42,7 +55,7 @@ export async function GET(req: NextRequest) {
     let query = supabase
       .from('payments')
       .select('*, tenants(*), properties(*)')
-      .order('payment_date', {ascending: false});
+      .order('payment_date', { ascending: false });
 
     if (property_id) {
       query = query.eq('property_id', property_id);
@@ -68,36 +81,41 @@ export async function GET(req: NextRequest) {
       if (allowedPaymentTypes.includes(type)) {
         query = query.eq('payment_type', type);
       } else {
-        console.warn(`Invalid payment type provided: ${type}. Filter has been ignored.`);
+        console.warn(
+          `Invalid payment type provided: ${type}. Filter has been ignored.`,
+        );
       }
     }
 
-    const {data: payments, error} = await query;
+    const { data: payments, error } = await query;
 
     if (error) {
       console.error('Error fetching payments:', error);
-      return NextResponse.json({error: error.message}, {status: 500});
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({data: payments});
+    return NextResponse.json({ data: payments });
   } catch (error) {
     console.error('Error in payment GET route:', error);
-    return NextResponse.json({error: 'Failed to fetch payments'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to fetch payments' },
+      { status: 500 },
+    );
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
     const validatedData = paymentSchema.parse(body);
 
     // Verify property ownership and tenant/lease association
-    const {data: property, error: propertyError} = await supabase
+    const { data: property, error: propertyError } = await supabase
       .from('properties')
       .select('id')
       .eq('id', validatedData.property_id)
@@ -105,10 +123,13 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (propertyError || !property) {
-      return NextResponse.json({error: 'Property not found or unauthorized'}, {status: 404});
+      return NextResponse.json(
+        { error: 'Property not found or unauthorized' },
+        { status: 404 },
+      );
     }
 
-    const {data: tenant, error: tenantError} = await supabase
+    const { data: tenant, error: tenantError } = await supabase
       .from('tenants')
       .select('id')
       .eq('id', validatedData.tenant_id)
@@ -116,10 +137,13 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (tenantError || !tenant) {
-      return NextResponse.json({error: 'Tenant not found or unauthorized'}, {status: 404});
+      return NextResponse.json(
+        { error: 'Tenant not found or unauthorized' },
+        { status: 404 },
+      );
     }
 
-    const {data: lease, error: leaseError} = await supabase
+    const { data: lease, error: leaseError } = await supabase
       .from('leases')
       .select('id')
       .eq('id', validatedData.lease_id)
@@ -127,7 +151,10 @@ export async function POST(req: NextRequest) {
       .single();
 
     if (leaseError || !lease) {
-      return NextResponse.json({error: 'Lease not found or unauthorized'}, {status: 404});
+      return NextResponse.json(
+        { error: 'Lease not found or unauthorized' },
+        { status: 404 },
+      );
     }
 
     let paymentIntent;
@@ -146,7 +173,7 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const {data: payment, error} = await supabase
+    const { data: payment, error } = await supabase
       .from('payments')
       .insert([
         {
@@ -160,7 +187,7 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       console.error('Error creating payment:', error);
-      return NextResponse.json({error: error.message}, {status: 500});
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     // Create notification for new payment
@@ -186,42 +213,54 @@ export async function POST(req: NextRequest) {
           client_secret: paymentIntent?.client_secret,
         },
       },
-      {status: 201},
+      { status: 201 },
     );
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error in payment POST route:', error);
-    return NextResponse.json({error: 'Failed to create payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to create payment' },
+      { status: 500 },
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
-    const {id, ...updateData} = body;
+    const { id, ...updateData } = body;
 
     if (!id) {
-      return NextResponse.json({error: 'Payment ID is required'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Payment ID is required' },
+        { status: 400 },
+      );
     }
 
     const validatedData = paymentSchema.partial().parse(updateData);
 
     // Verify payment ownership
-    const {data: existingPayment, error: paymentCheckError} = await supabase
+    const { data: existingPayment, error: paymentCheckError } = await supabase
       .from('payments')
       .select('payment_status, payment_intent_id')
       .eq('id', id)
       .single();
 
     if (paymentCheckError || !existingPayment) {
-      return NextResponse.json({error: 'Payment not found or unauthorized'}, {status: 404});
+      return NextResponse.json(
+        { error: 'Payment not found or unauthorized' },
+        { status: 404 },
+      );
     }
 
     // Prevent updates to completed or refunded payments
@@ -230,19 +269,22 @@ export async function PUT(req: NextRequest) {
       existingPayment.payment_status === 'REFUNDED'
     ) {
       return NextResponse.json(
-        {error: 'Cannot update completed or refunded payments'},
-        {status: 400},
+        { error: 'Cannot update completed or refunded payments' },
+        { status: 400 },
       );
     }
 
     // Handle Stripe payment status updates if necessary
-    if (validatedData.payment_status === 'REFUNDED' && existingPayment.payment_intent_id) {
+    if (
+      validatedData.payment_status === 'REFUNDED' &&
+      existingPayment.payment_intent_id
+    ) {
       await stripe.refunds.create({
         payment_intent: existingPayment.payment_intent_id,
       });
     }
 
-    const {data: payment, error} = await supabase
+    const { data: payment, error } = await supabase
       .from('payments')
       .update(validatedData)
       .eq('id', id)
@@ -251,7 +293,7 @@ export async function PUT(req: NextRequest) {
 
     if (error) {
       console.error('Error updating payment:', error);
-      return NextResponse.json({error: error.message}, {status: 500});
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
     // Create notification for payment status update
@@ -271,44 +313,59 @@ export async function PUT(req: NextRequest) {
       ]);
     }
 
-    return NextResponse.json({data: payment});
+    return NextResponse.json({ data: payment });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error in payment PUT route:', error);
-    return NextResponse.json({error: 'Failed to update payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to update payment' },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const id = req.nextUrl.searchParams.get('id');
     if (!id) {
-      return NextResponse.json({error: 'Payment ID is required'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Payment ID is required' },
+        { status: 400 },
+      );
     }
 
     // Verify payment ownership and status
-    const {data: payment, error: paymentCheckError} = await supabase
+    const { data: payment, error: paymentCheckError } = await supabase
       .from('payments')
       .select('payment_status, payment_intent_id')
       .eq('id', id)
       .single();
 
     if (paymentCheckError || !payment) {
-      return NextResponse.json({error: 'Payment not found or unauthorized'}, {status: 404});
+      return NextResponse.json(
+        { error: 'Payment not found or unauthorized' },
+        { status: 404 },
+      );
     }
 
     // Prevent deletion of completed or refunded payments
-    if (payment.payment_status === 'COMPLETED' || payment.payment_status === 'REFUNDED') {
+    if (
+      payment.payment_status === 'COMPLETED' ||
+      payment.payment_status === 'REFUNDED'
+    ) {
       return NextResponse.json(
-        {error: 'Cannot delete completed or refunded payments'},
-        {status: 400},
+        { error: 'Cannot delete completed or refunded payments' },
+        { status: 400 },
       );
     }
 
@@ -317,16 +374,22 @@ export async function DELETE(req: NextRequest) {
       await stripe.paymentIntents.cancel(payment.payment_intent_id);
     }
 
-    const {error} = await supabase.from('payments').delete().eq('id', id);
+    const { error } = await supabase.from('payments').delete().eq('id', id);
 
     if (error) {
       console.error('Error deleting payment:', error);
-      return NextResponse.json({error: error.message}, {status: 500});
+      return NextResponse.json({ error: error.message }, { status: 500 });
     }
 
-    return NextResponse.json({message: 'Payment deleted successfully'}, {status: 200});
+    return NextResponse.json(
+      { message: 'Payment deleted successfully' },
+      { status: 200 },
+    );
   } catch (error) {
     console.error('Error in payment DELETE route:', error);
-    return NextResponse.json({error: 'Failed to delete payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to delete payment' },
+      { status: 500 },
+    );
   }
 }

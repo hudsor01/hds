@@ -1,5 +1,5 @@
-import {clsx, type ClassValue} from 'clsx';
-import {twMerge} from 'tailwind-merge';
+import { clsx, type ClassValue } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 /**
  * Combines class names using clsx and merges Tailwind classes properly
@@ -32,7 +32,8 @@ export const isClient = !isServer;
 /**
  * Delays execution for a specified number of milliseconds
  */
-export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+export const delay = (ms: number) =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 /**
  * Safely access nested object properties
@@ -42,7 +43,10 @@ export function get(obj: any, path: string, defaultValue: any = undefined) {
     String.prototype.split
       .call(path, regexp)
       .filter(Boolean)
-      .reduce((res, key) => (res !== null && res !== undefined ? res[key] : res), obj);
+      .reduce(
+        (res, key) => (res !== null && res !== undefined ? res[key] : res),
+        obj,
+      );
   const result = travel(/[,[\]]+?/) || travel(/[,[\].]+?/);
   return result === undefined || result === obj ? defaultValue : result;
 }

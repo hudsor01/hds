@@ -1,10 +1,10 @@
 'use client';
 
-import {Box, Paper} from '@mui/material';
-import {useTheme} from '@mui/material/styles';
-import {useVirtualizer} from '@tanstack/react-virtual';
-import {motion} from 'framer-motion';
-import {useRef} from 'react';
+import { Box, Paper } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import { motion } from 'framer-motion';
+import { useRef } from 'react';
 
 interface VirtualizedListProps<T> {
   items: T[];
@@ -33,8 +33,8 @@ export function VirtualizedList<T>({
     <Paper
       ref={parentRef}
       component={motion.div}
-      initial={{opacity: 0}}
-      animate={{opacity: 1}}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       sx={{
         height: '100%',
         overflow: 'auto',
@@ -62,7 +62,7 @@ export function VirtualizedList<T>({
           position: 'relative',
         }}
       >
-        {virtualizer.getVirtualItems().map(virtualItem => (
+        {virtualizer.getVirtualItems().map((virtualItem) => (
           <Box
             key={virtualItem.key}
             data-index={virtualItem.index}

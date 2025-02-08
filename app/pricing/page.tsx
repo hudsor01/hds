@@ -89,49 +89,55 @@ export default function PricingPage() {
   const [selectedTier, setSelectedTier] = useState<string>('Growth');
 
   return (
-    <div className='mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8'>
-      <div className='text-center'>
-        <h2 className='text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight text-foreground'>
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
+      <div className="text-center">
+        <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
           Simple, transparent pricing
         </h2>
-        <p className='mx-auto mt-3 sm:mt-4 max-w-2xl text-base sm:text-lg text-muted-foreground'>
+        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:mt-4 sm:text-lg">
           Choose the perfect plan for your property management needs
         </p>
       </div>
-      <div className='mx-auto mt-16 grid max-w-lg gap-8 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4 sm:grid-cols-2 sm:max-w-none'>
+      <div className="mx-auto mt-16 grid max-w-lg gap-8 sm:max-w-none sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4">
         {pricingTiers.map((tier, index) => (
           <div
             key={index}
             onClick={() => setSelectedTier(tier.title)}
-            className={`rounded-lg border p-8 cursor-pointer transition-all duration-300 hover:shadow-lg ${
+            className={`cursor-pointer rounded-lg border p-8 transition-all duration-300 hover:shadow-lg ${
               selectedTier === tier.title
                 ? 'border-blue-500 shadow-lg ring-2 ring-blue-500 ring-opacity-50'
                 : 'border-border hover:border-blue-200'
             }`}
           >
-            <h3 className='text-xl sm:text-2xl font-bold'>{tier.title}</h3>
-            <p className='mt-2 text-sm sm:text-base text-muted-foreground'>{tier.description}</p>
-            <div className='mt-4 flex flex-col sm:flex-row sm:items-baseline'>
-              <span className='text-4xl font-bold sm:text-5xl'>{tier.price}</span>
-              <span className='text-muted-foreground sm:ml-2'>/{tier.duration}</span>
+            <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
+            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
+              {tier.description}
+            </p>
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
+              <span className="text-4xl font-bold sm:text-5xl">
+                {tier.price}
+              </span>
+              <span className="text-muted-foreground sm:ml-2">
+                /{tier.duration}
+              </span>
             </div>
-            <ul className='mt-8 space-y-4'>
+            <ul className="mt-8 space-y-4">
               {tier.features.map((feature, featureIndex) => (
-                <li key={featureIndex} className='flex items-center'>
+                <li key={featureIndex} className="flex items-center">
                   <svg
-                    className='h-5 w-5 text-green-500'
-                    fill='none'
-                    stroke='currentColor'
-                    viewBox='0 0 24 24'
+                    className="h-5 w-5 text-green-500"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
                   >
                     <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       strokeWidth={2}
-                      d='M5 13l4 4L19 7'
+                      d="M5 13l4 4L19 7"
                     />
                   </svg>
-                  <span className='ml-3'>{feature}</span>
+                  <span className="ml-3">{feature}</span>
                 </li>
               ))}
             </ul>
@@ -157,7 +163,7 @@ const PricingCheckoutButton = ({
   highlighted: boolean;
 }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const router = useRouter();
 
   const handleClick = async () => {
@@ -178,8 +184,8 @@ const PricingCheckoutButton = ({
         toast.loading('Setting up your trial...');
         const response = await fetch('/api/subscribe/free', {
           method: 'POST',
-          headers: {'Content-Type': 'application/json'},
-          body: JSON.stringify({trialDays: 14}),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ trialDays: 14 }),
         });
 
         if (response.ok) {
@@ -193,15 +199,17 @@ const PricingCheckoutButton = ({
       }
 
       if (!session) {
-        router.push(`${routes.auth.login}?callbackUrl=${encodeURIComponent('/pricing')}` as Route);
+        router.push(
+          `${routes.auth.login}?callbackUrl=${encodeURIComponent('/pricing')}` as Route,
+        );
         return;
       }
 
       toast.loading('Preparing checkout...');
       const response = await fetch('/api/checkout', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({priceId}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ priceId }),
       });
 
       const data = await response.json();
@@ -213,12 +221,18 @@ const PricingCheckoutButton = ({
       if (data.url) {
         window.location.href = data.url;
       } else if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
-        await stripe?.redirectToCheckout({sessionId: data.sessionId});
+        const stripe = await loadStripe(
+          process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
+        );
+        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
       }
     } catch (error) {
       console.error('Checkout error:', error);
-      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.');
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : 'Payment failed. Please try again.',
+      );
     } finally {
       setIsLoading(false);
       toast.dismiss();
@@ -230,10 +244,10 @@ const PricingCheckoutButton = ({
       variant={highlighted ? 'default' : 'outline'}
       onClick={handleClick}
       disabled={isLoading}
-      className={`w-full mt-4 font-semibold transition-all duration-300 ${
+      className={`mt-4 w-full font-semibold transition-all duration-300 ${
         highlighted
-          ? 'bg-blue-500 hover:bg-blue-600 text-white scale-105'
-          : 'hover:border-blue-200 hover:scale-102'
+          ? 'scale-105 bg-blue-500 text-white hover:bg-blue-600'
+          : 'hover:scale-102 hover:border-blue-200'
       }`}
     >
       {isLoading ? 'Processing...' : text}

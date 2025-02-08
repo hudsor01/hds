@@ -1,4 +1,4 @@
-import {SvgIconComponent} from '@mui/icons-material';
+import { SvgIconComponent } from '@mui/icons-material';
 
 export interface TeamMember {
   name: string;

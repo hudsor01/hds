@@ -10,10 +10,15 @@ interface DashboardCardProps {
   children: React.ReactNode;
 }
 
-export function DashboardCard({title, subtitle, action, children}: DashboardCardProps) {
+export function DashboardCard({
+  title,
+  subtitle,
+  action,
+  children,
+}: DashboardCardProps) {
   return (
-    <Paper sx={{height: '100%'}}>
-      <Box sx={{p: 3}}>
+    <Paper sx={{ height: '100%' }}>
+      <Box sx={{ p: 3 }}>
         <Box
           sx={{
             display: 'flex',
@@ -23,11 +28,11 @@ export function DashboardCard({title, subtitle, action, children}: DashboardCard
           }}
         >
           <Box>
-            <Typography variant='h6' component='h2'>
+            <Typography variant="h6" component="h2">
               {title}
             </Typography>
             {subtitle && (
-              <Typography variant='body2' color='text.secondary'>
+              <Typography variant="body2" color="text.secondary">
                 {subtitle}
               </Typography>
             )}

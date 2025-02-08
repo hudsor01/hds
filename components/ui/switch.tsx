@@ -1,11 +1,11 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {SwitchProps as MuiSwitchProps} from '@mui/material';
-import {Switch as MuiSwitch, styled} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { SwitchProps as MuiSwitchProps } from '@mui/material';
+import { Switch as MuiSwitch, styled } from '@mui/material';
 import * as React from 'react';
 
-const StyledSwitch = styled(MuiSwitch)(({theme}) => ({
+const StyledSwitch = styled(MuiSwitch)(({ theme }) => ({
   width: 36,
   height: 20,
   padding: 0,
@@ -44,11 +44,11 @@ export interface SwitchProps extends Omit<MuiSwitchProps, 'size'> {
 }
 
 export const Switch = React.forwardRef<HTMLButtonElement, SwitchProps>(
-  ({className, size = 'default', ...props}, ref) => (
+  ({ className, size = 'default', ...props }, ref) => (
     <StyledSwitch
       ref={ref}
       className={cn(
-        'peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent shadow-xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input',
+        'shadow-xs focus-visible:outline-hidden peer inline-flex h-5 w-9 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50 data-[state=checked]:bg-primary data-[state=unchecked]:bg-input',
         size === 'sm' && 'h-4 w-7',
         size === 'lg' && 'h-6 w-11',
         className,

@@ -1,6 +1,6 @@
-import {Dialog} from '@/components/ui/dialogs/dialog';
-import {Button} from '@mui/material';
-import {type ReactNode} from 'react';
+import { Dialog } from '@/components/ui/dialogs/dialog';
+import { Button } from '@mui/material';
+import { type ReactNode } from 'react';
 
 interface FormDialogProps {
   open: boolean;
@@ -27,12 +27,12 @@ export function FormDialog({
       onClose={onClose}
       title={title}
       footer={
-        <div className='flex justify-end gap-2'>
+        <div className="flex justify-end gap-2">
           <Button onClick={onClose} disabled={loading}>
             Cancel
           </Button>
           <Button
-            variant='contained'
+            variant="contained"
             onClick={onSubmit}
             disabled={loading}
             sx={{
@@ -47,7 +47,7 @@ export function FormDialog({
         </div>
       }
     >
-      <div className='mt-4'>{children}</div>
+      <div className="mt-4">{children}</div>
     </Dialog>
   );
 }

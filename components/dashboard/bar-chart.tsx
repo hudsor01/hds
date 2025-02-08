@@ -1,6 +1,6 @@
 'use client';
 
-import {Box} from '@mui/material';
+import { Box } from '@mui/material';
 import {
   Bar,
   CartesianGrid,
@@ -18,16 +18,16 @@ interface BarChartProps {
   }>;
 }
 
-export function BarChart({data}: BarChartProps) {
+export function BarChart({ data }: BarChartProps) {
   return (
-    <Box sx={{width: '100%', height: 300}}>
+    <Box sx={{ width: '100%', height: 300 }}>
       <ResponsiveContainer>
         <RechartsBarChart data={data}>
-          <CartesianGrid strokeDasharray='3 3' />
-          <XAxis dataKey='name' />
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" />
           <YAxis />
           <Tooltip />
-          <Bar dataKey='value' fill='#1976d2' />
+          <Bar dataKey="value" fill="#1976d2" />
         </RechartsBarChart>
       </ResponsiveContainer>
     </Box>

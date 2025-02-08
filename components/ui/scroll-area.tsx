@@ -1,9 +1,9 @@
 'use client';
 
-import {Box, styled} from '@mui/material';
+import { Box, styled } from '@mui/material';
 import * as React from 'react';
 
-const StyledScrollArea = styled(Box)(({theme}) => ({
+const StyledScrollArea = styled(Box)(({ theme }) => ({
   position: 'relative',
   overflow: 'auto',
   '&::-webkit-scrollbar': {
@@ -19,13 +19,14 @@ const StyledScrollArea = styled(Box)(({theme}) => ({
   },
 }));
 
-const ScrollArea = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
-  ({className, children, ...props}, ref) => (
-    <StyledScrollArea ref={ref} className={className} {...props}>
-      {children}
-    </StyledScrollArea>
-  ),
-);
+const ScrollArea = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, children, ...props }, ref) => (
+  <StyledScrollArea ref={ref} className={className} {...props}>
+    {children}
+  </StyledScrollArea>
+));
 ScrollArea.displayName = 'ScrollArea';
 
-export {ScrollArea};
+export { ScrollArea };

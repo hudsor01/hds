@@ -1,9 +1,9 @@
 'use client';
 
-import {Loader2} from '-react';
-import {Button} from '@/components/ui/buttons/button';
-import {zodResolver} from '@hookform/resolvers/zod';
-import type {SelectChangeEvent} from '@mui/material';
+import { Loader2 } from '-react';
+import { Button } from '@/components/ui/buttons/button';
+import { zodResolver } from '@hookform/resolvers/zod';
+import type { SelectChangeEvent } from '@mui/material';
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,19 @@ import {
   DialogHeader,
   DialogTitle,
 } from 'components/ui/dialog';
-import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from 'components/ui/form';
-import {Input} from 'components/ui/input';
-import {Select, SelectItem} from 'components/ui/select';
-import {useState} from 'react';
-import {useForm} from 'react-hook-form';
-import {toast} from 'sonner';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from 'components/ui/form';
+import { Input } from 'components/ui/input';
+import { Select, SelectItem } from 'components/ui/select';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import * as z from 'zod';
 
 const tenantFormSchema = z.object({
@@ -43,7 +50,7 @@ interface TenantDialogProps {
     unit: string;
     leaseEnd: string;
   };
-  properties: {id: string; name: string; units: string[]}[];
+  properties: { id: string; name: string; units: string[] }[];
   onSubmitAction: (data: TenantFormValues) => Promise<void>;
 }
 
@@ -55,7 +62,9 @@ export function TenantDialog({
   onSubmitAction,
 }: TenantDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(tenant?.property || '');
+  const [selectedProperty, setSelectedProperty] = useState(
+    tenant?.property || '',
+  );
 
   const form = useForm<TenantFormValues>({
     resolver: zodResolver(tenantFormSchema),
@@ -84,11 +93,12 @@ export function TenantDialog({
     }
   };
 
-  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits =
+    properties.find((p) => p.id === selectedProperty)?.units || [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className='sm:max-w-[425px]'>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>{tenant ? 'Edit Tenant' : 'Add Tenant'}</DialogTitle>
           <DialogDescription>
@@ -98,15 +108,18 @@ export function TenantDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className='space-y-4'>
+          <form
+            onSubmit={form.handleSubmit(handleSubmit)}
+            className="space-y-4"
+          >
             <FormField
               control={form.control}
-              name='name'
-              render={({field}) => (
+              name="name"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input placeholder='John Doe' {...field} />
+                    <Input placeholder="John Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -114,12 +127,12 @@ export function TenantDialog({
             />
             <FormField
               control={form.control}
-              name='email'
-              render={({field}) => (
+              name="email"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Email</FormLabel>
                   <FormControl>
-                    <Input placeholder='john@example.com' {...field} />
+                    <Input placeholder="john@example.com" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -127,12 +140,12 @@ export function TenantDialog({
             />
             <FormField
               control={form.control}
-              name='phone'
-              render={({field}) => (
+              name="phone"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Phone</FormLabel>
                   <FormControl>
-                    <Input placeholder='(123) 456-7890' {...field} />
+                    <Input placeholder="(123) 456-7890" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -140,8 +153,8 @@ export function TenantDialog({
             />
             <FormField
               control={form.control}
-              name='property'
-              render={({field}) => (
+              name="property"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Property</FormLabel>
                   <Select
@@ -152,9 +165,9 @@ export function TenantDialog({
                       form.setValue('unit', ''); // Reset unit when property changes
                     }}
                     defaultValue={field.value}
-                    placeholder='Select a property'
+                    placeholder="Select a property"
                   >
-                    {properties.map(property => (
+                    {properties.map((property) => (
                       <SelectItem key={property.id} value={property.id}>
                         {property.name}
                       </SelectItem>
@@ -166,8 +179,8 @@ export function TenantDialog({
             />
             <FormField
               control={form.control}
-              name='unit'
-              render={({field}) => (
+              name="unit"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Unit</FormLabel>
                   <Select
@@ -176,9 +189,9 @@ export function TenantDialog({
                     }}
                     defaultValue={field.value}
                     disabled={!selectedProperty}
-                    placeholder='Select a unit'
+                    placeholder="Select a unit"
                   >
-                    {selectedPropertyUnits.map(unit => (
+                    {selectedPropertyUnits.map((unit) => (
                       <SelectItem key={unit} value={unit}>
                         {unit}
                       </SelectItem>
@@ -190,20 +203,22 @@ export function TenantDialog({
             />
             <FormField
               control={form.control}
-              name='leaseEnd'
-              render={({field}) => (
+              name="leaseEnd"
+              render={({ field }) => (
                 <FormItem>
                   <FormLabel>Lease End Date</FormLabel>
                   <FormControl>
-                    <Input type='date' {...field} />
+                    <Input type="date" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter>
-              <Button type='submit' disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting && (
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                )}
                 {tenant ? 'Update Tenant' : 'Add Tenant'}
               </Button>
             </DialogFooter>

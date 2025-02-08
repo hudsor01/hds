@@ -24,7 +24,7 @@ export interface IconProps {
   className?: string;
 }
 
-export function Icon({name, className}: IconProps) {
+export function Icon({ name, className }: IconProps) {
   const Component = iconMapping[name];
   if (!Component) {
     console.warn(`Icon "${name}" not found.`);

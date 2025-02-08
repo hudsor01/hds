@@ -1,15 +1,24 @@
 'use client';
 
-import {Badge} from '@/components/ui/badge';
-import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/cards/card';
-import {useToast} from '@/hooks/use-toast';
-import {MaintenanceRequest} from '@/types/maintenance_requests';
-import {createClient} from '@supabase/supabase-js';
-import {useEffect, useState} from 'react';
+import { Badge } from '@/components/ui/badge';
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/cards/card';
+import { useToast } from '@/hooks/use-toast';
+import { MaintenanceRequest } from '@/types/maintenance_requests';
+import { createClient } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
 
-export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
+export default function MaintenanceTracker({
+  propertyId,
+}: {
+  propertyId: string;
+}) {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
-  const {toast} = useToast();
+  const { toast } = useToast();
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -18,11 +27,11 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
   useEffect(() => {
     // Initial fetch of maintenance requests
     const fetchRequests = async () => {
-      const {data, error} = await supabase
+      const { data, error } = await supabase
         .from('maintenance_requests')
         .select('*')
         .eq('property_id', propertyId)
-        .order('created_at', {ascending: false});
+        .order('created_at', { ascending: false });
 
       if (error) {
         toast({
@@ -49,18 +58,20 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
           table: 'maintenance_requests',
           filter: `property_id=eq.${propertyId}`,
         },
-        payload => {
+        (payload) => {
           // Handle different types of changes
           if (payload.eventType === 'INSERT') {
-            setRequests(prev => [payload.new as MaintenanceRequest, ...prev]);
+            setRequests((prev) => [payload.new as MaintenanceRequest, ...prev]);
             toast({
               title: 'New maintenance request',
               description: 'A new maintenance request has been created.',
             });
           } else if (payload.eventType === 'UPDATE') {
-            setRequests(prev =>
-              prev.map(request =>
-                request.id === payload.new.id ? (payload.new as MaintenanceRequest) : request,
+            setRequests((prev) =>
+              prev.map((request) =>
+                request.id === payload.new.id
+                  ? (payload.new as MaintenanceRequest)
+                  : request,
               ),
             );
             toast({
@@ -78,20 +89,20 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
   }, [propertyId, supabase, toast]);
 
   return (
-    <Card className='w-full'>
+    <Card className="w-full">
       <CardHeader>
         <CardTitle>Maintenance Requests</CardTitle>
       </CardHeader>
       <CardContent>
-        <div className='space-y-4'>
-          {requests.map(request => (
+        <div className="space-y-4">
+          {requests.map((request) => (
             <div
               key={request.id}
-              className='flex items-center justify-between rounded-lg border p-4'
+              className="flex items-center justify-between rounded-lg border p-4"
             >
               <div>
-                <h3 className='font-medium'>{request.title}</h3>
-                <p className='text-sm text-gray-500'>
+                <h3 className="font-medium">{request.title}</h3>
+                <p className="text-sm text-gray-500">
                   {new Date(request.createdAt).toLocaleDateString()}
                 </p>
               </div>
@@ -109,7 +120,9 @@ export default function MaintenanceTracker({propertyId}: {propertyId: string}) {
             </div>
           ))}
           {requests.length === 0 && (
-            <p className='text-center text-gray-500'>No maintenance requests found</p>
+            <p className="text-center text-gray-500">
+              No maintenance requests found
+            </p>
           )}
         </div>
       </CardContent>

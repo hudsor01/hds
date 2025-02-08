@@ -1,5 +1,5 @@
-import {stripe} from '@/lib/payments/stripe';
-import {supabase} from '@/lib/supabase';
+import { stripe } from '@/lib/payments/stripe';
+import { supabase } from '@/lib/supabase';
 
 if (!process.env.STRIPE_SECRET_KEY) {
   throw new Error('STRIPE_SECRET_KEY is not defined');
@@ -35,17 +35,24 @@ export async function createPaymentIntent({
   });
 }
 
-export async function createCustomer(email: string, metadata?: Record<string, string>) {
+export async function createCustomer(
+  email: string,
+  metadata?: Record<string, string>,
+) {
   return stripe.customers.create({
     email,
     metadata,
   });
 }
 
-export async function createSubscription({customerId, priceId, metadata}: CreateSubscription) {
+export async function createSubscription({
+  customerId,
+  priceId,
+  metadata,
+}: CreateSubscription) {
   return stripe.subscriptions.create({
     customer: customerId,
-    items: [{price: priceId}],
+    items: [{ price: priceId }],
     metadata,
   });
 }
@@ -61,7 +68,10 @@ export async function getPaymentMethods(customerId: string) {
   });
 }
 
-export async function attachPaymentMethod(customerId: string, paymentMethodId: string) {
+export async function attachPaymentMethod(
+  customerId: string,
+  paymentMethodId: string,
+) {
   return stripe.paymentMethods.attach(paymentMethodId, {
     customer: customerId,
   });
@@ -91,7 +101,7 @@ export async function savePaymentRecord(
     description?: string;
   },
 ) {
-  const {data: payment, error} = await supabase
+  const { data: payment, error } = await supabase
     .from('payments')
     .insert([
       {
@@ -112,7 +122,7 @@ export async function updatePaymentStatus(
   status: string,
   stripeEvent?: Record<string, any>,
 ) {
-  const {data: payment, error} = await supabase
+  const { data: payment, error } = await supabase
     .from('payments')
     .update({
       payment_status: status,
@@ -142,10 +152,17 @@ export async function getPaymentHistory(
     .from('payments')
     .select('*, tenants(*), properties(*)')
     .eq('user_id', userId)
-    .order('payment_date', {ascending: false});
+    .order('payment_date', { ascending: false });
 
   if (filters) {
-    const {tenant_id, property_id, payment_type, payment_status, start_date, end_date} = filters;
+    const {
+      tenant_id,
+      property_id,
+      payment_type,
+      payment_status,
+      start_date,
+      end_date,
+    } = filters;
 
     if (tenant_id) query = query.eq('tenant_id', tenant_id);
     if (property_id) query = query.eq('property_id', property_id);
@@ -155,7 +172,7 @@ export async function getPaymentHistory(
     if (end_date) query = query.lte('payment_date', end_date);
   }
 
-  const {data, error} = await query;
+  const { data, error } = await query;
   if (error) throw error;
   return data;
 }

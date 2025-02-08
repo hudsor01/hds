@@ -1,24 +1,31 @@
 'use client';
 
-import {CrudContainer} from './crud-container';
-import {PropertyCard} from './property-card';
-import {PropertyDialog} from '@/components/dashboard/property-dialog';
-import {Button} from '@/components/ui/buttons/button';
-import {useDashboardCrud} from '@/hooks/use-dashboard-crud';
-import {useDashboardUpdates} from '@/hooks/use-dashboard-updates';
-import type {Property, PropertyStatus, PropertyUnit, UpdatePropertyInput} from '@/types/property';
-import {useEffect, useState} from 'react';
-import {Plus} from 'react-feather';
-import {toast} from 'sonner';
+import { CrudContainer } from './crud-container';
+import { PropertyCard } from './property-card';
+import { PropertyDialog } from '@/components/dashboard/property-dialog';
+import { Button } from '@/components/ui/buttons/button';
+import { useDashboardCrud } from '@/hooks/use-dashboard-crud';
+import { useDashboardUpdates } from '@/hooks/use-dashboard-updates';
+import type {
+  Property,
+  PropertyStatus,
+  PropertyUnit,
+  UpdatePropertyInput,
+} from '@/types/property';
+import { useEffect, useState } from 'react';
+import { Plus } from 'react-feather';
+import { toast } from 'sonner';
 
 type PropertyWithoutIdAndUnits = Omit<Property, 'id' | 'units'>;
 
 export function PropertyManager() {
   const [properties, setProperties] = useState<Property[]>([]);
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(
+    null,
+  );
 
-  const {create, update, remove, getAll, loading} = useDashboardCrud<
+  const { create, update, remove, getAll, loading } = useDashboardCrud<
     Property,
     PropertyWithoutIdAndUnits
   >({
@@ -29,10 +36,10 @@ export function PropertyManager() {
   useDashboardUpdates({
     table: 'properties',
     onUpdate: (data: Property) => {
-      setProperties(prev => prev.map(p => (p.id === data.id ? data : p)));
+      setProperties((prev) => prev.map((p) => (p.id === data.id ? data : p)));
     },
     onDelete: (id: string) => {
-      setProperties(prev => prev.filter(p => p.id !== id));
+      setProperties((prev) => prev.filter((p) => p.id !== id));
     },
   });
 
@@ -55,7 +62,10 @@ export function PropertyManager() {
     setDialogOpen(true);
   };
 
-  const handleUpdateProperty = async (property: Property, updateData: UpdatePropertyInput) => {
+  const handleUpdateProperty = async (
+    property: Property,
+    updateData: UpdatePropertyInput,
+  ) => {
     try {
       await update(property.id, updateData);
       toast.success('Property updated successfully');
@@ -75,14 +85,18 @@ export function PropertyManager() {
 
   const getOccupiedUnits = (units?: PropertyUnit[]) => {
     if (!units) return 0;
-    return units.filter(unit => unit.status === ('OCCUPIED' as PropertyStatus)).length;
+    return units.filter(
+      (unit) => unit.status === ('OCCUPIED' as PropertyStatus),
+    ).length;
   };
 
   const getTotalUnits = (units?: PropertyUnit[]) => {
     return units?.length || 0;
   };
 
-  const handleSubmitProperty = async (data: Omit<Property, 'id' | 'units'>): Promise<void> => {
+  const handleSubmitProperty = async (
+    data: Omit<Property, 'id' | 'units'>,
+  ): Promise<void> => {
     try {
       if (selectedProperty) {
         const updateData: UpdatePropertyInput = {
@@ -103,33 +117,37 @@ export function PropertyManager() {
           createdAt: new Date(),
           updatedAt: new Date(),
         };
-        await create({...newPropertyData, units: []});
+        await create({ ...newPropertyData, units: [] });
       }
       setDialogOpen(false);
-      toast.success(`Property ${selectedProperty ? 'updated' : 'created'} successfully`);
+      toast.success(
+        `Property ${selectedProperty ? 'updated' : 'created'} successfully`,
+      );
     } catch (error) {
-      toast.error(`Failed to ${selectedProperty ? 'update' : 'create'} property`);
+      toast.error(
+        `Failed to ${selectedProperty ? 'update' : 'create'} property`,
+      );
     }
   };
 
   return (
     <CrudContainer
-      table='properties'
-      title='Properties'
+      table="properties"
+      title="Properties"
       loading={loading}
       onItemCreated={(item: unknown) => {
         const property = item as Property;
-        setProperties(prev => [...prev, property]);
+        setProperties((prev) => [...prev, property]);
       }}
     >
-      <div className='flex justify-end mb-4'>
+      <div className="mb-4 flex justify-end">
         <Button onClick={handleAddProperty}>
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className="mr-2 h-4 w-4" />
           Add Property
         </Button>
       </div>
-      <div className='grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
-        {properties.map(property => (
+      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {properties.map((property) => (
           <PropertyCard
             key={property.id}
             name={property.name}
@@ -146,7 +164,7 @@ export function PropertyManager() {
       </div>
       <PropertyDialog
         open={dialogOpen}
-        onOpenChangeAction={open => {
+        onOpenChangeAction={(open) => {
           setDialogOpen(open);
           if (!open) setSelectedProperty(null);
         }}

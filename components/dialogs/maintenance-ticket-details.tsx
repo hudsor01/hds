@@ -1,18 +1,29 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button';
 import type {
   MaintenanceStatus,
   MaintenanceTicket,
   UpdateMaintenanceTicket,
 } from '@/types/maintenance_requests';
-import type {SelectChangeEvent} from '@mui/material';
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
-import {Label} from 'components/ui/label';
-import {Select, SelectItem} from 'components/ui/select';
+import type { SelectChangeEvent } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from 'components/ui/dialog';
+import { Label } from 'components/ui/label';
+import { Select, SelectItem } from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
-import {useState} from 'react';
-import {AlertTriangle, CheckCircle, Clock, MessageSquare, Paperclip} from 'react-feather';
+import { useState } from 'react';
+import {
+  AlertTriangle,
+  CheckCircle,
+  Clock,
+  MessageSquare,
+  Paperclip,
+} from 'react-feather';
 
 interface MaintenanceTicketDetailsProps {
   open: boolean;
@@ -33,13 +44,13 @@ export function MaintenanceTicketDetails({
   const getStatusIcon = (status: MaintenanceStatus) => {
     switch (status) {
       case 'open':
-        return <AlertTriangle className='h-5 w-5 text-yellow-500' />;
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'in_progress':
-        return <Clock className='h-5 w-5 text-blue-500' />;
+        return <Clock className="h-5 w-5 text-blue-500" />;
       case 'completed':
-        return <CheckCircle className='h-5 w-5 text-green-500' />;
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
       case 'cancelled':
-        return <AlertTriangle className='h-5 w-5 text-gray-500' />;
+        return <AlertTriangle className="h-5 w-5 text-gray-500" />;
     }
   };
 
@@ -76,99 +87,105 @@ export function MaintenanceTicketDetails({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className='sm:max-w-[600px]'>
+      <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle className='flex items-center space-x-2'>
+          <DialogTitle className="flex items-center space-x-2">
             {getStatusIcon(ticket.status)}
             <span>{ticket.title}</span>
           </DialogTitle>
         </DialogHeader>
 
-        <div className='space-y-6'>
+        <div className="space-y-6">
           {/* Ticket Details */}
-          <div className='space-y-4'>
+          <div className="space-y-4">
             <div>
               <Label>Property</Label>
-              <p className='text-sm mt-1'>{ticket.propertyName}</p>
+              <p className="mt-1 text-sm">{ticket.propertyName}</p>
             </div>
 
             {ticket.unitNumber && (
               <div>
                 <Label>Unit</Label>
-                <p className='text-sm mt-1'>{ticket.unitNumber}</p>
+                <p className="mt-1 text-sm">{ticket.unitNumber}</p>
               </div>
             )}
 
             <div>
               <Label>Description</Label>
-              <p className='text-sm mt-1'>{ticket.description}</p>
+              <p className="mt-1 text-sm">{ticket.description}</p>
             </div>
 
-            <div className='flex justify-between items-center'>
+            <div className="flex items-center justify-between">
               <div>
                 <Label>Status</Label>
                 <Select
                   value={ticket.status}
                   onChange={handleStatusUpdate}
                   disabled={isLoading}
-                  placeholder='Select status'
+                  placeholder="Select status"
                 >
-                  <SelectItem value='open'>Open</SelectItem>
-                  <SelectItem value='in_progress'>In Progress</SelectItem>
-                  <SelectItem value='completed'>Completed</SelectItem>
-                  <SelectItem value='cancelled'>Cancelled</SelectItem>
+                  <SelectItem value="open">Open</SelectItem>
+                  <SelectItem value="in_progress">In Progress</SelectItem>
+                  <SelectItem value="completed">Completed</SelectItem>
+                  <SelectItem value="cancelled">Cancelled</SelectItem>
                 </Select>
               </div>
 
               <div>
                 <Label>Priority</Label>
-                <p className='text-sm mt-1 capitalize'>{ticket.priority}</p>
+                <p className="mt-1 text-sm capitalize">{ticket.priority}</p>
               </div>
             </div>
 
-            <div className='flex justify-between text-sm text-gray-500'>
-              <span>Created {new Date(ticket.createdAt).toLocaleDateString()}</span>
-              <span>{ticket.assignedTo ? `Assigned to ${ticket.assignedTo}` : 'Unassigned'}</span>
+            <div className="flex justify-between text-sm text-gray-500">
+              <span>
+                Created {new Date(ticket.createdAt).toLocaleDateString()}
+              </span>
+              <span>
+                {ticket.assignedTo
+                  ? `Assigned to ${ticket.assignedTo}`
+                  : 'Unassigned'}
+              </span>
             </div>
           </div>
 
           {/* Comments Section */}
           <div>
-            <h3 className='font-medium mb-4'>Comments</h3>
-            <div className='space-y-4'>
-              {ticket.comments.map(comment => (
-                <div key={comment.id} className='bg-gray-50 p-3 rounded-lg'>
-                  <div className='flex justify-between text-sm mb-2'>
-                    <span className='font-medium'>{comment.createdBy}</span>
-                    <span className='text-gray-500'>
+            <h3 className="mb-4 font-medium">Comments</h3>
+            <div className="space-y-4">
+              {ticket.comments.map((comment) => (
+                <div key={comment.id} className="rounded-lg bg-gray-50 p-3">
+                  <div className="mb-2 flex justify-between text-sm">
+                    <span className="font-medium">{comment.createdBy}</span>
+                    <span className="text-gray-500">
                       {new Date(comment.createdAt).toLocaleDateString()}
                     </span>
                   </div>
-                  <p className='text-sm'>{comment.content}</p>
+                  <p className="text-sm">{comment.content}</p>
                   {comment.attachments && comment.attachments.length > 0 && (
-                    <div className='mt-2 flex items-center text-sm text-blue-600'>
-                      <Paperclip className='h-4 w-4 mr-1' />
+                    <div className="mt-2 flex items-center text-sm text-blue-600">
+                      <Paperclip className="mr-1 h-4 w-4" />
                       <span>{comment.attachments.length} attachments</span>
                     </div>
                   )}
                 </div>
               ))}
 
-              <form onSubmit={handleAddComment} className='space-y-2'>
+              <form onSubmit={handleAddComment} className="space-y-2">
                 <Textarea
-                  placeholder='Add a comment...'
+                  placeholder="Add a comment..."
                   value={newComment}
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
                     setNewComment(e.target.value)
                   }
                 />
-                <div className='flex justify-end space-x-2'>
+                <div className="flex justify-end space-x-2">
                   <Button
-                    type='submit'
+                    type="submit"
                     disabled={isLoading || !newComment.trim()}
-                    className='flex items-center'
+                    className="flex items-center"
                   >
-                    <MessageSquare className='h-4 w-4 mr-2' />
+                    <MessageSquare className="mr-2 h-4 w-4" />
                     Add Comment
                   </Button>
                 </div>

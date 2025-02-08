@@ -1,12 +1,15 @@
-import { prisma } from '@/lib/prisma/prisma'
+import { prisma } from '@/lib/prisma/prisma';
 
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const {userId} = getAuth(request);
+    const { userId } = getAuth(request);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const lease = await prisma.leases.findUnique({
@@ -30,26 +33,33 @@ export async function GET(request: NextRequest, {params}: {params: {id: string}}
     });
 
     if (!lease) {
-      return NextResponse.json({error: 'Lease not found'}, {status: 404});
+      return NextResponse.json({ error: 'Lease not found' }, { status: 404 });
     }
 
     return NextResponse.json(lease);
   } catch (error) {
-    return NextResponse.json({error: 'Error fetching lease'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error fetching lease' },
+      { status: 500 },
+    );
   }
 }
 
-export async function PATCH(request: NextRequest, {params}: {params: {id: string}}) {
+export async function PATCH(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const {userId} = getAuth(request);
+    const { userId } = getAuth(request);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const json = await request.json();
 
     // Ensure dates are in ISO format
-    if (json.start_date) json.start_date = new Date(json.start_date).toISOString();
+    if (json.start_date)
+      json.start_date = new Date(json.start_date).toISOString();
     if (json.end_date) json.end_date = new Date(json.end_date).toISOString();
 
     const lease = await prisma.leases.update({
@@ -75,15 +85,21 @@ export async function PATCH(request: NextRequest, {params}: {params: {id: string
 
     return NextResponse.json(lease);
   } catch (error) {
-    return NextResponse.json({error: 'Error updating lease'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error updating lease' },
+      { status: 500 },
+    );
   }
 }
 
-export async function DELETE(request: NextRequest, {params}: {params: {id: string}}) {
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } },
+) {
   try {
-    const {userId} = getAuth(request);
+    const { userId } = getAuth(request);
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     await prisma.leases.delete({
@@ -92,8 +108,11 @@ export async function DELETE(request: NextRequest, {params}: {params: {id: strin
       },
     });
 
-    return new NextResponse(null, {status: 204});
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
-    return NextResponse.json({error: 'Error deleting lease'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error deleting lease' },
+      { status: 500 },
+    );
   }
 }

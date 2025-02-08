@@ -1,14 +1,14 @@
 'use server';
 
-import {createCheckoutSession, createCustomerPortalSession} from './stripe';
-import {withTeam} from '@/lib/auth/middleware';
-import {redirect} from 'next/navigation';
+import { createCheckoutSession, createCustomerPortalSession } from './stripe';
+import { withTeam } from '@/lib/auth/middleware';
+import { redirect } from 'next/navigation';
 
 export async function checkoutAction(formData: FormData) {
   return (
     await withTeam(async (data, team) => {
       const priceId = data.get('priceId') as string;
-      createCheckoutSession({team: team, priceId});
+      createCheckoutSession({ team: team, priceId });
     })
   )(formData);
 }

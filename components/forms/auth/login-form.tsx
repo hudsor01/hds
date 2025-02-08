@@ -10,7 +10,7 @@ import { z } from 'zod';
 type SignInFormData = z.infer<typeof signInSchema>;
 
 export function LoginForm() {
-  const {signIn} = useSignIn();
+  const { signIn } = useSignIn();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,20 +39,20 @@ export function LoginForm() {
     <FormContainer schema={signInSchema} onSubmit={handleSubmit}>
       <Stack spacing={3}>
         <FormInput
-          name='email'
-          label='Email'
-          type='email'
-          autoComplete='email'
+          name="email"
+          label="Email"
+          type="email"
+          autoComplete="email"
           disabled={isLoading}
         />
         <FormInput
-          name='password'
-          label='Password'
-          type='password'
-          autoComplete='current-password'
+          name="password"
+          label="Password"
+          type="password"
+          autoComplete="current-password"
           disabled={isLoading}
         />
-        <Button type='submit' variant='contained' loading={isLoading} fullWidth>
+        <Button type="submit" variant="contained" loading={isLoading} fullWidth>
           Sign In
         </Button>
       </Stack>

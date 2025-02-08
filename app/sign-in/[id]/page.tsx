@@ -1,17 +1,17 @@
 'use client';
 
-import {EmailSignIn} from '@/components/forms/auth/email-sign-in';
-import {ForgotPassword} from '@/components/forms/auth/forgot-password';
-import {OauthSignIn} from '@/components/forms/auth/oauth-sign-in';
-import {PasswordSignIn} from '@/components/forms/auth/password-sign-in';
-import {SignUp} from '@/components/forms/auth/sign-up';
-import {UpdatePassword} from '@/components/forms/auth/update-password';
+import { EmailSignIn } from '@/components/forms/auth/email-sign-in';
+import { ForgotPassword } from '@/components/forms/auth/forgot-password';
+import { OauthSignIn } from '@/components/forms/auth/oauth-sign-in';
+import { PasswordSignIn } from '@/components/forms/auth/password-sign-in';
+import { SignUp } from '@/components/forms/auth/sign-up';
+import { UpdatePassword } from '@/components/forms/auth/update-password';
 import Logo from '@/components/icons/Logo';
-import {Card} from '@/components/ui/cards/card';
-import {Separator} from '@/components/ui/separator';
-import {createClient} from '@/lib/db';
-import {cookies} from 'next/headers';
-import {redirect} from 'next/navigation';
+import { Card } from '@/components/ui/cards/card';
+import { Separator } from '@/components/ui/separator';
+import { createClient } from '@/lib/db';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // Define view types as a constant
 const VIEW_TYPES = [
@@ -49,8 +49,8 @@ export default async function SignIn({
   params,
   searchParams,
 }: {
-  params: {id: string};
-  searchParams: {disable_button: boolean};
+  params: { id: string };
+  searchParams: { disable_button: boolean };
 }) {
   const authConfig = getAuthConfig();
   const supabase = createClient();
@@ -60,14 +60,15 @@ export default async function SignIn({
   if (VIEW_TYPES.includes(params.id as ViewType)) {
     viewType = params.id as ViewType;
   } else {
-    const preferredView = (await cookies()).get('preferredSignInView')?.value || null;
+    const preferredView =
+      (await cookies()).get('preferredSignInView')?.value || null;
     viewType = getDefaultView(preferredView);
     return redirect(`/signin/${viewType}`);
   }
 
   // Check authentication status
   const {
-    data: {user},
+    data: { user },
   } = await supabase.auth.getUser();
 
   if (user && viewType !== 'update_password') {
@@ -77,10 +78,10 @@ export default async function SignIn({
   }
 
   return (
-    <div className='flex justify-center height-screen-helper'>
-      <div className='flex flex-col justify-between max-w-lg p-3 m-auto w-80'>
-        <div className='flex justify-center pb-12'>
-          <Logo width='64px' height='64px' />
+    <div className="height-screen-helper flex justify-center">
+      <div className="m-auto flex w-80 max-w-lg flex-col justify-between p-3">
+        <div className="flex justify-center pb-12">
+          <Logo width="64px" height="64px" />
         </div>
         <Card
           title={
@@ -93,7 +94,9 @@ export default async function SignIn({
                   : 'Sign In'
           }
         >
-          {viewType === 'password_signin' && <PasswordSignIn allowEmail={authConfig.allowEmail} />}
+          {viewType === 'password_signin' && (
+            <PasswordSignIn allowEmail={authConfig.allowEmail} />
+          )}
           {viewType === 'email_signin' && (
             <EmailSignIn
               allowPassword={authConfig.allowPassword}
@@ -107,13 +110,17 @@ export default async function SignIn({
             />
           )}
           {viewType === 'update_password' && <UpdatePassword />}
-          {viewType === 'signup' && <SignUp allowEmail={authConfig.allowEmail} />}
-          {viewType !== 'update_password' && viewType !== 'signup' && authConfig.allowOauth && (
-            <>
-              <Separator text='Third-party sign-in' />
-              <OauthSignIn />
-            </>
+          {viewType === 'signup' && (
+            <SignUp allowEmail={authConfig.allowEmail} />
           )}
+          {viewType !== 'update_password' &&
+            viewType !== 'signup' &&
+            authConfig.allowOauth && (
+              <>
+                <Separator text="Third-party sign-in" />
+                <OauthSignIn />
+              </>
+            )}
         </Card>
       </div>
     </div>

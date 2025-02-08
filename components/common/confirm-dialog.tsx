@@ -33,7 +33,12 @@ export function ConfirmDialog({
         <Button onClick={onCancel} disabled={isLoading}>
           Cancel
         </Button>
-        <Button onClick={onConfirm} color='error' disabled={isLoading} autoFocus>
+        <Button
+          onClick={onConfirm}
+          color="error"
+          disabled={isLoading}
+          autoFocus
+        >
           Delete
         </Button>
       </DialogActions>

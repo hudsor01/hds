@@ -14,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@mui/material';
-import {Plus} from 'react-feather';
+import { Plus } from 'react-feather';
 
 // Mock data for testing
 const mockTenants = [
@@ -53,19 +53,24 @@ const mockTenants = [
 export default function TenantsPage() {
   return (
     <Box>
-      <Container maxWidth='xl'>
+      <Container maxWidth="xl">
         {/* Header */}
-        <Stack direction='row' justifyContent='space-between' alignItems='center' mb={4}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={4}
+        >
           <Box>
-            <Typography variant='h4' fontWeight={600} gutterBottom>
+            <Typography variant="h4" fontWeight={600} gutterBottom>
               Tenants
             </Typography>
-            <Typography variant='body1' color='text.secondary'>
+            <Typography variant="body1" color="text.secondary">
               Manage your tenants and leases
             </Typography>
           </Box>
           <Button
-            variant='contained'
+            variant="contained"
             startIcon={<Plus size={20} />}
             sx={{
               bgcolor: 'primary.main',
@@ -86,7 +91,10 @@ export default function TenantsPage() {
         </Stack>
 
         {/* Tenants Table */}
-        <TableContainer component={Paper} sx={{borderRadius: 2, boxShadow: 1}}>
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 2, boxShadow: 1 }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -100,20 +108,24 @@ export default function TenantsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTenants.map(tenant => (
+              {mockTenants.map((tenant) => (
                 <TableRow
                   key={tenant.id}
                   hover
                   sx={{
                     cursor: 'pointer',
-                    '&:last-child td, &:last-child th': {border: 0},
+                    '&:last-child td, &:last-child th': { border: 0 },
                   }}
                 >
                   <TableCell>{tenant.name}</TableCell>
                   <TableCell>{tenant.unit}</TableCell>
                   <TableCell>{tenant.property}</TableCell>
-                  <TableCell>{new Date(tenant.leaseStart).toLocaleDateString()}</TableCell>
-                  <TableCell>{new Date(tenant.leaseEnd).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(tenant.leaseStart).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    {new Date(tenant.leaseEnd).toLocaleDateString()}
+                  </TableCell>
                   <TableCell>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
@@ -127,8 +139,14 @@ export default function TenantsPage() {
                         px: 2,
                         py: 0.5,
                         borderRadius: 1,
-                        bgcolor: tenant.status === 'Active' ? 'success.light' : 'error.light',
-                        color: tenant.status === 'Active' ? 'success.dark' : 'error.dark',
+                        bgcolor:
+                          tenant.status === 'Active'
+                            ? 'success.light'
+                            : 'error.light',
+                        color:
+                          tenant.status === 'Active'
+                            ? 'success.dark'
+                            : 'error.dark',
                         fontSize: '0.875rem',
                       }}
                     >

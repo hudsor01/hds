@@ -1,8 +1,8 @@
 import {
-    cancelRecurringPayment,
-    getRecurringPayments,
-    setupRecurringPayment,
-    updateRecurringPayment,
+  cancelRecurringPayment,
+  getRecurringPayments,
+  setupRecurringPayment,
+  updateRecurringPayment,
 } from '@/lib/services/recurring-payments';
 
 import { NextRequest, NextResponse } from 'next/server';
@@ -21,9 +21,9 @@ const recurringPaymentSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
@@ -31,21 +31,27 @@ export async function POST(req: NextRequest) {
 
     const recurringPayment = await setupRecurringPayment(userId, validatedData);
 
-    return NextResponse.json({data: recurringPayment}, {status: 201});
+    return NextResponse.json({ data: recurringPayment }, { status: 201 });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error setting up recurring payment:', error);
-    return NextResponse.json({error: 'Failed to set up recurring payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to set up recurring payment' },
+      { status: 500 },
+    );
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const searchParams = req.nextUrl.searchParams;
@@ -57,57 +63,75 @@ export async function GET(req: NextRequest) {
 
     const payments = await getRecurringPayments(userId, filters);
 
-    return NextResponse.json({data: payments});
+    return NextResponse.json({ data: payments });
   } catch (error) {
     console.error('Error fetching recurring payments:', error);
-    return NextResponse.json({error: 'Failed to fetch recurring payments'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to fetch recurring payments' },
+      { status: 500 },
+    );
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const body = await req.json();
-    const {id, ...updates} = body;
+    const { id, ...updates } = body;
 
     if (!id) {
-      return NextResponse.json({error: 'Payment ID is required'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Payment ID is required' },
+        { status: 400 },
+      );
     }
 
     const validatedUpdates = recurringPaymentSchema.partial().parse(updates);
     const updated = await updateRecurringPayment(id, userId, validatedUpdates);
 
-    return NextResponse.json({data: updated});
+    return NextResponse.json({ data: updated });
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
+      return NextResponse.json(
+        { error: error.errors[0].message },
+        { status: 400 },
+      );
     }
     console.error('Error updating recurring payment:', error);
-    return NextResponse.json({error: 'Failed to update recurring payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to update recurring payment' },
+      { status: 500 },
+    );
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return NextResponse.json({error: 'Unauthorized'}, {status: 401});
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
     const id = req.nextUrl.searchParams.get('id');
     if (!id) {
-      return NextResponse.json({error: 'Payment ID is required'}, {status: 400});
+      return NextResponse.json(
+        { error: 'Payment ID is required' },
+        { status: 400 },
+      );
     }
 
     const cancelled = await cancelRecurringPayment(id, userId);
 
-    return NextResponse.json({data: cancelled});
+    return NextResponse.json({ data: cancelled });
   } catch (error) {
     console.error('Error cancelling recurring payment:', error);
-    return NextResponse.json({error: 'Failed to cancel recurring payment'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Failed to cancel recurring payment' },
+      { status: 500 },
+    );
   }
 }

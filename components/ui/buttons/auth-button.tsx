@@ -1,10 +1,10 @@
 'use client';
 
-import { Button } from '@/components/ui/buttons/button'
-import { signOut } from '../../app/auth/lib/auth/auth'
+import { Button } from '@/components/ui/buttons/button';
+import { signOut } from '../../app/auth/lib/auth/auth';
 
 export function AuthButton() {
-  const {session, isLoaded} = useSession();
+  const { session, isLoaded } = useSession();
   const isLoading = status === 'loading';
 
   if (isLoading) {
@@ -13,7 +13,7 @@ export function AuthButton() {
 
   if (session) {
     return (
-      <Button variant='outline' onClick={() => signOut()}>
+      <Button variant="outline" onClick={() => signOut()}>
         Sign Out
       </Button>
     );

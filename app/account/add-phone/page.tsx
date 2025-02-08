@@ -1,15 +1,17 @@
 'use client';
-import * as React from 'react'
+import * as React from 'react';
 
-import { useUser } from '../../auth/lib/auth/config'
+import { useUser } from '../../auth/lib/auth/config';
 
 export default function Page() {
-  const {user, loading} = useUser();
+  const { user, loading } = useUser();
   const [phone, setPhone] = React.useState('');
   const [code, setCode] = React.useState('');
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [successful, setSuccessful] = React.useState(false);
-  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>();
+  const [phoneObj, setPhoneObj] = React.useState<
+    PhoneNumberResource | undefined
+  >();
 
   if (!isLoaded) return null;
 
@@ -23,12 +25,12 @@ export default function Page() {
 
     try {
       // Add unverified phone number to user
-      const res = await user.createPhoneNumber({phoneNumber: phone});
+      const res = await user.createPhoneNumber({ phoneNumber: phone });
       // Reload user to get updated User object
       await user.reload();
 
       // Create a reference to the new phone number to use related methods
-      const phoneNumber = user.phoneNumbers.find(a => a.id === res.id);
+      const phoneNumber = user.phoneNumbers.find((a) => a.id === res.id);
       setPhoneObj(phoneNumber);
 
       // Send the user an SMS with the verification code
@@ -47,7 +49,7 @@ export default function Page() {
     e.preventDefault();
     try {
       // Verify that the provided code matches the code sent to the user
-      const phoneVerifyAttempt = await phoneObj?.attemptVerification({code});
+      const phoneVerifyAttempt = await phoneObj?.attemptVerification({ code });
 
       if (phoneVerifyAttempt?.verification.status === 'verified') {
         setSuccessful(true);
@@ -76,19 +78,19 @@ export default function Page() {
       <>
         <h1>Verify phone</h1>
         <div>
-          <form onSubmit={e => verifyCode(e)}>
+          <form onSubmit={(e) => verifyCode(e)}>
             <div>
-              <label htmlFor='code'>Enter code</label>
+              <label htmlFor="code">Enter code</label>
               <input
-                onChange={e => setCode(e.target.value)}
-                id='code'
-                name='code'
-                type='text'
+                onChange={(e) => setCode(e.target.value)}
+                id="code"
+                name="code"
+                type="text"
                 value={code}
               />
             </div>
             <div>
-              <button type='submit'>Verify</button>
+              <button type="submit">Verify</button>
             </div>
           </form>
         </div>
@@ -101,19 +103,19 @@ export default function Page() {
     <>
       <h1>Add phone</h1>
       <div>
-        <form onSubmit={e => handleSubmit(e)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div>
-            <label htmlFor='phone'>Enter phone number</label>
+            <label htmlFor="phone">Enter phone number</label>
             <input
-              onChange={e => setPhone(e.target.value)}
-              id='phone'
-              name='phone'
-              type='phone'
+              onChange={(e) => setPhone(e.target.value)}
+              id="phone"
+              name="phone"
+              type="phone"
               value={phone}
             />
           </div>
           <div>
-            <button type='submit'>Continue</button>
+            <button type="submit">Continue</button>
           </div>
         </form>
       </div>

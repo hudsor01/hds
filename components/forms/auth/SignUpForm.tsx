@@ -1,8 +1,11 @@
 'use client';
 
-import {zodResolver} from '@hookform/resolvers/zod';
-import {Google as GoogleIcon, PersonAdd as PersonAddIcon} from '@mui/icons-material';
-import {LoadingButton} from '@mui/lab';
+import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  Google as GoogleIcon,
+  PersonAdd as PersonAddIcon,
+} from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 import {
   Alert,
   Box,
@@ -15,8 +18,8 @@ import {
   Typography,
 } from '@mui/material';
 import React from 'react';
-import {Controller, useForm} from 'react-hook-form';
-import {z} from 'zod';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 const signUpSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
@@ -33,13 +36,17 @@ interface SignUpFormProps {
   onSignIn: () => void;
 }
 
-export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps) => {
+export const SignUpForm = ({
+  onSubmit,
+  onGoogleSignUp,
+  onSignIn,
+}: SignUpFormProps) => {
   const [error, setError] = React.useState<string | null>(null);
 
   const {
     control,
     handleSubmit,
-    formState: {errors, isSubmitting},
+    formState: { errors, isSubmitting },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
   });
@@ -54,44 +61,48 @@ export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps
   };
 
   return (
-    <Paper elevation={3} sx={{p: 4, maxWidth: 400, mx: 'auto'}}>
-      <Typography variant='h5' gutterBottom align='center'>
+    <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto' }}>
+      <Typography variant="h5" gutterBottom align="center">
         Create an Account
       </Typography>
 
       <Button
         fullWidth
-        variant='outlined'
+        variant="outlined"
         startIcon={<GoogleIcon />}
         onClick={onGoogleSignUp}
-        sx={{mb: 3}}
+        sx={{ mb: 3 }}
       >
         Sign up with Google
       </Button>
 
-      <Divider sx={{my: 2}}>or</Divider>
+      <Divider sx={{ my: 2 }}>or</Divider>
 
       <Collapse in={!!error}>
         {error && (
-          <Alert severity='error' sx={{mb: 2}}>
+          <Alert severity="error" sx={{ mb: 2 }}>
             {error}
           </Alert>
         )}
       </Collapse>
 
-      <Box component='form' onSubmit={handleSubmit(handleFormSubmit)} noValidate>
-        <Box sx={{display: 'flex', gap: 2}}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit(handleFormSubmit)}
+        noValidate
+      >
+        <Box sx={{ display: 'flex', gap: 2 }}>
           <Controller
-            name='firstName'
+            name="firstName"
             control={control}
-            defaultValue=''
-            render={({field}) => (
+            defaultValue=""
+            render={({ field }) => (
               <TextField
                 {...field}
-                margin='normal'
+                margin="normal"
                 required
                 fullWidth
-                label='First Name'
+                label="First Name"
                 error={!!errors.firstName}
                 helperText={errors.firstName?.message}
               />
@@ -99,16 +110,16 @@ export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps
           />
 
           <Controller
-            name='lastName'
+            name="lastName"
             control={control}
-            defaultValue=''
-            render={({field}) => (
+            defaultValue=""
+            render={({ field }) => (
               <TextField
                 {...field}
-                margin='normal'
+                margin="normal"
                 required
                 fullWidth
-                label='Last Name'
+                label="Last Name"
                 error={!!errors.lastName}
                 helperText={errors.lastName?.message}
               />
@@ -117,17 +128,17 @@ export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps
         </Box>
 
         <Controller
-          name='email'
+          name="email"
           control={control}
-          defaultValue=''
-          render={({field}) => (
+          defaultValue=""
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              label='Email Address'
-              autoComplete='email'
+              label="Email Address"
+              autoComplete="email"
               error={!!errors.email}
               helperText={errors.email?.message}
             />
@@ -135,17 +146,17 @@ export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps
         />
 
         <Controller
-          name='password'
+          name="password"
           control={control}
-          defaultValue=''
-          render={({field}) => (
+          defaultValue=""
+          render={({ field }) => (
             <TextField
               {...field}
-              margin='normal'
+              margin="normal"
               required
               fullWidth
-              label='Password'
-              type='password'
+              label="Password"
+              type="password"
               error={!!errors.password}
               helperText={errors.password?.message}
             />
@@ -153,21 +164,26 @@ export const SignUpForm = ({onSubmit, onGoogleSignUp, onSignIn}: SignUpFormProps
         />
 
         <LoadingButton
-          type='submit'
+          type="submit"
           fullWidth
-          variant='contained'
+          variant="contained"
           loading={isSubmitting}
-          loadingPosition='start'
+          loadingPosition="start"
           startIcon={<PersonAddIcon />}
-          sx={{mt: 3}}
+          sx={{ mt: 3 }}
         >
           Sign Up
         </LoadingButton>
 
-        <Box sx={{mt: 2, textAlign: 'center'}}>
-          <Typography variant='body2'>
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography variant="body2">
             Already have an account?{' '}
-            <Link component='button' variant='body2' onClick={onSignIn} sx={{cursor: 'pointer'}}>
+            <Link
+              component="button"
+              variant="body2"
+              onClick={onSignIn}
+              sx={{ cursor: 'pointer' }}
+            >
               Sign in
             </Link>
           </Typography>

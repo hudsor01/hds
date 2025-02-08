@@ -11,14 +11,19 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import {CreditCard, Download} from 'react-feather';
+import { CreditCard, Download } from 'react-feather';
 
 export function BillingSettings() {
   const currentPlan = {
     name: 'Professional',
     price: 29.99,
     billingCycle: 'monthly',
-    features: ['Up to 100 properties', 'Advanced analytics', 'Email support', 'API access'],
+    features: [
+      'Up to 100 properties',
+      'Advanced analytics',
+      'Email support',
+      'API access',
+    ],
   };
 
   const billingHistory = [
@@ -43,28 +48,28 @@ export function BillingSettings() {
   ];
 
   return (
-    <Box sx={{p: 3}}>
-      <Typography variant='h6' gutterBottom>
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h6" gutterBottom>
         Billing & Subscription
       </Typography>
-      <Typography variant='body2' color='text.secondary' sx={{mb: 4}}>
+      <Typography variant="body2" color="text.secondary" sx={{ mb: 4 }}>
         Manage your subscription plan and billing information
       </Typography>
 
       <Grid container spacing={4}>
         {/* Current Plan */}
         <Grid item xs={12} md={6}>
-          <Card variant='outlined'>
+          <Card variant="outlined">
             <CardContent>
               <Stack spacing={2}>
                 <Box>
-                  <Typography variant='subtitle2' gutterBottom>
+                  <Typography variant="subtitle2" gutterBottom>
                     Current Plan
                   </Typography>
-                  <Typography variant='h5' color='primary.main'>
+                  <Typography variant="h5" color="primary.main">
                     {currentPlan.name}
                   </Typography>
-                  <Typography variant='body2' color='text.secondary'>
+                  <Typography variant="body2" color="text.secondary">
                     ${currentPlan.price}/month
                   </Typography>
                 </Box>
@@ -72,23 +77,23 @@ export function BillingSettings() {
                 <Divider />
 
                 <Box>
-                  <Typography variant='subtitle2' gutterBottom>
+                  <Typography variant="subtitle2" gutterBottom>
                     Plan Features
                   </Typography>
                   <Stack spacing={1}>
                     {currentPlan.features.map((feature, index) => (
-                      <Typography key={index} variant='body2'>
+                      <Typography key={index} variant="body2">
                         • {feature}
                       </Typography>
                     ))}
                   </Stack>
                 </Box>
 
-                <Box sx={{mt: 2}}>
-                  <Button variant='contained' color='primary'>
+                <Box sx={{ mt: 2 }}>
+                  <Button variant="contained" color="primary">
                     Upgrade Plan
                   </Button>
-                  <Button variant='outlined' color='inherit' sx={{ml: 2}}>
+                  <Button variant="outlined" color="inherit" sx={{ ml: 2 }}>
                     Cancel Subscription
                   </Button>
                 </Box>
@@ -99,18 +104,27 @@ export function BillingSettings() {
 
         {/* Payment Method */}
         <Grid item xs={12} md={6}>
-          <Card variant='outlined'>
+          <Card variant="outlined">
             <CardContent>
               <Stack spacing={3}>
                 <Box>
-                  <Typography variant='subtitle2' gutterBottom>
+                  <Typography variant="subtitle2" gutterBottom>
                     Payment Method
                   </Typography>
-                  <Box sx={{display: 'flex', alignItems: 'center', gap: 2, mt: 1}}>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 2,
+                      mt: 1,
+                    }}
+                  >
                     <CreditCard size={20} />
                     <Box>
-                      <Typography variant='body2'>•••• •••• •••• 4242</Typography>
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="body2">
+                        •••• •••• •••• 4242
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
                         Expires 12/2024
                       </Typography>
                     </Box>
@@ -118,7 +132,11 @@ export function BillingSettings() {
                 </Box>
 
                 <Box>
-                  <Button variant='outlined' color='inherit' startIcon={<CreditCard size={16} />}>
+                  <Button
+                    variant="outlined"
+                    color="inherit"
+                    startIcon={<CreditCard size={16} />}
+                  >
                     Update Payment Method
                   </Button>
                 </Box>
@@ -127,13 +145,13 @@ export function BillingSettings() {
           </Card>
 
           {/* Billing History */}
-          <Box sx={{mt: 4}}>
-            <Typography variant='subtitle2' gutterBottom>
+          <Box sx={{ mt: 4 }}>
+            <Typography variant="subtitle2" gutterBottom>
               Billing History
             </Typography>
-            <Card variant='outlined'>
+            <Card variant="outlined">
               <Stack divider={<Divider />}>
-                {billingHistory.map(invoice => (
+                {billingHistory.map((invoice) => (
                   <Box
                     key={invoice.id}
                     sx={{
@@ -144,15 +162,19 @@ export function BillingSettings() {
                     }}
                   >
                     <Stack spacing={0.5}>
-                      <Typography variant='body2'>{invoice.id}</Typography>
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="body2">{invoice.id}</Typography>
+                      <Typography variant="caption" color="text.secondary">
                         {new Date(invoice.date).toLocaleDateString()}
                       </Typography>
                     </Stack>
-                    <Stack direction='row' spacing={2} alignItems='center'>
-                      <Typography variant='body2'>${invoice.amount}</Typography>
-                      <Chip label={invoice.status} size='small' color='success' />
-                      <Button size='small' startIcon={<Download size={16} />}>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <Typography variant="body2">${invoice.amount}</Typography>
+                      <Chip
+                        label={invoice.status}
+                        size="small"
+                        color="success"
+                      />
+                      <Button size="small" startIcon={<Download size={16} />}>
                         PDF
                       </Button>
                     </Stack>

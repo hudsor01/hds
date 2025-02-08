@@ -1,12 +1,12 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import type {Lease} from '@/types/lease';
-import {LEASE_STATUS} from '@/types/lease';
-import type {Property} from '@/types/property';
+import { Button } from '@/components/ui/buttons/button';
+import type { Lease } from '@/types/lease';
+import { LEASE_STATUS } from '@/types/lease';
+import type { Property } from '@/types/property';
 import LeaseDialog from 'components/dialogs/lease-dialog';
-import {useState} from 'react';
-import {Edit, Plus, Trash} from 'react-feather';
+import { useState } from 'react';
+import { Edit, Plus, Trash } from 'react-feather';
 
 // Mock data for initial development
 const mockProperties: Property[] = [
@@ -98,13 +98,15 @@ export default function LeasesPage() {
       updatedAt: new Date(),
     };
 
-    setLeases(leases.map(l => (l.id === selectedLease.id ? updatedLease : l)));
+    setLeases(
+      leases.map((l) => (l.id === selectedLease.id ? updatedLease : l)),
+    );
   };
 
   const handleDeleteLease = async (leaseId: string) => {
     // In a real app, this would be an API call
     if (confirm('Are you sure you want to delete this lease?')) {
-      setLeases(leases.filter(l => l.id !== leaseId));
+      setLeases(leases.filter((l) => l.id !== leaseId));
     }
   };
 
@@ -124,11 +126,11 @@ export default function LeasesPage() {
   };
 
   return (
-    <div className='p-6 space-y-6'>
-      <div className='flex justify-between items-center'>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className='text-2xl font-bold'>Leases</h1>
-          <p className='text-gray-500'>Manage your property leases</p>
+          <h1 className="text-2xl font-bold">Leases</h1>
+          <p className="text-gray-500">Manage your property leases</p>
         </div>
         <Button
           onClick={() => {
@@ -136,57 +138,77 @@ export default function LeasesPage() {
             setIsDialogOpen(true);
           }}
         >
-          <Plus className='w-4 h-4 mr-2' />
+          <Plus className="mr-2 h-4 w-4" />
           Add Lease
         </Button>
       </div>
 
-      <div className='bg-white rounded-lg shadow-sm'>
-        <div className='overflow-x-auto'>
-          <table className='w-full text-left'>
-            <thead className='bg-gray-50 border-b'>
+      <div className="rounded-lg bg-white shadow-sm">
+        <div className="overflow-x-auto">
+          <table className="w-full text-left">
+            <thead className="border-b bg-gray-50">
               <tr>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Property</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Unit</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Tenant</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Dates</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Rent</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Status</th>
-                <th className='px-6 py-3 text-sm font-medium text-gray-500'>Actions</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Property
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Unit
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Tenant
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Dates
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Rent
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">
+                  Actions
+                </th>
               </tr>
             </thead>
-            <tbody className='divide-y'>
-              {leases.map(lease => (
+            <tbody className="divide-y">
+              {leases.map((lease) => (
                 <tr key={lease.id}>
-                  <td className='px-6 py-4'>{lease.propertyName}</td>
-                  <td className='px-6 py-4'>Unit {lease.unitNumber}</td>
-                  <td className='px-6 py-4'>{lease.tenantName}</td>
-                  <td className='px-6 py-4'>
+                  <td className="px-6 py-4">{lease.propertyName}</td>
+                  <td className="px-6 py-4">Unit {lease.unitNumber}</td>
+                  <td className="px-6 py-4">{lease.tenantName}</td>
+                  <td className="px-6 py-4">
                     {new Date(lease.startDate).toLocaleDateString()} -{' '}
                     {new Date(lease.endDate).toLocaleDateString()}
                   </td>
-                  <td className='px-6 py-4'>${lease.rentAmount.toLocaleString()}</td>
-                  <td className='px-6 py-4'>
+                  <td className="px-6 py-4">
+                    ${lease.rentAmount.toLocaleString()}
+                  </td>
+                  <td className="px-6 py-4">
                     <span
-                      className={`px-2 py-1 rounded-full text-xs font-medium capitalize ${getStatusColor(lease.status)}`}
+                      className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getStatusColor(lease.status)}`}
                     >
                       {lease.status}
                     </span>
                   </td>
-                  <td className='px-6 py-4'>
-                    <div className='flex gap-2'>
+                  <td className="px-6 py-4">
+                    <div className="flex gap-2">
                       <Button
-                        variant='ghost'
-                        size='sm'
+                        variant="ghost"
+                        size="sm"
                         onClick={() => {
                           setSelectedLease(lease);
                           setIsDialogOpen(true);
                         }}
                       >
-                        <Edit className='w-4 h-4' />
+                        <Edit className="h-4 w-4" />
                       </Button>
-                      <Button variant='ghost' size='sm' onClick={() => handleDeleteLease(lease.id)}>
-                        <Trash className='w-4 h-4' />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteLease(lease.id)}
+                      >
+                        <Trash className="h-4 w-4" />
                       </Button>
                     </div>
                   </td>

@@ -2,7 +2,7 @@
 
 import AnalyticsChart from '@/components/analytics/AnalyticsChart';
 import MetricCard from '@/components/analytics/MetricCard';
-import {api} from '@/lib/api';
+import { api } from '@/lib/api';
 import type {
   FinancialMetrics,
   MaintenanceMetrics,
@@ -10,37 +10,43 @@ import type {
   TenantMetrics,
   TimeSeriesData,
 } from '@/types/analytics';
-import {Grid, Typography} from '@mui/material';
-import {useQuery} from '@tanstack/react-query';
-import {useEffect, useState} from 'react';
-import {DollarSign, Home, Tool, Users} from 'react-feather';
-import { checkRole } from '../../../utils/roles'
+import { Grid, Typography } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { DollarSign, Home, Tool, Users } from 'react-feather';
+import { checkRole } from '../../../utils/roles';
 
 const REFETCH_INTERVAL = 30000; // 30 seconds
 
 // Fetch metrics based on role
-const {data: propertyMetrics, isLoading: loadingProperties} = useQuery<{data: PropertyMetrics}>({
+const { data: propertyMetrics, isLoading: loadingProperties } = useQuery<{
+  data: PropertyMetrics;
+}>({
   queryKey: ['analytics', 'properties', checkRole('admin')],
   queryFn: () => api.get('/api/analytics/properties'),
   enabled: checkRole('admin'),
   refetchInterval: REFETCH_INTERVAL,
 });
 
-const {data: tenantMetrics, isLoading: loadingTenants} = useQuery<{data: TenantMetrics}>({
+const { data: tenantMetrics, isLoading: loadingTenants } = useQuery<{
+  data: TenantMetrics;
+}>({
   queryKey: ['analytics', 'tenants', role],
   queryFn: () => api.get('/api/analytics/tenants'),
   enabled: permissions.canViewAllTenants || role === 'TENANT',
   refetchInterval: REFETCH_INTERVAL,
 });
 
-const {data: financialMetrics, isLoading: loadingFinances} = useQuery<{data: FinancialMetrics}>({
+const { data: financialMetrics, isLoading: loadingFinances } = useQuery<{
+  data: FinancialMetrics;
+}>({
   queryKey: ['analytics', 'finances', role],
   queryFn: () => api.get('/api/analytics/finances'),
   enabled: permissions.canViewAllPayments || role === 'TENANT',
   refetchInterval: REFETCH_INTERVAL,
 });
 
-const {data: maintenanceMetrics, isLoading: loadingMaintenance} = useQuery<{
+const { data: maintenanceMetrics, isLoading: loadingMaintenance } = useQuery<{
   data: MaintenanceMetrics;
 }>({
   queryKey: ['analytics', 'maintenance', role],
@@ -49,7 +55,7 @@ const {data: maintenanceMetrics, isLoading: loadingMaintenance} = useQuery<{
   refetchInterval: REFETCH_INTERVAL,
 });
 
-const {data: trends} = useQuery<{data: TimeSeriesData[]}>({
+const { data: trends } = useQuery<{ data: TimeSeriesData[] }>({
   queryKey: ['analytics', 'trends', role],
   queryFn: () => api.get('/api/analytics/trends?trend_metric=revenue'),
   enabled: permissions.canViewReports || role === 'TENANT',
@@ -88,7 +94,7 @@ export const useRoleBasedAccess = () => {
       const user = supabase.auth.user();
 
       if (user) {
-        const {data, error} = await supabase
+        const { data, error } = await supabase
           .from('profiles')
           .select('role, permissions')
           .eq('id', user.id)
@@ -108,11 +114,11 @@ export const useRoleBasedAccess = () => {
 
   return (
     <div>
-      <Typography variant='h4' gutterBottom>
+      <Typography variant="h4" gutterBottom>
         {role === 'TENANT' ? 'My Dashboard' : 'Dashboard'}
       </Typography>
 
-      <Grid container spacing={3} sx={{mb: 4}}>
+      <Grid container spacing={3} sx={{ mb: 4 }}>
         {(permissions.canViewAllProperties || role === 'TENANT') && (
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
@@ -173,7 +179,7 @@ export const useRoleBasedAccess = () => {
         {(permissions.canViewAllProperties || role === 'TENANT') && (
           <Grid item xs={12} sm={6} md={3}>
             <MetricCard
-              title='Maintenance Requests'
+              title="Maintenance Requests"
               value={maintenanceMetrics?.data?.open_work_orders || 0}
               icon={<Tool />}
               isLoading={loadingMaintenance}
@@ -196,16 +202,16 @@ export const useRoleBasedAccess = () => {
             <AnalyticsChart
               title={role === 'TENANT' ? 'Payment History' : 'Revenue Trend'}
               data={trends?.data || []}
-              valuePrefix='$'
+              valuePrefix="$"
             />
           </Grid>
           {role !== 'TENANT' && (
             <Grid item xs={12} md={4}>
               <AnalyticsChart
-                title='Occupancy Rate'
+                title="Occupancy Rate"
                 data={trends?.data || []}
-                valueSuffix='%'
-                color='#4CAF50'
+                valueSuffix="%"
+                color="#4CAF50"
               />
             </Grid>
           )}

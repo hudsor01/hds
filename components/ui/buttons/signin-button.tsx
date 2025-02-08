@@ -1,14 +1,13 @@
 'use client';
 
-
 import { Button } from '@mui/material';
 
 export function SignInButton() {
-  const {signIn} = useSignIn();
+  const { signIn } = useSignIn();
 
   return (
     <Button
-      variant='contained'
+      variant="contained"
       onClick={() => {
         if (!signIn) {
           console.error('signIn is undefined');

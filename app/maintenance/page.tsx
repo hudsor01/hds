@@ -16,8 +16,8 @@ import {
   Tabs,
   Typography,
 } from '@mui/material';
-import {useState} from 'react';
-import {Plus} from 'react-feather';
+import { useState } from 'react';
+import { Plus } from 'react-feather';
 
 // Mock data for testing
 const mockTickets = [
@@ -115,19 +115,24 @@ export default function MaintenancePage() {
 
   return (
     <Box>
-      <Container maxWidth='xl'>
+      <Container maxWidth="xl">
         {/* Header */}
-        <Stack direction='row' justifyContent='space-between' alignItems='center' mb={4}>
+        <Stack
+          direction="row"
+          justifyContent="space-between"
+          alignItems="center"
+          mb={4}
+        >
           <Box>
-            <Typography variant='h4' fontWeight={600} gutterBottom>
+            <Typography variant="h4" fontWeight={600} gutterBottom>
               Maintenance
             </Typography>
-            <Typography variant='body1' color='text.secondary'>
+            <Typography variant="body1" color="text.secondary">
               Track and manage maintenance requests
             </Typography>
           </Box>
           <Button
-            variant='contained'
+            variant="contained"
             startIcon={<Plus size={20} />}
             sx={{
               bgcolor: 'primary.main',
@@ -148,17 +153,20 @@ export default function MaintenancePage() {
         </Stack>
 
         {/* Status Tabs */}
-        <Box sx={{borderBottom: 1, borderColor: 'divider', mb: 4}}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
           <Tabs value={tabValue} onChange={handleTabChange}>
-            <Tab label='All Requests' />
-            <Tab label='Pending' />
-            <Tab label='In Progress' />
-            <Tab label='Completed' />
+            <Tab label="All Requests" />
+            <Tab label="Pending" />
+            <Tab label="In Progress" />
+            <Tab label="Completed" />
           </Tabs>
         </Box>
 
         {/* Tickets Table */}
-        <TableContainer component={Paper} sx={{borderRadius: 2, boxShadow: 1}}>
+        <TableContainer
+          component={Paper}
+          sx={{ borderRadius: 2, boxShadow: 1 }}
+        >
           <Table>
             <TableHead>
               <TableRow>
@@ -172,21 +180,21 @@ export default function MaintenancePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTickets.map(ticket => (
+              {mockTickets.map((ticket) => (
                 <TableRow
                   key={ticket.id}
                   hover
                   sx={{
                     cursor: 'pointer',
-                    '&:last-child td, &:last-child th': {border: 0},
+                    '&:last-child td, &:last-child th': { border: 0 },
                   }}
                 >
                   <TableCell>
                     <Box>
-                      <Typography variant='body2' fontWeight={500}>
+                      <Typography variant="body2" fontWeight={500}>
                         {ticket.title}
                       </Typography>
-                      <Typography variant='caption' color='text.secondary'>
+                      <Typography variant="caption" color="text.secondary">
                         {ticket.description}
                       </Typography>
                     </Box>
@@ -224,7 +232,9 @@ export default function MaintenancePage() {
                       {ticket.status.replace('_', ' ')}
                     </Box>
                   </TableCell>
-                  <TableCell>{new Date(ticket.createdAt).toLocaleDateString()}</TableCell>
+                  <TableCell>
+                    {new Date(ticket.createdAt).toLocaleDateString()}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

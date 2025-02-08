@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+import { useEffect } from 'react';
 
 export function usePreferencesSync() {
   useEffect(() => {
@@ -19,7 +19,10 @@ export function usePreferencesSync() {
     const prefs = loadPreferences();
     if (prefs) {
       // Apply loaded preferences
-      document.documentElement.setAttribute('data-theme', prefs.theme || 'light');
+      document.documentElement.setAttribute(
+        'data-theme',
+        prefs.theme || 'light',
+      );
     }
   }, []);
 }

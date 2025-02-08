@@ -1,13 +1,13 @@
-import { prisma } from '@/lib/prisma'
-import { cookies } from 'next/headers'
-import { NextRequest, NextResponse } from 'next/server'
+import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   try {
     // Verify authentication
-    const {userId} = await auth();
+    const { userId } = await auth();
     if (!userId) {
-      return new NextResponse('Unauthorized', {status: 401});
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const searchParams = request.nextUrl.searchParams;
@@ -17,7 +17,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '10');
 
     // Initialize Supabase client for complex queries
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient({ cookies });
 
     let results = [];
 
@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
         results = await prisma.property.findMany({
           where: {
             OR: [
-              {name: {contains: query, mode: 'insensitive'}},
-              {address: {contains: query, mode: 'insensitive'}},
+              { name: { contains: query, mode: 'insensitive' } },
+              { address: { contains: query, mode: 'insensitive' } },
             ],
           },
           take: limit,
@@ -42,8 +42,8 @@ export async function GET(request: NextRequest) {
         results = await prisma.tenant.findMany({
           where: {
             OR: [
-              {name: {contains: query, mode: 'insensitive'}},
-              {email: {contains: query, mode: 'insensitive'}},
+              { name: { contains: query, mode: 'insensitive' } },
+              { email: { contains: query, mode: 'insensitive' } },
             ],
           },
           take: limit,
@@ -62,8 +62,8 @@ export async function GET(request: NextRequest) {
         results = await prisma.maintenanceRequest.findMany({
           where: {
             OR: [
-              {description: {contains: query, mode: 'insensitive'}},
-              {status: {contains: query, mode: 'insensitive'}},
+              { description: { contains: query, mode: 'insensitive' } },
+              { status: { contains: query, mode: 'insensitive' } },
             ],
           },
           take: limit,
@@ -83,19 +83,19 @@ export async function GET(request: NextRequest) {
         const [properties, tenants, maintenance] = await Promise.all([
           prisma.property.findMany({
             where: {
-              name: {contains: query, mode: 'insensitive'},
+              name: { contains: query, mode: 'insensitive' },
             },
             take: limit,
           }),
           prisma.tenant.findMany({
             where: {
-              name: {contains: query, mode: 'insensitive'},
+              name: { contains: query, mode: 'insensitive' },
             },
             take: limit,
           }),
           prisma.maintenanceRequest.findMany({
             where: {
-              description: {contains: query, mode: 'insensitive'},
+              description: { contains: query, mode: 'insensitive' },
             },
             take: limit,
           }),
@@ -117,6 +117,9 @@ export async function GET(request: NextRequest) {
     });
   } catch (error) {
     console.error('Search error:', error);
-    return NextResponse.json({error: 'Error performing search'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error performing search' },
+      { status: 500 },
+    );
   }
 }

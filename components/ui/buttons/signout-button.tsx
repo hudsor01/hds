@@ -1,13 +1,13 @@
 'use client';
 
-import { useTransition } from 'react'
-import { signOut } from '../../app/auth/lib/auth/auth'
+import { useTransition } from 'react';
+import { signOut } from '../../app/auth/lib/auth/auth';
 interface SignOutButtonProps {
   className?: string;
   children?: React.ReactNode;
 }
 
-export function SignOutButton({className, children}: SignOutButtonProps) {
+export function SignOutButton({ className, children }: SignOutButtonProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleSignOut = () => {

@@ -1,4 +1,4 @@
-import type { Prisma, waitlist } from '@prisma/client'
+import type { Prisma, waitlist } from '@prisma/client';
 
 export type WaitlistEventType =
   | 'signup'
@@ -95,7 +95,7 @@ export interface WaitlistAdminStats extends WaitlistStats {
   geographicDistribution: Record<string, number>;
 }
 // vite.config.ts
-import { defineConfig } from 'vite'
+import { defineConfig } from 'vite';
 
 export interface WaitlistBulkAction {
   action: 'delete' | 'update_status' | 'move_position';

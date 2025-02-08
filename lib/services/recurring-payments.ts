@@ -1,5 +1,5 @@
-import {stripe} from '@/lib/payments/stripe';
-import {supabase} from '@/lib/supabase';
+import { stripe } from '@/lib/payments/stripe';
+import { supabase } from '@/lib/supabase';
 
 export interface RecurringPaymentConfig {
   tenant_id: string;
@@ -12,7 +12,10 @@ export interface RecurringPaymentConfig {
   metadata?: Record<string, string>;
 }
 
-export async function setupRecurringPayment(userId: string, config: RecurringPaymentConfig) {
+export async function setupRecurringPayment(
+  userId: string,
+  config: RecurringPaymentConfig,
+) {
   // Create a subscription schedule in Stripe
   const schedule = await stripe.subscriptionSchedules.create({
     customer: config.tenant_id,
@@ -52,7 +55,7 @@ export async function setupRecurringPayment(userId: string, config: RecurringPay
   });
 
   // Save the recurring payment configuration
-  const {data: recurringPayment, error} = await supabase
+  const { data: recurringPayment, error } = await supabase
     .from('recurring_payments')
     .insert([
       {
@@ -66,7 +69,9 @@ export async function setupRecurringPayment(userId: string, config: RecurringPay
         description: config.description,
         stripe_schedule_id: schedule.id,
         status: 'ACTIVE',
-        next_payment_date: new Date(schedule.phases[0].start_date * 1000).toISOString(),
+        next_payment_date: new Date(
+          schedule.phases[0].start_date * 1000,
+        ).toISOString(),
       },
     ])
     .select()
@@ -82,7 +87,7 @@ export async function updateRecurringPayment(
   updates: Partial<RecurringPaymentConfig>,
 ) {
   // Get the existing recurring payment
-  const {data: existing, error: fetchError} = await supabase
+  const { data: existing, error: fetchError } = await supabase
     .from('recurring_payments')
     .select('stripe_schedule_id')
     .eq('id', id)
@@ -129,7 +134,7 @@ export async function updateRecurringPayment(
   }
 
   // Update the database record
-  const {data: updated, error: updateError} = await supabase
+  const { data: updated, error: updateError } = await supabase
     .from('recurring_payments')
     .update({
       ...updates,
@@ -146,7 +151,7 @@ export async function updateRecurringPayment(
 
 export async function cancelRecurringPayment(id: string, userId: string) {
   // Get the existing recurring payment
-  const {data: existing, error: fetchError} = await supabase
+  const { data: existing, error: fetchError } = await supabase
     .from('recurring_payments')
     .select('stripe_schedule_id')
     .eq('id', id)
@@ -159,7 +164,7 @@ export async function cancelRecurringPayment(id: string, userId: string) {
   await stripe.subscriptionSchedules.cancel(existing.stripe_schedule_id);
 
   // Update the database record
-  const {data: cancelled, error: updateError} = await supabase
+  const { data: cancelled, error: updateError } = await supabase
     .from('recurring_payments')
     .update({
       status: 'CANCELLED',
@@ -188,13 +193,13 @@ export async function getRecurringPayments(
     .eq('user_id', userId);
 
   if (filters) {
-    const {tenant_id, property_id, status} = filters;
+    const { tenant_id, property_id, status } = filters;
     if (tenant_id) query = query.eq('tenant_id', tenant_id);
     if (property_id) query = query.eq('property_id', property_id);
     if (status) query = query.eq('status', status);
   }
 
-  const {data, error} = await query;
+  const { data, error } = await query;
   if (error) throw error;
   return data;
 }

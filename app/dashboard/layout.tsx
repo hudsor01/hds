@@ -1,29 +1,31 @@
 'use client';
 
-import { AuthGuard } from '@/components/auth/auth-guard'
-import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
-import { useRouter } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { useUser } from '../../auth/lib/auth/config'
+import { AuthGuard } from '@/components/auth/auth-guard';
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useUser } from '../../auth/lib/auth/config';
 const SIDEBAR_WIDTH = 280;
 
 interface DashboardLayoutProps {
   children: React.ReactNode;
 }
 
-export default function DashboardLayout({children}: DashboardLayoutProps) {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const theme = useTheme();
   const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
-  const {user, isLoaded} = useUser();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
 
   // Check if user needs onboarding
   useEffect(() => {
     if (isLoaded && user) {
       const needsOnboarding =
-        !user.firstName || !user.lastName || !user.publicMetadata?.onboardingCompleted;
+        !user.firstName ||
+        !user.lastName ||
+        !user.publicMetadata?.onboardingCompleted;
       if (needsOnboarding) {
         router.push('/onboarding');
       }
@@ -36,7 +38,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
 
   return (
     <AuthGuard>
-      <Box sx={{display: 'flex', minHeight: '100vh', overflow: 'hidden'}}>
+      <Box sx={{ display: 'flex', minHeight: '100vh', overflow: 'hidden' }}>
         <DashboardHeader
           onSidebarOpen={() => setSidebarOpen(true)}
           onSidebarToggle={handleSidebarToggle}
@@ -44,7 +46,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
         />
 
         <Box
-          component='nav'
+          component="nav"
           sx={{
             position: 'fixed',
             left: 0,
@@ -61,9 +63,9 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
         >
           {lgUp ? (
             <Drawer
-              variant='permanent'
+              variant="permanent"
               sx={{
-                display: {xs: 'none', lg: 'block'},
+                display: { xs: 'none', lg: 'block' },
                 '& .MuiDrawer-paper': {
                   position: 'static',
                   width: 'auto',
@@ -77,7 +79,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
                 },
               }}
             >
-              <Box sx={{height: 64}} /> {/* Header spacing */}
+              <Box sx={{ height: 64 }} /> {/* Header spacing */}
               <Box
                 sx={{
                   px: sidebarCollapsed ? 1 : 2,
@@ -91,12 +93,12 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
             </Drawer>
           ) : (
             <Drawer
-              anchor='left'
+              anchor="left"
               onClose={() => setSidebarOpen(false)}
               open={sidebarOpen}
-              variant='temporary'
+              variant="temporary"
               sx={{
-                display: {xs: 'block', lg: 'none'},
+                display: { xs: 'block', lg: 'none' },
                 '& .MuiDrawer-paper': {
                   width: SIDEBAR_WIDTH,
                   boxSizing: 'border-box',
@@ -104,8 +106,8 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
                 },
               }}
             >
-              <Box sx={{height: 64}} /> {/* Header spacing */}
-              <Box sx={{px: 2, py: 3}}>
+              <Box sx={{ height: 64 }} /> {/* Header spacing */}
+              <Box sx={{ px: 2, py: 3 }}>
                 <DashboardNav collapsed={false} />
               </Box>
             </Drawer>
@@ -113,7 +115,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
         </Box>
 
         <Box
-          component='main'
+          component="main"
           sx={{
             flexGrow: 1,
             minHeight: '100vh',
@@ -128,7 +130,7 @@ export default function DashboardLayout({children}: DashboardLayoutProps) {
             overflow: 'auto',
           }}
         >
-          <Box sx={{p: 3}}>{children}</Box>
+          <Box sx={{ p: 3 }}>{children}</Box>
         </Box>
       </Box>
     </AuthGuard>

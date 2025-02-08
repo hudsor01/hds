@@ -1,5 +1,5 @@
-import {StatusBadge} from '@/components/ui/status-badge';
-import {Button} from '@mui/material';
+import { StatusBadge } from '@/components/ui/status-badge';
+import { Button } from '@mui/material';
 import {
   DataGrid,
   type GridColDef,
@@ -7,7 +7,7 @@ import {
   type GridPaginationModel,
   type GridSortModel,
 } from '@mui/x-data-grid';
-import {Edit, Trash} from 'react-feather';
+import { Edit, Trash } from 'react-feather';
 
 interface DataTableProps {
   columns: GridColDef[];
@@ -42,23 +42,23 @@ export function DataTable({
       width: 120,
       sortable: false,
       filterable: false,
-      renderCell: params => (
-        <div className='flex gap-2'>
+      renderCell: (params) => (
+        <div className="flex gap-2">
           {onEdit && (
             <Button
-              size='small'
+              size="small"
               onClick={() => onEdit(params.row)}
-              sx={{minWidth: 'auto', padding: '4px'}}
+              sx={{ minWidth: 'auto', padding: '4px' }}
             >
               <Edit size={16} />
             </Button>
           )}
           {onDelete && (
             <Button
-              size='small'
-              color='error'
+              size="small"
+              color="error"
               onClick={() => onDelete(params.row)}
-              sx={{minWidth: 'auto', padding: '4px'}}
+              sx={{ minWidth: 'auto', padding: '4px' }}
             >
               <Trash size={16} />
             </Button>
@@ -69,7 +69,7 @@ export function DataTable({
   ];
 
   return (
-    <div className='h-[600px] w-full'>
+    <div className="h-[600px] w-full">
       <DataGrid
         rows={rows}
         columns={columnsWithActions}
@@ -80,9 +80,9 @@ export function DataTable({
         paginationModel={paginationModel}
         rowCount={rowCount}
         pageSizeOptions={[10, 25, 50]}
-        paginationMode='server'
-        sortingMode='server'
-        filterMode='server'
+        paginationMode="server"
+        sortingMode="server"
+        filterMode="server"
         disableRowSelectionOnClick
         getRowHeight={() => 'auto'}
         sx={{

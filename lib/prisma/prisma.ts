@@ -1,15 +1,19 @@
-import {Prisma, PrismaClient} from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 
 declare global {
   var prisma: PrismaClient | undefined;
 }
 
 const prismaClientOptions: Prisma.PrismaClientOptions = {
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  log:
+    process.env.NODE_ENV === 'development'
+      ? ['query', 'error', 'warn']
+      : ['error'],
   errorFormat: 'pretty' as const,
 };
 
-export const prisma = globalThis.prisma || new PrismaClient(prismaClientOptions);
+export const prisma =
+  globalThis.prisma || new PrismaClient(prismaClientOptions);
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma;
@@ -24,7 +28,7 @@ export const handlePrismaError = (error: unknown) => {
       code: error.name === 'PrismaClientKnownRequestError' ? 400 : 500,
     };
   }
-  return {error: 'An unexpected error occurred', code: 500};
+  return { error: 'An unexpected error occurred', code: 500 };
 };
 
 // Utility function to safely execute Prisma operations
@@ -32,8 +36,8 @@ export async function prismaExecute<T>(operation: () => Promise<T>) {
   try {
     return await operation();
   } catch (error) {
-    const {error: message, code} = handlePrismaError(error);
-    throw {message, code};
+    const { error: message, code } = handlePrismaError(error);
+    throw { message, code };
   }
 }
 

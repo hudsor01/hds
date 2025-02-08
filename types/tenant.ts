@@ -13,4 +13,4 @@ export interface Tenant {
 }
 
 export type NewTenant = Omit<Tenant, 'id' | 'createdAt' | 'updatedAt'>;
-export type UpdateTenant = Partial<Tenant> & {id: string};
+export type UpdateTenant = Partial<Tenant> & { id: string };

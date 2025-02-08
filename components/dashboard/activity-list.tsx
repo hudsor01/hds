@@ -1,11 +1,11 @@
 'use client';
 
-import {VirtualizedList} from './virtualized-list.jsx';
-import {Box, Chip, Divider, ListItem, Stack, Typography} from '@mui/material';
-import {alpha, useTheme} from '@mui/material/styles';
-import {formatDistanceToNow} from 'date-fns';
-import {motion} from 'framer-motion';
-import {FileText, Home, Key, Tool, User} from 'react-feather';
+import { VirtualizedList } from './virtualized-list.jsx';
+import { Box, Chip, Divider, ListItem, Stack, Typography } from '@mui/material';
+import { alpha, useTheme } from '@mui/material/styles';
+import { formatDistanceToNow } from 'date-fns';
+import { motion } from 'framer-motion';
+import { FileText, Home, Key, Tool, User } from 'react-feather';
 
 interface ActivityItem {
   id: string;
@@ -35,7 +35,7 @@ const typeIcons = {
 } as const;
 
 const containerVariants = {
-  hidden: {opacity: 0},
+  hidden: { opacity: 0 },
   show: {
     opacity: 1,
     transition: {
@@ -45,11 +45,11 @@ const containerVariants = {
 };
 
 const itemVariants = {
-  hidden: {opacity: 0, y: 20},
-  show: {opacity: 1, y: 0},
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0 },
 };
 
-export function ActivityList({activities}: ActivityListProps) {
+export function ActivityList({ activities }: ActivityListProps) {
   const theme = useTheme();
 
   const renderActivityItem = (activity: ActivityItem, index: number) => {
@@ -61,7 +61,7 @@ export function ActivityList({activities}: ActivityListProps) {
         component={motion.div}
         variants={itemVariants}
         sx={{
-          px: {xs: 2, sm: 3},
+          px: { xs: 2, sm: 3 },
           py: 2,
           display: 'flex',
           alignItems: 'flex-start',
@@ -87,26 +87,26 @@ export function ActivityList({activities}: ActivityListProps) {
         </Box>
 
         <Stack spacing={0.5} flex={1}>
-          <Typography variant='subtitle2' fontWeight={600}>
+          <Typography variant="subtitle2" fontWeight={600}>
             {activity.action}
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant="body2" color="text.secondary">
             {activity.details}
           </Typography>
           <Stack
-            direction='row'
+            direction="row"
             spacing={1}
-            alignItems='center'
-            divider={<Divider orientation='vertical' flexItem />}
+            alignItems="center"
+            divider={<Divider orientation="vertical" flexItem />}
           >
-            <Typography variant='caption' color='text.disabled'>
-              {formatDistanceToNow(activity.timestamp, {addSuffix: true})}
+            <Typography variant="caption" color="text.disabled">
+              {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
             </Typography>
             <Chip
               label={activity.status}
-              size='small'
+              size="small"
               color={statusColor}
-              sx={{height: 20, fontSize: '0.75rem'}}
+              sx={{ height: 20, fontSize: '0.75rem' }}
             />
           </Stack>
         </Stack>

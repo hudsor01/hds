@@ -1,5 +1,5 @@
-import {Card, CardContent, CardProps, Grid, Typography} from '@mui/material';
-import {ReactNode} from 'react';
+import { Card, CardContent, CardProps, Grid, Typography } from '@mui/material';
+import { ReactNode } from 'react';
 
 // Property Card
 interface PropertyCardProps extends CardProps {
@@ -23,8 +23,8 @@ export function PropertyCard({
   return (
     <Card {...props}>
       <CardContent>
-        <Typography variant='h6'>{title}</Typography>
-        <Typography color='text.secondary'>{address}</Typography>
+        <Typography variant="h6">{title}</Typography>
+        <Typography color="text.secondary">{address}</Typography>
         <Typography>Status: {status}</Typography>
         <Typography>Rent: ${rentAmount}</Typography>
       </CardContent>
@@ -43,7 +43,7 @@ interface FeatureGridProps {
   features: FeatureProps[];
 }
 
-export function FeatureGrid({features}: FeatureGridProps) {
+export function FeatureGrid({ features }: FeatureGridProps) {
   return (
     <Grid container spacing={4}>
       {features.map((feature, index) => (
@@ -51,8 +51,10 @@ export function FeatureGrid({features}: FeatureGridProps) {
           <Card>
             <CardContent>
               {feature.icon}
-              <Typography variant='h6'>{feature.title}</Typography>
-              <Typography color='text.secondary'>{feature.description}</Typography>
+              <Typography variant="h6">{feature.title}</Typography>
+              <Typography color="text.secondary">
+                {feature.description}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -90,9 +92,9 @@ export function PricingTier({
       }}
     >
       <CardContent>
-        <Typography variant='h5'>{title}</Typography>
-        <Typography variant='h4'>${price}/mo</Typography>
-        <Typography color='text.secondary'>{description}</Typography>
+        <Typography variant="h5">{title}</Typography>
+        <Typography variant="h4">${price}/mo</Typography>
+        <Typography color="text.secondary">{description}</Typography>
         <ul>
           {features.map((feature, index) => (
             <li key={index}>{feature}</li>

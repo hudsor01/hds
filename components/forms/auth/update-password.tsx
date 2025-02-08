@@ -1,8 +1,8 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import {Input} from '@/components/ui/input';
-import {useState} from 'react';
+import { Button } from '@/components/ui/buttons/button';
+import { Input } from '@/components/ui/input';
+import { useState } from 'react';
 
 export function UpdatePassword() {
   const [password, setPassword] = useState('');
@@ -12,14 +12,14 @@ export function UpdatePassword() {
   };
 
   return (
-    <form className='grid gap-4' onSubmit={handleSubmitAction}>
+    <form className="grid gap-4" onSubmit={handleSubmitAction}>
       <Input
-        type='password'
-        placeholder='New password'
+        type="password"
+        placeholder="New password"
         value={password}
-        onChange={e => setPassword(e.target.value)}
+        onChange={(e) => setPassword(e.target.value)}
       />
-      <Button type='submit'>Update Password</Button>
+      <Button type="submit">Update Password</Button>
     </form>
   );
 }

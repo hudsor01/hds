@@ -1,4 +1,4 @@
-import {z} from 'zod';
+import { z } from 'zod';
 
 // Common field schemas
 const idSchema = z.string().uuid();
@@ -7,7 +7,9 @@ const phoneSchema = z.string().regex(/^\+?[1-9]\d{1,14}$/);
 const passwordSchema = z
   .string()
   .min(8)
-  .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/);
+  .regex(
+    /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
+  );
 const dateSchema = z.string().datetime();
 const currencySchema = z.number().min(0).multipleOf(0.01);
 
@@ -80,7 +82,7 @@ export const updatePasswordSchema = z
     newPassword: passwordSchema,
     confirmPassword: z.string().min(1),
   })
-  .refine(data => data.newPassword === data.confirmPassword, {
+  .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
     path: ['confirmPassword'],
   });

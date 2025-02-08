@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button';
 import {
   Dialog,
   DialogContent,
@@ -8,15 +8,17 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import {Input} from '@/components/ui/input';
+import { Input } from '@/components/ui/input';
 import Image from 'next/image';
-import {useState} from 'react';
-import {Loader2, Shield} from 'react-feather';
-import {toast} from 'sonner';
+import { useState } from 'react';
+import { Loader2, Shield } from 'react-feather';
+import { toast } from 'sonner';
 
 export function TwoFactorSetup() {
   const [isOpen, setIsOpen] = useState(false);
-  const [setupStep, setSetupStep] = useState<'initial' | 'qr' | 'verify'>('initial');
+  const [setupStep, setSetupStep] = useState<'initial' | 'qr' | 'verify'>(
+    'initial',
+  );
   const [qrCode, setQrCode] = useState<string>('');
   const [verificationCode, setVerificationCode] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -47,8 +49,8 @@ export function TwoFactorSetup() {
       setIsLoading(true);
       const response = await fetch('/api/auth/2fa/verify', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
-        body: JSON.stringify({token: verificationCode}),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ token: verificationCode }),
       });
       const data = await response.json();
 
@@ -68,8 +70,8 @@ export function TwoFactorSetup() {
 
   return (
     <>
-      <Button variant='outline' onClick={() => setIsOpen(true)}>
-        <Shield className='mr-2 h-4 w-4' />
+      <Button variant="outline" onClick={() => setIsOpen(true)}>
+        <Shield className="mr-2 h-4 w-4" />
         Setup 2FA
       </Button>
 
@@ -82,59 +84,65 @@ export function TwoFactorSetup() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className='space-y-4'>
+          <div className="space-y-4">
             {setupStep === 'initial' && (
-              <div className='space-y-4'>
-                <p className='text-sm text-muted-foreground'>
-                  Two-factor authentication adds an extra layer of security to your account. Once
-                  enabled, you will need to enter a code from your authenticator app when signing
-                  in.
+              <div className="space-y-4">
+                <p className="text-sm text-muted-foreground">
+                  Two-factor authentication adds an extra layer of security to
+                  your account. Once enabled, you will need to enter a code from
+                  your authenticator app when signing in.
                 </p>
                 <Button onClick={handle2FASetup} disabled={isLoading}>
-                  {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                  {isLoading && (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  )}
                   Begin Setup
                 </Button>
               </div>
             )}
 
             {setupStep === 'qr' && (
-              <div className='space-y-4'>
-                <div className='mx-auto w-64'>
+              <div className="space-y-4">
+                <div className="mx-auto w-64">
                   <Image
                     src={qrCode}
-                    alt='2FA QR Code'
+                    alt="2FA QR Code"
                     width={256}
                     height={256}
-                    className='rounded-lg'
+                    className="rounded-lg"
                   />
                 </div>
-                <p className='text-sm text-center'>Scan this QR code with your authenticator app</p>
-                <div className='flex justify-center'>
+                <p className="text-center text-sm">
+                  Scan this QR code with your authenticator app
+                </p>
+                <div className="flex justify-center">
                   <Button onClick={() => setSetupStep('verify')}>Next</Button>
                 </div>
               </div>
             )}
 
             {setupStep === 'verify' && (
-              <div className='space-y-4'>
-                <div className='space-y-2'>
-                  <p className='text-sm text-center'>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <p className="text-center text-sm">
                     Enter the verification code from your authenticator app
                   </p>
                   <Input
-                    type='text'
-                    placeholder='Enter 6-digit code'
+                    type="text"
+                    placeholder="Enter 6-digit code"
                     value={verificationCode}
-                    onChange={e => setVerificationCode(e.target.value)}
+                    onChange={(e) => setVerificationCode(e.target.value)}
                     maxLength={6}
                   />
                 </div>
-                <div className='flex justify-center'>
+                <div className="flex justify-center">
                   <Button
                     onClick={handleVerify2FA}
                     disabled={isLoading || verificationCode.length !== 6}
                   >
-                    {isLoading && <Loader2 className='mr-2 h-4 w-4 animate-spin' />}
+                    {isLoading && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
                     Verify
                   </Button>
                 </div>

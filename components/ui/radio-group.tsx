@@ -1,7 +1,7 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {RadioGroupProps as MuiRadioGroupProps} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { RadioGroupProps as MuiRadioGroupProps } from '@mui/material';
 import {
   FormControl,
   FormControlLabel,
@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import * as React from 'react';
 
-const StyledRadio = styled(MuiRadio)(({theme}) => ({
+const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
   '& .MuiSvgIcon-root': {
     fontSize: 20,
@@ -24,13 +24,25 @@ const StyledRadio = styled(MuiRadio)(({theme}) => ({
   },
 }));
 
-export interface RadioGroupProps extends Omit<MuiRadioGroupProps, 'defaultValue'> {
+export interface RadioGroupProps
+  extends Omit<MuiRadioGroupProps, 'defaultValue'> {
   defaultValue?: string;
   onValueChange?: (value: string) => void;
 }
 
 export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
-  ({className, defaultValue, value, onChange, onValueChange, children, ...props}, ref) => {
+  (
+    {
+      className,
+      defaultValue,
+      value,
+      onChange,
+      onValueChange,
+      children,
+      ...props
+    },
+    ref,
+  ) => {
     const handleChange = React.useCallback(
       (event: React.ChangeEvent<HTMLInputElement>) => {
         onChange?.(event, event.target.value);
@@ -57,27 +69,29 @@ export const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
 );
 RadioGroup.displayName = 'RadioGroup';
 
-export interface RadioGroupItemProps extends React.ComponentProps<typeof MuiRadio> {
+export interface RadioGroupItemProps
+  extends React.ComponentProps<typeof MuiRadio> {
   label?: React.ReactNode;
 }
 
-export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItemProps>(
-  ({className, label, ...props}, ref) => (
-    <FormControlLabel
-      control={
-        <StyledRadio
-          ref={ref}
-          className={cn(
-            'aspect-square h-4 w-4 rounded-full border border-primary text-primary shadow-sm focus:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
-            className,
-          )}
-          {...props}
-        />
-      }
-      label={label}
-    />
-  ),
-);
+export const RadioGroupItem = React.forwardRef<
+  HTMLButtonElement,
+  RadioGroupItemProps
+>(({ className, label, ...props }, ref) => (
+  <FormControlLabel
+    control={
+      <StyledRadio
+        ref={ref}
+        className={cn(
+          'aspect-square focus:outline-hidden h-4 w-4 rounded-full border border-primary text-primary shadow-sm focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          className,
+        )}
+        {...props}
+      />
+    }
+    label={label}
+  />
+));
 RadioGroupItem.displayName = 'RadioGroupItem';
 
 export default RadioGroup;

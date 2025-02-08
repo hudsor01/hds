@@ -1,12 +1,12 @@
-import { Resend } from 'resend'
+import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 interface SendEmailParams {
-  to: string
-  subject: string
-  text: string
-  html: string
+  to: string;
+  subject: string;
+  text: string;
+  html: string;
 }
 
 export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
@@ -17,10 +17,10 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
       subject,
       text,
       html,
-    })
-    return { success: true, data: result }
+    });
+    return { success: true, data: result };
   } catch (error) {
-    console.error('Error sending email:', error)
-    return { success: false, error }
+    console.error('Error sending email:', error);
+    return { success: false, error };
   }
 }

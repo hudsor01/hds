@@ -1,11 +1,11 @@
 'use client';
 
-import {useAuth} from '@/app/auth/hooks/use-auth';
-import {useRouter} from 'next/navigation';
-import {useEffect} from 'react';
+import { useAuth } from '@/app/auth/hooks/use-auth';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export function useProtectedRoute() {
-  const {isAuthenticated, isLoading} = useAuth();
+  const { isAuthenticated, isLoading } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
@@ -14,5 +14,5 @@ export function useProtectedRoute() {
     }
   }, [isAuthenticated, isLoading, router]);
 
-  return {isLoading};
+  return { isLoading };
 }

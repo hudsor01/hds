@@ -13,7 +13,7 @@ interface WaitlistFormProps {
   className?: string;
 }
 
-export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
+export function WaitlistForm({ onSuccess, className }: WaitlistFormProps) {
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
@@ -29,7 +29,7 @@ export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
 
       const response = await fetch('/api/waitlist/join', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           email,
           referral_code: referralCode,
@@ -49,9 +49,13 @@ export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
 
       // Track referral event if applicable
       if (referralCode) {
-        await trackWaitlistEvent(email, 'referral_created' as WaitlistEventType, {
-          referral_code: referralCode,
-        });
+        await trackWaitlistEvent(
+          email,
+          'referral_created' as WaitlistEventType,
+          {
+            referral_code: referralCode,
+          },
+        );
       }
 
       setIsSubmitted(true);
@@ -67,7 +71,7 @@ export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
 
   return (
     <Box
-      component='form'
+      component="form"
       onSubmit={handleSubmit}
       className={className}
       sx={{
@@ -75,14 +79,14 @@ export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
         gap: 2,
         maxWidth: 500,
         mx: 'auto',
-        flexDirection: {xs: 'column', sm: 'row'},
+        flexDirection: { xs: 'column', sm: 'row' },
       }}
     >
       <TextField
-        type='email'
-        placeholder='Enter your email'
+        type="email"
+        placeholder="Enter your email"
         value={email}
-        onChange={e => setEmail(e.target.value)}
+        onChange={(e) => setEmail(e.target.value)}
         required
         disabled={isLoading || isSubmitted}
         fullWidth
@@ -93,7 +97,7 @@ export function WaitlistForm({onSuccess, className}: WaitlistFormProps) {
         }}
       />
       <Button
-        type='submit'
+        type="submit"
         disabled={isLoading || isSubmitted}
         className={`h-14 min-w-[150px] rounded-lg ${
           isSubmitted ? 'bg-green-500' : gradientStyles.background

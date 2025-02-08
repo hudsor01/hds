@@ -6,7 +6,7 @@ import ReceiptIcon from '@mui/icons-material/Receipt';
 import SpeedDial from '@mui/material/SpeedDial';
 import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export function PropertyActionsMenu() {
   const router = useRouter();
@@ -36,11 +36,11 @@ export function PropertyActionsMenu() {
 
   return (
     <SpeedDial
-      ariaLabel='Property Management Actions'
-      sx={{position: 'fixed', bottom: 16, right: 16}}
+      ariaLabel="Property Management Actions"
+      sx={{ position: 'fixed', bottom: 16, right: 16 }}
       icon={<SpeedDialIcon />}
     >
-      {actions.map(action => (
+      {actions.map((action) => (
         <SpeedDialAction
           key={action.name}
           icon={action.icon}

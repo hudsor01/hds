@@ -1,5 +1,5 @@
-import {Alert, AlertProps, Button, Stack, Typography} from '@mui/material';
-import {Component, ErrorInfo, ReactNode} from 'react';
+import { Alert, AlertProps, Button, Stack, Typography } from '@mui/material';
+import { Component, ErrorInfo, ReactNode } from 'react';
 
 // Error Boundary
 interface ErrorBoundaryProps {
@@ -12,13 +12,16 @@ interface ErrorBoundaryState {
   error?: Error;
 }
 
-export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
+export class ErrorBoundary extends Component<
+  ErrorBoundaryProps,
+  ErrorBoundaryState
+> {
   public state: ErrorBoundaryState = {
     hasError: false,
   };
 
   public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return {hasError: true, error};
+    return { hasError: true, error };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
@@ -26,7 +29,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   }
 
   private handleReset = () => {
-    this.setState({hasError: false, error: undefined});
+    this.setState({ hasError: false, error: undefined });
   };
 
   public render() {
@@ -36,16 +39,16 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
       }
 
       return (
-        <Stack spacing={2} alignItems='center' sx={{p: 4}}>
-          <Alert severity='error' sx={{width: '100%', maxWidth: 500}}>
-            <Typography variant='h6' gutterBottom>
+        <Stack spacing={2} alignItems="center" sx={{ p: 4 }}>
+          <Alert severity="error" sx={{ width: '100%', maxWidth: 500 }}>
+            <Typography variant="h6" gutterBottom>
               Something went wrong
             </Typography>
-            <Typography variant='body2' color='text.secondary'>
+            <Typography variant="body2" color="text.secondary">
               {this.state.error?.message || 'An unexpected error occurred'}
             </Typography>
           </Alert>
-          <Button variant='contained' onClick={this.handleReset}>
+          <Button variant="contained" onClick={this.handleReset}>
             Try Again
           </Button>
         </Stack>
@@ -61,7 +64,11 @@ interface FormMessageProps extends AlertProps {
   message: string;
 }
 
-export function FormMessage({message, severity = 'info', ...props}: FormMessageProps) {
+export function FormMessage({
+  message,
+  severity = 'info',
+  ...props
+}: FormMessageProps) {
   return (
     <Alert severity={severity} {...props}>
       {message}
@@ -74,19 +81,19 @@ interface EnvWarningProps {
   missingVars: string[];
 }
 
-export function EnvWarning({missingVars}: EnvWarningProps) {
+export function EnvWarning({ missingVars }: EnvWarningProps) {
   if (missingVars.length === 0) return null;
 
   return (
-    <Alert severity='warning' sx={{mb: 2}}>
-      <Typography variant='h6' gutterBottom>
+    <Alert severity="warning" sx={{ mb: 2 }}>
+      <Typography variant="h6" gutterBottom>
         Missing Environment Variables
       </Typography>
-      <Typography variant='body2'>
+      <Typography variant="body2">
         The following environment variables are required but not set:
       </Typography>
       <ul>
-        {missingVars.map(variable => (
+        {missingVars.map((variable) => (
           <li key={variable}>{variable}</li>
         ))}
       </ul>

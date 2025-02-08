@@ -1,9 +1,9 @@
 'use client';
 
-import {Button} from '@mui/material';
-import {loadStripe} from '@stripe/stripe-js';
-import {useState} from 'react';
-import {toast} from 'sonner';
+import { Button } from '@mui/material';
+import { loadStripe } from '@stripe/stripe-js';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -18,10 +18,11 @@ export function StripeCheckoutButton({
   variant = 'contained',
   size = 'large',
 }: StripeCheckoutButtonProps) {
-  const {data: session} = useSession();
+  const { data: session } = useSession();
   const [loading, setLoading] = useState(false);
 
-  const isDisabled = loading || (!priceId && Boolean(session)) || (Boolean(priceId) && !session);
+  const isDisabled =
+    loading || (!priceId && Boolean(session)) || (Boolean(priceId) && !session);
 
   const handleCheckout = async () => {
     try {
@@ -44,7 +45,7 @@ export function StripeCheckoutButton({
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({priceId}),
+        body: JSON.stringify({ priceId }),
       });
 
       if (!response.ok) {
@@ -52,8 +53,8 @@ export function StripeCheckoutButton({
         throw new Error(error.message || 'Failed to create checkout session');
       }
 
-      const {sessionId} = await response.json();
-      const {error} = await stripe.redirectToCheckout({sessionId});
+      const { sessionId } = await response.json();
+      const { error } = await stripe.redirectToCheckout({ sessionId });
 
       if (error) {
         throw error;
@@ -74,7 +75,9 @@ export function StripeCheckoutButton({
       disabled={isDisabled}
       sx={{
         background:
-          variant === 'contained' ? 'linear-gradient(45deg, #635bff 0%, #a259ff 100%)' : undefined,
+          variant === 'contained'
+            ? 'linear-gradient(45deg, #635bff 0%, #a259ff 100%)'
+            : undefined,
         fontWeight: 600,
         '&:hover': {
           opacity: 0.9,

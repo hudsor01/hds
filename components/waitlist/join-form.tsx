@@ -1,69 +1,76 @@
-import { useState } from 'react'
-import { TextField, Button, Alert, CircularProgress } from '@mui/material'
-import { Mail, User, Link as LinkIcon } from 'react-feather'
-import type { WaitlistJoinRequest, WaitlistJoinResponse } from '@/types/waitlist'
+import { useState } from 'react';
+import { TextField, Button, Alert, CircularProgress } from '@mui/material';
+import { Mail, User, Link as LinkIcon } from 'react-feather';
+import type {
+  WaitlistJoinRequest,
+  WaitlistJoinResponse,
+} from '@/types/waitlist';
 
 interface JoinFormProps {
-  onSuccess?: (response: WaitlistJoinResponse) => void
-  onError?: (error: string) => void
-  referralCode?: string
+  onSuccess?: (response: WaitlistJoinResponse) => void;
+  onError?: (error: string) => void;
+  referralCode?: string;
 }
 
-export default function JoinForm({ onSuccess, onError, referralCode: initialReferralCode }: JoinFormProps) {
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState(false)
+export default function JoinForm({
+  onSuccess,
+  onError,
+  referralCode: initialReferralCode,
+}: JoinFormProps) {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState(false);
   const [formData, setFormData] = useState<WaitlistJoinRequest>({
     email: '',
     name: '',
     referralCode: initialReferralCode || '',
-  })
+  });
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setLoading(true)
-    setError(null)
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
 
     try {
       const response = await fetch('/api/waitlist/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      })
+      });
 
-      const data: WaitlistJoinResponse = await response.json()
+      const data: WaitlistJoinResponse = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist')
+        throw new Error(data.error || 'Failed to join waitlist');
       }
 
-      setSuccess(true)
-      onSuccess?.(data)
+      setSuccess(true);
+      onSuccess?.(data);
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An error occurred'
-      setError(message)
-      onError?.(message)
+      const message = err instanceof Error ? err.message : 'An error occurred';
+      setError(message);
+      onError?.(message);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target
-    setFormData(prev => ({ ...prev, [name]: value }))
-  }
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   if (success) {
     return (
-      <div className="text-center p-6 bg-green-50 rounded-lg">
-        <h3 className="text-xl font-semibold text-green-800 mb-2">
+      <div className="rounded-lg bg-green-50 p-6 text-center">
+        <h3 className="mb-2 text-xl font-semibold text-green-800">
           You're on the list! 🎉
         </h3>
         <p className="text-green-700">
           Check your email for verification instructions.
         </p>
       </div>
-    )
+    );
   }
 
   return (
@@ -75,7 +82,10 @@ export default function JoinForm({ onSuccess, onError, referralCode: initialRefe
       )}
 
       <div className="relative">
-        <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <Mail
+          className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400"
+          size={20}
+        />
         <TextField
           name="email"
           type="email"
@@ -92,7 +102,10 @@ export default function JoinForm({ onSuccess, onError, referralCode: initialRefe
       </div>
 
       <div className="relative">
-        <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+        <User
+          className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400"
+          size={20}
+        />
         <TextField
           name="name"
           value={formData.name}
@@ -108,7 +121,10 @@ export default function JoinForm({ onSuccess, onError, referralCode: initialRefe
 
       {!initialReferralCode && (
         <div className="relative">
-          <LinkIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+          <LinkIcon
+            className="absolute left-3 top-1/2 -translate-y-1/2 transform text-gray-400"
+            size={20}
+          />
           <TextField
             name="referralCode"
             value={formData.referralCode}
@@ -138,5 +154,5 @@ export default function JoinForm({ onSuccess, onError, referralCode: initialRefe
         )}
       </Button>
     </form>
-  )
+  );
 }

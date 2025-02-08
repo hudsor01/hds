@@ -13,10 +13,19 @@ export const PROPERTY_TYPES = {
   commercial: 'commercial',
 } as const;
 
-export type PropertyType = 'apartment' | 'house' | 'condo' | 'townhouse' | 'commercial';
-export type PropertyStatus = 'available' | 'rented' | 'maintenance' | 'inactive';
+export type PropertyType =
+  | 'apartment'
+  | 'house'
+  | 'condo'
+  | 'townhouse'
+  | 'commercial';
+export type PropertyStatus =
+  | 'available'
+  | 'rented'
+  | 'maintenance'
+  | 'inactive';
 
-export { Property } from './database.types'
+export { Property } from './database.types';
 
 export interface PropertyListProps {
   properties: Property[];

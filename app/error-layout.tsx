@@ -1,9 +1,13 @@
 'use client';
 
 import theme from './theme';
-import {Box, CssBaseline, ThemeProvider} from '@mui/material';
+import { Box, CssBaseline, ThemeProvider } from '@mui/material';
 
-export default function ErrorLayout({children}: {children: React.ReactNode}) {
+export default function ErrorLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -17,7 +21,7 @@ export default function ErrorLayout({children}: {children: React.ReactNode}) {
         }}
       >
         <Box
-          component='header'
+          component="header"
           sx={{
             height: 70,
             px: 3,
@@ -29,7 +33,7 @@ export default function ErrorLayout({children}: {children: React.ReactNode}) {
           }}
         >
           <Box
-            component='h1'
+            component="h1"
             sx={{
               fontSize: '1.5rem',
               fontWeight: 700,
@@ -42,7 +46,7 @@ export default function ErrorLayout({children}: {children: React.ReactNode}) {
             Property Manager
           </Box>
         </Box>
-        <Box component='main' sx={{flex: 1}}>
+        <Box component="main" sx={{ flex: 1 }}>
           {children}
         </Box>
       </Box>

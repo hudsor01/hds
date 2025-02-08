@@ -1,7 +1,7 @@
 'use client';
 
-import {motion, useAnimation, useInView} from 'framer-motion';
-import {useEffect, useRef} from 'react';
+import { motion, useAnimation, useInView } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 interface StaggeredListProps {
   children: React.ReactNode[];
@@ -18,10 +18,10 @@ export function StaggeredList({
 }: StaggeredListProps) {
   const controls = useAnimation();
   const ref = useRef(null);
-  const isInView = useInView(ref, {once: true, amount: 0.2});
+  const isInView = useInView(ref, { once: true, amount: 0.2 });
 
   const containerVariants = {
-    hidden: {opacity: 0},
+    hidden: { opacity: 0 },
     visible: {
       opacity: 1,
       transition: {
@@ -32,7 +32,7 @@ export function StaggeredList({
   };
 
   const itemVariants = {
-    hidden: {opacity: 0, y: 20},
+    hidden: { opacity: 0, y: 20 },
     visible: {
       opacity: 1,
       y: 0,
@@ -53,7 +53,7 @@ export function StaggeredList({
     <motion.div
       ref={ref}
       variants={containerVariants}
-      initial='hidden'
+      initial="hidden"
       animate={controls}
       className={className}
     >

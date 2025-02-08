@@ -1,5 +1,5 @@
-import {Property} from '@/types/property';
-import {create} from 'zustand';
+import { Property } from '@/types/property';
+import { create } from 'zustand';
 
 interface PropertyStore {
   selectedProperty: Property | null;
@@ -8,15 +8,15 @@ interface PropertyStore {
     status: string[];
     sortBy: string;
   };
-  setFilters: (filters: {status: string[]; sortBy: string}) => void;
+  setFilters: (filters: { status: string[]; sortBy: string }) => void;
 }
 
-export const usePropertyStore = create<PropertyStore>(set => ({
+export const usePropertyStore = create<PropertyStore>((set) => ({
   selectedProperty: null,
-  setSelectedProperty: property => set({selectedProperty: property}),
+  setSelectedProperty: (property) => set({ selectedProperty: property }),
   filters: {
     status: [],
     sortBy: 'created_at',
   },
-  setFilters: filters => set({filters}),
+  setFilters: (filters) => set({ filters }),
 }));

@@ -1,12 +1,15 @@
-import {createRouteHandlerClient} from '@supabase/auth-helpers-nextjs';
-import {cookies} from 'next/headers';
-import {NextResponse} from 'next/server';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function GET(request: Request, {params}: {params: {id: string}}) {
+export async function GET(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient({ cookies });
 
-    const {data: tenant, error} = await supabase
+    const { data: tenant, error } = await supabase
       .from('tenants')
       .select(
         `
@@ -27,16 +30,22 @@ export async function GET(request: Request, {params}: {params: {id: string}}) {
 
     return NextResponse.json(tenant);
   } catch (error) {
-    return NextResponse.json({error: 'Error fetching tenant'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error fetching tenant' },
+      { status: 500 },
+    );
   }
 }
 
-export async function PATCH(request: Request, {params}: {params: {id: string}}) {
+export async function PATCH(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient({ cookies });
     const json = await request.json();
 
-    const {data: tenant, error} = await supabase
+    const { data: tenant, error } = await supabase
       .from('tenants')
       .update(json)
       .eq('id', params.id)
@@ -47,20 +56,32 @@ export async function PATCH(request: Request, {params}: {params: {id: string}}) 
 
     return NextResponse.json(tenant);
   } catch (error) {
-    return NextResponse.json({error: 'Error updating tenant'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error updating tenant' },
+      { status: 500 },
+    );
   }
 }
 
-export async function DELETE(request: Request, {params}: {params: {id: string}}) {
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string } },
+) {
   try {
-    const supabase = createRouteHandlerClient({cookies});
+    const supabase = createRouteHandlerClient({ cookies });
 
-    const {error} = await supabase.from('tenants').delete().eq('id', params.id);
+    const { error } = await supabase
+      .from('tenants')
+      .delete()
+      .eq('id', params.id);
 
     if (error) throw error;
 
-    return new NextResponse(null, {status: 204});
+    return new NextResponse(null, { status: 204 });
   } catch (error) {
-    return NextResponse.json({error: 'Error deleting tenant'}, {status: 500});
+    return NextResponse.json(
+      { error: 'Error deleting tenant' },
+      { status: 500 },
+    );
   }
 }

@@ -1,14 +1,18 @@
 'use client';
 
-import {DataTable, renderDateCell, renderStatusCell} from '@/components/data-display/data-table';
-import {FormDialog} from '@/components/ui/dialogs/form-dialog';
-import {api} from '@/lib/api';
-import {Button, TextField} from '@mui/material';
-import {type GridColDef} from '@mui/x-data-grid';
-import {useQuery} from '@tanstack/react-query';
-import {useState} from 'react';
-import {Plus} from 'react-feather';
-import {z} from 'zod';
+import {
+  DataTable,
+  renderDateCell,
+  renderStatusCell,
+} from '@/components/data-display/data-table';
+import { FormDialog } from '@/components/ui/dialogs/form-dialog';
+import { api } from '@/lib/api';
+import { Button, TextField } from '@mui/material';
+import { type GridColDef } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { Plus } from 'react-feather';
+import { z } from 'zod';
 
 const inspectionSchema = z.object({
   property_id: z.string().uuid('Invalid property ID'),
@@ -19,21 +23,39 @@ const inspectionSchema = z.object({
 });
 
 const columns: GridColDef[] = [
-  {field: 'id', headerName: 'ID', width: 100},
-  {field: 'inspection_type', headerName: 'Type', width: 150},
-  {field: 'status', headerName: 'Status', width: 120, renderCell: renderStatusCell},
-  {field: 'inspector_name', headerName: 'Inspector', width: 150},
-  {field: 'scheduled_date', headerName: 'Scheduled Date', width: 200, renderCell: renderDateCell},
-  {field: 'completed_date', headerName: 'Completed Date', width: 200, renderCell: renderDateCell},
-  {field: 'notes', headerName: 'Notes', width: 200},
+  { field: 'id', headerName: 'ID', width: 100 },
+  { field: 'inspection_type', headerName: 'Type', width: 150 },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 120,
+    renderCell: renderStatusCell,
+  },
+  { field: 'inspector_name', headerName: 'Inspector', width: 150 },
+  {
+    field: 'scheduled_date',
+    headerName: 'Scheduled Date',
+    width: 200,
+    renderCell: renderDateCell,
+  },
+  {
+    field: 'completed_date',
+    headerName: 'Completed Date',
+    width: 200,
+    renderCell: renderDateCell,
+  },
+  { field: 'notes', headerName: 'Notes', width: 200 },
 ];
 
 export default function InspectionsPage() {
   const [open, setOpen] = useState(false);
   const [selectedInspection, setSelectedInspection] = useState<any>(null);
-  const [paginationModel, setPaginationModel] = useState({page: 0, pageSize: 10});
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
-  const {data, isLoading} = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ['inspections', paginationModel],
     queryFn: () => api.get('/api/inspections'),
   });
@@ -70,11 +92,11 @@ export default function InspectionsPage() {
   };
 
   return (
-    <div className='container mx-auto p-4'>
-      <div className='mb-4 flex items-center justify-between'>
-        <h1 className='text-2xl font-bold'>Inspections</h1>
+    <div className="container mx-auto p-4">
+      <div className="mb-4 flex items-center justify-between">
+        <h1 className="text-2xl font-bold">Inspections</h1>
         <Button
-          variant='contained'
+          variant="contained"
           startIcon={<Plus size={20} />}
           onClick={() => setOpen(true)}
           sx={{
@@ -108,30 +130,30 @@ export default function InspectionsPage() {
         onSubmit={handleSubmit}
         title={selectedInspection ? 'Edit Inspection' : 'New Inspection'}
       >
-        <div className='grid gap-4'>
+        <div className="grid gap-4">
           <TextField
-            label='Property'
+            label="Property"
             select
             fullWidth
             required
             // Add property options
           />
           <TextField
-            label='Inspection Type'
+            label="Inspection Type"
             select
             fullWidth
             required
             // Add inspection type options
           />
           <TextField
-            label='Scheduled Date'
-            type='datetime-local'
+            label="Scheduled Date"
+            type="datetime-local"
             fullWidth
             required
-            InputLabelProps={{shrink: true}}
+            InputLabelProps={{ shrink: true }}
           />
-          <TextField label='Inspector Name' fullWidth required />
-          <TextField label='Notes' fullWidth multiline rows={4} />
+          <TextField label="Inspector Name" fullWidth required />
+          <TextField label="Notes" fullWidth multiline rows={4} />
         </div>
       </FormDialog>
     </div>

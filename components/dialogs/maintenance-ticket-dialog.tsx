@@ -1,23 +1,28 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button';
 import type {
   MaintenancePriority,
   MaintenanceTicket,
   NewMaintenanceTicket,
 } from '@/types/maintenance_requests';
-import type {SelectChangeEvent} from '@mui/material';
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
-import {Input} from 'components/ui/input';
-import {Label} from 'components/ui/label';
-import {Select, SelectItem} from 'components/ui/select';
+import type { SelectChangeEvent } from '@mui/material';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from 'components/ui/dialog';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+import { Select, SelectItem } from 'components/ui/select';
 import Textarea from 'components/ui/textarea';
-import {useState} from 'react';
+import { useState } from 'react';
 
 interface Property {
   id: string;
   name: string;
-  units: {id: string; number: string}[];
+  units: { id: string; number: string }[];
 }
 
 // Mock data for development
@@ -26,18 +31,18 @@ const MOCK_PROPERTIES: Property[] = [
     id: 'prop1',
     name: 'Sunset Apartments',
     units: [
-      {id: 'unit1', number: '1A'},
-      {id: 'unit2', number: '1B'},
-      {id: 'unit3', number: '2A'},
+      { id: 'unit1', number: '1A' },
+      { id: 'unit2', number: '1B' },
+      { id: 'unit3', number: '2A' },
     ],
   },
   {
     id: 'prop2',
     name: 'Ocean View Complex',
     units: [
-      {id: 'unit4', number: '101'},
-      {id: 'unit5', number: '102'},
-      {id: 'unit6', number: '103'},
+      { id: 'unit4', number: '101' },
+      { id: 'unit5', number: '102' },
+      { id: 'unit6', number: '103' },
     ],
   },
 ];
@@ -59,7 +64,9 @@ export function MaintenanceTicketDialog({
   const [selectedProperty, setSelectedProperty] = useState<string>(
     existingTicket?.propertyId || '',
   );
-  const [selectedUnit, setSelectedUnit] = useState<string>(existingTicket?.unitId || '');
+  const [selectedUnit, setSelectedUnit] = useState<string>(
+    existingTicket?.unitId || '',
+  );
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -84,28 +91,31 @@ export function MaintenanceTicketDialog({
     }
   };
 
-  const selectedPropertyUnits = MOCK_PROPERTIES.find(p => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits =
+    MOCK_PROPERTIES.find((p) => p.id === selectedProperty)?.units || [];
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className='sm:max-w-[500px]'>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>
-            {existingTicket ? 'Edit Maintenance Ticket' : 'Create Maintenance Ticket'}
+            {existingTicket
+              ? 'Edit Maintenance Ticket'
+              : 'Create Maintenance Ticket'}
           </DialogTitle>
         </DialogHeader>
-        <form onSubmit={handleSubmit} className='space-y-4'>
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <Label htmlFor='property'>Property</Label>
+            <Label htmlFor="property">Property</Label>
             <Select
               value={selectedProperty}
               onChange={(event: SelectChangeEvent<unknown>) => {
                 setSelectedProperty(event.target.value as string);
               }}
               required
-              placeholder='Select a property'
+              placeholder="Select a property"
             >
-              {MOCK_PROPERTIES.map(property => (
+              {MOCK_PROPERTIES.map((property) => (
                 <SelectItem key={property.id} value={property.id}>
                   {property.name}
                 </SelectItem>
@@ -115,15 +125,15 @@ export function MaintenanceTicketDialog({
 
           {selectedProperty && (
             <div>
-              <Label htmlFor='unit'>Unit (Optional)</Label>
+              <Label htmlFor="unit">Unit (Optional)</Label>
               <Select
                 value={selectedUnit}
                 onChange={(event: SelectChangeEvent<unknown>) => {
                   setSelectedUnit(event.target.value as string);
                 }}
-                placeholder='Select a unit'
+                placeholder="Select a unit"
               >
-                {selectedPropertyUnits.map(unit => (
+                {selectedPropertyUnits.map((unit) => (
                   <SelectItem key={unit.id} value={unit.id}>
                     Unit {unit.number}
                   </SelectItem>
@@ -133,41 +143,54 @@ export function MaintenanceTicketDialog({
           )}
 
           <div>
-            <Label htmlFor='title'>Title</Label>
-            <Input id='title' name='title' defaultValue={existingTicket?.title} required />
+            <Label htmlFor="title">Title</Label>
+            <Input
+              id="title"
+              name="title"
+              defaultValue={existingTicket?.title}
+              required
+            />
           </div>
 
           <div>
-            <Label htmlFor='description'>Description</Label>
+            <Label htmlFor="description">Description</Label>
             <Textarea
-              id='description'
-              name='description'
+              id="description"
+              name="description"
               defaultValue={existingTicket?.description}
               required
             />
           </div>
 
           <div>
-            <Label htmlFor='priority'>Priority</Label>
+            <Label htmlFor="priority">Priority</Label>
             <Select
-              name='priority'
+              name="priority"
               defaultValue={existingTicket?.priority || 'medium'}
               required
-              placeholder='Select priority'
+              placeholder="Select priority"
             >
-              <SelectItem value='low'>Low</SelectItem>
-              <SelectItem value='medium'>Medium</SelectItem>
-              <SelectItem value='high'>High</SelectItem>
-              <SelectItem value='urgent'>Urgent</SelectItem>
+              <SelectItem value="low">Low</SelectItem>
+              <SelectItem value="medium">Medium</SelectItem>
+              <SelectItem value="high">High</SelectItem>
+              <SelectItem value="urgent">Urgent</SelectItem>
             </Select>
           </div>
 
-          <div className='flex justify-end space-x-2'>
-            <Button type='button' variant='outline' onClick={() => onOpenChangeAction(false)}>
+          <div className="flex justify-end space-x-2">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChangeAction(false)}
+            >
               Cancel
             </Button>
-            <Button type='submit' disabled={isLoading}>
-              {isLoading ? 'Submitting...' : existingTicket ? 'Update Ticket' : 'Create Ticket'}
+            <Button type="submit" disabled={isLoading}>
+              {isLoading
+                ? 'Submitting...'
+                : existingTicket
+                  ? 'Update Ticket'
+                  : 'Create Ticket'}
             </Button>
           </div>
         </form>

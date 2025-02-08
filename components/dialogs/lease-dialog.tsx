@@ -1,14 +1,19 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import type {Lease} from '@/types/lease';
-import {LEASE_STATUS, PAYMENT_FREQUENCY} from '@/types/lease';
-import type {Property} from '@/types/property';
-import {Dialog, DialogContent, DialogHeader, DialogTitle} from 'components/ui/dialog';
-import {Input} from 'components/ui/input';
-import {Label} from 'components/ui/label';
-import {Select} from 'components/ui/select';
-import {useState} from 'react';
+import { Button } from '@/components/ui/buttons/button';
+import type { Lease } from '@/types/lease';
+import { LEASE_STATUS, PAYMENT_FREQUENCY } from '@/types/lease';
+import type { Property } from '@/types/property';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from 'components/ui/dialog';
+import { Input } from 'components/ui/input';
+import { Label } from 'components/ui/label';
+import { Select } from 'components/ui/select';
+import { useState } from 'react';
 
 interface LeaseDialogProps {
   open: boolean;
@@ -29,9 +34,9 @@ export function LeaseDialog({
 }: LeaseDialogProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  const [selectedProperty, setSelectedProperty] = useState<Property | undefined>(
-    lease ? properties.find(p => p.id === lease.propertyId) : undefined,
-  );
+  const [selectedProperty, setSelectedProperty] = useState<
+    Property | undefined
+  >(lease ? properties.find((p) => p.id === lease.propertyId) : undefined);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -40,8 +45,10 @@ export function LeaseDialog({
 
     try {
       const formData = new FormData(e.currentTarget);
-      const property = properties.find(p => p.id === formData.get('propertyId'));
-      const unit = property?.units.find(u => u.id === formData.get('unitId'));
+      const property = properties.find(
+        (p) => p.id === formData.get('propertyId'),
+      );
+      const unit = property?.units.find((u) => u.id === formData.get('unitId'));
 
       if (!property || !unit) {
         throw new Error('Invalid property or unit selected');
@@ -58,7 +65,9 @@ export function LeaseDialog({
         endDate: new Date(formData.get('endDate') as string),
         rentAmount: parseFloat(formData.get('rentAmount') as string),
         securityDeposit: parseFloat(formData.get('securityDeposit') as string),
-        paymentFrequency: formData.get('paymentFrequency') as keyof typeof PAYMENT_FREQUENCY,
+        paymentFrequency: formData.get(
+          'paymentFrequency',
+        ) as keyof typeof PAYMENT_FREQUENCY,
         status: formData.get('status') as keyof typeof LEASE_STATUS,
       };
 
@@ -78,21 +87,23 @@ export function LeaseDialog({
           <DialogTitle>{lease ? 'Edit Lease' : 'Add Lease'}</DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className='space-y-4'>
-          <div className='grid grid-cols-2 gap-4'>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor='propertyId'>Property</Label>
+              <Label htmlFor="propertyId">Property</Label>
               <Select
-                name='propertyId'
+                name="propertyId"
                 value={selectedProperty?.id}
-                onChange={e => {
-                  const property = properties.find(p => p.id === e.target.value);
+                onChange={(e) => {
+                  const property = properties.find(
+                    (p) => p.id === e.target.value,
+                  );
                   setSelectedProperty(property);
                 }}
                 required
               >
-                <option value=''>Select property</option>
-                {properties.map(property => (
+                <option value="">Select property</option>
+                {properties.map((property) => (
                   <option key={property.id} value={property.id}>
                     {property.name}
                   </option>
@@ -100,15 +111,15 @@ export function LeaseDialog({
               </Select>
             </div>
             <div>
-              <Label htmlFor='unitId'>Unit</Label>
+              <Label htmlFor="unitId">Unit</Label>
               <Select
-                name='unitId'
+                name="unitId"
                 defaultValue={lease?.unitId}
                 required
                 disabled={!selectedProperty}
               >
-                <option value=''>Select unit</option>
-                {selectedProperty?.units.map(unit => (
+                <option value="">Select unit</option>
+                {selectedProperty?.units.map((unit) => (
                   <option key={unit.id} value={unit.id}>
                     {unit.number}
                   </option>
@@ -117,85 +128,89 @@ export function LeaseDialog({
             </div>
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor='tenantId'>Tenant ID</Label>
+              <Label htmlFor="tenantId">Tenant ID</Label>
               <Input
-                id='tenantId'
-                name='tenantId'
+                id="tenantId"
+                name="tenantId"
                 defaultValue={lease?.tenantId}
                 required
-                placeholder='Enter tenant ID'
+                placeholder="Enter tenant ID"
               />
             </div>
             <div>
-              <Label htmlFor='tenantName'>Tenant Name</Label>
+              <Label htmlFor="tenantName">Tenant Name</Label>
               <Input
-                id='tenantName'
-                name='tenantName'
+                id="tenantName"
+                name="tenantName"
                 defaultValue={lease?.tenantName}
                 required
-                placeholder='Enter tenant name'
+                placeholder="Enter tenant name"
               />
             </div>
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor='startDate'>Start Date</Label>
+              <Label htmlFor="startDate">Start Date</Label>
               <Input
-                id='startDate'
-                name='startDate'
-                type='date'
+                id="startDate"
+                name="startDate"
+                type="date"
                 defaultValue={lease?.startDate.toISOString().split('T')[0]}
                 required
               />
             </div>
             <div>
-              <Label htmlFor='endDate'>End Date</Label>
+              <Label htmlFor="endDate">End Date</Label>
               <Input
-                id='endDate'
-                name='endDate'
-                type='date'
+                id="endDate"
+                name="endDate"
+                type="date"
                 defaultValue={lease?.endDate.toISOString().split('T')[0]}
                 required
               />
             </div>
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor='rentAmount'>Rent Amount</Label>
+              <Label htmlFor="rentAmount">Rent Amount</Label>
               <Input
-                id='rentAmount'
-                name='rentAmount'
-                type='number'
-                min='0'
-                step='0.01'
+                id="rentAmount"
+                name="rentAmount"
+                type="number"
+                min="0"
+                step="0.01"
                 defaultValue={lease?.rentAmount}
                 required
-                placeholder='Enter rent amount'
+                placeholder="Enter rent amount"
               />
             </div>
             <div>
-              <Label htmlFor='securityDeposit'>Security Deposit</Label>
+              <Label htmlFor="securityDeposit">Security Deposit</Label>
               <Input
-                id='securityDeposit'
-                name='securityDeposit'
-                type='number'
-                min='0'
-                step='0.01'
+                id="securityDeposit"
+                name="securityDeposit"
+                type="number"
+                min="0"
+                step="0.01"
                 defaultValue={lease?.securityDeposit}
                 required
-                placeholder='Enter security deposit'
+                placeholder="Enter security deposit"
               />
             </div>
           </div>
 
-          <div className='grid grid-cols-2 gap-4'>
+          <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor='paymentFrequency'>Payment Frequency</Label>
-              <Select name='paymentFrequency' defaultValue={lease?.paymentFrequency} required>
+              <Label htmlFor="paymentFrequency">Payment Frequency</Label>
+              <Select
+                name="paymentFrequency"
+                defaultValue={lease?.paymentFrequency}
+                required
+              >
                 {Object.entries(PAYMENT_FREQUENCY).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
@@ -204,8 +219,8 @@ export function LeaseDialog({
               </Select>
             </div>
             <div>
-              <Label htmlFor='status'>Status</Label>
-              <Select name='status' defaultValue={lease?.status} required>
+              <Label htmlFor="status">Status</Label>
+              <Select name="status" defaultValue={lease?.status} required>
                 {Object.entries(LEASE_STATUS).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
@@ -215,13 +230,17 @@ export function LeaseDialog({
             </div>
           </div>
 
-          {error && <div className='text-sm text-red-500'>{error}</div>}
+          {error && <div className="text-sm text-red-500">{error}</div>}
 
-          <div className='flex justify-end gap-3'>
-            <Button type='button' onClick={() => onOpenChangeAction(false)} disabled={isLoading}>
+          <div className="flex justify-end gap-3">
+            <Button
+              type="button"
+              onClick={() => onOpenChangeAction(false)}
+              disabled={isLoading}
+            >
               Cancel
             </Button>
-            <Button type='submit' disabled={isLoading}>
+            <Button type="submit" disabled={isLoading}>
               {isLoading ? 'Saving...' : lease ? 'Save Changes' : 'Add Lease'}
             </Button>
           </div>

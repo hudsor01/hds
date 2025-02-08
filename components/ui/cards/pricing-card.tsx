@@ -1,8 +1,8 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import {cn} from '@/lib/utils';
-import type {PricingCardProps} from '@/types/mui';
+import { Button } from '@/components/ui/buttons/button';
+import { cn } from '@/lib/utils';
+import type { PricingCardProps } from '@/types/mui';
 import {
   Card,
   CardContent,
@@ -11,7 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from 'components/ui/cards/card';
-import {Check} from 'react-feather';
+import { Check } from 'react-feather';
 
 export function PricingCard({
   title,
@@ -33,23 +33,25 @@ export function PricingCard({
       )}
     >
       {highlighted && (
-        <div className='absolute -right-12 top-6 rotate-45 bg-primary px-12 py-1 text-sm font-medium text-primary-foreground'>
+        <div className="absolute -right-12 top-6 rotate-45 bg-primary px-12 py-1 text-sm font-medium text-primary-foreground">
           Popular
         </div>
       )}
-      <CardHeader className='space-y-2 pb-8 pt-6 text-center'>
-        <CardTitle className='text-2xl font-bold'>{title}</CardTitle>
-        <CardDescription className='text-sm text-muted-foreground'>{description}</CardDescription>
+      <CardHeader className="space-y-2 pb-8 pt-6 text-center">
+        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
+        <CardDescription className="text-sm text-muted-foreground">
+          {description}
+        </CardDescription>
       </CardHeader>
-      <CardContent className='flex flex-1 flex-col'>
-        <div className='mb-8 flex items-baseline justify-center'>
-          <span className='text-4xl font-bold'>{price}</span>
-          <span className='ml-2 text-sm text-muted-foreground'>{duration}</span>
+      <CardContent className="flex flex-1 flex-col">
+        <div className="mb-8 flex items-baseline justify-center">
+          <span className="text-4xl font-bold">{price}</span>
+          <span className="ml-2 text-sm text-muted-foreground">{duration}</span>
         </div>
-        <ul className='mb-8 space-y-3 px-6'>
+        <ul className="mb-8 space-y-3 px-6">
           {features.map((feature, index) => (
-            <li key={index} className='flex items-center gap-3 text-sm'>
-              <Check className='h-4 w-4 text-primary' />
+            <li key={index} className="flex items-center gap-3 text-sm">
+              <Check className="h-4 w-4 text-primary" />
               {feature}
             </li>
           ))}
@@ -60,7 +62,9 @@ export function PricingCard({
           onClick={onSubscribeAction}
           className={cn(
             'w-full transition-colors',
-            highlighted ? 'bg-primary text-primary-foreground hover:bg-primary/90' : '',
+            highlighted
+              ? 'bg-primary text-primary-foreground hover:bg-primary/90'
+              : '',
           )}
           variant={highlighted ? 'default' : 'outline'}
         >

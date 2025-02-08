@@ -1,4 +1,4 @@
-import type {Route} from 'next';
+import type { Route } from 'next';
 
 export const routes = {
   dashboard: '/dashboard' as Route,

@@ -1,6 +1,6 @@
-import {BaseQueryParams, BaseResponse} from '@/types/common';
-import {NextApiRequest, NextApiResponse} from 'next';
-import {ZodError, ZodSchema} from 'zod';
+import { BaseQueryParams, BaseResponse } from '@/types/common';
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ZodError, ZodSchema } from 'zod';
 
 export type ApiError = {
   message: string;
@@ -29,8 +29,12 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
     });
 
     if (!response.ok) {
-      const error = await response.json().catch(() => ({message: 'An error occurred'}));
-      throw new Error(error.message || `HTTP error! status: ${response.status}`);
+      const error = await response
+        .json()
+        .catch(() => ({ message: 'An error occurred' }));
+      throw new Error(
+        error.message || `HTTP error! status: ${response.status}`,
+      );
     }
 
     return response;
@@ -41,8 +45,9 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
 
 // Auth header helper
 function getAuthHeader(): HeadersInit {
-  const token = typeof window !== 'undefined' ? localStorage.getItem('token') : null;
-  return token ? {Authorization: `Bearer ${token}`} : {};
+  const token =
+    typeof window !== 'undefined' ? localStorage.getItem('token') : null;
+  return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
 // Generic API functions
@@ -50,12 +55,19 @@ export async function fetchData<T>(
   endpoint: string,
   params?: BaseQueryParams,
 ): Promise<BaseResponse<T>> {
-  const queryString = params ? `?${new URLSearchParams(params as Record<string, string>)}` : '';
-  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}${queryString}`);
+  const queryString = params
+    ? `?${new URLSearchParams(params as Record<string, string>)}`
+    : '';
+  const response = await fetchWithErrorHandling(
+    `${API_BASE_URL}${endpoint}${queryString}`,
+  );
   return response.json();
 }
 
-export async function createData<T>(endpoint: string, payload: unknown): Promise<BaseResponse<T>> {
+export async function createData<T>(
+  endpoint: string,
+  payload: unknown,
+): Promise<BaseResponse<T>> {
   const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}`, {
     method: 'POST',
     body: JSON.stringify(payload),
@@ -68,10 +80,13 @@ export async function updateData<T>(
   id: string | number,
   payload: unknown,
 ): Promise<BaseResponse<T>> {
-  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
-    method: 'PUT',
-    body: JSON.stringify(payload),
-  });
+  const response = await fetchWithErrorHandling(
+    `${API_BASE_URL}${endpoint}/${id}`,
+    {
+      method: 'PUT',
+      body: JSON.stringify(payload),
+    },
+  );
   return response.json();
 }
 
@@ -79,9 +94,12 @@ export async function deleteData<T>(
   endpoint: string,
   id: string | number,
 ): Promise<BaseResponse<T>> {
-  const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
-    method: 'DELETE',
-  });
+  const response = await fetchWithErrorHandling(
+    `${API_BASE_URL}${endpoint}/${id}`,
+    {
+      method: 'DELETE',
+    },
+  );
   return response.json();
 }
 
@@ -92,7 +110,7 @@ export const withValidation = <T>(schema: ZodSchema<T>) => {
       return await schema.parseAsync(req.body);
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new Error(error.errors.map(e => e.message).join(', '));
+        throw new Error(error.errors.map((e) => e.message).join(', '));
       }
       throw error;
     }
@@ -100,15 +118,19 @@ export const withValidation = <T>(schema: ZodSchema<T>) => {
 };
 
 export const withErrorHandler = <T>(
-  handler: (req: NextApiRequest, res: NextApiResponse<BaseResponse<T>>) => Promise<void>,
+  handler: (
+    req: NextApiRequest,
+    res: NextApiResponse<BaseResponse<T>>,
+  ) => Promise<void>,
 ) => {
   return async (req: NextApiRequest, res: NextApiResponse<BaseResponse<T>>) => {
     try {
       await handler(req, res);
     } catch (error) {
       console.error(error);
-      const message = error instanceof Error ? error.message : 'Internal Server Error';
-      res.status(500).json({data: null as T, error: message});
+      const message =
+        error instanceof Error ? error.message : 'Internal Server Error';
+      res.status(500).json({ data: null as T, error: message });
     }
   };
 };
@@ -129,10 +151,13 @@ function handleError(error: unknown): ApiError {
 
 // API client for use in components
 export const api = {
-  async get<T>(endpoint: string, params?: BaseQueryParams): Promise<ApiResponse<T>> {
+  async get<T>(
+    endpoint: string,
+    params?: BaseQueryParams,
+  ): Promise<ApiResponse<T>> {
     try {
       const response = await fetchData<T>(endpoint, params);
-      return {data: response.data as T, error: null};
+      return { data: response.data as T, error: null };
     } catch (error) {
       return {
         data: {} as T,
@@ -144,7 +169,7 @@ export const api = {
   async post<T>(endpoint: string, data?: unknown): Promise<ApiResponse<T>> {
     try {
       const response = await createData<T>(endpoint, data);
-      return {data: response.data as T, error: null};
+      return { data: response.data as T, error: null };
     } catch (error) {
       return {
         data: {} as T,
@@ -153,10 +178,14 @@ export const api = {
     }
   },
 
-  async put<T>(endpoint: string, id: string | number, data: unknown): Promise<ApiResponse<T>> {
+  async put<T>(
+    endpoint: string,
+    id: string | number,
+    data: unknown,
+  ): Promise<ApiResponse<T>> {
     try {
       const response = await updateData<T>(endpoint, id, data);
-      return {data: response.data as T, error: null};
+      return { data: response.data as T, error: null };
     } catch (error) {
       return {
         data: {} as T,
@@ -165,10 +194,13 @@ export const api = {
     }
   },
 
-  async delete<T>(endpoint: string, id: string | number): Promise<ApiResponse<T>> {
+  async delete<T>(
+    endpoint: string,
+    id: string | number,
+  ): Promise<ApiResponse<T>> {
     try {
       const response = await deleteData<T>(endpoint, id);
-      return {data: response.data as T, error: null};
+      return { data: response.data as T, error: null };
     } catch (error) {
       return {
         data: {} as T,

@@ -1,6 +1,6 @@
-import {ForgotPasswordForm} from '@/components/forms/auth/ForgotPasswordForm';
-import {Box, Container, Typography} from '@mui/material';
-import {type Metadata} from 'next';
+import { ForgotPasswordForm } from '@/components/forms/auth/ForgotPasswordForm';
+import { Box, Container, Typography } from '@mui/material';
+import { type Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Forgot Password',
@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default function ForgotPasswordPage() {
   return (
-    <Container maxWidth='sm'>
+    <Container maxWidth="sm">
       <Box
         sx={{
           minHeight: '100vh',
@@ -20,12 +20,13 @@ export default function ForgotPasswordPage() {
           py: 4,
         }}
       >
-        <Box sx={{width: '100%', maxWidth: 400, textAlign: 'center', mb: 4}}>
-          <Typography variant='h4' component='h1' gutterBottom>
+        <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mb: 4 }}>
+          <Typography variant="h4" component="h1" gutterBottom>
             Forgot your password?
           </Typography>
-          <Typography variant='body1' color='text.secondary'>
-            Enter your email address and we'll send you a link to reset your password.
+          <Typography variant="body1" color="text.secondary">
+            Enter your email address and we'll send you a link to reset your
+            password.
           </Typography>
         </Box>
         <ForgotPasswordForm />

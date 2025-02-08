@@ -33,7 +33,10 @@ export default function AuthCallbackPage() {
   }, [code, next, router]);
 
   return (
-    <Container maxWidth="sm" className="min-h-screen flex items-center justify-center">
+    <Container
+      maxWidth="sm"
+      className="flex min-h-screen items-center justify-center"
+    >
       <Box className="text-center">
         <CircularProgress size={48} className="mb-4" />
         <Typography variant="h6">Completing authentication...</Typography>

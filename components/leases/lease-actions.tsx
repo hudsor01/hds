@@ -1,17 +1,17 @@
-import {useLeaseActions} from '@/hooks/use-leases';
-import {LEASE_STATUS} from '@/types/lease';
-import {IconButton, Menu, MenuItem} from '@mui/material';
-import {useState} from 'react';
-import {MoreVertical} from 'react-feather';
+import { useLeaseActions } from '@/hooks/use-leases';
+import { LEASE_STATUS } from '@/types/lease';
+import { IconButton, Menu, MenuItem } from '@mui/material';
+import { useState } from 'react';
+import { MoreVertical } from 'react-feather';
 
 interface LeaseActionsProps {
   leaseId: string;
   leaseStatus: keyof typeof LEASE_STATUS;
 }
 
-export function LeaseActions({leaseId, leaseStatus}: LeaseActionsProps) {
+export function LeaseActions({ leaseId, leaseStatus }: LeaseActionsProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const {terminate, renew} = useLeaseActions(leaseId);
+  const { terminate, renew } = useLeaseActions(leaseId);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

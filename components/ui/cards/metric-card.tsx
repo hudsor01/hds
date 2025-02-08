@@ -1,10 +1,10 @@
 'use client';
 
-import {Box, Card, Tooltip, Typography, alpha, useTheme} from '@mui/material';
-import {motion} from 'framer-motion';
+import { Box, Card, Tooltip, Typography, alpha, useTheme } from '@mui/material';
+import { motion } from 'framer-motion';
 import React from 'react';
-import type {Icon} from 'react-feather';
-import {TrendingUp} from 'react-feather';
+import type { Icon } from 'react-feather';
+import { TrendingUp } from 'react-feather';
 
 interface MetricCardProps {
   title: string;
@@ -17,16 +17,16 @@ interface MetricCardProps {
 }
 
 const cardVariants = {
-  initial: {scale: 0.96, opacity: 0},
-  animate: {scale: 1, opacity: 1},
-  hover: {scale: 1.02, transition: {duration: 0.2}},
-  tap: {scale: 0.98},
+  initial: { scale: 0.96, opacity: 0 },
+  animate: { scale: 1, opacity: 1 },
+  hover: { scale: 1.02, transition: { duration: 0.2 } },
+  tap: { scale: 0.98 },
 };
 
 const iconVariants = {
-  initial: {rotate: -10, scale: 0.9},
-  animate: {rotate: 0, scale: 1},
-  hover: {rotate: 5, scale: 1.1, transition: {duration: 0.2}},
+  initial: { rotate: -10, scale: 0.9 },
+  animate: { rotate: 0, scale: 1 },
+  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
 };
 
 export function MetricCard({
@@ -52,17 +52,17 @@ export function MetricCard({
   }, [value, formatType]);
 
   return (
-    <Tooltip title={tooltip || ''} arrow placement='top'>
+    <Tooltip title={tooltip || ''} arrow placement="top">
       <motion.div
         variants={cardVariants}
-        initial='initial'
-        animate='animate'
-        whileHover='hover'
-        whileTap='tap'
+        initial="initial"
+        animate="animate"
+        whileHover="hover"
+        whileTap="tap"
       >
         <Card
           sx={{
-            p: {xs: 1.5, sm: 2},
+            p: { xs: 1.5, sm: 2 },
             height: '100%',
             display: 'flex',
             flexDirection: 'column',
@@ -79,7 +79,9 @@ export function MetricCard({
             },
           }}
         >
-          <Box sx={{display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5}}>
+          <Box
+            sx={{ display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5 }}
+          >
             <motion.div
               variants={iconVariants}
               style={{
@@ -93,15 +95,15 @@ export function MetricCard({
                 boxShadow: `0 2px 8px 0 ${alpha(theme.palette[color].main, 0.3)}`,
               }}
             >
-              <Icon width={20} height={20} color='#fff' />
+              <Icon width={20} height={20} color="#fff" />
             </motion.div>
 
             <Typography
-              variant='h4'
+              variant="h4"
               sx={{
                 fontWeight: 700,
                 color: theme.palette[color].dark,
-                fontSize: {xs: '1.25rem', sm: '1.5rem'},
+                fontSize: { xs: '1.25rem', sm: '1.5rem' },
               }}
             >
               {formattedValue}
@@ -109,7 +111,7 @@ export function MetricCard({
           </Box>
 
           <Typography
-            variant='subtitle2'
+            variant="subtitle2"
             sx={{
               opacity: 0.8,
               color: theme.palette[color].dark,
@@ -123,8 +125,8 @@ export function MetricCard({
           {percentageChange !== undefined && (
             <Box
               component={motion.div}
-              initial={{opacity: 0, y: 10}}
-              animate={{opacity: 1, y: 0}}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               sx={{
                 mt: 'auto',
                 display: 'flex',
@@ -137,12 +139,14 @@ export function MetricCard({
                 style={{
                   transform: percentageChange < 0 ? 'rotate(180deg)' : 'none',
                   color:
-                    percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                    percentageChange >= 0
+                      ? theme.palette.success.main
+                      : theme.palette.error.main,
                 }}
               />
               <Typography
-                component='span'
-                variant='caption'
+                component="span"
+                variant="caption"
                 sx={{
                   fontWeight: 600,
                   color: percentageChange >= 0 ? 'success.main' : 'error.main',

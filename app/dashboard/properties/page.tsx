@@ -1,8 +1,8 @@
 'use client';
 
-import {supabase, useUser} from '@/app/auth/lib/auth/config';
-import {PropertyDialog} from '@/components/properties/property-dialog';
-import type {Property, PropertyCardData} from '@/types/property';
+import { supabase, useUser } from '@/app/auth/lib/auth/config';
+import { PropertyDialog } from '@/components/properties/property-dialog';
+import type { Property, PropertyCardData } from '@/types/property';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -20,39 +20,43 @@ import {
   Typography,
 } from '@mui/material';
 import Grid from '@mui/material/Grid';
-import {alpha, useTheme} from '@mui/material/styles';
-import {motion} from 'framer-motion';
+import { alpha, useTheme } from '@mui/material/styles';
+import { motion } from 'framer-motion';
 import Image from 'next/image';
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from 'react';
 
 const containerVariants = {
-  initial: {opacity: 0},
-  animate: {opacity: 1, transition: {staggerChildren: 0.1}},
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
 };
 
 const itemVariants = {
-  initial: {y: 20, opacity: 0},
-  animate: {y: 0, opacity: 1},
+  initial: { y: 20, opacity: 0 },
+  animate: { y: 0, opacity: 1 },
 };
 
 export default function PropertiesPage() {
   const theme = useTheme();
-  const {user} = useUser();
+  const { user } = useUser();
   const [properties, setProperties] = useState<PropertyCardData[]>([]);
   const [search, setSearch] = useState('');
   const [openDialog, setOpenDialog] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<PropertyCardData | undefined>();
+  const [selectedProperty, setSelectedProperty] = useState<
+    PropertyCardData | undefined
+  >();
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const {data, error} = await supabase.from('properties').select('*, units(*)');
+        const { data, error } = await supabase
+          .from('properties')
+          .select('*, units(*)');
 
         if (error) throw error;
 
         if (data) {
-          const transformedData: PropertyCardData[] = data.map(property => ({
+          const transformedData: PropertyCardData[] = data.map((property) => ({
             id: property.id,
             title: property.name,
             address: property.address,
@@ -80,15 +84,18 @@ export default function PropertiesPage() {
     setOpenDialog(true);
   };
 
-  const {remove: deleteProperty, loading: deleteLoading} = useDashboardCrud<Property>({
-    table: 'properties',
-    onSuccess: () => {
-      setProperties(prev => prev.filter(p => p.id !== selectedProperty?.id));
-    },
-    onError: error => {
-      console.error('Error deleting property:', error);
-    },
-  });
+  const { remove: deleteProperty, loading: deleteLoading } =
+    useDashboardCrud<Property>({
+      table: 'properties',
+      onSuccess: () => {
+        setProperties((prev) =>
+          prev.filter((p) => p.id !== selectedProperty?.id),
+        );
+      },
+      onError: (error) => {
+        console.error('Error deleting property:', error);
+      },
+    });
 
   const handleDelete = async (id: string) => {
     try {
@@ -99,7 +106,7 @@ export default function PropertiesPage() {
   };
 
   const filteredProperties = properties.filter(
-    property =>
+    (property) =>
       property.title.toLowerCase().includes(search.toLowerCase()) ||
       property.address.toLowerCase().includes(search.toLowerCase()),
   );
@@ -139,43 +146,49 @@ export default function PropertiesPage() {
   };
 
   return (
-    <motion.div variants={containerVariants} initial='initial' animate='animate'>
+    <motion.div
+      variants={containerVariants}
+      initial="initial"
+      animate="animate"
+    >
       {/* Header */}
-      <Box sx={{mb: 4}}>
-        <Typography variant='h4' gutterBottom>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" gutterBottom>
           Properties
         </Typography>
-        <Typography color='text.secondary'>Manage your property portfolio</Typography>
+        <Typography color="text.secondary">
+          Manage your property portfolio
+        </Typography>
       </Box>
 
       {/* Actions */}
       <Stack
-        direction={{xs: 'column', sm: 'row'}}
+        direction={{ xs: 'column', sm: 'row' }}
         spacing={2}
-        alignItems={{xs: 'stretch', sm: 'center'}}
-        sx={{mb: 3}}
+        alignItems={{ xs: 'stretch', sm: 'center' }}
+        sx={{ mb: 3 }}
       >
         <TextField
           value={search}
-          onChange={e => setSearch(e.target.value)}
-          placeholder='Search properties...'
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Search properties..."
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 <SearchIcon />
               </InputAdornment>
             ),
           }}
-          sx={{flex: 1}}
+          sx={{ flex: 1 }}
         />
         <Button
-          variant='contained'
+          variant="contained"
           startIcon={<AddIcon />}
           onClick={() => {
             setSelectedProperty(undefined);
             setOpenDialog(true);
           }}
-          sx={{minWidth: 200}}
+          sx={{ minWidth: 200 }}
         >
           Add Property
         </Button>
@@ -188,26 +201,26 @@ export default function PropertiesPage() {
             py: 10,
             textAlign: 'center',
             borderStyle: 'dashed',
-            bgcolor: theme => alpha(theme.palette.primary.main, 0.04),
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
           }}
         >
           <Image
-            src='/illustrations/no-data.svg'
-            alt='No properties'
+            src="/illustrations/no-data.svg"
+            alt="No properties"
             width={180}
             height={180}
-            style={{marginBottom: 16, opacity: 0.7}}
+            style={{ marginBottom: 16, opacity: 0.7 }}
           />
-          <Typography variant='h6' paragraph>
+          <Typography variant="h6" paragraph>
             No properties found
           </Typography>
-          <Typography variant='body2' color='text.secondary'>
+          <Typography variant="body2" color="text.secondary">
             Try adjusting your search or add a new property
           </Typography>
         </Card>
       ) : (
         <Grid container spacing={3}>
-          {filteredProperties.map(property => (
+          {filteredProperties.map((property) => (
             <Grid item xs={12} sm={6} md={4} key={property.id}>
               <motion.div variants={itemVariants}>
                 <Card
@@ -221,16 +234,18 @@ export default function PropertiesPage() {
                   }}
                 >
                   {/* Property Image */}
-                  <Box sx={{pt: '75%', position: 'relative'}}>
+                  <Box sx={{ pt: '75%', position: 'relative' }}>
                     <Image
                       src={property.image}
                       alt={property.title}
                       fill
-                      style={{objectFit: 'cover'}}
+                      style={{ objectFit: 'cover' }}
                     />
                     <Chip
                       label={property.status}
-                      color={property.status === 'available' ? 'success' : 'primary'}
+                      color={
+                        property.status === 'available' ? 'success' : 'primary'
+                      }
                       sx={{
                         position: 'absolute',
                         top: 16,
@@ -241,55 +256,75 @@ export default function PropertiesPage() {
                   </Box>
 
                   {/* Property Details */}
-                  <Box sx={{p: 3}}>
-                    <Typography variant='subtitle1' noWrap paragraph>
+                  <Box sx={{ p: 3 }}>
+                    <Typography variant="subtitle1" noWrap paragraph>
                       {property.title}
                     </Typography>
-                    <Typography variant='body2' color='text.secondary' noWrap sx={{mb: 2}}>
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      noWrap
+                      sx={{ mb: 2 }}
+                    >
                       {property.address}
                     </Typography>
 
-                    <Stack direction='row' alignItems='center' spacing={3} sx={{mb: 2}}>
-                      <Stack direction='row' alignItems='center' spacing={1}>
-                        <Typography variant='subtitle1'>${property.price}</Typography>
-                        <Typography variant='caption' color='text.secondary'>
+                    <Stack
+                      direction="row"
+                      alignItems="center"
+                      spacing={3}
+                      sx={{ mb: 2 }}
+                    >
+                      <Stack direction="row" alignItems="center" spacing={1}>
+                        <Typography variant="subtitle1">
+                          ${property.price}
+                        </Typography>
+                        <Typography variant="caption" color="text.secondary">
                           /month
                         </Typography>
                       </Stack>
-                      <Stack direction='row' spacing={1}>
-                        <Typography variant='body2'>{property.bedrooms} beds</Typography>
-                        <Typography variant='body2' color='text.secondary'>
+                      <Stack direction="row" spacing={1}>
+                        <Typography variant="body2">
+                          {property.bedrooms} beds
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
                           •
                         </Typography>
-                        <Typography variant='body2'>{property.bathrooms} baths</Typography>
+                        <Typography variant="body2">
+                          {property.bathrooms} baths
+                        </Typography>
                       </Stack>
                     </Stack>
 
-                    <Stack direction='row' spacing={1}>
-                      <Tooltip title='Edit'>
+                    <Stack direction="row" spacing={1}>
+                      <Tooltip title="Edit">
                         <IconButton
-                          size='small'
+                          size="small"
                           onClick={() => handleEdit(property)}
                           sx={{
                             color: 'primary.main',
-                            bgcolor: theme => alpha(theme.palette.primary.main, 0.08),
+                            bgcolor: (theme) =>
+                              alpha(theme.palette.primary.main, 0.08),
                             '&:hover': {
-                              bgcolor: theme => alpha(theme.palette.primary.main, 0.16),
+                              bgcolor: (theme) =>
+                                alpha(theme.palette.primary.main, 0.16),
                             },
                           }}
                         >
                           <EditIcon />
                         </IconButton>
                       </Tooltip>
-                      <Tooltip title='Delete'>
+                      <Tooltip title="Delete">
                         <IconButton
-                          size='small'
+                          size="small"
                           onClick={() => handleDelete(property.id)}
                           sx={{
                             color: 'error.main',
-                            bgcolor: theme => alpha(theme.palette.error.main, 0.08),
+                            bgcolor: (theme) =>
+                              alpha(theme.palette.error.main, 0.08),
                             '&:hover': {
-                              bgcolor: theme => alpha(theme.palette.error.main, 0.16),
+                              bgcolor: (theme) =>
+                                alpha(theme.palette.error.main, 0.16),
                             },
                           }}
                         >
@@ -309,15 +344,17 @@ export default function PropertiesPage() {
       <PropertyDialog
         open={openDialog}
         onOpenChangeAction={setOpenDialog}
-        property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
-        onSubmitAction={async data => {
+        property={
+          selectedProperty ? convertToProperty(selectedProperty) : undefined
+        }
+        onSubmitAction={async (data) => {
           try {
-            const {create, update} = useDashboardCrud<Property>({
+            const { create, update } = useDashboardCrud<Property>({
               table: 'properties',
-              onSuccess: result => {
-                setProperties(prev => {
+              onSuccess: (result) => {
+                setProperties((prev) => {
                   if (selectedProperty) {
-                    return prev.map(p =>
+                    return prev.map((p) =>
                       p.id === result.id
                         ? {
                             ...p,
@@ -346,7 +383,7 @@ export default function PropertiesPage() {
                 });
                 setOpenDialog(false);
               },
-              onError: error => {
+              onError: (error) => {
                 console.error('Error saving property:', error);
               },
             });

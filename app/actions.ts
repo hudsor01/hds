@@ -1,10 +1,10 @@
 'use server';
 
-import {createClient} from '@supabase/supabase-js';
-import {revalidatePath} from 'next/cache';
-import {cookies} from 'next/headers';
-import {redirect} from 'next/navigation';
-import {z} from 'zod';
+import { createClient } from '@supabase/supabase-js';
+import { revalidatePath } from 'next/cache';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { z } from 'zod';
 
 interface SubscribeData {
   email: string;
@@ -39,7 +39,7 @@ export async function subscribeToWaitlist(data: SubscribeData) {
 
     // TODO: Integrate with your email service provider
     // For now, we'll simulate a successful subscription
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     // Store subscription preferences in cookies
     (
@@ -55,7 +55,7 @@ export async function subscribeToWaitlist(data: SubscribeData) {
     });
 
     revalidatePath('/');
-    return {success: true};
+    return { success: true };
   } catch (error) {
     console.error('Subscription error:', error);
     return {
@@ -81,10 +81,10 @@ export async function submitContactForm(data: ContactFormData) {
 
     // TODO: Integrate with your email service or CRM
     // For now, we'll simulate a successful submission
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     revalidatePath('/contact');
-    return {success: true};
+    return { success: true };
   } catch (error) {
     console.error('Contact form submission error:', error);
     return {
@@ -110,7 +110,7 @@ export async function requestDemo(data: ContactFormData) {
 
     // TODO: Integrate with your scheduling system
     // For now, we'll simulate a successful demo request
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     revalidatePath('/demo');
     return {
@@ -165,10 +165,10 @@ export async function signInWithEmail(formData: FormData) {
   });
 
   try {
-    const {data, error} = await supabase.auth.signInWithPassword(credentials);
-    return error ? {error: error.message} : {success: true};
+    const { data, error } = await supabase.auth.signInWithPassword(credentials);
+    return error ? { error: error.message } : { success: true };
   } catch (error) {
-    return {error: 'Authentication failed'};
+    return { error: 'Authentication failed' };
   }
 }
 
@@ -179,26 +179,26 @@ export async function signUpWithEmail(formData: FormData) {
   });
 
   try {
-    const {data, error} = await supabase.auth.signUp(credentials);
-    return error ? {error: error.message} : {success: true};
+    const { data, error } = await supabase.auth.signUp(credentials);
+    return error ? { error: error.message } : { success: true };
   } catch (error) {
-    return {error: 'Registration failed'};
+    return { error: 'Registration failed' };
   }
 }
 
 export async function signOut() {
   try {
-    const {error} = await supabase.auth.signOut();
-    return error ? {error: error.message} : {success: true};
+    const { error } = await supabase.auth.signOut();
+    return error ? { error: error.message } : { success: true };
   } catch (error) {
-    return {error: 'Logout failed'};
+    return { error: 'Logout failed' };
   }
 }
 
 export async function getSession() {
   try {
     const {
-      data: {session},
+      data: { session },
     } = await supabase.auth.getSession();
     return session;
   } catch (error) {
@@ -208,14 +208,14 @@ export async function getSession() {
 
 export async function forgotPasswordAction(formData: FormData) {
   const email = formData.get('email')?.toString();
-  if (!email) return {error: 'Email is required'};
+  if (!email) return { error: 'Email is required' };
 
   try {
-    const {error} = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/reset-password`,
     });
-    return error ? {error: error.message} : {success: true};
+    return error ? { error: error.message } : { success: true };
   } catch (error) {
-    return {error: 'Password reset failed. Please try again.'};
+    return { error: 'Password reset failed. Please try again.' };
   }
 }

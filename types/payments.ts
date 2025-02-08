@@ -1,6 +1,6 @@
-import {PaymentStatus, PaymentType} from '@prisma/client';
-import type {Stripe} from 'stripe';
-import {z} from 'zod';
+import { PaymentStatus, PaymentType } from '@prisma/client';
+import type { Stripe } from 'stripe';
+import { z } from 'zod';
 
 // Schema for payment validation
 export const paymentSchema = z.object({
@@ -70,7 +70,12 @@ export interface StripeWebhookPayload {
   };
 }
 
-export type PaymentMethodType = 'card' | 'ach_debit' | 'check' | 'cash' | 'bank_transfer';
+export type PaymentMethodType =
+  | 'card'
+  | 'ach_debit'
+  | 'check'
+  | 'cash'
+  | 'bank_transfer';
 
 export interface PaymentMethodDetails {
   type: PaymentMethodType;
@@ -183,6 +188,12 @@ export interface PaymentMethodRequirements {
   };
   bank_transfer: {
     required: ['bank_name', 'account_holder'];
-    optional: ['swift_bic', 'iban', 'routing_number', 'account_number', 'reference'];
+    optional: [
+      'swift_bic',
+      'iban',
+      'routing_number',
+      'account_number',
+      'reference',
+    ];
   };
 }

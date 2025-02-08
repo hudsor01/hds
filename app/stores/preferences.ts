@@ -1,5 +1,5 @@
-import {create} from 'zustand';
-import {createJSONStorage, persist} from 'zustand/middleware';
+import { create } from 'zustand';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 export interface UserPreferences {
   fontSize: 'small' | 'medium' | 'large';
@@ -21,9 +21,9 @@ export const usePreferences = create<UserPreferences>()(
       animations: true,
       reducedMotion: false,
 
-      setFontSize: size => set({fontSize: size}),
-      setAnimations: enabled => set({animations: enabled}),
-      setReducedMotion: enabled => set({reducedMotion: enabled}),
+      setFontSize: (size) => set({ fontSize: size }),
+      setAnimations: (enabled) => set({ animations: enabled }),
+      setReducedMotion: (enabled) => set({ reducedMotion: enabled }),
 
       sync: async () => {
         try {
@@ -44,7 +44,7 @@ export const usePreferences = create<UserPreferences>()(
 
           if (response.ok) {
             const data = await response.json();
-            set({...data, lastSynced: Date.now()});
+            set({ ...data, lastSynced: Date.now() });
           }
         } catch (error) {
           console.error('Failed to sync preferences:', error);
@@ -54,7 +54,7 @@ export const usePreferences = create<UserPreferences>()(
     {
       name: 'user-preferences',
       storage: createJSONStorage(() => localStorage),
-      partialize: state => ({
+      partialize: (state) => ({
         fontSize: state.fontSize,
         animations: state.animations,
         reducedMotion: state.reducedMotion,

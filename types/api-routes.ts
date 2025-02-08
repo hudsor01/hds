@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server'
-import analyticsDB from '../types/analyticsDB'
-import waitlistDB from '../types/waitlistDB'
+import { NextRequest, NextResponse } from 'next/server';
+import analyticsDB from '../types/analyticsDB';
+import waitlistDB from '../types/waitlistDB';
 // Waitlist API Routes
 export interface WaitlistPostRequest extends NextRequest {
   body: ReadableStream<Uint8Array<ArrayBufferLike>> & {
@@ -106,7 +106,7 @@ const defaultStringMethods = {
 
 export async function POST(request: WaitlistPostRequest): Promise<Response> {
   try {
-    const {email, source, referralCode} = await request.json();
+    const { email, source, referralCode } = await request.json();
 
     // Use object spread to include the default string methods
     const entry = await waitlistDB.add({
@@ -132,13 +132,13 @@ export async function POST(request: WaitlistPostRequest): Promise<Response> {
       success: false,
       error: 'Failed to join waitlist',
     };
-    return NextResponse.json(response, {status: 500});
+    return NextResponse.json(response, { status: 500 });
   }
 }
 
 // app/api/analytics/route.ts
 export async function GET(request: AnalyticsRequest): Promise<Response> {
-  const {searchParams} = new URL(request.url);
+  const { searchParams } = new URL(request.url);
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
   const template = searchParams.get('template') || undefined;
@@ -149,5 +149,5 @@ export async function GET(request: AnalyticsRequest): Promise<Response> {
     template,
   });
 
-  return Response.json({success: true, data: stats});
+  return Response.json({ success: true, data: stats });
 }

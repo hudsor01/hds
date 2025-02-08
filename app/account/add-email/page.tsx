@@ -1,15 +1,17 @@
 'use client';
 
-import * as React from 'react'
-import { useUser } from '../../auth/lib/auth/config'
+import * as React from 'react';
+import { useUser } from '../../auth/lib/auth/config';
 
 export default function Page() {
-  const {user, loading} = useUser();
+  const { user, loading } = useUser();
   const [email, setEmail] = React.useState('');
   const [code, setCode] = React.useState('');
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [successful, setSuccessful] = React.useState(false);
-  const [emailObj, setEmailObj] = React.useState<EmailAddressResource | undefined>();
+  const [emailObj, setEmailObj] = React.useState<
+    EmailAddressResource | undefined
+  >();
 
   if (loading) return null;
 
@@ -23,17 +25,17 @@ export default function Page() {
 
     try {
       // Add an unverified email address to user
-      const res = await user.createEmailAddress({email});
+      const res = await user.createEmailAddress({ email });
       // Reload user to get updated User object
       await user.reload();
 
       // Find the email address that was just added
-      const emailAddress = user.emailAddresses.find(a => a.id === res.id);
+      const emailAddress = user.emailAddresses.find((a) => a.id === res.id);
       // Create a reference to the email address that was just added
       setEmailObj(emailAddress);
 
       // Send the user an email with the verification code
-      emailAddress?.prepareVerification({strategy: 'email_code'});
+      emailAddress?.prepareVerification({ strategy: 'email_code' });
 
       // Set to true to display second form
       // and capture the OTP code
@@ -48,7 +50,7 @@ export default function Page() {
     e.preventDefault();
     try {
       // Verify that the code entered matches the code sent to the user
-      const emailVerifyAttempt = await emailObj?.attemptVerification({code});
+      const emailVerifyAttempt = await emailObj?.attemptVerification({ code });
 
       if (emailVerifyAttempt?.verification.status === 'verified') {
         setSuccessful(true);
@@ -77,19 +79,19 @@ export default function Page() {
       <>
         <h1>Verify email</h1>
         <div>
-          <form onSubmit={e => verifyCode(e)}>
+          <form onSubmit={(e) => verifyCode(e)}>
             <div>
-              <label htmlFor='code'>Enter code</label>
+              <label htmlFor="code">Enter code</label>
               <input
-                onChange={e => setCode(e.target.value)}
-                id='code'
-                name='code'
-                type='text'
+                onChange={(e) => setCode(e.target.value)}
+                id="code"
+                name="code"
+                type="text"
                 value={code}
               />
             </div>
             <div>
-              <button type='submit'>Verify</button>
+              <button type="submit">Verify</button>
             </div>
           </form>
         </div>
@@ -102,19 +104,19 @@ export default function Page() {
     <>
       <h1>Add Email</h1>
       <div>
-        <form onSubmit={e => handleSubmit(e)}>
+        <form onSubmit={(e) => handleSubmit(e)}>
           <div>
-            <label htmlFor='email'>Enter email address</label>
+            <label htmlFor="email">Enter email address</label>
             <input
-              onChange={e => setEmail(e.target.value)}
-              id='email'
-              name='email'
-              type='email'
+              onChange={(e) => setEmail(e.target.value)}
+              id="email"
+              name="email"
+              type="email"
               value={email}
             />
           </div>
           <div>
-            <button type='submit'>Continue</button>
+            <button type="submit">Continue</button>
           </div>
         </form>
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button';
 import {
   MaintenancePriority,
   MaintenanceStatus,
@@ -8,11 +8,11 @@ import {
   NewMaintenanceTicket,
   UpdateMaintenanceTicket,
 } from '@/types/maintenance_requests';
-import {MaintenanceTicketDetails} from 'components/dialogs/maintenance-ticket-details';
-import {MaintenanceTicketDialog} from 'components/dialogs/maintenance-ticket-dialog';
-import {Card} from 'components/ui/cards/card';
-import {useState} from 'react';
-import {AlertTriangle, CheckCircle, Clock, Plus} from 'react-feather';
+import { MaintenanceTicketDetails } from 'components/dialogs/maintenance-ticket-details';
+import { MaintenanceTicketDialog } from 'components/dialogs/maintenance-ticket-dialog';
+import { Card } from 'components/ui/cards/card';
+import { useState } from 'react';
+import { AlertTriangle, CheckCircle, Clock, Plus } from 'react-feather';
 
 // Mock data for development
 const MOCK_TICKETS: MaintenanceTicket[] = [
@@ -51,7 +51,8 @@ const MOCK_TICKETS: MaintenanceTicket[] = [
 
 export default function MaintenancePage() {
   const [tickets, setTickets] = useState<MaintenanceTicket[]>(MOCK_TICKETS);
-  const [selectedTicket, setSelectedTicket] = useState<MaintenanceTicket | null>(null);
+  const [selectedTicket, setSelectedTicket] =
+    useState<MaintenanceTicket | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
   const handleCreateTicket = async (data: NewMaintenanceTicket) => {
@@ -71,8 +72,10 @@ export default function MaintenancePage() {
 
   const handleUpdateTicket = async (data: UpdateMaintenanceTicket) => {
     // TODO: Implement API call
-    const updatedTickets = tickets.map(ticket =>
-      ticket.id === data.id ? {...ticket, ...data, updatedAt: new Date().toISOString()} : ticket,
+    const updatedTickets = tickets.map((ticket) =>
+      ticket.id === data.id
+        ? { ...ticket, ...data, updatedAt: new Date().toISOString() }
+        : ticket,
     );
     setTickets(updatedTickets);
   };
@@ -95,54 +98,68 @@ export default function MaintenancePage() {
   const getStatusIcon = (status: MaintenanceStatus) => {
     switch (status) {
       case 'open':
-        return <AlertTriangle className='h-5 w-5 text-yellow-500' />;
+        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
       case 'in_progress':
-        return <Clock className='h-5 w-5 text-blue-500' />;
+        return <Clock className="h-5 w-5 text-blue-500" />;
       case 'completed':
-        return <CheckCircle className='h-5 w-5 text-green-500' />;
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
       case 'cancelled':
-        return <AlertTriangle className='h-5 w-5 text-gray-500' />;
+        return <AlertTriangle className="h-5 w-5 text-gray-500" />;
     }
   };
 
   return (
-    <div className='p-6 space-y-6'>
-      <div className='flex justify-between items-center'>
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
         <div>
-          <h1 className='text-2xl font-bold'>Maintenance Tickets</h1>
-          <p className='text-gray-500'>Manage and track maintenance requests</p>
+          <h1 className="text-2xl font-bold">Maintenance Tickets</h1>
+          <p className="text-gray-500">Manage and track maintenance requests</p>
         </div>
         <Button onClick={() => setIsCreateDialogOpen(true)}>
-          <Plus className='h-4 w-4 mr-2' />
+          <Plus className="mr-2 h-4 w-4" />
           New Ticket
         </Button>
       </div>
 
-      <div className='grid gap-4'>
-        {tickets.map(ticket => (
-          <Card key={ticket.id} className='p-4'>
-            <div className='flex items-start justify-between'>
-              <div className='space-y-1'>
-                <div className='flex items-center space-x-2'>
+      <div className="grid gap-4">
+        {tickets.map((ticket) => (
+          <Card key={ticket.id} className="p-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center space-x-2">
                   {getStatusIcon(ticket.status)}
-                  <h3 className='font-medium'>{ticket.title}</h3>
-                  <span className={`text-sm ${getPriorityColor(ticket.priority)}`}>
-                    {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)} Priority
+                  <h3 className="font-medium">{ticket.title}</h3>
+                  <span
+                    className={`text-sm ${getPriorityColor(ticket.priority)}`}
+                  >
+                    {ticket.priority.charAt(0).toUpperCase() +
+                      ticket.priority.slice(1)}{' '}
+                    Priority
                   </span>
                 </div>
-                <p className='text-sm text-gray-500'>
+                <p className="text-sm text-gray-500">
                   {ticket.propertyName} - Unit {ticket.unitNumber}
                 </p>
-                <p className='text-sm'>{ticket.description}</p>
+                <p className="text-sm">{ticket.description}</p>
               </div>
-              <Button variant='outline' size='sm' onClick={() => setSelectedTicket(ticket)}>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setSelectedTicket(ticket)}
+              >
                 View Details
               </Button>
             </div>
-            <div className='mt-4 text-sm text-gray-500'>
-              <div className='flex items-center justify-between'>
-                <span>Created {new Date(ticket.createdAt).toLocaleDateString()}</span>
-                <span>{ticket.assignedTo ? `Assigned to ${ticket.assignedTo}` : 'Unassigned'}</span>
+            <div className="mt-4 text-sm text-gray-500">
+              <div className="flex items-center justify-between">
+                <span>
+                  Created {new Date(ticket.createdAt).toLocaleDateString()}
+                </span>
+                <span>
+                  {ticket.assignedTo
+                    ? `Assigned to ${ticket.assignedTo}`
+                    : 'Unassigned'}
+                </span>
               </div>
             </div>
           </Card>
@@ -158,7 +175,7 @@ export default function MaintenancePage() {
       {selectedTicket && (
         <MaintenanceTicketDetails
           open={!!selectedTicket}
-          onOpenChange={open => !open && setSelectedTicket(null)}
+          onOpenChange={(open) => !open && setSelectedTicket(null)}
           ticket={selectedTicket}
           onUpdate={handleUpdateTicket}
         />

@@ -1,4 +1,4 @@
-import type {CommandMenuProps} from '@/types/command-menu';
+import type { CommandMenuProps } from '@/types/command-menu';
 import {
   Box,
   Dialog,
@@ -12,17 +12,17 @@ import {
   ListItemText,
   TextField,
 } from '@mui/material';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
-import {Search, X} from 'react-feather';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { Search, X } from 'react-feather';
 
-export function CommandMenu({items, open, onClose}: CommandMenuProps) {
+export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
   const [search, setSearch] = useState('');
   const [selectedIndex, setSelectedIndex] = useState(0);
   const router = useRouter();
 
   const filteredItems = items.filter(
-    item =>
+    (item) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.description?.toLowerCase().includes(search.toLowerCase()),
   );
@@ -38,11 +38,13 @@ export function CommandMenu({items, open, onClose}: CommandMenuProps) {
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault();
-          setSelectedIndex(i => (i + 1) % filteredItems.length);
+          setSelectedIndex((i) => (i + 1) % filteredItems.length);
           break;
         case 'ArrowUp':
           e.preventDefault();
-          setSelectedIndex(i => (i - 1 + filteredItems.length) % filteredItems.length);
+          setSelectedIndex(
+            (i) => (i - 1 + filteredItems.length) % filteredItems.length,
+          );
           break;
         case 'Enter':
           e.preventDefault();
@@ -66,7 +68,7 @@ export function CommandMenu({items, open, onClose}: CommandMenuProps) {
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth='sm'
+      maxWidth="sm"
       fullWidth
       PaperProps={{
         sx: {
@@ -75,23 +77,23 @@ export function CommandMenu({items, open, onClose}: CommandMenuProps) {
         },
       }}
     >
-      <DialogContent sx={{p: 0}}>
-        <Box sx={{p: 2, borderBottom: 1, borderColor: 'divider'}}>
+      <DialogContent sx={{ p: 0 }}>
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
           <TextField
             autoFocus
             fullWidth
-            placeholder='Search commands...'
+            placeholder="Search commands..."
             value={search}
-            onChange={e => setSearch(e.target.value)}
+            onChange={(e) => setSearch(e.target.value)}
             InputProps={{
               startAdornment: (
-                <InputAdornment position='start'>
+                <InputAdornment position="start">
                   <Search size={20} />
                 </InputAdornment>
               ),
               endAdornment: (
-                <InputAdornment position='end'>
-                  <IconButton size='small' onClick={onClose}>
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={onClose}>
                     <X size={20} />
                   </IconButton>
                 </InputAdornment>
@@ -100,7 +102,7 @@ export function CommandMenu({items, open, onClose}: CommandMenuProps) {
           />
         </Box>
 
-        <List sx={{py: 0}}>
+        <List sx={{ py: 0 }}>
           {filteredItems.map((item, index) => (
             <ListItem key={item.id} disablePadding>
               <ListItemButton

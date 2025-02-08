@@ -16,7 +16,7 @@ export const EarlyAccessEmail = () => (
       <li>Priority support</li>
       <li>Feature request priority</li>
     </ul>
-    <Button href='[signup-link]'>Claim Your Spot</Button>
+    <Button href="[signup-link]">Claim Your Spot</Button>
   </EmailTemplate>
 );
 
@@ -25,7 +25,7 @@ export const SpotAvailableEmail = () => (
     <h1>Your Spot is Ready!</h1>
     <p>A spot has opened in our early access program.</p>
     <p>You have 48 hours to claim it before we move to the next person.</p>
-    <Button href='[claim-link]'>Join Now</Button>
+    <Button href="[claim-link]">Join Now</Button>
   </EmailTemplate>
 );
 
@@ -35,12 +35,16 @@ export const LaunchReminderEmail = () => (
     <p>Your special pricing ends in 24 hours.</p>
     <Features />
     <Pricing />
-    <Button href='[signup-link]'>Get Started</Button>
+    <Button href="[signup-link]">Get Started</Button>
   </EmailTemplate>
 );
 
 // Email sending service
-export const sendEmail = async (to: string, template: EmailTemplate, data: Record<string, any>) => {
+export const sendEmail = async (
+  to: string,
+  template: EmailTemplate,
+  data: Record<string, any>,
+) => {
   const templates = {
     [EmailTemplate.WELCOME]: WelcomeEmail,
     [EmailTemplate.EARLY_ACCESS]: EarlyAccessEmail,

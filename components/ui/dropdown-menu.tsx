@@ -1,7 +1,7 @@
 'use client';
 
-import {cn} from '@/lib/utils';
-import type {MenuItemProps, MenuProps} from '@mui/material';
+import { cn } from '@/lib/utils';
+import type { MenuItemProps, MenuProps } from '@mui/material';
 import {
   Divider,
   IconButton,
@@ -12,9 +12,9 @@ import {
   styled,
 } from '@mui/material';
 import * as React from 'react';
-import {Check, ChevronRight} from 'react-feather';
+import { Check, ChevronRight } from 'react-feather';
 
-const StyledMenu = styled(Menu)(({theme}) => ({
+const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     minWidth: 180,
@@ -32,7 +32,7 @@ const StyledMenu = styled(Menu)(({theme}) => ({
   },
 }));
 
-const StyledMenuItem = styled(MenuItem)(({theme}) => ({
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   minHeight: 36,
   padding: '6px 16px',
   '&:hover': {
@@ -52,7 +52,7 @@ export interface DropdownMenuProps extends Omit<MenuProps, 'open'> {
 }
 
 export const DropdownMenu = React.forwardRef<HTMLDivElement, DropdownMenuProps>(
-  ({className, children, trigger, onOpenChange, ...props}, ref) => {
+  ({ className, children, trigger, onOpenChange, ...props }, ref) => {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -73,7 +73,13 @@ export const DropdownMenu = React.forwardRef<HTMLDivElement, DropdownMenuProps>(
             {trigger}
           </IconButton>
         )}
-        <StyledMenu ref={ref} anchorEl={anchorEl} open={open} onClose={handleClose} {...props}>
+        <StyledMenu
+          ref={ref}
+          anchorEl={anchorEl}
+          open={open}
+          onClose={handleClose}
+          {...props}
+        >
           {children}
         </StyledMenu>
       </>
@@ -88,32 +94,33 @@ export interface DropdownMenuItemProps extends MenuItemProps {
   endIcon?: React.ReactNode;
 }
 
-export const DropdownMenuItem = React.forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({className, children, inset, startIcon, endIcon, ...props}, ref) => (
-    <StyledMenuItem
-      ref={ref}
-      className={cn(
-        'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
-        inset && 'pl-8',
-        className,
-      )}
-      {...props}
-    >
-      {startIcon && <ListItemIcon>{startIcon}</ListItemIcon>}
-      <ListItemText>{children}</ListItemText>
-      {endIcon && <ListItemIcon sx={{ml: 'auto'}}>{endIcon}</ListItemIcon>}
-    </StyledMenuItem>
-  ),
-);
+export const DropdownMenuItem = React.forwardRef<
+  HTMLLIElement,
+  DropdownMenuItemProps
+>(({ className, children, inset, startIcon, endIcon, ...props }, ref) => (
+  <StyledMenuItem
+    ref={ref}
+    className={cn(
+      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
+      inset && 'pl-8',
+      className,
+    )}
+    {...props}
+  >
+    {startIcon && <ListItemIcon>{startIcon}</ListItemIcon>}
+    <ListItemText>{children}</ListItemText>
+    {endIcon && <ListItemIcon sx={{ ml: 'auto' }}>{endIcon}</ListItemIcon>}
+  </StyledMenuItem>
+));
 DropdownMenuItem.displayName = 'DropdownMenuItem';
 
 export const DropdownMenuSeparator = React.forwardRef<
   HTMLHRElement,
   React.ComponentProps<typeof Divider>
->(({className, ...props}, ref) => (
+>(({ className, ...props }, ref) => (
   <Divider
     ref={ref}
-    component='hr'
+    component="hr"
     className={cn('-mx-1 my-1 h-px bg-muted', className)}
     {...props}
   />
@@ -122,19 +129,19 @@ DropdownMenuSeparator.displayName = 'DropdownMenuSeparator';
 
 export const DropdownMenuCheckItem = React.forwardRef<
   HTMLLIElement,
-  DropdownMenuItemProps & {checked?: boolean}
->(({className, children, checked, ...props}, ref) => (
+  DropdownMenuItemProps & { checked?: boolean }
+>(({ className, children, checked, ...props }, ref) => (
   <StyledMenuItem
     ref={ref}
     className={cn(
-      'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
+      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
       className,
     )}
     {...props}
   >
     {checked && (
-      <ListItemIcon sx={{minWidth: 24}}>
-        <Check className='h-4 w-4' />
+      <ListItemIcon sx={{ minWidth: 24 }}>
+        <Check className="h-4 w-4" />
       </ListItemIcon>
     )}
     <ListItemText>{children}</ListItemText>
@@ -142,19 +149,20 @@ export const DropdownMenuCheckItem = React.forwardRef<
 ));
 DropdownMenuCheckItem.displayName = 'DropdownMenuCheckItem';
 
-export const DropdownMenuSubItem = React.forwardRef<HTMLLIElement, DropdownMenuItemProps>(
-  ({className, children, ...props}, ref) => (
-    <StyledMenuItem
-      ref={ref}
-      className={cn(
-        'relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm outline-hidden transition-colors focus:bg-accent focus:text-accent-foreground data-disabled:pointer-events-none data-disabled:opacity-50',
-        className,
-      )}
-      {...props}
-    >
-      <ListItemText>{children}</ListItemText>
-      <ChevronRight className='ml-auto h-4 w-4' />
-    </StyledMenuItem>
-  ),
-);
+export const DropdownMenuSubItem = React.forwardRef<
+  HTMLLIElement,
+  DropdownMenuItemProps
+>(({ className, children, ...props }, ref) => (
+  <StyledMenuItem
+    ref={ref}
+    className={cn(
+      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
+      className,
+    )}
+    {...props}
+  >
+    <ListItemText>{children}</ListItemText>
+    <ChevronRight className="ml-auto h-4 w-4" />
+  </StyledMenuItem>
+));
 DropdownMenuSubItem.displayName = 'DropdownMenuSubItem';

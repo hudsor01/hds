@@ -16,14 +16,19 @@ interface QuickActionsProps {
 /**
  * QuickActions component to display a set of actions for a property.
  */
-export function QuickActions({property, onEdit, onDelete, onView}: QuickActionsProps) {
+export function QuickActions({
+  property,
+  onEdit,
+  onDelete,
+  onView,
+}: QuickActionsProps) {
   return (
-    <div className='flex gap-2'>
+    <div className="flex gap-2">
       {/* Edit Action */}
       {onEdit && (
         <button
           onClick={() => onEdit(property.id)}
-          className='text-blue-500 hover:text-blue-700 transition-colors'
+          className="text-blue-500 transition-colors hover:text-blue-700"
         >
           Edit
         </button>
@@ -33,7 +38,7 @@ export function QuickActions({property, onEdit, onDelete, onView}: QuickActionsP
       {onDelete && (
         <button
           onClick={() => onDelete(property.id)}
-          className='text-red-500 hover:text-red-700 transition-colors'
+          className="text-red-500 transition-colors hover:text-red-700"
         >
           Delete
         </button>
@@ -43,7 +48,7 @@ export function QuickActions({property, onEdit, onDelete, onView}: QuickActionsP
       {onView && (
         <button
           onClick={() => onView(property.id)}
-          className='text-green-500 hover:text-green-700 transition-colors'
+          className="text-green-500 transition-colors hover:text-green-700"
         >
           View
         </button>

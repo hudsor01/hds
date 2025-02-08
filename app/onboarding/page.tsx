@@ -3,19 +3,19 @@
 import { Button } from '@/components/ui/buttons/button';
 import { Card } from '@/components/ui/cards/card';
 import {
-    Box,
-    Container,
-    FormControl,
-    FormHelperText,
-    InputLabel,
-    MenuItem,
-    Select,
-    SelectChangeEvent,
-    Step,
-    StepLabel,
-    Stepper,
-    TextField,
-    Typography,
+  Box,
+  Container,
+  FormControl,
+  FormHelperText,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Step,
+  StepLabel,
+  Stepper,
+  TextField,
+  Typography,
 } from '@mui/material';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -112,7 +112,7 @@ const managementStyles = [
 export default function OnboardingPage() {
   const [activeStep, setActiveStep] = useState(0);
   const [formData, setFormData] = useState<OnboardingData>(initialData);
-  const {user, isLoaded} = useUser();
+  const { user, isLoaded } = useUser();
   const router = useRouter();
 
   const handleNext = async () => {
@@ -138,25 +138,27 @@ export default function OnboardingPage() {
         console.error('Error updating profile:', error);
       }
     } else {
-      setActiveStep(prevStep => prevStep + 1);
+      setActiveStep((prevStep) => prevStep + 1);
     }
   };
 
   const handleBack = () => {
-    setActiveStep(prevStep => prevStep - 1);
+    setActiveStep((prevStep) => prevStep - 1);
   };
 
   const handleTextChange =
-    (field: keyof OnboardingData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData(prev => ({
+    (field: keyof OnboardingData) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      setFormData((prev) => ({
         ...prev,
         [field]: event.target.value,
       }));
     };
 
   const handleSelectChange =
-    (field: keyof OnboardingData) => (event: SelectChangeEvent<string | string[]>) => {
-      setFormData(prev => ({
+    (field: keyof OnboardingData) =>
+    (event: SelectChangeEvent<string | string[]>) => {
+      setFormData((prev) => ({
         ...prev,
         [field]: event.target.value,
       }));
@@ -179,17 +181,17 @@ export default function OnboardingPage() {
     switch (step) {
       case 0:
         return (
-          <Box className='space-y-4'>
+          <Box className="space-y-4">
             <TextField
               fullWidth
-              label='First Name'
+              label="First Name"
               value={formData.firstName}
               onChange={handleTextChange('firstName')}
               required
             />
             <TextField
               fullWidth
-              label='Last Name'
+              label="Last Name"
               value={formData.lastName}
               onChange={handleTextChange('lastName')}
               required
@@ -198,11 +200,15 @@ export default function OnboardingPage() {
         );
       case 1:
         return (
-          <Box className='space-y-4'>
+          <Box className="space-y-4">
             <FormControl fullWidth required>
               <InputLabel>State</InputLabel>
-              <Select value={formData.state} label='State' onChange={handleSelectChange('state')}>
-                {states.map(state => (
+              <Select
+                value={formData.state}
+                label="State"
+                onChange={handleSelectChange('state')}
+              >
+                {states.map((state) => (
                   <MenuItem key={state} value={state}>
                     {state}
                   </MenuItem>
@@ -213,10 +219,10 @@ export default function OnboardingPage() {
               <InputLabel>Number of Properties</InputLabel>
               <Select
                 value={formData.propertyCount}
-                label='Number of Properties'
+                label="Number of Properties"
                 onChange={handleSelectChange('propertyCount')}
               >
-                {['1-5', '6-10', '11-20', '21-50', '50+'].map(count => (
+                {['1-5', '6-10', '11-20', '21-50', '50+'].map((count) => (
                   <MenuItem key={count} value={count}>
                     {count}
                   </MenuItem>
@@ -227,16 +233,16 @@ export default function OnboardingPage() {
         );
       case 2:
         return (
-          <Box className='space-y-4'>
+          <Box className="space-y-4">
             <FormControl fullWidth required>
               <InputLabel>Property Types</InputLabel>
               <Select
                 multiple
                 value={formData.propertyTypes}
-                label='Property Types'
+                label="Property Types"
                 onChange={handleSelectChange('propertyTypes')}
               >
-                {propertyTypes.map(type => (
+                {propertyTypes.map((type) => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -248,10 +254,10 @@ export default function OnboardingPage() {
               <InputLabel>Management Style</InputLabel>
               <Select
                 value={formData.managementStyle}
-                label='Management Style'
+                label="Management Style"
                 onChange={handleSelectChange('managementStyle')}
               >
-                {managementStyles.map(style => (
+                {managementStyles.map((style) => (
                   <MenuItem key={style} value={style}>
                     {style}
                   </MenuItem>
@@ -270,32 +276,40 @@ export default function OnboardingPage() {
   }
 
   return (
-    <Container maxWidth='md' className='min-h-screen py-12'>
-      <Card className='p-8'>
-        <Box className='text-center mb-8'>
-          <Typography variant='h4' component='h1' className='font-bold mb-2'>
+    <Container maxWidth="md" className="min-h-screen py-12">
+      <Card className="p-8">
+        <Box className="mb-8 text-center">
+          <Typography variant="h4" component="h1" className="mb-2 font-bold">
             Welcome to HDS
           </Typography>
-          <Typography variant='body1' color='text.secondary'>
+          <Typography variant="body1" color="text.secondary">
             Let's set up your profile to get started
           </Typography>
         </Box>
 
-        <Stepper activeStep={activeStep} className='mb-8'>
-          {steps.map(label => (
+        <Stepper activeStep={activeStep} className="mb-8">
+          {steps.map((label) => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>
           ))}
         </Stepper>
 
-        <Box className='mb-8'>{getStepContent(activeStep)}</Box>
+        <Box className="mb-8">{getStepContent(activeStep)}</Box>
 
-        <Box className='flex justify-between'>
-          <Button onClick={handleBack} disabled={activeStep === 0} variant='outline'>
+        <Box className="flex justify-between">
+          <Button
+            onClick={handleBack}
+            disabled={activeStep === 0}
+            variant="outline"
+          >
             Back
           </Button>
-          <Button onClick={handleNext} disabled={!isStepValid()} variant='default'>
+          <Button
+            onClick={handleNext}
+            disabled={!isStepValid()}
+            variant="default"
+          >
             {activeStep === steps.length - 1 ? 'Complete' : 'Next'}
           </Button>
         </Box>

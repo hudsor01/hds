@@ -1,6 +1,6 @@
 // components/properties/property-actions.tsx
-import {ConfirmDialog} from '@/components/common/confirm-dialog';
-import {useDeleteProperty} from '@/hooks/use-properties';
+import { ConfirmDialog } from '@/components/common/confirm-dialog';
+import { useDeleteProperty } from '@/hooks/use-properties';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
@@ -9,15 +9,18 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
-import {useRouter} from 'next/navigation';
-import {useState} from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 interface PropertyActionsProps {
   propertyId: string;
   propertyName: string;
 }
 
-export function PropertyActions({propertyId, propertyName}: PropertyActionsProps) {
+export function PropertyActions({
+  propertyId,
+  propertyName,
+}: PropertyActionsProps) {
   const router = useRouter();
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -30,11 +33,15 @@ export function PropertyActions({propertyId, propertyName}: PropertyActionsProps
 
   return (
     <>
-      <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
+      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
         <MoreVertIcon />
       </IconButton>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={() => setAnchorEl(null)}
+      >
         <MenuItem
           onClick={() => {
             router.push(`/properties/${propertyId}/edit`);
@@ -42,7 +49,7 @@ export function PropertyActions({propertyId, propertyName}: PropertyActionsProps
           }}
         >
           <ListItemIcon>
-            <EditIcon fontSize='small' />
+            <EditIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
@@ -52,10 +59,10 @@ export function PropertyActions({propertyId, propertyName}: PropertyActionsProps
             setShowDeleteDialog(true);
             setAnchorEl(null);
           }}
-          sx={{color: 'error.main'}}
+          sx={{ color: 'error.main' }}
         >
           <ListItemIcon>
-            <DeleteIcon fontSize='small' color='error' />
+            <DeleteIcon fontSize="small" color="error" />
           </ListItemIcon>
           <ListItemText>Delete</ListItemText>
         </MenuItem>
@@ -63,7 +70,7 @@ export function PropertyActions({propertyId, propertyName}: PropertyActionsProps
 
       <ConfirmDialog
         open={showDeleteDialog}
-        title='Delete Property'
+        title="Delete Property"
         message={`Are you sure you want to delete ${propertyName}? This action cannot be undone.`}
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteDialog(false)}

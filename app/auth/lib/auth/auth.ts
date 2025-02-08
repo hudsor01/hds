@@ -1,6 +1,6 @@
-import {AuthService} from './service';
-import {prisma} from '@/lib/prisma';
-import type {Session} from '@prisma/client';
+import { AuthService } from './service';
+import { prisma } from '@/lib/prisma';
+import type { Session } from '@prisma/client';
 
 const authService = new AuthService();
 
@@ -8,9 +8,9 @@ export async function getSession(): Promise<Session | null> {
   try {
     const sessions = await prisma.session.findMany({
       where: {
-        expires: {gt: new Date()},
+        expires: { gt: new Date() },
       },
-      orderBy: {expires: 'desc'},
+      orderBy: { expires: 'desc' },
       take: 1,
     });
     return sessions[0] || null;
@@ -39,7 +39,7 @@ export async function getUserProfile() {
 
   try {
     const user = await prisma.user.findUnique({
-      where: {id: session.userId},
+      where: { id: session.userId },
     });
     return user;
   } catch (error) {
@@ -58,7 +58,7 @@ export async function updateUserProfile(updates: {
 
   try {
     const user = await prisma.user.update({
-      where: {id: session.userId},
+      where: { id: session.userId },
       data: updates,
     });
     return user;

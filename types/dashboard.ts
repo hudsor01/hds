@@ -1,5 +1,10 @@
 // Base types
-export type Status = 'PENDING' | 'IN_PROGRESS' | 'COMPLETED' | 'CANCELLED' | 'ON_HOLD';
+export type Status =
+  | 'PENDING'
+  | 'IN_PROGRESS'
+  | 'COMPLETED'
+  | 'CANCELLED'
+  | 'ON_HOLD';
 export type Priority = 'CRITICAL' | 'HIGH' | 'MEDIUM' | 'LOW';
 export type ActivityType = 'MAINTENANCE' | 'PAYMENT' | 'LEASE' | 'INSPECTION';
 

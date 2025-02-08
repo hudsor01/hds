@@ -1,5 +1,5 @@
-import {supabase} from '@/lib/supabase';
-import type {WaitlistStats} from '@/types/waitlist-analytics';
+import { supabase } from '@/lib/supabase';
+import type { WaitlistStats } from '@/types/waitlist-analytics';
 import Papa from 'papaparse';
 
 interface ExportOptions {
@@ -13,20 +13,20 @@ interface ExportOptions {
 
 export async function exportWaitlistData(options: ExportOptions) {
   // Fetch waitlist entries
-  const {data: entries, error: entriesError} = await supabase
+  const { data: entries, error: entriesError } = await supabase
     .from('waitlist')
     .select('*')
-    .order('position', {ascending: true});
+    .order('position', { ascending: true });
 
   if (entriesError) throw entriesError;
 
   // Fetch analytics if requested
   let analytics: WaitlistStats | undefined;
   if (options.includeAnalytics) {
-    const {data: events, error: eventsError} = await supabase
+    const { data: events, error: eventsError } = await supabase
       .from('waitlist_events')
       .select('*')
-      .order('timestamp', {ascending: false});
+      .order('timestamp', { ascending: false });
 
     if (eventsError) throw eventsError;
 
@@ -36,7 +36,7 @@ export async function exportWaitlistData(options: ExportOptions) {
 
   // Prepare export data
   const exportData = {
-    entries: entries.map(entry => ({
+    entries: entries.map((entry) => ({
       email: entry.email,
       position: entry.position,
       status: entry.status,
@@ -44,7 +44,7 @@ export async function exportWaitlistData(options: ExportOptions) {
       referred_by: entry.referred_by,
       joined_at: entry.created_at,
     })),
-    ...(analytics && {analytics}),
+    ...(analytics && { analytics }),
   };
 
   // Return in requested format
@@ -68,16 +68,16 @@ function processEvents(events: any[]): WaitlistStats {
   };
 
   // Group events by date
-  const dailyMap = new Map<string, {signups: number; referrals: number}>();
+  const dailyMap = new Map<string, { signups: number; referrals: number }>();
   const sourceMap = new Map<string, number>();
-  const referralMap = new Map<string, {email: string; count: number}>();
+  const referralMap = new Map<string, { email: string; count: number }>();
 
-  events.forEach(event => {
+  events.forEach((event) => {
     const date = event.timestamp.split('T')[0];
 
     // Update daily stats
     if (!dailyMap.has(date)) {
-      dailyMap.set(date, {signups: 0, referrals: 0});
+      dailyMap.set(date, { signups: 0, referrals: 0 });
     }
     const dayStats = dailyMap.get(date)!;
     if (event.type === 'signup') dayStats.signups++;

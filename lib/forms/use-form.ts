@@ -1,8 +1,8 @@
-import {useToast} from '@/hooks/ui';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useCallback} from 'react';
-import {useForm as useReactHookForm} from 'react-hook-form';
-import {z} from 'zod';
+import { useToast } from '@/hooks/ui';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useCallback } from 'react';
+import { useForm as useReactHookForm } from 'react-hook-form';
+import { z } from 'zod';
 
 interface UseFormOptions<T extends z.ZodObject<any>> {
   schema: T;
@@ -17,7 +17,7 @@ export function useForm<T extends z.ZodObject<any>>({
   onSubmit,
   onError,
 }: UseFormOptions<T>) {
-  const {showToast} = useToast();
+  const { showToast } = useToast();
 
   const form = useReactHookForm({
     resolver: zodResolver(schema),
@@ -29,7 +29,8 @@ export function useForm<T extends z.ZodObject<any>>({
       try {
         await onSubmit(data);
       } catch (error) {
-        const message = error instanceof Error ? error.message : 'An error occurred';
+        const message =
+          error instanceof Error ? error.message : 'An error occurred';
         showToast(message, 'error');
         onError?.(error instanceof Error ? error : new Error(message));
       }
@@ -49,7 +50,10 @@ export function getFieldError(fieldName: string, errors: Record<string, any>) {
   return error?.message as string | undefined;
 }
 
-export function isFieldRequired(schema: z.ZodObject<any>, fieldName: string): boolean {
+export function isFieldRequired(
+  schema: z.ZodObject<any>,
+  fieldName: string,
+): boolean {
   const shape = schema.shape as Record<string, z.ZodTypeAny>;
   const field = shape[fieldName];
   return !field.isOptional();
@@ -84,6 +88,8 @@ export function createFormField<T extends z.ZodObject<any>>(schema: T) {
 }
 
 // Form schema creator with type inference
-export function createFormSchema<T extends Record<string, z.ZodTypeAny>>(fields: T) {
+export function createFormSchema<T extends Record<string, z.ZodTypeAny>>(
+  fields: T,
+) {
   return z.object(fields);
 }

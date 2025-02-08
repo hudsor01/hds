@@ -1,4 +1,4 @@
-import {prisma} from '@/lib/db';
+import { prisma } from '@/lib/db';
 
 export interface WaitlistEntry {
   id: string;
@@ -10,6 +10,6 @@ export interface WaitlistEntry {
 
 export const getWaitlistEntries = async () => {
   return await prisma.waitlist.findMany({
-    orderBy: {created_at: 'desc'},
+    orderBy: { created_at: 'desc' },
   });
 };

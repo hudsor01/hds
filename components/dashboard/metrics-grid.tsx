@@ -1,8 +1,8 @@
 'use client';
 
-import {Grid, Paper, Stack, Typography, alpha, useTheme} from '@mui/material';
-import {motion} from 'framer-motion';
-import {DollarSign, FileText, Home, Tool, Users} from 'react-feather';
+import { Grid, Paper, Stack, Typography, alpha, useTheme } from '@mui/material';
+import { motion } from 'framer-motion';
+import { DollarSign, FileText, Home, Tool, Users } from 'react-feather';
 
 const metrics = [
   {
@@ -62,9 +62,9 @@ export function MetricsGrid() {
           lg={3}
           xl={2.4}
           component={motion.div}
-          initial={{opacity: 0, y: 20}}
-          animate={{opacity: 1, y: 0}}
-          transition={{delay: index * 0.1}}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: index * 0.1 }}
         >
           <Paper
             sx={{
@@ -82,7 +82,7 @@ export function MetricsGrid() {
             }}
           >
             <Stack spacing={2}>
-              <Stack direction='row' alignItems='center' spacing={2}>
+              <Stack direction="row" alignItems="center" spacing={2}>
                 <Paper
                   sx={{
                     p: 1.5,
@@ -95,10 +95,13 @@ export function MetricsGrid() {
                 </Paper>
                 {metric.percentageChange && (
                   <Typography
-                    variant='body2'
+                    variant="body2"
                     sx={{
                       ml: 'auto',
-                      color: metric.percentageChange > 0 ? 'success.main' : 'error.main',
+                      color:
+                        metric.percentageChange > 0
+                          ? 'success.main'
+                          : 'error.main',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 0.5,
@@ -111,7 +114,7 @@ export function MetricsGrid() {
               </Stack>
 
               <Stack spacing={0.5}>
-                <Typography variant='h4'>
+                <Typography variant="h4">
                   {metric.formatType === 'currency'
                     ? new Intl.NumberFormat('en-US', {
                         style: 'currency',
@@ -120,7 +123,7 @@ export function MetricsGrid() {
                       }).format(metric.value)
                     : metric.value}
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography variant="body2" color="text.secondary">
                   {metric.title}
                 </Typography>
               </Stack>

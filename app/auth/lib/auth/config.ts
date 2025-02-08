@@ -1,5 +1,5 @@
-import {createClient, type Session, type User} from '@supabase/supabase-js';
-import {useEffect, useState} from 'react';
+import { createClient, type Session, type User } from '@supabase/supabase-js';
+import { useEffect, useState } from 'react';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -14,14 +14,14 @@ export function useSession() {
 
   useEffect(() => {
     // Get initial session
-    void supabase.auth.getSession().then(({data: {session}}) => {
+    void supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
-      data: {subscription},
+      data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session);
     });
@@ -29,7 +29,7 @@ export function useSession() {
     return () => subscription.unsubscribe();
   }, []);
 
-  return {session, loading};
+  return { session, loading };
 }
 
 // Hook to get the current user
@@ -39,14 +39,14 @@ export function useUser() {
 
   useEffect(() => {
     // Get initial user
-    void supabase.auth.getUser().then(({data: {user}}) => {
+    void supabase.auth.getUser().then(({ data: { user } }) => {
       setUser(user);
       setLoading(false);
     });
 
     // Listen for auth changes
     const {
-      data: {subscription},
+      data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
     });
@@ -54,11 +54,16 @@ export function useUser() {
     return () => subscription.unsubscribe();
   }, []);
 
-  return {user, loading};
+  return { user, loading };
 }
 
 // Protected route configuration
-export const protectedRoutes = ['/dashboard', '/settings', '/properties', '/tenants'];
+export const protectedRoutes = [
+  '/dashboard',
+  '/settings',
+  '/properties',
+  '/tenants',
+];
 
 // Auth redirect configuration
 export const authConfig = {

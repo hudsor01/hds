@@ -1,4 +1,4 @@
-import {Activity, ActivityType} from '@/types/database.types';
+import { Activity, ActivityType } from '@/types/database.types';
 import BuildIcon from '@mui/icons-material/Build';
 import HomeIcon from '@mui/icons-material/Home';
 import PaymentIcon from '@mui/icons-material/Payment';
@@ -14,8 +14,8 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardHeader from '@mui/material/CardHeader';
 import Typography from '@mui/material/Typography';
-import {format} from 'date-fns';
-import {useState} from 'react';
+import { format } from 'date-fns';
+import { useState } from 'react';
 
 function getActivityIcon(type: ActivityType) {
   switch (type) {
@@ -88,10 +88,10 @@ export function ActivityTimeline() {
   return (
     <Card>
       <CardHeader
-        title='Recent Activity'
+        title="Recent Activity"
         action={
           activities.length > 3 && (
-            <Button onClick={() => setExpanded(!expanded)} size='small'>
+            <Button onClick={() => setExpanded(!expanded)} size="small">
               {expanded ? 'Show Less' : 'View All'}
             </Button>
           )
@@ -105,22 +105,24 @@ export function ActivityTimeline() {
                 <TimelineDot color={getTimelineDotColor(activity.type)}>
                   {getActivityIcon(activity.type)}
                 </TimelineDot>
-                {index < displayedActivities.length - 1 && <TimelineConnector />}
+                {index < displayedActivities.length - 1 && (
+                  <TimelineConnector />
+                )}
               </TimelineSeparator>
               <TimelineContent>
-                <Typography variant='subtitle2' component='div'>
+                <Typography variant="subtitle2" component="div">
                   {activity.title}
                 </Typography>
-                <Typography variant='body2' color='text.secondary'>
+                <Typography variant="body2" color="text.secondary">
                   {activity.description}
                 </Typography>
-                <Typography variant='caption' color='text.secondary'>
+                <Typography variant="caption" color="text.secondary">
                   {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
                 </Typography>
                 {activity.metadata && (
                   <Typography
-                    variant='caption'
-                    component='div'
+                    variant="caption"
+                    component="div"
                     sx={{
                       mt: 1,
                       p: 1,
@@ -130,7 +132,7 @@ export function ActivityTimeline() {
                     }}
                   >
                     {Object.entries(activity.metadata).map(([key, value]) => (
-                      <span key={key} style={{marginRight: 8}}>
+                      <span key={key} style={{ marginRight: 8 }}>
                         {key.replace('_', ' ')}: <strong>{value}</strong>
                       </span>
                     ))}
