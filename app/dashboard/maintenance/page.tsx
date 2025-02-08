@@ -1,112 +1,134 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+import { Plus, AlertTriangle, CheckCircle, Clock } from 'react-feather';
 import { Button } from '@/components/ui/buttons/button';
-import {
+import { Card } from '@/components/ui/cards/card';
+import { MaintenanceTicketDialog } from '@/components/dialogs/maintenance-ticket-dialog';
+import { MaintenanceTicketDetails } from '@/components/dialogs/maintenance-ticket-details';
+import { useToast } from '@/hooks/use-toast';
+import { useMaintenanceRequests } from '@/hooks/data';
+import type {
   MaintenancePriority,
   MaintenanceStatus,
-  MaintenanceTicket,
-  NewMaintenanceTicket,
-  UpdateMaintenanceTicket,
+  MaintenanceRequestWithRelations,
+  NewMaintenanceRequest,
+  UpdateMaintenanceRequest,
 } from '@/types/maintenance_requests';
-import { MaintenanceTicketDetails } from 'components/dialogs/maintenance-ticket-details';
-import { MaintenanceTicketDialog } from 'components/dialogs/maintenance-ticket-dialog';
-import { Card } from 'components/ui/cards/card';
-import { useState } from 'react';
-import { AlertTriangle, CheckCircle, Clock, Plus } from 'react-feather';
-
-// Mock data for development
-const MOCK_TICKETS: MaintenanceTicket[] = [
-  {
-    id: '1',
-    title: 'Broken AC Unit',
-    description: 'AC unit in apartment 2B is not cooling properly',
-    status: 'open',
-    priority: 'high',
-    propertyId: 'prop1',
-    propertyName: 'Sunset Apartments',
-    unitId: 'unit1',
-    unitNumber: '2B',
-    createdBy: 'tenant@example.com',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    comments: [],
-  },
-  {
-    id: '2',
-    title: 'Leaking Faucet',
-    description: 'Kitchen sink faucet is dripping constantly',
-    status: 'in_progress',
-    priority: 'medium',
-    propertyId: 'prop1',
-    propertyName: 'Sunset Apartments',
-    unitId: 'unit2',
-    unitNumber: '3A',
-    createdBy: 'tenant@example.com',
-    assignedTo: 'maintenance@example.com',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    comments: [],
-  },
-];
 
 export default function MaintenancePage() {
-  const [tickets, setTickets] = useState<MaintenanceTicket[]>(MOCK_TICKETS);
-  const [selectedTicket, setSelectedTicket] =
-    useState<MaintenanceTicket | null>(null);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+  const [selectedTicket, setSelectedTicket] = useState<MaintenanceRequestWithRelations | null>(
+    null,
+  );
+  const { toast } = useToast();
+  const { data: response, isLoading, error } = useMaintenanceRequests();
+  const tickets = response?.data || [];
 
-  const handleCreateTicket = async (data: NewMaintenanceTicket) => {
-    // TODO: Implement API call
-    const newTicket: MaintenanceTicket = {
-      ...data,
-      id: (tickets.length + 1).toString(),
-      status: 'open',
-      propertyName: 'Sunset Apartments', // This would come from the API
-      createdBy: 'user@example.com', // This would come from the session
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      comments: [],
-    };
-    setTickets([...tickets, newTicket]);
+  useEffect(() => {
+    if (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to load maintenance tickets',
+        variant: 'destructive',
+      });
+    }
+  }, [error, toast]);
+
+  const handleCreateTicket = async (data: NewMaintenanceRequest) => {
+    try {
+      const response = await fetch('/api/maintenance', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to create maintenance ticket');
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Maintenance ticket created successfully',
+      });
+      setIsCreateDialogOpen(false);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to create maintenance ticket',
+        variant: 'destructive',
+      });
+    }
   };
 
-  const handleUpdateTicket = async (data: UpdateMaintenanceTicket) => {
-    // TODO: Implement API call
-    const updatedTickets = tickets.map((ticket) =>
-      ticket.id === data.id
-        ? { ...ticket, ...data, updatedAt: new Date().toISOString() }
-        : ticket,
-    );
-    setTickets(updatedTickets);
-  };
+  const handleUpdateTicket = async (data: UpdateMaintenanceRequest) => {
+    try {
+      const response = await fetch(`/api/maintenance/${data.id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-  const getPriorityColor = (priority: MaintenancePriority) => {
-    switch (priority) {
-      case 'urgent':
-        return 'text-red-500';
-      case 'high':
-        return 'text-orange-500';
-      case 'medium':
-        return 'text-yellow-500';
-      case 'low':
-        return 'text-blue-500';
-      default:
-        return 'text-gray-500';
+      if (!response.ok) {
+        throw new Error('Failed to update maintenance ticket');
+      }
+
+      toast({
+        title: 'Success',
+        description: 'Maintenance ticket updated successfully',
+      });
+      setSelectedTicket(null);
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'Failed to update maintenance ticket',
+        variant: 'destructive',
+      });
     }
   };
 
   const getStatusIcon = (status: MaintenanceStatus) => {
     switch (status) {
-      case 'open':
-        return <AlertTriangle className="h-5 w-5 text-yellow-500" />;
+      case 'pending':
+        return <Clock className="h-4 w-4 text-yellow-500" />;
       case 'in_progress':
-        return <Clock className="h-5 w-5 text-blue-500" />;
+        return <AlertTriangle className="h-4 w-4 text-blue-500" />;
       case 'completed':
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case 'cancelled':
-        return <AlertTriangle className="h-5 w-5 text-gray-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />;
+      default:
+        return null;
     }
   };
+
+  const getPriorityColor = (priority: MaintenancePriority) => {
+    switch (priority) {
+      case 'low':
+        return 'text-gray-500';
+      case 'medium':
+        return 'text-yellow-500';
+      case 'high':
+        return 'text-orange-500';
+      case 'urgent':
+        return 'text-red-500';
+      default:
+        return 'text-gray-500';
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-[50vh] items-center justify-center">
+        <div className="text-center">
+          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <p className="mt-2 text-sm text-gray-500">Loading tickets...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -122,7 +144,7 @@ export default function MaintenancePage() {
       </div>
 
       <div className="grid gap-4">
-        {tickets.map((ticket) => (
+        {tickets.map((ticket: MaintenanceRequestWithRelations) => (
           <Card key={ticket.id} className="p-4">
             <div className="flex items-start justify-between">
               <div className="space-y-1">
@@ -138,46 +160,39 @@ export default function MaintenancePage() {
                   </span>
                 </div>
                 <p className="text-sm text-gray-500">
-                  {ticket.propertyName} - Unit {ticket.unitNumber}
+                  {ticket.property?.name} - Unit {ticket.unit?.number}
                 </p>
                 <p className="text-sm">{ticket.description}</p>
               </div>
               <Button
                 variant="outline"
-                size="sm"
+                className="px-3 py-1 text-sm"
                 onClick={() => setSelectedTicket(ticket)}
               >
                 View Details
               </Button>
             </div>
-            <div className="mt-4 text-sm text-gray-500">
-              <div className="flex items-center justify-between">
-                <span>
-                  Created {new Date(ticket.createdAt).toLocaleDateString()}
-                </span>
-                <span>
-                  {ticket.assignedTo
-                    ? `Assigned to ${ticket.assignedTo}`
-                    : 'Unassigned'}
-                </span>
-              </div>
-            </div>
           </Card>
         ))}
+        {tickets.length === 0 && (
+          <div className="text-center">
+            <p className="text-gray-500">No maintenance tickets found</p>
+          </div>
+        )}
       </div>
 
       <MaintenanceTicketDialog
         open={isCreateDialogOpen}
-        onOpenChange={setIsCreateDialogOpen}
-        onSubmit={handleCreateTicket}
+        onOpenChangeAction={setIsCreateDialogOpen}
+        onSubmitAction={handleCreateTicket}
       />
 
       {selectedTicket && (
         <MaintenanceTicketDetails
-          open={!!selectedTicket}
-          onOpenChange={(open) => !open && setSelectedTicket(null)}
+          open={Boolean(selectedTicket)}
+          onOpenChangeAction={() => setSelectedTicket(null)}
           ticket={selectedTicket}
-          onUpdate={handleUpdateTicket}
+          onUpdateAction={handleUpdateTicket}
         />
       )}
     </div>
