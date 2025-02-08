@@ -917,23 +917,32 @@ model work_orders {
   @@index([user_id])
 }
 
+enum WaitlistStatus {
+  PENDING
+  ACTIVE
+  VERIFIED
+  BLOCKED
+
+  @@schema("public")
+}
+
 model waitlist {
-  id            String    @id @default(uuid()) @db.Uuid
-  email         String    @unique
+  id            String         @id @default(uuid()) @db.Uuid
+  email         String         @unique
   name          String?
   position      Int
-  status        String    @default("pending")
-  referral_code String?   @unique
+  status        WaitlistStatus @default(PENDING)
+  referral_code String?        @unique
   referred_by   String?
-  email_verified Boolean  @default(false)
-  verified_at   DateTime? @db.Timestamptz(6)
-  metadata      Json?     @default("{}")
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime  @default(now()) @db.Timestamptz(6)
+  email_verified Boolean       @default(false)
+  verified_at   DateTime?      @db.Timestamptz(6)
+  metadata      Json?          @default("{}")
+  created_at    DateTime       @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime       @default(now()) @db.Timestamptz(6)
 
   // Relations
-  referrer      waitlist?  @relation("ReferralRelation", fields: [referred_by], references: [email])
-  referrals     waitlist[] @relation("ReferralRelation")
+  referrer      waitlist?      @relation("ReferralRelation", fields: [referred_by], references: [email])
+  referrals     waitlist[]     @relation("ReferralRelation")
   events        waitlist_events[]
 
   @@index([position])

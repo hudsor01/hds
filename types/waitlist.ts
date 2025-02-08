@@ -1,6 +1,4 @@
-import type { waitlist, waitlist_events } from '@prisma/client'
-
-export type WaitlistStatus = 'pending' | 'active' | 'verified' | 'blocked';
+import type { Prisma, waitlist } from '@prisma/client'
 
 export type WaitlistEventType =
   | 'signup'
@@ -16,7 +14,12 @@ export interface WaitlistEntry extends waitlist {
   referrer?: WaitlistEntry | null;
 }
 
-export interface WaitlistEvent extends waitlist_events {
+export interface WaitlistEvent {
+  id: string;
+  email: string;
+  type: string;
+  metadata: Prisma.JsonValue | null;
+  timestamp: Date;
   waitlist?: WaitlistEntry;
 }
 
@@ -34,7 +37,7 @@ export interface WaitlistStats {
       positionsGained: number;
     }>;
   };
-  statusBreakdown: Record<WaitlistStatus, number>;
+  statusBreakdown: Record<waitlist['status'], number>;
   dailySignups: Array<{
     date: string;
     count: number;
@@ -98,7 +101,7 @@ export interface WaitlistBulkAction {
   action: 'delete' | 'update_status' | 'move_position';
   emails: string[];
   data?: {
-    status?: WaitlistStatus;
+    status?: waitlist['status'];
     position?: number;
   };
 }
