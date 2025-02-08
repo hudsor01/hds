@@ -3,10 +3,13 @@
 import { Box, Container, Paper, Typography } from '@mui/material'
 import { Auth } from '@supabase/auth-ui-react'
 import { ThemeSupa } from '@supabase/auth-ui-shared'
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
+import { createBrowserClient } from '@supabase/ssr'
 
 export default function SignInPage() {
-  const supabase = createClientComponentClient();
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  );
 
   return (
     <Container
@@ -43,6 +46,9 @@ export default function SignInPage() {
           }}
           providers={['google', 'github']}
           redirectTo={`${window.location.origin}/auth/callback`}
+          theme="light"
+          showLinks={true}
+          view="sign_in"
         />
       </Paper>
     </Container>

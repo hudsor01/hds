@@ -1,9 +1,42 @@
 'use client';
 
-
+import './globals.css'
+import React, { useState, useEffect } from 'react'
 import type { NextPage } from 'next'
 import { useRouter } from 'next/navigation'
-import React, { useState } from 'react'
+import { createClient } from '@supabase/supabase-js'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
+
+export default function App() {
+    const [session, setSession] = useState(null)
+
+    useEffect(() => {
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        setSession(session)
+      })
+
+      const {
+        data: { subscription },
+      } = supabase.auth.onAuthStateChange((_event, session) => {
+        setSession(session)
+      })
+
+      return () => subscription.unsubscribe()
+    }, [])
+
+    if (!session) {
+      return (<Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />)
+    }
+    else {
+      return (<div>Logged in!</div>)
+    }
+  }
 
 const ForgotPasswordPage: NextPage = () => {
   const [email, setEmail] = useState('');
@@ -14,8 +47,8 @@ const ForgotPasswordPage: NextPage = () => {
   const [error, setError] = useState('');
 
   const router = useRouter();
-  const {isSignedIn} = useAuth();
-  const {isLoaded, signIn, setActive} = useSignIn();
+  const { isLoaded, isAuthenticated, signIn, setActive } = supabase.auth;
+  const isSignedIn = isAuthenticated;
 
   if (!isLoaded) {
     return null;

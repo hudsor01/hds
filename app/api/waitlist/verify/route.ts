@@ -1,5 +1,4 @@
 import { WaitlistVerificationService } from '@/lib/services/waitlist-verification'
-import { rateLimitMiddleware } from '@/middleware/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -9,12 +8,6 @@ const verifySchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    // Apply rate limiting
-    const rateLimit = await rateLimitMiddleware(req, 'waitlist')
-    if (rateLimit instanceof NextResponse) {
-      return rateLimit
-    }
-
     const body = await req.json()
     const result = verifySchema.safeParse(body)
 
@@ -54,12 +47,6 @@ export async function POST(req: NextRequest) {
 // Resend verification email
 export async function PUT(req: NextRequest) {
   try {
-    // Apply rate limiting
-    const rateLimit = await rateLimitMiddleware(req, 'waitlist')
-    if (rateLimit instanceof NextResponse) {
-      return rateLimit
-    }
-
     const body = await req.json()
     const result = z.object({ email: z.string().email() }).safeParse(body)
 

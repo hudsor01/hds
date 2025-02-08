@@ -1,6 +1,5 @@
 import {createTheme} from '@mui/material/styles';
 import {Roboto} from 'next/font/google';
-import type {} from '@mui/x-charts/themeAugmentation';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],

@@ -1,8 +1,5 @@
-require('@rushstack/eslint-patch/modern-module-resolution');
-
 module.exports = [
   {
-    // Global ignore patterns
     ignores: [
       'node_modules/',
       '.next/',
@@ -23,7 +20,6 @@ module.exports = [
         project: './tsconfig.json',
       },
     },
-    // Instead of "extends", we write rules and include plugins directly.
     plugins: {
       '@typescript-eslint': require('@typescript-eslint/eslint-plugin'),
       react: require('eslint-plugin-react'),
@@ -39,12 +35,12 @@ module.exports = [
       '@typescript-eslint/no-unsafe-return': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
       'no-console': ['warn', { allow: ['warn', 'error'] }],
       'no-unused-vars': 'off',
       'no-undef': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
+      'prettier/prettier': ['error', { endOfLine: 'auto' }],
     },
     settings: {
       react: {
@@ -52,6 +48,5 @@ module.exports = [
       },
     },
   },
-  // Append the Next.js config which includes the Next.js plugin and its recommended rules.
   require('eslint-config-next'),
 ];

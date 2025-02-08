@@ -1,6 +1,8 @@
-// Inspired by react-hot-toast library
 import type {ToastActionElement, ToastProps} from '@/components/feedback/toast';
 import * as React from 'react';
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+
 
 const TOAST_LIMIT = 1;
 const TOAST_REMOVE_DELAY = 1000000;
@@ -150,7 +152,7 @@ function toast({...props}: Toast) {
       ...props,
       id,
       open: true,
-      onOpenChange: open => {
+      onOpenChange: (open: any) => {
         if (!open) dismiss();
       },
     },

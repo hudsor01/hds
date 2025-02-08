@@ -5,11 +5,18 @@ import { SidebarNav } from '@/components/layout/sidebar-nav'
 import LoadingState from '@/components/loading/loading-state'
 
 import { Box } from '@mui/material'
+import { supabase } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
+import { Auth } from '@supabase/auth-ui-react'
 import { Suspense } from 'react'
 
 export default function DashboardLayout({children}: {children: React.ReactNode}) {
-  const {isLoaded, isSignedIn} = useAuth();
+  const supabase = await createClient()
+
+  const {data, error } = await supabase.auth.getUser()
+  if (error || !data.user) {
+    redirect('/login')
+  }
 
   if (!isLoaded) {
     return <LoadingState fullPage message='Loading authentication...' />;
@@ -35,8 +42,12 @@ export default function DashboardLayout({children}: {children: React.ReactNode})
         <ErrorBoundary
           error={new Error('Something went wrong')}
           reset={() => window.location.reload()}
-        >
-          <Suspense fallback={<LoadingState message='Loading content...' />}>{children}</Suspense>
+          render={() => (
+            <Suspense fallback={<LoadingState message="Loading content..." />}>
+              {children}
+            </Suspense>
+          )}
+        />
         </ErrorBoundary>
       </Box>
     </Box>

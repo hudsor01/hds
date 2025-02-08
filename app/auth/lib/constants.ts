@@ -7,12 +7,15 @@ import HomeIcon from '@mui/icons-material/Home';
 import PeopleIcon from '@mui/icons-material/People';
 import SettingsIcon from '@mui/icons-material/Settings';
 
-export const USER_ROLES = {
+export const ROLE = {
   ADMIN: 'ADMIN',
-  USER: 'USER',
+  TENANT: 'TENANT',
+  PROPERTY_MANAGER: 'PROPERTY_MANAGER',
+  PROPERTY_OWNER: 'PROPERTY_OWNER',
+  VENDOR: 'VENDOR',
 } as const;
 
-export type UserRole = (typeof USER_ROLES)[keyof typeof USER_ROLES];
+export type Role = (typeof ROLE)[keyof typeof ROLE];
 
 export const ACTIVITY_TYPES = {
   MAINTENANCE: 'MAINTENANCE',

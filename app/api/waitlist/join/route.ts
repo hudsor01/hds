@@ -2,7 +2,6 @@ import { WaitlistPositionService } from '@/lib/services/waitlist-position'
 import { WaitlistReferralService } from '@/lib/services/waitlist-referral'
 import { WaitlistVerificationService } from '@/lib/services/waitlist-verification'
 import { supabase } from '@/lib/supabase'
-import { rateLimitMiddleware } from '@/middleware/rate-limit'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -14,12 +13,6 @@ const joinSchema = z.object({
 
 export async function POST(req: NextRequest) {
   try {
-    // Apply rate limiting
-    const rateLimit = await rateLimitMiddleware(req, 'waitlist')
-    if (rateLimit instanceof NextResponse) {
-      return rateLimit
-    }
-
     const body = await req.json()
     const result = joinSchema.safeParse(body)
 

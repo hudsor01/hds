@@ -14,14 +14,15 @@ import {Grid, Typography} from '@mui/material';
 import {useQuery} from '@tanstack/react-query';
 import {useEffect, useState} from 'react';
 import {DollarSign, Home, Tool, Users} from 'react-feather';
+import { checkRole } from '../../../utils/roles'
 
 const REFETCH_INTERVAL = 30000; // 30 seconds
 
 // Fetch metrics based on role
 const {data: propertyMetrics, isLoading: loadingProperties} = useQuery<{data: PropertyMetrics}>({
-  queryKey: ['analytics', 'properties', role],
+  queryKey: ['analytics', 'properties', checkRole('admin')],
   queryFn: () => api.get('/api/analytics/properties'),
-  enabled: permissions.canViewAllProperties || role === 'TENANT',
+  enabled: checkRole('admin'),
   refetchInterval: REFETCH_INTERVAL,
 });
 
