@@ -3,18 +3,14 @@ const js = require('@eslint/js');
 const nextPlugin = require('@next/eslint-plugin-next');
 const tsPlugin = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
+const eslintConfigPrettier = require('eslint-config-prettier');
 
 const compat = new FlatCompat();
 
 module.exports = [
   {
-    ignores: [
-      'node_modules/',
-      '.next/',
-      'out/',
-      'public/',
-      'dist/**'
-    ],
+    extends: ['prettier'],
+    ignores: ['node_modules/', '.next/', 'out/', 'public/', 'dist/**'],
   },
   js.configs.recommended,
   ...compat.extends('plugin:@typescript-eslint/recommended'),

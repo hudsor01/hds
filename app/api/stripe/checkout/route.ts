@@ -55,7 +55,10 @@ export async function GET(request: NextRequest) {
 
     // Get user from session
     const supabase = await createClient();
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
 
     if (authError || !user) {
       throw new Error('User not authenticated.');

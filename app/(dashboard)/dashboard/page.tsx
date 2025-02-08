@@ -46,7 +46,8 @@ export default function DashboardPage() {
       return data;
     },
     enabled: Boolean(
-      role && (checkRole(role, 'admin') || permissions.includes('view_properties')),
+      role &&
+        (checkRole(role, 'admin') || permissions.includes('view_properties')),
     ),
     refetchInterval: REFETCH_INTERVAL,
   });

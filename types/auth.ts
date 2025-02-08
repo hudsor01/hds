@@ -1,5 +1,18 @@
 export type UserRole = 'ADMIN' | 'PROPERTY_MANAGER' | 'LANDLORD' | 'TENANT';
 
+export interface User {
+  id: string;
+  role: UserRole;
+  email: string;
+  isAuthenticated: boolean;
+}
+
+export interface AuthState {
+  user: User | null;
+  isLoading: boolean;
+  error: Error | null;
+}
+
 export interface UserPermissions {
   canViewAllProperties: boolean;
   canManageProperties: boolean;

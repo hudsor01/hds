@@ -8,12 +8,7 @@ import type {
   Comment,
 } from '@/types/maintenance_requests';
 import type { SelectChangeEvent } from '@mui/material';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialogs/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@mui/material';
 import { Label } from '@/components/ui/label';
 import { Select, SelectItem } from '@/components/ui/select';
 import Textarea from '@/components/ui/textarea';
@@ -73,12 +68,14 @@ export function MaintenanceTicketDetails({
   };
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
+    <Dialog
+      open={open}
+      onClose={() => onOpenChangeAction(false)}
+      maxWidth="md"
+      fullWidth
+    >
+      <DialogTitle>Maintenance Ticket Details</DialogTitle>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Maintenance Ticket Details</DialogTitle>
-        </DialogHeader>
-
         <div className="space-y-6">
           {/* Status */}
           <div className="space-y-2">

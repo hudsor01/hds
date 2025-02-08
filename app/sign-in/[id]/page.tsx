@@ -1,17 +1,14 @@
 'use client';
 
-import { EmailSignIn } from '@/components/forms/auth/email-sign-in';
-import { ForgotPassword } from '@/components/auth/forgot-password';
 import { OauthSignIn } from '@/components/auth/oauth-sign-in';
-import { PasswordSignIn } from '@/components/forms/auth/password-sign-in';
-import { SignUp } from '@/components/forms/auth/sign-up';
 import { UpdatePassword } from '@/components/auth/update-password';
 import Logo from '@/components/icons/Logo';
 import { Card } from '@/components/ui/cards/card';
 import { Separator } from '@/components/ui/separator';
-import { createClient } from '@/lib/db';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/client';
+import { login, signup } from '@/app/login/actions';
 
 // Define view types as a constant
 const VIEW_TYPES = [
@@ -111,7 +108,7 @@ export default async function SignIn({
           )}
           {viewType === 'update_password' && <UpdatePassword />}
           {viewType === 'signup' && (
-            <SignUp allowEmail={authConfig.allowEmail} />
+            <Signup allowEmail={authConfig.allowEmail} />
           )}
           {viewType !== 'update_password' &&
             viewType !== 'signup' &&

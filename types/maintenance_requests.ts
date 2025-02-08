@@ -1,5 +1,9 @@
 export type MaintenancePriority = 'low' | 'medium' | 'high' | 'urgent';
-export type MaintenanceStatus = 'pending' | 'in_progress' | 'completed' | 'cancelled';
+export type MaintenanceStatus =
+  | 'pending'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled';
 
 export interface Comment {
   content: string;
@@ -30,7 +34,13 @@ export interface MaintenanceRequest {
 
 export type NewMaintenanceRequest = Omit<
   MaintenanceRequest,
-  'id' | 'status' | 'created_at' | 'updated_at' | 'completed_at' | 'assigned_to' | 'comments'
+  | 'id'
+  | 'status'
+  | 'created_at'
+  | 'updated_at'
+  | 'completed_at'
+  | 'assigned_to'
+  | 'comments'
 >;
 
 export type UpdateMaintenanceRequest = Partial<

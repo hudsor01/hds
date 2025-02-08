@@ -18,9 +18,8 @@ import type {
 
 export default function MaintenancePage() {
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] = useState<MaintenanceRequestWithRelations | null>(
-    null,
-  );
+  const [selectedTicket, setSelectedTicket] =
+    useState<MaintenanceRequestWithRelations | null>(null);
   const { toast } = useToast();
   const { data: response, isLoading, error } = useMaintenanceRequests();
   const tickets = response?.data || [];

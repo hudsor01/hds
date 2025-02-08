@@ -69,7 +69,8 @@ export async function POST(request: Request) {
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
-        const status = event.type === 'invoice.payment_succeeded' ? 'active' : 'past_due';
+        const status =
+          event.type === 'invoice.payment_succeeded' ? 'active' : 'past_due';
 
         if (invoice.subscription) {
           await prisma.subscriptions.updateMany({
@@ -89,7 +90,8 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error handling Stripe webhook:', error);
     return new NextResponse(
-      'Webhook error: ' + (error instanceof Error ? error.message : 'Unknown error'),
+      'Webhook error: ' +
+        (error instanceof Error ? error.message : 'Unknown error'),
       { status: 400 },
     );
   }

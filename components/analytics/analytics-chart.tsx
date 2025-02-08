@@ -1,12 +1,7 @@
 'use client';
 
 import { TimeSeriesData } from '@/types/analytics';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  useTheme,
-} from '@mui/material';
+import { Card, CardContent, CardHeader, useTheme } from '@mui/material';
 import {
   Area,
   AreaChart,
