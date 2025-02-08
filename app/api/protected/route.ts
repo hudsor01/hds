@@ -1,28 +1,25 @@
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
-import { NextResponse } from 'next/server';
+import { withAuth } from '@/lib/auth/protected-api'
+import { NextRequest } from 'next/server'
 
-export async function GET() {
-  const supabase = createRouteHandlerClient({ cookies });
+export async function GET(req: NextRequest) {
+  return withAuth(req, async (userId) => {
+    // Your protected API logic here
+    return new Response(JSON.stringify({
+      message: 'This is a protected endpoint',
+      userId
+    }))
+  })
+}
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
+export async function POST(req: NextRequest) {
+  return withAuth(req, async (userId) => {
+    const body = await req.json()
 
-  if (!session) {
-    return new NextResponse(
-      JSON.stringify({
-        error: 'Unauthorized',
-      }),
-      {
-        status: 401,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-    );
-  }
-
-  // Your protected route logic here
-  return NextResponse.json({ message: 'Authenticated' });
+    // Your protected API logic here
+    return new Response(JSON.stringify({
+      message: 'Data received',
+      userId,
+      data: body
+    }))
+  })
 }

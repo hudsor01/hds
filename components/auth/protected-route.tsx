@@ -3,35 +3,42 @@
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import { useRouter } from 'next/navigation';
+import { useRouter, redirect } from 'next/navigation';
+import { createClient } from '@/utils/supabase/server';
+import type { UserRole } from '@prisma/client';
 
-export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { isLoaded, userId } = useAuth();
+interface ProtectedRouteProps {
+  children: React.ReactNode;
+  allowedRoles?: UserRole[];
+}
+
+export async function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
+  const supabase = createClient();
   const router = useRouter();
 
-  if (!isLoaded) {
-    return (
-      <Box
-        sx={{
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          minHeight: '100vh',
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
-  }
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
 
-  if (!userId) {
-    router.push('/sign-in');
-    return (
-      <Box sx={{ p: 3 }}>
-        <Alert severity="warning">Please sign in to access this page</Alert>
-      </Box>
-    );
-  }
+    if (error || !user) {
+      redirect('/sign-in');
+    }
 
-  return <>{children}</>;
+    // If roles are specified, check user's role
+    if (allowedRoles?.length) {
+      const { data: dbUser } = await supabase
+        .from('users')
+        .select('role')
+        .eq('id', user.id)
+        .single();
+
+      if (!dbUser || !allowedRoles.includes(dbUser.role as UserRole)) {
+        redirect('/unauthorized');
+      }
+    }
+
+    return <>{children}</>;
+  } catch (error) {
+    console.error('Protected route error:', error);
+    redirect('/sign-in');
+  }
 }
