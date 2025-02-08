@@ -1,13 +1,13 @@
 import {
-  getFinancialMetrics,
-  getMaintenanceMetrics,
-  getPropertyMetrics,
-  getTenantMetrics,
-  getTimeSeries,
+    getFinancialMetrics,
+    getMaintenanceMetrics,
+    getPropertyMetrics,
+    getTenantMetrics,
+    getTimeSeries,
 } from '@/lib/services/analytics';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const timeRangeSchema = z.object({
   start_date: z.string().datetime().optional(),

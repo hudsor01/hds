@@ -1,5 +1,5 @@
-import {SignIn} from '@clerk/nextjs';
-import {Box, Container, Paper, Typography} from '@mui/material';
+
+import { Box, Container, Paper, Typography } from '@mui/material'
 
 export default function SignInPage() {
   return (

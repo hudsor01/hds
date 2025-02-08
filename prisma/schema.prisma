@@ -13,7 +13,6 @@ datasource db {
 // Core User Model
 model users {
   id                  String    @id @default(uuid()) @db.Uuid
-  clerkId             String    @unique
   role                String    @default("USER")
   name                String?
   email               String    @unique
@@ -36,7 +35,6 @@ model users {
 
   @@schema("public")
   @@index([email])
-  @@index([clerkId])
 }
 
 model properties {
@@ -959,5 +957,18 @@ model waitlist_events {
   @@index([email])
   @@index([type])
   @@index([timestamp])
+  @@schema("public")
+}
+
+model WaitlistVerification {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([token])
+  @@index([email])
   @@schema("public")
 }

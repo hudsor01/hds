@@ -1,12 +1,12 @@
 'use client';
 
-import ErrorBoundary from '@/components/error/error-boundary';
-import {SidebarNav} from '@/components/layout/sidebar-nav';
-import LoadingState from '@/components/loading/loading-state';
-import {useAuth} from '@clerk/nextjs';
-import {Box} from '@mui/material';
-import {redirect} from 'next/navigation';
-import {Suspense} from 'react';
+import ErrorBoundary from '@/components/error/error-boundary'
+import { SidebarNav } from '@/components/layout/sidebar-nav'
+import LoadingState from '@/components/loading/loading-state'
+
+import { Box } from '@mui/material'
+import { redirect } from 'next/navigation'
+import { Suspense } from 'react'
 
 export default function DashboardLayout({children}: {children: React.ReactNode}) {
   const {isLoaded, isSignedIn} = useAuth();

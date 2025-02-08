@@ -1,6 +1,6 @@
-import {prisma} from '@/lib/prisma/prisma';
-import {getAuth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
+import { prisma } from '@/lib/prisma/prisma'
+
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest, {params}: {params: {id: string}}) {
   try {

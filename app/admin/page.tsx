@@ -1,8 +1,7 @@
-import {SearchUsers} from './SearchUsers';
-import {removeRole, setRole} from './_actions';
-import {checkRole} from '@/utils/roles';
-import {clerkClient} from '@clerk/nextjs/server';
-import {redirect} from 'next/navigation';
+import { checkRole } from '@/utils/roles';
+import { redirect } from 'next/navigation';
+import { SearchUsers } from './SearchUsers';
+import { removeRole, setRole } from './_actions';
 
 export default async function AdminDashboard(params: {searchParams: Promise<{search?: string}>}) {
   if (!checkRole('admin')) {
@@ -11,7 +10,7 @@ export default async function AdminDashboard(params: {searchParams: Promise<{sea
 
   const query = (await params.searchParams).search;
 
-  const client = await clerkClient();
+
 
   const users = query ? (await client.users.getUserList({query})).data : [];
 

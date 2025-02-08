@@ -1,7 +1,7 @@
-import {supabase} from '@/lib/supabase';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { supabase } from '@/lib/supabase';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const workOrderSchema = z.object({
   vendor_id: z.string().uuid('Invalid vendor ID'),

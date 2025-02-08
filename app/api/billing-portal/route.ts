@@ -1,7 +1,7 @@
-import {getStripe} from '../../../utils/stripe/client';
-import type {Session} from '@clerk/nextjs/server';
-import {auth} from '@clerk/nextjs/server';
-import {NextResponse} from 'next/server';
+
+import { getStripe } from '../../../utils/stripe/client'
+
+import { NextResponse } from 'next/server'
 
 type SessionWithUser = Session & {
   user: {

@@ -9,8 +9,7 @@ async function main() {
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscription_status: 'active',
-      clerkId: 'test-clerk-id',
+      subscription_status: 'active'
     },
   });
 

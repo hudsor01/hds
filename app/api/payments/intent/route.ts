@@ -1,7 +1,7 @@
-import {createPaymentIntent} from '@/lib/services/payments';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { createPaymentIntent } from '@/lib/services/payments';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const paymentIntentSchema = z.object({
   amount: z.number().positive('Amount must be positive'),

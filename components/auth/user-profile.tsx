@@ -1,5 +1,6 @@
-import {UserButton, useUser} from '@clerk/nextjs';
-import {Box, Typography} from '@mui/material';
+
+import { Box, Typography } from '@mui/material'
+import { useUser } from '../../app/auth/lib/auth/config'
 
 export function UserProfile() {
   const {user, isLoaded} = useUser();

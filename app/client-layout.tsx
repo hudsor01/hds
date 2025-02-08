@@ -1,15 +1,14 @@
 'use client';
 
-import Navbar from '../components/layout/Navbar';
-import {Providers} from './providers';
-import {ClerkProvider} from '@clerk/nextjs';
-import {Analytics} from '@vercel/analytics/react';
-import {SpeedInsights} from '@vercel/speed-insights/next';
-import {Toaster} from 'sonner';
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Toaster } from 'sonner'
+import Navbar from '../components/layout/Navbar'
+import { Providers } from './providers'
 
 export default function ClientLayout({children}: {children: React.ReactNode}) {
   return (
-    <ClerkProvider>
+    <>
       <Providers>
         <div className='relative flex min-h-screen flex-col'>
           <Navbar />
@@ -34,6 +33,6 @@ export default function ClientLayout({children}: {children: React.ReactNode}) {
       </Providers>
       <Analytics />
       <SpeedInsights />
-    </ClerkProvider>
+    </>
   );
 }

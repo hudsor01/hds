@@ -1,20 +1,19 @@
 'use client';
 
-import {useUser} from '@clerk/nextjs';
-import {EmailAddressResource} from '@clerk/types';
-import * as React from 'react';
+import * as React from 'react'
+import { useUser } from '../../auth/lib/auth/config'
 
 export default function Page() {
-  const {isLoaded, user} = useUser();
+  const {user, loading} = useUser();
   const [email, setEmail] = React.useState('');
   const [code, setCode] = React.useState('');
   const [isVerifying, setIsVerifying] = React.useState(false);
   const [successful, setSuccessful] = React.useState(false);
   const [emailObj, setEmailObj] = React.useState<EmailAddressResource | undefined>();
 
-  if (!isLoaded) return null;
+  if (loading) return null;
 
-  if (isLoaded && !user?.id) {
+  if (!user?.id) {
     return <p>You must be logged in to access this page</p>;
   }
 
@@ -40,8 +39,6 @@ export default function Page() {
       // and capture the OTP code
       setIsVerifying(true);
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
     }
   };

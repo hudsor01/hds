@@ -1,12 +1,12 @@
 import {
-  cancelRecurringPayment,
-  getRecurringPayments,
-  setupRecurringPayment,
-  updateRecurringPayment,
+    cancelRecurringPayment,
+    getRecurringPayments,
+    setupRecurringPayment,
+    updateRecurringPayment,
 } from '@/lib/services/recurring-payments';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 const recurringPaymentSchema = z.object({
   tenant_id: z.string().uuid('Invalid tenant ID'),

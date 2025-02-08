@@ -1,10 +1,10 @@
 'use client';
 
-import {useAuth} from '@clerk/nextjs';
+
 import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import CircularProgress from '@mui/material/CircularProgress';
-import {useRouter} from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 export function ProtectedRoute({children}: {children: React.ReactNode}) {
   const {isLoaded, userId} = useAuth();

@@ -1,7 +1,7 @@
-import {supabase} from '@/lib/supabase';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { supabase } from '@/lib/supabase'
+
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 const messageSchema = z.object({
   recipient_id: z.string().uuid('Invalid recipient ID'),

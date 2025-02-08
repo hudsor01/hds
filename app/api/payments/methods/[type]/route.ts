@@ -1,9 +1,9 @@
-import {stripe} from '@/lib/payments/stripe';
-import {supabase} from '@/lib/supabase';
-import type {PaymentMethodType} from '@/types/payments';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { stripe } from '@/lib/payments/stripe';
+import { supabase } from '@/lib/supabase';
+import type { PaymentMethodType } from '@/types/payments';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Validation schemas for different payment method types
 const cardSchema = z.object({

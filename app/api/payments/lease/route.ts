@@ -1,9 +1,8 @@
-import {prisma} from '@/lib/db';
-import {createPaymentIntent, createStripeCustomer} from '@/lib/stripe';
-import {paymentSchema, type PaymentRecord} from '@/types/payments';
-import {getAuth} from '@clerk/nextjs/server';
-import {PaymentStatus} from '@prisma/client';
-import {NextRequest, NextResponse} from 'next/server';
+import { prisma } from '@/lib/db'
+import { createPaymentIntent, createStripeCustomer } from '@/lib/stripe'
+import { paymentSchema, type PaymentRecord } from '@/types/payments'
+import { PaymentStatus } from '@prisma/client'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function POST(req: NextRequest) {
   try {

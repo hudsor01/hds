@@ -1,11 +1,10 @@
 'use client';
 
-import {gradientStyles} from '@/utils/styles';
-import {useAuth, UserButton} from '@clerk/nextjs';
-import {AppBar, Box, Button, Container, Stack, Toolbar, Typography} from '@mui/material';
-import Link from 'next/link';
-import {usePathname} from 'next/navigation';
-import {LogIn} from 'react-feather';
+import { gradientStyles } from '@/utils/styles'
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LogIn } from 'react-feather'
 
 const publicNavItems = [
   {name: 'Home', href: '/'},

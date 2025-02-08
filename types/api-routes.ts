@@ -1,6 +1,6 @@
-import {analyticsDB, waitlistDB} from '../lib/db';
-import {NextRequest, NextResponse} from 'next/server';
-
+import { NextRequest, NextResponse } from 'next/server'
+import analyticsDB from '../types/analyticsDB'
+import waitlistDB from '../types/waitlistDB'
 // Waitlist API Routes
 export interface WaitlistPostRequest extends NextRequest {
   body: ReadableStream<Uint8Array<ArrayBufferLike>> & {

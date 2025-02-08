@@ -1,11 +1,10 @@
 'use client';
+import * as React from 'react'
 
-import {useUser} from '@clerk/nextjs';
-import {PhoneNumberResource} from '@clerk/types';
-import * as React from 'react';
+import { useUser } from '../../auth/lib/auth/config'
 
 export default function Page() {
-  const {isLoaded, user} = useUser();
+  const {user, loading} = useUser();
   const [phone, setPhone] = React.useState('');
   const [code, setCode] = React.useState('');
   const [isVerifying, setIsVerifying] = React.useState(false);
@@ -39,8 +38,6 @@ export default function Page() {
       // and capture the OTP code
       setIsVerifying(true);
     } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
       console.error(JSON.stringify(err, null, 2));
     }
   };

@@ -1,26 +1,25 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import {Card} from '@/components/ui/cards/card';
-import {useUser} from '@clerk/nextjs';
+import { Button } from '@/components/ui/buttons/button';
+import { Card } from '@/components/ui/cards/card';
 import {
-  Box,
-  Container,
-  FormControl,
-  FormHelperText,
-  InputLabel,
-  MenuItem,
-  Select,
-  SelectChangeEvent,
-  Step,
-  StepLabel,
-  Stepper,
-  TextField,
-  Typography,
+    Box,
+    Container,
+    FormControl,
+    FormHelperText,
+    InputLabel,
+    MenuItem,
+    Select,
+    SelectChangeEvent,
+    Step,
+    StepLabel,
+    Stepper,
+    TextField,
+    Typography,
 } from '@mui/material';
-import {useRouter} from 'next/navigation';
-import {useState} from 'react';
-import {toast} from 'sonner';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const steps = ['Personal Information', 'Property Details', 'Preferences'];
 

@@ -1,9 +1,9 @@
 'use client';
 
-import {useAuth, useSignIn} from '@clerk/nextjs';
-import type {NextPage} from 'next';
-import {useRouter} from 'next/navigation';
-import React, {useState} from 'react';
+
+import type { NextPage } from 'next'
+import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
 
 const ForgotPasswordPage: NextPage = () => {
   const [email, setEmail] = useState('');

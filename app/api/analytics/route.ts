@@ -1,8 +1,8 @@
-import {getAnalyticsDashboard} from '@/lib/services/analytics';
-import {supabase} from '@/lib/supabase';
-import {auth} from '@clerk/nextjs/server';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { getAnalyticsDashboard } from '@/lib/services/analytics';
+import { supabase } from '@/lib/supabase';
+
+import { NextRequest, NextResponse } from 'next/server';
+import { z } from 'zod';
 
 // Cache analytics data for 5 minutes
 const CACHE_TTL = 5 * 60 * 1000;

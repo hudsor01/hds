@@ -1,17 +1,17 @@
 'use client';
 
-import {useProperties} from '../../hooks/data';
-import {PropertyFilters} from './property-filters';
-import {PropertyGrid} from './property-grid';
-import {PropertyTable} from './property-table';
-import AddIcon from '@mui/icons-material/Add';
-import GridViewIcon from '@mui/icons-material/GridView';
-import ViewListIcon from '@mui/icons-material/ViewList';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import {useState} from 'react';
+import AddIcon from '@mui/icons-material/Add'
+import GridViewIcon from '@mui/icons-material/GridView'
+import ViewListIcon from '@mui/icons-material/ViewList'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import { useState } from 'react'
+import { useProperties } from '../../hooks/data'
+import { PropertyFilters } from './property-filters'
+import { PropertyGrid } from './property-grid'
+import { PropertyTable } from './property-table'
 
 export function PropertyListing() {
   const [view, setView] = useState<'grid' | 'table'>('grid');
@@ -47,7 +47,7 @@ export function PropertyListing() {
       {view === 'grid' ? (
         <PropertyGrid properties={properties?.data ?? []} isLoading={isLoading} />
       ) : (
-        <PropertyTable properties={properties?.data} isLoading={isLoading} />
+        <PropertyTable properties={properties?.data ?? []} isLoading={isLoading} />
       )}
     </Box>
   );

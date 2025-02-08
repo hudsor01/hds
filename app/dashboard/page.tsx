@@ -1,10 +1,9 @@
 'use client';
 
-import {Card} from '@/components/ui/cards/card';
-import {auth} from '@clerk/nextjs';
-import {Box, Container, Grid, Typography} from '@mui/material';
-import {redirect} from 'next/navigation';
-import {BarChart2, DollarSign, Home as HomeIcon, Users} from 'react-feather';
+import { Card } from '@/components/ui/cards/card'
+import { Box, Container, Grid, Typography } from '@mui/material'
+import { redirect } from 'next/navigation'
+import { BarChart2, DollarSign, Home as HomeIcon, Users } from 'react-feather'
 
 const stats = [
   {

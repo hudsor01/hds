@@ -1,31 +1,11 @@
-import {prisma} from '@/lib/prisma';
-import {WebhookEvent, type DeletedObjectJSON, type OrganizationJSON} from '@clerk/nextjs/server';
-import {sql} from '@vercel/postgres';
-import {headers} from 'next/headers';
-import {Webhook} from 'svix';
-
-export async function POST(req: Request) {
-  // Verify webhook
-  const evt = await verifyWebhook(req);
-  if (!evt.success) return evt.response;
-
-  // Handle webhook events
-  switch (evt.data.type) {
-    case 'user.created':
-      await handleUserCreated(evt.data);
-      break;
-    case 'user.updated':
-      await handleUserUpdated(evt.data);
-      break;
-  }
-
-  return new Response('Webhook processed', {status: 200});
-}
+import { prisma } from '@/lib/prisma'
+import { sql } from '@vercel/postgres'
+import { headers } from 'next/headers'
+import { Webhook } from 'svix'
 
 async function handleUserCreated(data: WebhookEvent) {
   await prisma.users.create({
     data: {
-      clerkId: data.data.id,
       email: data.data.email_addresses[0]?.email_address,
       name: `${data.data.first_name} ${data.data.last_name}`,
       role: data.data.private_metadata?.role || 'USER',
@@ -44,13 +24,6 @@ function handleUserDeleted(data: DeletedObjectJSON) {
 function handleOrganizationCreated(data: OrganizationJSON) {
   throw new Error('Function not implemented.');
 }
-
-async function verifyWebhook(req: Request) {
-  const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET;
-
-  if (!WEBHOOK_SECRET) {
-    throw new Error('Missing CLERK_WEBHOOK_SECRET');
-  }
 
   const headerPayload = headers();
   const svix_id = headerPayload.get('svix-id');
@@ -87,7 +60,6 @@ async function verifyWebhook(req: Request) {
       response: new Response('Webhook verification failed', {status: 400}),
     };
   }
-}
 
 // Webhook logging
 async function logWebhook(evt: WebhookEvent) {

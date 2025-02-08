@@ -1,7 +1,4 @@
 import {UserRole} from '@/types/roles';
-import {useUser} from '@clerk/nextjs';
-import {clerkClient, currentUser, auth as getAuth} from '@clerk/nextjs/server';
-import type {UserResource} from '@clerk/types';
 import {NextRequest, NextResponse} from 'next/server';
 
 interface ExtendedUserResource extends UserResource {
@@ -74,12 +71,12 @@ export async function getCurrentUser() {
 }
 
 export async function getUserRole(userId: string): Promise<UserRole> {
-  const user = await clerkClient.users.getUser(userId);
+  const user = await .users.getUser(userId);
   return (user.privateMetadata?.role as UserRole) || 'USER';
 }
 
 export async function updateUserRole(userId: string, role: UserRole) {
-  await clerkClient.users.updateUser(userId, {
+  await .users.updateUser(userId, {
     privateMetadata: {role},
   });
 }

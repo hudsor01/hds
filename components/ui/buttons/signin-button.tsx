@@ -1,7 +1,7 @@
 'use client';
 
-import {useSignIn} from '@clerk/nextjs';
-import {Button} from '@mui/material';
+
+import { Button } from '@mui/material';
 
 export function SignInButton() {
   const {signIn} = useSignIn();

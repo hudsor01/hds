@@ -1,12 +1,11 @@
 'use client';
 
-import {Button} from '@/components/ui/buttons/button';
-import {useSession} from '@clerk/nextjs';
-import {loadStripe} from '@stripe/stripe-js';
-import type {Route} from 'next';
-import {useRouter} from 'next/navigation';
-import {useState} from 'react';
-import {toast} from 'sonner';
+import { Button } from '@/components/ui/buttons/button';
+import { loadStripe } from '@stripe/stripe-js';
+import type { Route } from 'next';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 const pricingTiers = [
   {

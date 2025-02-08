@@ -1,6 +1,6 @@
 'use client';
 
-import {useAuth} from '@clerk/nextjs';
+
 
 export function ProtectedComponent() {
   const {isLoaded, isSignedIn, userId} = useAuth();

@@ -1,92 +1,96 @@
-import {resend} from '@/lib/email';
-import {supabase} from '@/lib/supabase';
-import {NextRequest, NextResponse} from 'next/server';
-import {z} from 'zod';
+import { WaitlistPositionService } from '@/lib/services/waitlist-position'
+import { WaitlistReferralService } from '@/lib/services/waitlist-referral'
+import { WaitlistVerificationService } from '@/lib/services/waitlist-verification'
+import { supabase } from '@/lib/supabase'
+import { rateLimitMiddleware } from '@/middleware/rate-limit'
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 const joinSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  referral_code: z.string().optional(),
-});
+  email: z.string().email(),
+  name: z.string().optional(),
+  referralCode: z.string().optional(),
+})
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {email, referral_code} = joinSchema.parse(body);
-
-    // Check if email already exists
-    const {data: existing} = await supabase
-      .from('waitlist')
-      .select('id, status')
-      .eq('email', email)
-      .single();
-
-    if (existing) {
-      if (existing.status === 'joined') {
-        return NextResponse.json({error: 'You have already joined the waitlist'}, {status: 400});
-      }
-      return NextResponse.json({data: existing});
+    // Apply rate limiting
+    const rateLimit = await rateLimitMiddleware(req, 'waitlist')
+    if (rateLimit instanceof NextResponse) {
+      return rateLimit
     }
 
-    // Get current position
-    const {count} = await supabase.from('waitlist').select('*', {count: 'exact', head: true});
+    const body = await req.json()
+    const result = joinSchema.safeParse(body)
 
-    const position = (count || 0) + 1;
+    if (!result.success) {
+      return NextResponse.json(
+        { error: 'Invalid request data', details: result.error.issues },
+        { status: 400 }
+      )
+    }
+
+    const { email, name, referralCode } = result.data
+
+    // Check if email already exists
+    const { data: existing } = await supabase
+      .from('waitlist')
+      .select('email')
+      .eq('email', email)
+      .single()
+
+    if (existing) {
+      return NextResponse.json(
+        { error: 'Email already registered' },
+        { status: 409 }
+      )
+    }
+
+    // Get next position
+    const position = await WaitlistPositionService.getNextPosition()
 
     // Create waitlist entry
-    const {data: entry, error} = await supabase
+    const { data: entry, error } = await supabase
       .from('waitlist')
       .insert([
         {
           email,
+          name,
           position,
-          status: 'pending',
-          referral_code: referral_code || generateReferralCode(),
-          referred_by: referral_code || null,
+          referral_code: await WaitlistReferralService.generateReferralCode(),
         },
       ])
       .select()
-      .single();
+      .single()
 
-    if (error) throw error;
+    if (error) {
+      console.error('Error creating waitlist entry:', error)
+      return NextResponse.json(
+        { error: 'Failed to join waitlist' },
+        { status: 500 }
+      )
+    }
 
-    // Send welcome email
-    await resend.emails.send({
-      from: 'Property Manager <waitlist@hudsondigitalsolutions.com>',
-      to: email,
-      subject: 'Welcome to the Property Manager Waitlist!',
-      react: WelcomeEmail({
-        position,
+    // Process referral if code provided
+    if (referralCode) {
+      await WaitlistReferralService.processReferral(email, referralCode)
+    }
+
+    // Send verification email
+    await WaitlistVerificationService.sendVerificationEmail(email)
+
+    return NextResponse.json({
+      success: true,
+      data: {
+        position: entry.position,
         referralCode: entry.referral_code,
-      }),
-    });
-
-    // Update referrer's position if applicable
-    if (referral_code) {
-      const {data: referrer} = await supabase
-        .from('waitlist')
-        .select('position')
-        .eq('referral_code', referral_code)
-        .single();
-
-      if (referrer) {
-        // Move referrer up by 1 position
-        await supabase.rpc('update_waitlist_positions', {
-          p_referrer_position: referrer.position,
-          p_new_position: Math.max(1, referrer.position - 1),
-        });
-      }
-    }
-
-    return NextResponse.json({data: entry});
+      },
+    })
   } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json({error: error.errors[0].message}, {status: 400});
-    }
-    console.error('Error in waitlist join:', error);
-    return NextResponse.json({error: 'Failed to join waitlist'}, {status: 500});
+    console.error('Error in waitlist join:', error)
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    )
   }
-}
-
-function generateReferralCode(): string {
-  return Math.random().toString(36).substring(2, 8).toUpperCase();
 }

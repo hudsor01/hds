@@ -1,14 +1,13 @@
 'use client';
 
-import {useUser} from '@clerk/nextjs';
-import EditIcon from '@mui/icons-material/Edit';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
-import {useRouter} from 'next/navigation';
+import EditIcon from '@mui/icons-material/Edit'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
+import { useRouter } from 'next/navigation'
 
 export function UserProfile() {
   const {user, isLoaded} = useUser();

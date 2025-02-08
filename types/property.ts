@@ -16,21 +16,7 @@ export const PROPERTY_TYPES = {
 export type PropertyType = 'apartment' | 'house' | 'condo' | 'townhouse' | 'commercial';
 export type PropertyStatus = 'available' | 'rented' | 'maintenance' | 'inactive';
 
-export interface Property {
-  id: string;
-  name: string;
-  address: string;
-  city: string;
-  state: string;
-  zipCode: string;
-  type: PropertyType;
-  status: PropertyStatus;
-  units: PropertyUnit[];
-  owner_id: string;
-  organization_id: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
+export { Property } from './database.types'
 
 export interface PropertyListProps {
   properties: Property[];

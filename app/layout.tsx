@@ -1,11 +1,11 @@
-import './globals.css';
-import {Providers} from './providers';
-import {ClerkProvider} from '@clerk/nextjs';
-import {Analytics} from '@vercel/analytics/react';
-import {SpeedInsights} from '@vercel/speed-insights/next';
-import type {Metadata} from 'next';
-import {Roboto} from 'next/font/google';
-import {Toaster} from 'sonner';
+import './globals.css'
+import { Providers } from './providers'
+
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import type { Metadata } from 'next'
+import { Roboto } from 'next/font/google'
+import { Toaster } from 'sonner'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -29,14 +29,13 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         <link rel='icon' href='/favicon.ico' />
       </head>
       <body className={roboto.className}>
-        <ClerkProvider>
+
           <Providers>
             {children}
             <Toaster position='top-center' expand={true} richColors />
           </Providers>
           <Analytics />
           <SpeedInsights />
-        </ClerkProvider>
       </body>
     </html>
   );

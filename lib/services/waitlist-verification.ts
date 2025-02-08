@@ -1,166 +1,118 @@
-import VerificationEmail from '@/emails/verification';
-import { resend } from '@/lib/email';
-import { supabase } from '@/lib/supabase';
-import { nanoid } from 'nanoid';
+import { sendEmail } from '@/lib/email'
+import { prisma } from '@/lib/prisma'
+import { generateToken } from '@/lib/utils/token'
+import { WaitlistStatus } from '@prisma/client'
 
 export class WaitlistVerificationService {
-  private static VERIFICATION_TOKEN_LENGTH = 32;
-  private static VERIFICATION_EXPIRY_HOURS = 24;
-
-  /**
-   * Generate a verification token
-   */
-  private static async generateVerificationToken(): Promise<string> {
-    return nanoid(this.VERIFICATION_TOKEN_LENGTH);
-  }
-
-  /**
-   * Send verification email
-   */
-  static async sendVerificationEmail(email: string): Promise<boolean> {
+  static async sendVerificationEmail(email: string): Promise<{ success: boolean; error?: string }> {
     try {
-      // Generate verification token
-      const token = await this.generateVerificationToken();
-      const expiresAt = new Date();
-      expiresAt.setHours(expiresAt.getHours() + this.VERIFICATION_EXPIRY_HOURS);
+      const waitlistEntry = await prisma.waitlist.findUnique({
+        where: { email },
+      })
 
-      // Store verification token
-      const {error} = await supabase.from('verification_tokens').insert([
-        {
-          identifier: email,
+      if (!waitlistEntry) {
+        return { success: false, error: 'Email not found in waitlist' }
+      }
+
+      if (waitlistEntry.status === WaitlistStatus.VERIFIED) {
+        return { success: false, error: 'Email already verified' }
+      }
+
+      const token = generateToken()
+      const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+
+      await prisma.waitlistVerification.create({
+        data: {
+          email,
           token,
-          expires: expiresAt.toISOString(),
+          expiresAt,
         },
-      ]);
+      })
 
-      if (error) throw error;
-
-      // Send verification email
-      const verificationUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}`;
-
-      await resend.emails.send({
-        from: 'Property Manager <waitlist@hudsondigitalsolutions.com>',
+      await sendEmail({
         to: email,
-        subject: 'Verify your email address',
-        react: VerificationEmail({
-          verificationUrl,
-          expiresIn: `${this.VERIFICATION_EXPIRY_HOURS} hours`,
-        }),
-      });
+        subject: 'Verify your waitlist position',
+        text: `Click the following link to verify your email: ${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}`,
+        html: `
+          <h1>Verify your waitlist position</h1>
+          <p>Click the following link to verify your email:</p>
+          <a href="${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}">
+            Verify Email
+          </a>
+          <p>This link will expire in 24 hours.</p>
+        `,
+      })
 
-      return true;
+      return { success: true }
     } catch (error) {
-      console.error('Error sending verification email:', error);
-      return false;
+      console.error('Error sending verification email:', error)
+      return { success: false, error: 'Failed to send verification email' }
     }
   }
 
-  /**
-   * Verify email with token
-   */
-  static async verifyEmail(token: string): Promise<{
-    success: boolean;
-    email?: string;
-    error?: string;
-  }> {
+  static async verifyEmail(token: string): Promise<{ success: boolean; email?: string; error?: string }> {
     try {
-      // Get verification token
-      const {data: verification, error} = await supabase
-        .from('verification_tokens')
-        .select('*')
-        .eq('token', token)
-        .single();
+      const verification = await prisma.waitlistVerification.findUnique({
+        where: { token },
+      })
 
-      if (error || !verification) {
-        return {success: false, error: 'Invalid verification token'};
+      if (!verification) {
+        return { success: false, error: 'Invalid verification token' }
       }
 
-      // Check if token is expired
-      if (new Date(verification.expires) < new Date()) {
-        return {success: false, error: 'Verification token has expired'};
+      if (verification.expiresAt < new Date()) {
+        return { success: false, error: 'Verification token has expired' }
       }
 
-      // Update waitlist entry
-      const {error: updateError} = await supabase
-        .from('waitlist')
-        .update({
-          status: 'active',
-          email_verified: true,
-          verified_at: new Date().toISOString(),
-        })
-        .eq('email', verification.identifier);
+      const waitlistEntry = await prisma.waitlist.findUnique({
+        where: { email: verification.email },
+      })
 
-      if (updateError) {
-        return {success: false, error: 'Failed to verify email'};
+      if (!waitlistEntry) {
+        return { success: false, error: 'Email not found in waitlist' }
       }
 
-      // Delete used token
-      await supabase.from('verification_tokens').delete().eq('token', token);
+      await prisma.waitlist.update({
+        where: { email: verification.email },
+        data: { status: WaitlistStatus.VERIFIED },
+      })
 
-      // Track verification event
-      await supabase.from('waitlist_events').insert([
-        {
-          email: verification.identifier,
-          type: 'email_verified',
-          metadata: {
-            verified_at: new Date().toISOString(),
-          },
-        },
-      ]);
+      // Clean up used verification token
+      await prisma.waitlistVerification.delete({
+        where: { token },
+      })
 
-      return {success: true, email: verification.identifier};
+      return { success: true, email: verification.email }
     } catch (error) {
-      console.error('Error verifying email:', error);
-      return {success: false, error: 'Failed to verify email'};
+      console.error('Error verifying email:', error)
+      return { success: false, error: 'Failed to verify email' }
     }
   }
 
-  /**
-   * Check verification status
-   */
-  static async checkVerificationStatus(email: string): Promise<{
-    isVerified: boolean;
-    verifiedAt?: string;
-  }> {
-    const {data, error} = await supabase
-      .from('waitlist')
-      .select('email_verified, verified_at')
-      .eq('email', email)
-      .single();
-
-    if (error || !data) {
-      return {isVerified: false};
-    }
-
-    return {
-      isVerified: data.email_verified || false,
-      verifiedAt: data.verified_at,
-    };
-  }
-
-  /**
-   * Resend verification email
-   */
-  static async resendVerification(email: string): Promise<{
-    success: boolean;
-    error?: string;
-  }> {
+  static async resendVerification(email: string): Promise<{ success: boolean; error?: string }> {
     try {
-      // Check if already verified
-      const {isVerified} = await this.checkVerificationStatus(email);
-      if (isVerified) {
-        return {success: false, error: 'Email is already verified'};
+      const waitlistEntry = await prisma.waitlist.findUnique({
+        where: { email },
+      })
+
+      if (!waitlistEntry) {
+        return { success: false, error: 'Email not found in waitlist' }
       }
 
-      // Delete any existing tokens
-      await supabase.from('verification_tokens').delete().eq('identifier', email);
+      if (waitlistEntry.status === WaitlistStatus.VERIFIED) {
+        return { success: false, error: 'Email already verified' }
+      }
+
+      // Delete any existing verification tokens for this email
+      await prisma.waitlistVerification.deleteMany({
+        where: { email },
+      })
 
       // Send new verification email
-      const success = await this.sendVerificationEmail(email);
-      return {success};
+      return this.sendVerificationEmail(email)
     } catch (error) {
-      console.error('Error resending verification:', error);
-      return {success: false, error: 'Failed to resend verification email'};
+      console.error('Error resending verification:', error)
+      return { success: false, error: 'Failed to resend verification' }
     }
   }
 }

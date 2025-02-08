@@ -1,6 +1,6 @@
-import type {Database} from '@/types/database.types';
-import {PaymentStatus, PaymentType, Prisma, PrismaClient} from '@prisma/client';
-import {createClient} from '@supabase/supabase-js';
+import type { Database } from '@/types/database.types'
+import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
+import { createClient } from '@supabase/supabase-js'
 
 // Prisma Client Initialization
 declare global {
@@ -152,7 +152,7 @@ export const leases = {
         user_id: true,
         tenant_id: true,
         property_id: true,
-        type: true,
+        lease_type: true,
         start_date: true,
         end_date: true,
         rent_amount: true,
@@ -160,7 +160,7 @@ export const leases = {
         payment_day: true,
         documents: true,
         created_at: true,
-        status: true,
+        lease_status: true,
       },
     });
   },
@@ -169,7 +169,7 @@ export const leases = {
     return prisma.leases.findMany({
       where: {
         property_id: propertyId,
-        status: 'Active',
+        lease_status: 'Active',
         end_date: {
           gte: new Date(),
         },
@@ -178,13 +178,13 @@ export const leases = {
         user_id: true,
         tenant_id: true,
         property_id: true,
-        type: true,
+        lease_type: true,
         start_date: true,
         end_date: true,
         rent_amount: true,
         depositAmount: true,
         payment_day: true,
-        status: true,
+        lease_status: true,
       },
       orderBy: {start_date: 'desc'},
     });
@@ -218,7 +218,7 @@ export const properties = {
             last_name: true,
             email: true,
             phone: true,
-            status: true,
+            tenant_status: true,
           },
         },
         maintenance_requests: {
@@ -228,7 +228,6 @@ export const properties = {
           select: {
             id: true,
             title: true,
-            description: true,
             status: true,
             priority: true,
             created_at: true,
@@ -308,4 +307,4 @@ export const disconnect = async () => {
 export const connect = async () => {
   await prisma.$connect();
 };
-export {createClient};
+export { createClient }

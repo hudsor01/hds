@@ -1,8 +1,7 @@
 'use client';
 
-import {signOut} from '@clerk/nextjs';
-import {useTransition} from 'react';
-
+import { useTransition } from 'react'
+import { signOut } from '../../app/auth/lib/auth/auth'
 interface SignOutButtonProps {
   className?: string;
   children?: React.ReactNode;

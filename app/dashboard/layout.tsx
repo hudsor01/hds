@@ -1,13 +1,10 @@
 'use client';
 
-import {AuthGuard} from '@/components/auth/auth-guard';
-import {DashboardHeader} from '@/components/layout/dashboard-header';
-import {DashboardNav} from '@/components/layout/dashboard-nav';
-import {useUser} from '@clerk/nextjs';
-import {Box, Drawer, useMediaQuery, useTheme} from '@mui/material';
-import {useRouter} from 'next/navigation';
-import {useEffect, useState} from 'react';
-
+import { AuthGuard } from '@/components/auth/auth-guard'
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useUser } from '../../auth/lib/auth/config'
 const SIDEBAR_WIDTH = 280;
 
 interface DashboardLayoutProps {
