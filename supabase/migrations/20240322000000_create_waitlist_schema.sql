@@ -83,68 +83,39 @@ CREATE POLICY "Enable public read access for waitlist" ON public.waitlist
     FOR SELECT USING (true);
 
 CREATE POLICY "Enable self-service signup" ON public.waitlist
-    FOR INSERT WITH CHECK (
-        -- Ensure email is not already used
-        NOT EXISTS (
-            SELECT 1 FROM public.waitlist WHERE email = NEW.email
-        )
-    );
+    FOR INSERT WITH CHECK (true);
 
 CREATE POLICY "Enable users to update their own entries" ON public.waitlist
     FOR UPDATE USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND email = waitlist.email
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.email', true) = waitlist.email
     );
 
 CREATE POLICY "Enable admin access to waitlist" ON public.waitlist
     FOR ALL USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'ADMIN'
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.role', true) = 'ADMIN'
     );
 
 -- Waitlist events policies
 CREATE POLICY "Enable read access for own events" ON public.waitlist_events
     FOR SELECT USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND email = waitlist_events.email
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.email', true) = waitlist_events.email
     );
 
 CREATE POLICY "Enable admin access to events" ON public.waitlist_events
     FOR ALL USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'ADMIN'
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.role', true) = 'ADMIN'
     );
 
 -- Verification tokens policies
 CREATE POLICY "Enable access to own verification tokens" ON public.verification_tokens
     FOR ALL USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND email = verification_tokens.identifier
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.email', true) = verification_tokens.identifier
     );
 
 -- IP blacklist policies
 CREATE POLICY "Enable admin access to IP blacklist" ON public.ip_blacklist
     FOR ALL USING (
-        auth.uid() IS NOT NULL AND
-        EXISTS (
-            SELECT 1 FROM auth.users
-            WHERE id = auth.uid() AND raw_user_meta_data->>'role' = 'ADMIN'
-        )
+        auth.uid() IS NOT NULL AND current_setting('jwt.claims.role', true) = 'ADMIN'
     );
 
 -- Create function to update timestamps
