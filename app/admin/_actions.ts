@@ -10,7 +10,7 @@ export async function setRole(formData: FormData): Promise<void> {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!checkRole(user, 'admin')) {
+  if (!checkRole(user?.email, 'admin')) {
     throw new Error('Not Authorized');
   }
 
@@ -21,7 +21,7 @@ export async function setRole(formData: FormData): Promise<void> {
       .eq('id', formData.get('id'));
 
     if (updateError) throw updateError;
-  } catch (error) {
+  } catch {
     throw new Error('Failed to set role');
   }
 }
@@ -33,7 +33,7 @@ export async function removeRole(formData: FormData): Promise<void> {
     data: { user },
   } = await supabase.auth.getUser();
 
-  if (!checkRole(user, 'admin')) {
+  if (!checkRole(user?.email, 'admin')) {
     throw new Error('Not Authorized');
   }
 
@@ -44,7 +44,7 @@ export async function removeRole(formData: FormData): Promise<void> {
       .eq('id', formData.get('id'));
 
     if (updateError) throw updateError;
-  } catch (error) {
+  } catch {
     throw new Error('Failed to remove role');
   }
 }

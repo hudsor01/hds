@@ -1,5 +1,6 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   swcMinify: true,
   experimental: {
@@ -10,7 +11,7 @@ const nextConfig = {
     typedRoutes: true,
   },
   images: {
-    domains: ['www.propertywait.com'],
+    domains: ['www.hudsondigitalsolutions.com'],
     formats: ['image/avif', 'image/webp'],
   },
   typescript: {
@@ -19,6 +20,6 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: false,
   },
-}
+};
 
-module.exports = nextConfig
+export default nextConfig;
