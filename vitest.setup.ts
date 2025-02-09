@@ -1,3 +1,0 @@
-/* vitest.setup.ts
-   Vitest setup file. Add global configurations or imports here if needed.
-*/

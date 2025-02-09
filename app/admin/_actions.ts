@@ -1,28 +1,50 @@
-'use server'
+'use server';
 
-import { checkRole } from '@/utils/roles'
+import { createClient } from '@/utils/supabase/server';
+import { checkRole } from '@/utils/roles';
 
 export async function setRole(formData: FormData): Promise<void> {
-  // Check that the user trying to set the role is an admin
-  if (!checkRole('admin')) {
-    throw new Error('Not Authorized')
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!checkRole(user, 'admin')) {
+    throw new Error('Not Authorized');
   }
 
   try {
-    await client.users.updateUserMetadata(formData.get('id') as string, {
-      publicMetadata: { role: formData.get('role') },
-    })
-  } catch (err) {
-    throw new Error('Failed to set role')
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ role: formData.get('role') })
+      .eq('id', formData.get('id'));
+
+    if (updateError) throw updateError;
+  } catch (error) {
+    throw new Error('Failed to set role');
   }
 }
 
 export async function removeRole(formData: FormData): Promise<void> {
+  const supabase = await createClient();
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!checkRole(user, 'admin')) {
+    throw new Error('Not Authorized');
+  }
+
   try {
-    await client.users.updateUserMetadata(formData.get('id') as string, {
-      publicMetadata: { role: null },
-    })
-  } catch (err) {
-    throw new Error('Failed to remove role')
+    const { error: updateError } = await supabase
+      .from('users')
+      .update({ role: null })
+      .eq('id', formData.get('id'));
+
+    if (updateError) throw updateError;
+  } catch (error) {
+    throw new Error('Failed to remove role');
   }
 }

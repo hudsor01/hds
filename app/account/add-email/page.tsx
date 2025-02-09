@@ -2,6 +2,7 @@
 
 import * as React from 'react';
 import { useUser } from '../../auth/lib/auth/config';
+import { supabase } from '../../../lib/supabase';
 
 export default function Page() {
   const { user, loading } = useUser();

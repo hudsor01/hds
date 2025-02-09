@@ -1,12 +1,14 @@
+// @ts-nocheck
 import js from '@eslint/js';
-import nextPlugin from '@next/eslint-plugin-next';
-import tsPlugin from '@typescript-eslint/eslint-plugin';
-import tsParser from '@typescript-eslint/parser';
-import reactPlugin from 'eslint-plugin-react';
-import reactHooksPlugin from 'eslint-plugin-react-hooks';
-import jsxA11yPlugin from 'eslint-plugin-jsx-a11y';
-import prettierPlugin from 'eslint-plugin-prettier';
-import prettierConfig from 'eslint-config-prettier';
+
+const nextPlugin = require('@next/eslint-plugin-next');
+const tsPlugin = require('@typescript-eslint/eslint-plugin');
+const tsParser = require('@typescript-eslint/parser');
+const reactPlugin = require('eslint-plugin-react');
+const reactHooksPlugin = require('eslint-plugin-react-hooks');
+const jsxA11yPlugin = require('eslint-plugin-jsx-a11y');
+const prettierPlugin = require('eslint-plugin-prettier');
+const prettierConfig = require('eslint-config-prettier');
 
 export default [
   {
@@ -37,6 +39,11 @@ export default [
       },
       globals: {
         React: 'readonly',
+        JSX: 'readonly',
+        process: 'readonly',
+        console: 'readonly',
+        setTimeout: 'readonly',
+        window: 'readonly',
       },
     },
     settings: {

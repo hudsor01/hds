@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
-import { Box, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { Box, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
 import { useAuth } from '@/components/providers/auth-provider';
 
 const navigation = [
