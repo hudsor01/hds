@@ -1,4 +1,11 @@
-import { UserRole } from '@prisma/client';
+export type UserRole =
+  | 'SUPER_ADMIN'
+  | 'ADMIN'
+  | 'PROPERTY_MANAGER'
+  | 'PROPERTY_OWNER'
+  | 'MAINTENANCE'
+  | 'TENANT'
+  | 'USER';
 
 export function checkRole(
   userRole: string | null | undefined,

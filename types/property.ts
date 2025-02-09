@@ -1,6 +1,6 @@
-import type { MaintenanceRequest } from './maintenance_requests'
-import type { Tenant } from './tenant'
-import type { Database } from './supabase_db.types'
+import type { MaintenanceRequest } from './maintenance_requests';
+import type { Tenant } from './tenant';
+import type { Database } from './supabase_db.types';
 
 export const PROPERTY_STATUS = {
   active: 'active',
@@ -18,8 +18,8 @@ export const PROPERTY_TYPES = {
 } as const;
 
 // Reference the enums from Supabase
-export type PropertyType = Database['public']['Enums']['PropertyType'];
-export type PropertyStatus = Database['public']['Enums']['PropertyStatus'];
+export type PropertyType = (typeof PROPERTY_TYPES)[keyof typeof PROPERTY_TYPES];
+export type PropertyStatus = (typeof PROPERTY_STATUS)[keyof typeof PROPERTY_STATUS];
 
 // Base property type from Supabase
 export type PropertyRow = Database['public']['Tables']['properties']['Row'];

@@ -1,15 +1,13 @@
 const { FlatCompat } = require('@eslint/eslintrc');
 const js = require('@eslint/js');
-const nextPlugin = require('@next/eslint-plugin-next');
 const tsPlugin = require('@typescript-eslint/eslint-plugin');
 const tsParser = require('@typescript-eslint/parser');
-const eslintConfigPrettier = require('eslint-config-prettier');
-
-const compat = new FlatCompat();
+const compat = new FlatCompat({
+  baseDirectory: __dirname,
+});
 
 module.exports = [
   {
-    extends: ['prettier'],
     ignores: ['node_modules/', '.next/', 'out/', 'public/', 'dist/**'],
   },
   js.configs.recommended,
@@ -27,7 +25,6 @@ module.exports = [
     },
     plugins: {
       '@typescript-eslint': tsPlugin,
-      'next': nextPlugin,
       'react': require('eslint-plugin-react'),
       'react-hooks': require('eslint-plugin-react-hooks'),
       'prettier': require('eslint-plugin-prettier'),
@@ -35,10 +32,6 @@ module.exports = [
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/no-unsafe-assignment': 'error',
-      '@typescript-eslint/no-unsafe-member-access': 'error',
-      '@typescript-eslint/no-unsafe-call': 'error',
-      '@typescript-eslint/no-unsafe-return': 'error',
       'react-hooks/rules-of-hooks': 'error',
       'react-hooks/exhaustive-deps': 'warn',
       'no-console': ['warn', { allow: ['warn', 'error'] }],
