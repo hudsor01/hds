@@ -15,13 +15,12 @@ module.exports = [
   js.configs.recommended,
   ...compat.extends('plugin:@typescript-eslint/recommended'),
   {
-    // Custom configuration for all JS/TS files
     files: ['**/*.{js,jsx,ts,tsx}'],
     languageOptions: {
-      parser: 'tsParser',
+      parser: tsParser,
       parserOptions: {
         ecmaVersion: 2020,
-        sourceType: 'commonjs',
+        sourceType: 'module',
         ecmaFeatures: { jsx: true },
         project: './tsconfig.json',
       },
@@ -29,9 +28,9 @@ module.exports = [
     plugins: {
       '@typescript-eslint': tsPlugin,
       'next': nextPlugin,
-      react: require('eslint-plugin-react'),
+      'react': require('eslint-plugin-react'),
       'react-hooks': require('eslint-plugin-react-hooks'),
-      prettier: require('eslint-plugin-prettier'),
+      'prettier': require('eslint-plugin-prettier'),
     },
     rules: {
       '@typescript-eslint/no-unused-vars': 'error',
@@ -47,7 +46,13 @@ module.exports = [
       'no-undef': 'error',
       'no-var': 'error',
       'prefer-const': 'error',
-      'prettier/prettier': ['error', { endOfLine: 'auto' }],
+      'prettier/prettier': ['error', {
+        endOfLine: 'auto',
+        singleQuote: true,
+        semi: true,
+        tabWidth: 2,
+        trailingComma: 'all',
+      }],
     },
     settings: {
       react: {
