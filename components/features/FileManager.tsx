@@ -6,8 +6,6 @@ import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@/utils/supabase/client';
 import { FileText, Trash2, Upload } from 'react-feather';
 import { useState } from 'react';
-import type { SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '@/types/supabase_db.types';
 
 interface FileData {
   name: string;
@@ -24,7 +22,7 @@ export default function FileManager({ propertyId }: FileManagerProps) {
   const [files, setFiles] = useState<FileData[]>([]);
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
-  const supabase = createClient() as SupabaseClient<Database>;
+  const supabase = createClient();
 
   const uploadFile = async (file: globalThis.File) => {
     try {
