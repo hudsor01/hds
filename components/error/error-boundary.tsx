@@ -6,10 +6,10 @@ import { AlertTriangle } from 'react-feather';
 
 interface ErrorBoundaryProps {
   error: Error;
-  reset: () => void;
+  resetAction: () => void;
 }
 
-export default function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
+export default function ErrorBoundary({ error, resetAction }: ErrorBoundaryProps) {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Error:', error);
@@ -22,12 +22,11 @@ export default function ErrorBoundary({ error, reset }: ErrorBoundaryProps) {
         Something went wrong!
       </Typography>
       <Typography color="text.secondary" paragraph>
-        {error.message ||
-          'An unexpected error occurred. Please try again later.'}
+        {error.message || 'An unexpected error occurred. Please try again later.'}
       </Typography>
       <Button
         variant="contained"
-        onClick={reset}
+        onClick={resetAction}
         sx={{
           mt: 2,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',

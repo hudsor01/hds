@@ -1,4 +1,4 @@
-import { Property, type PropertyListProps } from '@/types/property';
+import { type PropertyListProps } from '@/types/property';
 import { useIntl } from 'react-intl';
 
 export default function PropertyList({ properties }: PropertyListProps) {
@@ -6,7 +6,7 @@ export default function PropertyList({ properties }: PropertyListProps) {
 
   return (
     <ul>
-      {properties.map((property: Property) => (
+      {properties.map((property) => (
         <li key={property.id}>
           {intl.formatMessage({ id: 'property.name' }, { name: property.name })}
         </li>

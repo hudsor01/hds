@@ -1,4 +1,5 @@
 // components/properties/property-filters.tsx
+import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types/property';
 import SearchIcon from '@mui/icons-material/Search';
 import Box from '@mui/material/Box';
 import InputAdornment from '@mui/material/InputAdornment';
@@ -31,9 +32,11 @@ export function PropertyFilters() {
         defaultValue={searchParams.get('status') || 'all'}
       >
         <MenuItem value="all">All Status</MenuItem>
-        <MenuItem value="occupied">Occupied</MenuItem>
-        <MenuItem value="vacant">Vacant</MenuItem>
-        <MenuItem value="maintenance">Maintenance</MenuItem>
+        {Object.entries(PROPERTY_STATUS).map(([value, label]) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
       </TextField>
 
       <TextField
@@ -43,9 +46,11 @@ export function PropertyFilters() {
         defaultValue={searchParams.get('type') || 'all'}
       >
         <MenuItem value="all">All Types</MenuItem>
-        <MenuItem value="house">House</MenuItem>
-        <MenuItem value="apartment">Apartment</MenuItem>
-        <MenuItem value="condo">Condo</MenuItem>
+        {Object.entries(PROPERTY_TYPES).map(([value, label]) => (
+          <MenuItem key={value} value={value}>
+            {label}
+          </MenuItem>
+        ))}
       </TextField>
     </Box>
   );

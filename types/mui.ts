@@ -13,4 +13,7 @@ export interface PricingCardProps {
 
 export interface DialogProps extends MuiDialogProps {
   children: React.ReactNode;
+  title?: string;
+  description?: string;
+  footer?: React.ReactNode;
 }

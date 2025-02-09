@@ -1,25 +1,12 @@
-// components/FileManager.tsx
 'use client';
 
 import { Button } from '@/components/ui/buttons/button';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/cards/card';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card';
 import { useToast } from '@/hooks/use-toast';
-import { createClient } from '@supabase/supabase-js';
-import { File, Trash2, Upload } from 'react-feather';
+import { createClient } from '@/utils/supabase/client';
+import { File as FileIcon, Trash2, Upload } from 'react-feather';
 import { useState } from 'react';
-
-// components/FileManager.tsx
-
-// components/FileManager.tsx
-
-// components/FileManager.tsx
-
-// components/FileManager.tsx
+import type { Database } from '@/types/supabase_db.types';
 
 interface FileData {
   name: string;
@@ -36,13 +23,9 @@ export default function FileManager({ propertyId }: FileManagerProps) {
   const [files, setFiles] = useState<FileData[]>([]);
   const [uploading, setUploading] = useState(false);
   const { toast } = useToast();
+  const supabase = createClient();
 
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
-
-  const uploadFile = async (file: File) => {
+  const uploadFile = async (file: globalThis.File) => {
     try {
       setUploading(true);
       const fileExt = file.name.split('.').pop();
@@ -68,15 +51,15 @@ export default function FileManager({ propertyId }: FileManagerProps) {
 
       setFiles((prev) => [...prev, newFile]);
       toast({
-        title: 'File uploaded successfully',
-        description: file.name,
+        title: 'Success',
+        description: 'File uploaded successfully',
+        variant: 'success',
       });
     } catch (error) {
       toast({
-        title: 'Error uploading file',
-        description:
-          error instanceof Error ? error.message : 'Unknown error occurred',
-        variant: 'destructive',
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to upload file',
+        variant: 'error',
       });
     } finally {
       setUploading(false);
@@ -93,15 +76,15 @@ export default function FileManager({ propertyId }: FileManagerProps) {
 
       setFiles((prev) => prev.filter((file) => file.name !== fileName));
       toast({
-        title: 'File deleted successfully',
-        description: fileName,
+        title: 'Success',
+        description: 'File deleted successfully',
+        variant: 'success',
       });
     } catch (error) {
       toast({
-        title: 'Error deleting file',
-        description:
-          error instanceof Error ? error.message : 'Unknown error occurred',
-        variant: 'destructive',
+        title: 'Error',
+        description: error instanceof Error ? error.message : 'Failed to delete file',
+        variant: 'error',
       });
     }
   };
@@ -135,12 +118,9 @@ export default function FileManager({ propertyId }: FileManagerProps) {
 
           <div className="divide-y">
             {files.map((file) => (
-              <div
-                key={file.name}
-                className="flex items-center justify-between py-3"
-              >
+              <div key={file.name} className="flex items-center justify-between py-3">
                 <div className="flex items-center space-x-3">
-                  <File className="h-5 w-5 text-gray-500" />
+                  <FileIcon className="h-5 w-5 text-gray-500" />
                   <div>
                     <a
                       href={file.url}
@@ -157,7 +137,7 @@ export default function FileManager({ propertyId }: FileManagerProps) {
                   </div>
                 </div>
                 <Button
-                  variant="ghost"
+                  variant="outlined"
                   size="icon"
                   onClick={() => deleteFile(file.name)}
                   className="text-red-500 hover:text-red-600"
@@ -167,9 +147,7 @@ export default function FileManager({ propertyId }: FileManagerProps) {
               </div>
             ))}
             {files.length === 0 && (
-              <p className="py-4 text-center text-gray-500">
-                No documents uploaded yet
-              </p>
+              <p className="py-4 text-center text-gray-500">No documents uploaded yet</p>
             )}
           </div>
         </div>
