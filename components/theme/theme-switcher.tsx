@@ -8,7 +8,7 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from './dropdown-menu';
-import { Laptop, Moon, Sun } from 'lucide-react';
+import { Monitor, Moon, Sun } from 'react-feather';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 
@@ -40,7 +40,7 @@ export function ThemeSwitcher() {
             <Moon className="mr-2 h-4 w-4" /> Dark
           </DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="system">
-            <Laptop className="mr-2 h-4 w-4" /> System
+            <Monitor className="mr-2 h-4 w-4" /> System
           </DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

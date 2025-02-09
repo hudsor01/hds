@@ -10,7 +10,7 @@ import {
 } from '@/components/ui/cards/card';
 import { useToast } from '@/hooks/use-toast';
 import { createClient } from '@supabase/supabase-js';
-import { File, Trash2, Upload } from 'lucide-react';
+import { File, Trash2, Upload } from 'react-feather';
 import { useState } from 'react';
 
 // components/FileManager.tsx

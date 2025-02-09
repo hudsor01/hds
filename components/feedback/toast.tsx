@@ -1,7 +1,7 @@
 import { cn } from '@/utils/cn';
 import * as ToastPrimitives from '@radix-ui/react-toast';
 import { cva, type VariantProps } from 'class-variance-authority';
-import { X } from 'lucide-react';
+import { X } from 'react-feather';
 import * as React from 'react';
 
 const ToastProvider = ToastPrimitives.Provider;

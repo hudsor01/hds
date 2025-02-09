@@ -1,7 +1,6 @@
 import type { MaintenanceRequest } from './maintenance_requests'
 import type { Tenant } from './tenant'
 import type { Database } from './supabase_db.types'
-import type { Task } from './task'
 
 export const PROPERTY_STATUS = {
   active: 'active',
@@ -153,4 +152,24 @@ export interface PropertyCardData {
   tasks: Task[];
 }
 
-type Task = Database['public']['Tables']['tasks']['Row'];
+// Use more generic types since notes table isn't in Supabase schema
+interface Note {
+  id: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  user_id: string;
+  property_id: string;
+}
+
+interface Task {
+  id: string;
+  title: string;
+  description?: string;
+  status: 'pending' | 'in_progress' | 'completed';
+  due_date?: string;
+  assigned_to?: string;
+  property_id: string;
+  created_at: string;
+  updated_at: string;
+}

@@ -1,6 +1,6 @@
 import FetchDataSteps from '@/components/tutorial/fetch-data-steps';
 import { createClient } from '@/utils/supabase/server';
-import { InfoIcon } from 'lucide-react';
+import { Info } from 'react-feather';
 import { redirect } from 'next/navigation';
 
 export default async function ProtectedPage() {
@@ -18,7 +18,7 @@ export default async function ProtectedPage() {
     <div className="flex w-full flex-1 flex-col gap-12">
       <div className="w-full">
         <div className="flex items-center gap-3 rounded-md bg-accent p-3 px-5 text-sm text-foreground">
-          <InfoIcon size="16" strokeWidth={2} />
+          <Info size={16} strokeWidth={2} />
           This is a protected page that you can only see as an authenticated
           user
         </div>
