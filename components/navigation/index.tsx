@@ -1,177 +1,113 @@
-import { useAuth } from '@/lib/auth'
-import {
-  AppBar,
-  Box,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Stack,
-  Toolbar,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { ReactNode, useState } from 'react'
+'use client';
 
-// Navigation Item
-interface NavItem {
-  label: string
-  href: string
-  icon?: ReactNode
-  requiresAuth?: boolean
-  requiredRole?: string
-}
+import { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
+import { Box, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText } from '@mui/material';
+import { useAuth } from '@/components/providers/auth-provider';
 
-interface NavigationProps {
-  items: NavItem[]
-  logo?: ReactNode
-}
+const navigation = [
+  { name: 'Dashboard', href: '/dashboard' },
+  { name: 'Properties', href: '/properties' },
+  { name: 'Tenants', href: '/tenants' },
+  { name: 'Maintenance', href: '/maintenance' },
+  { name: 'Leases', href: '/leases' },
+  { name: 'Payments', href: '/payments' },
+  { name: 'Settings', href: '/settings' },
+];
 
-// Main Navigation
-export function MainNavigation({ items, logo }: NavigationProps) {
-  const theme = useTheme()
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-  const [mobileOpen, setMobileOpen] = useState(false)
-  const pathname = usePathname()
-  const { isAuthenticated, role } = useAuth()
+const publicNavigation = [
+  { name: 'Home', href: '/' },
+  { name: 'Features', href: '/features' },
+  { name: 'Pricing', href: '/pricing' },
+  { name: 'About', href: '/about' },
+  { name: 'Contact', href: '/contact' },
+];
 
-  const filteredItems = items.filter(
-    (item) =>
-      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole)
-  )
+export function MobileNav() {
+  const [isOpen, setIsOpen] = useState(false);
+  const pathname = usePathname();
+  const { user } = useAuth();
 
-  const navContent = (
-    <List>
-      {filteredItems.map((item) => (
-        <ListItem
-          key={item.href}
-          component={Link}
-          href={item.href}
-          selected={pathname === item.href}
-          sx={{
-            borderRadius: 1,
-            mb: 0.5,
-            '&.Mui-selected': {
-              bgcolor: 'primary.light',
-              color: 'primary.main',
-              '&:hover': {
-                bgcolor: 'primary.light',
-              },
-            },
-          }}
-        >
-          {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-          <ListItemText primary={item.label} />
-        </ListItem>
-      ))}
-    </List>
-  )
+  const toggleDrawer = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const navItems = user ? navigation : publicNavigation;
 
   return (
     <>
-      <AppBar position="sticky" color="default" elevation={0}>
-        <Toolbar>
-          {isMobile && (
-            <IconButton edge="start" onClick={() => setMobileOpen(true)} sx={{ mr: 2 }}>
-              <Menu />
-            </IconButton>
-          )}
-          {logo}
-          {!isMobile && (
-            <Stack direction="row" spacing={2} sx={{ ml: 'auto' }}>
-              {navContent}
-            </Stack>
-          )}
-        </Toolbar>
-      </AppBar>
-
-      {isMobile && (
-        <Drawer
-          anchor="left"
-          open={mobileOpen}
-          onClose={() => setMobileOpen(false)}
-          sx={{
-            '& .MuiDrawer-paper': {
-              width: 280,
-              boxSizing: 'border-box',
-            },
-          }}
+      <Box sx={{ display: { xs: 'block', md: 'none' } }}>
+        <IconButton
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          onClick={toggleDrawer}
+          sx={{ mr: 2 }}
         >
-          <Box sx={{ p: 2 }}>
-            <IconButton
-              onClick={() => setMobileOpen(false)}
-              sx={{ mb: 2, ml: 'auto', display: 'block' }}
-            >
-              <X />
-            </IconButton>
-            {navContent}
-          </Box>
-        </Drawer>
-      )}
-    </>
-  )
-}
+          {isOpen ? <CloseIcon /> : <MenuIcon />}
+        </IconButton>
+      </Box>
 
-// Sidebar Navigation
-interface SidebarProps extends NavigationProps {
-  width?: number
-}
-
-export function Sidebar({ items, logo, width = 280 }: SidebarProps) {
-  const pathname = usePathname()
-  const { isAuthenticated, role } = useAuth()
-
-  const filteredItems = items.filter(
-    (item) =>
-      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole)
-  )
-
-  return (
-    <Drawer
-      variant="permanent"
-      sx={{
-        width,
-        flexShrink: 0,
-        '& .MuiDrawer-paper': {
-          width,
-          boxSizing: 'border-box',
-          borderRight: '1px solid',
-          borderColor: 'divider',
-        },
-      }}
-    >
-      <Toolbar>{logo}</Toolbar>
-      <Box sx={{ overflow: 'auto' }}>
+      <Drawer
+        anchor="left"
+        open={isOpen}
+        onClose={toggleDrawer}
+        sx={{
+          '& .MuiDrawer-paper': {
+            width: 240,
+            boxSizing: 'border-box',
+          },
+        }}
+      >
         <List>
-          {filteredItems.map((item) => (
+          {navItems.map(item => (
             <ListItem
-              key={item.href}
+              key={item.name}
               component={Link}
               href={item.href}
-              selected={pathname === item.href}
+              onClick={toggleDrawer}
               sx={{
-                borderRadius: 1,
-                mx: 1,
-                mb: 0.5,
-                '&.Mui-selected': {
-                  bgcolor: 'primary.light',
-                  color: 'primary.main',
-                  '&:hover': {
-                    bgcolor: 'primary.light',
-                  },
+                backgroundColor: pathname === item.href ? 'action.selected' : 'transparent',
+                '&:hover': {
+                  backgroundColor: 'action.hover',
                 },
               }}
             >
-              {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
-              <ListItemText primary={item.label} />
+              <ListItemText primary={item.name} />
             </ListItem>
           ))}
         </List>
-      </Box>
-    </Drawer>
-  )
+      </Drawer>
+    </>
+  );
+}
+
+export function DesktopNav() {
+  const pathname = usePathname();
+  const { user } = useAuth();
+
+  const navItems = user ? navigation : publicNavigation;
+
+  return (
+    <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
+      {navItems.map(item => (
+        <ListItem
+          key={item.name}
+          component={Link}
+          href={item.href}
+          sx={{
+            width: 'auto',
+            backgroundColor: pathname === item.href ? 'action.selected' : 'transparent',
+            '&:hover': {
+              backgroundColor: 'action.hover',
+            },
+          }}
+        >
+          <ListItemText primary={item.name} />
+        </ListItem>
+      ))}
+    </Box>
+  );
 }

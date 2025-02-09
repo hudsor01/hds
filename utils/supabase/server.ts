@@ -1,30 +1,35 @@
-import { createClient } from '@supabase/supabase-js'
-import { cookies } from 'next/headers'
-import type { Database } from '@/types/database.types'
+import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
+import type { Database } from '@/types/database.types';
+import type { CookieOptions } from '@supabase/ssr';
 
 export function createClient() {
-  return createClient<Database>(
+  const cookieStore = cookies();
+
+  return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        storage: {
-          getItem: (key: string) => {
-            const cookieStore = cookies()
-            return cookieStore.get(key)?.value
-          },
-          setItem: (key: string, value: string) => {
-            const cookieStore = cookies()
-            cookieStore.set(key, value)
-          },
-          removeItem: (key: string) => {
-            const cookieStore = cookies()
-            cookieStore.set(key, '', { maxAge: 0 })
-          },
+      cookies: {
+        get(name: string) {
+          const cookie = cookieStore.get(name);
+          return cookie?.value;
+        },
+        set(name: string, value: string, options: CookieOptions) {
+          try {
+            cookieStore.set(name, value);
+          } catch (error) {
+            console.error('Error setting cookie:', error);
+          }
+        },
+        remove(name: string, options: CookieOptions) {
+          try {
+            cookieStore.delete(name);
+          } catch (error) {
+            console.error('Error removing cookie:', error);
+          }
         },
       },
     }
-  )
+  );
 }
