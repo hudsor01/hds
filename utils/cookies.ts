@@ -2,18 +2,18 @@ import { cookies } from 'next/headers'
 
 export function createCookieOptions() {
   return {
-    get(name: string) {
+    async get(name: string) {
       try {
-        const cookieStore = cookies()
+        const cookieStore = await cookies()
         const cookie = cookieStore.get(name)
         return cookie?.value
       } catch {
         return undefined
       }
     },
-    set(name: string, value: string, options: { path: string }) {
+    async set(name: string, value: string, options: { path: string }) {
       try {
-        const cookieStore = cookies()
+        const cookieStore = await cookies()
         cookieStore.set({
           name,
           value,
@@ -23,9 +23,9 @@ export function createCookieOptions() {
         // Safely ignore cookie errors in Server Components
       }
     },
-    remove(name: string, options: { path: string }) {
+    async remove(name: string, options: { path: string }) {
       try {
-        const cookieStore = cookies()
+        const cookieStore = await cookies()
         cookieStore.set({
           name,
           value: '',

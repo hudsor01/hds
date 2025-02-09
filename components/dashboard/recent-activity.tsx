@@ -1,6 +1,6 @@
 'use client'
 
-import type { RecentActivity } from '@/auth/lib/types/dashboard'
+import type { RecentActivity } from '@/types/dashboard'
 import {
   Box,
   Card,

@@ -1,6 +1,8 @@
 // components/properties/property-grid.tsx
+'use client'
+
 import { formatCurrency } from '@/utils/format'
-import { type PropertyRow } from '@/types/property'
+import type { PropertyRow } from '@/types/property'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -18,9 +20,12 @@ import { useState } from 'react'
 interface PropertyGridProps {
   properties: PropertyRow[]
   isLoading: boolean
+  onEdit?: (property: PropertyRow) => void
+  onViewDetails?: (property: PropertyRow) => void
+  onManageTenants?: (property: PropertyRow) => void
 }
 
-export function PropertyGrid({ properties, isLoading }: PropertyGridProps) {
+export function PropertyGrid({ properties, isLoading, onEdit, onViewDetails, onManageTenants }: PropertyGridProps) {
   if (isLoading) {
     return (
       <Grid container spacing={3}>
@@ -37,14 +42,26 @@ export function PropertyGrid({ properties, isLoading }: PropertyGridProps) {
     <Grid container spacing={3}>
       {properties.map((property) => (
         <Grid item xs={12} sm={6} md={4} key={property.id}>
-          <PropertyCard property={property} />
+          <PropertyCard
+            property={property}
+            onEdit={onEdit}
+            onViewDetails={onViewDetails}
+            onManageTenants={onManageTenants}
+          />
         </Grid>
       ))}
     </Grid>
   )
 }
 
-function PropertyCard({ property }: { property: PropertyRow }) {
+interface PropertyCardProps {
+  property: PropertyRow
+  onEdit?: (property: PropertyRow) => void
+  onViewDetails?: (property: PropertyRow) => void
+  onManageTenants?: (property: PropertyRow) => void
+}
+
+function PropertyCard({ property, onEdit, onViewDetails, onManageTenants }: PropertyCardProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -112,30 +129,36 @@ function PropertyCard({ property }: { property: PropertyRow }) {
       </CardContent>
 
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu()
-            // Add edit handler
-          }}
-        >
-          Edit
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu()
-            // Add view details handler
-          }}
-        >
-          View Details
-        </MenuItem>
-        <MenuItem
-          onClick={() => {
-            handleCloseMenu()
-            // Add manage tenants handler
-          }}
-        >
-          Manage Tenants
-        </MenuItem>
+        {onEdit && (
+          <MenuItem
+            onClick={() => {
+              handleCloseMenu()
+              onEdit(property)
+            }}
+          >
+            Edit
+          </MenuItem>
+        )}
+        {onViewDetails && (
+          <MenuItem
+            onClick={() => {
+              handleCloseMenu()
+              onViewDetails(property)
+            }}
+          >
+            View Details
+          </MenuItem>
+        )}
+        {onManageTenants && (
+          <MenuItem
+            onClick={() => {
+              handleCloseMenu()
+              onManageTenants(property)
+            }}
+          >
+            Manage Tenants
+          </MenuItem>
+        )}
       </Menu>
     </Card>
   )

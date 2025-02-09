@@ -1,6 +1,6 @@
 'use client'
 
-import type { routes } from '../../app/routes'
+import { routes } from '../../app/routes'
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'

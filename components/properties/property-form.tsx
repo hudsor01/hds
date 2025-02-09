@@ -1,3 +1,5 @@
+'use client'
+
 import { FormInput, FormSelect } from '@/components/forms/mui/form-fields'
 import { FormContainer } from '@/components/forms/mui/form-provider'
 import { useCreateProperty } from '@/hooks/data'
@@ -21,20 +23,26 @@ type PropertyFormData = z.infer<typeof propertySchema>
 
 interface PropertyFormProps {
   userId: string
+  onSuccess?: () => void
 }
 
-export function PropertyForm({ userId }: PropertyFormProps) {
+export function PropertyForm({ userId, onSuccess }: PropertyFormProps) {
   const { mutateAsync: createProperty, isPending } = useCreateProperty()
 
   const handleSubmit = async (data: PropertyFormData) => {
-    const propertyData: PropertyInsert = {
-      ...data,
-      id: crypto.randomUUID(),
-      user_id: userId,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+    try {
+      const propertyData: PropertyInsert = {
+        ...data,
+        id: crypto.randomUUID(),
+        user_id: userId,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      }
+      await createProperty(propertyData)
+      onSuccess?.()
+    } catch (error) {
+      console.error('Failed to create property:', error)
     }
-    await createProperty(propertyData)
   }
 
   return (
@@ -63,7 +71,7 @@ export function PropertyForm({ userId }: PropertyFormProps) {
         <FormSelect name="property_status" label="Status" options={propertyStatuses} />
         <FormInput name="description" label="Description" multiline rows={4} />
         <Button type="submit" variant="contained" disabled={isPending} fullWidth>
-          Create Property
+          {isPending ? 'Creating...' : 'Create Property'}
         </Button>
       </Stack>
     </FormContainer>

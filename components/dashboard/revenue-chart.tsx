@@ -26,6 +26,8 @@ export function RevenueChart() {
     },
   })
 
+  if (isLoading) return <RevenueChart.Skeleton />;
+
   return (
     <Card className="p-6">
       <div className="mb-4">

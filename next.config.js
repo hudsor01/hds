@@ -6,10 +6,18 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: '2mb',
     },
-    optimizePackageImports: ['@mui/material'],
+    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+    typedRoutes: true,
   },
   images: {
     domains: ['www.propertywait.com'],
+    formats: ['image/avif', 'image/webp'],
+  },
+  typescript: {
+    ignoreBuildErrors: false,
+  },
+  eslint: {
+    ignoreDuringBuilds: false,
   },
 }
 

@@ -1,18 +1,47 @@
+'use client'
+
 import { BaseDataGrid } from '@/components/common/data-grid'
 import { formatCurrency } from '@/utils/format'
-import { type PropertyRow, type PropertyTableProps } from '@/types/property'
+import type { PropertyRow, PropertyTableProps } from '@/types/property'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import { Typography } from '@mui/material'
 import Box from '@mui/material/Box'
 import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
 import {
   type GridColDef,
   type GridRenderCellParams,
-  type GridValueGetterParams,
 } from '@mui/x-data-grid'
+import { useState } from 'react'
 
-export function PropertyTable({ properties, isLoading }: PropertyTableProps) {
+interface ExtendedPropertyTableProps extends PropertyTableProps {
+  onEdit?: (property: PropertyRow) => void
+  onViewDetails?: (property: PropertyRow) => void
+  onManageTenants?: (property: PropertyRow) => void
+}
+
+export function PropertyTable({
+  properties,
+  isLoading,
+  onEdit,
+  onViewDetails,
+  onManageTenants,
+}: ExtendedPropertyTableProps) {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
+  const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(null)
+
+  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>, property: PropertyRow) => {
+    setAnchorEl(event.currentTarget)
+    setSelectedProperty(property)
+  }
+
+  const handleCloseMenu = () => {
+    setAnchorEl(null)
+    setSelectedProperty(null)
+  }
+
   const columns: GridColDef[] = [
     {
       field: 'name',
@@ -54,20 +83,57 @@ export function PropertyTable({ properties, isLoading }: PropertyTableProps) {
       valueFormatter: ({ value }: { value: number }) => formatCurrency(value),
     },
     {
-      field: 'tenants',
-      headerName: 'Tenants',
+      field: 'property_type',
+      headerName: 'Type',
       width: 130,
-      valueGetter: (params: GridValueGetterParams<PropertyRow>) => params.row.tenants?.length || 0,
     },
     {
       field: 'actions',
       headerName: 'Actions',
       width: 100,
       sortable: false,
-      renderCell: () => (
-        <IconButton>
-          <MoreVertIcon />
-        </IconButton>
+      renderCell: (params: GridRenderCellParams<PropertyRow>) => (
+        <>
+          <IconButton onClick={(e) => handleOpenMenu(e, params.row)}>
+            <MoreVertIcon />
+          </IconButton>
+          <Menu
+            anchorEl={anchorEl}
+            open={Boolean(anchorEl) && selectedProperty?.id === params.row.id}
+            onClose={handleCloseMenu}
+          >
+            {onEdit && (
+              <MenuItem
+                onClick={() => {
+                  handleCloseMenu()
+                  onEdit(params.row)
+                }}
+              >
+                Edit
+              </MenuItem>
+            )}
+            {onViewDetails && (
+              <MenuItem
+                onClick={() => {
+                  handleCloseMenu()
+                  onViewDetails(params.row)
+                }}
+              >
+                View Details
+              </MenuItem>
+            )}
+            {onManageTenants && (
+              <MenuItem
+                onClick={() => {
+                  handleCloseMenu()
+                  onManageTenants(params.row)
+                }}
+              >
+                Manage Tenants
+              </MenuItem>
+            )}
+          </Menu>
+        </>
       ),
     },
   ]

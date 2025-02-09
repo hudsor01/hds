@@ -1,25 +1,28 @@
-export default {
-  titleTemplate: '%s | PropertyWait',
-  defaultTitle: 'PropertyWait - Revolutionary Property Management System',
-  description:
-    'Join the waitlist for PropertyWait, the next-generation property management system that simplifies your workflow and maximizes efficiency.',
+/** @type {import('next-seo').DefaultSeoProps} */
+const defaultSEOConfig = {
+  defaultTitle: 'HDS - Housing Data System',
+  titleTemplate: '%s | HDS',
+  description: 'A comprehensive housing data management system for property owners and managers.',
+  canonical: 'https://hds.vercel.app',
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://www.propertywait.com/',
-    site_name: 'PropertyWait',
+    url: 'https://hds.vercel.app',
+    siteName: 'HDS - Housing Data System',
+    title: 'HDS - Housing Data System',
+    description: 'A comprehensive housing data management system for property owners and managers.',
     images: [
       {
-        url: 'https://www.propertywait.com/og-image.jpg',
+        url: 'https://hds.vercel.app/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'PropertyWait',
+        alt: 'HDS - Housing Data System',
       },
     ],
   },
   twitter: {
-    handle: '@propertywait',
-    site: '@propertywait',
+    handle: '@hds',
+    site: '@hds',
     cardType: 'summary_large_image',
   },
   additionalLinkTags: [
@@ -27,5 +30,22 @@ export default {
       rel: 'icon',
       href: '/favicon.ico',
     },
+    {
+      rel: 'apple-touch-icon',
+      href: '/apple-touch-icon.png',
+      sizes: '180x180',
+    },
+  ],
+  additionalMetaTags: [
+    {
+      name: 'viewport',
+      content: 'width=device-width, initial-scale=1.0',
+    },
+    {
+      name: 'theme-color',
+      content: '#000000',
+    },
   ],
 }
+
+module.exports = defaultSEOConfig

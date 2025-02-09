@@ -1,1 +1,1 @@
-export * from './waitlist-form'
+export * from '@/components/waitlist/waitlist-form'
