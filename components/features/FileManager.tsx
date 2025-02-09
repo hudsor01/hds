@@ -51,14 +51,16 @@ export default function FileManager({ propertyId }: FileManagerProps) {
 
       setFiles((prev) => [...prev, newFile]);
       toast({
-        title: 'Success',
-        description: 'File uploaded successfully',
+        open: true,
+        onClose: () => {},
+        message: 'File uploaded successfully',
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to upload file',
+        open: true,
+        onClose: () => {},
+        message: error instanceof Error ? error.message : 'Failed to upload file',
         variant: 'error',
       });
     } finally {
@@ -76,14 +78,16 @@ export default function FileManager({ propertyId }: FileManagerProps) {
 
       setFiles((prev) => prev.filter((file) => file.name !== fileName));
       toast({
-        title: 'Success',
-        description: 'File deleted successfully',
+        open: true,
+        onClose: () => {},
+        message: 'File deleted successfully',
         variant: 'success',
       });
     } catch (error) {
       toast({
-        title: 'Error',
-        description: error instanceof Error ? error.message : 'Failed to delete file',
+        open: true,
+        onClose: () => {},
+        message: error instanceof Error ? error.message : 'Failed to delete file',
         variant: 'error',
       });
     }
@@ -137,7 +141,7 @@ export default function FileManager({ propertyId }: FileManagerProps) {
                   </div>
                 </div>
                 <Button
-                  variant="outlined"
+                  variant="outline"
                   size="icon"
                   onClick={() => deleteFile(file.name)}
                   className="text-red-500 hover:text-red-600"
