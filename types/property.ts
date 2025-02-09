@@ -1,6 +1,7 @@
 import type { MaintenanceRequest } from './maintenance_requests'
 import type { Tenant } from './tenant'
 import type { Database } from './supabase_db.types'
+import type { Task } from './task'
 
 export const PROPERTY_STATUS = {
   active: 'active',
@@ -151,3 +152,5 @@ export interface PropertyCardData {
   events: Event[];
   tasks: Task[];
 }
+
+type Task = Database['public']['Tables']['tasks']['Row'];
