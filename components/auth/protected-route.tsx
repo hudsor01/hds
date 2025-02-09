@@ -1,26 +1,29 @@
-'use client';
+'use client'
 
-import Alert from '@mui/material/Alert';
-import Box from '@mui/material/Box';
-import CircularProgress from '@mui/material/CircularProgress';
-import { useRouter, redirect } from 'next/navigation';
-import { createClient } from '@/utils/supabase/server';
-import type { UserRole } from '@prisma/client';
+import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
+import CircularProgress from '@mui/material/CircularProgress'
+import { useRouter, redirect } from 'next/navigation'
+import { createClient } from '@/utils/supabase/server'
+import type { UserRole } from '@prisma/client'
 
 interface ProtectedRouteProps {
-  children: React.ReactNode;
-  allowedRoles?: UserRole[];
+  children: React.ReactNode
+  allowedRoles?: UserRole[]
 }
 
 export async function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const supabase = createClient();
-  const router = useRouter();
+  const supabase = createClient()
+  const router = useRouter()
 
   try {
-    const { data: { user }, error } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser()
 
     if (error || !user) {
-      redirect('/sign-in');
+      redirect('/sign-in')
     }
 
     // If roles are specified, check user's role
@@ -29,16 +32,16 @@ export async function ProtectedRoute({ children, allowedRoles }: ProtectedRouteP
         .from('users')
         .select('role')
         .eq('id', user.id)
-        .single();
+        .single()
 
       if (!dbUser || !allowedRoles.includes(dbUser.role as UserRole)) {
-        redirect('/unauthorized');
+        redirect('/unauthorized')
       }
     }
 
-    return <>{children}</>;
+    return <>{children}</>
   } catch (error) {
-    console.error('Protected route error:', error);
-    redirect('/sign-in');
+    console.error('Protected route error:', error)
+    redirect('/sign-in')
   }
 }

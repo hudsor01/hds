@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { PublicLayout } from '@/components/layout/public-layout';
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
+import { PublicLayout } from '@/components/layout/public-layout'
+import { Box, Container, Grid, Paper, Typography } from '@mui/material'
 
 export default function AboutPage() {
   return (
@@ -11,18 +11,11 @@ export default function AboutPage() {
           <Box className="space-y-12">
             {/* Hero Section */}
             <Box className="space-y-4 text-center">
-              <Typography
-                variant="h1"
-                className="gradient-text text-4xl font-bold sm:text-5xl"
-              >
+              <Typography variant="h1" className="gradient-text text-4xl font-bold sm:text-5xl">
                 About HDS
               </Typography>
-              <Typography
-                variant="h2"
-                className="mx-auto max-w-2xl text-xl text-muted-foreground"
-              >
-                Transforming property management with modern technology and
-                innovative solutions
+              <Typography variant="h2" className="mx-auto max-w-2xl text-xl text-muted-foreground">
+                Transforming property management with modern technology and innovative solutions
               </Typography>
             </Box>
 
@@ -32,19 +25,15 @@ export default function AboutPage() {
                 Our Mission
               </Typography>
               <Typography variant="body1" className="text-muted-foreground">
-                To provide property managers with powerful, intuitive tools for
-                managing properties, streamlining workflows, and improving
-                tenant satisfaction through better data management and
-                analytics.
+                To provide property managers with powerful, intuitive tools for managing properties,
+                streamlining workflows, and improving tenant satisfaction through better data
+                management and analytics.
               </Typography>
             </Paper>
 
             {/* Values Section */}
             <Box className="space-y-6">
-              <Typography
-                variant="h3"
-                className="text-center text-2xl font-bold"
-              >
+              <Typography variant="h3" className="text-center text-2xl font-bold">
                 Our Values
               </Typography>
               <Grid container spacing={4}>
@@ -75,10 +64,7 @@ export default function AboutPage() {
                       <Typography variant="h5" className="mb-3 font-semibold">
                         {value.title}
                       </Typography>
-                      <Typography
-                        variant="body1"
-                        className="text-muted-foreground"
-                      >
+                      <Typography variant="body1" className="text-muted-foreground">
                         {value.description}
                       </Typography>
                     </Paper>
@@ -90,5 +76,5 @@ export default function AboutPage() {
         </Container>
       </Box>
     </PublicLayout>
-  );
+  )
 }

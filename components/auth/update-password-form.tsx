@@ -1,60 +1,51 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
+import { useState } from 'react'
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
+import { useRouter } from 'next/navigation'
 
 interface UpdatePasswordFormProps {
-  redirectTo?: string;
+  redirectTo?: string
 }
 
-export default function UpdatePasswordForm({
-  redirectTo = '/',
-}: UpdatePasswordFormProps) {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
+export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordFormProps) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    e.preventDefault()
     if (password !== confirmPassword) {
-      setError('Passwords do not match');
-      return;
+      setError('Passwords do not match')
+      return
     }
 
-    setIsLoading(true);
-    setError(null);
+    setIsLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('/auth/reset-password', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to update password');
+        throw new Error(data.error || 'Failed to update password')
       }
 
-      router.push(redirectTo);
-      router.refresh();
+      router.push(redirectTo)
+      router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Box
@@ -102,9 +93,7 @@ export default function UpdatePasswordForm({
         fullWidth
         error={password !== confirmPassword && confirmPassword !== ''}
         helperText={
-          password !== confirmPassword && confirmPassword !== ''
-            ? 'Passwords do not match'
-            : ' '
+          password !== confirmPassword && confirmPassword !== '' ? 'Passwords do not match' : ' '
         }
       />
 
@@ -123,5 +112,5 @@ export default function UpdatePasswordForm({
         {isLoading ? <CircularProgress size={24} /> : 'Update Password'}
       </Button>
     </Box>
-  );
+  )
 }

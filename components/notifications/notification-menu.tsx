@@ -1,30 +1,27 @@
-import BuildIcon from '@mui/icons-material/Build';
-import HomeIcon from '@mui/icons-material/Home';
-import PaymentIcon from '@mui/icons-material/Payment';
-import Box from '@mui/material/Box';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Typography from '@mui/material/Typography';
-import { format } from 'date-fns';
+import BuildIcon from '@mui/icons-material/Build'
+import HomeIcon from '@mui/icons-material/Home'
+import PaymentIcon from '@mui/icons-material/Payment'
+import Box from '@mui/material/Box'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Typography from '@mui/material/Typography'
+import { format } from 'date-fns'
 
 interface Notification {
-  id: string;
-  type: 'maintenance' | 'payment' | 'property';
-  message: string;
-  timestamp: Date;
-  read: boolean;
+  id: string
+  type: 'maintenance' | 'payment' | 'property'
+  message: string
+  timestamp: Date
+  read: boolean
 }
 
 interface NotificationsMenuProps {
-  anchorEl: HTMLElement | null;
-  onClose: () => void;
+  anchorEl: HTMLElement | null
+  onClose: () => void
 }
 
-export function NotificationsMenu({
-  anchorEl,
-  onClose,
-}: NotificationsMenuProps) {
+export function NotificationsMenu({ anchorEl, onClose }: NotificationsMenuProps) {
   // This would normally come from your notifications service
   const notifications: Notification[] = [
     {
@@ -41,18 +38,18 @@ export function NotificationsMenu({
       timestamp: new Date(),
       read: false,
     },
-  ];
+  ]
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
       case 'maintenance':
-        return <BuildIcon fontSize="small" />;
+        return <BuildIcon fontSize="small" />
       case 'payment':
-        return <PaymentIcon fontSize="small" />;
+        return <PaymentIcon fontSize="small" />
       case 'property':
-        return <HomeIcon fontSize="small" />;
+        return <HomeIcon fontSize="small" />
     }
-  };
+  }
 
   return (
     <Menu
@@ -85,11 +82,7 @@ export function NotificationsMenu({
           <ListItemIcon>{getIcon(notification.type)}</ListItemIcon>
           <Box sx={{ ml: 2 }}>
             <Typography variant="body2">{notification.message}</Typography>
-            <Typography
-              variant="caption"
-              color="text.secondary"
-              sx={{ mt: 0.5 }}
-            >
+            <Typography variant="caption" color="text.secondary" sx={{ mt: 0.5 }}>
               {format(notification.timestamp, 'PPp')}
             </Typography>
           </Box>
@@ -104,5 +97,5 @@ export function NotificationsMenu({
         </MenuItem>
       )}
     </Menu>
-  );
+  )
 }

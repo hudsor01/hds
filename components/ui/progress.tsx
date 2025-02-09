@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import type { LinearProgressProps } from '@mui/material';
-import { LinearProgress as MuiLinearProgress, styled } from '@mui/material';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import type { LinearProgressProps } from '@mui/material'
+import { LinearProgress as MuiLinearProgress, styled } from '@mui/material'
+import * as React from 'react'
 
 const StyledLinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
   height: 8,
@@ -15,16 +15,16 @@ const StyledLinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     backgroundColor: theme.palette.primary.main,
   },
-}));
+}))
 
 export interface ProgressProps extends Omit<LinearProgressProps, 'value'> {
-  value?: number;
-  max?: number;
+  value?: number
+  max?: number
 }
 
 export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
   ({ className, value = 0, max = 100, ...props }, ref) => {
-    const normalizedValue = (value / max) * 100;
+    const normalizedValue = (value / max) * 100
 
     return (
       <StyledLinearProgress
@@ -34,7 +34,7 @@ export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
         className={cn('w-full', className)}
         {...props}
       />
-    );
-  },
-);
-Progress.displayName = 'Progress';
+    )
+  }
+)
+Progress.displayName = 'Progress'

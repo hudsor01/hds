@@ -1,14 +1,14 @@
-import { Card, CardContent, CardProps, Grid, Typography } from '@mui/material';
-import { ReactNode } from 'react';
+import { Card, CardContent, CardProps, Grid, Typography } from '@mui/material'
+import { ReactNode } from 'react'
 
 // Property Card
 interface PropertyCardProps extends CardProps {
-  title: string;
-  address: string;
-  status: 'vacant' | 'occupied' | 'maintenance';
-  rentAmount: number;
-  onView?: () => void;
-  onEdit?: () => void;
+  title: string
+  address: string
+  status: 'vacant' | 'occupied' | 'maintenance'
+  rentAmount: number
+  onView?: () => void
+  onEdit?: () => void
 }
 
 export function PropertyCard({
@@ -29,18 +29,18 @@ export function PropertyCard({
         <Typography>Rent: ${rentAmount}</Typography>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 // Feature Grid
 interface FeatureProps {
-  title: string;
-  description: string;
-  icon: ReactNode;
+  title: string
+  description: string
+  icon: ReactNode
 }
 
 interface FeatureGridProps {
-  features: FeatureProps[];
+  features: FeatureProps[]
 }
 
 export function FeatureGrid({ features }: FeatureGridProps) {
@@ -52,25 +52,23 @@ export function FeatureGrid({ features }: FeatureGridProps) {
             <CardContent>
               {feature.icon}
               <Typography variant="h6">{feature.title}</Typography>
-              <Typography color="text.secondary">
-                {feature.description}
-              </Typography>
+              <Typography color="text.secondary">{feature.description}</Typography>
             </CardContent>
           </Card>
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }
 
 // Pricing Tier
 interface PricingTierProps extends CardProps {
-  title: string;
-  price: number;
-  description: string;
-  features: string[];
-  recommended?: boolean;
-  onSubscribe?: () => void;
+  title: string
+  price: number
+  description: string
+  features: string[]
+  recommended?: boolean
+  onSubscribe?: () => void
 }
 
 export function PricingTier({
@@ -102,5 +100,5 @@ export function PricingTier({
         </ul>
       </CardContent>
     </Card>
-  );
+  )
 }

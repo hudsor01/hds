@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import type { FeatureCardProps } from '@/types/feature-card';
-import { Tooltip } from '@mui/material';
-import { Card } from 'components/ui/cards/card';
-import { motion, useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import type { FeatureCardProps } from '@/types/feature-card'
+import { Tooltip } from '@mui/material'
+import { Card } from 'components/ui/cards/card'
+import { motion, useInView } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 
 export function FeatureCard({
   title,
@@ -13,14 +13,14 @@ export function FeatureCard({
   delay = 0,
   onView,
 }: FeatureCardProps) {
-  const ref = useRef<HTMLDivElement>(null);
-  const isInView = useInView(ref, { once: true });
+  const ref = useRef<HTMLDivElement>(null)
+  const isInView = useInView(ref, { once: true })
 
   useEffect(() => {
     if (isInView && onView) {
-      onView();
+      onView()
     }
-  }, [isInView, onView]);
+  }, [isInView, onView])
 
   return (
     <Tooltip title={`Learn more about ${title}`}>
@@ -47,5 +47,5 @@ export function FeatureCard({
         </Card>
       </motion.div>
     </Tooltip>
-  );
+  )
 }

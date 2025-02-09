@@ -1,16 +1,15 @@
-import { supabase } from '@/lib/supabase';
-import type { Database } from '@/types/database.types';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { supabase } from '@/lib/supabase'
+import type { Database } from '@/types/database.types'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-type Waitlist = Database['public']['Tables']['waitlist']['Row'];
-type WaitlistInsert = Database['public']['Tables']['waitlist']['Insert'];
+type Waitlist = Database['public']['Tables']['waitlist']['Row']
+type WaitlistInsert = Database['public']['Tables']['waitlist']['Insert']
 
 const WAITLIST_KEYS = {
   all: ['waitlist'] as const,
-  position: (email: string) =>
-    [...WAITLIST_KEYS.all, 'position', email] as const,
+  position: (email: string) => [...WAITLIST_KEYS.all, 'position', email] as const,
   status: (email: string) => [...WAITLIST_KEYS.all, 'status', email] as const,
-};
+}
 
 export function useWaitlistPosition(email: string) {
   return useQuery({
@@ -20,19 +19,19 @@ export function useWaitlistPosition(email: string) {
         .from('waitlist')
         .select('position, status, referral_code')
         .eq('email', email)
-        .single();
+        .single()
 
-      if (error) throw error;
-      if (!data) throw new Error('No data found');
+      if (error) throw error
+      if (!data) throw new Error('No data found')
 
-      return data;
+      return data
     },
     enabled: Boolean(email),
-  });
+  })
 }
 
 export function useWaitlistSignup() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: WaitlistInsert) => {
@@ -40,19 +39,19 @@ export function useWaitlistSignup() {
         .from('waitlist')
         .insert([data])
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      if (!result) throw new Error('No data returned');
+      if (error) throw error
+      if (!result) throw new Error('No data returned')
 
-      return result;
+      return result
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: WAITLIST_KEYS.position(data.email),
-      });
+      })
     },
-  });
+  })
 }
 
 export function useWaitlistReferrals(referralCode: string) {
@@ -63,47 +62,41 @@ export function useWaitlistReferrals(referralCode: string) {
         .from('waitlist')
         .select('email, name, created_at')
         .eq('referred_by', referralCode)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: true })
 
-      if (error) throw error;
-      if (!data) throw new Error('No data found');
+      if (error) throw error
+      if (!data) throw new Error('No data found')
 
-      return data;
+      return data
     },
     enabled: Boolean(referralCode),
-  });
+  })
 }
 
 // Admin-only functions
 export function useWaitlistAdmin() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   const updateStatus = useMutation({
-    mutationFn: async ({
-      email,
-      status,
-    }: {
-      email: string;
-      status: Waitlist['status'];
-    }) => {
+    mutationFn: async ({ email, status }: { email: string; status: Waitlist['status'] }) => {
       const { data, error } = await supabase
         .from('waitlist')
         .update({ status })
         .eq('email', email)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      if (!data) throw new Error('No data found');
+      if (error) throw error
+      if (!data) throw new Error('No data found')
 
-      return data;
+      return data
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({
         queryKey: WAITLIST_KEYS.status(data.email),
-      });
+      })
     },
-  });
+  })
 
   const getWaitlist = useQuery({
     queryKey: WAITLIST_KEYS.all,
@@ -111,19 +104,19 @@ export function useWaitlistAdmin() {
       const { data, error } = await supabase
         .from('waitlist')
         .select('*')
-        .order('position', { ascending: true });
+        .order('position', { ascending: true })
 
-      if (error) throw error;
-      if (!data) throw new Error('No data found');
+      if (error) throw error
+      if (!data) throw new Error('No data found')
 
-      return data;
+      return data
     },
-  });
+  })
 
   return {
     updateStatus,
     getWaitlist,
-  };
+  }
 }
 
 // Event tracking
@@ -135,13 +128,13 @@ export function useWaitlistEvents(waitlistId: string) {
         .from('waitlist_events')
         .select('*')
         .eq('waitlist_id', waitlistId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
-      if (error) throw error;
-      if (!data) throw new Error('No data found');
+      if (error) throw error
+      if (!data) throw new Error('No data found')
 
-      return data;
+      return data
     },
     enabled: Boolean(waitlistId),
-  });
+  })
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import type { MenuItemProps, MenuProps } from '@mui/material';
-import { Divider, Menu, MenuItem, styled } from '@mui/material';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import type { MenuItemProps, MenuProps } from '@mui/material'
+import { Divider, Menu, MenuItem, styled } from '@mui/material'
+import * as React from 'react'
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
@@ -29,38 +29,38 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
       },
     },
   },
-}));
+}))
 
 export interface ContextMenuProps extends Omit<MenuProps, 'open'> {
-  trigger: React.ReactNode;
+  trigger: React.ReactNode
 }
 
 export const ContextMenu = React.memo(
   React.forwardRef<HTMLDivElement, ContextMenuProps>(
     ({ className, children, trigger, ...props }, ref) => {
       const [contextMenu, setContextMenu] = React.useState<{
-        mouseX: number;
-        mouseY: number;
-      } | null>(null);
+        mouseX: number
+        mouseY: number
+      } | null>(null)
 
       const handleContextMenu = React.useCallback(
         (event: React.MouseEvent) => {
-          event.preventDefault();
+          event.preventDefault()
           setContextMenu(
             contextMenu === null
               ? {
                   mouseX: event.clientX,
                   mouseY: event.clientY,
                 }
-              : null,
-          );
+              : null
+          )
         },
-        [contextMenu],
-      );
+        [contextMenu]
+      )
 
       const handleClose = React.useCallback(() => {
-        setContextMenu(null);
-      }, []);
+        setContextMenu(null)
+      }, [])
 
       return (
         <>
@@ -81,34 +81,33 @@ export const ContextMenu = React.memo(
             {children}
           </StyledMenu>
         </>
-      );
-    },
+      )
+    }
   ),
   (prevProps, nextProps) => {
     return (
       prevProps.trigger === nextProps.trigger &&
       prevProps.className === nextProps.className &&
       prevProps.children === nextProps.children
-    );
-  },
-);
+    )
+  }
+)
 
-ContextMenu.displayName = 'ContextMenu';
+ContextMenu.displayName = 'ContextMenu'
 
 export interface ContextMenuItemProps extends MenuItemProps {
-  inset?: boolean;
+  inset?: boolean
 }
 
-export const ContextMenuItem = React.forwardRef<
-  HTMLLIElement,
-  ContextMenuItemProps
->(({ className, inset, ...props }, ref) => (
-  <MenuItem ref={ref} className={cn(inset && 'pl-8', className)} {...props} />
-));
-ContextMenuItem.displayName = 'ContextMenuItem';
+export const ContextMenuItem = React.forwardRef<HTMLLIElement, ContextMenuItemProps>(
+  ({ className, inset, ...props }, ref) => (
+    <MenuItem ref={ref} className={cn(inset && 'pl-8', className)} {...props} />
+  )
+)
+ContextMenuItem.displayName = 'ContextMenuItem'
 
 export const ContextMenuSeparator = React.forwardRef<
   HTMLHRElement,
   React.ComponentProps<typeof Divider>
->((props, ref) => <Divider ref={ref} {...props} />);
-ContextMenuSeparator.displayName = 'ContextMenuSeparator';
+>((props, ref) => <Divider ref={ref} {...props} />)
+ContextMenuSeparator.displayName = 'ContextMenuSeparator'

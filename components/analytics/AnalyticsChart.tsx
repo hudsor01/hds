@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography, useTheme } from '@mui/material';
+import { Box, Card, CardContent, Typography, useTheme } from '@mui/material'
 import {
   Area,
   AreaChart,
@@ -7,14 +7,14 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 interface AnalyticsChartProps {
-  title: string;
-  data: Array<{ timestamp: string; value: number }>;
-  valuePrefix?: string;
-  valueSuffix?: string;
-  color?: string;
+  title: string
+  data: Array<{ timestamp: string; value: number }>
+  valuePrefix?: string
+  valueSuffix?: string
+  color?: string
 }
 
 export default function AnalyticsChart({
@@ -24,8 +24,8 @@ export default function AnalyticsChart({
   valueSuffix = '',
   color,
 }: AnalyticsChartProps) {
-  const theme = useTheme();
-  const chartColor = color || theme.palette.primary.main;
+  const theme = useTheme()
+  const chartColor = color || theme.palette.primary.main
 
   return (
     <Card>
@@ -50,9 +50,7 @@ export default function AnalyticsChart({
                 tickFormatter={(value) => new Date(value).toLocaleDateString()}
               />
               <YAxis
-                tickFormatter={(value) =>
-                  `${valuePrefix}${value.toLocaleString()}${valueSuffix}`
-                }
+                tickFormatter={(value) => `${valuePrefix}${value.toLocaleString()}${valueSuffix}`}
               />
               <Tooltip
                 formatter={(value: number) =>
@@ -72,5 +70,5 @@ export default function AnalyticsChart({
         </Box>
       </CardContent>
     </Card>
-  );
+  )
 }

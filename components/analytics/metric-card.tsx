@@ -1,22 +1,16 @@
-'use client';
+'use client'
 
-import { Trend } from '@/types/analytics';
-import {
-  Box,
-  Card,
-  CardContent,
-  CircularProgress,
-  Typography,
-} from '@mui/material';
-import { ArrowDownRight, ArrowUpRight } from 'react-feather';
+import { Trend } from '@/types/analytics'
+import { Box, Card, CardContent, CircularProgress, Typography } from '@mui/material'
+import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 
 export interface MetricCardProps {
-  title: string;
-  value: number;
-  isLoading?: boolean;
-  icon?: React.ReactNode;
-  trend?: Trend;
-  format?: 'number' | 'currency' | 'percentage';
+  title: string
+  value: number
+  isLoading?: boolean
+  icon?: React.ReactNode
+  trend?: Trend
+  format?: 'number' | 'currency' | 'percentage'
 }
 
 export default function MetricCard({
@@ -33,24 +27,24 @@ export default function MetricCard({
         return new Intl.NumberFormat('en-US', {
           style: 'currency',
           currency: 'USD',
-        }).format(val);
+        }).format(val)
       case 'percentage':
-        return `${val}%`;
+        return `${val}%`
       default:
-        return new Intl.NumberFormat('en-US').format(val);
+        return new Intl.NumberFormat('en-US').format(val)
     }
-  };
+  }
 
   const getTrendColor = (direction: 'up' | 'down' | 'neutral') => {
     switch (direction) {
       case 'up':
-        return '#10B981'; // green
+        return '#10B981' // green
       case 'down':
-        return '#EF4444'; // red
+        return '#EF4444' // red
       default:
-        return '#6B7280'; // gray
+        return '#6B7280' // gray
     }
-  };
+  }
 
   return (
     <Card
@@ -71,11 +65,7 @@ export default function MetricCard({
             mb: 2,
           }}
         >
-          <Typography
-            variant="subtitle2"
-            color="textSecondary"
-            sx={{ fontWeight: 500 }}
-          >
+          <Typography variant="subtitle2" color="textSecondary" sx={{ fontWeight: 500 }}>
             {title}
           </Typography>
           {icon && (
@@ -118,11 +108,7 @@ export default function MetricCard({
                 ) : trend.direction === 'down' ? (
                   <ArrowDownRight size={20} />
                 ) : null}
-                <Typography
-                  variant="body2"
-                  component="span"
-                  sx={{ fontWeight: 500 }}
-                >
+                <Typography variant="body2" component="span" sx={{ fontWeight: 500 }}>
                   {trend.value}%
                 </Typography>
               </Box>
@@ -131,5 +117,5 @@ export default function MetricCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

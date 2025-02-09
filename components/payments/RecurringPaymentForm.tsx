@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { api } from '@/lib/api';
+import { api } from '@/lib/api'
 import {
   Box,
   Button,
@@ -10,16 +10,16 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface RecurringPaymentFormProps {
-  propertyId: string;
-  tenantId: string;
-  onSuccess?: () => void;
-  onCancel?: () => void;
+  propertyId: string
+  tenantId: string
+  onSuccess?: () => void
+  onCancel?: () => void
 }
 
 export default function RecurringPaymentForm({
@@ -28,26 +28,26 @@ export default function RecurringPaymentForm({
   onSuccess,
   onCancel,
 }: RecurringPaymentFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [frequency, setFrequency] = useState('monthly');
-  const [paymentDay, setPaymentDay] = useState('1');
-  const [amount, setAmount] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [frequency, setFrequency] = useState('monthly')
+  const [paymentDay, setPaymentDay] = useState('1')
+  const [amount, setAmount] = useState('')
 
   const { data: paymentMethods } = useQuery({
     queryKey: ['payment-methods'],
     queryFn: () => api.get('/api/payments/methods'),
-  });
+  })
 
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('')
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
+    event.preventDefault()
     if (!selectedPaymentMethod) {
-      toast.error('Please select a payment method');
-      return;
+      toast.error('Please select a payment method')
+      return
     }
 
-    setIsLoading(true);
+    setIsLoading(true)
 
     try {
       const response = await api.post('/api/payments/recurring', {
@@ -58,31 +58,25 @@ export default function RecurringPaymentForm({
         payment_day: parseInt(paymentDay, 10),
         payment_method_id: selectedPaymentMethod,
         description: `Recurring ${frequency} payment for property ${propertyId}`,
-      });
+      })
 
       if (response.error) {
-        toast.error(
-          response.error.message || 'Failed to set up recurring payment',
-        );
-        return;
+        toast.error(response.error.message || 'Failed to set up recurring payment')
+        return
       }
 
-      toast.success('Recurring payment set up successfully');
-      onSuccess?.();
+      toast.success('Recurring payment set up successfully')
+      onSuccess?.()
     } catch (error) {
-      console.error('Error setting up recurring payment:', error);
-      toast.error('Failed to set up recurring payment');
+      console.error('Error setting up recurring payment:', error)
+      toast.error('Failed to set up recurring payment')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{ width: '100%', maxWidth: 400 }}
-    >
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
       <Typography variant="h6" gutterBottom>
         Set Up Recurring Payment
       </Typography>
@@ -100,10 +94,7 @@ export default function RecurringPaymentForm({
 
         <FormControl fullWidth required>
           <InputLabel>Frequency</InputLabel>
-          <Select
-            value={frequency}
-            onChange={(e) => setFrequency(e.target.value)}
-          >
+          <Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
             <MenuItem value="weekly">Weekly</MenuItem>
             <MenuItem value="monthly">Monthly</MenuItem>
             <MenuItem value="yearly">Yearly</MenuItem>
@@ -121,9 +112,7 @@ export default function RecurringPaymentForm({
             max: frequency === 'weekly' ? 6 : 31,
           }}
           helperText={
-            frequency === 'weekly'
-              ? '0 = Sunday, 6 = Saturday'
-              : 'Day of the month (1-31)'
+            frequency === 'weekly' ? '0 = Sunday, 6 = Saturday' : 'Day of the month (1-31)'
           }
           fullWidth
         />
@@ -164,5 +153,5 @@ export default function RecurringPaymentForm({
         </Button>
       </Box>
     </Box>
-  );
+  )
 }

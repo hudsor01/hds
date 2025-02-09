@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { loadStripe } from '@stripe/stripe-js';
-import type { Route } from 'next';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { toast } from 'sonner';
+import { Button } from '@/components/ui/buttons/button'
+import { loadStripe } from '@stripe/stripe-js'
+import type { Route } from 'next'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 const pricingTiers = [
   {
@@ -83,10 +83,10 @@ const pricingTiers = [
     highlighted: false,
     buttonText: 'Contact Enterprise',
   },
-];
+]
 
 export default function PricingPage() {
-  const [selectedTier, setSelectedTier] = useState<string>('Growth');
+  const [selectedTier, setSelectedTier] = useState<string>('Growth')
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
@@ -110,16 +110,10 @@ export default function PricingPage() {
             }`}
           >
             <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground sm:text-base">
-              {tier.description}
-            </p>
+            <p className="mt-2 text-sm text-muted-foreground sm:text-base">{tier.description}</p>
             <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
-              <span className="text-4xl font-bold sm:text-5xl">
-                {tier.price}
-              </span>
-              <span className="text-muted-foreground sm:ml-2">
-                /{tier.duration}
-              </span>
+              <span className="text-4xl font-bold sm:text-5xl">{tier.price}</span>
+              <span className="text-muted-foreground sm:ml-2">/{tier.duration}</span>
             </div>
             <ul className="mt-8 space-y-4">
               {tier.features.map((feature, featureIndex) => (
@@ -150,7 +144,7 @@ export default function PricingPage() {
         ))}
       </div>
     </div>
-  );
+  )
 }
 
 const PricingCheckoutButton = ({
@@ -158,86 +152,78 @@ const PricingCheckoutButton = ({
   text,
   highlighted,
 }: {
-  priceId: string | null;
-  text: string;
-  highlighted: boolean;
+  priceId: string | null
+  text: string
+  highlighted: boolean
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  const { data: session } = useSession();
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false)
+  const { data: session } = useSession()
+  const router = useRouter()
 
   const handleClick = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
 
       if (text === 'Contact Sales') {
-        router.push(routes.contact as Route);
-        return;
+        router.push(routes.contact as Route)
+        return
       }
 
       if (!priceId) {
         if (!session) {
-          router.push(routes.auth.register as Route);
-          return;
+          router.push(routes.auth.register as Route)
+          return
         }
 
-        toast.loading('Setting up your trial...');
+        toast.loading('Setting up your trial...')
         const response = await fetch('/api/subscribe/free', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ trialDays: 14 }),
-        });
+        })
 
         if (response.ok) {
-          router.push('/dashboard' as Route);
-          toast.success('Free trial activated! Enjoy your 14-day access.');
+          router.push('/dashboard' as Route)
+          toast.success('Free trial activated! Enjoy your 14-day access.')
         } else {
-          const error = await response.json();
-          throw new Error(error.message || 'Failed to activate trial');
+          const error = await response.json()
+          throw new Error(error.message || 'Failed to activate trial')
         }
-        return;
+        return
       }
 
       if (!session) {
-        router.push(
-          `${routes.auth.login}?callbackUrl=${encodeURIComponent('/pricing')}` as Route,
-        );
-        return;
+        router.push(`${routes.auth.login}?callbackUrl=${encodeURIComponent('/pricing')}` as Route)
+        return
       }
 
-      toast.loading('Preparing checkout...');
+      toast.loading('Preparing checkout...')
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ priceId }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Payment processing failed');
+        throw new Error(data.error || 'Payment processing failed')
       }
 
       if (data.url) {
-        window.location.href = data.url;
+        window.location.href = data.url
       } else if (data.sessionId) {
-        const stripe = await loadStripe(
-          process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!,
-        );
-        await stripe?.redirectToCheckout({ sessionId: data.sessionId });
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+        await stripe?.redirectToCheckout({ sessionId: data.sessionId })
       }
     } catch (error) {
-      console.error('Checkout error:', error);
-      toast.error(
-        error instanceof Error
-          ? error.message
-          : 'Payment failed. Please try again.',
-      );
+      console.error('Checkout error:', error)
+      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.')
     } finally {
-      setIsLoading(false);
-      toast.dismiss();
+      setIsLoading(false)
+      toast.dismiss()
     }
-  };
+  }
 
   return (
     <Button
@@ -252,5 +238,5 @@ const PricingCheckoutButton = ({
     >
       {isLoading ? 'Processing...' : text}
     </Button>
-  );
-};
+  )
+}

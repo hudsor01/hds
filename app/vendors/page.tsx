@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
 import {
   DataTable,
   renderCurrencyCell,
   renderStatusCell,
-} from '@/components/data-display/data-table';
-import { FormDialog } from '@/components/ui/dialogs/form-dialog';
-import { api } from '@/lib/api';
-import { Button, Chip, TextField } from '@mui/material';
-import { type GridColDef } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Plus } from 'react-feather';
-import { z } from 'zod';
+} from '@/components/data-display/data-table'
+import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { api } from '@/lib/api'
+import { Button, Chip, TextField } from '@mui/material'
+import { type GridColDef } from '@mui/x-data-grid'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Plus } from 'react-feather'
+import { z } from 'zod'
 
 const vendorSchema = z.object({
   company_name: z.string().min(1, 'Company name is required'),
@@ -20,12 +20,10 @@ const vendorSchema = z.object({
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 characters'),
   address: z.string().optional(),
-  services: z
-    .array(z.string())
-    .min(1, 'At least one service must be specified'),
+  services: z.array(z.string()).min(1, 'At least one service must be specified'),
   rate: z.number().positive('Rate must be positive').optional(),
   status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']).default('ACTIVE'),
-});
+})
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -57,7 +55,7 @@ const columns: GridColDef[] = [
     width: 120,
     renderCell: renderStatusCell,
   },
-];
+]
 
 const serviceOptions = [
   'Plumbing',
@@ -69,51 +67,51 @@ const serviceOptions = [
   'Carpentry',
   'Roofing',
   'General Maintenance',
-];
+]
 
 export default function VendorsPage() {
-  const [open, setOpen] = useState(false);
-  const [selectedVendor, setSelectedVendor] = useState<any>(null);
+  const [open, setOpen] = useState(false)
+  const [selectedVendor, setSelectedVendor] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: ['vendors', paginationModel],
     queryFn: () => api.get('/api/vendors'),
-  });
+  })
 
   const handleEdit = (vendor: any) => {
-    setSelectedVendor(vendor);
-    setOpen(true);
-  };
+    setSelectedVendor(vendor)
+    setOpen(true)
+  }
 
   const handleDelete = async (vendor: any) => {
     if (window.confirm('Are you sure you want to delete this vendor?')) {
       try {
-        await api.delete(`/api/vendors`, vendor.id);
+        await api.delete(`/api/vendors`, vendor.id)
         // Refresh data
       } catch (error) {
-        console.error('Error deleting vendor:', error);
+        console.error('Error deleting vendor:', error)
       }
     }
-  };
+  }
 
   const handleSubmit = async (formData: any) => {
     try {
       if (selectedVendor) {
-        await api.put(`/api/vendors`, selectedVendor.id, formData);
+        await api.put(`/api/vendors`, selectedVendor.id, formData)
       } else {
-        await api.post('/api/vendors', formData);
+        await api.post('/api/vendors', formData)
       }
-      setOpen(false);
-      setSelectedVendor(null);
+      setOpen(false)
+      setSelectedVendor(null)
       // Refresh data
     } catch (error) {
-      console.error('Error saving vendor:', error);
+      console.error('Error saving vendor:', error)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -148,8 +146,8 @@ export default function VendorsPage() {
       <FormDialog
         open={open}
         onClose={() => {
-          setOpen(false);
-          setSelectedVendor(null);
+          setOpen(false)
+          setSelectedVendor(null)
         }}
         onSubmit={handleSubmit}
         title={selectedVendor ? 'Edit Vendor' : 'New Vendor'}
@@ -179,5 +177,5 @@ export default function VendorsPage() {
         </div>
       </FormDialog>
     </div>
-  );
+  )
 }

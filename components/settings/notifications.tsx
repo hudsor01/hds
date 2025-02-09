@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Box,
@@ -8,8 +8,8 @@ import {
   FormHelperText,
   Switch,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
+} from '@mui/material'
+import { useState } from 'react'
 
 export function NotificationSettings() {
   const [settings, setSettings] = useState({
@@ -27,7 +27,7 @@ export function NotificationSettings() {
       alerts: true,
       sounds: true,
     },
-  });
+  })
 
   const handleChange =
     (category: keyof typeof settings, setting: string) =>
@@ -38,8 +38,8 @@ export function NotificationSettings() {
           ...prev[category],
           [setting]: event.target.checked,
         },
-      }));
-    };
+      }))
+    }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -123,9 +123,7 @@ export function NotificationSettings() {
                 label="Reminders"
               />
             </FormGroup>
-            <FormHelperText>
-              Receive push notifications on your device
-            </FormHelperText>
+            <FormHelperText>Receive push notifications on your device</FormHelperText>
           </FormControl>
         </Box>
 
@@ -154,12 +152,10 @@ export function NotificationSettings() {
                 label="Notification sounds"
               />
             </FormGroup>
-            <FormHelperText>
-              Configure desktop notification preferences
-            </FormHelperText>
+            <FormHelperText>Configure desktop notification preferences</FormHelperText>
           </FormControl>
         </Box>
       </FormGroup>
     </Box>
-  );
+  )
 }

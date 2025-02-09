@@ -1,55 +1,55 @@
-import { NextRequest, NextResponse } from 'next/server';
-import analyticsDB from '../types/analyticsDB';
-import waitlistDB from '../types/waitlistDB';
+import { NextRequest, NextResponse } from 'next/server'
+import analyticsDB from '../types/analyticsDB'
+import waitlistDB from '../types/waitlistDB'
 // Waitlist API Routes
 export interface WaitlistPostRequest extends NextRequest {
   body: ReadableStream<Uint8Array<ArrayBufferLike>> & {
-    email: string;
-    source?: string;
-    referralCode?: string;
-  };
+    email: string
+    source?: string
+    referralCode?: string
+  }
 }
 
 export interface WaitlistResponse {
-  success: boolean;
+  success: boolean
   data?: {
-    id: string;
-    email: string;
-    position: number;
-    createdAt: Date;
-  };
-  error?: string;
+    id: string
+    email: string
+    position: number
+    createdAt: Date
+  }
+  error?: string
 }
 
 // Email API Routes
 export interface EmailSendRequest extends Omit<NextRequest, 'body'> {
   body: {
-    templateId: string;
-    waitlistIds: string[];
-    metadata?: Record<string, any>;
-  };
+    templateId: string
+    waitlistIds: string[]
+    metadata?: Record<string, any>
+  }
 }
 
 export interface EmailTrackingRequest extends NextRequest {
   params: {
-    eventId: string;
-    type: 'open' | 'click';
-  };
+    eventId: string
+    type: 'open' | 'click'
+  }
 }
 
 // Analytics API Routes
 export interface AnalyticsRequest extends NextRequest {
   query: {
-    startDate?: string;
-    endDate?: string;
-    template?: string;
-  };
+    startDate?: string
+    endDate?: string
+    template?: string
+  }
 }
 
 // Helper: function for stubbed methods
 const notImplemented = () => {
-  throw new Error('Function not implemented.');
-};
+  throw new Error('Function not implemented.')
+}
 
 const defaultStringMethods = {
   charAt: notImplemented,
@@ -102,11 +102,11 @@ const defaultStringMethods = {
   toWellFormed: notImplemented,
   [Symbol.iterator]: notImplemented,
   length: 0,
-};
+}
 
 export async function POST(request: WaitlistPostRequest): Promise<Response> {
   try {
-    const { email, source, referralCode } = await request.json();
+    const { email, source, referralCode } = await request.json()
 
     // Use object spread to include the default string methods
     const entry = await waitlistDB.add({
@@ -114,7 +114,7 @@ export async function POST(request: WaitlistPostRequest): Promise<Response> {
       source,
       referralCode,
       ...defaultStringMethods,
-    } as any);
+    } as any)
 
     const response: WaitlistResponse = {
       success: true,
@@ -124,30 +124,30 @@ export async function POST(request: WaitlistPostRequest): Promise<Response> {
         position: entry.position,
         createdAt: entry.createdAt,
       },
-    };
+    }
 
-    return NextResponse.json(response);
+    return NextResponse.json(response)
   } catch (error) {
     const response: WaitlistResponse = {
       success: false,
       error: 'Failed to join waitlist',
-    };
-    return NextResponse.json(response, { status: 500 });
+    }
+    return NextResponse.json(response, { status: 500 })
   }
 }
 
 // app/api/analytics/route.ts
 export async function GET(request: AnalyticsRequest): Promise<Response> {
-  const { searchParams } = new URL(request.url);
-  const startDate = searchParams.get('startDate');
-  const endDate = searchParams.get('endDate');
-  const template = searchParams.get('template') || undefined;
+  const { searchParams } = new URL(request.url)
+  const startDate = searchParams.get('startDate')
+  const endDate = searchParams.get('endDate')
+  const template = searchParams.get('template') || undefined
 
   const stats = await analyticsDB.getStats({
     startDate: startDate ? new Date(startDate) : undefined,
     endDate: endDate ? new Date(endDate) : undefined,
     template,
-  });
+  })
 
-  return Response.json({ success: true, data: stats });
+  return Response.json({ success: true, data: stats })
 }

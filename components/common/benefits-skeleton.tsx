@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Skeleton } from 'components/ui/skeleton';
+import { Skeleton } from 'components/ui/skeleton'
 
 export function BenefitsSkeleton() {
   return (
@@ -12,5 +12,5 @@ export function BenefitsSkeleton() {
         </div>
       ))}
     </div>
-  );
+  )
 }

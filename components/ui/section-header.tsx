@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 export function SectionHeader({
   title,
@@ -8,10 +8,10 @@ export function SectionHeader({
   gradient = true,
   className,
 }: {
-  title: string;
-  subtitle?: string;
-  gradient?: boolean;
-  className?: string;
+  title: string
+  subtitle?: string
+  gradient?: boolean
+  className?: string
 }) {
   return (
     <div className={cn('mb-16 text-center', className)}>
@@ -33,5 +33,5 @@ export function SectionHeader({
         </p>
       )}
     </div>
-  );
+  )
 }

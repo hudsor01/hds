@@ -1,4 +1,4 @@
-import type { Prisma, waitlist } from '@prisma/client';
+import type { Prisma, waitlist } from '@prisma/client'
 
 export type WaitlistEventType =
   | 'signup'
@@ -6,105 +6,105 @@ export type WaitlistEventType =
   | 'referral_created'
   | 'referral_bonus'
   | 'position_updated'
-  | 'status_changed';
+  | 'status_changed'
 
 export interface WaitlistEntry extends waitlist {
-  referrals?: WaitlistEntry[];
-  events?: WaitlistEvent[];
-  referrer?: WaitlistEntry | null;
+  referrals?: WaitlistEntry[]
+  events?: WaitlistEvent[]
+  referrer?: WaitlistEntry | null
 }
 
 export interface WaitlistEvent {
-  id: string;
-  email: string;
-  type: string;
-  metadata: Prisma.JsonValue | null;
-  timestamp: Date;
-  waitlist?: WaitlistEntry;
+  id: string
+  email: string
+  type: string
+  metadata: Prisma.JsonValue | null
+  timestamp: Date
+  waitlist?: WaitlistEntry
 }
 
 export interface WaitlistStats {
-  total: number;
-  averageWaitTime: number;
-  medianPosition: number;
-  conversionRate: number;
+  total: number
+  averageWaitTime: number
+  medianPosition: number
+  conversionRate: number
   referralStats: {
-    totalReferrals: number;
-    averageReferralsPerUser: number;
+    totalReferrals: number
+    averageReferralsPerUser: number
     topReferrers: Array<{
-      email: string;
-      referralCount: number;
-      positionsGained: number;
-    }>;
-  };
-  statusBreakdown: Record<waitlist['status'], number>;
+      email: string
+      referralCount: number
+      positionsGained: number
+    }>
+  }
+  statusBreakdown: Record<waitlist['status'], number>
   dailySignups: Array<{
-    date: string;
-    count: number;
-  }>;
+    date: string
+    count: number
+  }>
 }
 
 export interface WaitlistReferralStats {
-  totalReferrals: number;
-  activeReferrals: number;
-  positionsGained: number;
+  totalReferrals: number
+  activeReferrals: number
+  positionsGained: number
   referralHistory: Array<{
-    referredEmail: string;
-    date: string;
-    status: string;
-  }>;
+    referredEmail: string
+    date: string
+    status: string
+  }>
 }
 
 export interface WaitlistPositionUpdate {
-  email: string;
-  newPosition: number;
-  oldPosition?: number;
-  reason?: string;
+  email: string
+  newPosition: number
+  oldPosition?: number
+  reason?: string
 }
 
 export interface WaitlistVerificationStatus {
-  isVerified: boolean;
-  verifiedAt?: string;
+  isVerified: boolean
+  verifiedAt?: string
 }
 
 export interface WaitlistJoinRequest {
-  email: string;
-  name?: string;
-  referralCode?: string;
+  email: string
+  name?: string
+  referralCode?: string
 }
 
 export interface WaitlistJoinResponse {
-  success: boolean;
+  success: boolean
   data?: {
-    position: number;
-    referralCode: string;
-  };
-  error?: string;
+    position: number
+    referralCode: string
+  }
+  error?: string
 }
 
 // Admin types
 export interface WaitlistAdminStats extends WaitlistStats {
-  retentionRate: number;
-  bounceRate: number;
+  retentionRate: number
+  bounceRate: number
   emailStats: {
-    delivered: number;
-    opened: number;
-    clicked: number;
-    bounced: number;
-  };
-  geographicDistribution: Record<string, number>;
+    delivered: number
+    opened: number
+    clicked: number
+    bounced: number
+  }
+  geographicDistribution: Record<string, number>
 }
 // vite.config.ts
-import { defineConfig } from 'vite';
+import { defineConfig } from 'vite'
 
 export interface WaitlistBulkAction {
-  action: 'delete' | 'update_status' | 'move_position';
-  emails: string[];
+  action: 'delete' | 'update_status' | 'move_position'
+  emails: string[]
   data?: {
-    status?: waitlist['status'];
-    position?: number;
-  };
+    status?: waitlist['status']
+    position?: number
+  }
 }
 export default defineConfig({
   // Your Vite configuration here
-});
+})

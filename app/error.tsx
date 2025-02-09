@@ -1,20 +1,20 @@
-'use client';
+'use client'
 
-import { FadeIn } from '@/components/animations/fade-in';
-import { Box, Button, Container, Typography } from '@mui/material';
-import { useEffect } from 'react';
-import { RefreshCw, Send } from 'react-feather';
+import { FadeIn } from '@/components/animations/fade-in'
+import { Box, Button, Container, Typography } from '@mui/material'
+import { useEffect } from 'react'
+import { RefreshCw, Send } from 'react-feather'
 
 interface ErrorProps {
-  error: Error;
-  reset: () => void;
+  error: Error
+  reset: () => void
 }
 
 export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error('Error:', error);
-  }, [error]);
+    console.error('Error:', error)
+  }, [error])
 
   return (
     <Container maxWidth="md">
@@ -52,13 +52,9 @@ export default function Error({ error, reset }: ErrorProps) {
         </FadeIn>
 
         <FadeIn delay={0.6}>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 'sm', mb: 4 }}
-          >
-            We're experiencing some technical difficulties. Our team has been
-            notified and is working to fix the issue.
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
+            We're experiencing some technical difficulties. Our team has been notified and is
+            working to fix the issue.
           </Typography>
         </FadeIn>
 
@@ -71,8 +67,7 @@ export default function Error({ error, reset }: ErrorProps) {
               sx={{
                 background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                 '&:hover': {
-                  background:
-                    'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                  background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                 },
               }}
             >
@@ -97,5 +92,5 @@ export default function Error({ error, reset }: ErrorProps) {
         </FadeIn>
       </Box>
     </Container>
-  );
+  )
 }

@@ -6,7 +6,7 @@ export const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-};
+}
 
 export const itemVariants = {
   hidden: { opacity: 0, y: 20 },
@@ -14,4 +14,4 @@ export const itemVariants = {
     opacity: 1,
     y: 0,
   },
-};
+}

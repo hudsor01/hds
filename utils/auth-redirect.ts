@@ -46,8 +46,10 @@ export const publicPaths = [
 ]
 
 export function isPublicPath(path: string): boolean {
-  return publicPaths.includes(getBaseUrl(path)) ||
+  return (
+    publicPaths.includes(getBaseUrl(path)) ||
     path.startsWith('/_next') ||
     path.startsWith('/api/public') ||
     path.includes('.')
+  )
 }

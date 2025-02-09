@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { Grid, Paper, Stack, Typography, alpha, useTheme } from '@mui/material';
-import { motion } from 'framer-motion';
-import { DollarSign, FileText, Home, Tool, Users } from 'react-feather';
+import { Grid, Paper, Stack, Typography, alpha, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
+import { DollarSign, FileText, Home, Tool, Users } from 'react-feather'
 
 const metrics = [
   {
@@ -46,10 +46,10 @@ const metrics = [
     tooltip: 'Total monthly revenue from all properties',
     formatType: 'currency' as const,
   },
-];
+]
 
 export function MetricsGrid() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Grid container spacing={2}>
@@ -98,10 +98,7 @@ export function MetricsGrid() {
                     variant="body2"
                     sx={{
                       ml: 'auto',
-                      color:
-                        metric.percentageChange > 0
-                          ? 'success.main'
-                          : 'error.main',
+                      color: metric.percentageChange > 0 ? 'success.main' : 'error.main',
                       display: 'flex',
                       alignItems: 'center',
                       gap: 0.5,
@@ -132,5 +129,5 @@ export function MetricsGrid() {
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }

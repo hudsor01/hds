@@ -1,11 +1,11 @@
-import { routes } from '../../routes';
-import ApartmentIcon from '@mui/icons-material/Apartment';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import BuildIcon from '@mui/icons-material/Build';
-import DescriptionIcon from '@mui/icons-material/Description';
-import HomeIcon from '@mui/icons-material/Home';
-import PeopleIcon from '@mui/icons-material/People';
-import SettingsIcon from '@mui/icons-material/Settings';
+import { routes } from '../../routes'
+import ApartmentIcon from '@mui/icons-material/Apartment'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import BuildIcon from '@mui/icons-material/Build'
+import DescriptionIcon from '@mui/icons-material/Description'
+import HomeIcon from '@mui/icons-material/Home'
+import PeopleIcon from '@mui/icons-material/People'
+import SettingsIcon from '@mui/icons-material/Settings'
 
 export const ROLE = {
   ADMIN: 'ADMIN',
@@ -13,36 +13,34 @@ export const ROLE = {
   PROPERTY_MANAGER: 'PROPERTY_MANAGER',
   PROPERTY_OWNER: 'PROPERTY_OWNER',
   VENDOR: 'VENDOR',
-} as const;
+} as const
 
-export type Role = (typeof ROLE)[keyof typeof ROLE];
+export type Role = (typeof ROLE)[keyof typeof ROLE]
 
 export const ACTIVITY_TYPES = {
   MAINTENANCE: 'MAINTENANCE',
   PAYMENT: 'PAYMENT',
   LEASE: 'LEASE',
-} as const;
+} as const
 
-export type ActivityType = (typeof ACTIVITY_TYPES)[keyof typeof ACTIVITY_TYPES];
+export type ActivityType = (typeof ACTIVITY_TYPES)[keyof typeof ACTIVITY_TYPES]
 
 export const ACTIVITY_STATUS = {
   pending: 'Pending',
   in_progress: 'In Progress',
   completed: 'Completed',
-} as const;
+} as const
 
-export type ActivityStatus =
-  (typeof ACTIVITY_STATUS)[keyof typeof ACTIVITY_STATUS];
+export type ActivityStatus = (typeof ACTIVITY_STATUS)[keyof typeof ACTIVITY_STATUS]
 
 export const PRIORITY_LEVELS = {
   low: 'Low',
   medium: 'Medium',
   high: 'High',
   critical: 'Critical',
-} as const;
+} as const
 
-export type PriorityLevel =
-  (typeof PRIORITY_LEVELS)[keyof typeof PRIORITY_LEVELS];
+export type PriorityLevel = (typeof PRIORITY_LEVELS)[keyof typeof PRIORITY_LEVELS]
 
 export const navItems = [
   { name: 'Dashboard', href: routes.dashboard, icon: HomeIcon },
@@ -52,53 +50,53 @@ export const navItems = [
   { name: 'Finances', href: routes.finances.index, icon: AttachMoneyIcon },
   { name: 'Maintenance', href: routes.maintenance.index, icon: BuildIcon },
   { name: 'Settings', href: routes.settings, icon: SettingsIcon },
-];
+]
 
 export const ACTIVITY_FILTERS = [
   { value: 'ALL', label: 'All' },
   { value: 'MAINTENANCE', label: 'Maintenance' },
   { value: 'PAYMENT', label: 'Payments' },
   { value: 'LEASE', label: 'Leases' },
-] as const;
+] as const
 
 export const PRIORITY_LABELS = {
   low: 'Low Priority',
   medium: 'Medium Priority',
   high: 'High Priority',
   critical: 'Critical Priority',
-} as const;
+} as const
 
 export const STATUS_LABELS = {
   PENDING: 'Pending',
   IN_PROGRESS: 'In Progress',
   COMPLETED: 'Completed',
-} as const;
+} as const
 
 export const PROPERTY_STATUS = {
   active: 'Active',
   inactive: 'Inactive',
   maintenance: 'Under Maintenance',
-} as const;
+} as const
 
 export const PROPERTY_TYPES = {
   apartment: 'Apartment',
   house: 'House',
   condo: 'Condominium',
   commercial: 'Commercial',
-} as const;
+} as const
 
 export const LEASE_STATUS = {
   active: 'Active',
   pending: 'Pending',
   expired: 'Expired',
   terminated: 'Terminated',
-} as const;
+} as const
 
 export const LEASE_TYPES = {
   residential: 'Residential',
   commercial: 'Commercial',
   shortTerm: 'Short Term',
-} as const;
+} as const
 
 export const MOCK_ANALYTICS_DATA = {
   financialPerformance: {
@@ -150,4 +148,4 @@ export const MOCK_ANALYTICS_DATA = {
       '2024': 88,
     },
   },
-};
+}

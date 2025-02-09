@@ -1,4 +1,4 @@
-import { useAuth } from '@/lib/auth';
+import { useAuth } from '@/lib/auth'
 import {
   AppBar,
   Box,
@@ -12,38 +12,37 @@ import {
   Toolbar,
   useMediaQuery,
   useTheme,
-} from '@mui/material';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { ReactNode, useState } from 'react';
+} from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { ReactNode, useState } from 'react'
 
 // Navigation Item
 interface NavItem {
-  label: string;
-  href: string;
-  icon?: ReactNode;
-  requiresAuth?: boolean;
-  requiredRole?: string;
+  label: string
+  href: string
+  icon?: ReactNode
+  requiresAuth?: boolean
+  requiredRole?: string
 }
 
 interface NavigationProps {
-  items: NavItem[];
-  logo?: ReactNode;
+  items: NavItem[]
+  logo?: ReactNode
 }
 
 // Main Navigation
 export function MainNavigation({ items, logo }: NavigationProps) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const pathname = usePathname();
-  const { isAuthenticated, role } = useAuth();
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+  const [mobileOpen, setMobileOpen] = useState(false)
+  const pathname = usePathname()
+  const { isAuthenticated, role } = useAuth()
 
   const filteredItems = items.filter(
     (item) =>
-      (!item.requiresAuth || isAuthenticated) &&
-      (!item.requiredRole || role === item.requiredRole),
-  );
+      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole)
+  )
 
   const navContent = (
     <List>
@@ -70,18 +69,14 @@ export function MainNavigation({ items, logo }: NavigationProps) {
         </ListItem>
       ))}
     </List>
-  );
+  )
 
   return (
     <>
       <AppBar position="sticky" color="default" elevation={0}>
         <Toolbar>
           {isMobile && (
-            <IconButton
-              edge="start"
-              onClick={() => setMobileOpen(true)}
-              sx={{ mr: 2 }}
-            >
+            <IconButton edge="start" onClick={() => setMobileOpen(true)} sx={{ mr: 2 }}>
               <Menu />
             </IconButton>
           )}
@@ -118,23 +113,22 @@ export function MainNavigation({ items, logo }: NavigationProps) {
         </Drawer>
       )}
     </>
-  );
+  )
 }
 
 // Sidebar Navigation
 interface SidebarProps extends NavigationProps {
-  width?: number;
+  width?: number
 }
 
 export function Sidebar({ items, logo, width = 280 }: SidebarProps) {
-  const pathname = usePathname();
-  const { isAuthenticated, role } = useAuth();
+  const pathname = usePathname()
+  const { isAuthenticated, role } = useAuth()
 
   const filteredItems = items.filter(
     (item) =>
-      (!item.requiresAuth || isAuthenticated) &&
-      (!item.requiredRole || role === item.requiredRole),
-  );
+      (!item.requiresAuth || isAuthenticated) && (!item.requiredRole || role === item.requiredRole)
+  )
 
   return (
     <Drawer
@@ -179,5 +173,5 @@ export function Sidebar({ items, logo, width = 280 }: SidebarProps) {
         </List>
       </Box>
     </Drawer>
-  );
+  )
 }

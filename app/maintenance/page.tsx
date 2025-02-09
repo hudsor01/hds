@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Box,
@@ -15,9 +15,9 @@ import {
   TableRow,
   Tabs,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import { Plus } from 'react-feather';
+} from '@mui/material'
+import { useState } from 'react'
+import { Plus } from 'react-feather'
 
 // Mock data for testing
 const mockTickets = [
@@ -54,14 +54,14 @@ const mockTickets = [
     createdAt: '2024-01-13T09:15:00Z',
     description: 'Window in living room is cracked and needs replacement.',
   },
-];
+]
 
 export default function MaintenancePage() {
-  const [tabValue, setTabValue] = useState(0);
+  const [tabValue, setTabValue] = useState(0)
 
   const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
+    setTabValue(newValue)
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -69,24 +69,24 @@ export default function MaintenancePage() {
         return {
           bg: 'warning.light',
           color: 'warning.dark',
-        };
+        }
       case 'IN_PROGRESS':
         return {
           bg: 'info.light',
           color: 'info.dark',
-        };
+        }
       case 'COMPLETED':
         return {
           bg: 'success.light',
           color: 'success.dark',
-        };
+        }
       default:
         return {
           bg: 'grey.200',
           color: 'grey.700',
-        };
+        }
     }
-  };
+  }
 
   const getPriorityColor = (priority: string) => {
     switch (priority.toLowerCase()) {
@@ -94,35 +94,30 @@ export default function MaintenancePage() {
         return {
           bg: 'error.light',
           color: 'error.dark',
-        };
+        }
       case 'medium':
         return {
           bg: 'warning.light',
           color: 'warning.dark',
-        };
+        }
       case 'low':
         return {
           bg: 'success.light',
           color: 'success.dark',
-        };
+        }
       default:
         return {
           bg: 'grey.200',
           color: 'grey.700',
-        };
+        }
     }
-  };
+  }
 
   return (
     <Box>
       <Container maxWidth="xl">
         {/* Header */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-        >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
           <Box>
             <Typography variant="h4" fontWeight={600} gutterBottom>
               Maintenance
@@ -163,10 +158,7 @@ export default function MaintenancePage() {
         </Box>
 
         {/* Tickets Table */}
-        <TableContainer
-          component={Paper}
-          sx={{ borderRadius: 2, boxShadow: 1 }}
-        >
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 1 }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -232,9 +224,7 @@ export default function MaintenancePage() {
                       {ticket.status.replace('_', ' ')}
                     </Box>
                   </TableCell>
-                  <TableCell>
-                    {new Date(ticket.createdAt).toLocaleDateString()}
-                  </TableCell>
+                  <TableCell>{new Date(ticket.createdAt).toLocaleDateString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -242,5 +232,5 @@ export default function MaintenancePage() {
         </TableContainer>
       </Container>
     </Box>
-  );
+  )
 }

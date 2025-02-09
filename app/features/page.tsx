@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { Card } from '@/components/ui/cards/card';
-import { Box, Container, Grid, Typography } from '@mui/material';
+import { Card } from '@/components/ui/cards/card'
+import { Box, Container, Grid, Typography } from '@mui/material'
 import {
   BarChart,
   Calendar,
@@ -11,31 +11,28 @@ import {
   MessageCircle,
   Settings,
   Users,
-} from 'react-feather';
+} from 'react-feather'
 
 interface Feature {
-  title: string;
-  description: string;
-  icon: typeof Home;
+  title: string
+  description: string
+  icon: typeof Home
 }
 
 const features: Feature[] = [
   {
     title: 'Property Management',
-    description:
-      'Efficiently manage your properties with our comprehensive dashboard.',
+    description: 'Efficiently manage your properties with our comprehensive dashboard.',
     icon: Home,
   },
   {
     title: 'Tenant Portal',
-    description:
-      'Give tenants access to a dedicated portal for payments and maintenance requests.',
+    description: 'Give tenants access to a dedicated portal for payments and maintenance requests.',
     icon: Users,
   },
   {
     title: 'Financial Tracking',
-    description:
-      'Track rent payments, expenses, and generate financial reports.',
+    description: 'Track rent payments, expenses, and generate financial reports.',
     icon: BarChart,
   },
   {
@@ -55,17 +52,15 @@ const features: Feature[] = [
   },
   {
     title: 'Scheduling',
-    description:
-      'Schedule viewings, maintenance, and other property-related events.',
+    description: 'Schedule viewings, maintenance, and other property-related events.',
     icon: Calendar,
   },
   {
     title: 'Communication Hub',
-    description:
-      'Streamline communication between property managers, owners, and tenants.',
+    description: 'Streamline communication between property managers, owners, and tenants.',
     icon: MessageCircle,
   },
-];
+]
 
 export default function FeaturesPage() {
   return (
@@ -75,19 +70,14 @@ export default function FeaturesPage() {
           <Typography variant="h2" className="mb-4 font-bold">
             Powerful Features for Property Management
           </Typography>
-          <Typography
-            variant="h5"
-            color="text.secondary"
-            className="mx-auto max-w-3xl"
-          >
-            Everything you need to manage your properties efficiently and grow
-            your business
+          <Typography variant="h5" color="text.secondary" className="mx-auto max-w-3xl">
+            Everything you need to manage your properties efficiently and grow your business
           </Typography>
         </Box>
 
         <Grid container spacing={4}>
           {features.map((feature, index) => {
-            const Icon = feature.icon;
+            const Icon = feature.icon
             return (
               <Grid item xs={12} sm={6} md={4} key={feature.title}>
                 <Card
@@ -107,10 +97,10 @@ export default function FeaturesPage() {
                   </Box>
                 </Card>
               </Grid>
-            );
+            )
           })}
         </Grid>
       </Container>
     </Box>
-  );
+  )
 }

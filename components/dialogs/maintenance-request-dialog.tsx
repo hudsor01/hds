@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/auth/lib/constants';
-import { Button } from '@/components/ui/buttons/button';
+import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/auth/lib/constants'
+import { Button } from '@/components/ui/buttons/button'
 import type {
   MaintenanceRequest,
   NewMaintenanceRequest,
   UpdateMaintenanceRequest,
-} from '@/types/maintenance_requests';
-import type { Property } from '@/types/property';
-import type { SelectChangeEvent } from '@mui/material';
+} from '@/types/maintenance_requests'
+import type { Property } from '@/types/property'
+import type { SelectChangeEvent } from '@mui/material'
 import {
   Dialog,
   DialogContent,
@@ -16,41 +16,39 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Select, SelectItem } from 'components/ui/select';
-import Textarea from 'components/ui/textarea';
-import { useState } from 'react';
+} from 'components/ui/dialog'
+import { Input } from 'components/ui/input'
+import { Label } from 'components/ui/label'
+import { Select, SelectItem } from 'components/ui/select'
+import Textarea from 'components/ui/textarea'
+import { useState } from 'react'
 
 interface MaintenanceRequestDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  request?: MaintenanceRequest;
-  properties: Property[];
-  onSubmitAction: (data: NewMaintenanceRequest) => Promise<void>;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  request?: MaintenanceRequest
+  properties: Property[]
+  onSubmitAction: (data: NewMaintenanceRequest) => Promise<void>
 }
 
 interface MaintenanceRequestEditDialogProps
   extends Omit<MaintenanceRequestDialogProps, 'onSubmitAction'> {
-  request: MaintenanceRequest;
-  onSubmitAction: (data: UpdateMaintenanceRequest) => Promise<void>;
+  request: MaintenanceRequest
+  onSubmitAction: (data: UpdateMaintenanceRequest) => Promise<void>
 }
 
 export function MaintenanceRequestDialog(
-  props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps,
+  props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps
 ) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(
-    props.request?.propertyId || '',
-  );
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedProperty, setSelectedProperty] = useState(props.request?.propertyId || '')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(e.currentTarget)
       const data = {
         propertyId: formData.get('propertyId') as string,
         unitId: formData.get('unitId') as string,
@@ -58,35 +56,30 @@ export function MaintenanceRequestDialog(
         title: formData.get('title') as string,
         description: formData.get('description') as string,
         priority: formData.get('priority') as keyof typeof PRIORITY_LEVELS,
-      };
+      }
 
       if (props.request) {
         await (props as MaintenanceRequestEditDialogProps).onSubmitAction({
           ...data,
           id: props.request.id,
-        });
+        })
       } else {
-        await (props as MaintenanceRequestDialogProps).onSubmitAction(
-          data as NewMaintenanceRequest,
-        );
+        await (props as MaintenanceRequestDialogProps).onSubmitAction(data as NewMaintenanceRequest)
       }
-      props.onOpenChangeAction(false);
+      props.onOpenChangeAction(false)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
-  const selectedPropertyUnits =
-    props.properties.find((p) => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits = props.properties.find((p) => p.id === selectedProperty)?.units || []
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChangeAction}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {props.request
-              ? 'Edit Maintenance Request'
-              : 'New Maintenance Request'}
+            {props.request ? 'Edit Maintenance Request' : 'New Maintenance Request'}
           </DialogTitle>
           <DialogDescription>
             {props.request
@@ -102,7 +95,7 @@ export function MaintenanceRequestDialog(
                 name="propertyId"
                 defaultValue={props.request?.propertyId}
                 onChange={(event: SelectChangeEvent<unknown>) => {
-                  setSelectedProperty(event.target.value as string);
+                  setSelectedProperty(event.target.value as string)
                 }}
                 placeholder="Select a property"
               >
@@ -132,12 +125,7 @@ export function MaintenanceRequestDialog(
 
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Input
-                id="title"
-                name="title"
-                defaultValue={props.request?.title}
-                required
-              />
+              <Input id="title" name="title" defaultValue={props.request?.title} required />
             </div>
 
             <div className="space-y-2">
@@ -168,15 +156,11 @@ export function MaintenanceRequestDialog(
 
           <DialogFooter>
             <Button type="submit" disabled={isLoading}>
-              {isLoading
-                ? 'Saving...'
-                : props.request
-                  ? 'Save Changes'
-                  : 'Submit Request'}
+              {isLoading ? 'Saving...' : props.request ? 'Save Changes' : 'Submit Request'}
             </Button>
           </DialogFooter>
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

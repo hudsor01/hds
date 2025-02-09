@@ -1,41 +1,38 @@
-import { Alert, AlertProps, Button, Stack, Typography } from '@mui/material';
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Alert, AlertProps, Button, Stack, Typography } from '@mui/material'
+import { Component, ErrorInfo, ReactNode } from 'react'
 
 // Error Boundary
 interface ErrorBoundaryProps {
-  children: ReactNode;
-  fallback?: ReactNode;
+  children: ReactNode
+  fallback?: ReactNode
 }
 
 interface ErrorBoundaryState {
-  hasError: boolean;
-  error?: Error;
+  hasError: boolean
+  error?: Error
 }
 
-export class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public state: ErrorBoundaryState = {
     hasError: false,
-  };
+  }
 
   public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
-    return { hasError: true, error };
+    return { hasError: true, error }
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Uncaught error:', error, errorInfo);
+    console.error('Uncaught error:', error, errorInfo)
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: undefined });
-  };
+    this.setState({ hasError: false, error: undefined })
+  }
 
   public render() {
     if (this.state.hasError) {
       if (this.props.fallback) {
-        return this.props.fallback;
+        return this.props.fallback
       }
 
       return (
@@ -52,37 +49,33 @@ export class ErrorBoundary extends Component<
             Try Again
           </Button>
         </Stack>
-      );
+      )
     }
 
-    return this.props.children;
+    return this.props.children
   }
 }
 
 // Form Message
 interface FormMessageProps extends AlertProps {
-  message: string;
+  message: string
 }
 
-export function FormMessage({
-  message,
-  severity = 'info',
-  ...props
-}: FormMessageProps) {
+export function FormMessage({ message, severity = 'info', ...props }: FormMessageProps) {
   return (
     <Alert severity={severity} {...props}>
       {message}
     </Alert>
-  );
+  )
 }
 
 // Environment Warning
 interface EnvWarningProps {
-  missingVars: string[];
+  missingVars: string[]
 }
 
 export function EnvWarning({ missingVars }: EnvWarningProps) {
-  if (missingVars.length === 0) return null;
+  if (missingVars.length === 0) return null
 
   return (
     <Alert severity="warning" sx={{ mb: 2 }}>
@@ -98,5 +91,5 @@ export function EnvWarning({ missingVars }: EnvWarningProps) {
         ))}
       </ul>
     </Alert>
-  );
+  )
 }

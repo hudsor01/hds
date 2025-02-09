@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { Box, Card, Tooltip, Typography, alpha, useTheme } from '@mui/material';
-import { motion } from 'framer-motion';
-import React from 'react';
-import type { Icon } from 'react-feather';
-import { TrendingUp } from 'react-feather';
+import { Box, Card, Tooltip, Typography, alpha, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
+import React from 'react'
+import type { Icon } from 'react-feather'
+import { TrendingUp } from 'react-feather'
 
 interface MetricCardProps {
-  title: string;
-  value: string | number;
-  icon: Icon;
-  color: 'primary' | 'success' | 'info' | 'warning';
-  percentageChange?: number;
-  tooltip?: string;
-  formatType?: 'currency' | 'number' | 'percentage';
+  title: string
+  value: string | number
+  icon: Icon
+  color: 'primary' | 'success' | 'info' | 'warning'
+  percentageChange?: number
+  tooltip?: string
+  formatType?: 'currency' | 'number' | 'percentage'
 }
 
 const cardVariants = {
@@ -21,13 +21,13 @@ const cardVariants = {
   animate: { scale: 1, opacity: 1 },
   hover: { scale: 1.02, transition: { duration: 0.2 } },
   tap: { scale: 0.98 },
-};
+}
 
 const iconVariants = {
   initial: { rotate: -10, scale: 0.9 },
   animate: { rotate: 0, scale: 1 },
   hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
-};
+}
 
 export function MetricCard({
   title,
@@ -38,18 +38,18 @@ export function MetricCard({
   tooltip,
   formatType = 'number',
 }: MetricCardProps) {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const formattedValue = React.useMemo(() => {
     switch (formatType) {
       case 'currency':
-        return `$${Number(value).toLocaleString()}`;
+        return `$${Number(value).toLocaleString()}`
       case 'percentage':
-        return `${Number(value)}%`;
+        return `${Number(value)}%`
       default:
-        return String(value);
+        return String(value)
     }
-  }, [value, formatType]);
+  }, [value, formatType])
 
   return (
     <Tooltip title={tooltip || ''} arrow placement="top">
@@ -79,9 +79,7 @@ export function MetricCard({
             },
           }}
         >
-          <Box
-            sx={{ display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5 }}
-          >
+          <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5 }}>
             <motion.div
               variants={iconVariants}
               style={{
@@ -139,9 +137,7 @@ export function MetricCard({
                 style={{
                   transform: percentageChange < 0 ? 'rotate(180deg)' : 'none',
                   color:
-                    percentageChange >= 0
-                      ? theme.palette.success.main
-                      : theme.palette.error.main,
+                    percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main,
                 }}
               />
               <Typography
@@ -159,5 +155,5 @@ export function MetricCard({
         </Card>
       </motion.div>
     </Tooltip>
-  );
+  )
 }

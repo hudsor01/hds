@@ -1,21 +1,16 @@
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import Divider from '@mui/material/Divider'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
 
 interface FormLayoutProps {
-  title: string;
-  description?: string;
-  children: React.ReactNode;
-  actions?: React.ReactNode;
+  title: string
+  description?: string
+  children: React.ReactNode
+  actions?: React.ReactNode
 }
 
-export function FormLayout({
-  title,
-  description,
-  children,
-  actions,
-}: FormLayoutProps) {
+export function FormLayout({ title, description, children, actions }: FormLayoutProps) {
   return (
     <Paper>
       <Box sx={{ p: 3 }}>
@@ -34,12 +29,10 @@ export function FormLayout({
         {actions && (
           <>
             <Divider sx={{ my: 3 }} />
-            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>
-              {actions}
-            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'flex-end', gap: 2 }}>{actions}</Box>
           </>
         )}
       </Box>
     </Paper>
-  );
+  )
 }

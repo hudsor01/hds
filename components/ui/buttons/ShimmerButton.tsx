@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { motion, useAnimationControls } from 'framer-motion';
-import { useEffect } from 'react';
+import { cn } from '@/lib/utils'
+import { motion, useAnimationControls } from 'framer-motion'
+import { useEffect } from 'react'
 
 export const ShimmerButton = ({
   children,
@@ -12,18 +12,18 @@ export const ShimmerButton = ({
   shimmerDuration = 3,
   ...props
 }: React.ComponentProps<'button'> & {
-  shimmerColor?: string;
-  shimmerSize?: number;
-  shimmerDuration?: number;
+  shimmerColor?: string
+  shimmerSize?: number
+  shimmerDuration?: number
 }) => {
-  const controls = useAnimationControls();
+  const controls = useAnimationControls()
 
   useEffect(() => {
     const animateShimmer = async () => {
       await controls.start({
         transition: { duration: 0 },
         backgroundPosition: '-100% 0',
-      });
+      })
       controls.start({
         backgroundPosition: ['-100% 0', '200% 0'],
         transition: {
@@ -31,10 +31,10 @@ export const ShimmerButton = ({
           repeat: Infinity,
           ease: 'linear',
         },
-      });
-    };
-    animateShimmer();
-  }, [controls, shimmerDuration]);
+      })
+    }
+    animateShimmer()
+  }, [controls, shimmerDuration])
 
   return (
     <button
@@ -42,7 +42,7 @@ export const ShimmerButton = ({
         'relative overflow-hidden rounded-xl px-6 py-3 font-medium',
         'transform transition-all duration-300 hover:scale-[1.02]',
         'bg-pastel-blue-600 text-white shadow-lg hover:shadow-xl',
-        className,
+        className
       )}
       {...props}
     >
@@ -67,5 +67,5 @@ export const ShimmerButton = ({
       {/* Content */}
       <span className="relative z-10">{children}</span>
     </button>
-  );
-};
+  )
+}

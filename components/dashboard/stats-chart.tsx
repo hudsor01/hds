@@ -1,27 +1,20 @@
-'use client';
+'use client'
 
-import { Card } from 'components/ui/cards/card';
-import {
-  Area,
-  AreaChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Card } from 'components/ui/cards/card'
+import { Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 interface StatsChartProps {
   data: {
-    name: string;
-    value: number;
-  }[];
-  title: string;
-  formatter?: (value: number) => string;
+    name: string
+    value: number
+  }[]
+  title: string
+  formatter?: (value: number) => string
 }
 
 export function StatsChart({ data, title, formatter }: StatsChartProps) {
-  const defaultFormatter = (value: number) => value.toString();
-  const formatValue = formatter || defaultFormatter;
+  const defaultFormatter = (value: number) => value.toString()
+  const formatValue = formatter || defaultFormatter
 
   return (
     <Card className="p-4">
@@ -70,5 +63,5 @@ export function StatsChart({ data, title, formatter }: StatsChartProps) {
         </ResponsiveContainer>
       </div>
     </Card>
-  );
+  )
 }

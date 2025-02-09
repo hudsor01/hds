@@ -1,30 +1,30 @@
-'use client';
+'use client'
 
-import { VirtualizedList } from './virtualized-list.jsx';
-import { Box, Chip, Divider, ListItem, Stack, Typography } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
-import { formatDistanceToNow } from 'date-fns';
-import { motion } from 'framer-motion';
-import { FileText, Home, Key, Tool, User } from 'react-feather';
+import { VirtualizedList } from './virtualized-list.jsx'
+import { Box, Chip, Divider, ListItem, Stack, Typography } from '@mui/material'
+import { alpha, useTheme } from '@mui/material/styles'
+import { formatDistanceToNow } from 'date-fns'
+import { motion } from 'framer-motion'
+import { FileText, Home, Key, Tool, User } from 'react-feather'
 
 interface ActivityItem {
-  id: string;
-  type: 'property' | 'tenant' | 'maintenance' | 'lease' | 'document';
-  action: string;
-  status: 'completed' | 'pending' | 'failed';
-  timestamp: Date;
-  details: string;
+  id: string
+  type: 'property' | 'tenant' | 'maintenance' | 'lease' | 'document'
+  action: string
+  status: 'completed' | 'pending' | 'failed'
+  timestamp: Date
+  details: string
 }
 
 interface ActivityListProps {
-  activities: ActivityItem[];
+  activities: ActivityItem[]
 }
 
 const statusColors = {
   completed: 'success',
   pending: 'warning',
   failed: 'error',
-} as const;
+} as const
 
 const typeIcons = {
   property: Home,
@@ -32,7 +32,7 @@ const typeIcons = {
   maintenance: Tool,
   lease: Key,
   document: FileText,
-} as const;
+} as const
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -42,19 +42,19 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
-};
+}
 
 export function ActivityList({ activities }: ActivityListProps) {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const renderActivityItem = (activity: ActivityItem, index: number) => {
-    const Icon = typeIcons[activity.type];
-    const statusColor = statusColors[activity.status];
+    const Icon = typeIcons[activity.type]
+    const statusColor = statusColors[activity.status]
 
     return (
       <ListItem
@@ -111,8 +111,8 @@ export function ActivityList({ activities }: ActivityListProps) {
           </Stack>
         </Stack>
       </ListItem>
-    );
-  };
+    )
+  }
 
   return (
     <VirtualizedList
@@ -121,5 +121,5 @@ export function ActivityList({ activities }: ActivityListProps) {
       estimateSize={120}
       overscan={3}
     />
-  );
+  )
 }

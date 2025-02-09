@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { styled, ToggleButton, type ToggleButtonProps } from '@mui/material';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import { styled, ToggleButton, type ToggleButtonProps } from '@mui/material'
+import * as React from 'react'
 
 const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   padding: theme.spacing(1, 2),
@@ -18,21 +18,21 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
       backgroundColor: theme.palette.primary.dark,
     },
   },
-}));
+}))
 
 export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
-  pressed?: boolean;
-  onPressedChange?: (pressed: boolean) => void;
+  pressed?: boolean
+  onPressedChange?: (pressed: boolean) => void
 }
 
 export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
   ({ className, pressed, onPressedChange, children, ...props }, ref) => {
     const handleChange = React.useCallback(
       (_: React.MouseEvent<HTMLElement>, selected: boolean) => {
-        onPressedChange?.(selected);
+        onPressedChange?.(selected)
       },
-      [onPressedChange],
-    );
+      [onPressedChange]
+    )
 
     return (
       <StyledToggleButton
@@ -41,14 +41,14 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         onChange={handleChange}
         className={cn(
           'focus-visible:outline-hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
-          className,
+          className
         )}
         {...props}
       >
         {children}
       </StyledToggleButton>
-    );
-  },
-);
+    )
+  }
+)
 
-Toggle.displayName = 'Toggle';
+Toggle.displayName = 'Toggle'

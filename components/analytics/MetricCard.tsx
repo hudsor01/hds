@@ -1,24 +1,18 @@
-import { Card, CardContent, Skeleton, Typography } from '@mui/material';
-import { ReactNode } from 'react';
+import { Card, CardContent, Skeleton, Typography } from '@mui/material'
+import { ReactNode } from 'react'
 
 interface MetricCardProps {
-  title: string;
-  value: string | number;
-  icon?: ReactNode;
+  title: string
+  value: string | number
+  icon?: ReactNode
   trend?: {
-    value: number;
-    direction: 'up' | 'down';
-  };
-  isLoading?: boolean;
+    value: number
+    direction: 'up' | 'down'
+  }
+  isLoading?: boolean
 }
 
-export default function MetricCard({
-  title,
-  value,
-  icon,
-  trend,
-  isLoading,
-}: MetricCardProps) {
+export default function MetricCard({ title, value, icon, trend, isLoading }: MetricCardProps) {
   if (isLoading) {
     return (
       <Card>
@@ -29,17 +23,13 @@ export default function MetricCard({
           <Skeleton variant="text" width="60%" height={40} />
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
     <Card>
       <CardContent>
-        <Typography
-          color="textSecondary"
-          gutterBottom
-          className="flex items-center gap-2"
-        >
+        <Typography color="textSecondary" gutterBottom className="flex items-center gap-2">
           {icon}
           {title}
         </Typography>
@@ -57,5 +47,5 @@ export default function MetricCard({
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

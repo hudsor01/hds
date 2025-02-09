@@ -1,14 +1,14 @@
-import './globals.css';
-import { AuthProvider } from '@/components/providers/auth-provider';
-import { Providers } from '@/components/providers/providers';
+import './globals.css'
+import { AuthProvider } from '@/components/providers/auth-provider'
+import { Providers } from '@/components/providers/providers'
 
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
-import { Toaster } from 'sonner';
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { Toaster } from 'sonner'
 
-const inter = Inter({ subsets: ['latin'] });
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: 'Property Manager',
@@ -16,13 +16,9 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-};
+}
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
@@ -40,5 +36,5 @@ export default function RootLayout({
         <SpeedInsights />
       </body>
     </html>
-  );
+  )
 }

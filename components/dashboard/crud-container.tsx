@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import type { BaseCrudItem, CrudContainerProps } from '../../types/crud-types';
-import { useProtectedRoute } from '@/hooks/use-protected-route';
-import Spinner from 'components/ui/spinner';
+import type { BaseCrudItem, CrudContainerProps } from '../../types/crud-types'
+import { useProtectedRoute } from '@/hooks/use-protected-route'
+import Spinner from 'components/ui/spinner'
 
 export function CrudContainer<T extends BaseCrudItem>({
   title,
@@ -10,7 +10,7 @@ export function CrudContainer<T extends BaseCrudItem>({
   loading = false,
   className = '',
 }: CrudContainerProps<T>) {
-  useProtectedRoute();
+  useProtectedRoute()
 
   return (
     <div className={`container mx-auto p-6 ${className}`}>
@@ -25,5 +25,5 @@ export function CrudContainer<T extends BaseCrudItem>({
         children
       )}
     </div>
-  );
+  )
 }

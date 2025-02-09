@@ -1,4 +1,4 @@
-import type { Route } from 'next';
+import type { Route } from 'next'
 
 export const routes = {
   dashboard: '/dashboard' as Route,
@@ -33,6 +33,6 @@ export const routes = {
     edit: (id: string) => `/dashboard/documents/${id}/edit` as Route,
   },
   settings: '/dashboard/settings' as Route,
-} as const;
+} as const
 
-export type AppRoutes = typeof routes;
+export type AppRoutes = typeof routes

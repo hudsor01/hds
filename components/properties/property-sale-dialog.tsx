@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { Dialog } from '@/components/ui/dialogs/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import type { PropertyRow, PropertySale } from '@/types/property';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import { Dialog } from '@/components/ui/dialogs/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import type { PropertyRow, PropertySale } from '@/types/property'
+import { useState } from 'react'
 
 interface PropertySaleDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  property: PropertyRow;
-  onSubmitAction: (data: PropertySale) => Promise<void>;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  property: PropertyRow
+  onSubmitAction: (data: PropertySale) => Promise<void>
 }
 
 export function PropertySaleDialog({
@@ -20,27 +20,27 @@ export function PropertySaleDialog({
   property,
   onSubmitAction,
 }: PropertySaleDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(e.currentTarget)
       const data: PropertySale = {
         propertyId: property.id,
         salePrice: Number(formData.get('salePrice')),
         saleDate: new Date(formData.get('saleDate') as string).toISOString(),
         notes: (formData.get('notes') as string) || undefined,
-      };
+      }
 
-      await onSubmitAction(data);
-      onOpenChangeAction(false);
+      await onSubmitAction(data)
+      onOpenChangeAction(false)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog
@@ -71,5 +71,5 @@ export function PropertySaleDialog({
         </div>
       </form>
     </Dialog>
-  );
+  )
 }

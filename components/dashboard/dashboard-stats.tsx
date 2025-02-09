@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import type { PropertyStats } from '@/types/dashboard';
-import { Box, Card, Grid, Tooltip, Typography } from '@mui/material';
-import { alpha, useTheme } from '@mui/material/styles';
-import { motion } from 'framer-motion';
-import { Box as BoxIcon, DollarSign, TrendingUp, Users } from 'react-feather';
+import type { PropertyStats } from '@/types/dashboard'
+import { Box, Card, Grid, Tooltip, Typography } from '@mui/material'
+import { alpha, useTheme } from '@mui/material/styles'
+import { motion } from 'framer-motion'
+import { Box as BoxIcon, DollarSign, TrendingUp, Users } from 'react-feather'
 
 interface DashboardStatsProps {
-  stats: PropertyStats;
+  stats: PropertyStats
 }
 
 const cardVariants = {
@@ -15,16 +15,16 @@ const cardVariants = {
   animate: { scale: 1, opacity: 1 },
   hover: { scale: 1.02, transition: { duration: 0.2 } },
   tap: { scale: 0.98 },
-};
+}
 
 const iconVariants = {
   initial: { rotate: -10, scale: 0.9 },
   animate: { rotate: 0, scale: 1 },
   hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
-};
+}
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const items = [
     {
@@ -67,7 +67,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       color: 'warning',
       gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.12)} 0%, ${alpha(theme.palette.warning.dark, 0.12)} 100%)`,
     },
-  ] as const;
+  ] as const
 
   return (
     <Grid container spacing={{ xs: 2, sm: 3 }}>
@@ -160,8 +160,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     height={16}
                     style={{
                       marginRight: 4,
-                      transform:
-                        item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
+                      transform: item.percentageChange < 0 ? 'rotate(180deg)' : 'none',
                       color:
                         item.percentageChange >= 0
                           ? theme.palette.success.main
@@ -173,10 +172,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     variant="subtitle2"
                     sx={{
                       fontWeight: 600,
-                      color:
-                        item.percentageChange >= 0
-                          ? 'success.main'
-                          : 'error.main',
+                      color: item.percentageChange >= 0 ? 'success.main' : 'error.main',
                     }}
                   >
                     {Math.abs(item.percentageChange)}%
@@ -188,5 +184,5 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }

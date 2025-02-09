@@ -1,14 +1,14 @@
-import { Property } from '@/types/property';
-import { create } from 'zustand';
+import { Property } from '@/types/property'
+import { create } from 'zustand'
 
 interface PropertyStore {
-  selectedProperty: Property | null;
-  setSelectedProperty: (property: Property | null) => void;
+  selectedProperty: Property | null
+  setSelectedProperty: (property: Property | null) => void
   filters: {
-    status: string[];
-    sortBy: string;
-  };
-  setFilters: (filters: { status: string[]; sortBy: string }) => void;
+    status: string[]
+    sortBy: string
+  }
+  setFilters: (filters: { status: string[]; sortBy: string }) => void
 }
 
 export const usePropertyStore = create<PropertyStore>((set) => ({
@@ -19,4 +19,4 @@ export const usePropertyStore = create<PropertyStore>((set) => ({
     sortBy: 'created_at',
   },
   setFilters: (filters) => set({ filters }),
-}));
+}))

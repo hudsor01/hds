@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material';
-import { PropertyCard } from 'components/dashboard/property-card';
-import { Plus } from 'react-feather';
+import { Box, Button, Container, Grid, Stack, Typography } from '@mui/material'
+import { PropertyCard } from 'components/dashboard/property-card'
+import { Plus } from 'react-feather'
 
 // Mock data for testing
 const mockProperties = [
@@ -27,19 +27,14 @@ const mockProperties = [
     units: '12 Units',
     occupancy: '83%',
   },
-];
+]
 
 export default function PropertiesPage() {
   return (
     <Box>
       <Container maxWidth="xl">
         {/* Header */}
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="center"
-          mb={4}
-        >
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
           <Box>
             <Typography variant="h4" fontWeight={600} gutterBottom>
               Properties
@@ -79,5 +74,5 @@ export default function PropertiesPage() {
         </Grid>
       </Container>
     </Box>
-  );
+  )
 }

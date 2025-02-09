@@ -1,18 +1,18 @@
-import EmailLayout, {button, footer, link, text} from '../layout';
-import {Button, Heading, Hr, Link, Section, Text} from '@react-email/components';
+import EmailLayout, { button, footer, link, text } from '../layout'
+import { Button, Heading, Hr, Link, Section, Text } from '@react-email/components'
 
 interface WelcomeEmailProps {
-  position: number;
-  referralCode: string;
+  position: number
+  referralCode: string
 }
 
-export default function WelcomeEmail({position, referralCode}: WelcomeEmailProps) {
-  const previewText = `You're #${position} on our waitlist!`;
-  const shareUrl = `https://hudsondigitalsolutions.com/?ref=${referralCode}`;
+export default function WelcomeEmail({ position, referralCode }: WelcomeEmailProps) {
+  const previewText = `You're #${position} on our waitlist!`
+  const shareUrl = `https://hudsondigitalsolutions.com/?ref=${referralCode}`
 
   return (
     <EmailLayout preview={previewText}>
-      <Heading style={{fontSize: '24px', fontWeight: 'bold', margin: '0 0 20px'}}>
+      <Heading style={{ fontSize: '24px', fontWeight: 'bold', margin: '0 0 20px' }}>
         Welcome to Property Manager!
       </Heading>
 
@@ -48,14 +48,14 @@ export default function WelcomeEmail({position, referralCode}: WelcomeEmailProps
         </Button>
       </Section>
 
-      <Hr style={{borderColor: '#dedede', margin: '20px 0'}} />
+      <Hr style={{ borderColor: '#dedede', margin: '20px 0' }} />
 
       <Text style={footer}>
         Property Manager by{' '}
-        <Link href='https://hudsondigitalsolutions.com' style={link}>
+        <Link href="https://hudsondigitalsolutions.com" style={link}>
           Hudson Digital Solutions
         </Link>
       </Text>
     </EmailLayout>
-  );
+  )
 }

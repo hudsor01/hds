@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { ToggleButton, ToggleButtonGroup } from '@mui/material';
+import { ToggleButton, ToggleButtonGroup } from '@mui/material'
 
-export const ToggleGroup = ToggleButtonGroup;
-export const ToggleGroupItem = ToggleButton;
+export const ToggleGroup = ToggleButtonGroup
+export const ToggleGroupItem = ToggleButton

@@ -1,5 +1,5 @@
-import { Input } from '@/components/ui/input';
-import { getFieldError } from '@/lib/forms/use-form';
+import { Input } from '@/components/ui/input'
+import { getFieldError } from '@/lib/forms/use-form'
 import {
   FormControl,
   FormHelperText,
@@ -8,20 +8,20 @@ import {
   Select,
   TextField,
   TextFieldProps,
-} from '@mui/material';
-import { Controller, useFormContext } from 'react-hook-form';
+} from '@mui/material'
+import { Controller, useFormContext } from 'react-hook-form'
 
 interface FormFieldProps extends Omit<TextFieldProps, 'name'> {
-  name: string;
-  label: string;
+  name: string
+  label: string
 }
 
 export function FormInput({ name, label, ...props }: FormFieldProps) {
   const {
     register,
     formState: { errors },
-  } = useFormContext();
-  const error = getFieldError(name, errors);
+  } = useFormContext()
+  const error = getFieldError(name, errors)
 
   return (
     <TextField
@@ -32,24 +32,19 @@ export function FormInput({ name, label, ...props }: FormFieldProps) {
       helperText={error}
       fullWidth
     />
-  );
+  )
 }
 
 interface SelectFieldProps extends FormFieldProps {
-  options: Array<{ label: string; value: string | number }>;
+  options: Array<{ label: string; value: string | number }>
 }
 
-export function FormSelect({
-  name,
-  label,
-  options,
-  ...props
-}: SelectFieldProps) {
+export function FormSelect({ name, label, options, ...props }: SelectFieldProps) {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
-  const error = getFieldError(name, errors);
+  } = useFormContext()
+  const error = getFieldError(name, errors)
 
   return (
     <Controller
@@ -69,26 +64,20 @@ export function FormSelect({
         </FormControl>
       )}
     />
-  );
+  )
 }
 
 interface DateFieldProps extends FormFieldProps {
-  minDate?: Date;
-  maxDate?: Date;
+  minDate?: Date
+  maxDate?: Date
 }
 
-export function FormDatePicker({
-  name,
-  label,
-  minDate,
-  maxDate,
-  ...props
-}: DateFieldProps) {
+export function FormDatePicker({ name, label, minDate, maxDate, ...props }: DateFieldProps) {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
-  const error = getFieldError(name, errors);
+  } = useFormContext()
+  const error = getFieldError(name, errors)
 
   return (
     <Controller
@@ -111,19 +100,19 @@ export function FormDatePicker({
         />
       )}
     />
-  );
+  )
 }
 
 interface CheckboxFieldProps extends Omit<FormFieldProps, 'label'> {
-  label: React.ReactNode;
+  label: React.ReactNode
 }
 
 export function FormCheckbox({ name, label, ...props }: CheckboxFieldProps) {
   const {
     control,
     formState: { errors },
-  } = useFormContext();
-  const error = getFieldError(name, errors);
+  } = useFormContext()
+  const error = getFieldError(name, errors)
 
   return (
     <Controller
@@ -132,17 +121,12 @@ export function FormCheckbox({ name, label, ...props }: CheckboxFieldProps) {
       render={({ field }) => (
         <FormControl error={!!error}>
           <label>
-            <Input
-              type="checkbox"
-              {...field}
-              {...props}
-              checked={field.value}
-            />
+            <Input type="checkbox" {...field} {...props} checked={field.value} />
             {label}
           </label>
           {error && <FormHelperText>{error}</FormHelperText>}
         </FormControl>
       )}
     />
-  );
+  )
 }

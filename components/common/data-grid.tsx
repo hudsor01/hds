@@ -1,11 +1,6 @@
-import type { BaseGridProps } from '@/types/grid';
-import { Box } from '@mui/material';
-import {
-  DataGrid,
-  GridToolbar,
-  type GridColDef,
-  type GridRowParams,
-} from '@mui/x-data-grid';
+import type { BaseGridProps } from '@/types/grid'
+import { Box } from '@mui/material'
+import { DataGrid, GridToolbar, type GridColDef, type GridRowParams } from '@mui/x-data-grid'
 
 export function BaseDataGrid<T extends { id: string | number }>({
   data,
@@ -16,13 +11,13 @@ export function BaseDataGrid<T extends { id: string | number }>({
   customToolbar,
   disableSelection,
 }: BaseGridProps<T> & {
-  columns: GridColDef[];
-  customToolbar?: typeof GridToolbar;
-  disableSelection?: boolean;
+  columns: GridColDef[]
+  customToolbar?: typeof GridToolbar
+  disableSelection?: boolean
 }) {
   const handleRowClick = onRowClick
     ? (params: GridRowParams) => onRowClick(params.row as T)
-    : undefined;
+    : undefined
 
   return (
     <Box sx={{ width: '100%', height: '100%' }}>
@@ -52,5 +47,5 @@ export function BaseDataGrid<T extends { id: string | number }>({
         }}
       />
     </Box>
-  );
+  )
 }

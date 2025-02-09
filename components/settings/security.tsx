@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Box,
@@ -10,8 +10,8 @@ import {
   Switch,
   TextField,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
+} from '@mui/material'
+import { useState } from 'react'
 
 export function SecuritySettings() {
   const [settings, setSettings] = useState({
@@ -20,28 +20,26 @@ export function SecuritySettings() {
     passwordExpiry: 90,
     loginNotifications: true,
     deviceHistory: true,
-  });
+  })
 
   const handleSwitchChange =
-    (field: keyof typeof settings) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
+    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       setSettings((prev) => ({
         ...prev,
         [field]: event.target.checked,
-      }));
-    };
+      }))
+    }
 
   const handleNumberChange =
-    (field: keyof typeof settings) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = parseInt(event.target.value, 10);
+    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+      const value = parseInt(event.target.value, 10)
       if (!isNaN(value)) {
         setSettings((prev) => ({
           ...prev,
           [field]: value,
-        }));
+        }))
       }
-    };
+    }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -61,17 +59,12 @@ export function SecuritySettings() {
             <FormGroup>
               <FormControlLabel
                 control={
-                  <Switch
-                    checked={settings.twoFactor}
-                    onChange={handleSwitchChange('twoFactor')}
-                  />
+                  <Switch checked={settings.twoFactor} onChange={handleSwitchChange('twoFactor')} />
                 }
                 label="Enable two-factor authentication"
               />
             </FormGroup>
-            <FormHelperText>
-              Add an extra layer of security to your account
-            </FormHelperText>
+            <FormHelperText>Add an extra layer of security to your account</FormHelperText>
           </FormControl>
         </Box>
 
@@ -88,9 +81,7 @@ export function SecuritySettings() {
               size="small"
               inputProps={{ min: 5, max: 120 }}
             />
-            <FormHelperText>
-              Automatically log out after period of inactivity
-            </FormHelperText>
+            <FormHelperText>Automatically log out after period of inactivity</FormHelperText>
           </FormControl>
 
           <FormControl fullWidth>
@@ -102,9 +93,7 @@ export function SecuritySettings() {
               size="small"
               inputProps={{ min: 30, max: 365 }}
             />
-            <FormHelperText>
-              Require password change after specified period
-            </FormHelperText>
+            <FormHelperText>Require password change after specified period</FormHelperText>
           </FormControl>
         </Box>
 
@@ -149,5 +138,5 @@ export function SecuritySettings() {
         </Box>
       </FormGroup>
     </Box>
-  );
+  )
 }

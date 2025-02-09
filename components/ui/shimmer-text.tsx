@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { cn } from '../../lib/utils';
-import React, { CSSProperties, FC, ReactNode } from 'react';
+import { cn } from '../../lib/utils'
+import React, { CSSProperties, FC, ReactNode } from 'react'
 
 interface AnimatedShinyTextProps {
-  children: ReactNode;
-  className?: string;
-  shimmerWidth?: number;
+  children: ReactNode
+  className?: string
+  shimmerWidth?: number
 }
 
 const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
@@ -30,12 +30,12 @@ const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
         // Shimmer gradient
         'bg-gradient-to-r from-transparent via-black/80 via-50% to-transparent dark:via-yellow-300',
 
-        className,
+        className
       )}
     >
       {children}
     </p>
-  );
-};
+  )
+}
 
-export default AnimatedShinyText;
+export default AnimatedShinyText

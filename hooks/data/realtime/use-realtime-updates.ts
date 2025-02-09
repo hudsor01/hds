@@ -1,11 +1,11 @@
 // lib/hooks/use-realtime-updates.ts
-import { supabase } from '@/lib/supabase';
-import { useQueryClient } from '@tanstack/react-query';
-import { useEffect } from 'react';
-import { toast } from 'sonner';
+import { supabase } from '@/lib/supabase'
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
 
 export function useRealtimeUpdates(table: string, userId: string) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const channel = supabase
@@ -19,14 +19,14 @@ export function useRealtimeUpdates(table: string, userId: string) {
           filter: `user_id=eq.${userId}`,
         },
         (payload) => {
-          queryClient.invalidateQueries({ queryKey: [table] });
-          toast.success(`${table} updated`);
-        },
+          queryClient.invalidateQueries({ queryKey: [table] })
+          toast.success(`${table} updated`)
+        }
       )
-      .subscribe();
+      .subscribe()
 
     return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [table, userId, queryClient]);
+      supabase.removeChannel(channel)
+    }
+  }, [table, userId, queryClient])
 }

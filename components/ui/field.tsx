@@ -1,21 +1,18 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { Label } from 'components/ui/label';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import { Label } from 'components/ui/label'
+import * as React from 'react'
 
 interface FieldProps extends React.HTMLAttributes<HTMLDivElement> {
-  label?: React.ReactNode;
-  helperText?: React.ReactNode;
-  errorText?: React.ReactNode;
-  required?: boolean;
+  label?: React.ReactNode
+  helperText?: React.ReactNode
+  errorText?: React.ReactNode
+  required?: boolean
 }
 
 export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
-  (
-    { className, label, children, helperText, errorText, required, ...props },
-    ref,
-  ) => {
+  ({ className, label, children, helperText, errorText, required, ...props }, ref) => {
     return (
       <div ref={ref} className={cn('space-y-2', className)} {...props}>
         {label && (
@@ -25,12 +22,10 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
           </Label>
         )}
         {children}
-        {helperText && (
-          <p className="text-sm text-muted-foreground">{helperText}</p>
-        )}
+        {helperText && <p className="text-sm text-muted-foreground">{helperText}</p>}
         {errorText && <p className="text-sm text-destructive">{errorText}</p>}
       </div>
-    );
-  },
-);
-Field.displayName = 'Field';
+    )
+  }
+)
+Field.displayName = 'Field'

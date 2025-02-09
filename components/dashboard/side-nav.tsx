@@ -1,36 +1,28 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
-import {
-  Box,
-  ChevronLeft,
-  ChevronRight,
-  FileText,
-  Home,
-  Settings,
-  Users,
-} from 'react-feather';
+import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { useState } from 'react'
+import { Box, ChevronLeft, ChevronRight, FileText, Home, Settings, Users } from 'react-feather'
 
 export function DashboardSideNav() {
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const pathname = usePathname();
+  const [isCollapsed, setIsCollapsed] = useState(false)
+  const pathname = usePathname()
 
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Properties', href: '/dashboard/properties', icon: Box },
     { name: 'Tenants', href: '/dashboard/tenants', icon: Users },
     { name: 'Documents', href: '/dashboard/documents', icon: FileText },
-  ];
+  ]
 
   return (
     <>
       <aside
         className={cn(
           'fixed left-0 top-0 z-50 h-screen border-r bg-background transition-all duration-300',
-          isCollapsed ? 'w-16' : 'w-64',
+          isCollapsed ? 'w-16' : 'w-64'
         )}
       >
         <div className="flex h-full flex-col">
@@ -58,15 +50,11 @@ export function DashboardSideNav() {
                   'mx-2 my-1 flex items-center rounded-lg p-4 transition-colors',
                   pathname === item.href
                     ? 'bg-primary/10 text-primary'
-                    : 'text-foreground hover:bg-accent',
+                    : 'text-foreground hover:bg-accent'
                 )}
               >
-                <item.icon
-                  className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')}
-                />
-                {!isCollapsed && (
-                  <span className="text-sm font-medium">{item.name}</span>
-                )}
+                <item.icon className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+                {!isCollapsed && <span className="text-sm font-medium">{item.name}</span>}
               </Link>
             ))}
           </nav>
@@ -79,29 +67,20 @@ export function DashboardSideNav() {
                 'mx-2 my-1 flex items-center rounded-lg p-4 transition-colors',
                 pathname === '/dashboard/settings'
                   ? 'bg-primary/10 text-primary'
-                  : 'text-foreground hover:bg-accent',
+                  : 'text-foreground hover:bg-accent'
               )}
             >
-              <Settings
-                className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')}
-              />
-              {!isCollapsed && (
-                <span className="text-sm font-medium">Settings</span>
-              )}
+              <Settings className={cn('h-5 w-5', isCollapsed ? 'mx-auto' : 'mr-3')} />
+              {!isCollapsed && <span className="text-sm font-medium">Settings</span>}
             </Link>
           </div>
         </div>
       </aside>
 
       {/* Responsive Content Area */}
-      <main
-        className={cn(
-          'transition-margin duration-300',
-          isCollapsed ? 'ml-16' : 'ml-64',
-        )}
-      >
+      <main className={cn('transition-margin duration-300', isCollapsed ? 'ml-16' : 'ml-64')}>
         {/* Your dashboard content goes here */}
       </main>
     </>
-  );
+  )
 }

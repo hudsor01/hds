@@ -1,13 +1,13 @@
 // components/layout/shell.tsx
-'use client';
+'use client'
 
-import { useScrollTop } from '@/hooks/use-scroll';
-import { cn } from '@/lib/utils';
+import { useScrollTop } from '@/hooks/use-scroll'
+import { cn } from '@/lib/utils'
 
 // components/layout/shell.tsx
 
 export function Shell({ children }: { children: React.ReactNode }) {
-  const scrolled = useScrollTop();
+  const scrolled = useScrollTop()
 
   return (
     <div className="flex h-screen dark:bg-slate-950">
@@ -15,9 +15,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       <nav
         className={cn(
           'fixed top-0 h-14 w-full border-b px-4 transition-all',
-          scrolled
-            ? 'border-border/40 bg-background/90 backdrop-blur-lg'
-            : 'border-transparent',
+          scrolled ? 'border-border/40 bg-background/90 backdrop-blur-lg' : 'border-transparent'
         )}
       >
         <div className="flex h-14 items-center gap-4">
@@ -35,5 +33,5 @@ export function Shell({ children }: { children: React.ReactNode }) {
       {/* Main content area with minimal padding */}
       <main className="flex-1 overflow-auto pt-14">{children}</main>
     </div>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 interface PublicLayoutProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function PublicLayout({ children, className }: PublicLayoutProps) {
@@ -18,5 +18,5 @@ export function PublicLayout({ children, className }: PublicLayoutProps) {
       {/* Content */}
       <div className="relative">{children}</div>
     </div>
-  );
+  )
 }

@@ -4,10 +4,12 @@ import { NextRequest } from 'next/server'
 export async function GET(req: NextRequest) {
   return withAuth(req, async (userId) => {
     // Your protected API logic here
-    return new Response(JSON.stringify({
-      message: 'This is a protected endpoint',
-      userId
-    }))
+    return new Response(
+      JSON.stringify({
+        message: 'This is a protected endpoint',
+        userId,
+      })
+    )
   })
 }
 
@@ -16,10 +18,12 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
 
     // Your protected API logic here
-    return new Response(JSON.stringify({
-      message: 'Data received',
-      userId,
-      data: body
-    }))
+    return new Response(
+      JSON.stringify({
+        message: 'Data received',
+        userId,
+        data: body,
+      })
+    )
   })
 }

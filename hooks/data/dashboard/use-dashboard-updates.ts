@@ -1,6 +1,6 @@
-import { supabase } from '@/lib/supabase';
-import type { UseDashboardUpdatesProps } from '@/types/database.types';
-import { useCallback, useEffect } from 'react';
+import { supabase } from '@/lib/supabase'
+import type { UseDashboardUpdatesProps } from '@/types/database.types'
+import { useCallback, useEffect } from 'react'
 
 export function useDashboardUpdates({
   table,
@@ -19,9 +19,9 @@ export function useDashboardUpdates({
           table,
         },
         (payload) => {
-          const data = payload.new;
-          onUpdate(data);
-        },
+          const data = payload.new
+          onUpdate(data)
+        }
       )
       .on(
         'postgres_changes',
@@ -31,18 +31,18 @@ export function useDashboardUpdates({
           table,
         },
         (payload) => {
-          const id = payload.old.id;
-          onDelete(id);
-        },
+          const id = payload.old.id
+          onDelete(id)
+        }
       )
-      .subscribe();
+      .subscribe()
 
     return () => {
-      void supabase.removeChannel(channel);
-    };
-  }, [table, onUpdate, onDelete]);
+      void supabase.removeChannel(channel)
+    }
+  }, [table, onUpdate, onDelete])
 
   useEffect(() => {
-    return handleUpdates();
-  }, [handleUpdates]);
+    return handleUpdates()
+  }, [handleUpdates])
 }

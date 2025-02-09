@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { ACTIVITY_FILTERS, type ActivityType } from '@/auth/lib/constants';
-import { Button } from '@/components/ui/buttons/button';
-import { Input } from 'components/ui/input';
-import { ToggleGroup, ToggleGroupItem } from 'components/ui/toggle-group';
-import * as React from 'react';
-import { Download, Search } from 'react-feather';
+import { ACTIVITY_FILTERS, type ActivityType } from '@/auth/lib/constants'
+import { Button } from '@/components/ui/buttons/button'
+import { Input } from 'components/ui/input'
+import { ToggleGroup, ToggleGroupItem } from 'components/ui/toggle-group'
+import * as React from 'react'
+import { Download, Search } from 'react-feather'
 
 interface ActivityHeaderProps {
-  filter: ActivityType | 'ALL';
-  onFilterChangeAction: (value: ActivityType | 'ALL') => void;
-  searchQuery: string;
-  onSearchChangeAction: (value: string) => void;
-  onExportAction: () => void;
+  filter: ActivityType | 'ALL'
+  onFilterChangeAction: (value: ActivityType | 'ALL') => void
+  searchQuery: string
+  onSearchChangeAction: (value: string) => void
+  onExportAction: () => void
 }
 
 export function ActivityHeader({
@@ -22,14 +22,11 @@ export function ActivityHeader({
   onSearchChangeAction,
   onExportAction,
 }: ActivityHeaderProps) {
-  const handleFilterChange = (
-    _: React.MouseEvent,
-    value: string | undefined,
-  ) => {
+  const handleFilterChange = (_: React.MouseEvent, value: string | undefined) => {
     if (value) {
-      onFilterChangeAction(value as ActivityType | 'ALL');
+      onFilterChangeAction(value as ActivityType | 'ALL')
     }
-  };
+  }
 
   return (
     <div className="space-y-4">
@@ -61,5 +58,5 @@ export function ActivityHeader({
         </ToggleGroup>
       </div>
     </div>
-  );
+  )
 }

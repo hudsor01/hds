@@ -1,50 +1,50 @@
-import { Activity, ActivityType } from '@/types/database.types';
-import BuildIcon from '@mui/icons-material/Build';
-import HomeIcon from '@mui/icons-material/Home';
-import PaymentIcon from '@mui/icons-material/Payment';
-import PersonIcon from '@mui/icons-material/Person';
-import Timeline from '@mui/lab/Timeline';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import Button from '@mui/material/Button';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardHeader from '@mui/material/CardHeader';
-import Typography from '@mui/material/Typography';
-import { format } from 'date-fns';
-import { useState } from 'react';
+import { Activity, ActivityType } from '@/types/database.types'
+import BuildIcon from '@mui/icons-material/Build'
+import HomeIcon from '@mui/icons-material/Home'
+import PaymentIcon from '@mui/icons-material/Payment'
+import PersonIcon from '@mui/icons-material/Person'
+import Timeline from '@mui/lab/Timeline'
+import TimelineConnector from '@mui/lab/TimelineConnector'
+import TimelineContent from '@mui/lab/TimelineContent'
+import TimelineDot from '@mui/lab/TimelineDot'
+import TimelineItem from '@mui/lab/TimelineItem'
+import TimelineSeparator from '@mui/lab/TimelineSeparator'
+import Button from '@mui/material/Button'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
+import Typography from '@mui/material/Typography'
+import { format } from 'date-fns'
+import { useState } from 'react'
 
 function getActivityIcon(type: ActivityType) {
   switch (type) {
     case 'property':
-      return <HomeIcon />;
+      return <HomeIcon />
     case 'payment':
-      return <PaymentIcon />;
+      return <PaymentIcon />
     case 'maintenance':
-      return <BuildIcon />;
+      return <BuildIcon />
     case 'tenant':
-      return <PersonIcon />;
+      return <PersonIcon />
   }
 }
 
 function getTimelineDotColor(type: ActivityType) {
   switch (type) {
     case 'property':
-      return 'primary';
+      return 'primary'
     case 'payment':
-      return 'success';
+      return 'success'
     case 'maintenance':
-      return 'error';
+      return 'error'
     case 'tenant':
-      return 'info';
+      return 'info'
   }
 }
 
 export function ActivityTimeline() {
-  const [expanded, setExpanded] = useState(false);
+  const [expanded, setExpanded] = useState(false)
 
   // Mock data - would come from your activity log API
   const activities: Activity[] = [
@@ -81,9 +81,9 @@ export function ActivityTimeline() {
         property: '789 Pine St',
       },
     },
-  ];
+  ]
 
-  const displayedActivities = expanded ? activities : activities.slice(0, 3);
+  const displayedActivities = expanded ? activities : activities.slice(0, 3)
 
   return (
     <Card>
@@ -105,9 +105,7 @@ export function ActivityTimeline() {
                 <TimelineDot color={getTimelineDotColor(activity.type)}>
                   {getActivityIcon(activity.type)}
                 </TimelineDot>
-                {index < displayedActivities.length - 1 && (
-                  <TimelineConnector />
-                )}
+                {index < displayedActivities.length - 1 && <TimelineConnector />}
               </TimelineSeparator>
               <TimelineContent>
                 <Typography variant="subtitle2" component="div">
@@ -144,5 +142,5 @@ export function ActivityTimeline() {
         </Timeline>
       </CardContent>
     </Card>
-  );
+  )
 }

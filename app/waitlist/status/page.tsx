@@ -1,41 +1,39 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { Container, Typography, TextField, Button, Alert } from '@mui/material';
-import StatusCard from '@/components/waitlist/status-card';
-import type { WaitlistEntry } from '@/types/waitlist';
+import { useEffect, useState } from 'react'
+import { Container, Typography, TextField, Button, Alert } from '@mui/material'
+import StatusCard from '@/components/waitlist/status-card'
+import type { WaitlistEntry } from '@/types/waitlist'
 
 export default function WaitlistStatusPage() {
-  const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [entry, setEntry] = useState<WaitlistEntry | null>(null);
-  const [totalCount, setTotalCount] = useState(0);
+  const [email, setEmail] = useState('')
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [entry, setEntry] = useState<WaitlistEntry | null>(null)
+  const [totalCount, setTotalCount] = useState(0)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
-      const response = await fetch(
-        `/api/waitlist/status?email=${encodeURIComponent(email)}`,
-      );
-      const data = await response.json();
+      const response = await fetch(`/api/waitlist/status?email=${encodeURIComponent(email)}`)
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch waitlist status');
+        throw new Error(data.error || 'Failed to fetch waitlist status')
       }
 
-      setEntry(data.entry);
-      setTotalCount(data.totalCount);
+      setEntry(data.entry)
+      setTotalCount(data.totalCount)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An error occurred';
-      setError(message);
+      const message = err instanceof Error ? err.message : 'An error occurred'
+      setError(message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Container maxWidth="md" className="py-12">
@@ -44,8 +42,7 @@ export default function WaitlistStatusPage() {
           Check Your Waitlist Status
         </Typography>
         <Typography variant="subtitle1" color="textSecondary" className="mb-8">
-          Enter your email address to see your current position and referral
-          status.
+          Enter your email address to see your current position and referral status.
         </Typography>
       </div>
 
@@ -91,5 +88,5 @@ export default function WaitlistStatusPage() {
         </Typography>
       </div>
     </Container>
-  );
+  )
 }

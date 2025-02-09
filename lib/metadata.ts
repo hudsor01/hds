@@ -1,10 +1,10 @@
-import type { Metadata } from 'next';
+import type { Metadata } from 'next'
 
 interface GenerateMetadataOptions {
-  title: string;
-  description?: string;
-  noIndex?: boolean;
-  ogImage?: string;
+  title: string
+  description?: string
+  noIndex?: boolean
+  ogImage?: string
 }
 
 export function generateMetadata({
@@ -13,9 +13,9 @@ export function generateMetadata({
   noIndex = false,
   ogImage,
 }: GenerateMetadataOptions): Metadata {
-  const baseTitle = 'Property Manager';
-  const fullTitle = `${title} | ${baseTitle}`;
-  const baseDescription = 'Modern property management solution';
+  const baseTitle = 'Property Manager'
+  const fullTitle = `${title} | ${baseTitle}`
+  const baseDescription = 'Modern property management solution'
 
   return {
     title: fullTitle,
@@ -47,7 +47,7 @@ export function generateMetadata({
         follow: false,
       },
     }),
-  };
+  }
 }
 
 // Example usage:

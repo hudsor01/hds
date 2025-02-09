@@ -1,12 +1,12 @@
-import { createClient } from '@/utils/supabase/client';
-import { NextResponse } from 'next/server';
+import { createClient } from '@/utils/supabase/client'
+import { NextResponse } from 'next/server'
 
 export async function GET(
   request: Request,
-  { params }: { params: { id: string; expenseId: string } },
+  { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient();
+    const supabase = createClient()
 
     // Get expense with property details
     const { data: expense, error } = await supabase
@@ -23,34 +23,31 @@ export async function GET(
           id,
           unit_number
         )
-      `,
+      `
       )
       .eq('id', params.expenseId)
       .eq('property_id', params.id)
-      .single();
+      .single()
 
-    if (error) throw error;
+    if (error) throw error
 
     if (!expense) {
-      return NextResponse.json({ error: 'Expense not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Expense not found' }, { status: 404 })
     }
 
-    return NextResponse.json(expense);
+    return NextResponse.json(expense)
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error fetching expense' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error fetching expense' }, { status: 500 })
   }
 }
 
 export async function PATCH(
   request: Request,
-  { params }: { params: { id: string; expenseId: string } },
+  { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient();
-    const json = await request.json();
+    const supabase = createClient()
+    const json = await request.json()
 
     // Update expense
     const { data: expense, error } = await supabase
@@ -77,41 +74,35 @@ export async function PATCH(
           id,
           unit_number
         )
-      `,
+      `
       )
-      .single();
+      .single()
 
-    if (error) throw error;
+    if (error) throw error
 
-    return NextResponse.json(expense);
+    return NextResponse.json(expense)
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error updating expense' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error updating expense' }, { status: 500 })
   }
 }
 
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string; expenseId: string } },
+  { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient();
+    const supabase = createClient()
 
     const { error } = await supabase
       .from('expenses')
       .delete()
       .eq('id', params.expenseId)
-      .eq('property_id', params.id);
+      .eq('property_id', params.id)
 
-    if (error) throw error;
+    if (error) throw error
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error deleting expense' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error deleting expense' }, { status: 500 })
   }
 }

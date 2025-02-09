@@ -1,87 +1,87 @@
-'use client';
+'use client'
 
-import './globals.css';
-import React, { useState, useEffect } from 'react';
-import type { NextPage } from 'next';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@supabase/supabase-js';
-import { Auth } from '@supabase/auth-ui-react';
-import { ThemeSupa } from '@supabase/auth-ui-shared';
+import './globals.css'
+import React, { useState, useEffect } from 'react'
+import type { NextPage } from 'next'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@supabase/supabase-js'
+import { Auth } from '@supabase/auth-ui-react'
+import { ThemeSupa } from '@supabase/auth-ui-shared'
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-);
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+)
 
 export default function App() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState(null)
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+      setSession(session)
+    })
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
+      setSession(session)
+    })
 
-    return () => subscription.unsubscribe();
-  }, []);
+    return () => subscription.unsubscribe()
+  }, [])
 
   if (!session) {
-    return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />;
+    return <Auth supabaseClient={supabase} appearance={{ theme: ThemeSupa }} />
   } else {
-    return <div>Logged in!</div>;
+    return <div>Logged in!</div>
   }
 }
 
 const ForgotPasswordPage: NextPage = () => {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [code, setCode] = useState('');
-  const [successfulCreation, setSuccessfulCreation] = useState(false);
-  const [secondFactor, setSecondFactor] = useState(false);
-  const [error, setError] = useState('');
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [code, setCode] = useState('')
+  const [successfulCreation, setSuccessfulCreation] = useState(false)
+  const [secondFactor, setSecondFactor] = useState(false)
+  const [error, setError] = useState('')
 
-  const router = useRouter();
-  const { isLoaded, isAuthenticated, signIn, setActive } = supabase.auth;
-  const isSignedIn = isAuthenticated;
+  const router = useRouter()
+  const { isLoaded, isAuthenticated, signIn, setActive } = supabase.auth
+  const isSignedIn = isAuthenticated
 
   if (!isLoaded) {
-    return null;
+    return null
   }
 
   // If the user is already signed in,
   // redirect them to the home page
   if (isSignedIn) {
-    router.push('/');
+    router.push('/')
   }
 
   // Send the password reset code to the user's email
   async function create(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
     await signIn
       ?.create({
         strategy: 'reset_password_email_code',
         identifier: email,
       })
       .then((_) => {
-        setSuccessfulCreation(true);
-        setError('');
+        setSuccessfulCreation(true)
+        setError('')
       })
       .catch((err) => {
-        console.error('error', err.errors[0].longMessage);
-        setError(err.errors[0].longMessage);
-      });
+        console.error('error', err.errors[0].longMessage)
+        setError(err.errors[0].longMessage)
+      })
   }
 
   // Reset the user's password.
   // Upon successful reset, the user will be
   // signed in and redirected to the home page
   async function reset(e: React.FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
     await signIn
       ?.attemptFirstFactor({
         strategy: 'reset_password_email_code',
@@ -91,21 +91,21 @@ const ForgotPasswordPage: NextPage = () => {
       .then((result) => {
         // Check if 2FA is required
         if (result.status === 'needs_second_factor') {
-          setSecondFactor(true);
-          setError('');
+          setSecondFactor(true)
+          setError('')
         } else if (result.status === 'complete') {
           // Set the active session to
           // the newly created session (user is now signed in)
-          setActive({ session: result.createdSessionId });
-          setError('');
+          setActive({ session: result.createdSessionId })
+          setError('')
         } else {
-          console.log(result);
+          console.log(result)
         }
       })
       .catch((err) => {
-        console.error('error', err.errors[0].longMessage);
-        setError(err.errors[0].longMessage);
-      });
+        console.error('error', err.errors[0].longMessage)
+        setError(err.errors[0].longMessage)
+      })
   }
 
   return (
@@ -142,32 +142,22 @@ const ForgotPasswordPage: NextPage = () => {
         {successfulCreation && (
           <>
             <label htmlFor="password">Enter your new password</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
 
             <label htmlFor="password">
               Enter the password reset code that was sent to your email
             </label>
-            <input
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-            />
+            <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
 
             <button>Reset</button>
             {error && <p>{error}</p>}
           </>
         )}
 
-        {secondFactor && (
-          <p>2FA is required, but this UI does not handle that</p>
-        )}
+        {secondFactor && <p>2FA is required, but this UI does not handle that</p>}
       </form>
     </div>
-  );
-};
+  )
+}
 
-export default ForgotPasswordPage;
+export default ForgotPasswordPage

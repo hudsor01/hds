@@ -1,10 +1,6 @@
-import { Sidebar } from '@/components/layout/sidebar';
+import { Sidebar } from '@/components/layout/sidebar'
 
-export default function SettingsLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function SettingsLayout({ children }: { children: React.ReactNode }) {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
@@ -12,5 +8,5 @@ export default function SettingsLayout({
         <div className="mx-auto max-w-4xl">{children}</div>
       </main>
     </div>
-  );
+  )
 }

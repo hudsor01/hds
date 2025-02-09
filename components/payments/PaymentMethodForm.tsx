@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { api } from '@/lib/api';
-import type { PaymentMethodType } from '@/types/payments';
+import { api } from '@/lib/api'
+import type { PaymentMethodType } from '@/types/payments'
 import {
   Box,
   Button,
@@ -11,15 +11,15 @@ import {
   Select,
   TextField,
   Typography,
-} from '@mui/material';
-import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from '@mui/material'
+import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface PaymentMethodFormProps {
-  onSuccess?: (paymentMethod: any) => void;
-  onCancel?: () => void;
-  defaultType?: PaymentMethodType;
+  onSuccess?: (paymentMethod: any) => void
+  onCancel?: () => void
+  defaultType?: PaymentMethodType
 }
 
 export default function PaymentMethodForm({
@@ -27,11 +27,10 @@ export default function PaymentMethodForm({
   onCancel,
   defaultType = 'card',
 }: PaymentMethodFormProps) {
-  const stripe = useStripe();
-  const elements = useElements();
-  const [isLoading, setIsLoading] = useState(false);
-  const [paymentType, setPaymentType] =
-    useState<PaymentMethodType>(defaultType);
+  const stripe = useStripe()
+  const elements = useElements()
+  const [isLoading, setIsLoading] = useState(false)
+  const [paymentType, setPaymentType] = useState<PaymentMethodType>(defaultType)
   const [formData, setFormData] = useState({
     bank_name: '',
     account_holder: '',
@@ -46,39 +45,36 @@ export default function PaymentMethodForm({
     swift_bic: '',
     iban: '',
     reference: '',
-  });
+  })
 
-  const handleInputChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setIsLoading(true);
+    event.preventDefault()
+    setIsLoading(true)
 
     try {
-      let paymentMethod;
+      let paymentMethod
 
       switch (paymentType) {
         case 'card':
           if (!stripe || !elements) {
-            toast.error('Stripe not initialized');
-            return;
+            toast.error('Stripe not initialized')
+            return
           }
-          const { error, paymentMethod: stripeMethod } =
-            await stripe.createPaymentMethod({
-              type: 'card',
-              card: elements.getElement(CardElement)!,
-            });
+          const { error, paymentMethod: stripeMethod } = await stripe.createPaymentMethod({
+            type: 'card',
+            card: elements.getElement(CardElement)!,
+          })
           if (error) {
-            toast.error(error.message);
-            return;
+            toast.error(error.message)
+            return
           }
-          paymentMethod = stripeMethod;
-          break;
+          paymentMethod = stripeMethod
+          break
 
         case 'ach_debit':
           // Create ACH payment method
@@ -91,14 +87,11 @@ export default function PaymentMethodForm({
               account_type: formData.account_type,
               account_holder_type: formData.account_holder_type,
             },
-          };
-          const achResponse = await api.post(
-            '/api/payments/methods/ach',
-            achData,
-          );
-          if (achResponse.error) throw new Error(achResponse.error.message);
-          paymentMethod = achResponse.data;
-          break;
+          }
+          const achResponse = await api.post('/api/payments/methods/ach', achData)
+          if (achResponse.error) throw new Error(achResponse.error.message)
+          paymentMethod = achResponse.data
+          break
 
         case 'check':
           // Save check payment method
@@ -111,14 +104,11 @@ export default function PaymentMethodForm({
               routing_number: formData.routing_number,
               account_number: formData.account_number,
             },
-          };
-          const checkResponse = await api.post(
-            '/api/payments/methods/check',
-            checkData,
-          );
-          if (checkResponse.error) throw new Error(checkResponse.error.message);
-          paymentMethod = checkResponse.data;
-          break;
+          }
+          const checkResponse = await api.post('/api/payments/methods/check', checkData)
+          if (checkResponse.error) throw new Error(checkResponse.error.message)
+          paymentMethod = checkResponse.data
+          break
 
         case 'cash':
           // Save cash payment method
@@ -129,14 +119,11 @@ export default function PaymentMethodForm({
               received_by: formData.received_by,
               notes: formData.notes,
             },
-          };
-          const cashResponse = await api.post(
-            '/api/payments/methods/cash',
-            cashData,
-          );
-          if (cashResponse.error) throw new Error(cashResponse.error.message);
-          paymentMethod = cashResponse.data;
-          break;
+          }
+          const cashResponse = await api.post('/api/payments/methods/cash', cashData)
+          if (cashResponse.error) throw new Error(cashResponse.error.message)
+          paymentMethod = cashResponse.data
+          break
 
         case 'bank_transfer':
           // Save bank transfer payment method
@@ -151,32 +138,25 @@ export default function PaymentMethodForm({
               account_number: formData.account_number,
               reference: formData.reference,
             },
-          };
-          const bankResponse = await api.post(
-            '/api/payments/methods/bank',
-            bankData,
-          );
-          if (bankResponse.error) throw new Error(bankResponse.error.message);
-          paymentMethod = bankResponse.data;
-          break;
+          }
+          const bankResponse = await api.post('/api/payments/methods/bank', bankData)
+          if (bankResponse.error) throw new Error(bankResponse.error.message)
+          paymentMethod = bankResponse.data
+          break
       }
 
-      toast.success('Payment method added successfully');
-      onSuccess?.(paymentMethod);
+      toast.success('Payment method added successfully')
+      onSuccess?.(paymentMethod)
     } catch (error) {
-      console.error('Error saving payment method:', error);
-      toast.error('Failed to save payment method');
+      console.error('Error saving payment method:', error)
+      toast.error('Failed to save payment method')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      sx={{ width: '100%', maxWidth: 400 }}
-    >
+    <Box component="form" onSubmit={handleSubmit} sx={{ width: '100%', maxWidth: 400 }}>
       <Typography variant="h6" gutterBottom>
         Add Payment Method
       </Typography>
@@ -389,5 +369,5 @@ export default function PaymentMethodForm({
         </Button>
       </Box>
     </Box>
-  );
+  )
 }

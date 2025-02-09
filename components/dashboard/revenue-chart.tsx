@@ -1,8 +1,8 @@
 // components/dashboard/revenue-chart.tsx
-'use client';
+'use client'
 
-import { Card } from '@/components/ui/cards/card';
-import { useQuery } from '@tanstack/react-query';
+import { Card } from '@/components/ui/cards/card'
+import { useQuery } from '@tanstack/react-query'
 import {
   CartesianGrid,
   Line,
@@ -11,7 +11,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 // components/dashboard/revenue-chart.tsx
 
@@ -21,10 +21,10 @@ export function RevenueChart() {
   const { data: chartData, isLoading } = useQuery({
     queryKey: ['revenueData'],
     queryFn: async () => {
-      const response = await fetch('/api/dashboard/revenue');
-      return response.json();
+      const response = await fetch('/api/dashboard/revenue')
+      return response.json()
     },
-  });
+  })
 
   return (
     <Card className="p-6">
@@ -40,17 +40,12 @@ export function RevenueChart() {
             <XAxis dataKey="month" />
             <YAxis />
             <Tooltip />
-            <Line
-              type="monotone"
-              dataKey="revenue"
-              stroke="#3b82f6"
-              strokeWidth={2}
-            />
+            <Line type="monotone" dataKey="revenue" stroke="#3b82f6" strokeWidth={2} />
           </LineChart>
         </ResponsiveContainer>
       </div>
     </Card>
-  );
+  )
 }
 
 RevenueChart.Skeleton = function Skeleton() {
@@ -61,5 +56,5 @@ RevenueChart.Skeleton = function Skeleton() {
         <div className="h-[300px] rounded bg-gray-200" />
       </div>
     </Card>
-  );
-};
+  )
+}

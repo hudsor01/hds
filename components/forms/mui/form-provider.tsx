@@ -1,17 +1,13 @@
-import { useForm } from '@/lib/forms/use-form';
-import { PropsWithChildren } from 'react';
-import {
-  FormProvider as RHFFormProvider,
-  UseFormReturn,
-} from 'react-hook-form';
-import { z } from 'zod';
+import { useForm } from '@/lib/forms/use-form'
+import { PropsWithChildren } from 'react'
+import { FormProvider as RHFFormProvider, UseFormReturn } from 'react-hook-form'
+import { z } from 'zod'
 
-interface FormContainerProps<T extends z.ZodObject<any>>
-  extends PropsWithChildren {
-  schema: T;
-  defaultValues?: Partial<z.infer<T>>;
-  onSubmit: (data: z.infer<T>) => Promise<void> | void;
-  onError?: (error: Error) => void;
+interface FormContainerProps<T extends z.ZodObject<any>> extends PropsWithChildren {
+  schema: T
+  defaultValues?: Partial<z.infer<T>>
+  onSubmit: (data: z.infer<T>) => Promise<void> | void
+  onError?: (error: Error) => void
 }
 
 export function FormContainer<T extends z.ZodObject<any>>({
@@ -26,11 +22,7 @@ export function FormContainer<T extends z.ZodObject<any>>({
     defaultValues,
     onSubmit,
     onError,
-  });
+  })
 
-  return (
-    <RHFFormProvider {...(methods as UseFormReturn)}>
-      {children}
-    </RHFFormProvider>
-  );
+  return <RHFFormProvider {...(methods as UseFormReturn)}>{children}</RHFFormProvider>
 }

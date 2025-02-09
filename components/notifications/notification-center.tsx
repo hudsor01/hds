@@ -1,39 +1,39 @@
 // components/notifications/notification-center.tsx
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
-import CloseIcon from '@mui/icons-material/Close';
-import ErrorIcon from '@mui/icons-material/Error';
-import InfoIcon from '@mui/icons-material/Info';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import WarningIcon from '@mui/icons-material/Warning';
-import Badge from '@mui/material/Badge';
-import Box from '@mui/material/Box';
-import Drawer from '@mui/material/Drawer';
-import IconButton from '@mui/material/IconButton';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
-import Tab from '@mui/material/Tab';
-import Tabs from '@mui/material/Tabs';
-import Tooltip from '@mui/material/Tooltip';
-import Typography from '@mui/material/Typography';
-import { formatDistanceToNow } from 'date-fns';
-import { useState } from 'react';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle'
+import CloseIcon from '@mui/icons-material/Close'
+import ErrorIcon from '@mui/icons-material/Error'
+import InfoIcon from '@mui/icons-material/Info'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import NotificationsIcon from '@mui/icons-material/Notifications'
+import WarningIcon from '@mui/icons-material/Warning'
+import Badge from '@mui/material/Badge'
+import Box from '@mui/material/Box'
+import Drawer from '@mui/material/Drawer'
+import IconButton from '@mui/material/IconButton'
+import List from '@mui/material/List'
+import ListItem from '@mui/material/ListItem'
+import ListItemIcon from '@mui/material/ListItemIcon'
+import ListItemText from '@mui/material/ListItemText'
+import Tab from '@mui/material/Tab'
+import Tabs from '@mui/material/Tabs'
+import Tooltip from '@mui/material/Tooltip'
+import Typography from '@mui/material/Typography'
+import { formatDistanceToNow } from 'date-fns'
+import { useState } from 'react'
 
 interface Notification {
-  id: string;
-  type: 'alert' | 'info' | 'warning' | 'success';
-  title: string;
-  message: string;
-  timestamp: Date;
-  read: boolean;
-  category: 'maintenance' | 'payment' | 'lease' | 'system';
+  id: string
+  type: 'alert' | 'info' | 'warning' | 'success'
+  title: string
+  message: string
+  timestamp: Date
+  read: boolean
+  category: 'maintenance' | 'payment' | 'lease' | 'system'
 }
 
 export function NotificationCenter() {
-  const [open, setOpen] = useState(false);
-  const [currentTab, setCurrentTab] = useState(0);
+  const [open, setOpen] = useState(false)
+  const [currentTab, setCurrentTab] = useState(0)
 
   // Mock notifications - would come from your notification service
   const notifications: Notification[] = [
@@ -64,33 +64,29 @@ export function NotificationCenter() {
       read: false,
       category: 'lease',
     },
-  ];
+  ]
 
-  const unreadCount = notifications.filter((n) => !n.read).length;
+  const unreadCount = notifications.filter((n) => !n.read).length
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
       case 'alert':
-        return <ErrorIcon color="error" />;
+        return <ErrorIcon color="error" />
       case 'warning':
-        return <WarningIcon color="warning" />;
+        return <WarningIcon color="warning" />
       case 'success':
-        return <CheckCircleIcon color="success" />;
+        return <CheckCircleIcon color="success" />
       default:
-        return <InfoIcon color="info" />;
+        return <InfoIcon color="info" />
     }
-  };
+  }
 
   const handleMarkAsRead = (id: string) => {
     // Implement mark as read functionality
-    console.log('Marking notification as read:', id);
-  };
+    console.log('Marking notification as read:', id)
+  }
 
-  const NotificationList = ({
-    notifications,
-  }: {
-    notifications: Notification[];
-  }) => (
+  const NotificationList = ({ notifications }: { notifications: Notification[] }) => (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {notifications.map((notification) => (
         <ListItem
@@ -102,11 +98,7 @@ export function NotificationCenter() {
             bgcolor: notification.read ? 'inherit' : 'action.hover',
           }}
           secondaryAction={
-            <IconButton
-              edge="end"
-              size="small"
-              onClick={() => handleMarkAsRead(notification.id)}
-            >
+            <IconButton edge="end" size="small" onClick={() => handleMarkAsRead(notification.id)}>
               <MoreVertIcon />
             </IconButton>
           }
@@ -134,7 +126,7 @@ export function NotificationCenter() {
         </ListItem>
       ))}
     </List>
-  );
+  )
 
   return (
     <>
@@ -183,11 +175,7 @@ export function NotificationCenter() {
 
         <Box sx={{ overflow: 'auto' }}>
           <NotificationList
-            notifications={
-              currentTab === 0
-                ? notifications
-                : notifications.filter((n) => !n.read)
-            }
+            notifications={currentTab === 0 ? notifications : notifications.filter((n) => !n.read)}
           />
 
           {notifications.length === 0 && (
@@ -208,7 +196,7 @@ export function NotificationCenter() {
             }}
             onClick={() => {
               // Implement mark all as read functionality
-              console.log('Marking all as read');
+              console.log('Marking all as read')
             }}
           >
             Mark all as read
@@ -216,5 +204,5 @@ export function NotificationCenter() {
         </Box>
       </Drawer>
     </>
-  );
+  )
 }

@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { Card } from '@/components/ui/cards/card';
-import LoadingButton from '@mui/lab/LoadingButton';
-import { Box, Container, Grid, TextField, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Mail, MapPin, Phone } from 'react-feather';
-import { toast } from 'sonner';
+import { Card } from '@/components/ui/cards/card'
+import LoadingButton from '@mui/lab/LoadingButton'
+import { Box, Container, Grid, TextField, Typography } from '@mui/material'
+import { useState } from 'react'
+import { Mail, MapPin, Phone } from 'react-feather'
+import { toast } from 'sonner'
 
 const contactInfo = [
   {
@@ -23,14 +23,14 @@ const contactInfo = [
     value: '123 Business Street, Suite 100, New York, NY 10001',
     icon: MapPin,
   },
-];
+]
 
 interface ContactFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  phone: string;
-  message: string;
+  firstName: string
+  lastName: string
+  email: string
+  phone: string
+  message: string
 }
 
 const initialFormData: ContactFormData = {
@@ -39,15 +39,15 @@ const initialFormData: ContactFormData = {
   email: '',
   phone: '',
   message: '',
-};
+}
 
 export default function ContactPage() {
-  const [formData, setFormData] = useState<ContactFormData>(initialFormData);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<ContactFormData>(initialFormData)
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+    e.preventDefault()
+    setIsSubmitting(true)
 
     try {
       const response = await fetch('/api/contact', {
@@ -56,28 +56,26 @@ export default function ContactPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to submit form');
+        throw new Error('Failed to submit form')
       }
 
-      toast.success('Message sent successfully!');
-      setFormData(initialFormData);
+      toast.success('Message sent successfully!')
+      setFormData(initialFormData)
     } catch (error) {
-      toast.error('Failed to send message. Please try again.');
-      console.error('Error submitting form:', error);
+      toast.error('Failed to send message. Please try again.')
+      console.error('Error submitting form:', error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   return (
     <Box className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-20">
@@ -86,19 +84,15 @@ export default function ContactPage() {
           <Typography variant="h2" className="mb-4 font-bold">
             Contact Us
           </Typography>
-          <Typography
-            variant="h5"
-            color="text.secondary"
-            className="mx-auto max-w-3xl"
-          >
-            Get in touch with our team to learn more about how we can help you
-            manage your properties
+          <Typography variant="h5" color="text.secondary" className="mx-auto max-w-3xl">
+            Get in touch with our team to learn more about how we can help you manage your
+            properties
           </Typography>
         </Box>
 
         <Grid container spacing={4} className="mb-16">
           {contactInfo.map((info, index) => {
-            const Icon = info.icon;
+            const Icon = info.icon
             return (
               <Grid item xs={12} md={4} key={info.title}>
                 <Card className="h-full p-6 transition-all hover:-translate-y-1 hover:shadow-lg">
@@ -115,7 +109,7 @@ export default function ContactPage() {
                   </Box>
                 </Card>
               </Grid>
-            );
+            )
           })}
         </Grid>
 
@@ -214,5 +208,5 @@ export default function ContactPage() {
         </Card>
       </Container>
     </Box>
-  );
+  )
 }

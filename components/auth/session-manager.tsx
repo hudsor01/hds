@@ -1,35 +1,22 @@
-'use client';
+'use client'
 
-import { Alert } from '@/components/ui/alert';
-import { Button } from '@/components/ui/buttons/button';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Separator } from '@/components/ui/separator';
-import { format } from 'date-fns';
-import { AnimatePresence, motion, Variants } from 'framer-motion';
-import { useState } from 'react';
-import {
-  Clock,
-  Globe,
-  Laptop,
-  Loader2,
-  Shield,
-  Smartphone,
-  Trash2,
-} from 'react-feather';
-import { toast } from 'sonner';
+import { Alert } from '@/components/ui/alert'
+import { Button } from '@/components/ui/buttons/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Separator } from '@/components/ui/separator'
+import { format } from 'date-fns'
+import { AnimatePresence, motion, Variants } from 'framer-motion'
+import { useState } from 'react'
+import { Clock, Globe, Laptop, Loader2, Shield, Smartphone, Trash2 } from 'react-feather'
+import { toast } from 'sonner'
 
 interface Session {
-  id: string;
-  device: string;
-  browser: string;
-  location: string;
-  lastActive: Date;
-  current: boolean;
+  id: string
+  device: string
+  browser: string
+  location: string
+  lastActive: Date
+  current: boolean
 }
 
 // Animation variants
@@ -42,7 +29,7 @@ const containerVariants: Variants = {
       delayChildren: 0.2,
     },
   },
-};
+}
 
 const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
@@ -60,7 +47,7 @@ const itemVariants: Variants = {
     scale: 0.95,
     transition: { duration: 0.2 },
   },
-};
+}
 
 const loadingVariants: Variants = {
   animate: {
@@ -72,75 +59,71 @@ const loadingVariants: Variants = {
       ease: 'easeInOut',
     },
   },
-};
+}
 
 export function SessionManager() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [sessions, setSessions] = useState<Session[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRevoking, setIsRevoking] = useState<string | null>(null);
+  const [isOpen, setIsOpen] = useState(false)
+  const [sessions, setSessions] = useState<Session[]>([])
+  const [isLoading, setIsLoading] = useState(false)
+  const [isRevoking, setIsRevoking] = useState<string | null>(null)
 
   const fetchSessions = async () => {
     try {
-      setIsLoading(true);
-      const response = await fetch('/api/auth/sessions');
-      const data = await response.json();
+      setIsLoading(true)
+      const response = await fetch('/api/auth/sessions')
+      const data = await response.json()
 
-      if (!response.ok) throw new Error(data.message);
-      setSessions(data.sessions);
+      if (!response.ok) throw new Error(data.message)
+      setSessions(data.sessions)
     } catch (error) {
       toast.error(
-        `Failed to load sessions: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+        `Failed to load sessions: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const revokeSession = async (sessionId: string) => {
     try {
-      setIsRevoking(sessionId);
+      setIsRevoking(sessionId)
       const response = await fetch(`/api/auth/sessions/${sessionId}`, {
         method: 'DELETE',
-      });
+      })
 
-      if (!response.ok) throw new Error('Failed to revoke session');
+      if (!response.ok) throw new Error('Failed to revoke session')
 
-      setSessions(sessions.filter((session) => session.id !== sessionId));
-      toast.success('Session revoked successfully');
+      setSessions(sessions.filter((session) => session.id !== sessionId))
+      toast.success('Session revoked successfully')
     } catch (error) {
       toast.error(
-        `Failed to revoke session: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+        `Failed to revoke session: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setIsRevoking(null);
+      setIsRevoking(null)
     }
-  };
+  }
 
   const getDeviceIcon = (device: string) => {
     switch (device.toLowerCase()) {
       case 'mobile':
-        return <Smartphone className="h-4 w-4" />;
+        return <Smartphone className="h-4 w-4" />
       case 'desktop':
-        return <Laptop className="h-4 w-4" />;
+        return <Laptop className="h-4 w-4" />
       default:
-        return <Globe className="h-4 w-4" />;
+        return <Globe className="h-4 w-4" />
     }
-  };
+  }
 
   const handleOpen = () => {
-    setIsOpen(true);
-    fetchSessions();
-  };
+    setIsOpen(true)
+    fetchSessions()
+  }
 
   return (
     <>
       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-        <Button
-          variant="outline"
-          onClick={handleOpen}
-          className="flex items-center gap-2"
-        >
+        <Button variant="outline" onClick={handleOpen} className="flex items-center gap-2">
           <Shield className="h-4 w-4" />
           Active Sessions
           {sessions.length > 1 && (
@@ -223,8 +206,7 @@ export function SessionManager() {
                           </div>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
-                            Last active{' '}
-                            {format(new Date(sessions[0].lastActive), 'PPp')}
+                            Last active {format(new Date(sessions[0].lastActive), 'PPp')}
                           </div>
                         </div>
                       </div>
@@ -261,22 +243,16 @@ export function SessionManager() {
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {session.location}
-                          </div>
+                          <div className="text-sm text-muted-foreground">{session.location}</div>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground">
                             <Clock className="h-3 w-3" />
-                            Last active{' '}
-                            {format(new Date(session.lastActive), 'PPp')}
+                            Last active {format(new Date(session.lastActive), 'PPp')}
                           </div>
                         </div>
                       </div>
 
                       {!session.current && (
-                        <motion.div
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
+                        <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
                           <Button
                             variant="ghost"
                             size="sm"
@@ -286,9 +262,7 @@ export function SessionManager() {
                           >
                             <motion.div
                               animate={
-                                isRevoking === session.id
-                                  ? { rotate: 360, scale: [1, 1.1, 1] }
-                                  : {}
+                                isRevoking === session.id ? { rotate: 360, scale: [1, 1.1, 1] } : {}
                               }
                               transition={{
                                 rotate: {
@@ -319,8 +293,8 @@ export function SessionManager() {
                   className="flex items-center justify-between border-t pt-4"
                 >
                   <div className="text-xs text-muted-foreground">
-                    Revoking a session will force a sign out on that device. The
-                    current session cannot be revoked.
+                    Revoking a session will force a sign out on that device. The current session
+                    cannot be revoked.
                   </div>
                 </motion.div>
               )}
@@ -329,5 +303,5 @@ export function SessionManager() {
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

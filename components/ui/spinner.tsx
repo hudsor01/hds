@@ -1,13 +1,11 @@
-import Box from '@mui/material/Box';
-import CircularProgress, {
-  CircularProgressProps,
-} from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import CircularProgress, { CircularProgressProps } from '@mui/material/CircularProgress'
+import Typography from '@mui/material/Typography'
 
 interface SpinnerProps extends CircularProgressProps {
-  variant?: 'determinate' | 'indeterminate';
-  showLabel?: boolean;
-  value?: number;
+  variant?: 'determinate' | 'indeterminate'
+  showLabel?: boolean
+  value?: number
 }
 
 const Spinner = ({
@@ -55,7 +53,7 @@ const Spinner = ({
         </Box>
       )}
     </Box>
-  );
-};
+  )
+}
 
-export default Spinner;
+export default Spinner

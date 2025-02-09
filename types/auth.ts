@@ -1,27 +1,27 @@
-export type UserRole = 'ADMIN' | 'PROPERTY_MANAGER' | 'LANDLORD' | 'TENANT';
+export type UserRole = 'ADMIN' | 'PROPERTY_MANAGER' | 'LANDLORD' | 'TENANT'
 
 export interface User {
-  id: string;
-  role: UserRole;
-  email: string;
-  isAuthenticated: boolean;
+  id: string
+  role: UserRole
+  email: string
+  isAuthenticated: boolean
 }
 
 export interface AuthState {
-  user: User | null;
-  isLoading: boolean;
-  error: Error | null;
+  user: User | null
+  isLoading: boolean
+  error: Error | null
 }
 
 export interface UserPermissions {
-  canViewAllProperties: boolean;
-  canManageProperties: boolean;
-  canViewAllTenants: boolean;
-  canManageTenants: boolean;
-  canViewAllPayments: boolean;
-  canManagePayments: boolean;
-  canViewReports: boolean;
-  canManageSettings: boolean;
+  canViewAllProperties: boolean
+  canManageProperties: boolean
+  canViewAllTenants: boolean
+  canManageTenants: boolean
+  canViewAllPayments: boolean
+  canManagePayments: boolean
+  canViewReports: boolean
+  canManageSettings: boolean
 }
 
 export const DEFAULT_ROLE_PERMISSIONS: Record<UserRole, UserPermissions> = {
@@ -65,4 +65,4 @@ export const DEFAULT_ROLE_PERMISSIONS: Record<UserRole, UserPermissions> = {
     canViewReports: false,
     canManageSettings: false,
   },
-};
+}

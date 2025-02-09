@@ -1,13 +1,9 @@
-'use client';
+'use client'
 
-import theme from './theme';
-import { Box, CssBaseline, ThemeProvider } from '@mui/material';
+import theme from './theme'
+import { Box, CssBaseline, ThemeProvider } from '@mui/material'
 
-export default function ErrorLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ErrorLayout({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -51,5 +47,5 @@ export default function ErrorLayout({
         </Box>
       </Box>
     </ThemeProvider>
-  );
+  )
 }

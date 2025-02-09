@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import type { PropertyInsert, PropertyRow } from '@/types/property';
-import { Dialog } from '@/components/ui/dialogs/dialog';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select } from '@/components/ui/select';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import type { PropertyInsert, PropertyRow } from '@/types/property'
+import { Dialog } from '@/components/ui/dialogs/dialog'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { Select } from '@/components/ui/select'
+import { useState } from 'react'
 
 interface PropertyDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  property?: PropertyRow;
-  userId: string;
-  onSubmitAction: (property: PropertyInsert) => Promise<void>;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  property?: PropertyRow
+  userId: string
+  onSubmitAction: (property: PropertyInsert) => Promise<void>
 }
 
 export function PropertyDialog({
@@ -23,16 +23,16 @@ export function PropertyDialog({
   userId,
   onSubmitAction,
 }: PropertyDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(e.currentTarget)
       const propertyData: PropertyInsert = {
         id: crypto.randomUUID(),
         name: formData.get('name') as string,
@@ -46,16 +46,16 @@ export function PropertyDialog({
         user_id: userId,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString(),
-      };
+      }
 
-      await onSubmitAction(propertyData);
-      onOpenChangeAction(false);
+      await onSubmitAction(propertyData)
+      onOpenChangeAction(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save property');
+      setError(err instanceof Error ? err.message : 'Failed to save property')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog
@@ -173,5 +173,5 @@ export function PropertyDialog({
         </div>
       </form>
     </Dialog>
-  );
+  )
 }

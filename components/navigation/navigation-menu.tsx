@@ -1,24 +1,24 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import { Menu as MuiMenu, MenuItem as MuiMenuItem } from '@mui/material';
-import type { Route } from 'next';
-import type { LinkProps } from 'next/link';
-import Link from 'next/link';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import { Menu as MuiMenu, MenuItem as MuiMenuItem } from '@mui/material'
+import type { Route } from 'next'
+import type { LinkProps } from 'next/link'
+import Link from 'next/link'
+import * as React from 'react'
 
 interface NavigationMenuProps extends React.HTMLAttributes<HTMLElement> {
   items: Array<{
-    title: string;
-    href: Route;
-    description?: string;
-    icon?: React.ReactNode;
-  }>;
+    title: string
+    href: Route
+    description?: string
+    icon?: React.ReactNode
+  }>
 }
 
 interface MenuItemLinkProps extends LinkProps<string> {
-  className?: string;
-  children?: React.ReactNode;
+  className?: string
+  children?: React.ReactNode
 }
 
 const MenuItemLink = React.forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
@@ -26,25 +26,21 @@ const MenuItemLink = React.forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
     <Link ref={ref} href={href} className={className} {...props}>
       {children}
     </Link>
-  ),
-);
-MenuItemLink.displayName = 'MenuItemLink';
+  )
+)
+MenuItemLink.displayName = 'MenuItemLink'
 
-export function NavigationMenu({
-  className,
-  items,
-  ...props
-}: NavigationMenuProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+export function NavigationMenu({ className, items, ...props }: NavigationMenuProps) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+  const open = Boolean(anchorEl)
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleClose = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <nav className={cn('relative z-10', className)} {...props}>
@@ -84,7 +80,7 @@ export function NavigationMenu({
         ))}
       </MuiMenu>
     </nav>
-  );
+  )
 }
 
-export default NavigationMenu;
+export default NavigationMenu

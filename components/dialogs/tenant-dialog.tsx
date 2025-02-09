@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { Loader2 } from '-react';
-import { Button } from '@/components/ui/buttons/button';
-import { zodResolver } from '@hookform/resolvers/zod';
-import type { SelectChangeEvent } from '@mui/material';
+import { Loader2 } from '-react'
+import { Button } from '@/components/ui/buttons/button'
+import { zodResolver } from '@hookform/resolvers/zod'
+import type { SelectChangeEvent } from '@mui/material'
 import {
   Dialog,
   DialogContent,
@@ -11,21 +11,14 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from 'components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from 'components/ui/form';
-import { Input } from 'components/ui/input';
-import { Select, SelectItem } from 'components/ui/select';
-import { useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { toast } from 'sonner';
-import * as z from 'zod';
+} from 'components/ui/dialog'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form'
+import { Input } from 'components/ui/input'
+import { Select, SelectItem } from 'components/ui/select'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
+import * as z from 'zod'
 
 const tenantFormSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters'),
@@ -34,24 +27,24 @@ const tenantFormSchema = z.object({
   property: z.string().min(1, 'Please select a property'),
   unit: z.string().min(1, 'Unit number is required'),
   leaseEnd: z.string().min(1, 'Lease end date is required'),
-});
+})
 
-type TenantFormValues = z.infer<typeof tenantFormSchema>;
+type TenantFormValues = z.infer<typeof tenantFormSchema>
 
 interface TenantDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
   tenant?: {
-    id: string;
-    name: string;
-    email: string;
-    phone: string;
-    property: string;
-    unit: string;
-    leaseEnd: string;
-  };
-  properties: { id: string; name: string; units: string[] }[];
-  onSubmitAction: (data: TenantFormValues) => Promise<void>;
+    id: string
+    name: string
+    email: string
+    phone: string
+    property: string
+    unit: string
+    leaseEnd: string
+  }
+  properties: { id: string; name: string; units: string[] }[]
+  onSubmitAction: (data: TenantFormValues) => Promise<void>
 }
 
 export function TenantDialog({
@@ -61,10 +54,8 @@ export function TenantDialog({
   properties,
   onSubmitAction,
 }: TenantDialogProps) {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState(
-    tenant?.property || '',
-  );
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [selectedProperty, setSelectedProperty] = useState(tenant?.property || '')
 
   const form = useForm<TenantFormValues>({
     resolver: zodResolver(tenantFormSchema),
@@ -76,25 +67,24 @@ export function TenantDialog({
       unit: '',
       leaseEnd: '',
     },
-  });
+  })
 
   const handleSubmit = async (data: TenantFormValues) => {
-    setIsSubmitting(true);
+    setIsSubmitting(true)
     try {
-      await onSubmitAction(data);
-      onOpenChangeAction(false);
-      form.reset();
+      await onSubmitAction(data)
+      onOpenChangeAction(false)
+      form.reset()
     } catch (error) {
       toast.error(
-        `Failed to ${tenant ? 'update' : 'add'} tenant: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+        `Failed to ${tenant ? 'update' : 'add'} tenant: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  };
+  }
 
-  const selectedPropertyUnits =
-    properties.find((p) => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits = properties.find((p) => p.id === selectedProperty)?.units || []
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
@@ -108,10 +98,7 @@ export function TenantDialog({
           </DialogDescription>
         </DialogHeader>
         <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="space-y-4"
-          >
+          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
             <FormField
               control={form.control}
               name="name"
@@ -159,10 +146,10 @@ export function TenantDialog({
                   <FormLabel>Property</FormLabel>
                   <Select
                     onChange={(event: SelectChangeEvent<unknown>) => {
-                      const value = event.target.value as string;
-                      field.onChange(value);
-                      setSelectedProperty(value);
-                      form.setValue('unit', ''); // Reset unit when property changes
+                      const value = event.target.value as string
+                      field.onChange(value)
+                      setSelectedProperty(value)
+                      form.setValue('unit', '') // Reset unit when property changes
                     }}
                     defaultValue={field.value}
                     placeholder="Select a property"
@@ -185,7 +172,7 @@ export function TenantDialog({
                   <FormLabel>Unit</FormLabel>
                   <Select
                     onChange={(event: SelectChangeEvent<unknown>) => {
-                      field.onChange(event.target.value as string);
+                      field.onChange(event.target.value as string)
                     }}
                     defaultValue={field.value}
                     disabled={!selectedProperty}
@@ -216,9 +203,7 @@ export function TenantDialog({
             />
             <DialogFooter>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                )}
+                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                 {tenant ? 'Update Tenant' : 'Add Tenant'}
               </Button>
             </DialogFooter>
@@ -226,5 +211,5 @@ export function TenantDialog({
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

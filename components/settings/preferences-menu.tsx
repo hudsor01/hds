@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button'
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from 'components/ui/dropdown-menu';
+} from 'components/ui/dropdown-menu'
 
 export function PreferencesMenu() {
   return (
@@ -21,5 +21,5 @@ export function PreferencesMenu() {
         <DropdownMenuItem>Notifications</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  );
+  )
 }

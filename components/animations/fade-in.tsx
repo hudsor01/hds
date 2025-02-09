@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import { type ReactNode } from 'react';
+import { motion } from 'framer-motion'
+import { type ReactNode } from 'react'
 
 interface FadeInProps {
-  children: ReactNode;
-  delay?: number;
-  duration?: number;
+  children: ReactNode
+  delay?: number
+  duration?: number
 }
 
 export function FadeIn({ children, delay = 0, duration = 0.5 }: FadeInProps) {
@@ -22,5 +22,5 @@ export function FadeIn({ children, delay = 0, duration = 0.5 }: FadeInProps) {
     >
       {children}
     </motion.div>
-  );
+  )
 }

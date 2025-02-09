@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Box } from '@mui/material';
+import { Box } from '@mui/material'
 import {
   Bar,
   CartesianGrid,
@@ -9,13 +9,13 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 interface BarChartProps {
   data: Array<{
-    name: string;
-    value: number;
-  }>;
+    name: string
+    value: number
+  }>
 }
 
 export function BarChart({ data }: BarChartProps) {
@@ -31,5 +31,5 @@ export function BarChart({ data }: BarChartProps) {
         </RechartsBarChart>
       </ResponsiveContainer>
     </Box>
-  );
+  )
 }

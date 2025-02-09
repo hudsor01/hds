@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Box } from '@mui/material';
+import { Box } from '@mui/material'
 import {
   CartesianGrid,
   Legend,
@@ -10,14 +10,14 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 interface PerformanceChartProps {
   data: Array<{
-    name: string;
-    revenue: number;
-    expenses: number;
-  }>;
+    name: string
+    revenue: number
+    expenses: number
+  }>
 }
 
 export function PerformanceChart({ data }: PerformanceChartProps) {
@@ -30,22 +30,10 @@ export function PerformanceChart({ data }: PerformanceChartProps) {
           <YAxis />
           <Tooltip />
           <Legend />
-          <Line
-            type="monotone"
-            dataKey="revenue"
-            stroke="#2196f3"
-            strokeWidth={2}
-            dot={false}
-          />
-          <Line
-            type="monotone"
-            dataKey="expenses"
-            stroke="#f44336"
-            strokeWidth={2}
-            dot={false}
-          />
+          <Line type="monotone" dataKey="revenue" stroke="#2196f3" strokeWidth={2} dot={false} />
+          <Line type="monotone" dataKey="expenses" stroke="#f44336" strokeWidth={2} dot={false} />
         </LineChart>
       </ResponsiveContainer>
     </Box>
-  );
+  )
 }

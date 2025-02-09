@@ -1,4 +1,4 @@
-import type { Route } from 'next';
+import type { Route } from 'next'
 
 export const routes = {
   // Public routes
@@ -73,7 +73,7 @@ export const routes = {
     view: (id: string) => `/dashboard/finances/${id}` as Route,
     edit: (id: string) => `/dashboard/finances/${id}/edit` as Route,
   },
-} as const;
+} as const
 
 // Route protection configurations
 export const protectedPaths = [
@@ -84,7 +84,7 @@ export const protectedPaths = [
   '/documents/:path*',
   '/finances/:path*',
   '/leases/:path*',
-];
+]
 
 export const publicPaths = [
   '/',
@@ -96,8 +96,8 @@ export const publicPaths = [
   '/sign-up',
   '/auth/:path*',
   '/api/public/:path*',
-];
+]
 
-export const apiPaths = ['/api/:path*'];
+export const apiPaths = ['/api/:path*']
 
-export type AppRoutes = typeof routes;
+export type AppRoutes = typeof routes

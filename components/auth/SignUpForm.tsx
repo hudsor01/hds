@@ -1,11 +1,8 @@
-'use client';
+'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import {
-  Google as GoogleIcon,
-  PersonAdd as PersonAddIcon,
-} from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Google as GoogleIcon, PersonAdd as PersonAddIcon } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Alert,
   Box,
@@ -16,32 +13,28 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from '@mui/material'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const signUpSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   password: z.string().min(8, 'Password must be at least 8 characters'),
-});
+})
 
-type SignUpFormValues = z.infer<typeof signUpSchema>;
+type SignUpFormValues = z.infer<typeof signUpSchema>
 
 interface SignUpFormProps {
-  onSubmit: (data: SignUpFormValues) => Promise<void>;
-  onGoogleSignUp: () => Promise<void>;
-  onSignIn: () => void;
+  onSubmit: (data: SignUpFormValues) => Promise<void>
+  onGoogleSignUp: () => Promise<void>
+  onSignIn: () => void
 }
 
-export const SignUpForm = ({
-  onSubmit,
-  onGoogleSignUp,
-  onSignIn,
-}: SignUpFormProps) => {
-  const [error, setError] = React.useState<string | null>(null);
+export const SignUpForm = ({ onSubmit, onGoogleSignUp, onSignIn }: SignUpFormProps) => {
+  const [error, setError] = React.useState<string | null>(null)
 
   const {
     control,
@@ -49,16 +42,16 @@ export const SignUpForm = ({
     formState: { errors, isSubmitting },
   } = useForm<SignUpFormValues>({
     resolver: zodResolver(signUpSchema),
-  });
+  })
 
   const handleFormSubmit = async (data: SignUpFormValues) => {
     try {
-      setError(null);
-      await onSubmit(data);
+      setError(null)
+      await onSubmit(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     }
-  };
+  }
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto' }}>
@@ -86,11 +79,7 @@ export const SignUpForm = ({
         )}
       </Collapse>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit(handleFormSubmit)}
-        noValidate
-      >
+      <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
         <Box sx={{ display: 'flex', gap: 2 }}>
           <Controller
             name="firstName"
@@ -178,17 +167,12 @@ export const SignUpForm = ({
         <Box sx={{ mt: 2, textAlign: 'center' }}>
           <Typography variant="body2">
             Already have an account?{' '}
-            <Link
-              component="button"
-              variant="body2"
-              onClick={onSignIn}
-              sx={{ cursor: 'pointer' }}
-            >
+            <Link component="button" variant="body2" onClick={onSignIn} sx={{ cursor: 'pointer' }}>
               Sign in
             </Link>
           </Typography>
         </Box>
       </Box>
     </Paper>
-  );
-};
+  )
+}

@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   FormControl,
@@ -6,15 +6,15 @@ import {
   Radio as MuiRadio,
   RadioGroup as MuiRadioGroup,
   styled,
-} from '@mui/material';
-import * as React from 'react';
+} from '@mui/material'
+import * as React from 'react'
 
 const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
   '&.Mui-checked': {
     color: theme.palette.primary.main,
   },
-}));
+}))
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   margin: 0,
@@ -22,11 +22,11 @@ const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
     fontSize: '0.875rem',
     marginLeft: theme.spacing(1),
   },
-}));
+}))
 
 export interface RadioGroupProps
   extends Omit<React.ComponentProps<typeof MuiRadioGroup>, 'defaultValue'> {
-  defaultValue?: string;
+  defaultValue?: string
 }
 
 const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
@@ -37,24 +37,24 @@ const RadioGroup = React.forwardRef<HTMLDivElement, RadioGroupProps>(
           {children}
         </MuiRadioGroup>
       </FormControl>
-    );
-  },
-);
-RadioGroup.displayName = 'RadioGroup';
+    )
+  }
+)
+RadioGroup.displayName = 'RadioGroup'
 
 export interface RadioProps extends React.ComponentProps<typeof StyledRadio> {
-  label?: string;
+  label?: string
 }
 
 const Radio = React.forwardRef<HTMLButtonElement, RadioProps>(
   ({ className, label, ...props }, ref) => {
-    const radio = <StyledRadio ref={ref} className={className} {...props} />;
+    const radio = <StyledRadio ref={ref} className={className} {...props} />
     if (label) {
-      return <StyledFormControlLabel control={radio} label={label} />;
+      return <StyledFormControlLabel control={radio} label={label} />
     }
-    return radio;
-  },
-);
-Radio.displayName = 'Radio';
+    return radio
+  }
+)
+Radio.displayName = 'Radio'
 
-export { Radio, RadioGroup };
+export { Radio, RadioGroup }

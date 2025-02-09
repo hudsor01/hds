@@ -1,4 +1,4 @@
-import { cn } from '@/lib/utils';
+import { cn } from '@/lib/utils'
 
 type StatusType =
   | 'pending'
@@ -10,11 +10,11 @@ type StatusType =
   | 'emergency'
   | 'high'
   | 'medium'
-  | 'low';
+  | 'low'
 
 interface StatusBadgeProps {
-  status: StatusType;
-  className?: string;
+  status: StatusType
+  className?: string
 }
 
 const statusStyles: Record<StatusType, string> = {
@@ -28,20 +28,20 @@ const statusStyles: Record<StatusType, string> = {
   high: 'bg-orange-100 text-orange-800 border-orange-200',
   medium: 'bg-yellow-100 text-yellow-800 border-yellow-200',
   low: 'bg-blue-100 text-blue-800 border-blue-200',
-};
+}
 
 export function StatusBadge({ status, className }: StatusBadgeProps) {
-  const formattedStatus = status.replace('_', ' ').toLowerCase();
+  const formattedStatus = status.replace('_', ' ').toLowerCase()
 
   return (
     <span
       className={cn(
         'inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-medium',
         statusStyles[status as StatusType],
-        className,
+        className
       )}
     >
       {formattedStatus}
     </span>
-  );
+  )
 }

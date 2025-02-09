@@ -4,7 +4,7 @@ export const PERMISSIONS = {
   MANAGE_MAINTENANCE: 'manage_maintenance',
   VIEW_REPORTS: 'view_reports',
   MANAGE_BILLING: 'manage_billing',
-} as const;
+} as const
 
 export const ROLE_PERMISSIONS = {
   OWNER: Object.values(PERMISSIONS),
@@ -16,14 +16,14 @@ export const ROLE_PERMISSIONS = {
   ],
   MAINTENANCE: [PERMISSIONS.MANAGE_MAINTENANCE],
   TENANT: [],
-} as const;
+} as const
 
-export type UserRole = 'ADMIN' | 'OWNER' | 'MANAGER' | 'USER';
+export type UserRole = 'ADMIN' | 'OWNER' | 'MANAGER' | 'USER'
 
 export interface UserRoleMetadata {
-  role?: UserRole;
+  role?: UserRole
 }
 
 export function isValidRole(role: string): role is UserRole {
-  return ['ADMIN', 'OWNER', 'MANAGER', 'USER'].includes(role as UserRole);
+  return ['ADMIN', 'OWNER', 'MANAGER', 'USER'].includes(role as UserRole)
 }

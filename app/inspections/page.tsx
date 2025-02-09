@@ -1,18 +1,14 @@
-'use client';
+'use client'
 
-import {
-  DataTable,
-  renderDateCell,
-  renderStatusCell,
-} from '@/components/data-display/data-table';
-import { FormDialog } from '@/components/ui/dialogs/form-dialog';
-import { api } from '@/lib/api';
-import { Button, TextField } from '@mui/material';
-import { type GridColDef } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Plus } from 'react-feather';
-import { z } from 'zod';
+import { DataTable, renderDateCell, renderStatusCell } from '@/components/data-display/data-table'
+import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { api } from '@/lib/api'
+import { Button, TextField } from '@mui/material'
+import { type GridColDef } from '@mui/x-data-grid'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Plus } from 'react-feather'
+import { z } from 'zod'
 
 const inspectionSchema = z.object({
   property_id: z.string().uuid('Invalid property ID'),
@@ -20,7 +16,7 @@ const inspectionSchema = z.object({
   scheduled_date: z.string().datetime(),
   inspector_name: z.string().min(1, 'Inspector name is required'),
   notes: z.string().optional(),
-});
+})
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -45,51 +41,51 @@ const columns: GridColDef[] = [
     renderCell: renderDateCell,
   },
   { field: 'notes', headerName: 'Notes', width: 200 },
-];
+]
 
 export default function InspectionsPage() {
-  const [open, setOpen] = useState(false);
-  const [selectedInspection, setSelectedInspection] = useState<any>(null);
+  const [open, setOpen] = useState(false)
+  const [selectedInspection, setSelectedInspection] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: ['inspections', paginationModel],
     queryFn: () => api.get('/api/inspections'),
-  });
+  })
 
   const handleEdit = (inspection: any) => {
-    setSelectedInspection(inspection);
-    setOpen(true);
-  };
+    setSelectedInspection(inspection)
+    setOpen(true)
+  }
 
   const handleDelete = async (inspection: any) => {
     if (window.confirm('Are you sure you want to delete this inspection?')) {
       try {
-        await api.delete(`/api/inspections`, inspection.id);
+        await api.delete(`/api/inspections`, inspection.id)
         // Refresh data
       } catch (error) {
-        console.error('Error deleting inspection:', error);
+        console.error('Error deleting inspection:', error)
       }
     }
-  };
+  }
 
   const handleSubmit = async (formData: any) => {
     try {
       if (selectedInspection) {
-        await api.put(`/api/inspections`, selectedInspection.id, formData);
+        await api.put(`/api/inspections`, selectedInspection.id, formData)
       } else {
-        await api.post('/api/inspections', formData);
+        await api.post('/api/inspections', formData)
       }
-      setOpen(false);
-      setSelectedInspection(null);
+      setOpen(false)
+      setSelectedInspection(null)
       // Refresh data
     } catch (error) {
-      console.error('Error saving inspection:', error);
+      console.error('Error saving inspection:', error)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -124,8 +120,8 @@ export default function InspectionsPage() {
       <FormDialog
         open={open}
         onClose={() => {
-          setOpen(false);
-          setSelectedInspection(null);
+          setOpen(false)
+          setSelectedInspection(null)
         }}
         onSubmit={handleSubmit}
         title={selectedInspection ? 'Edit Inspection' : 'New Inspection'}
@@ -157,5 +153,5 @@ export default function InspectionsPage() {
         </div>
       </FormDialog>
     </div>
-  );
+  )
 }

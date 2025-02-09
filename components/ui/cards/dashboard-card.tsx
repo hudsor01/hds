@@ -1,21 +1,16 @@
 // components/ui/dashboard-card.tsx
-import Box from '@mui/material/Box';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
 
 interface DashboardCardProps {
-  title: string;
-  subtitle?: string;
-  action?: React.ReactNode;
-  children: React.ReactNode;
+  title: string
+  subtitle?: string
+  action?: React.ReactNode
+  children: React.ReactNode
 }
 
-export function DashboardCard({
-  title,
-  subtitle,
-  action,
-  children,
-}: DashboardCardProps) {
+export function DashboardCard({ title, subtitle, action, children }: DashboardCardProps) {
   return (
     <Paper sx={{ height: '100%' }}>
       <Box sx={{ p: 3 }}>
@@ -42,5 +37,5 @@ export function DashboardCard({
         {children}
       </Box>
     </Paper>
-  );
+  )
 }

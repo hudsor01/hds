@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
 import {
   DataTable,
   renderCurrencyCell,
   renderDateCell,
   renderStatusCell,
-} from '@/components/ui/data-table';
-import { FormDialog } from '@/components/ui/dialogs/form-dialog';
-import { api } from '@/lib/api';
-import { Button, TextField } from '@mui/material';
-import { type GridColDef } from '@mui/x-data-grid';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { Plus } from 'react-feather';
-import { z } from 'zod';
+} from '@/components/ui/data-table'
+import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { api } from '@/lib/api'
+import { Button, TextField } from '@mui/material'
+import { type GridColDef } from '@mui/x-data-grid'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { Plus } from 'react-feather'
+import { z } from 'zod'
 
 const workOrderSchema = z.object({
   vendor_id: z.string().uuid('Invalid vendor ID'),
@@ -22,18 +22,13 @@ const workOrderSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   description: z.string().min(1, 'Description is required'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']).default('LOW'),
-  status: z
-    .enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'])
-    .default('PENDING'),
+  status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).default('PENDING'),
   scheduled_date: z.string().datetime(),
   completed_date: z.string().datetime().optional(),
-  estimated_cost: z
-    .number()
-    .positive('Estimated cost must be positive')
-    .optional(),
+  estimated_cost: z.number().positive('Estimated cost must be positive').optional(),
   actual_cost: z.number().positive('Actual cost must be positive').optional(),
   notes: z.string().optional(),
-});
+})
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
@@ -86,61 +81,61 @@ const columns: GridColDef[] = [
     width: 120,
     renderCell: renderCurrencyCell,
   },
-];
+]
 
 export default function WorkOrdersPage() {
-  const [open, setOpen] = useState(false);
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<any>(null);
+  const [open, setOpen] = useState(false)
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10,
-  });
+  })
 
   const { data, isLoading } = useQuery({
     queryKey: ['work-orders', paginationModel],
     queryFn: () => api.get('/api/work-orders'),
-  });
+  })
 
   const { data: vendors } = useQuery({
     queryKey: ['vendors'],
     queryFn: () => api.get('/api/vendors'),
-  });
+  })
 
   const { data: properties } = useQuery({
     queryKey: ['properties'],
     queryFn: () => api.get('/api/properties'),
-  });
+  })
 
   const handleEdit = (workOrder: any) => {
-    setSelectedWorkOrder(workOrder);
-    setOpen(true);
-  };
+    setSelectedWorkOrder(workOrder)
+    setOpen(true)
+  }
 
   const handleDelete = async (workOrder: any) => {
     if (window.confirm('Are you sure you want to delete this work order?')) {
       try {
-        await api.delete(`/api/work-orders`, workOrder.id);
+        await api.delete(`/api/work-orders`, workOrder.id)
         // Refresh data
       } catch (error) {
-        console.error('Error deleting work order:', error);
+        console.error('Error deleting work order:', error)
       }
     }
-  };
+  }
 
   const handleSubmit = async (formData: any) => {
     try {
       if (selectedWorkOrder) {
-        await api.put(`/api/work-orders`, selectedWorkOrder.id, formData);
+        await api.put(`/api/work-orders`, selectedWorkOrder.id, formData)
       } else {
-        await api.post('/api/work-orders', formData);
+        await api.post('/api/work-orders', formData)
       }
-      setOpen(false);
-      setSelectedWorkOrder(null);
+      setOpen(false)
+      setSelectedWorkOrder(null)
       // Refresh data
     } catch (error) {
-      console.error('Error saving work order:', error);
+      console.error('Error saving work order:', error)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -175,8 +170,8 @@ export default function WorkOrdersPage() {
       <FormDialog
         open={open}
         onClose={() => {
-          setOpen(false);
-          setSelectedWorkOrder(null);
+          setOpen(false)
+          setSelectedWorkOrder(null)
         }}
         onSubmit={handleSubmit}
         title={selectedWorkOrder ? 'Edit Work Order' : 'New Work Order'}
@@ -260,16 +255,10 @@ export default function WorkOrdersPage() {
           />
           <TextField label="Estimated Cost" type="number" fullWidth />
           <TextField label="Actual Cost" type="number" fullWidth />
-          <TextField
-            label="Description"
-            fullWidth
-            required
-            multiline
-            rows={4}
-          />
+          <TextField label="Description" fullWidth required multiline rows={4} />
           <TextField label="Notes" fullWidth multiline rows={4} />
         </div>
       </FormDialog>
     </div>
-  );
+  )
 }

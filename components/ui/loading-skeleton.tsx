@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Skeleton } from 'components/ui/skeleton';
+import { Skeleton } from 'components/ui/skeleton'
 
 export function PropertyCardSkeleton() {
   return (
@@ -11,7 +11,7 @@ export function PropertyCardSkeleton() {
         <Skeleton className="h-4 w-1/2" />
       </div>
     </div>
-  );
+  )
 }
 
 export function PricingCardSkeleton() {
@@ -30,7 +30,7 @@ export function PricingCardSkeleton() {
           ))}
       </div>
     </div>
-  );
+  )
 }
 
 export function FeatureCardSkeleton() {
@@ -42,7 +42,7 @@ export function FeatureCardSkeleton() {
         <Skeleton className="h-4 w-full" />
       </div>
     </div>
-  );
+  )
 }
 
 export function ContactFormSkeleton() {
@@ -68,5 +68,5 @@ export function ContactFormSkeleton() {
       </div>
       <Skeleton className="h-10 w-full" />
     </div>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-import { BaseDataGrid } from '@/components/common/data-grid';
-import { formatCurrency } from '@/utils/format';
-import { type PropertyRow, type PropertyTableProps } from '@/types/property';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { Typography } from '@mui/material';
-import Box from '@mui/material/Box';
-import Chip from '@mui/material/Chip';
-import IconButton from '@mui/material/IconButton';
+import { BaseDataGrid } from '@/components/common/data-grid'
+import { formatCurrency } from '@/utils/format'
+import { type PropertyRow, type PropertyTableProps } from '@/types/property'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import { Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Chip from '@mui/material/Chip'
+import IconButton from '@mui/material/IconButton'
 import {
   type GridColDef,
   type GridRenderCellParams,
   type GridValueGetterParams,
-} from '@mui/x-data-grid';
+} from '@mui/x-data-grid'
 
 export function PropertyTable({ properties, isLoading }: PropertyTableProps) {
   const columns: GridColDef[] = [
@@ -70,7 +70,7 @@ export function PropertyTable({ properties, isLoading }: PropertyTableProps) {
         </IconButton>
       ),
     },
-  ];
+  ]
 
-  return <BaseDataGrid data={properties} columns={columns} isLoading={isLoading} pageSize={10} />;
+  return <BaseDataGrid data={properties} columns={columns} isLoading={isLoading} pageSize={10} />
 }

@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { FadeIn } from '@/components/animations/fade-in';
-import { Box, Button, Container, Typography } from '@mui/material';
-import { Clock } from 'react-feather';
+import { FadeIn } from '@/components/animations/fade-in'
+import { Box, Button, Container, Typography } from '@mui/material'
+import { Clock } from 'react-feather'
 
 export default function RateLimitPage() {
   return (
@@ -50,13 +50,9 @@ export default function RateLimitPage() {
         </FadeIn>
 
         <FadeIn delay={0.8}>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 'sm', mb: 4 }}
-          >
-            You've made too many requests in a short period. Please wait a
-            moment before trying again.
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
+            You've made too many requests in a short period. Please wait a moment before trying
+            again.
           </Typography>
         </FadeIn>
 
@@ -76,5 +72,5 @@ export default function RateLimitPage() {
         </FadeIn>
       </Box>
     </Container>
-  );
+  )
 }

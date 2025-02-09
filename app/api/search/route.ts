@@ -1,25 +1,25 @@
-import { prisma } from '@/lib/prisma';
-import { cookies } from 'next/headers';
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma'
+import { cookies } from 'next/headers'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest) {
   try {
     // Verify authentication
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const searchParams = request.nextUrl.searchParams;
-    const query = searchParams.get('query') || '';
-    const type = searchParams.get('type') || 'all';
-    const page = parseInt(searchParams.get('page') || '1');
-    const limit = parseInt(searchParams.get('limit') || '10');
+    const searchParams = request.nextUrl.searchParams
+    const query = searchParams.get('query') || ''
+    const type = searchParams.get('type') || 'all'
+    const page = parseInt(searchParams.get('page') || '1')
+    const limit = parseInt(searchParams.get('limit') || '10')
 
     // Initialize Supabase client for complex queries
-    const supabase = createRouteHandlerClient({ cookies });
+    const supabase = createRouteHandlerClient({ cookies })
 
-    let results = [];
+    let results = []
 
     switch (type) {
       case 'properties':
@@ -35,8 +35,8 @@ export async function GET(request: NextRequest) {
           include: {
             units: true,
           },
-        });
-        break;
+        })
+        break
 
       case 'tenants':
         results = await prisma.tenant.findMany({
@@ -55,8 +55,8 @@ export async function GET(request: NextRequest) {
               },
             },
           },
-        });
-        break;
+        })
+        break
 
       case 'maintenance':
         results = await prisma.maintenanceRequest.findMany({
@@ -75,8 +75,8 @@ export async function GET(request: NextRequest) {
               },
             },
           },
-        });
-        break;
+        })
+        break
 
       default:
         // Search across all relevant tables
@@ -99,13 +99,13 @@ export async function GET(request: NextRequest) {
             },
             take: limit,
           }),
-        ]);
+        ])
 
         results = {
           properties,
           tenants,
           maintenance,
-        };
+        }
     }
 
     return NextResponse.json({
@@ -114,12 +114,9 @@ export async function GET(request: NextRequest) {
       page,
       limit,
       results,
-    });
+    })
   } catch (error) {
-    console.error('Search error:', error);
-    return NextResponse.json(
-      { error: 'Error performing search' },
-      { status: 500 },
-    );
+    console.error('Search error:', error)
+    return NextResponse.json({ error: 'Error performing search' }, { status: 500 })
   }
 }

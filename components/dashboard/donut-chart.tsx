@@ -1,22 +1,15 @@
-'use client';
+'use client'
 
-import { Box } from '@mui/material';
-import {
-  Cell,
-  Legend,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-} from 'recharts';
+import { Box } from '@mui/material'
+import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts'
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
+const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042']
 
 interface DonutChartProps {
   data: Array<{
-    name: string;
-    value: number;
-  }>;
+    name: string
+    value: number
+  }>
 }
 
 export function DonutChart({ data }: DonutChartProps) {
@@ -35,10 +28,7 @@ export function DonutChart({ data }: DonutChartProps) {
             dataKey="value"
           >
             {data.map((_, index) => (
-              <Cell
-                key={`cell-${index}`}
-                fill={COLORS[index % COLORS.length]}
-              />
+              <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
             ))}
           </Pie>
           <Tooltip />
@@ -46,5 +36,5 @@ export function DonutChart({ data }: DonutChartProps) {
         </PieChart>
       </ResponsiveContainer>
     </Box>
-  );
+  )
 }

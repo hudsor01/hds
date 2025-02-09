@@ -1,13 +1,13 @@
-import type { LeaseFormProps } from '../../types/lease';
-import { useCreateLease, useUpdateLease } from '@/hooks/use-leases';
-import { zodResolver } from '@hookform/resolvers/zod';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Grid from '@mui/material/Grid';
-import TextField from '@mui/material/TextField';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import type { LeaseFormProps } from '../../types/lease'
+import { useCreateLease, useUpdateLease } from '@/hooks/use-leases'
+import { zodResolver } from '@hookform/resolvers/zod'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Grid from '@mui/material/Grid'
+import TextField from '@mui/material/TextField'
+import { DatePicker } from '@mui/x-date-pickers/DatePicker'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const leaseSchema = z.object({
   propertyId: z.string().min(1, 'Property is required'),
@@ -23,13 +23,13 @@ const leaseSchema = z.object({
     gas: z.enum(['tenant', 'landlord']),
     internet: z.enum(['tenant', 'landlord']),
   }),
-});
+})
 
-type LeaseFormData = z.infer<typeof leaseSchema>;
+type LeaseFormData = z.infer<typeof leaseSchema>
 
 export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
-  const createLease = useCreateLease();
-  const updateLease = useUpdateLease();
+  const createLease = useCreateLease()
+  const updateLease = useUpdateLease()
 
   const {
     control,
@@ -46,20 +46,20 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
         internet: 'tenant',
       },
     },
-  });
+  })
 
   const onSubmit = async (data: LeaseFormData) => {
     try {
       if (initialData?.id) {
-        await updateLease.mutateAsync({ id: initialData.id, ...data });
+        await updateLease.mutateAsync({ id: initialData.id, ...data })
       } else {
-        await createLease.mutateAsync(data);
+        await createLease.mutateAsync(data)
       }
-      onSuccess?.();
+      onSuccess?.()
     } catch (error) {
-      console.error('Failed to save lease:', error);
+      console.error('Failed to save lease:', error)
     }
-  };
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -155,5 +155,5 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
         </Grid>
       </Grid>
     </form>
-  );
+  )
 }

@@ -1,46 +1,40 @@
-import {
-  Card,
-  CardContent,
-  Typography,
-  Chip,
-  LinearProgress,
-} from '@mui/material';
-import FeatherIcon from 'feather-icons-react';
-import type { WaitlistEntry } from '@/types/waitlist';
+import { Card, CardContent, Typography, Chip, LinearProgress } from '@mui/material'
+import FeatherIcon from 'feather-icons-react'
+import type { WaitlistEntry } from '@/types/waitlist'
 
 interface StatusCardProps {
-  entry: WaitlistEntry;
-  totalCount: number;
+  entry: WaitlistEntry
+  totalCount: number
 }
 
 export default function StatusCard({ entry, totalCount }: StatusCardProps) {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'VERIFIED':
-        return 'success';
+        return 'success'
       case 'PENDING':
-        return 'warning';
+        return 'warning'
       case 'BLOCKED':
-        return 'error';
+        return 'error'
       default:
-        return 'default';
+        return 'default'
     }
-  };
+  }
 
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'VERIFIED':
-        return 'check-circle';
+        return 'check-circle'
       case 'PENDING':
-        return 'clock';
+        return 'clock'
       case 'BLOCKED':
-        return 'x-circle';
+        return 'x-circle'
       default:
-        return 'help-circle';
+        return 'help-circle'
     }
-  };
+  }
 
-  const progress = ((totalCount - entry.position + 1) / totalCount) * 100;
+  const progress = ((totalCount - entry.position + 1) / totalCount) * 100
 
   return (
     <Card className="mx-auto w-full max-w-2xl">
@@ -66,11 +60,7 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
               {Math.round(progress)}%
             </Typography>
           </div>
-          <LinearProgress
-            variant="determinate"
-            value={progress}
-            className="h-2 rounded-full"
-          />
+          <LinearProgress variant="determinate" value={progress} className="h-2 rounded-full" />
         </div>
 
         <div className="mt-4 flex items-center text-gray-600">
@@ -88,9 +78,7 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
                 {entry.referral_code}
               </Typography>
               <button
-                onClick={() =>
-                  navigator.clipboard.writeText(entry.referral_code!)
-                }
+                onClick={() => navigator.clipboard.writeText(entry.referral_code!)}
                 className="text-blue-600 hover:text-blue-800"
               >
                 <FeatherIcon icon="copy" size={16} />
@@ -123,5 +111,5 @@ export default function StatusCard({ entry, totalCount }: StatusCardProps) {
         )}
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod';
+import { zodResolver } from '@hookform/resolvers/zod'
 import {
   Google as GoogleIcon,
   Login as LoginIcon,
   Visibility,
   VisibilityOff,
-} from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
+} from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
 import {
   Alert,
   Box,
@@ -20,17 +20,17 @@ import {
   Paper,
   TextField,
   Typography,
-} from '@mui/material';
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
+} from '@mui/material'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
-});
+})
 
-type SignInFormValues = z.infer<typeof signInSchema>;
+type SignInFormValues = z.infer<typeof signInSchema>
 
 export const SignInForm = ({
   onSubmitAction,
@@ -38,13 +38,13 @@ export const SignInForm = ({
   onForgotPasswordAction,
   onSignUpAction,
 }: {
-  onSubmitAction: (data: SignInFormValues) => Promise<void>;
-  onGoogleSignInAction: () => Promise<void>;
-  onForgotPasswordAction: () => void;
-  onSignUpAction: () => void;
+  onSubmitAction: (data: SignInFormValues) => Promise<void>
+  onGoogleSignInAction: () => Promise<void>
+  onForgotPasswordAction: () => void
+  onSignUpAction: () => void
 }) => {
-  const [error, setError] = React.useState<string | null>(null);
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [error, setError] = React.useState<string | null>(null)
+  const [showPassword, setShowPassword] = React.useState(false)
 
   const {
     control,
@@ -52,20 +52,20 @@ export const SignInForm = ({
     formState: { errors, isSubmitting },
   } = useForm<SignInFormValues>({
     resolver: zodResolver(signInSchema),
-  });
+  })
 
   const handleFormSubmit = async (data: SignInFormValues) => {
     try {
-      setError(null);
-      await onSubmitAction(data);
+      setError(null)
+      await onSubmitAction(data)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     }
-  };
+  }
 
   const togglePasswordVisibility = () => {
-    setShowPassword((show) => !show);
-  };
+    setShowPassword((show) => !show)
+  }
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto' }}>
@@ -93,11 +93,7 @@ export const SignInForm = ({
         )}
       </Collapse>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit(handleFormSubmit)}
-        noValidate
-      >
+      <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
         <Controller
           name="email"
           control={control}
@@ -186,5 +182,5 @@ export const SignInForm = ({
         </Box>
       </Box>
     </Paper>
-  );
-};
+  )
+}

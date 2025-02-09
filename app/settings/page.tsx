@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { api } from '@/lib/api';
+import { api } from '@/lib/api'
 import {
   Box,
   Button,
@@ -15,19 +15,19 @@ import {
   Tabs,
   TextField,
   Typography,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
-import { toast } from 'sonner';
+} from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
+import { toast } from 'sonner'
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+  children?: React.ReactNode
+  index: number
+  value: number
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -39,33 +39,33 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
     </div>
-  );
+  )
 }
 
 export default function SettingsPage() {
-  const [tabValue, setTabValue] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [tabValue, setTabValue] = useState(0)
+  const [loading, setLoading] = useState(false)
 
   const { data: userSettings } = useQuery({
     queryKey: ['settings', 'user'],
     queryFn: () => api.get('/api/settings?type=user'),
-  });
+  })
 
   const { data: securitySettings } = useQuery({
     queryKey: ['settings', 'security'],
     queryFn: () => api.get('/api/settings?type=security'),
-  });
+  })
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
-    setTabValue(newValue);
-  };
+    setTabValue(newValue)
+  }
 
   const handleUserSettingsSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
+    event.preventDefault()
+    setLoading(true)
 
     try {
-      const formData = new FormData(event.target as HTMLFormElement);
+      const formData = new FormData(event.target as HTMLFormElement)
       const data = {
         theme: formData.get('theme'),
         language: formData.get('language'),
@@ -75,40 +75,40 @@ export default function SettingsPage() {
         notifications_enabled: formData.get('notifications_enabled') === 'true',
         email_notifications: formData.get('email_notifications') === 'true',
         sms_notifications: formData.get('sms_notifications') === 'true',
-      };
+      }
 
-      await api.put('/api/settings', 'user', data);
-      toast.success('User settings updated successfully');
+      await api.put('/api/settings', 'user', data)
+      toast.success('User settings updated successfully')
     } catch (error) {
-      console.error('Error updating user settings:', error);
-      toast.error('Failed to update user settings');
+      console.error('Error updating user settings:', error)
+      toast.error('Failed to update user settings')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleSecuritySettingsSubmit = async (event: React.FormEvent) => {
-    event.preventDefault();
-    setLoading(true);
+    event.preventDefault()
+    setLoading(true)
 
     try {
-      const formData = new FormData(event.target as HTMLFormElement);
+      const formData = new FormData(event.target as HTMLFormElement)
       const data = {
         two_factor_enabled: formData.get('two_factor_enabled') === 'true',
         two_factor_method: formData.get('two_factor_method'),
         max_sessions: parseInt(formData.get('max_sessions') as string, 10),
         login_notifications: formData.get('login_notifications') === 'true',
-      };
+      }
 
-      await api.put('/api/settings', 'security', data);
-      toast.success('Security settings updated successfully');
+      await api.put('/api/settings', 'security', data)
+      toast.success('Security settings updated successfully')
     } catch (error) {
-      console.error('Error updating security settings:', error);
-      toast.error('Failed to update security settings');
+      console.error('Error updating security settings:', error)
+      toast.error('Failed to update security settings')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -193,9 +193,7 @@ export default function SettingsPage() {
                       control={
                         <Switch
                           name="notifications_enabled"
-                          defaultChecked={
-                            userSettings?.data?.notifications_enabled
-                          }
+                          defaultChecked={userSettings?.data?.notifications_enabled}
                         />
                       }
                       label="Enable Notifications"
@@ -204,9 +202,7 @@ export default function SettingsPage() {
                       control={
                         <Switch
                           name="email_notifications"
-                          defaultChecked={
-                            userSettings?.data?.email_notifications
-                          }
+                          defaultChecked={userSettings?.data?.email_notifications}
                         />
                       }
                       label="Email Notifications"
@@ -228,11 +224,9 @@ export default function SettingsPage() {
                   variant="contained"
                   disabled={loading}
                   sx={{
-                    background:
-                      'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                    background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background:
-                        'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                     },
                   }}
                 >
@@ -255,9 +249,7 @@ export default function SettingsPage() {
                       control={
                         <Switch
                           name="two_factor_enabled"
-                          defaultChecked={
-                            securitySettings?.data?.two_factor_enabled
-                          }
+                          defaultChecked={securitySettings?.data?.two_factor_enabled}
                         />
                       }
                       label="Enable Two-Factor Authentication"
@@ -270,9 +262,7 @@ export default function SettingsPage() {
                   label="Two-Factor Method"
                   select
                   fullWidth
-                  defaultValue={
-                    securitySettings?.data?.two_factor_method || 'EMAIL'
-                  }
+                  defaultValue={securitySettings?.data?.two_factor_method || 'EMAIL'}
                   disabled={!securitySettings?.data?.two_factor_enabled}
                 >
                   <MenuItem value="EMAIL">Email</MenuItem>
@@ -295,9 +285,7 @@ export default function SettingsPage() {
                       control={
                         <Switch
                           name="login_notifications"
-                          defaultChecked={
-                            securitySettings?.data?.login_notifications
-                          }
+                          defaultChecked={securitySettings?.data?.login_notifications}
                         />
                       }
                       label="Login Notifications"
@@ -310,11 +298,9 @@ export default function SettingsPage() {
                   variant="contained"
                   disabled={loading}
                   sx={{
-                    background:
-                      'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                    background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background:
-                        'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                     },
                   }}
                 >
@@ -326,5 +312,5 @@ export default function SettingsPage() {
         </Card>
       </TabPanel>
     </div>
-  );
+  )
 }

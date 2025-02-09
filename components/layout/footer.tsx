@@ -1,6 +1,6 @@
-import { containerVariants, itemVariants } from '@/lib/animation-variants';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { containerVariants, itemVariants } from '@/lib/animation-variants'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -12,11 +12,7 @@ export default function Footer() {
     >
       <motion.div variants={itemVariants}>
         Brought to you by{' '}
-        <Link
-          href="https://lakshb.dev"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <Link href="https://lakshb.dev" rel="noopener noreferrer" target="_blank">
           <span className="text-zinc-300 underline underline-offset-2 transition-all duration-200 ease-linear hover:text-yellow-200">
             lakshaybhushan
           </span>
@@ -24,5 +20,5 @@ export default function Footer() {
         </Link>
       </motion.div>
     </motion.div>
-  );
+  )
 }

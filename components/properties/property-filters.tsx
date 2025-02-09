@@ -1,14 +1,14 @@
 // components/properties/property-filters.tsx
-import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types/property';
-import SearchIcon from '@mui/icons-material/Search';
-import Box from '@mui/material/Box';
-import InputAdornment from '@mui/material/InputAdornment';
-import MenuItem from '@mui/material/MenuItem';
-import TextField from '@mui/material/TextField';
-import { useSearchParams } from 'next/navigation';
+import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types/property'
+import SearchIcon from '@mui/icons-material/Search'
+import Box from '@mui/material/Box'
+import InputAdornment from '@mui/material/InputAdornment'
+import MenuItem from '@mui/material/MenuItem'
+import TextField from '@mui/material/TextField'
+import { useSearchParams } from 'next/navigation'
 
 export function PropertyFilters() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()
 
   return (
     <Box sx={{ display: 'flex', gap: 2, my: 2 }}>
@@ -53,5 +53,5 @@ export function PropertyFilters() {
         ))}
       </TextField>
     </Box>
-  );
+  )
 }

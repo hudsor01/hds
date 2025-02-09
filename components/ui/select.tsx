@@ -1,15 +1,10 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import type { SelectProps as MuiSelectProps } from '@mui/material';
-import {
-  FormControl,
-  MenuItem,
-  Select as MuiSelect,
-  styled,
-} from '@mui/material';
-import { Icon } from 'components/ui/icon';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import type { SelectProps as MuiSelectProps } from '@mui/material'
+import { FormControl, MenuItem, Select as MuiSelect, styled } from '@mui/material'
+import { Icon } from 'components/ui/icon'
+import * as React from 'react'
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   '& .MuiOutlinedInput-notchedOutline': {
@@ -24,10 +19,10 @@ const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   '& .MuiSelect-icon': {
     color: 'rgba(0, 0, 0, 0.54)',
   },
-}));
+}))
 
 export interface SelectProps extends Omit<MuiSelectProps, 'variant'> {
-  placeholder?: string;
+  placeholder?: string
 }
 
 const Select = React.memo(
@@ -38,7 +33,7 @@ const Select = React.memo(
           ref={ref}
           className={cn(
             'focus:outline-hidden rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
-            className,
+            className
           )}
           displayEmpty
           IconComponent={() => <Icon name="chevron-down" className="h-5 w-5" />}
@@ -52,7 +47,7 @@ const Select = React.memo(
           {children}
         </StyledSelect>
       </FormControl>
-    ),
+    )
   ),
   (prevProps, nextProps) => {
     return (
@@ -60,29 +55,28 @@ const Select = React.memo(
       prevProps.className === nextProps.className &&
       prevProps.disabled === nextProps.disabled &&
       prevProps.placeholder === nextProps.placeholder
-    );
-  },
-);
+    )
+  }
+)
 
-Select.displayName = 'Select';
+Select.displayName = 'Select'
 
-const SelectItem = React.forwardRef<
-  HTMLLIElement,
-  React.ComponentProps<typeof MenuItem>
->(({ className, children, ...props }, ref) => (
-  <MenuItem
-    ref={ref}
-    className={cn(
-      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm focus:bg-accent focus:text-accent-foreground',
-      className,
-    )}
-    {...props}
-  >
-    {children}
-  </MenuItem>
-));
-SelectItem.displayName = 'SelectItem';
+const SelectItem = React.forwardRef<HTMLLIElement, React.ComponentProps<typeof MenuItem>>(
+  ({ className, children, ...props }, ref) => (
+    <MenuItem
+      ref={ref}
+      className={cn(
+        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm focus:bg-accent focus:text-accent-foreground',
+        className
+      )}
+      {...props}
+    >
+      {children}
+    </MenuItem>
+  )
+)
+SelectItem.displayName = 'SelectItem'
 
-export { Select, SelectItem };
+export { Select, SelectItem }
 
-export default Select;
+export default Select

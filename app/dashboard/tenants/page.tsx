@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import { useState } from 'react'
 
 interface Tenant {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  propertyId: string;
-  propertyName: string;
-  unitId: string;
-  leaseEnd: string;
-  status: 'active' | 'inactive' | 'pending';
+  id: string
+  name: string
+  email: string
+  phone: string
+  propertyId: string
+  propertyName: string
+  unitId: string
+  leaseEnd: string
+  status: 'active' | 'inactive' | 'pending'
 }
 
 export default function TenantsPage() {
@@ -28,7 +28,7 @@ export default function TenantsPage() {
       leaseEnd: '12/30/2024',
       status: 'active',
     },
-  ]);
+  ])
 
   return (
     <div className="p-6">
@@ -37,9 +37,7 @@ export default function TenantsPage() {
           <h1 className="text-2xl font-bold">Tenants</h1>
           <p className="text-gray-500">Manage your tenants and leases</p>
         </div>
-        <Button className="bg-blue-500 text-white hover:bg-blue-600">
-          + Add Tenant
-        </Button>
+        <Button className="bg-blue-500 text-white hover:bg-blue-600">+ Add Tenant</Button>
       </div>
 
       <div className="mb-6 grid grid-cols-2 gap-4">
@@ -86,18 +84,14 @@ export default function TenantsPage() {
             {tenants.map((tenant) => (
               <tr key={tenant.id}>
                 <td className="whitespace-nowrap px-6 py-4">
-                  <div className="text-sm font-medium text-gray-900">
-                    {tenant.name}
-                  </div>
+                  <div className="text-sm font-medium text-gray-900">{tenant.name}</div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="text-sm text-gray-500">{tenant.email}</div>
                   <div className="text-sm text-gray-500">{tenant.phone}</div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
-                  <div className="text-sm text-gray-500">
-                    {tenant.propertyName}
-                  </div>
+                  <div className="text-sm text-gray-500">{tenant.propertyName}</div>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="text-sm text-gray-500">{tenant.unitId}</div>
@@ -111,10 +105,7 @@ export default function TenantsPage() {
                   </span>
                 </td>
                 <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                  <Button
-                    variant="outline"
-                    className="text-blue-600 hover:text-blue-900"
-                  >
+                  <Button variant="outline" className="text-blue-600 hover:text-blue-900">
                     ...
                   </Button>
                 </td>
@@ -124,5 +115,5 @@ export default function TenantsPage() {
         </table>
       </div>
     </div>
-  );
+  )
 }

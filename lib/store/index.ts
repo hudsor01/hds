@@ -1,13 +1,13 @@
-import { create } from 'zustand';
-import { devtools, persist } from 'zustand/middleware';
+import { create } from 'zustand'
+import { devtools, persist } from 'zustand/middleware'
 
 // UI Store
 interface UIState {
-  theme: 'light' | 'dark' | 'system';
-  sidebarOpen: boolean;
-  setTheme: (theme: 'light' | 'dark' | 'system') => void;
-  toggleSidebar: () => void;
-  setSidebarOpen: (open: boolean) => void;
+  theme: 'light' | 'dark' | 'system'
+  sidebarOpen: boolean
+  setTheme: (theme: 'light' | 'dark' | 'system') => void
+  toggleSidebar: () => void
+  setSidebarOpen: (open: boolean) => void
 }
 
 export const useUIStore = create<UIState>()(
@@ -17,36 +17,32 @@ export const useUIStore = create<UIState>()(
         theme: 'system',
         sidebarOpen: false,
         setTheme: (theme) => set({ theme }),
-        toggleSidebar: () =>
-          set((state) => ({ sidebarOpen: !state.sidebarOpen })),
+        toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
         setSidebarOpen: (open) => set({ sidebarOpen: open }),
       }),
-      { name: 'ui-store' },
-    ),
-  ),
-);
+      { name: 'ui-store' }
+    )
+  )
+)
 
 // User Preferences Store
 interface UserPreferences {
   notifications: {
-    email: boolean;
-    push: boolean;
-    sms: boolean;
-  };
-  language: string;
-  timezone: string;
+    email: boolean
+    push: boolean
+    sms: boolean
+  }
+  language: string
+  timezone: string
 }
 
 interface PreferencesState {
-  preferences: UserPreferences;
-  setPreference: <K extends keyof UserPreferences>(
-    key: K,
-    value: UserPreferences[K],
-  ) => void;
+  preferences: UserPreferences
+  setPreference: <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => void
   setNotificationPreference: (
     type: keyof UserPreferences['notifications'],
-    enabled: boolean,
-  ) => void;
+    enabled: boolean
+  ) => void
 }
 
 export const usePreferencesStore = create<PreferencesState>()(
@@ -77,27 +73,27 @@ export const usePreferencesStore = create<PreferencesState>()(
             },
           })),
       }),
-      { name: 'preferences-store' },
-    ),
-  ),
-);
+      { name: 'preferences-store' }
+    )
+  )
+)
 
 // Dashboard Store
 interface DashboardState {
-  selectedPropertyId: string | null;
-  selectedTenantId: string | null;
+  selectedPropertyId: string | null
+  selectedTenantId: string | null
   filters: {
-    status: string[];
-    type: string[];
-    dateRange: [Date | null, Date | null];
-  };
-  setSelectedProperty: (id: string | null) => void;
-  setSelectedTenant: (id: string | null) => void;
+    status: string[]
+    type: string[]
+    dateRange: [Date | null, Date | null]
+  }
+  setSelectedProperty: (id: string | null) => void
+  setSelectedTenant: (id: string | null) => void
   setFilter: <K extends keyof DashboardState['filters']>(
     key: K,
-    value: DashboardState['filters'][K],
-  ) => void;
-  resetFilters: () => void;
+    value: DashboardState['filters'][K]
+  ) => void
+  resetFilters: () => void
 }
 
 export const useDashboardStore = create<DashboardState>()(
@@ -123,5 +119,5 @@ export const useDashboardStore = create<DashboardState>()(
           dateRange: [null, null],
         },
       }),
-  })),
-);
+  }))
+)

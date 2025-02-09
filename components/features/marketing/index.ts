@@ -1,1 +1,1 @@
-export * from './waitlist-form';
+export * from './waitlist-form'

@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { Box, Container, Typography } from '@mui/material';
-import dynamic from 'next/dynamic';
+import { Box, Container, Typography } from '@mui/material'
+import dynamic from 'next/dynamic'
 
 // Dynamically import the dashboard to reduce initial bundle size
 const WaitlistDashboard = dynamic(() => import('./dashboard'), {
   loading: () => <div>Loading dashboard...</div>,
-});
+})
 
 export default function WaitlistAdminPage() {
   return (
@@ -22,5 +22,5 @@ export default function WaitlistAdminPage() {
 
       <WaitlistDashboard />
     </Container>
-  );
+  )
 }

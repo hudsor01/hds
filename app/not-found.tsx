@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { FadeIn } from '@/components/animations/fade-in';
-import { Box, Button, Container, Typography } from '@mui/material';
-import Link from 'next/link';
-import { Home, Search } from 'react-feather';
+import { FadeIn } from '@/components/animations/fade-in'
+import { Box, Button, Container, Typography } from '@mui/material'
+import Link from 'next/link'
+import { Home, Search } from 'react-feather'
 
 export default function NotFound() {
   return (
@@ -42,13 +42,9 @@ export default function NotFound() {
         </FadeIn>
 
         <FadeIn delay={0.6}>
-          <Typography
-            variant="body1"
-            color="text.secondary"
-            sx={{ maxWidth: 'sm', mb: 4 }}
-          >
-            The page you're looking for doesn't exist or has been moved. Let's
-            get you back on track.
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
+            The page you're looking for doesn't exist or has been moved. Let's get you back on
+            track.
           </Typography>
         </FadeIn>
 
@@ -59,11 +55,9 @@ export default function NotFound() {
                 variant="contained"
                 startIcon={<Home size={20} />}
                 sx={{
-                  background:
-                    'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
+                  background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                   '&:hover': {
-                    background:
-                      'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
+                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
                   },
                 }}
               >
@@ -90,5 +84,5 @@ export default function NotFound() {
         </FadeIn>
       </Box>
     </Container>
-  );
+  )
 }

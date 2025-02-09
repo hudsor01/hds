@@ -1,11 +1,11 @@
-import { createClient } from '@/utils/supabase/server';
-import { Box, Typography } from '@mui/material';
+import { createClient } from '@/utils/supabase/server'
+import { Box, Typography } from '@mui/material'
 
 export async function ServerProfile() {
-  const supabase = await createClient();
+  const supabase = await createClient()
   const {
     data: { user },
-  } = await supabase.auth.getCurrentUser();
+  } = await supabase.auth.getCurrentUser()
 
   if (!user) {
     return (
@@ -14,7 +14,7 @@ export async function ServerProfile() {
           Please sign in to view server-side profile data
         </Typography>
       </Box>
-    );
+    )
   }
 
   return (
@@ -25,10 +25,8 @@ export async function ServerProfile() {
       <Typography variant="body1">User ID: {user.id}</Typography>
       <Typography variant="body1">Email: {user.email}</Typography>
       {user.user_metadata.firstName && (
-        <Typography variant="body1">
-          Name: {user.user_metadata.firstName}
-        </Typography>
+        <Typography variant="body1">Name: {user.user_metadata.firstName}</Typography>
       )}
     </Box>
-  );
+  )
 }

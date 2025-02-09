@@ -1,79 +1,71 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useAuth } from '@/components/providers/auth-provider';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  Divider,
-  TextField,
-  Typography,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import { Google } from '@mui/icons-material';
+import { useState } from 'react'
+import { useAuth } from '@/components/providers/auth-provider'
+import { Alert, Box, Button, CircularProgress, Divider, TextField, Typography } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { Google } from '@mui/icons-material'
 
 interface SignInFormProps {
-  onSuccess?: () => void;
-  redirectTo?: string;
+  onSuccess?: () => void
+  redirectTo?: string
 }
 
 export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormProps) {
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { signIn } = useAuth();
+  const router = useRouter()
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
-      const { error } = await signIn(formData.email, formData.password);
-      if (error) throw error;
-      onSuccess?.();
-      router.push(redirectTo);
-      router.refresh();
+      const { error } = await signIn(formData.email, formData.password)
+      if (error) throw error
+      onSuccess?.()
+      router.push(redirectTo)
+      router.refresh()
     } catch (error) {
-      setError(error instanceof Error ? error.message : 'Failed to sign in');
+      setError(error instanceof Error ? error.message : 'Failed to sign in')
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleGoogleSignIn = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('/auth/sign-in/google', {
         method: 'POST',
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to sign in with Google');
+        throw new Error(data.error || 'Failed to sign in with Google')
       }
 
-      window.location.href = data.url;
+      window.location.href = data.url
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
-      setLoading(false);
+      setError(err instanceof Error ? err.message : 'An error occurred')
+      setLoading(false)
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   return (
     <Box
@@ -158,22 +150,16 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
       <Box sx={{ mt: 2, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary">
           Don't have an account?{' '}
-          <Link
-            href="/sign-up"
-            style={{ color: '#007FFF', textDecoration: 'none' }}
-          >
+          <Link href="/sign-up" style={{ color: '#007FFF', textDecoration: 'none' }}>
             Sign up
           </Link>
         </Typography>
         <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
-          <Link
-            href="/forgot-password"
-            style={{ color: '#007FFF', textDecoration: 'none' }}
-          >
+          <Link href="/forgot-password" style={{ color: '#007FFF', textDecoration: 'none' }}>
             Forgot your password?
           </Link>
         </Typography>
       </Box>
     </Box>
-  );
+  )
 }

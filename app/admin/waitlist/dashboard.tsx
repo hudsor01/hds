@@ -1,19 +1,10 @@
-'use client';
+'use client'
 
-import { getWaitlistStats } from '@/lib/services/waitlist-analytics';
-import type { WaitlistStats } from '@/types/waitlist-analytics';
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Grid,
-  Tab,
-  Tabs,
-  Typography,
-} from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { getWaitlistStats } from '@/lib/services/waitlist-analytics'
+import type { WaitlistStats } from '@/types/waitlist-analytics'
+import { Box, Card, CardContent, Container, Grid, Tab, Tabs, Typography } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
+import { useState } from 'react'
 import {
   Area,
   AreaChart,
@@ -24,16 +15,16 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 interface TabPanelProps {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+  children?: React.ReactNode
+  index: number
+  value: number
 }
 
 function TabPanel(props: TabPanelProps) {
-  const { children, value, index, ...other } = props;
+  const { children, value, index, ...other } = props
 
   return (
     <div
@@ -45,24 +36,24 @@ function TabPanel(props: TabPanelProps) {
     >
       {value === index && <Box sx={{ py: 3 }}>{children}</Box>}
     </div>
-  );
+  )
 }
 
 export default function WaitlistDashboard() {
-  const [tabValue, setTabValue] = useState(0);
-  const [dateRange, setDateRange] = useState('30d');
+  const [tabValue, setTabValue] = useState(0)
+  const [dateRange, setDateRange] = useState('30d')
 
   const { data: stats, isLoading } = useQuery<WaitlistStats>({
     queryKey: ['waitlist-stats', dateRange],
     queryFn: () => getWaitlistStats(),
-  });
+  })
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   if (!stats) {
-    return <div>No data available</div>;
+    return <div>No data available</div>
   }
 
   return (
@@ -71,9 +62,7 @@ export default function WaitlistDashboard() {
         <Typography variant="h4" gutterBottom>
           Waitlist Dashboard
         </Typography>
-        <Typography color="text.secondary">
-          Monitor and manage your waitlist performance
-        </Typography>
+        <Typography color="text.secondary">Monitor and manage your waitlist performance</Typography>
       </Box>
 
       <Grid container spacing={3} sx={{ mb: 4 }}>
@@ -83,9 +72,7 @@ export default function WaitlistDashboard() {
               <Typography color="text.secondary" gutterBottom>
                 Total Signups
               </Typography>
-              <Typography variant="h4">
-                {stats.conversion.total_signups}
-              </Typography>
+              <Typography variant="h4">{stats.conversion.total_signups}</Typography>
               <Typography variant="body2" color="text.secondary">
                 {stats.daily[0]?.signups || 0} today
               </Typography>
@@ -99,9 +86,7 @@ export default function WaitlistDashboard() {
               <Typography color="text.secondary" gutterBottom>
                 Conversion Rate
               </Typography>
-              <Typography variant="h4">
-                {stats.conversion.rate.toFixed(1)}%
-              </Typography>
+              <Typography variant="h4">{stats.conversion.rate.toFixed(1)}%</Typography>
               <Typography variant="body2" color="text.secondary">
                 of {stats.conversion.total_views} views
               </Typography>
@@ -116,10 +101,7 @@ export default function WaitlistDashboard() {
                 Total Referrals
               </Typography>
               <Typography variant="h4">
-                {stats.referrals.reduce(
-                  (sum, ref) => sum + ref.referral_count,
-                  0,
-                )}
+                {stats.referrals.reduce((sum, ref) => sum + ref.referral_count, 0)}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 from {stats.referrals.length} referrers
@@ -201,5 +183,5 @@ export default function WaitlistDashboard() {
         </TabPanel>
       </Card>
     </Container>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
+import Box from '@mui/material/Box'
+import Container from '@mui/material/Container'
+import Paper from '@mui/material/Paper'
+import { styled } from '@mui/material/styles'
 
 const StyledAuthContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
@@ -12,7 +12,7 @@ const StyledAuthContainer = styled(Box)(({ theme }) => ({
   justifyContent: 'center',
   backgroundColor: theme.palette.background.default,
   padding: theme.spacing(3),
-}));
+}))
 
 export function EnhancedSignIn() {
   return (
@@ -60,5 +60,5 @@ export function EnhancedSignIn() {
         </Paper>
       </Container>
     </StyledAuthContainer>
-  );
+  )
 }

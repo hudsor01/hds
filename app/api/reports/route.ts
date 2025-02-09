@@ -1,28 +1,28 @@
-import { prisma } from '@/lib/prisma';
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma'
+import { NextRequest, NextResponse } from 'next/server'
 
 // Helper function to calculate occupancy rate
 const calculateOccupancyRate = (totalUnits: number, occupiedUnits: number) => {
-  return totalUnits === 0 ? 0 : (occupiedUnits / totalUnits) * 100;
-};
+  return totalUnits === 0 ? 0 : (occupiedUnits / totalUnits) * 100
+}
 
-const propertyName = request.property.name;
+const propertyName = request.property.name
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = getAuth(req);
+    const { userId } = getAuth(req)
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const { searchParams } = new URL(req.url);
-    const reportType = searchParams.get('type');
+    const { searchParams } = new URL(req.url)
+    const reportType = searchParams.get('type')
     const startDate = searchParams.get('startDate')
       ? new Date(searchParams.get('startDate')!)
-      : new Date(new Date().setMonth(new Date().getMonth() - 1));
+      : new Date(new Date().setMonth(new Date().getMonth() - 1))
     const endDate = searchParams.get('endDate')
       ? new Date(searchParams.get('endDate')!)
-      : new Date();
+      : new Date()
 
     switch (reportType) {
       case 'financial': {
@@ -59,34 +59,25 @@ export async function GET(req: NextRequest) {
               category: true,
             },
           }),
-        ]);
+        ])
 
         const totalPotentialIncome = properties.reduce(
           (sum, prop) => sum + Number(prop.rent_amount),
-          0,
-        );
-        const actualIncome = leases.reduce(
-          (sum, lease) => sum + Number(lease.rent_amount),
-          0,
-        );
-        const totalDeposits = leases.reduce(
-          (sum, lease) => sum + Number(lease.depositAmount),
-          0,
-        );
-        const totalExpenses = expenses.reduce(
-          (sum, expense) => sum + Number(expense.amount),
-          0,
-        );
+          0
+        )
+        const actualIncome = leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0)
+        const totalDeposits = leases.reduce((sum, lease) => sum + Number(lease.depositAmount), 0)
+        const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0)
 
         // Group expenses by category
         const expensesByCategory = expenses.reduce(
           (acc, expense) => {
-            const category = expense.category;
-            acc[category] = (acc[category] || 0) + Number(expense.amount);
-            return acc;
+            const category = expense.category
+            acc[category] = (acc[category] || 0) + Number(expense.amount)
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         return NextResponse.json({
           totalPotentialIncome,
@@ -94,13 +85,10 @@ export async function GET(req: NextRequest) {
           totalDeposits,
           totalExpenses,
           netIncome: actualIncome - totalExpenses,
-          occupancyRate: calculateOccupancyRate(
-            properties.length,
-            leases.length,
-          ),
+          occupancyRate: calculateOccupancyRate(properties.length, leases.length),
           expensesByCategory,
           period: { startDate, endDate },
-        });
+        })
       }
 
       case 'occupancy': {
@@ -125,42 +113,33 @@ export async function GET(req: NextRequest) {
               property: true,
             },
           }),
-        ]);
+        ])
 
         const occupancyByPropertyType = properties.reduce(
           (acc, property) => {
-            const type = property.type;
+            const type = property.type
             if (!acc[type]) {
               acc[type] = {
                 total: 0,
                 occupied: 0,
                 rate: 0,
-              };
+              }
             }
-            acc[type].total++;
-            acc[type].occupied += property.leases.length > 0 ? 1 : 0;
-            acc[type].rate = calculateOccupancyRate(
-              acc[type].total,
-              acc[type].occupied,
-            );
-            return acc;
+            acc[type].total++
+            acc[type].occupied += property.leases.length > 0 ? 1 : 0
+            acc[type].rate = calculateOccupancyRate(acc[type].total, acc[type].occupied)
+            return acc
           },
-          {} as Record<
-            string,
-            { total: number; occupied: number; rate: number }
-          >,
-        );
+          {} as Record<string, { total: number; occupied: number; rate: number }>
+        )
 
         return NextResponse.json({
           totalProperties: properties.length,
           occupiedProperties: activeLeases.length,
-          overallOccupancyRate: calculateOccupancyRate(
-            properties.length,
-            activeLeases.length,
-          ),
+          overallOccupancyRate: calculateOccupancyRate(properties.length, activeLeases.length),
           occupancyByPropertyType,
           period: { startDate, endDate },
-        });
+        })
       }
 
       case 'maintenance': {
@@ -176,36 +155,36 @@ export async function GET(req: NextRequest) {
           include: {
             property: true,
           },
-        });
+        })
 
         const requestsByStatus = maintenanceRequests.reduce(
           (acc, request) => {
-            const status = request.status || 'UNKNOWN';
-            acc[status] = (acc[status] || 0) + 1;
-            return acc;
+            const status = request.status || 'UNKNOWN'
+            acc[status] = (acc[status] || 0) + 1
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         const requestsByPriority = maintenanceRequests.reduce(
           (acc, request) => {
-            const priority = request.priority || 'UNKNOWN';
-            acc[priority] = (acc[priority] || 0) + 1;
-            return acc;
+            const priority = request.priority || 'UNKNOWN'
+            acc[priority] = (acc[priority] || 0) + 1
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         const requestsByProperty = maintenanceRequests.reduce(
           (acc, request) => {
             if (request.property) {
-              const propertyName = request.property.name;
-              acc[propertyName] = (acc[propertyName] || 0) + 1;
+              const propertyName = request.property.name
+              acc[propertyName] = (acc[propertyName] || 0) + 1
             }
-            return acc;
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         return NextResponse.json({
           totalRequests: maintenanceRequests.length,
@@ -213,7 +192,7 @@ export async function GET(req: NextRequest) {
           requestsByPriority,
           requestsByProperty,
           period: { startDate, endDate },
-        });
+        })
       }
 
       case 'leases': {
@@ -229,39 +208,38 @@ export async function GET(req: NextRequest) {
           include: {
             property: true,
           },
-        });
+        })
 
         const leasesByStatus = leases.reduce(
           (acc, lease) => {
-            const status = lease.status || 'UNKNOWN';
-            acc[status] = (acc[status] || 0) + 1;
-            return acc;
+            const status = lease.status || 'UNKNOWN'
+            acc[status] = (acc[status] || 0) + 1
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         const leasesByType = leases.reduce(
           (acc, lease) => {
-            const type = lease.type;
-            acc[type] = (acc[type] || 0) + 1;
-            return acc;
+            const type = lease.type
+            acc[type] = (acc[type] || 0) + 1
+            return acc
           },
-          {} as Record<string, number>,
-        );
+          {} as Record<string, number>
+        )
 
         const upcomingRenewals = leases
           .filter(
             (lease) =>
               lease.status === 'Active' &&
               lease.end_date &&
-              new Date(lease.end_date) <=
-                new Date(new Date().setMonth(new Date().getMonth() + 2)),
+              new Date(lease.end_date) <= new Date(new Date().setMonth(new Date().getMonth() + 2))
           )
           .map((lease) => ({
             leaseId: lease.user_id,
             propertyName: lease.property.name,
             endDate: lease.end_date,
-          }));
+          }))
 
         return NextResponse.json({
           totalLeases: leases.length,
@@ -269,23 +247,16 @@ export async function GET(req: NextRequest) {
           leasesByType,
           upcomingRenewals,
           averageLeaseAmount:
-            leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) /
-            leases.length,
+            leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) / leases.length,
           period: { startDate, endDate },
-        });
+        })
       }
 
       default:
-        return NextResponse.json(
-          { error: 'Invalid report type' },
-          { status: 400 },
-        );
+        return NextResponse.json({ error: 'Invalid report type' }, { status: 400 })
     }
   } catch (error) {
-    console.error('Reports API Error:', error);
-    return NextResponse.json(
-      { error: 'Error generating report' },
-      { status: 500 },
-    );
+    console.error('Reports API Error:', error)
+    return NextResponse.json({ error: 'Error generating report' }, { status: 500 })
   }
 }

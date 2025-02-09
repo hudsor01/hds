@@ -1,47 +1,40 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  TextField,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
+import { useState } from 'react'
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
+import Link from 'next/link'
 
 export default function ResetPasswordForm() {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
-  const [email, setEmail] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  const [email, setEmail] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to send reset email');
+        throw new Error(data.error || 'Failed to send reset email')
       }
 
-      setSuccess(true);
+      setSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   if (success) {
     return (
@@ -50,11 +43,10 @@ export default function ResetPasswordForm() {
           Check your email
         </Typography>
         <Typography color="text.secondary">
-          We've sent you a password reset link. Please check your email to
-          continue.
+          We've sent you a password reset link. Please check your email to continue.
         </Typography>
       </Box>
-    );
+    )
   }
 
   return (
@@ -81,8 +73,7 @@ export default function ResetPasswordForm() {
       </Typography>
 
       <Typography color="text.secondary" sx={{ mb: 2 }}>
-        Enter your email address and we'll send you a link to reset your
-        password.
+        Enter your email address and we'll send you a link to reset your password.
       </Typography>
 
       <TextField
@@ -112,14 +103,11 @@ export default function ResetPasswordForm() {
       <Box sx={{ mt: 2, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary">
           Remember your password?{' '}
-          <Link
-            href="/sign-in"
-            style={{ color: '#007FFF', textDecoration: 'none' }}
-          >
+          <Link href="/sign-in" style={{ color: '#007FFF', textDecoration: 'none' }}>
             Sign in
           </Link>
         </Typography>
       </Box>
     </Box>
-  );
+  )
 }

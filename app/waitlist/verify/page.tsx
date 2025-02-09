@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { Container, Typography } from '@mui/material';
-import VerifyEmail from '@/components/waitlist/verify-email';
-import { useRouter } from 'next/router';
+import { Container, Typography } from '@mui/material'
+import VerifyEmail from '@/components/waitlist/verify-email'
+import { useRouter } from 'next/router'
 
 export default function VerifyEmailPage() {
   const handleSuccess = (email: string) => {
     // You can add additional success handling here
-    console.log('Email verified:', email);
-  };
+    console.log('Email verified:', email)
+  }
 
   const handleError = (error: string) => {
     // You can add additional error handling here
-    console.error('Verification error:', error);
-  };
+    console.error('Verification error:', error)
+  }
 
   return (
     <Container maxWidth="md" className="py-12">
@@ -30,5 +30,5 @@ export default function VerifyEmailPage() {
         <VerifyEmail onSuccess={handleSuccess} onError={handleError} />
       </div>
     </Container>
-  );
+  )
 }

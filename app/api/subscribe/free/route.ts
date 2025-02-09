@@ -1,12 +1,12 @@
-import { prisma } from '@/prisma/seed';
+import { prisma } from '@/prisma/seed'
 
-import { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server'
 
 export async function POST() {
-  const { userId } = await auth();
+  const { userId } = await auth()
 
   if (!userId) {
-    return new NextResponse('Unauthorized', { status: 401 });
+    return new NextResponse('Unauthorized', { status: 401 })
   }
 
   try {
@@ -18,10 +18,10 @@ export async function POST() {
         id: true,
         subscription_status: true,
       },
-    });
+    })
 
     if (!existingUser) {
-      return new NextResponse('User not found', { status: 404 });
+      return new NextResponse('User not found', { status: 404 })
     }
 
     const updatedUser = await prisma.users.update({
@@ -37,11 +37,11 @@ export async function POST() {
         subscription_status: true,
         trialEndsAt: true,
       },
-    });
+    })
 
-    return NextResponse.json(updatedUser);
+    return NextResponse.json(updatedUser)
   } catch (error) {
-    console.error('Failed to activate free trial:', error);
-    return new NextResponse('Failed to activate free trial', { status: 500 });
+    console.error('Failed to activate free trial:', error)
+    return new NextResponse('Failed to activate free trial', { status: 500 })
   }
 }

@@ -36,7 +36,10 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user }, error } = await supabase.auth.getUser()
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser()
 
   // Handle auth redirects
   const isPublic = isPublicPath(request.nextUrl.pathname)

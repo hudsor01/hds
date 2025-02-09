@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button'
 import {
   Dialog,
   DialogContent,
@@ -10,29 +10,29 @@ import {
   MenuItem,
   Box,
   Typography,
-} from '@mui/material';
-import { useState } from 'react';
-import type { Property, PropertyType, PropertyStatus } from '@/types/property';
+} from '@mui/material'
+import { useState } from 'react'
+import type { Property, PropertyType, PropertyStatus } from '@/types/property'
 
 const PROPERTY_TYPES = {
   SINGLE_FAMILY: 'SINGLE_FAMILY',
   MULTI_FAMILY: 'MULTI_FAMILY',
   APARTMENT: 'APARTMENT',
   CONDO: 'CONDO',
-} as const;
+} as const
 
 const PROPERTY_STATUSES = {
   AVAILABLE: 'AVAILABLE',
   RENTED: 'RENTED',
   MAINTENANCE: 'MAINTENANCE',
   INACTIVE: 'INACTIVE',
-} as const;
+} as const
 
 interface PropertyDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  onSubmitAction: (data: Omit<Property, 'id' | 'units'>) => Promise<void>;
-  property?: Property | null;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  onSubmitAction: (data: Omit<Property, 'id' | 'units'>) => Promise<void>
+  property?: Property | null
 }
 
 export function PropertyDialog({
@@ -53,11 +53,11 @@ export function PropertyDialog({
     bedrooms: property?.bedrooms || 0,
     bathrooms: property?.bathrooms || 0,
     image: property?.image || '',
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    await onSubmitAction(formData);
+    e.preventDefault()
+    await onSubmitAction(formData)
     setFormData({
       name: '',
       address: '',
@@ -70,8 +70,8 @@ export function PropertyDialog({
       bedrooms: 0,
       bathrooms: 0,
       image: '',
-    });
-  };
+    })
+  }
 
   return (
     <Dialog open={open} onClose={() => onOpenChangeAction(false)}>
@@ -202,5 +202,5 @@ export function PropertyDialog({
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

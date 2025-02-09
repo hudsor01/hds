@@ -1,9 +1,9 @@
-import { Button } from './ui/button';
-import { containerVariants, itemVariants } from '@/lib/animation-variants';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { FaGithub } from 'react-icons/fa6';
-import { SiNotion } from 'react-icons/si';
+import { Button } from './ui/button'
+import { containerVariants, itemVariants } from '@/lib/animation-variants'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { FaGithub } from 'react-icons/fa6'
+import { SiNotion } from 'react-icons/si'
 
 export default function Header() {
   return (
@@ -46,5 +46,5 @@ export default function Header() {
         </Link>
       </motion.div>
     </motion.div>
-  );
+  )
 }

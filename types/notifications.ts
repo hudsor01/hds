@@ -1,10 +1,10 @@
-import { sendEmail } from '../components/emails/templates/emails';
+import { sendEmail } from '../components/emails/templates/emails'
 
 export interface WebhookUser {
-  id: string;
-  email_addresses: { email_address: string }[];
-  first_name: string;
-  last_name: string;
+  id: string
+  email_addresses: { email_address: string }[]
+  first_name: string
+  last_name: string
 }
 
 export const notifyAdminsOfNewUser = async (userData: WebhookUser) => {
@@ -16,5 +16,5 @@ export const notifyAdminsOfNewUser = async (userData: WebhookUser) => {
       email: userData.email_addresses[0].email_address,
       name: `${userData.first_name} ${userData.last_name}`,
     },
-  });
-};
+  })
+}

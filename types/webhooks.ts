@@ -1,16 +1,16 @@
 export interface WebhookLog {
-  id: string;
-  event_type: string;
-  created_at: string;
-  success: boolean;
-  payload: string;
+  id: string
+  event_type: string
+  created_at: string
+  success: boolean
+  payload: string
 }
 
 export interface WebhookPayload {
-  type: string;
-  data: Record<string, unknown>;
-  object: string;
-  created_at: string;
+  type: string
+  data: Record<string, unknown>
+  object: string
+  created_at: string
 }
 
 export type WebhookEventType =
@@ -21,8 +21,8 @@ export type WebhookEventType =
   | 'session.ended'
   | 'organization.created'
   | 'organization.updated'
-  | 'organization.deleted';
+  | 'organization.deleted'
 
 export interface WebhookLogGridProps {
-  logs: WebhookLog[];
+  logs: WebhookLog[]
 }

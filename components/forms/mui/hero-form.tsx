@@ -1,19 +1,19 @@
-import { Box, Button, TextField, Typography, useTheme } from '@mui/material';
-import React from 'react';
-import { useForm } from 'react-hook-form';
+import { Box, Button, TextField, Typography, useTheme } from '@mui/material'
+import React from 'react'
+import { useForm } from 'react-hook-form'
 
 export default function HeroForm() {
-  const theme = useTheme();
+  const theme = useTheme()
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm();
+  } = useForm()
 
   const onSubmit = (data: any) => {
     // Handle email submission
-    console.log(data);
-  };
+    console.log(data)
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -50,5 +50,5 @@ export default function HeroForm() {
         Join our beta program. No credit card required.
       </Typography>
     </form>
-  );
+  )
 }

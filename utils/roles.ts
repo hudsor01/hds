@@ -5,14 +5,14 @@ export type UserRole =
   | 'PROPERTY_OWNER'
   | 'MAINTENANCE'
   | 'TENANT'
-  | 'USER';
+  | 'USER'
 
 export function checkRole(
   userRole: string | null | undefined,
   requiredRole: string,
-  allowHigherRoles = true,
+  allowHigherRoles = true
 ): boolean {
-  if (!userRole) return false;
+  if (!userRole) return false
 
   const roleHierarchy: Record<string, number> = {
     SUPER_ADMIN: 100,
@@ -22,12 +22,10 @@ export function checkRole(
     MAINTENANCE: 60,
     TENANT: 50,
     USER: 10,
-  };
+  }
 
-  const userRoleLevel = roleHierarchy[userRole] || 0;
-  const requiredRoleLevel = roleHierarchy[requiredRole] || 0;
+  const userRoleLevel = roleHierarchy[userRole] || 0
+  const requiredRoleLevel = roleHierarchy[requiredRole] || 0
 
-  return allowHigherRoles
-    ? userRoleLevel >= requiredRoleLevel
-    : userRoleLevel === requiredRoleLevel;
+  return allowHigherRoles ? userRoleLevel >= requiredRoleLevel : userRoleLevel === requiredRoleLevel
 }

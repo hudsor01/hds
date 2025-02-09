@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { signOut } from '../../app/auth/lib/auth/auth';
+import { Button } from '@/components/ui/buttons/button'
+import { signOut } from '../../app/auth/lib/auth/auth'
 
 export function AuthButton() {
-  const { session, isLoaded } = useSession();
-  const isLoading = status === 'loading';
+  const { session, isLoaded } = useSession()
+  const isLoading = status === 'loading'
 
   if (isLoading) {
-    return <Button disabled>Loading...</Button>;
+    return <Button disabled>Loading...</Button>
   }
 
   if (session) {
@@ -16,12 +16,12 @@ export function AuthButton() {
       <Button variant="outline" onClick={() => signOut()}>
         Sign Out
       </Button>
-    );
+    )
   }
 
   function signIn(arg0: string): void {
-    throw new Error('Function not implemented.');
+    throw new Error('Function not implemented.')
   }
 
-  return <Button onClick={() => signIn('google')}>Sign In with Google</Button>;
+  return <Button onClick={() => signIn('google')}>Sign In with Google</Button>
 }

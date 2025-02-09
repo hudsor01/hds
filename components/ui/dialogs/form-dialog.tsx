@@ -1,15 +1,15 @@
-import { Dialog } from '@/components/ui/dialogs/dialog';
-import { Button } from '@mui/material';
-import { type ReactNode } from 'react';
+import { Dialog } from '@/components/ui/dialogs/dialog'
+import { Button } from '@mui/material'
+import { type ReactNode } from 'react'
 
 interface FormDialogProps {
-  open: boolean;
-  onClose: () => void;
-  onSubmit: () => void;
-  title: string;
-  children: ReactNode;
-  loading?: boolean;
-  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  open: boolean
+  onClose: () => void
+  onSubmit: () => void
+  title: string
+  children: ReactNode
+  loading?: boolean
+  maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
 
 export function FormDialog({
@@ -49,5 +49,5 @@ export function FormDialog({
     >
       <div className="mt-4">{children}</div>
     </Dialog>
-  );
+  )
 }

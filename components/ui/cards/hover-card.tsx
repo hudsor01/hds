@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
+import { motion } from 'framer-motion'
 
 interface HoverCardProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function HoverCard({ children }: HoverCardProps) {
@@ -17,5 +17,5 @@ export function HoverCard({ children }: HoverCardProps) {
     >
       {children}
     </motion.div>
-  );
+  )
 }

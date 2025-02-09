@@ -1,7 +1,7 @@
-import AnimatedShinyText from '@/components/ui/shimmer-text';
-import TextBlur from '@/components/ui/text-blur';
-import { containerVariants, itemVariants } from '@/lib/animation-variants';
-import { motion } from 'framer-motion';
+import AnimatedShinyText from '@/components/ui/shimmer-text'
+import TextBlur from '@/components/ui/text-blur'
+import { containerVariants, itemVariants } from '@/lib/animation-variants'
+import { motion } from 'framer-motion'
 
 export default function CTA() {
   return (
@@ -43,5 +43,5 @@ export default function CTA() {
         />
       </motion.div>
     </motion.div>
-  );
+  )
 }

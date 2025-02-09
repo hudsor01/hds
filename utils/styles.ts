@@ -28,4 +28,4 @@ export const gradientStyles = {
     background: 'linear-gradient(45deg, rgba(0, 127, 255, 0.1) 30%, rgba(0, 89, 178, 0.1) 90%)',
     zIndex: 0,
   },
-} as const;
+} as const

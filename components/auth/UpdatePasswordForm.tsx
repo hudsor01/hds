@@ -1,44 +1,33 @@
-'use client';
+'use client'
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Lock as LockIcon } from '@mui/icons-material';
-import { LoadingButton } from '@mui/lab';
-import {
-  Alert,
-  Box,
-  Collapse,
-  Paper,
-  TextField,
-  Typography,
-} from '@mui/material';
-import React from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Lock as LockIcon } from '@mui/icons-material'
+import { LoadingButton } from '@mui/lab'
+import { Alert, Box, Collapse, Paper, TextField, Typography } from '@mui/material'
+import React from 'react'
+import { Controller, useForm } from 'react-hook-form'
+import { z } from 'zod'
 
 const updatePasswordSchema = z
   .object({
-    currentPassword: z
-      .string()
-      .min(8, 'Password must be at least 8 characters'),
+    currentPassword: z.string().min(8, 'Password must be at least 8 characters'),
     newPassword: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string(),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',
     path: ['confirmPassword'],
-  });
+  })
 
-type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>;
+type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>
 
 interface UpdatePasswordFormProps {
-  onSubmitAction: (data: UpdatePasswordFormValues) => Promise<void>;
+  onSubmitAction: (data: UpdatePasswordFormValues) => Promise<void>
 }
 
-export const UpdatePasswordForm = ({
-  onSubmitAction,
-}: UpdatePasswordFormProps) => {
-  const [error, setError] = React.useState<string | null>(null);
-  const [success, setSuccess] = React.useState(false);
+export const UpdatePasswordForm = ({ onSubmitAction }: UpdatePasswordFormProps) => {
+  const [error, setError] = React.useState<string | null>(null)
+  const [success, setSuccess] = React.useState(false)
 
   const {
     control,
@@ -47,18 +36,18 @@ export const UpdatePasswordForm = ({
     formState: { errors, isSubmitting },
   } = useForm<UpdatePasswordFormValues>({
     resolver: zodResolver(updatePasswordSchema),
-  });
+  })
 
   const handleFormSubmit = async (data: UpdatePasswordFormValues) => {
     try {
-      setError(null);
-      await onSubmitAction(data);
-      setSuccess(true);
-      reset();
+      setError(null)
+      await onSubmitAction(data)
+      setSuccess(true)
+      reset()
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     }
-  };
+  }
 
   return (
     <Paper elevation={3} sx={{ p: 4, maxWidth: 400, mx: 'auto' }}>
@@ -79,11 +68,7 @@ export const UpdatePasswordForm = ({
         )}
       </Collapse>
 
-      <Box
-        component="form"
-        onSubmit={handleSubmit(handleFormSubmit)}
-        noValidate
-      >
+      <Box component="form" onSubmit={handleSubmit(handleFormSubmit)} noValidate>
         <Controller
           name="currentPassword"
           control={control}
@@ -151,5 +136,5 @@ export const UpdatePasswordForm = ({
         </LoadingButton>
       </Box>
     </Paper>
-  );
-};
+  )
+}

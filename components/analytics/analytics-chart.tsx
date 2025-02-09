@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { TimeSeriesData } from '@/types/analytics';
-import { Card, CardContent, CardHeader, useTheme } from '@mui/material';
+import { TimeSeriesData } from '@/types/analytics'
+import { Card, CardContent, CardHeader, useTheme } from '@mui/material'
 import {
   Area,
   AreaChart,
@@ -10,14 +10,14 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from 'recharts';
+} from 'recharts'
 
 interface AnalyticsChartProps {
-  title: string;
-  data: TimeSeriesData[];
-  valuePrefix?: string;
-  valueSuffix?: string;
-  color?: string;
+  title: string
+  data: TimeSeriesData[]
+  valuePrefix?: string
+  valueSuffix?: string
+  color?: string
 }
 
 export default function AnalyticsChart({
@@ -27,11 +27,11 @@ export default function AnalyticsChart({
   valueSuffix = '',
   color,
 }: AnalyticsChartProps) {
-  const theme = useTheme();
+  const theme = useTheme()
 
   const formatValue = (value: number) => {
-    return `${valuePrefix}${value.toLocaleString()}${valueSuffix}`;
-  };
+    return `${valuePrefix}${value.toLocaleString()}${valueSuffix}`
+  }
 
   return (
     <Card>
@@ -47,10 +47,7 @@ export default function AnalyticsChart({
               bottom: 0,
             }}
           >
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke={theme.palette.divider}
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
             <XAxis
               dataKey="date"
               stroke={theme.palette.text.secondary}
@@ -79,5 +76,5 @@ export default function AnalyticsChart({
         </ResponsiveContainer>
       </CardContent>
     </Card>
-  );
+  )
 }

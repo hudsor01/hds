@@ -1,19 +1,19 @@
-import { createClient } from '@/utils/supabase/client';
-import { useEffect, useState } from 'react';
-import { useAuth } from './use-auth';
+import { createClient } from '@/utils/supabase/client'
+import { useEffect, useState } from 'react'
+import { useAuth } from './use-auth'
 
 export function usePermissions() {
-  const { user } = useAuth();
-  const [permissions, setPermissions] = useState<string[]>([]);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const { user } = useAuth()
+  const [permissions, setPermissions] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
 
   useEffect(() => {
     const fetchPermissions = async () => {
       if (!user) {
-        setPermissions([]);
-        setLoading(false);
-        return;
+        setPermissions([])
+        setLoading(false)
+        return
       }
 
       try {
@@ -21,24 +21,24 @@ export function usePermissions() {
           .from('user_permissions')
           .select('permissions')
           .eq('user_id', user.id)
-          .single();
+          .single()
 
         if (error) {
-          console.error('Error fetching permissions:', error);
-          setPermissions([]);
+          console.error('Error fetching permissions:', error)
+          setPermissions([])
         } else {
-          setPermissions(data.permissions || []);
+          setPermissions(data.permissions || [])
         }
       } catch (error) {
-        console.error('Error fetching permissions:', error);
-        setPermissions([]);
+        console.error('Error fetching permissions:', error)
+        setPermissions([])
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchPermissions();
-  }, [user]);
+    fetchPermissions()
+  }, [user])
 
-  return { permissions, loading };
+  return { permissions, loading }
 }

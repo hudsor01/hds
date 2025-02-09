@@ -5,7 +5,7 @@ export const WelcomeEmail = () => (
     <p>Early access begins July 2025.</p>
     <Features />
   </EmailTemplate>
-);
+)
 
 export const EarlyAccessEmail = () => (
   <EmailTemplate>
@@ -18,7 +18,7 @@ export const EarlyAccessEmail = () => (
     </ul>
     <Button href="[signup-link]">Claim Your Spot</Button>
   </EmailTemplate>
-);
+)
 
 export const SpotAvailableEmail = () => (
   <EmailTemplate>
@@ -27,7 +27,7 @@ export const SpotAvailableEmail = () => (
     <p>You have 48 hours to claim it before we move to the next person.</p>
     <Button href="[claim-link]">Join Now</Button>
   </EmailTemplate>
-);
+)
 
 export const LaunchReminderEmail = () => (
   <EmailTemplate>
@@ -37,25 +37,21 @@ export const LaunchReminderEmail = () => (
     <Pricing />
     <Button href="[signup-link]">Get Started</Button>
   </EmailTemplate>
-);
+)
 
 // Email sending service
-export const sendEmail = async (
-  to: string,
-  template: EmailTemplate,
-  data: Record<string, any>,
-) => {
+export const sendEmail = async (to: string, template: EmailTemplate, data: Record<string, any>) => {
   const templates = {
     [EmailTemplate.WELCOME]: WelcomeEmail,
     [EmailTemplate.EARLY_ACCESS]: EarlyAccessEmail,
     [EmailTemplate.SPOT_AVAILABLE]: SpotAvailableEmail,
     [EmailTemplate.LAUNCH_REMINDER]: LaunchReminderEmail,
-  };
+  }
 
   return resend.emails.send({
     from: 'PropertyPro <hello@propertypro.com>',
     to,
     subject: getSubject(template),
     react: templates[template](data),
-  });
-};
+  })
+}

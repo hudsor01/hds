@@ -1,26 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Loader2 } from 'lucide-react';
+import React, { useState, useEffect } from 'react'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Loader2 } from 'lucide-react'
 
 interface AnalysisResult {
-  type: string;
-  content: any;
-  timestamp: string;
+  type: string
+  content: any
+  timestamp: string
 }
 
 const DevServerUI = () => {
-  const [query, setQuery] = useState('');
-  const [results, setResults] = useState<AnalysisResult | null>(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState('')
+  const [results, setResults] = useState<AnalysisResult | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   const handleQuery = async () => {
-    setLoading(true);
-    setError(null);
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('http://localhost:3001/api/query', {
@@ -29,18 +29,18 @@ const DevServerUI = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ query }),
-      });
+      })
 
-      if (!response.ok) throw new Error('Failed to process query');
+      if (!response.ok) throw new Error('Failed to process query')
 
-      const data = await response.json();
-      setResults(data);
+      const data = await response.json()
+      setResults(data)
     } catch (err) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <div className="container mx-auto p-4">
@@ -105,7 +105,7 @@ const DevServerUI = () => {
         </Tabs>
       )}
     </div>
-  );
-};
+  )
+}
 
-export default DevServerUI;
+export default DevServerUI

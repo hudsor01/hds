@@ -1,40 +1,38 @@
-'use client';
+'use client'
 
-import { AuthGuard } from '@/components/auth/auth-guard';
-import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { useUser } from '../../auth/lib/auth/config';
-const SIDEBAR_WIDTH = 280;
+import { AuthGuard } from '@/components/auth/auth-guard'
+import { Box, Drawer, useMediaQuery, useTheme } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { useUser } from '../../auth/lib/auth/config'
+const SIDEBAR_WIDTH = 280
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export default function DashboardLayout({ children }: DashboardLayoutProps) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
-  const theme = useTheme();
-  const lgUp = useMediaQuery(theme.breakpoints.up('lg'));
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
+  const theme = useTheme()
+  const lgUp = useMediaQuery(theme.breakpoints.up('lg'))
+  const { user, isLoaded } = useUser()
+  const router = useRouter()
 
   // Check if user needs onboarding
   useEffect(() => {
     if (isLoaded && user) {
       const needsOnboarding =
-        !user.firstName ||
-        !user.lastName ||
-        !user.publicMetadata?.onboardingCompleted;
+        !user.firstName || !user.lastName || !user.publicMetadata?.onboardingCompleted
       if (needsOnboarding) {
-        router.push('/onboarding');
+        router.push('/onboarding')
       }
     }
-  }, [isLoaded, user, router]);
+  }, [isLoaded, user, router])
 
   const handleSidebarToggle = () => {
-    setSidebarCollapsed(!sidebarCollapsed);
-  };
+    setSidebarCollapsed(!sidebarCollapsed)
+  }
 
   return (
     <AuthGuard>
@@ -134,5 +132,5 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
         </Box>
       </Box>
     </AuthGuard>
-  );
+  )
 }

@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { ExternalLink, Info } from 'react-feather';
-import Link from 'next/link';
-import React from 'react';
+import { ExternalLink, Info } from 'react-feather'
+import Link from 'next/link'
+import React from 'react'
 
 export function SmtpMessage() {
   return (
@@ -10,8 +10,8 @@ export function SmtpMessage() {
       <Info size={16} className="mt-0.5" />
       <div className="flex flex-col gap-1">
         <small className="text-sm text-secondary-foreground">
-          <strong> Note:</strong> Emails are rate limited. Enable Custom SMTP to
-          increase the rate limit.
+          <strong> Note:</strong> Emails are rate limited. Enable Custom SMTP to increase the rate
+          limit.
         </small>
         <div>
           <Link
@@ -24,5 +24,5 @@ export function SmtpMessage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

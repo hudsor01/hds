@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { cva, type VariantProps } from 'class-variance-authority';
-import { X, AlertCircle, CheckCircle, Info } from 'react-feather';
-import { Alert, IconButton, Snackbar } from '@mui/material';
-import { useState, forwardRef, type ReactNode } from 'react';
+import { cva, type VariantProps } from 'class-variance-authority'
+import { X, AlertCircle, CheckCircle, Info } from 'react-feather'
+import { Alert, IconButton, Snackbar } from '@mui/material'
+import { useState, forwardRef, type ReactNode } from 'react'
 
 const toastVariants = cva('flex items-center justify-between gap-2 rounded-lg shadow-lg', {
   variants: {
@@ -18,43 +18,43 @@ const toastVariants = cva('flex items-center justify-between gap-2 rounded-lg sh
   defaultVariants: {
     variant: 'default',
   },
-});
+})
 
-type ToastVariant = 'success' | 'error' | 'warning' | 'info' | 'default';
+export type ToastVariant = 'success' | 'error' | 'warning' | 'info' | 'default'
 
-interface ToastProps extends VariantProps<typeof toastVariants> {
-  open: boolean;
-  onClose: () => void;
-  message: string;
-  autoHideDuration?: number;
-  icon?: ReactNode;
-  variant?: ToastVariant;
+export interface ToastProps extends VariantProps<typeof toastVariants> {
+  open: boolean
+  onClose: () => void
+  message: string
+  autoHideDuration?: number
+  icon?: ReactNode
+  variant?: ToastVariant
 }
 
-const Toast = forwardRef<HTMLDivElement, ToastProps>(
+export const Toast = forwardRef<HTMLDivElement, ToastProps>(
   ({ variant = 'default', open, onClose, message, autoHideDuration = 6000, icon }, ref) => {
-    const [isOpen, setIsOpen] = useState(open);
+    const [isOpen, setIsOpen] = useState(open)
 
     const handleClose = () => {
-      setIsOpen(false);
-      onClose();
-    };
+      setIsOpen(false)
+      onClose()
+    }
 
     const getIcon = () => {
-      if (icon) return icon;
+      if (icon) return icon
       switch (variant) {
         case 'success':
-          return <CheckCircle className="h-5 w-5 text-green-500" />;
+          return <CheckCircle className="h-5 w-5 text-green-500" />
         case 'error':
-          return <X className="h-5 w-5 text-red-500" />;
+          return <X className="h-5 w-5 text-red-500" />
         case 'warning':
-          return <AlertCircle className="h-5 w-5 text-yellow-500" />;
+          return <AlertCircle className="h-5 w-5 text-yellow-500" />
         case 'info':
-          return <Info className="h-5 w-5 text-blue-500" />;
+          return <Info className="h-5 w-5 text-blue-500" />
         default:
-          return null;
+          return null
       }
-    };
+    }
 
     return (
       <Snackbar
@@ -81,10 +81,8 @@ const Toast = forwardRef<HTMLDivElement, ToastProps>(
           {message}
         </Alert>
       </Snackbar>
-    );
-  },
-);
+    )
+  }
+)
 
-Toast.displayName = 'Toast';
-
-export { Toast, type ToastProps };
+Toast.displayName = 'Toast'

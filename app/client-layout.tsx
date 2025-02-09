@@ -1,16 +1,12 @@
-'use client';
+'use client'
 
-import { Analytics } from '@vercel/analytics/react';
-import { SpeedInsights } from '@vercel/speed-insights/next';
-import { Toaster } from 'sonner';
-import Navbar from '../components/navigation/Navbar';
-import { Providers } from './providers';
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import { Toaster } from 'sonner'
+import Navbar from '../components/navigation/Navbar'
+import { Providers } from './providers'
 
-export default function ClientLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function ClientLayout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Providers>
@@ -23,16 +19,10 @@ export default function ClientLayout({
                 © 2024 Hudson Digital Solutions. All rights reserved.
               </p>
               <div className="flex items-center space-x-4">
-                <a
-                  href="/privacy"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
+                <a href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
                   Privacy
                 </a>
-                <a
-                  href="/terms"
-                  className="text-sm text-muted-foreground hover:text-foreground"
-                >
+                <a href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
                   Terms
                 </a>
               </div>
@@ -44,5 +34,5 @@ export default function ClientLayout({
       <Analytics />
       <SpeedInsights />
     </>
-  );
+  )
 }

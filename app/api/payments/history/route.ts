@@ -1,7 +1,7 @@
-import { getPaymentHistory } from '@/lib/services/payments';
+import { getPaymentHistory } from '@/lib/services/payments'
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 const filterSchema = z.object({
   tenant_id: z.string().uuid().optional(),
@@ -12,16 +12,16 @@ const filterSchema = z.object({
   end_date: z.string().datetime().optional(),
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(10),
-});
+})
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const searchParams = req.nextUrl.searchParams;
+    const searchParams = req.nextUrl.searchParams
     const filters = {
       tenant_id: searchParams.get('tenant_id') || undefined,
       property_id: searchParams.get('property_id') || undefined,
@@ -31,20 +31,20 @@ export async function GET(req: NextRequest) {
       end_date: searchParams.get('end_date') || undefined,
       page: Number(searchParams.get('page')) || 1,
       limit: Number(searchParams.get('limit')) || 10,
-    };
+    }
 
-    const validatedFilters = filterSchema.parse(filters);
-    const payments = await getPaymentHistory(userId, validatedFilters);
+    const validatedFilters = filterSchema.parse(filters)
+    const payments = await getPaymentHistory(userId, validatedFilters)
 
     // Calculate pagination metadata
-    const total = payments.length;
-    const totalPages = Math.ceil(total / validatedFilters.limit);
-    const hasMore = validatedFilters.page < totalPages;
+    const total = payments.length
+    const totalPages = Math.ceil(total / validatedFilters.limit)
+    const hasMore = validatedFilters.page < totalPages
 
     // Paginate results
-    const start = (validatedFilters.page - 1) * validatedFilters.limit;
-    const end = start + validatedFilters.limit;
-    const paginatedPayments = payments.slice(start, end);
+    const start = (validatedFilters.page - 1) * validatedFilters.limit
+    const end = start + validatedFilters.limit
+    const paginatedPayments = payments.slice(start, end)
 
     return NextResponse.json({
       data: paginatedPayments,
@@ -55,18 +55,12 @@ export async function GET(req: NextRequest) {
         totalPages,
         hasMore,
       },
-    });
+    })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
-    console.error('Error fetching payment history:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch payment history' },
-      { status: 500 },
-    );
+    console.error('Error fetching payment history:', error)
+    return NextResponse.json({ error: 'Failed to fetch payment history' }, { status: 500 })
   }
 }

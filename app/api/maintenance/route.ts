@@ -1,7 +1,7 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase'
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 // Validation schema for maintenance request creation/updates
 const maintenanceRequestSchema = z.object({
@@ -9,66 +9,61 @@ const maintenanceRequestSchema = z.object({
   description: z.string().min(1, 'Description is required'),
   property_id: z.string().uuid('Invalid property ID'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']).default('LOW'),
-  status: z
-    .enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'])
-    .default('PENDING'),
-});
+  status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).default('PENDING'),
+})
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const searchParams = req.nextUrl.searchParams;
-    const property_id = searchParams.get('property_id');
-    const status = searchParams.get('status');
-    const priority = searchParams.get('priority');
+    const searchParams = req.nextUrl.searchParams
+    const property_id = searchParams.get('property_id')
+    const status = searchParams.get('status')
+    const priority = searchParams.get('priority')
 
     let query = supabase
       .from('maintenance_requests')
       .select('*, properties(*)')
-      .eq('user_id', userId);
+      .eq('user_id', userId)
 
     if (property_id) {
-      query = query.eq('property_id', property_id);
+      query = query.eq('property_id', property_id)
     }
 
     if (status) {
-      query = query.eq('status', status);
+      query = query.eq('status', status)
     }
 
     if (priority) {
-      query = query.eq('priority', priority);
+      query = query.eq('priority', priority)
     }
 
-    const { data: requests, error } = await query;
+    const { data: requests, error } = await query
 
     if (error) {
-      console.error('Error fetching maintenance requests:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error fetching maintenance requests:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ data: requests });
+    return NextResponse.json({ data: requests })
   } catch (error) {
-    console.error('Error in maintenance request GET route:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch maintenance requests' },
-      { status: 500 },
-    );
+    console.error('Error in maintenance request GET route:', error)
+    return NextResponse.json({ error: 'Failed to fetch maintenance requests' }, { status: 500 })
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json();
-    const validatedData = maintenanceRequestSchema.parse(body);
+    const body = await req.json()
+    const validatedData = maintenanceRequestSchema.parse(body)
 
     // Verify property ownership
     const { data: property, error: propertyError } = await supabase
@@ -76,24 +71,21 @@ export async function POST(req: NextRequest) {
       .select('id')
       .eq('id', validatedData.property_id)
       .eq('user_id', userId)
-      .single();
+      .single()
 
     if (propertyError || !property) {
-      return NextResponse.json(
-        { error: 'Property not found or unauthorized' },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: 'Property not found or unauthorized' }, { status: 404 })
     }
 
     const { data: request, error } = await supabase
       .from('maintenance_requests')
       .insert([{ ...validatedData, user_id: userId }])
       .select()
-      .single();
+      .single()
 
     if (error) {
-      console.error('Error creating maintenance request:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error creating maintenance request:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     // Create notification for new maintenance request
@@ -108,42 +100,33 @@ export async function POST(req: NextRequest) {
           priority: validatedData.priority,
         },
       },
-    ]);
+    ])
 
-    return NextResponse.json({ data: request }, { status: 201 });
+    return NextResponse.json({ data: request }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
-    console.error('Error in maintenance request POST route:', error);
-    return NextResponse.json(
-      { error: 'Failed to create maintenance request' },
-      { status: 500 },
-    );
+    console.error('Error in maintenance request POST route:', error)
+    return NextResponse.json({ error: 'Failed to create maintenance request' }, { status: 500 })
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json();
-    const { id, ...updateData } = body;
+    const body = await req.json()
+    const { id, ...updateData } = body
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Maintenance request ID is required' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Maintenance request ID is required' }, { status: 400 })
     }
 
-    const validatedData = maintenanceRequestSchema.partial().parse(updateData);
+    const validatedData = maintenanceRequestSchema.partial().parse(updateData)
 
     // Verify request ownership
     const { data: existingRequest, error: requestCheckError } = await supabase
@@ -151,24 +134,21 @@ export async function PUT(req: NextRequest) {
       .select('id, status')
       .eq('id', id)
       .eq('user_id', userId)
-      .single();
+      .single()
 
     if (requestCheckError || !existingRequest) {
       return NextResponse.json(
         { error: 'Maintenance request not found or unauthorized' },
-        { status: 404 },
-      );
+        { status: 404 }
+      )
     }
 
     // Prevent updates to completed or cancelled requests
-    if (
-      existingRequest.status === 'COMPLETED' ||
-      existingRequest.status === 'CANCELLED'
-    ) {
+    if (existingRequest.status === 'COMPLETED' || existingRequest.status === 'CANCELLED') {
       return NextResponse.json(
         { error: 'Cannot update completed or cancelled maintenance requests' },
-        { status: 400 },
-      );
+        { status: 400 }
+      )
     }
 
     const { data: request, error } = await supabase
@@ -177,11 +157,11 @@ export async function PUT(req: NextRequest) {
       .eq('id', id)
       .eq('user_id', userId)
       .select()
-      .single();
+      .single()
 
     if (error) {
-      console.error('Error updating maintenance request:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error updating maintenance request:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     // Create notification for status update
@@ -198,38 +178,29 @@ export async function PUT(req: NextRequest) {
             new_status: validatedData.status,
           },
         },
-      ]);
+      ])
     }
 
-    return NextResponse.json({ data: request });
+    return NextResponse.json({ data: request })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
-    console.error('Error in maintenance request PUT route:', error);
-    return NextResponse.json(
-      { error: 'Failed to update maintenance request' },
-      { status: 500 },
-    );
+    console.error('Error in maintenance request PUT route:', error)
+    return NextResponse.json({ error: 'Failed to update maintenance request' }, { status: 500 })
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const id = req.nextUrl.searchParams.get('id');
+    const id = req.nextUrl.searchParams.get('id')
     if (!id) {
-      return NextResponse.json(
-        { error: 'Maintenance request ID is required' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Maintenance request ID is required' }, { status: 400 })
     }
 
     // Verify request ownership and status
@@ -238,42 +209,39 @@ export async function DELETE(req: NextRequest) {
       .select('status')
       .eq('id', id)
       .eq('user_id', userId)
-      .single();
+      .single()
 
     if (requestCheckError || !request) {
       return NextResponse.json(
         { error: 'Maintenance request not found or unauthorized' },
-        { status: 404 },
-      );
+        { status: 404 }
+      )
     }
 
     if (request.status === 'IN_PROGRESS') {
       return NextResponse.json(
         { error: 'Cannot delete a maintenance request that is in progress' },
-        { status: 400 },
-      );
+        { status: 400 }
+      )
     }
 
     const { error } = await supabase
       .from('maintenance_requests')
       .delete()
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('user_id', userId)
 
     if (error) {
-      console.error('Error deleting maintenance request:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error deleting maintenance request:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     return NextResponse.json(
       { message: 'Maintenance request deleted successfully' },
-      { status: 200 },
-    );
+      { status: 200 }
+    )
   } catch (error) {
-    console.error('Error in maintenance request DELETE route:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete maintenance request' },
-      { status: 500 },
-    );
+    console.error('Error in maintenance request DELETE route:', error)
+    return NextResponse.json({ error: 'Failed to delete maintenance request' }, { status: 500 })
   }
 }

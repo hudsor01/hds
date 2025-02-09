@@ -1,39 +1,39 @@
-'use client';
+'use client'
 
-import { useAuth } from '@/hooks/auth/use-auth';
-import { usePermissions } from '@/hooks/auth/use-permissions';
-import { apiClient } from '@/lib/api';
+import { useAuth } from '@/hooks/auth/use-auth'
+import { usePermissions } from '@/hooks/auth/use-permissions'
+import { apiClient } from '@/lib/api'
 import type {
   FinancialMetrics,
   MaintenanceMetrics,
   PropertyMetrics,
   TenantMetrics,
   TimeSeriesData,
-} from '@/types/analytics';
-import { Grid, Typography } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
-import { DollarSign, Home, Tool, Users } from 'react-feather';
-import { checkRole } from '@/utils/roles';
-import MetricCard from '@/components/analytics/metric-card';
-import AnalyticsChart from '@/components/analytics/analytics-chart';
+} from '@/types/analytics'
+import { Grid, Typography } from '@mui/material'
+import { useQuery } from '@tanstack/react-query'
+import { useEffect, useState } from 'react'
+import { DollarSign, Home, Tool, Users } from 'react-feather'
+import { checkRole } from '@/utils/roles'
+import MetricCard from '@/components/analytics/metric-card'
+import AnalyticsChart from '@/components/analytics/analytics-chart'
 
-const REFETCH_INTERVAL = 30000; // 30 seconds
+const REFETCH_INTERVAL = 30000 // 30 seconds
 
 interface ApiResponse<T> {
-  data: T;
+  data: T
 }
 
 export default function DashboardPage() {
-  const { user } = useAuth();
-  const { permissions } = usePermissions();
-  const [role, setRole] = useState<string | null>(null);
+  const { user } = useAuth()
+  const { permissions } = usePermissions()
+  const [role, setRole] = useState<string | null>(null)
 
   useEffect(() => {
     if (user?.role) {
-      setRole(user.role);
+      setRole(user.role)
     }
-  }, [user]);
+  }, [user])
 
   const { data: propertyMetrics, isLoading: loadingProperties } = useQuery<
     ApiResponse<PropertyMetrics>,
@@ -42,15 +42,12 @@ export default function DashboardPage() {
   >({
     queryKey: ['analytics', 'properties', role],
     queryFn: async () => {
-      const { data } = await apiClient.get('/api/analytics/properties');
-      return data;
+      const { data } = await apiClient.get('/api/analytics/properties')
+      return data
     },
-    enabled: Boolean(
-      role &&
-        (checkRole(role, 'admin') || permissions.includes('view_properties')),
-    ),
+    enabled: Boolean(role && (checkRole(role, 'admin') || permissions.includes('view_properties'))),
     refetchInterval: REFETCH_INTERVAL,
-  });
+  })
 
   const { data: tenantMetrics, isLoading: loadingTenants } = useQuery<
     ApiResponse<TenantMetrics>,
@@ -59,14 +56,12 @@ export default function DashboardPage() {
   >({
     queryKey: ['analytics', 'tenants', role],
     queryFn: async () => {
-      const { data } = await apiClient.get('/api/analytics/tenants');
-      return data;
+      const { data } = await apiClient.get('/api/analytics/tenants')
+      return data
     },
-    enabled: Boolean(
-      role && (permissions.includes('view_tenants') || role === 'TENANT'),
-    ),
+    enabled: Boolean(role && (permissions.includes('view_tenants') || role === 'TENANT')),
     refetchInterval: REFETCH_INTERVAL,
-  });
+  })
 
   const { data: financialMetrics, isLoading: loadingFinances } = useQuery<
     ApiResponse<FinancialMetrics>,
@@ -75,14 +70,12 @@ export default function DashboardPage() {
   >({
     queryKey: ['analytics', 'finances', role],
     queryFn: async () => {
-      const { data } = await apiClient.get('/api/analytics/finances');
-      return data;
+      const { data } = await apiClient.get('/api/analytics/finances')
+      return data
     },
-    enabled: Boolean(
-      role && (permissions.includes('view_finances') || role === 'TENANT'),
-    ),
+    enabled: Boolean(role && (permissions.includes('view_finances') || role === 'TENANT')),
     refetchInterval: REFETCH_INTERVAL,
-  });
+  })
 
   const { data: maintenanceMetrics, isLoading: loadingMaintenance } = useQuery<
     ApiResponse<MaintenanceMetrics>,
@@ -91,14 +84,12 @@ export default function DashboardPage() {
   >({
     queryKey: ['analytics', 'maintenance', role],
     queryFn: async () => {
-      const { data } = await apiClient.get('/api/analytics/maintenance');
-      return data;
+      const { data } = await apiClient.get('/api/analytics/maintenance')
+      return data
     },
-    enabled: Boolean(
-      role && (permissions.includes('view_maintenance') || role === 'TENANT'),
-    ),
+    enabled: Boolean(role && (permissions.includes('view_maintenance') || role === 'TENANT')),
     refetchInterval: REFETCH_INTERVAL,
-  });
+  })
 
   const { data: trends } = useQuery<
     ApiResponse<TimeSeriesData[]>,
@@ -107,28 +98,24 @@ export default function DashboardPage() {
   >({
     queryKey: ['analytics', 'trends', role],
     queryFn: async () => {
-      const { data } = await apiClient.get(
-        '/api/analytics/trends?trend_metric=revenue',
-      );
-      return data;
+      const { data } = await apiClient.get('/api/analytics/trends?trend_metric=revenue')
+      return data
     },
-    enabled: Boolean(
-      role && (permissions.includes('view_reports') || role === 'TENANT'),
-    ),
+    enabled: Boolean(role && (permissions.includes('view_reports') || role === 'TENANT')),
     refetchInterval: REFETCH_INTERVAL,
-  });
+  })
 
   const getMetricTitle = () => {
-    if (!role) return 'Properties';
+    if (!role) return 'Properties'
     switch (role) {
       case 'TENANT':
-        return 'My Properties';
+        return 'My Properties'
       case 'PROPERTY_MANAGER':
-        return 'Managed Properties';
+        return 'Managed Properties'
       default:
-        return 'Total Properties';
+        return 'Total Properties'
     }
-  };
+  }
 
   return (
     <Grid container spacing={3}>
@@ -185,16 +172,12 @@ export default function DashboardPage() {
 
       {/* Charts */}
       <Grid item xs={12} md={8}>
-        <AnalyticsChart
-          title="Revenue Trend"
-          data={trends?.data || []}
-          valuePrefix="$"
-        />
+        <AnalyticsChart title="Revenue Trend" data={trends?.data || []} valuePrefix="$" />
       </Grid>
 
       <Grid item xs={12} md={4}>
         {/* Activity Feed will be added here */}
       </Grid>
     </Grid>
-  );
+  )
 }

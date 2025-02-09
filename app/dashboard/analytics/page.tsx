@@ -1,34 +1,30 @@
-'use client';
+'use client'
 
-import { MOCK_ANALYTICS_DATA } from '@/auth/lib/constants';
-import { Box, Container, Grid, Paper, Typography } from '@mui/material';
-import { motion } from 'framer-motion';
-import dynamic from 'next/dynamic';
+import { MOCK_ANALYTICS_DATA } from '@/auth/lib/constants'
+import { Box, Container, Grid, Paper, Typography } from '@mui/material'
+import { motion } from 'framer-motion'
+import dynamic from 'next/dynamic'
 
 const PerformanceChart = dynamic(
-  () =>
-    import('components/dashboard/performance-chart').then(
-      (mod) => mod.PerformanceChart,
-    ),
+  () => import('components/dashboard/performance-chart').then((mod) => mod.PerformanceChart),
   {
     ssr: false,
-  },
-);
+  }
+)
 
 const DonutChart = dynamic(
-  () =>
-    import('components/dashboard/donut-chart').then((mod) => mod.DonutChart),
+  () => import('components/dashboard/donut-chart').then((mod) => mod.DonutChart),
   {
     ssr: false,
-  },
-);
+  }
+)
 
 const BarChart = dynamic(
   () => import('components/dashboard/bar-chart').then((mod) => mod.BarChart),
   {
     ssr: false,
-  },
-);
+  }
+)
 
 export default function AnalyticsPage() {
   const {
@@ -37,7 +33,7 @@ export default function AnalyticsPage() {
     propertyOccupancy,
     revenueDistribution,
     tenantInsights,
-  } = MOCK_ANALYTICS_DATA;
+  } = MOCK_ANALYTICS_DATA
 
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
@@ -90,12 +86,10 @@ export default function AnalyticsPage() {
                 Revenue Distribution
               </Typography>
               <DonutChart
-                data={Object.entries(revenueDistribution).map(
-                  ([name, value]) => ({
-                    name,
-                    value,
-                  }),
-                )}
+                data={Object.entries(revenueDistribution).map(([name, value]) => ({
+                  name,
+                  value,
+                }))}
               />
             </Paper>
           </Grid>
@@ -107,12 +101,10 @@ export default function AnalyticsPage() {
                 Property Occupancy Rates
               </Typography>
               <BarChart
-                data={Object.entries(propertyOccupancy).map(
-                  ([name, value]) => ({
-                    name,
-                    value,
-                  }),
-                )}
+                data={Object.entries(propertyOccupancy).map(([name, value]) => ({
+                  name,
+                  value,
+                }))}
               />
             </Paper>
           </Grid>
@@ -129,9 +121,7 @@ export default function AnalyticsPage() {
                     <Typography variant="h3" color="primary">
                       {tenantInsights.satisfaction.current}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Average Satisfaction Rating
-                    </Typography>
+                    <Typography variant="subtitle1">Average Satisfaction Rating</Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -139,9 +129,7 @@ export default function AnalyticsPage() {
                     <Typography variant="h3" color="success.main">
                       {tenantInsights.maintenance.avgResolutionTime.completed}
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Days Average Resolution Time
-                    </Typography>
+                    <Typography variant="subtitle1">Days Average Resolution Time</Typography>
                   </Box>
                 </Grid>
                 <Grid item xs={12} md={4}>
@@ -149,9 +137,7 @@ export default function AnalyticsPage() {
                     <Typography variant="h3" color="info.main">
                       {tenantInsights.retention['2024']}%
                     </Typography>
-                    <Typography variant="subtitle1">
-                      Tenant Retention Rate
-                    </Typography>
+                    <Typography variant="subtitle1">Tenant Retention Rate</Typography>
                   </Box>
                 </Grid>
               </Grid>
@@ -160,5 +146,5 @@ export default function AnalyticsPage() {
         </Grid>
       </motion.div>
     </Container>
-  );
+  )
 }

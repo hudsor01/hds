@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { Input } from 'components/ui/input';
-import Textarea from 'components/ui/textarea';
-import { motion } from 'framer-motion';
+import { Button } from '@/components/ui/buttons/button'
+import { Input } from 'components/ui/input'
+import Textarea from 'components/ui/textarea'
+import { motion } from 'framer-motion'
 
 const formVariants = {
   input: {
@@ -15,31 +15,26 @@ const formVariants = {
     hover: { scale: 1.02, backgroundColor: 'var(--primary-dark)' },
     loading: { opacity: 0.8, transition: { repeat: Infinity, duration: 1 } },
   },
-};
+}
 
-interface AnimatedInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement> {
-  error?: boolean;
+interface AnimatedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+  error?: boolean
 }
 
 export function AnimatedInput({ error, ...props }: AnimatedInputProps) {
   return (
-    <motion.div
-      animate={error ? 'error' : ''}
-      variants={formVariants.input}
-      whileFocus="focus"
-    >
+    <motion.div animate={error ? 'error' : ''} variants={formVariants.input} whileFocus="focus">
       <Input {...props} />
     </motion.div>
-  );
+  )
 }
 
 export function AnimatedButton({
   children,
   isLoading,
 }: {
-  children: React.ReactNode;
-  isLoading?: boolean;
+  children: React.ReactNode
+  isLoading?: boolean
 }) {
   return (
     <motion.div
@@ -52,22 +47,17 @@ export function AnimatedButton({
         {children}
       </Button>
     </motion.div>
-  );
+  )
 }
 
-interface AnimatedTextareaProps
-  extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
-  error?: boolean;
+interface AnimatedTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  error?: boolean
 }
 
 export function AnimatedTextarea({ error, ...props }: AnimatedTextareaProps) {
   return (
-    <motion.div
-      animate={error ? 'error' : ''}
-      variants={formVariants.input}
-      whileFocus="focus"
-    >
+    <motion.div animate={error ? 'error' : ''} variants={formVariants.input} whileFocus="focus">
       <Textarea {...props} />
     </motion.div>
-  );
+  )
 }

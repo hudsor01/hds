@@ -1,15 +1,15 @@
-import { createClient } from '@/utils/supabase/client';
-import { useEffect, useState } from 'react';
-import type { User } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/client'
+import { useEffect, useState } from 'react'
+import type { User } from '@supabase/supabase-js'
 
 interface AuthUser extends User {
-  role?: string;
+  role?: string
 }
 
 export function useAuth() {
-  const [user, setUser] = useState<AuthUser | null>(null);
-  const [loading, setLoading] = useState(true);
-  const supabase = createClient();
+  const [user, setUser] = useState<AuthUser | null>(null)
+  const [loading, setLoading] = useState(true)
+  const supabase = createClient()
 
   useEffect(() => {
     // Get initial session
@@ -17,24 +17,24 @@ export function useAuth() {
       try {
         const {
           data: { user },
-        } = await supabase.auth.getUser();
+        } = await supabase.auth.getUser()
         if (user) {
           const { data: profile } = await supabase
             .from('profiles')
             .select('role')
             .eq('id', user.id)
-            .single();
+            .single()
 
-          setUser({ ...user, role: profile?.role });
+          setUser({ ...user, role: profile?.role })
         }
       } catch (error) {
-        console.error('Error getting initial session:', error);
+        console.error('Error getting initial session:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    getInitialSession();
+    getInitialSession()
 
     // Listen for auth changes
     const {
@@ -45,19 +45,19 @@ export function useAuth() {
           .from('profiles')
           .select('role')
           .eq('id', session.user.id)
-          .single();
+          .single()
 
-        setUser({ ...session.user, role: profile?.role });
+        setUser({ ...session.user, role: profile?.role })
       } else {
-        setUser(null);
+        setUser(null)
       }
-      setLoading(false);
-    });
+      setLoading(false)
+    })
 
     return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+      subscription.unsubscribe()
+    }
+  }, [])
 
-  return { user, loading };
+  return { user, loading }
 }

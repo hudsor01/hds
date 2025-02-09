@@ -1,27 +1,22 @@
-import { checkRole } from '@/utils/roles';
-import { redirect } from 'next/navigation';
-import { SearchUsers } from './SearchUsers';
-import { removeRole, setRole } from './_actions';
+import { checkRole } from '@/utils/roles'
+import { redirect } from 'next/navigation'
+import { SearchUsers } from './SearchUsers'
+import { removeRole, setRole } from './_actions'
 
 export default async function AdminDashboard(params: {
-  searchParams: Promise<{ search?: string }>;
+  searchParams: Promise<{ search?: string }>
 }) {
   if (!checkRole('admin')) {
-    redirect('/');
+    redirect('/')
   }
 
-  const query = (await params.searchParams).search;
+  const query = (await params.searchParams).search
 
-  const users = query
-    ? (await client.users.getCurrentUserList({ query })).data
-    : [];
+  const users = query ? (await client.users.getCurrentUserList({ query })).data : []
 
   return (
     <>
-      <p>
-        This is the protected admin dashboard restricted to users with the
-        `admin` role.
-      </p>
+      <p>This is the protected admin dashboard restricted to users with the `admin` role.</p>
 
       <SearchUsers />
 
@@ -34,9 +29,8 @@ export default async function AdminDashboard(params: {
 
             <div>
               {
-                user.emailAddresses.find(
-                  (email) => email.id === user.primaryEmailAddressId,
-                )?.emailAddress
+                user.emailAddresses.find((email) => email.id === user.primaryEmailAddressId)
+                  ?.emailAddress
               }
             </div>
 
@@ -59,8 +53,8 @@ export default async function AdminDashboard(params: {
               <button type="submit">Remove Role</button>
             </form>
           </div>
-        );
+        )
       })}
     </>
-  );
+  )
 }

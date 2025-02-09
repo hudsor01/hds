@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { Box, styled } from '@mui/material';
-import * as React from 'react';
+import { Box, styled } from '@mui/material'
+import * as React from 'react'
 
 const StyledScrollArea = styled(Box)(({ theme }) => ({
   position: 'relative',
@@ -17,16 +17,15 @@ const StyledScrollArea = styled(Box)(({ theme }) => ({
       backgroundColor: theme.palette.action.hover,
     },
   },
-}));
+}))
 
-const ScrollArea = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, children, ...props }, ref) => (
-  <StyledScrollArea ref={ref} className={className} {...props}>
-    {children}
-  </StyledScrollArea>
-));
-ScrollArea.displayName = 'ScrollArea';
+const ScrollArea = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, children, ...props }, ref) => (
+    <StyledScrollArea ref={ref} className={className} {...props}>
+      {children}
+    </StyledScrollArea>
+  )
+)
+ScrollArea.displayName = 'ScrollArea'
 
-export { ScrollArea };
+export { ScrollArea }

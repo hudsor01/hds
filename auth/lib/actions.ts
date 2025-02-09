@@ -18,5 +18,5 @@ export async function getRecentActivity() {
       status: 'pending',
     },
     // Add more mock data as needed
-  ];
+  ]
 }

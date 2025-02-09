@@ -1,21 +1,18 @@
-import { stripe } from '@/lib/payments/stripe';
-import { supabase } from '@/lib/supabase';
+import { stripe } from '@/lib/payments/stripe'
+import { supabase } from '@/lib/supabase'
 
 export interface RecurringPaymentConfig {
-  tenant_id: string;
-  property_id: string;
-  amount: number;
-  frequency: 'monthly' | 'weekly' | 'yearly';
-  payment_day: number;
-  payment_method_id: string;
-  description?: string;
-  metadata?: Record<string, string>;
+  tenant_id: string
+  property_id: string
+  amount: number
+  frequency: 'monthly' | 'weekly' | 'yearly'
+  payment_day: number
+  payment_method_id: string
+  description?: string
+  metadata?: Record<string, string>
 }
 
-export async function setupRecurringPayment(
-  userId: string,
-  config: RecurringPaymentConfig,
-) {
+export async function setupRecurringPayment(userId: string, config: RecurringPaymentConfig) {
   // Create a subscription schedule in Stripe
   const schedule = await stripe.subscriptionSchedules.create({
     customer: config.tenant_id,
@@ -52,7 +49,7 @@ export async function setupRecurringPayment(
       payment_method_types: ['card'],
       default_payment_method: config.payment_method_id,
     },
-  });
+  })
 
   // Save the recurring payment configuration
   const { data: recurringPayment, error } = await supabase
@@ -69,22 +66,20 @@ export async function setupRecurringPayment(
         description: config.description,
         stripe_schedule_id: schedule.id,
         status: 'ACTIVE',
-        next_payment_date: new Date(
-          schedule.phases[0].start_date * 1000,
-        ).toISOString(),
+        next_payment_date: new Date(schedule.phases[0].start_date * 1000).toISOString(),
       },
     ])
     .select()
-    .single();
+    .single()
 
-  if (error) throw error;
-  return recurringPayment;
+  if (error) throw error
+  return recurringPayment
 }
 
 export async function updateRecurringPayment(
   id: string,
   userId: string,
-  updates: Partial<RecurringPaymentConfig>,
+  updates: Partial<RecurringPaymentConfig>
 ) {
   // Get the existing recurring payment
   const { data: existing, error: fetchError } = await supabase
@@ -92,9 +87,9 @@ export async function updateRecurringPayment(
     .select('stripe_schedule_id')
     .eq('id', id)
     .eq('user_id', userId)
-    .single();
+    .single()
 
-  if (fetchError) throw fetchError;
+  if (fetchError) throw fetchError
 
   // Update the Stripe schedule
   if (updates.amount || updates.frequency || updates.payment_day) {
@@ -130,7 +125,7 @@ export async function updateRecurringPayment(
           default_payment_method: updates.payment_method_id,
         },
       }),
-    });
+    })
   }
 
   // Update the database record
@@ -143,10 +138,10 @@ export async function updateRecurringPayment(
     .eq('id', id)
     .eq('user_id', userId)
     .select()
-    .single();
+    .single()
 
-  if (updateError) throw updateError;
-  return updated;
+  if (updateError) throw updateError
+  return updated
 }
 
 export async function cancelRecurringPayment(id: string, userId: string) {
@@ -156,12 +151,12 @@ export async function cancelRecurringPayment(id: string, userId: string) {
     .select('stripe_schedule_id')
     .eq('id', id)
     .eq('user_id', userId)
-    .single();
+    .single()
 
-  if (fetchError) throw fetchError;
+  if (fetchError) throw fetchError
 
   // Cancel the Stripe schedule
-  await stripe.subscriptionSchedules.cancel(existing.stripe_schedule_id);
+  await stripe.subscriptionSchedules.cancel(existing.stripe_schedule_id)
 
   // Update the database record
   const { data: cancelled, error: updateError } = await supabase
@@ -173,57 +168,57 @@ export async function cancelRecurringPayment(id: string, userId: string) {
     .eq('id', id)
     .eq('user_id', userId)
     .select()
-    .single();
+    .single()
 
-  if (updateError) throw updateError;
-  return cancelled;
+  if (updateError) throw updateError
+  return cancelled
 }
 
 export async function getRecurringPayments(
   userId: string,
   filters?: {
-    tenant_id?: string;
-    property_id?: string;
-    status?: string;
-  },
+    tenant_id?: string
+    property_id?: string
+    status?: string
+  }
 ) {
   let query = supabase
     .from('recurring_payments')
     .select('*, tenants(*), properties(*)')
-    .eq('user_id', userId);
+    .eq('user_id', userId)
 
   if (filters) {
-    const { tenant_id, property_id, status } = filters;
-    if (tenant_id) query = query.eq('tenant_id', tenant_id);
-    if (property_id) query = query.eq('property_id', property_id);
-    if (status) query = query.eq('status', status);
+    const { tenant_id, property_id, status } = filters
+    if (tenant_id) query = query.eq('tenant_id', tenant_id)
+    if (property_id) query = query.eq('property_id', property_id)
+    if (status) query = query.eq('status', status)
   }
 
-  const { data, error } = await query;
-  if (error) throw error;
-  return data;
+  const { data, error } = await query
+  if (error) throw error
+  return data
 }
 
 function getNextPaymentDate(paymentDay: number, frequency: string): number {
-  const now = new Date();
-  let nextDate = new Date(now.getFullYear(), now.getMonth(), paymentDay);
+  const now = new Date()
+  let nextDate = new Date(now.getFullYear(), now.getMonth(), paymentDay)
 
   if (frequency === 'weekly') {
     // Set to next occurrence of the specified day of week
-    const currentDay = now.getDay();
-    const daysUntilNext = (paymentDay - currentDay + 7) % 7;
-    nextDate = new Date(now.setDate(now.getDate() + daysUntilNext));
+    const currentDay = now.getDay()
+    const daysUntilNext = (paymentDay - currentDay + 7) % 7
+    nextDate = new Date(now.setDate(now.getDate() + daysUntilNext))
   } else if (frequency === 'yearly') {
     // Set to next occurrence of the day in the current or next year
     if (nextDate < now) {
-      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      nextDate.setFullYear(nextDate.getFullYear() + 1)
     }
   } else {
     // Monthly - Set to next occurrence of the day in current or next month
     if (nextDate < now) {
-      nextDate = new Date(now.getFullYear(), now.getMonth() + 1, paymentDay);
+      nextDate = new Date(now.getFullYear(), now.getMonth() + 1, paymentDay)
     }
   }
 
-  return Math.floor(nextDate.getTime() / 1000);
+  return Math.floor(nextDate.getTime() / 1000)
 }

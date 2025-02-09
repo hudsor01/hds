@@ -1,4 +1,4 @@
-'use client';
+'use client'
 
 import {
   Box,
@@ -10,21 +10,16 @@ import {
   Grid,
   Stack,
   Typography,
-} from '@mui/material';
-import { CreditCard, Download } from 'react-feather';
+} from '@mui/material'
+import { CreditCard, Download } from 'react-feather'
 
 export function BillingSettings() {
   const currentPlan = {
     name: 'Professional',
     price: 29.99,
     billingCycle: 'monthly',
-    features: [
-      'Up to 100 properties',
-      'Advanced analytics',
-      'Email support',
-      'API access',
-    ],
-  };
+    features: ['Up to 100 properties', 'Advanced analytics', 'Email support', 'API access'],
+  }
 
   const billingHistory = [
     {
@@ -45,7 +40,7 @@ export function BillingSettings() {
       amount: 29.99,
       status: 'paid',
     },
-  ];
+  ]
 
   return (
     <Box sx={{ p: 3 }}>
@@ -121,9 +116,7 @@ export function BillingSettings() {
                   >
                     <CreditCard size={20} />
                     <Box>
-                      <Typography variant="body2">
-                        •••• •••• •••• 4242
-                      </Typography>
+                      <Typography variant="body2">•••• •••• •••• 4242</Typography>
                       <Typography variant="caption" color="text.secondary">
                         Expires 12/2024
                       </Typography>
@@ -132,11 +125,7 @@ export function BillingSettings() {
                 </Box>
 
                 <Box>
-                  <Button
-                    variant="outlined"
-                    color="inherit"
-                    startIcon={<CreditCard size={16} />}
-                  >
+                  <Button variant="outlined" color="inherit" startIcon={<CreditCard size={16} />}>
                     Update Payment Method
                   </Button>
                 </Box>
@@ -169,11 +158,7 @@ export function BillingSettings() {
                     </Stack>
                     <Stack direction="row" spacing={2} alignItems="center">
                       <Typography variant="body2">${invoice.amount}</Typography>
-                      <Chip
-                        label={invoice.status}
-                        size="small"
-                        color="success"
-                      />
+                      <Chip label={invoice.status} size="small" color="success" />
                       <Button size="small" startIcon={<Download size={16} />}>
                         PDF
                       </Button>
@@ -186,5 +171,5 @@ export function BillingSettings() {
         </Grid>
       </Grid>
     </Box>
-  );
+  )
 }

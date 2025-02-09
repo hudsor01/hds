@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import AddIcon from '@mui/icons-material/Add';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import PeopleIcon from '@mui/icons-material/People';
-import SettingsIcon from '@mui/icons-material/Settings';
-import { Box, Card, Stack, Typography, alpha, useTheme } from '@mui/material';
-import { motion } from 'framer-motion';
-import type { Route } from 'next';
-import Link from 'next/link';
+import AddIcon from '@mui/icons-material/Add'
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import PeopleIcon from '@mui/icons-material/People'
+import SettingsIcon from '@mui/icons-material/Settings'
+import { Box, Card, Stack, Typography, alpha, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
+import type { Route } from 'next'
+import Link from 'next/link'
 
 const actions = [
   {
@@ -38,7 +38,7 @@ const actions = [
     color: 'warning',
     href: '/dashboard/settings' as Route,
   },
-] as const;
+] as const
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -48,15 +48,15 @@ const containerVariants = {
       staggerChildren: 0.1,
     },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
   show: { opacity: 1, y: 0 },
-};
+}
 
 export function QuickActions() {
-  const theme = useTheme();
+  const theme = useTheme()
 
   return (
     <Card
@@ -143,5 +143,5 @@ export function QuickActions() {
         </Stack>
       </motion.div>
     </Card>
-  );
+  )
 }

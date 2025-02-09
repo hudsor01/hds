@@ -1,21 +1,18 @@
-import { Button } from './buttons/button';
-import { Input } from '@/components/ui/input';
-import {
-  containerVariants,
-  itemVariants,
-} from '@/lib/utils/animations/animation-variants';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
-import { ChangeEvent } from 'react';
-import { GitHub, X } from 'react-feather';
+import { Button } from './buttons/button'
+import { Input } from '@/components/ui/input'
+import { containerVariants, itemVariants } from '@/lib/utils/animations/animation-variants'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { ChangeEvent } from 'react'
+import { GitHub, X } from 'react-feather'
 
 interface FormProps {
-  name: string;
-  email: string;
-  handleNameChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleEmailChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleSubmit: () => void;
-  loading: boolean;
+  name: string
+  email: string
+  handleNameChange: (e: ChangeEvent<HTMLInputElement>) => void
+  handleEmailChange: (e: ChangeEvent<HTMLInputElement>) => void
+  handleSubmit: () => void
+  loading: boolean
 }
 
 export default function Form({
@@ -34,12 +31,7 @@ export default function Form({
       animate="visible"
     >
       <motion.div variants={itemVariants}>
-        <Input
-          type="text"
-          placeholder="Your Name"
-          value={name}
-          onChange={handleNameChange}
-        />
+        <Input type="text" placeholder="Your Name" value={name} onChange={handleNameChange} />
       </motion.div>
       <motion.div variants={itemVariants}>
         <Input
@@ -59,22 +51,14 @@ export default function Form({
         className="mt-4 flex w-full items-center justify-center gap-1 text-muted-foreground"
       >
         <p>For any queries, reach out at </p>
-        <Link
-          href="https://x.com/dickswayze"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <Link href="https://x.com/dickswayze" rel="noopener noreferrer" target="_blank">
           <X className="h-4 w-4 transition-all duration-200 ease-linear hover:text-yellow-200" />
         </Link>
         or
-        <Link
-          href="https://github.com/hudsor01"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
+        <Link href="https://github.com/hudsor01" rel="noopener noreferrer" target="_blank">
           <GitHub className="ml-0.5 h-5 w-5 transition-all duration-200 ease-linear hover:text-yellow-200" />
         </Link>
       </motion.div>
     </motion.div>
-  );
+  )
 }

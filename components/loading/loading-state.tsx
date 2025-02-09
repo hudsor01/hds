@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { Box, CircularProgress, Container, Typography } from '@mui/material';
+import { Box, CircularProgress, Container, Typography } from '@mui/material'
 
 interface LoadingStateProps {
-  message?: string;
-  fullPage?: boolean;
+  message?: string
+  fullPage?: boolean
 }
 
 export default function LoadingState({
@@ -30,7 +30,7 @@ export default function LoadingState({
       />
       <Typography color="text.secondary">{message}</Typography>
     </Box>
-  );
+  )
 
   if (fullPage) {
     return (
@@ -50,8 +50,8 @@ export default function LoadingState({
       >
         {content}
       </Box>
-    );
+    )
   }
 
-  return <Container maxWidth="md">{content}</Container>;
+  return <Container maxWidth="md">{content}</Container>
 }

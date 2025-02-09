@@ -1,28 +1,27 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { Plus, AlertTriangle, CheckCircle, Clock } from 'react-feather';
-import { Button } from '@/components/ui/buttons/button';
-import { Card } from '@/components/ui/cards/card';
-import { MaintenanceTicketDialog } from '@/components/dialogs/maintenance-ticket-dialog';
-import { MaintenanceTicketDetails } from '@/components/dialogs/maintenance-ticket-details';
-import { useToast } from '@/hooks/use-toast';
-import { useMaintenanceRequests } from '@/hooks/data';
+import { useEffect, useState } from 'react'
+import { Plus, AlertTriangle, CheckCircle, Clock } from 'react-feather'
+import { Button } from '@/components/ui/buttons/button'
+import { Card } from '@/components/ui/cards/card'
+import { MaintenanceTicketDialog } from '@/components/dialogs/maintenance-ticket-dialog'
+import { MaintenanceTicketDetails } from '@/components/dialogs/maintenance-ticket-details'
+import { useToast } from '@/hooks/use-toast'
+import { useMaintenanceRequests } from '@/hooks/data'
 import type {
   MaintenancePriority,
   MaintenanceStatus,
   MaintenanceRequestWithRelations,
   NewMaintenanceRequest,
   UpdateMaintenanceRequest,
-} from '@/types/maintenance_requests';
+} from '@/types/maintenance_requests'
 
 export default function MaintenancePage() {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [selectedTicket, setSelectedTicket] =
-    useState<MaintenanceRequestWithRelations | null>(null);
-  const { toast } = useToast();
-  const { data: response, isLoading, error } = useMaintenanceRequests();
-  const tickets = response?.data || [];
+  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
+  const [selectedTicket, setSelectedTicket] = useState<MaintenanceRequestWithRelations | null>(null)
+  const { toast } = useToast()
+  const { data: response, isLoading, error } = useMaintenanceRequests()
+  const tickets = response?.data || []
 
   useEffect(() => {
     if (error) {
@@ -30,9 +29,9 @@ export default function MaintenancePage() {
         title: 'Error',
         description: 'Failed to load maintenance tickets',
         variant: 'destructive',
-      });
+      })
     }
-  }, [error, toast]);
+  }, [error, toast])
 
   const handleCreateTicket = async (data: NewMaintenanceRequest) => {
     try {
@@ -42,25 +41,25 @@ export default function MaintenancePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to create maintenance ticket');
+        throw new Error('Failed to create maintenance ticket')
       }
 
       toast({
         title: 'Success',
         description: 'Maintenance ticket created successfully',
-      });
-      setIsCreateDialogOpen(false);
+      })
+      setIsCreateDialogOpen(false)
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to create maintenance ticket',
         variant: 'destructive',
-      });
+      })
     }
-  };
+  }
 
   const handleUpdateTicket = async (data: UpdateMaintenanceRequest) => {
     try {
@@ -70,53 +69,53 @@ export default function MaintenancePage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(data),
-      });
+      })
 
       if (!response.ok) {
-        throw new Error('Failed to update maintenance ticket');
+        throw new Error('Failed to update maintenance ticket')
       }
 
       toast({
         title: 'Success',
         description: 'Maintenance ticket updated successfully',
-      });
-      setSelectedTicket(null);
+      })
+      setSelectedTicket(null)
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to update maintenance ticket',
         variant: 'destructive',
-      });
+      })
     }
-  };
+  }
 
   const getStatusIcon = (status: MaintenanceStatus) => {
     switch (status) {
       case 'pending':
-        return <Clock className="h-4 w-4 text-yellow-500" />;
+        return <Clock className="h-4 w-4 text-yellow-500" />
       case 'in_progress':
-        return <AlertTriangle className="h-4 w-4 text-blue-500" />;
+        return <AlertTriangle className="h-4 w-4 text-blue-500" />
       case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle className="h-4 w-4 text-green-500" />
       default:
-        return null;
+        return null
     }
-  };
+  }
 
   const getPriorityColor = (priority: MaintenancePriority) => {
     switch (priority) {
       case 'low':
-        return 'text-gray-500';
+        return 'text-gray-500'
       case 'medium':
-        return 'text-yellow-500';
+        return 'text-yellow-500'
       case 'high':
-        return 'text-orange-500';
+        return 'text-orange-500'
       case 'urgent':
-        return 'text-red-500';
+        return 'text-red-500'
       default:
-        return 'text-gray-500';
+        return 'text-gray-500'
     }
-  };
+  }
 
   if (isLoading) {
     return (
@@ -126,7 +125,7 @@ export default function MaintenancePage() {
           <p className="mt-2 text-sm text-gray-500">Loading tickets...</p>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -150,12 +149,8 @@ export default function MaintenancePage() {
                 <div className="flex items-center space-x-2">
                   {getStatusIcon(ticket.status)}
                   <h3 className="font-medium">{ticket.title}</h3>
-                  <span
-                    className={`text-sm ${getPriorityColor(ticket.priority)}`}
-                  >
-                    {ticket.priority.charAt(0).toUpperCase() +
-                      ticket.priority.slice(1)}{' '}
-                    Priority
+                  <span className={`text-sm ${getPriorityColor(ticket.priority)}`}>
+                    {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)} Priority
                   </span>
                 </div>
                 <p className="text-sm text-gray-500">
@@ -195,5 +190,5 @@ export default function MaintenancePage() {
         />
       )}
     </div>
-  );
+  )
 }

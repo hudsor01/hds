@@ -1,7 +1,7 @@
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase'
 
-import { NextRequest, NextResponse } from 'next/server';
-import { z } from 'zod';
+import { NextRequest, NextResponse } from 'next/server'
+import { z } from 'zod'
 
 const messageSchema = z.object({
   recipient_id: z.string().uuid('Invalid recipient ID'),
@@ -10,27 +10,27 @@ const messageSchema = z.object({
   attachments: z.array(z.string()).optional(),
   parent_id: z.string().uuid('Invalid parent message ID').optional(),
   thread_id: z.string().uuid('Invalid thread ID').optional(),
-});
+})
 
 const threadSchema = z.object({
   subject: z.string().min(1, 'Thread subject is required'),
   participants: z.array(z.string().uuid('Invalid participant ID')),
-});
+})
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const searchParams = req.nextUrl.searchParams;
-    const thread_id = searchParams.get('thread_id');
-    const unread_only = searchParams.get('unread_only') === 'true';
-    const limit = parseInt(searchParams.get('limit') || '50', 10);
-    const offset = parseInt(searchParams.get('offset') || '0', 10);
+    const searchParams = req.nextUrl.searchParams
+    const thread_id = searchParams.get('thread_id')
+    const unread_only = searchParams.get('unread_only') === 'true'
+    const limit = parseInt(searchParams.get('limit') || '50', 10)
+    const offset = parseInt(searchParams.get('offset') || '0', 10)
 
-    let query;
+    let query
     if (thread_id) {
       // Get messages from a specific thread
       query = supabase
@@ -38,7 +38,7 @@ export async function GET(req: NextRequest) {
         .select('*, sender:sender_id(*)')
         .eq('thread_id', thread_id)
         .order('created_at', { ascending: true })
-        .range(offset, offset + limit - 1);
+        .range(offset, offset + limit - 1)
     } else {
       // Get message threads for the user
       query = supabase
@@ -46,47 +46,44 @@ export async function GET(req: NextRequest) {
         .select('*, last_message:last_message_id(*)')
         .contains('participants', [userId])
         .order('updated_at', { ascending: false })
-        .range(offset, offset + limit - 1);
+        .range(offset, offset + limit - 1)
 
       if (unread_only) {
-        query = query.is('read_at', null);
+        query = query.is('read_at', null)
       }
     }
 
-    const { data, error } = await query;
+    const { data, error } = await query
 
     if (error) {
-      console.error('Error fetching messages:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error fetching messages:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ data });
+    return NextResponse.json({ data })
   } catch (error) {
-    console.error('Error in messages GET route:', error);
-    return NextResponse.json(
-      { error: 'Failed to fetch messages' },
-      { status: 500 },
-    );
+    console.error('Error in messages GET route:', error)
+    return NextResponse.json({ error: 'Failed to fetch messages' }, { status: 500 })
   }
 }
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json();
-    const { create_thread, ...messageData } = body;
+    const body = await req.json()
+    const { create_thread, ...messageData } = body
 
     if (create_thread) {
       // Create a new message thread
-      const validatedData = threadSchema.parse(messageData);
+      const validatedData = threadSchema.parse(messageData)
 
       // Ensure the sender is included in participants
       if (!validatedData.participants.includes(userId)) {
-        validatedData.participants.push(userId);
+        validatedData.participants.push(userId)
       }
 
       const { data: thread, error: threadError } = await supabase
@@ -98,33 +95,27 @@ export async function POST(req: NextRequest) {
           },
         ])
         .select()
-        .single();
+        .single()
 
       if (threadError) {
-        console.error('Error creating message thread:', threadError);
-        return NextResponse.json(
-          { error: threadError.message },
-          { status: 500 },
-        );
+        console.error('Error creating message thread:', threadError)
+        return NextResponse.json({ error: threadError.message }, { status: 500 })
       }
 
-      return NextResponse.json({ data: thread }, { status: 201 });
+      return NextResponse.json({ data: thread }, { status: 201 })
     } else {
       // Create a new message
-      const validatedData = messageSchema.parse(messageData);
+      const validatedData = messageSchema.parse(messageData)
 
       // Verify recipient exists and is valid
       const { data: recipient, error: recipientError } = await supabase
         .from('users')
         .select('id')
         .eq('id', validatedData.recipient_id)
-        .single();
+        .single()
 
       if (recipientError || !recipient) {
-        return NextResponse.json(
-          { error: 'Recipient not found' },
-          { status: 404 },
-        );
+        return NextResponse.json({ error: 'Recipient not found' }, { status: 404 })
       }
 
       // If thread_id is provided, verify the sender is a participant
@@ -133,20 +124,17 @@ export async function POST(req: NextRequest) {
           .from('message_threads')
           .select('participants')
           .eq('id', validatedData.thread_id)
-          .single();
+          .single()
 
         if (threadError || !thread) {
-          return NextResponse.json(
-            { error: 'Thread not found' },
-            { status: 404 },
-          );
+          return NextResponse.json({ error: 'Thread not found' }, { status: 404 })
         }
 
         if (!thread.participants.includes(userId)) {
           return NextResponse.json(
             { error: 'Not authorized to post in this thread' },
-            { status: 403 },
-          );
+            { status: 403 }
+          )
         }
       }
 
@@ -159,11 +147,11 @@ export async function POST(req: NextRequest) {
           },
         ])
         .select()
-        .single();
+        .single()
 
       if (error) {
-        console.error('Error creating message:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('Error creating message:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
       }
 
       // Update thread's last_message_id if this is a thread message
@@ -174,7 +162,7 @@ export async function POST(req: NextRequest) {
             last_message_id: message.id,
             updated_at: new Date().toISOString(),
           })
-          .eq('id', validatedData.thread_id);
+          .eq('id', validatedData.thread_id)
       }
 
       // Create notification for recipient
@@ -190,40 +178,31 @@ export async function POST(req: NextRequest) {
             sender_id: userId,
           },
         },
-      ]);
+      ])
 
-      return NextResponse.json({ data: message }, { status: 201 });
+      return NextResponse.json({ data: message }, { status: 201 })
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
-    console.error('Error in messages POST route:', error);
-    return NextResponse.json(
-      { error: 'Failed to create message' },
-      { status: 500 },
-    );
+    console.error('Error in messages POST route:', error)
+    return NextResponse.json({ error: 'Failed to create message' }, { status: 500 })
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json();
-    const { id, mark_as_read, ...updateData } = body;
+    const body = await req.json()
+    const { id, mark_as_read, ...updateData } = body
 
     if (!id) {
-      return NextResponse.json(
-        { error: 'Message ID is required' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Message ID is required' }, { status: 400 })
     }
 
     // For marking messages as read
@@ -234,18 +213,18 @@ export async function PUT(req: NextRequest) {
         .eq('id', id)
         .eq('recipient_id', userId)
         .select()
-        .single();
+        .single()
 
       if (error) {
-        console.error('Error marking message as read:', error);
-        return NextResponse.json({ error: error.message }, { status: 500 });
+        console.error('Error marking message as read:', error)
+        return NextResponse.json({ error: error.message }, { status: 500 })
       }
 
-      return NextResponse.json({ data: message });
+      return NextResponse.json({ data: message })
     }
 
     // For other message updates
-    const validatedData = messageSchema.partial().parse(updateData);
+    const validatedData = messageSchema.partial().parse(updateData)
 
     const { data: message, error } = await supabase
       .from('messages')
@@ -253,42 +232,33 @@ export async function PUT(req: NextRequest) {
       .eq('id', id)
       .eq('sender_id', userId) // Only allow sender to update message
       .select()
-      .single();
+      .single()
 
     if (error) {
-      console.error('Error updating message:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error updating message:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ data: message });
+    return NextResponse.json({ data: message })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: error.errors[0].message },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
-    console.error('Error in messages PUT route:', error);
-    return NextResponse.json(
-      { error: 'Failed to update message' },
-      { status: 500 },
-    );
+    console.error('Error in messages PUT route:', error)
+    return NextResponse.json({ error: 'Failed to update message' }, { status: 500 })
   }
 }
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth();
+    const { userId } = await auth()
     if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const id = req.nextUrl.searchParams.get('id');
+    const id = req.nextUrl.searchParams.get('id')
     if (!id) {
-      return NextResponse.json(
-        { error: 'Message ID is required' },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: 'Message ID is required' }, { status: 400 })
     }
 
     // Verify message ownership
@@ -296,28 +266,21 @@ export async function DELETE(req: NextRequest) {
       .from('messages')
       .select('sender_id, thread_id')
       .eq('id', id)
-      .single();
+      .single()
 
     if (messageCheckError || !message) {
-      return NextResponse.json({ error: 'Message not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Message not found' }, { status: 404 })
     }
 
     if (message.sender_id !== userId) {
-      return NextResponse.json(
-        { error: 'Not authorized to delete this message' },
-        { status: 403 },
-      );
+      return NextResponse.json({ error: 'Not authorized to delete this message' }, { status: 403 })
     }
 
-    const { error } = await supabase
-      .from('messages')
-      .delete()
-      .eq('id', id)
-      .eq('sender_id', userId);
+    const { error } = await supabase.from('messages').delete().eq('id', id).eq('sender_id', userId)
 
     if (error) {
-      console.error('Error deleting message:', error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      console.error('Error deleting message:', error)
+      return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
     // If this was the last message in a thread, update the thread's last_message_id
@@ -328,25 +291,19 @@ export async function DELETE(req: NextRequest) {
         .eq('thread_id', message.thread_id)
         .order('created_at', { ascending: false })
         .limit(1)
-        .single();
+        .single()
 
       if (lastMessage) {
         await supabase
           .from('message_threads')
           .update({ last_message_id: lastMessage.id })
-          .eq('id', message.thread_id);
+          .eq('id', message.thread_id)
       }
     }
 
-    return NextResponse.json(
-      { message: 'Message deleted successfully' },
-      { status: 200 },
-    );
+    return NextResponse.json({ message: 'Message deleted successfully' }, { status: 200 })
   } catch (error) {
-    console.error('Error in messages DELETE route:', error);
-    return NextResponse.json(
-      { error: 'Failed to delete message' },
-      { status: 500 },
-    );
+    console.error('Error in messages DELETE route:', error)
+    return NextResponse.json({ error: 'Failed to delete message' }, { status: 500 })
   }
 }

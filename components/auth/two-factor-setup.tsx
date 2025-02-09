@@ -1,72 +1,70 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button'
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Input } from '@/components/ui/input';
-import Image from 'next/image';
-import { useState } from 'react';
-import { Loader2, Shield } from 'react-feather';
-import { toast } from 'sonner';
+} from '@/components/ui/dialog'
+import { Input } from '@/components/ui/input'
+import Image from 'next/image'
+import { useState } from 'react'
+import { Loader2, Shield } from 'react-feather'
+import { toast } from 'sonner'
 
 export function TwoFactorSetup() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [setupStep, setSetupStep] = useState<'initial' | 'qr' | 'verify'>(
-    'initial',
-  );
-  const [qrCode, setQrCode] = useState<string>('');
-  const [verificationCode, setVerificationCode] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [setupStep, setSetupStep] = useState<'initial' | 'qr' | 'verify'>('initial')
+  const [qrCode, setQrCode] = useState<string>('')
+  const [verificationCode, setVerificationCode] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handle2FASetup = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const response = await fetch('/api/auth/2fa/setup', {
         method: 'POST',
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
 
-      if (!response.ok) throw new Error(data.message);
+      if (!response.ok) throw new Error(data.message)
 
-      setQrCode(data.qrCode);
-      setSetupStep('qr');
+      setQrCode(data.qrCode)
+      setSetupStep('qr')
     } catch (error) {
       toast.error(
-        `Failed to setup 2FA: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+        `Failed to setup 2FA: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleVerify2FA = async () => {
     try {
-      setIsLoading(true);
+      setIsLoading(true)
       const response = await fetch('/api/auth/2fa/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ token: verificationCode }),
-      });
-      const data = await response.json();
+      })
+      const data = await response.json()
 
-      if (!response.ok) throw new Error(data.message);
+      if (!response.ok) throw new Error(data.message)
 
-      toast.success('Two-factor authentication enabled');
-      setIsOpen(false);
-      setSetupStep('initial');
+      toast.success('Two-factor authentication enabled')
+      setIsOpen(false)
+      setSetupStep('initial')
     } catch (error) {
       toast.error(
-        `Invalid verification code: ${error instanceof Error ? error.message : 'Unknown error'}`,
-      );
+        `Invalid verification code: ${error instanceof Error ? error.message : 'Unknown error'}`
+      )
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <>
@@ -88,14 +86,12 @@ export function TwoFactorSetup() {
             {setupStep === 'initial' && (
               <div className="space-y-4">
                 <p className="text-sm text-muted-foreground">
-                  Two-factor authentication adds an extra layer of security to
-                  your account. Once enabled, you will need to enter a code from
-                  your authenticator app when signing in.
+                  Two-factor authentication adds an extra layer of security to your account. Once
+                  enabled, you will need to enter a code from your authenticator app when signing
+                  in.
                 </p>
                 <Button onClick={handle2FASetup} disabled={isLoading}>
-                  {isLoading && (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  )}
+                  {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                   Begin Setup
                 </Button>
               </div>
@@ -112,9 +108,7 @@ export function TwoFactorSetup() {
                     className="rounded-lg"
                   />
                 </div>
-                <p className="text-center text-sm">
-                  Scan this QR code with your authenticator app
-                </p>
+                <p className="text-center text-sm">Scan this QR code with your authenticator app</p>
                 <div className="flex justify-center">
                   <Button onClick={() => setSetupStep('verify')}>Next</Button>
                 </div>
@@ -140,9 +134,7 @@ export function TwoFactorSetup() {
                     onClick={handleVerify2FA}
                     disabled={isLoading || verificationCode.length !== 6}
                   >
-                    {isLoading && (
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    )}
+                    {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     Verify
                   </Button>
                 </div>
@@ -152,5 +144,5 @@ export function TwoFactorSetup() {
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

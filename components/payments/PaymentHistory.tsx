@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { useRoleBasedAccess } from '@/hooks/use-auth';
-import { usePaymentHistory } from '@/hooks/use-payment';
-import type { ApiResponse } from '@/lib/api';
+import { useRoleBasedAccess } from '@/hooks/use-auth'
+import { usePaymentHistory } from '@/hooks/use-payment'
+import type { ApiResponse } from '@/lib/api'
 import {
   Box,
   Card,
@@ -18,53 +18,37 @@ import {
   TableHead,
   TableRow,
   Typography,
-} from '@mui/material';
-import { DatePicker } from '@mui/x-date-pickers';
-import { useState } from 'react';
+} from '@mui/material'
+import { DatePicker } from '@mui/x-date-pickers'
+import { useState } from 'react'
 
 interface PaymentHistoryProps {
-  propertyId?: string;
-  tenantId?: string;
+  propertyId?: string
+  tenantId?: string
 }
 
 interface Payment {
-  id: string;
-  payment_date: string;
-  payment_type: string;
-  payment_amount: number;
-  payment_status: string;
+  id: string
+  payment_date: string
+  payment_type: string
+  payment_amount: number
+  payment_status: string
   property?: {
-    name: string;
-  };
+    name: string
+  }
   tenant?: {
-    first_name: string;
-    last_name: string;
-  };
-  late_fee?: number;
-  late_days?: number;
+    first_name: string
+    last_name: string
+  }
+  late_fee?: number
+  late_days?: number
 }
 
-const PAYMENT_TYPES = [
-  'RENT',
-  'DEPOSIT',
-  'LATE_FEE',
-  'MAINTENANCE',
-  'UTILITIES',
-  'OTHER',
-];
-const PAYMENT_STATUSES = [
-  'PENDING',
-  'COMPLETED',
-  'FAILED',
-  'REFUNDED',
-  'CANCELLED',
-];
+const PAYMENT_TYPES = ['RENT', 'DEPOSIT', 'LATE_FEE', 'MAINTENANCE', 'UTILITIES', 'OTHER']
+const PAYMENT_STATUSES = ['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED']
 
-export default function PaymentHistory({
-  propertyId,
-  tenantId,
-}: PaymentHistoryProps) {
-  const { role, permissions } = useRoleBasedAccess();
+export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryProps) {
+  const { role, permissions } = useRoleBasedAccess()
   const [filters, setFilters] = useState({
     property_id: propertyId,
     tenant_id: tenantId || (role === 'TENANT' ? 'current' : ''),
@@ -74,25 +58,22 @@ export default function PaymentHistory({
     end_date: '',
     page: 1,
     limit: 10,
-  });
+  })
 
-  const { data: response, isLoading } = usePaymentHistory(filters);
-  const payments = (response as ApiResponse<Payment[]>)?.data || [];
+  const { data: response, isLoading } = usePaymentHistory(filters)
+  const payments = (response as ApiResponse<Payment[]>)?.data || []
 
   const handleFilterChange = (key: string, value: any) => {
     setFilters((prev) => ({
       ...prev,
       [key]: value,
       page: 1, // Reset page when filters change
-    }));
-  };
+    }))
+  }
 
-  const handlePageChange = (
-    event: React.ChangeEvent<unknown>,
-    page: number,
-  ) => {
-    setFilters((prev) => ({ ...prev, page }));
-  };
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    setFilters((prev) => ({ ...prev, page }))
+  }
 
   return (
     <Box>
@@ -108,9 +89,7 @@ export default function PaymentHistory({
               <Select
                 value={filters.payment_type}
                 label="Payment Type"
-                onChange={(e) =>
-                  handleFilterChange('payment_type', e.target.value)
-                }
+                onChange={(e) => handleFilterChange('payment_type', e.target.value)}
               >
                 <MenuItem value="">All</MenuItem>
                 {PAYMENT_TYPES.map((type) => (
@@ -127,9 +106,7 @@ export default function PaymentHistory({
             <Select
               value={filters.payment_status}
               label="Status"
-              onChange={(e) =>
-                handleFilterChange('payment_status', e.target.value)
-              }
+              onChange={(e) => handleFilterChange('payment_status', e.target.value)}
             >
               <MenuItem value="">All</MenuItem>
               {PAYMENT_STATUSES.map((status) => (
@@ -144,10 +121,7 @@ export default function PaymentHistory({
             label="Start Date"
             value={filters.start_date ? new Date(filters.start_date) : null}
             onChange={(date) =>
-              handleFilterChange(
-                'start_date',
-                date?.toISOString().split('T')[0] || '',
-              )
+              handleFilterChange('start_date', date?.toISOString().split('T')[0] || '')
             }
             slotProps={{ textField: { size: 'small' } }}
           />
@@ -156,10 +130,7 @@ export default function PaymentHistory({
             label="End Date"
             value={filters.end_date ? new Date(filters.end_date) : null}
             onChange={(date) =>
-              handleFilterChange(
-                'end_date',
-                date?.toISOString().split('T')[0] || '',
-              )
+              handleFilterChange('end_date', date?.toISOString().split('T')[0] || '')
             }
             slotProps={{ textField: { size: 'small' } }}
           />
@@ -191,54 +162,34 @@ export default function PaymentHistory({
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell
-                  colSpan={permissions.canViewAllProperties ? 8 : 4}
-                  align="center"
-                >
+                <TableCell colSpan={permissions.canViewAllProperties ? 8 : 4} align="center">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : payments.length === 0 ? (
               <TableRow>
-                <TableCell
-                  colSpan={permissions.canViewAllProperties ? 8 : 4}
-                  align="center"
-                >
+                <TableCell colSpan={permissions.canViewAllProperties ? 8 : 4} align="center">
                   No payments found
                 </TableCell>
               </TableRow>
             ) : (
               payments.map((payment) => (
                 <TableRow key={payment.id}>
-                  <TableCell>
-                    {new Date(payment.payment_date).toLocaleDateString()}
-                  </TableCell>
-                  <TableCell>
-                    {payment.payment_type.replace('_', ' ')}
-                  </TableCell>
+                  <TableCell>{new Date(payment.payment_date).toLocaleDateString()}</TableCell>
+                  <TableCell>{payment.payment_type.replace('_', ' ')}</TableCell>
                   <TableCell>${payment.payment_amount.toFixed(2)}</TableCell>
                   {permissions.canViewAllProperties && (
                     <>
                       <TableCell>
-                        {payment.late_fee
-                          ? `$${payment.late_fee.toFixed(2)}`
-                          : '-'}
-                        {payment.late_days
-                          ? ` (${payment.late_days} days)`
-                          : ''}
+                        {payment.late_fee ? `$${payment.late_fee.toFixed(2)}` : '-'}
+                        {payment.late_days ? ` (${payment.late_days} days)` : ''}
                       </TableCell>
                       <TableCell>
-                        $
-                        {(
-                          (payment.payment_amount || 0) +
-                          (payment.late_fee || 0)
-                        ).toFixed(2)}
+                        ${((payment.payment_amount || 0) + (payment.late_fee || 0)).toFixed(2)}
                       </TableCell>
                     </>
                   )}
-                  <TableCell>
-                    {payment.payment_status.replace('_', ' ')}
-                  </TableCell>
+                  <TableCell>{payment.payment_status.replace('_', ' ')}</TableCell>
                   {permissions.canViewAllProperties && (
                     <>
                       <TableCell>{payment.property?.name || '-'}</TableCell>
@@ -267,5 +218,5 @@ export default function PaymentHistory({
         </Box>
       )}
     </Box>
-  );
+  )
 }

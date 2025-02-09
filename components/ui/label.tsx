@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { cn } from '@/lib/utils';
-import type { FormLabelProps } from '@mui/material';
-import { FormLabel as MuiFormLabel, styled } from '@mui/material';
-import * as React from 'react';
+import { cn } from '@/lib/utils'
+import type { FormLabelProps } from '@mui/material'
+import { FormLabel as MuiFormLabel, styled } from '@mui/material'
+import * as React from 'react'
 
 const StyledLabel = styled(MuiFormLabel)(({ theme }) => ({
   fontSize: theme.typography.pxToRem(14),
@@ -16,10 +16,10 @@ const StyledLabel = styled(MuiFormLabel)(({ theme }) => ({
   '&.Mui-focused': {
     color: theme.palette.primary.main,
   },
-}));
+}))
 
 export interface LabelProps extends FormLabelProps {
-  htmlFor?: string;
+  htmlFor?: string
 }
 
 export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
@@ -28,10 +28,10 @@ export const Label = React.forwardRef<HTMLLabelElement, LabelProps>(
       ref={ref}
       className={cn(
         'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70',
-        className,
+        className
       )}
       {...props}
     />
-  ),
-);
-Label.displayName = 'Label';
+  )
+)
+Label.displayName = 'Label'

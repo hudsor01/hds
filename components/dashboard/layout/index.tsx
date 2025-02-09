@@ -1,31 +1,13 @@
-import { ErrorBoundary } from '@/components/common/error-boundary';
-import { LoadingState } from '@/components/common/loading-state';
-import {
-  Box,
-  Drawer,
-  IconButton,
-  Stack,
-  Toolbar,
-  useMediaQuery,
-  useTheme,
-} from '@mui/material';
-import { motion } from 'framer-motion';
-import type { Route } from 'next';
-import Link from 'next/link';
-import { Suspense, useState } from 'react';
-import {
-  BarChart2,
-  FileText,
-  Home,
-  Key,
-  Menu,
-  Settings,
-  Tool,
-  Users,
-  X,
-} from 'react-feather';
+import { ErrorBoundary } from '@/components/common/error-boundary'
+import { LoadingState } from '@/components/common/loading-state'
+import { Box, Drawer, IconButton, Stack, Toolbar, useMediaQuery, useTheme } from '@mui/material'
+import { motion } from 'framer-motion'
+import type { Route } from 'next'
+import Link from 'next/link'
+import { Suspense, useState } from 'react'
+import { BarChart2, FileText, Home, Key, Menu, Settings, Tool, Users, X } from 'react-feather'
 
-const DRAWER_WIDTH = 280;
+const DRAWER_WIDTH = 280
 
 const sidebarItems = [
   { title: 'Dashboard', href: '/dashboard' as Route, icon: Home },
@@ -39,16 +21,16 @@ const sidebarItems = [
     icon: BarChart2,
   },
   { title: 'Settings', href: '/dashboard/settings' as Route, icon: Settings },
-];
+]
 
 interface DashboardLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode
 }
 
 export function DashboardLayout({ children }: DashboardLayoutProps) {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('lg'))
+  const [mobileOpen, setMobileOpen] = useState(false)
 
   const drawer = (
     <Stack
@@ -70,7 +52,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
 
       <Stack sx={{ p: 2, gap: 1, flex: 1 }}>
         {sidebarItems.map((item, index) => {
-          const Icon = item.icon;
+          const Icon = item.icon
           return (
             <motion.div
               key={item.href}
@@ -105,11 +87,11 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                 </Stack>
               </Link>
             </motion.div>
-          );
+          )
         })}
       </Stack>
     </Stack>
-  );
+  )
 
   return (
     <ErrorBoundary>
@@ -191,5 +173,5 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         </Box>
       </Box>
     </ErrorBoundary>
-  );
+  )
 }

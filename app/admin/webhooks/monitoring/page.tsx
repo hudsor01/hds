@@ -1,12 +1,12 @@
-import { Button, Card, Chip, Grid, Typography } from '@mui/material';
-import { DataGrid } from '@mui/x-data-grid';
-import { sql } from '@vercel/postgres';
+import { Button, Card, Chip, Grid, Typography } from '@mui/material'
+import { DataGrid } from '@mui/x-data-grid'
+import { sql } from '@vercel/postgres'
 
 interface WebhookStat {
-  event_type: string;
-  status: string;
-  count: number;
-  last_received: string;
+  event_type: string
+  status: string
+  count: number
+  last_received: string
 }
 
 async function getWebhookStats() {
@@ -19,23 +19,23 @@ async function getWebhookStats() {
     FROM webhook_logs
     WHERE created_at > NOW() - INTERVAL '24 hours'
     GROUP BY event_type, status
-  `;
-  return rows;
+  `
+  return rows
 }
 
 export default async function WebhookMonitoring() {
-  const stats = await getWebhookStats();
+  const stats = await getWebhookStats()
 
   function calculateSuccessRate(stats: WebhookStat[]): number {
-    const total = stats.reduce((sum, stat) => sum + Number(stat.count), 0);
+    const total = stats.reduce((sum, stat) => sum + Number(stat.count), 0)
     const successful = stats
       .filter((stat) => stat.status === 'success')
-      .reduce((sum, stat) => sum + Number(stat.count), 0);
-    return total ? Math.round((successful / total) * 100) : 0;
+      .reduce((sum, stat) => sum + Number(stat.count), 0)
+    return total ? Math.round((successful / total) * 100) : 0
   }
 
   function calculateTotalEvents(stats: WebhookStat[]): number {
-    return stats.reduce((sum, stat) => sum + Number(stat.count), 0);
+    return stats.reduce((sum, stat) => sum + Number(stat.count), 0)
   }
 
   function transformStatsForGrid(stats: WebhookStat[]) {
@@ -49,20 +49,20 @@ export default async function WebhookMonitoring() {
               count: 0,
               success: 0,
               lastReceived: stat.last_received,
-            };
+            }
           }
-          acc[stat.event_type].count += Number(stat.count);
+          acc[stat.event_type].count += Number(stat.count)
           if (stat.status === 'success') {
-            acc[stat.event_type].success += Number(stat.count);
+            acc[stat.event_type].success += Number(stat.count)
           }
-          return acc;
+          return acc
         },
-        {} as Record<string, any>,
-      ),
+        {} as Record<string, any>
+      )
     ).map(([_, data]) => ({
       ...data,
       success: Math.round((data.success / data.count) * 100),
-    }));
+    }))
   }
 
   function getFailedEvents(stats: WebhookStat[]) {
@@ -73,7 +73,7 @@ export default async function WebhookMonitoring() {
         type: stat.event_type,
         error: stat.status,
         created_at: stat.last_received,
-      }));
+      }))
   }
 
   async function retryWebhook(row: { type: string; id: string }) {
@@ -82,9 +82,9 @@ export default async function WebhookMonitoring() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ eventType: row.type, id: row.id }),
-      });
+      })
     } catch (error) {
-      console.error('Failed to retry webhook:', error);
+      console.error('Failed to retry webhook:', error)
     }
   }
 
@@ -127,18 +127,14 @@ export default async function WebhookMonitoring() {
                   headerName: 'Success Rate',
                   width: 150,
                   renderCell: ({ value }) => (
-                    <Chip
-                      label={`${value}%`}
-                      color={value > 95 ? 'success' : 'warning'}
-                    />
+                    <Chip label={`${value}%`} color={value > 95 ? 'success' : 'warning'} />
                   ),
                 },
                 {
                   field: 'lastReceived',
                   headerName: 'Last Received',
                   width: 200,
-                  valueFormatter: ({ value }) =>
-                    new Date(value).toLocaleString(),
+                  valueFormatter: ({ value }) => new Date(value).toLocaleString(),
                 },
               ]}
               autoHeight
@@ -166,19 +162,14 @@ export default async function WebhookMonitoring() {
                   field: 'created_at',
                   headerName: 'Time',
                   width: 200,
-                  valueFormatter: ({ value }) =>
-                    new Date(value).toLocaleString(),
+                  valueFormatter: ({ value }) => new Date(value).toLocaleString(),
                 },
                 {
                   field: 'actions',
                   headerName: 'Actions',
                   width: 150,
                   renderCell: ({ row }) => (
-                    <Button
-                      variant="contained"
-                      size="small"
-                      onClick={() => retryWebhook(row)}
-                    >
+                    <Button variant="contained" size="small" onClick={() => retryWebhook(row)}>
                       Retry
                     </Button>
                   ),
@@ -195,5 +186,5 @@ export default async function WebhookMonitoring() {
         </Grid>
       </Grid>
     </div>
-  );
+  )
 }

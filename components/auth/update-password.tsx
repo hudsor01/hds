@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import { Input } from '@/components/ui/input'
+import { useState } from 'react'
 
 export function UpdatePassword() {
-  const [password, setPassword] = useState('');
+  const [password, setPassword] = useState('')
 
   const handleSubmitAction = async () => {
     // Implement password update logic
-  };
+  }
 
   return (
     <form className="grid gap-4" onSubmit={handleSubmitAction}>
@@ -21,5 +21,5 @@ export function UpdatePassword() {
       />
       <Button type="submit">Update Password</Button>
     </form>
-  );
+  )
 }

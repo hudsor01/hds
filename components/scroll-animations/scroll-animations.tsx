@@ -1,26 +1,23 @@
-'use client';
+'use client'
 
-import { motion, useAnimation, useInView } from 'framer-motion';
-import { useEffect, useRef } from 'react';
+import { motion, useAnimation, useInView } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 
 interface ScrollAnimatedSectionProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
-export function ScrollAnimatedSection({
-  children,
-  className,
-}: ScrollAnimatedSectionProps) {
-  const controls = useAnimation();
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+export function ScrollAnimatedSection({ children, className }: ScrollAnimatedSectionProps) {
+  const controls = useAnimation()
+  const ref = useRef(null)
+  const isInView = useInView(ref, { once: true })
 
   useEffect(() => {
     if (isInView) {
-      controls.start({ opacity: 1, y: 0 });
+      controls.start({ opacity: 1, y: 0 })
     }
-  }, [controls, isInView]);
+  }, [controls, isInView])
 
   return (
     <motion.div
@@ -32,5 +29,5 @@ export function ScrollAnimatedSection({
     >
       {children}
     </motion.div>
-  );
+  )
 }

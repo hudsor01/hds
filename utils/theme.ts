@@ -1,11 +1,11 @@
-import { createTheme, type ThemeOptions } from '@mui/material/styles';
-import { Roboto } from 'next/font/google';
+import { createTheme, type ThemeOptions } from '@mui/material/styles'
+import { Roboto } from 'next/font/google'
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
   display: 'swap',
-});
+})
 
 // Define your Tailwind colors
 const tailwindColors = {
@@ -18,7 +18,7 @@ const tailwindColors = {
   text: '#111827',
   textSecondary: '#6B7280',
   border: '#E5E7EB',
-} as const;
+} as const
 
 export const theme = createTheme({
   palette: {
@@ -101,4 +101,4 @@ export const theme = createTheme({
       },
     },
   },
-} as ThemeOptions);
+} as ThemeOptions)

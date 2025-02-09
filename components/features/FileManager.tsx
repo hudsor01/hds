@@ -1,97 +1,92 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card';
-import { useToast } from '@/hooks/use-toast';
-import { createClient } from '@/utils/supabase/client';
-import { File as FileIcon, Trash2, Upload } from 'react-feather';
-import { useState } from 'react';
-import type { Database } from '@/types/supabase_db.types';
+import { Button } from '@/components/ui/buttons/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
+import { useToast } from '@/hooks/use-toast'
+import { createClient } from '@/utils/supabase/client'
+import { File as FileIcon, Trash2, Upload } from 'react-feather'
+import { useState } from 'react'
+import type { SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '@/types/supabase_db.types'
 
 interface FileData {
-  name: string;
-  size: number;
-  created_at: string;
-  url: string;
+  name: string
+  size: number
+  created_at: string
+  url: string
 }
 
 interface FileManagerProps {
-  propertyId: string;
+  propertyId: string
 }
 
 export default function FileManager({ propertyId }: FileManagerProps) {
-  const [files, setFiles] = useState<FileData[]>([]);
-  const [uploading, setUploading] = useState(false);
-  const { toast } = useToast();
-  const supabase = createClient();
+  const [files, setFiles] = useState<FileData[]>([])
+  const [uploading, setUploading] = useState(false)
+  const { toast } = useToast()
+  const supabase = createClient() as SupabaseClient<Database>
 
   const uploadFile = async (file: globalThis.File) => {
     try {
-      setUploading(true);
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
-      const filePath = `${propertyId}/${fileName}`;
+      setUploading(true)
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`
+      const filePath = `${propertyId}/${fileName}`
 
       const { error: uploadError } = await supabase.storage
         .from('property-documents')
-        .upload(filePath, file);
+        .upload(filePath, file)
 
-      if (uploadError) throw uploadError;
+      if (uploadError) throw uploadError
 
       const { data: urlData } = await supabase.storage
         .from('property-documents')
-        .getPublicUrl(filePath);
+        .getPublicUrl(filePath)
+
+      if (!urlData) throw new Error('Failed to get file URL')
 
       const newFile: FileData = {
         name: file.name,
         size: file.size,
         created_at: new Date().toISOString(),
         url: urlData.publicUrl,
-      };
+      }
 
-      setFiles((prev) => [...prev, newFile]);
+      setFiles((prev) => [...prev, newFile])
       toast({
-        open: true,
-        onClose: () => {},
         message: 'File uploaded successfully',
         variant: 'success',
-      });
+      })
     } catch (error) {
       toast({
-        open: true,
-        onClose: () => {},
         message: error instanceof Error ? error.message : 'Failed to upload file',
         variant: 'error',
-      });
+      })
     } finally {
-      setUploading(false);
+      setUploading(false)
     }
-  };
+  }
 
   const deleteFile = async (fileName: string) => {
     try {
       const { error } = await supabase.storage
         .from('property-documents')
-        .remove([`${propertyId}/${fileName}`]);
+        .remove([`${propertyId}/${fileName}`])
 
-      if (error) throw error;
+      if (error) throw error
 
-      setFiles((prev) => prev.filter((file) => file.name !== fileName));
+      setFiles((prev) => prev.filter((file) => file.name !== fileName))
       toast({
-        open: true,
-        onClose: () => {},
         message: 'File deleted successfully',
         variant: 'success',
-      });
+      })
     } catch (error) {
       toast({
-        open: true,
-        onClose: () => {},
         message: error instanceof Error ? error.message : 'Failed to delete file',
         variant: 'error',
-      });
+      })
     }
-  };
+  }
 
   return (
     <Card className="w-full">
@@ -114,8 +109,8 @@ export default function FileManager({ propertyId }: FileManagerProps) {
               type="file"
               className="hidden"
               onChange={(e) => {
-                const file = e.target.files?.[0];
-                if (file) uploadFile(file);
+                const file = e.target.files?.[0]
+                if (file) uploadFile(file)
               }}
             />
           </div>
@@ -142,7 +137,6 @@ export default function FileManager({ propertyId }: FileManagerProps) {
                 </div>
                 <Button
                   variant="outline"
-                  size="icon"
                   onClick={() => deleteFile(file.name)}
                   className="text-red-500 hover:text-red-600"
                 >
@@ -157,5 +151,5 @@ export default function FileManager({ propertyId }: FileManagerProps) {
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,27 +1,21 @@
-'use client';
+'use client'
 
-import {
-  Box,
-  Tab as MuiTab,
-  Tabs as MuiTabs,
-  SxProps,
-  Theme,
-} from '@mui/material';
-import { styled } from '@mui/material/styles';
-import { forwardRef, ReactElement, ReactNode, SyntheticEvent } from 'react';
+import { Box, Tab as MuiTab, Tabs as MuiTabs, SxProps, Theme } from '@mui/material'
+import { styled } from '@mui/material/styles'
+import { forwardRef, ReactElement, ReactNode, SyntheticEvent } from 'react'
 
 interface TabPanelProps {
-  children?: ReactNode;
-  index: number;
-  value: number;
-  className?: string;
-  sx?: SxProps<Theme>;
-  keepMounted?: boolean;
+  children?: ReactNode
+  index: number
+  value: number
+  className?: string
+  sx?: SxProps<Theme>
+  keepMounted?: boolean
 }
 
 const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(
   { children, value, index, keepMounted = false, ...props },
-  ref,
+  ref
 ) {
   return (
     <div
@@ -32,12 +26,10 @@ const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(
       aria-labelledby={`tab-${index}`}
       {...props}
     >
-      {(keepMounted || value === index) && (
-        <Box sx={{ p: 3, ...props.sx }}>{children}</Box>
-      )}
+      {(keepMounted || value === index) && <Box sx={{ p: 3, ...props.sx }}>{children}</Box>}
     </div>
-  );
-});
+  )
+})
 
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({
   '& .MuiTabs-indicator': {
@@ -47,7 +39,7 @@ const StyledTabs = styled(MuiTabs)(({ theme }) => ({
   '& .MuiTabs-scrollButtons': {
     width: 48,
   },
-}));
+}))
 
 const StyledTab = styled(MuiTab)(({ theme }) => ({
   textTransform: 'none',
@@ -70,26 +62,26 @@ const StyledTab = styled(MuiTab)(({ theme }) => ({
   '&.Mui-focusVisible': {
     backgroundColor: theme.palette.action.focus,
   },
-}));
+}))
 
 interface TabItem {
-  label: string;
-  content: ReactNode;
-  disabled?: boolean;
-  icon?: ReactElement;
-  iconPosition?: 'start' | 'end' | 'top';
+  label: string
+  content: ReactNode
+  disabled?: boolean
+  icon?: ReactElement
+  iconPosition?: 'start' | 'end' | 'top'
 }
 
 interface TabsProps {
-  value: number;
-  onChangeAction: (event: SyntheticEvent, newValue: number) => void;
-  items: TabItem[];
-  variant?: 'standard' | 'scrollable' | 'fullWidth';
-  centered?: boolean;
-  keepMounted?: boolean;
-  sx?: SxProps<Theme>;
-  tabPanelSx?: SxProps<Theme>;
-  className?: string;
+  value: number
+  onChangeAction: (event: SyntheticEvent, newValue: number) => void
+  items: TabItem[]
+  variant?: 'standard' | 'scrollable' | 'fullWidth'
+  centered?: boolean
+  keepMounted?: boolean
+  sx?: SxProps<Theme>
+  tabPanelSx?: SxProps<Theme>
+  className?: string
 }
 
 export function Tabs({
@@ -127,16 +119,10 @@ export function Tabs({
       </StyledTabs>
 
       {items.map((item, index) => (
-        <TabPanel
-          key={index}
-          value={value}
-          index={index}
-          keepMounted={keepMounted}
-          sx={tabPanelSx}
-        >
+        <TabPanel key={index} value={value} index={index} keepMounted={keepMounted} sx={tabPanelSx}>
           {item.content}
         </TabPanel>
       ))}
     </Box>
-  );
+  )
 }

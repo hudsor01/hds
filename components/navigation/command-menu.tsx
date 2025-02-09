@@ -1,4 +1,4 @@
-import type { CommandMenuProps } from '@/types/command-menu';
+import type { CommandMenuProps } from '@/types/command-menu'
 import {
   Box,
   Dialog,
@@ -11,58 +11,56 @@ import {
   ListItemIcon,
   ListItemText,
   TextField,
-} from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
-import { Search, X } from 'react-feather';
+} from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Search, X } from 'react-feather'
 
 export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
-  const [search, setSearch] = useState('');
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const router = useRouter();
+  const [search, setSearch] = useState('')
+  const [selectedIndex, setSelectedIndex] = useState(0)
+  const router = useRouter()
 
   const filteredItems = items.filter(
     (item) =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
-      item.description?.toLowerCase().includes(search.toLowerCase()),
-  );
+      item.description?.toLowerCase().includes(search.toLowerCase())
+  )
 
   useEffect(() => {
-    setSelectedIndex(0);
-  }, [search]);
+    setSelectedIndex(0)
+  }, [search])
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return;
+      if (!open) return
 
       switch (e.key) {
         case 'ArrowDown':
-          e.preventDefault();
-          setSelectedIndex((i) => (i + 1) % filteredItems.length);
-          break;
+          e.preventDefault()
+          setSelectedIndex((i) => (i + 1) % filteredItems.length)
+          break
         case 'ArrowUp':
-          e.preventDefault();
-          setSelectedIndex(
-            (i) => (i - 1 + filteredItems.length) % filteredItems.length,
-          );
-          break;
+          e.preventDefault()
+          setSelectedIndex((i) => (i - 1 + filteredItems.length) % filteredItems.length)
+          break
         case 'Enter':
-          e.preventDefault();
+          e.preventDefault()
           if (filteredItems[selectedIndex]) {
-            filteredItems[selectedIndex].action();
-            onClose();
+            filteredItems[selectedIndex].action()
+            onClose()
           }
-          break;
+          break
         case 'Escape':
-          e.preventDefault();
-          onClose();
-          break;
+          e.preventDefault()
+          onClose()
+          break
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, filteredItems, selectedIndex, onClose]);
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [open, filteredItems, selectedIndex, onClose])
 
   return (
     <Dialog
@@ -107,8 +105,8 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
             <ListItem key={item.id} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  item.action();
-                  onClose();
+                  item.action()
+                  onClose()
                 }}
                 selected={index === selectedIndex}
                 sx={{
@@ -165,5 +163,5 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
         </List>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

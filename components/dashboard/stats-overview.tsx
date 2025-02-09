@@ -1,26 +1,26 @@
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import BuildIcon from '@mui/icons-material/Build';
-import GroupIcon from '@mui/icons-material/Group';
-import HomeIcon from '@mui/icons-material/Home';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useTheme } from '@mui/material/styles';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
+import BuildIcon from '@mui/icons-material/Build'
+import GroupIcon from '@mui/icons-material/Group'
+import HomeIcon from '@mui/icons-material/Home'
+import TrendingDownIcon from '@mui/icons-material/TrendingDown'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import Grid from '@mui/material/Grid'
+import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 
 interface StatCardProps {
-  title: string;
-  value: string;
-  trend: number;
-  icon: React.ReactNode;
-  trendLabel: string;
+  title: string
+  value: string
+  trend: number
+  icon: React.ReactNode
+  trendLabel: string
 }
 
 function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
-  const theme = useTheme();
-  const isPositive = trend >= 0;
+  const theme = useTheme()
+  const isPositive = trend >= 0
 
   return (
     <Card sx={{ height: '100%' }}>
@@ -48,21 +48,17 @@ function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
               </span>
             </Typography>
           </Grid>
-          <Grid
-            item
-            xs={4}
-            sx={{ display: 'flex', justifyContent: 'flex-end' }}
-          >
+          <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
             {icon}
           </Grid>
         </Grid>
       </CardContent>
     </Card>
-  );
+  )
 }
 
 export function StatsOverview() {
-  const iconStyle = { fontSize: 40, color: 'primary.main', opacity: 0.7 };
+  const iconStyle = { fontSize: 40, color: 'primary.main', opacity: 0.7 }
 
   const stats = [
     {
@@ -93,7 +89,7 @@ export function StatsOverview() {
       icon: <BuildIcon sx={iconStyle} />,
       trendLabel: 'vs last month',
     },
-  ];
+  ]
 
   return (
     <Grid container spacing={3}>
@@ -103,5 +99,5 @@ export function StatsOverview() {
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }

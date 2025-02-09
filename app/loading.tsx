@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { Card } from '@/components/ui/cards/card';
-import { Skeleton } from '@/components/ui/skeleton';
+import { Card } from '@/components/ui/cards/card'
+import { Skeleton } from '@/components/ui/skeleton'
 
 export default function Loading() {
   return (
@@ -17,5 +17,5 @@ export default function Loading() {
         ))}
       </div>
     </div>
-  );
+  )
 }

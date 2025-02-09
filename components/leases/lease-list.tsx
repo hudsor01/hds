@@ -1,16 +1,16 @@
-import { LeaseActions } from './lease-actions';
-import { useLeases } from '@/hooks/use-leases';
-import { formatCurrency } from '@/lib/utils';
-import type { Lease } from '@/types/lease';
-import AddIcon from '@mui/icons-material/Add';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Chip from '@mui/material/Chip';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { format } from 'date-fns';
+import { LeaseActions } from './lease-actions'
+import { useLeases } from '@/hooks/use-leases'
+import { formatCurrency } from '@/lib/utils'
+import type { Lease } from '@/types/lease'
+import AddIcon from '@mui/icons-material/Add'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Chip from '@mui/material/Chip'
+import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import { format } from 'date-fns'
 
 export function LeaseList() {
-  const { data: leases, isLoading } = useLeases();
+  const { data: leases, isLoading } = useLeases()
 
   const columns: GridColDef<Lease>[] = [
     {
@@ -55,15 +55,13 @@ export function LeaseList() {
       field: 'startDate',
       headerName: 'Start Date',
       width: 130,
-      valueFormatter: ({ value }) =>
-        format(new Date(value as string), 'MM/dd/yyyy'),
+      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy'),
     },
     {
       field: 'endDate',
       headerName: 'End Date',
       width: 130,
-      valueFormatter: ({ value }) =>
-        format(new Date(value as string), 'MM/dd/yyyy'),
+      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy'),
     },
     {
       field: 'actions',
@@ -74,7 +72,7 @@ export function LeaseList() {
         <LeaseActions leaseId={params.row.id} leaseStatus={params.row.status} />
       ),
     },
-  ];
+  ]
 
   return (
     <Box>
@@ -97,5 +95,5 @@ export function LeaseList() {
         }}
       />
     </Box>
-  );
+  )
 }

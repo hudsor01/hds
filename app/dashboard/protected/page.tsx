@@ -1,17 +1,17 @@
-import FetchDataSteps from '@/components/tutorial/fetch-data-steps';
-import { createClient } from '@/utils/supabase/server';
-import { Info } from 'react-feather';
-import { redirect } from 'next/navigation';
+import FetchDataSteps from '@/components/tutorial/fetch-data-steps'
+import { createClient } from '@/utils/supabase/server'
+import { Info } from 'react-feather'
+import { redirect } from 'next/navigation'
 
 export default async function ProtectedPage() {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   const {
     data: { user },
-  } = await supabase.auth.getCurrentUser();
+  } = await supabase.auth.getCurrentUser()
 
   if (!user) {
-    return redirect('/sign-in');
+    return redirect('/sign-in')
   }
 
   return (
@@ -19,8 +19,7 @@ export default async function ProtectedPage() {
       <div className="w-full">
         <div className="flex items-center gap-3 rounded-md bg-accent p-3 px-5 text-sm text-foreground">
           <Info size={16} strokeWidth={2} />
-          This is a protected page that you can only see as an authenticated
-          user
+          This is a protected page that you can only see as an authenticated user
         </div>
       </div>
       <div className="flex flex-col items-start gap-2">
@@ -34,5 +33,5 @@ export default async function ProtectedPage() {
         <FetchDataSteps />
       </div>
     </div>
-  );
+  )
 }

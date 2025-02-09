@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
-import * as React from 'react';
+import Link from 'next/link'
+import * as React from 'react'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Properties', href: '/properties' },
   { name: 'Tenant', href: '/tenant' },
   { name: 'Settings', href: '/settings' },
-];
+]
 
 export function MainNav(): React.ReactElement {
   return (
@@ -23,5 +23,5 @@ export function MainNav(): React.ReactElement {
         <Link href="/auth/login">Sign in</Link>
       </div>
     </nav>
-  );
+  )
 }

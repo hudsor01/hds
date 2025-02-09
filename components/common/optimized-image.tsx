@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import Image from 'next/image';
-import React, { useState } from 'react';
+import Image from 'next/image'
+import React, { useState } from 'react'
 
 interface OptimizedImageProps {
-  src: string;
-  alt: string;
-  width?: number;
-  height?: number;
-  priority?: boolean;
-  className?: string;
-  sizes?: string;
+  src: string
+  alt: string
+  width?: number
+  height?: number
+  priority?: boolean
+  className?: string
+  sizes?: string
 }
 
 export const OptimizedImage: React.FC<OptimizedImageProps> = ({
@@ -22,14 +22,14 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   className = '',
   sizes = '100vw',
 }) => {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(false)
 
   // Calculate srcSet based on device sizes
   const generateSrcSet = () => {
-    const widths = [640, 750, 828, 1080, 1200, 1920];
-    return widths.map((w) => `${src}?w=${w} ${w}w`).join(', ');
-  };
+    const widths = [640, 750, 828, 1080, 1200, 1920]
+    return widths.map((w) => `${src}?w=${w} ${w}w`).join(', ')
+  }
 
   return (
     <div className={`relative ${className}`}>
@@ -45,15 +45,13 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         onLoadStart={() => setLoading(true)}
         onLoad={() => setLoading(false)}
         onError={() => {
-          setError(true);
-          setLoading(false);
+          setError(true)
+          setLoading(false)
         }}
         loading={priority ? 'eager' : 'lazy'}
       />
 
-      {loading && !error && (
-        <div className="absolute inset-0 animate-pulse bg-gray-200" />
-      )}
+      {loading && !error && <div className="absolute inset-0 animate-pulse bg-gray-200" />}
 
       {error && (
         <div className="absolute inset-0 flex items-center justify-center bg-gray-100">
@@ -61,5 +59,5 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         </div>
       )}
     </div>
-  );
-};
+  )
+}

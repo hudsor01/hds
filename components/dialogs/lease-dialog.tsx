@@ -1,28 +1,23 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import type { Lease } from '@/types/lease';
-import { LEASE_STATUS, PAYMENT_FREQUENCY } from '@/types/lease';
-import type { Property } from '@/types/property';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from 'components/ui/dialog';
-import { Input } from 'components/ui/input';
-import { Label } from 'components/ui/label';
-import { Select } from 'components/ui/select';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import type { Lease } from '@/types/lease'
+import { LEASE_STATUS, PAYMENT_FREQUENCY } from '@/types/lease'
+import type { Property } from '@/types/property'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from 'components/ui/dialog'
+import { Input } from 'components/ui/input'
+import { Label } from 'components/ui/label'
+import { Select } from 'components/ui/select'
+import { useState } from 'react'
 
 interface LeaseDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  lease?: Lease;
-  properties: Property[];
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  lease?: Lease
+  properties: Property[]
   onSubmitAction: (
-    lease: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>,
-  ) => Promise<void>;
+    lease: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>
+  ) => Promise<void>
 }
 
 export function LeaseDialog({
@@ -32,26 +27,24 @@ export function LeaseDialog({
   properties,
   onSubmitAction,
 }: LeaseDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState('');
-  const [selectedProperty, setSelectedProperty] = useState<
-    Property | undefined
-  >(lease ? properties.find((p) => p.id === lease.propertyId) : undefined);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [selectedProperty, setSelectedProperty] = useState<Property | undefined>(
+    lease ? properties.find((p) => p.id === lease.propertyId) : undefined
+  )
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError('');
+    e.preventDefault()
+    setIsLoading(true)
+    setError('')
 
     try {
-      const formData = new FormData(e.currentTarget);
-      const property = properties.find(
-        (p) => p.id === formData.get('propertyId'),
-      );
-      const unit = property?.units.find((u) => u.id === formData.get('unitId'));
+      const formData = new FormData(e.currentTarget)
+      const property = properties.find((p) => p.id === formData.get('propertyId'))
+      const unit = property?.units.find((u) => u.id === formData.get('unitId'))
 
       if (!property || !unit) {
-        throw new Error('Invalid property or unit selected');
+        throw new Error('Invalid property or unit selected')
       }
 
       const leaseData = {
@@ -65,20 +58,18 @@ export function LeaseDialog({
         endDate: new Date(formData.get('endDate') as string),
         rentAmount: parseFloat(formData.get('rentAmount') as string),
         securityDeposit: parseFloat(formData.get('securityDeposit') as string),
-        paymentFrequency: formData.get(
-          'paymentFrequency',
-        ) as keyof typeof PAYMENT_FREQUENCY,
+        paymentFrequency: formData.get('paymentFrequency') as keyof typeof PAYMENT_FREQUENCY,
         status: formData.get('status') as keyof typeof LEASE_STATUS,
-      };
+      }
 
-      await onSubmitAction(leaseData);
-      onOpenChangeAction(false);
+      await onSubmitAction(leaseData)
+      onOpenChangeAction(false)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save lease');
+      setError(err instanceof Error ? err.message : 'Failed to save lease')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
@@ -95,10 +86,8 @@ export function LeaseDialog({
                 name="propertyId"
                 value={selectedProperty?.id}
                 onChange={(e) => {
-                  const property = properties.find(
-                    (p) => p.id === e.target.value,
-                  );
-                  setSelectedProperty(property);
+                  const property = properties.find((p) => p.id === e.target.value)
+                  setSelectedProperty(property)
                 }}
                 required
               >
@@ -206,11 +195,7 @@ export function LeaseDialog({
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label htmlFor="paymentFrequency">Payment Frequency</Label>
-              <Select
-                name="paymentFrequency"
-                defaultValue={lease?.paymentFrequency}
-                required
-              >
+              <Select name="paymentFrequency" defaultValue={lease?.paymentFrequency} required>
                 {Object.entries(PAYMENT_FREQUENCY).map(([key, value]) => (
                   <option key={key} value={key}>
                     {value}
@@ -233,11 +218,7 @@ export function LeaseDialog({
           {error && <div className="text-sm text-red-500">{error}</div>}
 
           <div className="flex justify-end gap-3">
-            <Button
-              type="button"
-              onClick={() => onOpenChangeAction(false)}
-              disabled={isLoading}
-            >
+            <Button type="button" onClick={() => onOpenChangeAction(false)} disabled={isLoading}>
               Cancel
             </Button>
             <Button type="submit" disabled={isLoading}>
@@ -247,7 +228,7 @@ export function LeaseDialog({
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }
 
-export default LeaseDialog;
+export default LeaseDialog

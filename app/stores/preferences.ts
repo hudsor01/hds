@@ -1,18 +1,18 @@
-import { create } from 'zustand';
-import { createJSONStorage, persist } from 'zustand/middleware';
+import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 export interface UserPreferences {
-  fontSize: 'small' | 'medium' | 'large';
-  animations: boolean;
-  reducedMotion: boolean;
-  lastSynced?: number;
-  setFontSize: (size: 'small' | 'medium' | 'large') => void;
-  setAnimations: (enabled: boolean) => void;
-  setReducedMotion: (enabled: boolean) => void;
-  sync: () => Promise<void>;
+  fontSize: 'small' | 'medium' | 'large'
+  animations: boolean
+  reducedMotion: boolean
+  lastSynced?: number
+  setFontSize: (size: 'small' | 'medium' | 'large') => void
+  setAnimations: (enabled: boolean) => void
+  setReducedMotion: (enabled: boolean) => void
+  sync: () => Promise<void>
 }
 
-const SYNC_ENDPOINT = '/api/preferences/sync';
+const SYNC_ENDPOINT = '/api/preferences/sync'
 
 export const usePreferences = create<UserPreferences>()(
   persist(
@@ -40,14 +40,14 @@ export const usePreferences = create<UserPreferences>()(
               },
               lastSynced: get().lastSynced,
             }),
-          });
+          })
 
           if (response.ok) {
-            const data = await response.json();
-            set({ ...data, lastSynced: Date.now() });
+            const data = await response.json()
+            set({ ...data, lastSynced: Date.now() })
           }
         } catch (error) {
-          console.error('Failed to sync preferences:', error);
+          console.error('Failed to sync preferences:', error)
         }
       },
     }),
@@ -60,6 +60,6 @@ export const usePreferences = create<UserPreferences>()(
         reducedMotion: state.reducedMotion,
         lastSynced: state.lastSynced,
       }),
-    },
-  ),
-);
+    }
+  )
+)

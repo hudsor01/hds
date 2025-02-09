@@ -1,14 +1,14 @@
-'use client';
+'use client'
 
-import { type Milestone, type TeamMember, type Value } from '@/types/about';
-import { Apartment, Lightbulb, People, Security, Timeline, TouchApp } from '@mui/icons-material';
-import React from 'react';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
-import { ArrowForward } from '@mui/icons-material';
-import Link from 'next/link';
-import { routes } from './routes';
-import { FadeIn } from '@/components/animations/fade-in';
-import { File as FileIcon, Trash2, Upload } from 'react-feather';
+import { type Milestone, type TeamMember, type Value } from '@/types/about'
+import { Apartment, Lightbulb, People, Security, Timeline, TouchApp } from '@mui/icons-material'
+import React from 'react'
+import { Box, Button, Container, Grid, Typography } from '@mui/material'
+import { ArrowForward } from '@mui/icons-material'
+import Link from 'next/link'
+import { routes } from './routes'
+import { FadeIn } from '@/components/animations/fade-in'
+import { File as FileIcon, Trash2, Upload } from 'react-feather'
 
 // Enhanced values with more property management specific content
 const values: Value[] = [
@@ -30,7 +30,7 @@ const values: Value[] = [
     icon: TouchApp,
     color: 'text-green-500',
   },
-];
+]
 
 // Enhanced team with more detailed bios and achievements
 const team: TeamMember[] = [
@@ -58,7 +58,7 @@ const team: TeamMember[] = [
     linkedin: 'https://linkedin.com/in/emily-rodriguez',
     achievements: ['IREM Leadership Award', 'Customer Success Leader of the Year'],
   },
-];
+]
 
 // Enhanced milestones with more specific achievements
 const milestones: Milestone[] = [
@@ -90,7 +90,7 @@ const milestones: Milestone[] = [
     icon: People,
     metric: '50,000+ units managed',
   },
-];
+]
 
 export default function HomePage() {
   return (
@@ -195,5 +195,5 @@ export default function HomePage() {
         ))}
       </Grid>
     </Container>
-  );
+  )
 }

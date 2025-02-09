@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import type { Lease } from '@/types/lease';
-import { LEASE_STATUS } from '@/types/lease';
-import type { Property } from '@/types/property';
-import LeaseDialog from 'components/dialogs/lease-dialog';
-import { useState } from 'react';
-import { Edit, Plus, Trash } from 'react-feather';
+import { Button } from '@/components/ui/buttons/button'
+import type { Lease } from '@/types/lease'
+import { LEASE_STATUS } from '@/types/lease'
+import type { Property } from '@/types/property'
+import LeaseDialog from 'components/dialogs/lease-dialog'
+import { useState } from 'react'
+import { Edit, Plus, Trash } from 'react-feather'
 
 // Mock data for initial development
 const mockProperties: Property[] = [
@@ -42,7 +42,7 @@ const mockProperties: Property[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-];
+]
 
 const mockLeases: Lease[] = [
   {
@@ -63,15 +63,15 @@ const mockLeases: Lease[] = [
     createdAt: new Date(),
     updatedAt: new Date(),
   },
-];
+]
 
 export default function LeasesPage() {
-  const [leases, setLeases] = useState<Lease[]>(mockLeases);
-  const [selectedLease, setSelectedLease] = useState<Lease | undefined>();
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [leases, setLeases] = useState<Lease[]>(mockLeases)
+  const [selectedLease, setSelectedLease] = useState<Lease | undefined>()
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
 
   const handleAddLease = async (
-    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>,
+    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>
   ) => {
     // In a real app, this would be an API call
     const newLease: Lease = {
@@ -80,14 +80,14 @@ export default function LeasesPage() {
       documents: [],
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
-    setLeases([...leases, newLease]);
-  };
+    }
+    setLeases([...leases, newLease])
+  }
 
   const handleEditLease = async (
-    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>,
+    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>
   ) => {
-    if (!selectedLease) return;
+    if (!selectedLease) return
 
     // In a real app, this would be an API call
     const updatedLease: Lease = {
@@ -96,34 +96,32 @@ export default function LeasesPage() {
       documents: selectedLease.documents,
       createdAt: selectedLease.createdAt,
       updatedAt: new Date(),
-    };
+    }
 
-    setLeases(
-      leases.map((l) => (l.id === selectedLease.id ? updatedLease : l)),
-    );
-  };
+    setLeases(leases.map((l) => (l.id === selectedLease.id ? updatedLease : l)))
+  }
 
   const handleDeleteLease = async (leaseId: string) => {
     // In a real app, this would be an API call
     if (confirm('Are you sure you want to delete this lease?')) {
-      setLeases(leases.filter((l) => l.id !== leaseId));
+      setLeases(leases.filter((l) => l.id !== leaseId))
     }
-  };
+  }
 
   const getStatusColor = (status: keyof typeof LEASE_STATUS) => {
     switch (status) {
       case 'active':
-        return 'text-green-600 bg-green-50';
+        return 'text-green-600 bg-green-50'
       case 'pending':
-        return 'text-yellow-600 bg-yellow-50';
+        return 'text-yellow-600 bg-yellow-50'
       case 'expired':
-        return 'text-red-600 bg-red-50';
+        return 'text-red-600 bg-red-50'
       case 'terminated':
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-gray-50'
       default:
-        return 'text-gray-600 bg-gray-50';
+        return 'text-gray-600 bg-gray-50'
     }
-  };
+  }
 
   return (
     <div className="space-y-6 p-6">
@@ -134,8 +132,8 @@ export default function LeasesPage() {
         </div>
         <Button
           onClick={() => {
-            setSelectedLease(undefined);
-            setIsDialogOpen(true);
+            setSelectedLease(undefined)
+            setIsDialogOpen(true)
           }}
         >
           <Plus className="mr-2 h-4 w-4" />
@@ -148,27 +146,13 @@ export default function LeasesPage() {
           <table className="w-full text-left">
             <thead className="border-b bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Property
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Unit
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Tenant
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Dates
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Rent
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Status
-                </th>
-                <th className="px-6 py-3 text-sm font-medium text-gray-500">
-                  Actions
-                </th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Property</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Unit</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Tenant</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Dates</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Rent</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Status</th>
+                <th className="px-6 py-3 text-sm font-medium text-gray-500">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y">
@@ -181,9 +165,7 @@ export default function LeasesPage() {
                     {new Date(lease.startDate).toLocaleDateString()} -{' '}
                     {new Date(lease.endDate).toLocaleDateString()}
                   </td>
-                  <td className="px-6 py-4">
-                    ${lease.rentAmount.toLocaleString()}
-                  </td>
+                  <td className="px-6 py-4">${lease.rentAmount.toLocaleString()}</td>
                   <td className="px-6 py-4">
                     <span
                       className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getStatusColor(lease.status)}`}
@@ -197,17 +179,13 @@ export default function LeasesPage() {
                         variant="ghost"
                         size="sm"
                         onClick={() => {
-                          setSelectedLease(lease);
-                          setIsDialogOpen(true);
+                          setSelectedLease(lease)
+                          setIsDialogOpen(true)
                         }}
                       >
                         <Edit className="h-4 w-4" />
                       </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteLease(lease.id)}
-                      >
+                      <Button variant="ghost" size="sm" onClick={() => handleDeleteLease(lease.id)}>
                         <Trash className="h-4 w-4" />
                       </Button>
                     </div>
@@ -226,5 +204,5 @@ export default function LeasesPage() {
         onSubmitAction={selectedLease ? handleEditLease : handleAddLease}
       />
     </div>
-  );
+  )
 }

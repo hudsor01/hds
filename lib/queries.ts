@@ -1,35 +1,35 @@
-import { getPaginatedResults, PaginationParams, prisma } from '@/lib/db';
-import { PaymentStatus, PaymentType, Prisma } from '@prisma/client';
+import { getPaginatedResults, PaginationParams, prisma } from '@/lib/db'
+import { PaymentStatus, PaymentType, Prisma } from '@prisma/client'
 
 // Payment queries
 export const getPaymentsByTenant = async (tenantId: string) => {
   return prisma.payments.findMany({
     where: { tenant_id: tenantId },
     orderBy: { created_at: 'desc' },
-  });
-};
+  })
+}
 
 export const getPaymentsByLease = async (leaseId: string) => {
   const lease = await prisma.leases.findUnique({
     where: { user_id: leaseId },
-  });
+  })
 
-  if (!lease) return [];
+  if (!lease) return []
 
   return prisma.payments.findMany({
     where: { tenant_id: lease.tenant_id },
     orderBy: { created_at: 'desc' },
-  });
-};
+  })
+}
 
 export const getPaginatedPayments = async (
   tenantId: string,
   params: PaginationParams & {
-    status?: PaymentStatus;
-    type?: PaymentType;
-    startDate?: Date;
-    endDate?: Date;
-  },
+    status?: PaymentStatus
+    type?: PaymentType
+    startDate?: Date
+    endDate?: Date
+  }
 ) => {
   const where = {
     tenant_id: tenantId,
@@ -42,7 +42,7 @@ export const getPaginatedPayments = async (
           lte: params.endDate,
         },
       }),
-  };
+  }
 
   return getPaginatedResults(
     (skip, take) =>
@@ -53,9 +53,9 @@ export const getPaginatedPayments = async (
         take,
       }),
     () => prisma.payments.count({ where }),
-    params,
-  );
-};
+    params
+  )
+}
 
 // Lease queries
 export const getLeaseWithDetails = async (leaseId: string) => {
@@ -75,8 +75,8 @@ export const getLeaseWithDetails = async (leaseId: string) => {
       created_at: true,
       status: true,
     },
-  });
-};
+  })
+}
 
 export const getActiveLeasesByProperty = async (propertyId: string) => {
   return prisma.leases.findMany({
@@ -100,8 +100,8 @@ export const getActiveLeasesByProperty = async (propertyId: string) => {
       status: true,
     },
     orderBy: { start_date: 'desc' },
-  });
-};
+  })
+}
 
 // Property queries
 export const getPropertyWithDetails = async (propertyId: string) => {
@@ -146,16 +146,16 @@ export const getPropertyWithDetails = async (propertyId: string) => {
         },
       },
     },
-  });
-};
+  })
+}
 
 export const getPaginatedProperties = async (
   userId: string,
   params: PaginationParams & {
-    status?: string;
-    type?: string;
-    search?: string;
-  },
+    status?: string
+    type?: string
+    search?: string
+  }
 ) => {
   const where: Prisma.propertiesWhereInput = {
     user_id: userId,
@@ -168,7 +168,7 @@ export const getPaginatedProperties = async (
         { city: { contains: params.search } },
       ],
     }),
-  };
+  }
 
   return getPaginatedResults(
     (skip, take) =>
@@ -206,6 +206,6 @@ export const getPaginatedProperties = async (
         take,
       }),
     () => prisma.properties.count({ where }),
-    params,
-  );
-};
+    params
+  )
+}

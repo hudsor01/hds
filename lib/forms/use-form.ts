@@ -1,14 +1,14 @@
-import { useToast } from '@/hooks/ui';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useCallback } from 'react';
-import { useForm as useReactHookForm } from 'react-hook-form';
-import { z } from 'zod';
+import { useToast } from '@/hooks/ui'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useCallback } from 'react'
+import { useForm as useReactHookForm } from 'react-hook-form'
+import { z } from 'zod'
 
 interface UseFormOptions<T extends z.ZodObject<any>> {
-  schema: T;
-  defaultValues?: Partial<z.infer<T>>;
-  onSubmit: (data: z.infer<T>) => Promise<void> | void;
-  onError?: (error: Error) => void;
+  schema: T
+  defaultValues?: Partial<z.infer<T>>
+  onSubmit: (data: z.infer<T>) => Promise<void> | void
+  onError?: (error: Error) => void
 }
 
 export function useForm<T extends z.ZodObject<any>>({
@@ -17,62 +17,58 @@ export function useForm<T extends z.ZodObject<any>>({
   onSubmit,
   onError,
 }: UseFormOptions<T>) {
-  const { showToast } = useToast();
+  const { showToast } = useToast()
 
   const form = useReactHookForm({
     resolver: zodResolver(schema),
     defaultValues: defaultValues as any,
-  });
+  })
 
   const handleSubmit = useCallback(
     async (data: z.infer<T>) => {
       try {
-        await onSubmit(data);
+        await onSubmit(data)
       } catch (error) {
-        const message =
-          error instanceof Error ? error.message : 'An error occurred';
-        showToast(message, 'error');
-        onError?.(error instanceof Error ? error : new Error(message));
+        const message = error instanceof Error ? error.message : 'An error occurred'
+        showToast(message, 'error')
+        onError?.(error instanceof Error ? error : new Error(message))
       }
     },
-    [onSubmit, onError, showToast],
-  );
+    [onSubmit, onError, showToast]
+  )
 
   return {
     ...form,
     handleSubmit: form.handleSubmit(handleSubmit),
-  };
+  }
 }
 
 // Form field utilities
 export function getFieldError(fieldName: string, errors: Record<string, any>) {
-  const error = errors[fieldName];
-  return error?.message as string | undefined;
+  const error = errors[fieldName]
+  return error?.message as string | undefined
 }
 
-export function isFieldRequired(
-  schema: z.ZodObject<any>,
-  fieldName: string,
-): boolean {
-  const shape = schema.shape as Record<string, z.ZodTypeAny>;
-  const field = shape[fieldName];
-  return !field.isOptional();
+export function isFieldRequired(schema: z.ZodObject<any>, fieldName: string): boolean {
+  const shape = schema.shape as Record<string, z.ZodTypeAny>
+  const field = shape[fieldName]
+  return !field.isOptional()
 }
 
 // Form validation utilities
 export function validateField<T extends z.ZodObject<any>>(
   schema: T,
   fieldName: keyof z.infer<T>,
-  value: any,
+  value: any
 ): string | null {
   try {
-    schema.shape[fieldName].parse(value);
-    return null;
+    schema.shape[fieldName].parse(value)
+    return null
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return error.errors[0]?.message || 'Invalid value';
+      return error.errors[0]?.message || 'Invalid value'
     }
-    return 'Invalid value';
+    return 'Invalid value'
   }
 }
 
@@ -84,12 +80,10 @@ export function createFormField<T extends z.ZodObject<any>>(schema: T) {
       required: isFieldRequired(schema, name as string),
       validate: (value: any) => validateField(schema, name, value),
     }),
-  };
+  }
 }
 
 // Form schema creator with type inference
-export function createFormSchema<T extends Record<string, z.ZodTypeAny>>(
-  fields: T,
-) {
-  return z.object(fields);
+export function createFormSchema<T extends Record<string, z.ZodTypeAny>>(fields: T) {
+  return z.object(fields)
 }

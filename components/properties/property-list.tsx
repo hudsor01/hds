@@ -1,8 +1,8 @@
-import { type PropertyListProps } from '@/types/property';
-import { useIntl } from 'react-intl';
+import { type PropertyListProps } from '@/types/property'
+import { useIntl } from 'react-intl'
 
 export default function PropertyList({ properties }: PropertyListProps) {
-  const intl = useIntl();
+  const intl = useIntl()
 
   return (
     <ul>
@@ -12,5 +12,5 @@ export default function PropertyList({ properties }: PropertyListProps) {
         </li>
       ))}
     </ul>
-  );
+  )
 }

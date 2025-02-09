@@ -1,6 +1,6 @@
-import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
-import type { Database } from '@/types/database.types';
+import { createClient } from '@supabase/supabase-js'
+import { cookies } from 'next/headers'
+import type { Database } from '@/types/database.types'
 
 export function createClient() {
   return createClient<Database>(
@@ -12,19 +12,19 @@ export function createClient() {
         autoRefreshToken: true,
         storage: {
           getItem: (key: string) => {
-            const cookieStore = cookies();
-            return cookieStore.get(key)?.value;
+            const cookieStore = cookies()
+            return cookieStore.get(key)?.value
           },
           setItem: (key: string, value: string) => {
-            const cookieStore = cookies();
-            cookieStore.set(key, value);
+            const cookieStore = cookies()
+            cookieStore.set(key, value)
           },
           removeItem: (key: string) => {
-            const cookieStore = cookies();
-            cookieStore.set(key, '', { maxAge: 0 });
+            const cookieStore = cookies()
+            cookieStore.set(key, '', { maxAge: 0 })
           },
         },
       },
-    },
-  );
+    }
+  )
 }

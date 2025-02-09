@@ -1,50 +1,40 @@
-'use client';
+'use client'
 
-import EditIcon from '@mui/icons-material/Edit';
-import Avatar from '@mui/material/Avatar';
-import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
-import Paper from '@mui/material/Paper';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
-import { useRouter } from 'next/navigation';
+import EditIcon from '@mui/icons-material/Edit'
+import Avatar from '@mui/material/Avatar'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Paper from '@mui/material/Paper'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
+import { useRouter } from 'next/navigation'
 
 export function UserProfile() {
-  const { user, isLoaded } = useUser();
-  const router = useRouter();
+  const { user, isLoaded } = useUser()
+  const router = useRouter()
 
   if (!isLoaded) {
-    return <UserProfileSkeleton />;
+    return <UserProfileSkeleton />
   }
 
   const handleEditProfile = () => {
-    router.push('/user/settings');
-  };
+    router.push('/user/settings')
+  }
 
   return (
     <Paper sx={{ p: 3 }}>
       <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-        <Avatar
-          src={user?.imageUrl}
-          alt={user?.fullName || ''}
-          sx={{ width: 72, height: 72 }}
-        />
+        <Avatar src={user?.imageUrl} alt={user?.fullName || ''} sx={{ width: 72, height: 72 }} />
         <Box sx={{ flex: 1 }}>
           <Typography variant="h5">{user?.fullName}</Typography>
-          <Typography color="text.secondary">
-            {user?.primaryEmailAddress?.emailAddress}
-          </Typography>
+          <Typography color="text.secondary">{user?.primaryEmailAddress?.emailAddress}</Typography>
         </Box>
-        <Button
-          variant="outlined"
-          startIcon={<EditIcon />}
-          onClick={handleEditProfile}
-        >
+        <Button variant="outlined" startIcon={<EditIcon />} onClick={handleEditProfile}>
           Edit Profile
         </Button>
       </Box>
     </Paper>
-  );
+  )
 }
 
 function UserProfileSkeleton() {
@@ -59,5 +49,5 @@ function UserProfileSkeleton() {
         <Skeleton variant="rectangular" width={120} height={36} />
       </Box>
     </Paper>
-  );
+  )
 }

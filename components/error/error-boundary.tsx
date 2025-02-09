@@ -1,19 +1,19 @@
-'use client';
+'use client'
 
-import { Button, Container, Typography } from '@mui/material';
-import { useEffect } from 'react';
-import { AlertTriangle } from 'react-feather';
+import { Button, Container, Typography } from '@mui/material'
+import { useEffect } from 'react'
+import { AlertTriangle } from 'react-feather'
 
 interface ErrorBoundaryProps {
-  error: Error;
-  resetAction: () => void;
+  error: Error
+  resetAction: () => void
 }
 
 export default function ErrorBoundary({ error, resetAction }: ErrorBoundaryProps) {
   useEffect(() => {
     // Log the error to an error reporting service
-    console.error('Error:', error);
-  }, [error]);
+    console.error('Error:', error)
+  }, [error])
 
   return (
     <Container maxWidth="md" sx={{ py: 8, textAlign: 'center' }}>
@@ -38,5 +38,5 @@ export default function ErrorBoundary({ error, resetAction }: ErrorBoundaryProps
         Try again
       </Button>
     </Container>
-  );
+  )
 }

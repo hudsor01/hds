@@ -1,28 +1,19 @@
-'use client';
+'use client'
 
-import { Badge } from '@/components/ui/badge';
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/cards/card';
-import { useToast } from '@/hooks/use-toast';
-import { MaintenanceRequest } from '@/types/maintenance_requests';
-import { createClient } from '@supabase/supabase-js';
-import { useEffect, useState } from 'react';
+import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
+import { useToast } from '@/hooks/use-toast'
+import { MaintenanceRequest } from '@/types/maintenance_requests'
+import { createClient } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 
-export default function MaintenanceTracker({
-  propertyId,
-}: {
-  propertyId: string;
-}) {
-  const [requests, setRequests] = useState<MaintenanceRequest[]>([]);
-  const { toast } = useToast();
+export default function MaintenanceTracker({ propertyId }: { propertyId: string }) {
+  const [requests, setRequests] = useState<MaintenanceRequest[]>([])
+  const { toast } = useToast()
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-  );
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   useEffect(() => {
     // Initial fetch of maintenance requests
@@ -31,21 +22,21 @@ export default function MaintenanceTracker({
         .from('maintenance_requests')
         .select('*')
         .eq('property_id', propertyId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
       if (error) {
         toast({
           title: 'Error fetching maintenance requests',
           description: error.message,
           variant: 'destructive',
-        });
-        return;
+        })
+        return
       }
 
-      setRequests(data || []);
-    };
+      setRequests(data || [])
+    }
 
-    fetchRequests();
+    fetchRequests()
 
     // Set up real-time subscription
     const channel = supabase
@@ -61,32 +52,30 @@ export default function MaintenanceTracker({
         (payload) => {
           // Handle different types of changes
           if (payload.eventType === 'INSERT') {
-            setRequests((prev) => [payload.new as MaintenanceRequest, ...prev]);
+            setRequests((prev) => [payload.new as MaintenanceRequest, ...prev])
             toast({
               title: 'New maintenance request',
               description: 'A new maintenance request has been created.',
-            });
+            })
           } else if (payload.eventType === 'UPDATE') {
             setRequests((prev) =>
               prev.map((request) =>
-                request.id === payload.new.id
-                  ? (payload.new as MaintenanceRequest)
-                  : request,
-              ),
-            );
+                request.id === payload.new.id ? (payload.new as MaintenanceRequest) : request
+              )
+            )
             toast({
               title: 'Maintenance request updated',
               description: `Request status updated to ${payload.new.status}`,
-            });
+            })
           }
-        },
+        }
       )
-      .subscribe();
+      .subscribe()
 
     return () => {
-      channel.unsubscribe();
-    };
-  }, [propertyId, supabase, toast]);
+      channel.unsubscribe()
+    }
+  }, [propertyId, supabase, toast])
 
   return (
     <Card className="w-full">
@@ -120,12 +109,10 @@ export default function MaintenanceTracker({
             </div>
           ))}
           {requests.length === 0 && (
-            <p className="text-center text-gray-500">
-              No maintenance requests found
-            </p>
+            <p className="text-center text-gray-500">No maintenance requests found</p>
           )}
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

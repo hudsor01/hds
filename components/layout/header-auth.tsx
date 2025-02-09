@@ -1,26 +1,23 @@
-import { Badge } from './ui/badge';
-import { Button } from './ui/button';
-import { signOutAction } from '@/app/actions';
-import { hasEnvVars } from '@/utils/supabase/check-env-vars';
-import { createClient } from '@/utils/supabase/server';
-import Link from 'next/link';
+import { Badge } from './ui/badge'
+import { Button } from './ui/button'
+import { signOutAction } from '@/app/actions'
+import { hasEnvVars } from '@/utils/supabase/check-env-vars'
+import { createClient } from '@/utils/supabase/server'
+import Link from 'next/link'
 
 export default async function AuthButton() {
-  const supabase = await createClient();
+  const supabase = await createClient()
 
   const {
     data: { user },
-  } = await supabase.auth.getCurrentUser();
+  } = await supabase.auth.getCurrentUser()
 
   if (!hasEnvVars) {
     return (
       <>
         <div className="flex items-center gap-4">
           <div>
-            <Badge
-              variant={'default'}
-              className="pointer-events-none font-normal"
-            >
+            <Badge variant={'default'} className="pointer-events-none font-normal">
               Please update .env.local file with anon key and url
             </Badge>
           </div>
@@ -46,7 +43,7 @@ export default async function AuthButton() {
           </div>
         </div>
       </>
-    );
+    )
   }
   return user ? (
     <div className="flex items-center gap-4">
@@ -66,5 +63,5 @@ export default async function AuthButton() {
         <Link href="/sign-up">Sign up</Link>
       </Button>
     </div>
-  );
+  )
 }

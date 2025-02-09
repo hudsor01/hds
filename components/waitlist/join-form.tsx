@@ -1,15 +1,12 @@
-import { useState } from 'react';
-import { TextField, Button, Alert, CircularProgress } from '@mui/material';
-import { Mail, User, Link as LinkIcon } from 'react-feather';
-import type {
-  WaitlistJoinRequest,
-  WaitlistJoinResponse,
-} from '@/types/waitlist';
+import { useState } from 'react'
+import { TextField, Button, Alert, CircularProgress } from '@mui/material'
+import { Mail, User, Link as LinkIcon } from 'react-feather'
+import type { WaitlistJoinRequest, WaitlistJoinResponse } from '@/types/waitlist'
 
 interface JoinFormProps {
-  onSuccess?: (response: WaitlistJoinResponse) => void;
-  onError?: (error: string) => void;
-  referralCode?: string;
+  onSuccess?: (response: WaitlistJoinResponse) => void
+  onError?: (error: string) => void
+  referralCode?: string
 }
 
 export default function JoinForm({
@@ -17,60 +14,56 @@ export default function JoinForm({
   onError,
   referralCode: initialReferralCode,
 }: JoinFormProps) {
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [formData, setFormData] = useState<WaitlistJoinRequest>({
     email: '',
     name: '',
     referralCode: initialReferralCode || '',
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError(null);
+    e.preventDefault()
+    setLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('/api/waitlist/join', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data: WaitlistJoinResponse = await response.json();
+      const data: WaitlistJoinResponse = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to join waitlist');
+        throw new Error(data.error || 'Failed to join waitlist')
       }
 
-      setSuccess(true);
-      onSuccess?.(data);
+      setSuccess(true)
+      onSuccess?.(data)
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'An error occurred';
-      setError(message);
-      onError?.(message);
+      const message = err instanceof Error ? err.message : 'An error occurred'
+      setError(message)
+      onError?.(message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   if (success) {
     return (
       <div className="rounded-lg bg-green-50 p-6 text-center">
-        <h3 className="mb-2 text-xl font-semibold text-green-800">
-          You're on the list! 🎉
-        </h3>
-        <p className="text-green-700">
-          Check your email for verification instructions.
-        </p>
+        <h3 className="mb-2 text-xl font-semibold text-green-800">You're on the list! 🎉</h3>
+        <p className="text-green-700">Check your email for verification instructions.</p>
       </div>
-    );
+    )
   }
 
   return (
@@ -147,12 +140,8 @@ export default function JoinForm({
         disabled={loading}
         className="h-12 bg-blue-600 hover:bg-blue-700"
       >
-        {loading ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          'Join the Waitlist'
-        )}
+        {loading ? <CircularProgress size={24} color="inherit" /> : 'Join the Waitlist'}
       </Button>
     </form>
-  );
+  )
 }

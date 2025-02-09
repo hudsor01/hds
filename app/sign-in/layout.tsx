@@ -5,10 +5,6 @@ export const metadata: Metadata = {
   description: 'Sign in to your Property Manager account',
 }
 
-export default function SignInLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function SignInLayout({ children }: { children: React.ReactNode }) {
   return children
 }

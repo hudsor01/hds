@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client'
 
-export const prisma = new PrismaClient();
+export const prisma = new PrismaClient()
 
 async function main() {
   // Create a test user first
@@ -9,9 +9,9 @@ async function main() {
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscription_status: 'active'
+      subscription_status: 'active',
     },
-  });
+  })
 
   // Create a test property
   const property = await prisma.properties.create({
@@ -28,7 +28,7 @@ async function main() {
       amenities: [],
       images: [],
     },
-  });
+  })
 
   // Create a test tenant
   await prisma.tenants.create({
@@ -48,15 +48,15 @@ async function main() {
       },
       documents: [],
     },
-  });
+  })
 }
 
 main()
   .then(async () => {
-    await prisma.$disconnect();
+    await prisma.$disconnect()
   })
-  .catch(async e => {
-    console.error(e);
-    await prisma.$disconnect();
-    process.exit(1);
-  });
+  .catch(async (e) => {
+    console.error(e)
+    await prisma.$disconnect()
+    process.exit(1)
+  })

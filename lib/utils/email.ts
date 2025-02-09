@@ -1,7 +1,7 @@
-import WelcomeEmail from '@/components/emails/welcome';
-import { Resend } from 'resend';
+import WelcomeEmail from '@/components/emails/welcome'
+import { Resend } from 'resend'
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 export const emailService = {
   async sendWelcome(email: string) {
@@ -10,6 +10,6 @@ export const emailService = {
       to: email,
       subject: 'Welcome to the Hudson Digital Property Management Waitlist!',
       react: WelcomeEmail({ email }),
-    });
+    })
   },
-};
+}

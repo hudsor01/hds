@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import Link from 'next/link';
+import Link from 'next/link'
 
 const features = [
   {
@@ -75,20 +75,19 @@ const features = [
       </svg>
     ),
   },
-];
+]
 
 export function FeatureGrid() {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
         <h1 className="text-2xl font-semibold capitalize text-gray-800 dark:text-white lg:text-3xl">
-          explore our <br /> awesome{' '}
-          <span className="underline decoration-blue-200">Features</span>
+          explore our <br /> awesome <span className="underline decoration-blue-200">Features</span>
         </h1>
 
         <p className="mt-4 text-gray-500 dark:text-gray-300 xl:mt-6">
-          Discover how our property management platform can transform your
-          business with these powerful features.
+          Discover how our property management platform can transform your business with these
+          powerful features.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:mt-12 xl:grid-cols-3 xl:gap-12">
@@ -105,9 +104,7 @@ export function FeatureGrid() {
                 {feature.name}
               </h1>
 
-              <p className="text-gray-500 dark:text-gray-300">
-                {feature.description}
-              </p>
+              <p className="text-gray-500 dark:text-gray-300">{feature.description}</p>
 
               <Link
                 href="/features"
@@ -133,5 +130,5 @@ export function FeatureGrid() {
         </div>
       </div>
     </section>
-  );
+  )
 }

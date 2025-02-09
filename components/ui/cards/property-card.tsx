@@ -1,15 +1,15 @@
-'use client';
+'use client'
 
-import { Card } from 'components/ui/cards/card';
-import { Home } from 'react-feather';
+import { Card } from 'components/ui/cards/card'
+import { Home } from 'react-feather'
 
 export interface PropertyCardProps {
-  name: string;
-  address: string;
-  units: string;
-  occupancy: string;
-  onUpdate: () => void;
-  onDelete: () => void;
+  name: string
+  address: string
+  units: string
+  occupancy: string
+  onUpdate: () => void
+  onDelete: () => void
 }
 
 export function PropertyCard({
@@ -38,5 +38,5 @@ export function PropertyCard({
         </div>
       </div>
     </Card>
-  );
+  )
 }

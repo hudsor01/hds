@@ -1,10 +1,4 @@
-export type Json =
-  | string
-  | number
-  | boolean
-  | null
-  | { [key: string]: Json | undefined }
-  | Json[]
+export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 
 export type Database = {
   public: {
@@ -90,33 +84,33 @@ export type Database = {
       activity: {
         Row: {
           activity_log_id: string
-          activity_type: Database["public"]["Enums"]["ActivityType"]
+          activity_type: Database['public']['Enums']['ActivityType']
           created_at: string | null
           description: string
           entityId: string
-          entityType: Database["public"]["Enums"]["EntityType"]
+          entityType: Database['public']['Enums']['EntityType']
           id: string
           updated_at: string | null
           userId: string
         }
         Insert: {
           activity_log_id: string
-          activity_type: Database["public"]["Enums"]["ActivityType"]
+          activity_type: Database['public']['Enums']['ActivityType']
           created_at?: string | null
           description: string
           entityId: string
-          entityType: Database["public"]["Enums"]["EntityType"]
+          entityType: Database['public']['Enums']['EntityType']
           id: string
           updated_at?: string | null
           userId: string
         }
         Update: {
           activity_log_id?: string
-          activity_type?: Database["public"]["Enums"]["ActivityType"]
+          activity_type?: Database['public']['Enums']['ActivityType']
           created_at?: string | null
           description?: string
           entityId?: string
-          entityType?: Database["public"]["Enums"]["EntityType"]
+          entityType?: Database['public']['Enums']['EntityType']
           id?: string
           updated_at?: string | null
           userId?: string
@@ -127,7 +121,7 @@ export type Database = {
         Row: {
           created_at: string | null
           entityId: string | null
-          entityType: Database["public"]["Enums"]["EntityType"]
+          entityType: Database['public']['Enums']['EntityType']
           id: string
           ipAddress: string | null
           newValues: Json | null
@@ -138,7 +132,7 @@ export type Database = {
         Insert: {
           created_at?: string | null
           entityId?: string | null
-          entityType: Database["public"]["Enums"]["EntityType"]
+          entityType: Database['public']['Enums']['EntityType']
           id: string
           ipAddress?: string | null
           newValues?: Json | null
@@ -149,7 +143,7 @@ export type Database = {
         Update: {
           created_at?: string | null
           entityId?: string | null
-          entityType?: Database["public"]["Enums"]["EntityType"]
+          entityType?: Database['public']['Enums']['EntityType']
           id?: string
           ipAddress?: string | null
           newValues?: Json | null
@@ -291,18 +285,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "inspections_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'inspections_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "inspections_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'inspections_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -340,7 +334,7 @@ export type Database = {
           documents: string[] | null
           end_date: string | null
           lease_status: string | null
-          lease_type: Database["public"]["Enums"]["LeaseType"]
+          lease_type: Database['public']['Enums']['LeaseType']
           payment_day: number
           property_id: string
           rent_amount: number
@@ -354,7 +348,7 @@ export type Database = {
           documents?: string[] | null
           end_date?: string | null
           lease_status?: string | null
-          lease_type: Database["public"]["Enums"]["LeaseType"]
+          lease_type: Database['public']['Enums']['LeaseType']
           payment_day: number
           property_id: string
           rent_amount: number
@@ -368,7 +362,7 @@ export type Database = {
           documents?: string[] | null
           end_date?: string | null
           lease_status?: string | null
-          lease_type?: Database["public"]["Enums"]["LeaseType"]
+          lease_type?: Database['public']['Enums']['LeaseType']
           payment_day?: number
           property_id?: string
           rent_amount?: number
@@ -378,11 +372,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "leases_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'leases_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -449,18 +443,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "maintenance_requests_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'maintenance_requests_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "maintenance_requests_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'maintenance_requests_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -541,7 +535,7 @@ export type Database = {
           message: string
           read_at: string | null
           title: string
-          type: Database["public"]["Enums"]["NotificationType"]
+          type: Database['public']['Enums']['NotificationType']
           updated_at: string | null
           user_id: string
         }
@@ -552,7 +546,7 @@ export type Database = {
           message: string
           read_at?: string | null
           title: string
-          type: Database["public"]["Enums"]["NotificationType"]
+          type: Database['public']['Enums']['NotificationType']
           updated_at?: string | null
           user_id: string
         }
@@ -563,7 +557,7 @@ export type Database = {
           message?: string
           read_at?: string | null
           title?: string
-          type?: Database["public"]["Enums"]["NotificationType"]
+          type?: Database['public']['Enums']['NotificationType']
           updated_at?: string | null
           user_id?: string
         }
@@ -689,25 +683,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "payments_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'payments_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "payments_tenant_id_fkey"
-            columns: ["tenant_id"]
+            foreignKeyName: 'payments_tenant_id_fkey'
+            columns: ['tenant_id']
             isOneToOne: false
-            referencedRelation: "tenants"
-            referencedColumns: ["id"]
+            referencedRelation: 'tenants'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "payments_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'payments_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -768,11 +762,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "properties_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'properties_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -905,11 +899,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "Session_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'Session_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1054,18 +1048,18 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "tenants_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'tenants_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "tenants_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'tenants_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1357,11 +1351,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "vendors_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'vendors_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1458,11 +1452,11 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "waitlist_events_email_fkey"
-            columns: ["email"]
+            foreignKeyName: 'waitlist_events_email_fkey'
+            columns: ['email']
             isOneToOne: false
-            referencedRelation: "waitlist"
-            referencedColumns: ["email"]
+            referencedRelation: 'waitlist'
+            referencedColumns: ['email']
           },
         ]
       }
@@ -1523,25 +1517,25 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "work_orders_property_id_fkey"
-            columns: ["property_id"]
+            foreignKeyName: 'work_orders_property_id_fkey'
+            columns: ['property_id']
             isOneToOne: false
-            referencedRelation: "properties"
-            referencedColumns: ["id"]
+            referencedRelation: 'properties'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "work_orders_user_id_fkey"
-            columns: ["user_id"]
+            foreignKeyName: 'work_orders_user_id_fkey'
+            columns: ['user_id']
             isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            referencedRelation: 'users'
+            referencedColumns: ['id']
           },
           {
-            foreignKeyName: "work_orders_vendor_id_fkey"
-            columns: ["vendor_id"]
+            foreignKeyName: 'work_orders_vendor_id_fkey'
+            columns: ['vendor_id']
             isOneToOne: false
-            referencedRelation: "vendors"
-            referencedColumns: ["id"]
+            referencedRelation: 'vendors'
+            referencedColumns: ['id']
           },
         ]
       }
@@ -1721,107 +1715,92 @@ export type Database = {
       }
     }
     Enums: {
-      ActivityType: "CREATE" | "UPDATE" | "DELETE" | "LOGIN" | "LOGOUT"
+      ActivityType: 'CREATE' | 'UPDATE' | 'DELETE' | 'LOGIN' | 'LOGOUT'
       AuditAction:
-        | "CREATE"
-        | "UPDATE"
-        | "DELETE"
-        | "LOGIN"
-        | "LOGOUT"
-        | "ADMIN_ACCESS"
-        | "SETTINGS_CHANGE"
-        | "PASSWORD_RESET"
-        | "EMAIL_CHANGE"
-        | "ROLE_CHANGE"
+        | 'CREATE'
+        | 'UPDATE'
+        | 'DELETE'
+        | 'LOGIN'
+        | 'LOGOUT'
+        | 'ADMIN_ACCESS'
+        | 'SETTINGS_CHANGE'
+        | 'PASSWORD_RESET'
+        | 'EMAIL_CHANGE'
+        | 'ROLE_CHANGE'
       EntityType:
-        | "USER"
-        | "PROPERTY"
-        | "TENANT"
-        | "LEASE"
-        | "PAYMENT"
-        | "MAINTENANCE"
-        | "DOCUMENT"
-        | "SETTINGS"
-        | "EMAIL_TEMPLATE"
-        | "ROUTE"
-      ImageJobPriority: "LOW" | "MEDIUM" | "HIGH"
-      ImageJobStatus: "PENDING" | "PROCESSING" | "COMPLETED" | "FAILED"
-      InvoiceStatus: "DRAFT" | "PENDING" | "PAID" | "OVERDUE" | "CANCELLED"
-      InvoiceTemplateType: "STANDARD" | "CUSTOM"
-      LeaseType: "FIXED_TERM" | "MONTH_TO_MONTH" | "WEEKLY" | "YEARLY"
-      MessageStatus: "SENT" | "DELIVERED" | "READ" | "FAILED"
-      NotificationStatus: "UNREAD" | "READ" | "ARCHIVED"
-      NotificationType:
-        | "SYSTEM"
-        | "MAINTENANCE"
-        | "PAYMENT"
-        | "LEASE"
-        | "MESSAGE"
-        | "ALERT"
-      PaymentMethod:
-        | "CASH"
-        | "CHECK"
-        | "CREDIT_CARD"
-        | "BANK_TRANSFER"
-        | "OTHER"
+        | 'USER'
+        | 'PROPERTY'
+        | 'TENANT'
+        | 'LEASE'
+        | 'PAYMENT'
+        | 'MAINTENANCE'
+        | 'DOCUMENT'
+        | 'SETTINGS'
+        | 'EMAIL_TEMPLATE'
+        | 'ROUTE'
+      ImageJobPriority: 'LOW' | 'MEDIUM' | 'HIGH'
+      ImageJobStatus: 'PENDING' | 'PROCESSING' | 'COMPLETED' | 'FAILED'
+      InvoiceStatus: 'DRAFT' | 'PENDING' | 'PAID' | 'OVERDUE' | 'CANCELLED'
+      InvoiceTemplateType: 'STANDARD' | 'CUSTOM'
+      LeaseType: 'FIXED_TERM' | 'MONTH_TO_MONTH' | 'WEEKLY' | 'YEARLY'
+      MessageStatus: 'SENT' | 'DELIVERED' | 'READ' | 'FAILED'
+      NotificationStatus: 'UNREAD' | 'READ' | 'ARCHIVED'
+      NotificationType: 'SYSTEM' | 'MAINTENANCE' | 'PAYMENT' | 'LEASE' | 'MESSAGE' | 'ALERT'
+      PaymentMethod: 'CASH' | 'CHECK' | 'CREDIT_CARD' | 'BANK_TRANSFER' | 'OTHER'
       PaymentStatus:
-        | "PENDING"
-        | "PAID"
-        | "COMPLETED"
-        | "FAILED"
-        | "CANCELLED"
-        | "REFUNDED"
-        | "OVERDUE"
-        | "LATE"
-        | "PARTIAL"
+        | 'PENDING'
+        | 'PAID'
+        | 'COMPLETED'
+        | 'FAILED'
+        | 'CANCELLED'
+        | 'REFUNDED'
+        | 'OVERDUE'
+        | 'LATE'
+        | 'PARTIAL'
       PaymentType:
-        | "RENT"
-        | "DEPOSIT"
-        | "SUBSCRIPTION"
-        | "LATE_FEE"
-        | "MAINTENANCE"
-        | "UTILITIES"
-        | "SECURITY_DEPOSIT"
-        | "OTHER"
+        | 'RENT'
+        | 'DEPOSIT'
+        | 'SUBSCRIPTION'
+        | 'LATE_FEE'
+        | 'MAINTENANCE'
+        | 'UTILITIES'
+        | 'SECURITY_DEPOSIT'
+        | 'OTHER'
       PropertyStatus:
-        | "AVAILABLE"
-        | "OCCUPIED"
-        | "VACANT"
-        | "MAINTENANCE"
-        | "RENOVATION"
-        | "OFF_MARKET"
+        | 'AVAILABLE'
+        | 'OCCUPIED'
+        | 'VACANT'
+        | 'MAINTENANCE'
+        | 'RENOVATION'
+        | 'OFF_MARKET'
       PropertyType:
-        | "SINGLE_FAMILY"
-        | "MULTI_FAMILY"
-        | "APARTMENT"
-        | "CONDO"
-        | "TOWNHOUSE"
-        | "COMMERCIAL"
-        | "INDUSTRIAL"
-        | "LAND"
-      RequestStatus: "PENDING" | "APPROVED" | "REJECTED"
+        | 'SINGLE_FAMILY'
+        | 'MULTI_FAMILY'
+        | 'APARTMENT'
+        | 'CONDO'
+        | 'TOWNHOUSE'
+        | 'COMMERCIAL'
+        | 'INDUSTRIAL'
+        | 'LAND'
+      RequestStatus: 'PENDING' | 'APPROVED' | 'REJECTED'
       SubscriptionStatus:
-        | "ACTIVE"
-        | "PAST_DUE"
-        | "CANCELLED"
-        | "INCOMPLETE"
-        | "INCOMPLETE_EXPIRED"
-        | "TRIALING"
-        | "UNPAID"
-      TenantStatus: "ACTIVE" | "INACTIVE" | "PENDING" | "REJECTED"
-      ToolType:
-        | "PROPERTY_MANAGER"
-        | "PROJECT_MANAGER"
-        | "IMAGE_OPTIMIZER"
-        | "DOCUMENT_MANAGER"
+        | 'ACTIVE'
+        | 'PAST_DUE'
+        | 'CANCELLED'
+        | 'INCOMPLETE'
+        | 'INCOMPLETE_EXPIRED'
+        | 'TRIALING'
+        | 'UNPAID'
+      TenantStatus: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'REJECTED'
+      ToolType: 'PROPERTY_MANAGER' | 'PROJECT_MANAGER' | 'IMAGE_OPTIMIZER' | 'DOCUMENT_MANAGER'
       UserRole:
-        | "SUPER_ADMIN"
-        | "ADMIN"
-        | "PROPERTY_MANAGER"
-        | "PROPERTY_OWNER"
-        | "MAINTENANCE"
-        | "TENANT"
-        | "USER"
+        | 'SUPER_ADMIN'
+        | 'ADMIN'
+        | 'PROPERTY_MANAGER'
+        | 'PROPERTY_OWNER'
+        | 'MAINTENANCE'
+        | 'TENANT'
+        | 'USER'
     }
     CompositeTypes: {
       [_ in never]: never
@@ -1829,27 +1808,25 @@ export type Database = {
   }
 }
 
-type PublicSchema = Database[Extract<keyof Database, "public">]
+type PublicSchema = Database[Extract<keyof Database, 'public'>]
 
 export type Tables<
   PublicTableNameOrOptions extends
-    | keyof (PublicSchema["Tables"] & PublicSchema["Views"])
+    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
     | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-        Database[PublicTableNameOrOptions["schema"]]["Views"])
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+        Database[PublicTableNameOrOptions['schema']]['Views'])
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? (Database[PublicTableNameOrOptions["schema"]]["Tables"] &
-      Database[PublicTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+  ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
+      Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
       Row: infer R
     }
     ? R
     : never
-  : PublicTableNameOrOptions extends keyof (PublicSchema["Tables"] &
-        PublicSchema["Views"])
-    ? (PublicSchema["Tables"] &
-        PublicSchema["Views"])[PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] & PublicSchema['Views'])
+    ? (PublicSchema['Tables'] & PublicSchema['Views'])[PublicTableNameOrOptions] extends {
         Row: infer R
       }
       ? R
@@ -1857,20 +1834,18 @@ export type Tables<
     : never
 
 export type TablesInsert<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
     }
     ? I
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
         Insert: infer I
       }
       ? I
@@ -1878,20 +1853,18 @@ export type TablesInsert<
     : never
 
 export type TablesUpdate<
-  PublicTableNameOrOptions extends
-    | keyof PublicSchema["Tables"]
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicTableNameOrOptions["schema"]]["Tables"]
+    ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+  ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
     }
     ? U
     : never
-  : PublicTableNameOrOptions extends keyof PublicSchema["Tables"]
-    ? PublicSchema["Tables"][PublicTableNameOrOptions] extends {
+  : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
+    ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
         Update: infer U
       }
       ? U
@@ -1899,29 +1872,27 @@ export type TablesUpdate<
     : never
 
 export type Enums<
-  PublicEnumNameOrOptions extends
-    | keyof PublicSchema["Enums"]
-    | { schema: keyof Database },
+  PublicEnumNameOrOptions extends keyof PublicSchema['Enums'] | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
-    ? keyof Database[PublicEnumNameOrOptions["schema"]]["Enums"]
+    ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
     : never = never,
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicEnumNameOrOptions["schema"]]["Enums"][EnumName]
-  : PublicEnumNameOrOptions extends keyof PublicSchema["Enums"]
-    ? PublicSchema["Enums"][PublicEnumNameOrOptions]
+  ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
+  : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
+    ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never
 
 export type CompositeTypes<
   PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema["CompositeTypes"]
+    | keyof PublicSchema['CompositeTypes']
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database
   }
-    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
     : never = never,
 > = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema["CompositeTypes"]
-    ? PublicSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
+    ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
     : never

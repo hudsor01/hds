@@ -1,28 +1,15 @@
-'use client';
+'use client'
 
-import type {
-  WebhookEventType,
-  WebhookLog,
-  WebhookPayload,
-} from '@/types/webhooks';
-import {
-  Button,
-  Chip,
-  Dialog,
-  DialogContent,
-  DialogTitle,
-} from '@mui/material';
-import { DataGrid, GridToolbar } from '@mui/x-data-grid';
-import { useState } from 'react';
+import type { WebhookEventType, WebhookLog, WebhookPayload } from '@/types/webhooks'
+import { Button, Chip, Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { DataGrid, GridToolbar } from '@mui/x-data-grid'
+import { useState } from 'react'
 
 interface WebhookLogGridProps {
-  logs: WebhookLog[];
+  logs: WebhookLog[]
 }
 
-const EVENT_TYPE_COLORS: Record<
-  string,
-  'info' | 'success' | 'warning' | 'error'
-> = {
+const EVENT_TYPE_COLORS: Record<string, 'info' | 'success' | 'warning' | 'error'> = {
   'user.created': 'success',
   'user.updated': 'info',
   'user.deleted': 'error',
@@ -31,13 +18,11 @@ const EVENT_TYPE_COLORS: Record<
   'organization.created': 'success',
   'organization.updated': 'info',
   'organization.deleted': 'error',
-};
+}
 
 export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
-  const [selectedPayload, setSelectedPayload] = useState<WebhookPayload | null>(
-    null,
-  );
-  const [isModalOpen, setModalOpen] = useState(false);
+  const [selectedPayload, setSelectedPayload] = useState<WebhookPayload | null>(null)
+  const [isModalOpen, setModalOpen] = useState(false)
 
   return (
     <>
@@ -51,9 +36,7 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
             renderCell: ({ value }) => (
               <Chip
                 label={value}
-                color={
-                  EVENT_TYPE_COLORS[value as WebhookEventType] || 'default'
-                }
+                color={EVENT_TYPE_COLORS[value as WebhookEventType] || 'default'}
                 size="small"
               />
             ),
@@ -62,8 +45,7 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
             field: 'created_at',
             headerName: 'Time',
             width: 200,
-            valueFormatter: ({ value }) =>
-              new Date(value as string).toLocaleString(),
+            valueFormatter: ({ value }) => new Date(value as string).toLocaleString(),
           },
           {
             field: 'success',
@@ -86,8 +68,8 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
                 variant="outlined"
                 size="small"
                 onClick={() => {
-                  setSelectedPayload(JSON.parse(value as string));
-                  setModalOpen(true);
+                  setSelectedPayload(JSON.parse(value as string))
+                  setModalOpen(true)
                 }}
               >
                 View Payload
@@ -113,12 +95,7 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
         }}
       />
 
-      <Dialog
-        open={isModalOpen}
-        onClose={() => setModalOpen(false)}
-        maxWidth="md"
-        fullWidth
-      >
+      <Dialog open={isModalOpen} onClose={() => setModalOpen(false)} maxWidth="md" fullWidth>
         <DialogTitle>Webhook Payload</DialogTitle>
         <DialogContent>
           <pre className="overflow-auto rounded-md bg-gray-50 p-4">
@@ -127,5 +104,5 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
         </DialogContent>
       </Dialog>
     </>
-  );
+  )
 }

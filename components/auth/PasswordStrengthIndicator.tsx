@@ -1,49 +1,40 @@
-'use client';
+'use client'
 
-import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 
 interface PasswordStrengthProps {
-  password: string;
+  password: string
 }
 
-export function PasswordStrengthIndicator({
-  password,
-}: PasswordStrengthProps): React.ReactElement {
-  const [strength, setStrength] = useState(0);
-  const [feedback, setFeedback] = useState('');
+export function PasswordStrengthIndicator({ password }: PasswordStrengthProps): React.ReactElement {
+  const [strength, setStrength] = useState(0)
+  const [feedback, setFeedback] = useState('')
 
   useEffect(() => {
     const calculateStrength = (): number => {
-      let score = 0;
-      if (!password) return 0;
+      let score = 0
+      if (!password) return 0
 
       // Length check
-      if (password.length >= 8) score += 1;
-      if (password.length >= 12) score += 1;
+      if (password.length >= 8) score += 1
+      if (password.length >= 12) score += 1
 
       // Character type checks
-      if (/[A-Z]/.test(password)) score += 1;
-      if (/[0-9]/.test(password)) score += 1;
-      if (/[^A-Za-z0-9]/.test(password)) score += 1;
+      if (/[A-Z]/.test(password)) score += 1
+      if (/[0-9]/.test(password)) score += 1
+      if (/[^A-Za-z0-9]/.test(password)) score += 1
 
-      return score;
-    };
+      return score
+    }
 
-    const newStrength = calculateStrength();
-    setStrength(newStrength);
+    const newStrength = calculateStrength()
+    setStrength(newStrength)
 
     // Set feedback based on strength
-    const feedbackMessages = [
-      'Very weak',
-      'Weak',
-      'Fair',
-      'Good',
-      'Strong',
-      'Very strong',
-    ];
-    setFeedback(feedbackMessages[newStrength] || 'Very weak');
-  }, [password]);
+    const feedbackMessages = ['Very weak', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong']
+    setFeedback(feedbackMessages[newStrength] || 'Very weak')
+  }, [password])
 
   const strengthColor = [
     'bg-red-500',
@@ -52,7 +43,7 @@ export function PasswordStrengthIndicator({
     'bg-blue-500',
     'bg-green-500',
     'bg-green-600',
-  ][strength];
+  ][strength]
 
   return (
     <div className="space-y-2">
@@ -73,5 +64,5 @@ export function PasswordStrengthIndicator({
         Password strength: {feedback}
       </motion.p>
     </div>
-  );
+  )
 }

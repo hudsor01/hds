@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { Card } from 'components/ui/cards/card';
-import { Skeleton } from 'components/ui/skeleton';
+import { Card } from 'components/ui/cards/card'
+import { Skeleton } from 'components/ui/skeleton'
 
 export function DashboardSkeleton() {
   return (
@@ -61,5 +61,5 @@ export function DashboardSkeleton() {
         </div>
       </div>
     </div>
-  );
+  )
 }

@@ -1,39 +1,39 @@
-import { FormInput } from '@/components/forms/form-fields';
-import { FormContainer } from '@/components/forms/form-provider';
-import { signInSchema } from '@/lib/validations/schemas';
+import { FormInput } from '@/components/forms/form-fields'
+import { FormContainer } from '@/components/forms/form-provider'
+import { signInSchema } from '@/lib/validations/schemas'
 
-import { Button, Stack } from '@mui/material';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
-import { z } from 'zod';
+import { Button, Stack } from '@mui/material'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
+import { z } from 'zod'
 
-type SignInFormData = z.infer<typeof signInSchema>;
+type SignInFormData = z.infer<typeof signInSchema>
 
 export function LoginForm() {
-  const { signIn } = useSignIn();
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
+  const { signIn } = useSignIn()
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (data: SignInFormData) => {
-    if (!signIn) return;
+    if (!signIn) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const result = await signIn.create({
         identifier: data.email,
         password: data.password,
-      });
+      })
 
       if (result.status === 'complete') {
-        router.push('/dashboard');
+        router.push('/dashboard')
       }
     } catch (error) {
-      console.error('Error signing in:', error);
-      throw new Error('Failed to sign in');
+      console.error('Error signing in:', error)
+      throw new Error('Failed to sign in')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <FormContainer schema={signInSchema} onSubmit={handleSubmit}>
@@ -57,5 +57,5 @@ export function LoginForm() {
         </Button>
       </Stack>
     </FormContainer>
-  );
+  )
 }

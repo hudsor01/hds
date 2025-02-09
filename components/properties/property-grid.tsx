@@ -1,23 +1,23 @@
 // components/properties/property-grid.tsx
-import { formatCurrency } from '@/utils/format';
-import { type PropertyRow } from '@/types/property';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import Chip from '@mui/material/Chip';
-import Grid from '@mui/material/Grid';
-import IconButton from '@mui/material/IconButton';
-import Menu from '@mui/material/Menu';
-import MenuItem from '@mui/material/MenuItem';
-import Skeleton from '@mui/material/Skeleton';
-import Typography from '@mui/material/Typography';
-import { useState } from 'react';
+import { formatCurrency } from '@/utils/format'
+import { type PropertyRow } from '@/types/property'
+import MoreVertIcon from '@mui/icons-material/MoreVert'
+import Box from '@mui/material/Box'
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardMedia from '@mui/material/CardMedia'
+import Chip from '@mui/material/Chip'
+import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
+import Menu from '@mui/material/Menu'
+import MenuItem from '@mui/material/MenuItem'
+import Skeleton from '@mui/material/Skeleton'
+import Typography from '@mui/material/Typography'
+import { useState } from 'react'
 
 interface PropertyGridProps {
-  properties: PropertyRow[];
-  isLoading: boolean;
+  properties: PropertyRow[]
+  isLoading: boolean
 }
 
 export function PropertyGrid({ properties, isLoading }: PropertyGridProps) {
@@ -30,7 +30,7 @@ export function PropertyGrid({ properties, isLoading }: PropertyGridProps) {
           </Grid>
         ))}
       </Grid>
-    );
+    )
   }
 
   return (
@@ -41,19 +41,19 @@ export function PropertyGrid({ properties, isLoading }: PropertyGridProps) {
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }
 
 function PropertyCard({ property }: { property: PropertyRow }) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
 
   const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
+    setAnchorEl(event.currentTarget)
+  }
 
   const handleCloseMenu = () => {
-    setAnchorEl(null);
-  };
+    setAnchorEl(null)
+  }
 
   return (
     <Card sx={{ height: '100%' }}>
@@ -114,7 +114,7 @@ function PropertyCard({ property }: { property: PropertyRow }) {
       <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
         <MenuItem
           onClick={() => {
-            handleCloseMenu();
+            handleCloseMenu()
             // Add edit handler
           }}
         >
@@ -122,7 +122,7 @@ function PropertyCard({ property }: { property: PropertyRow }) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleCloseMenu();
+            handleCloseMenu()
             // Add view details handler
           }}
         >
@@ -130,7 +130,7 @@ function PropertyCard({ property }: { property: PropertyRow }) {
         </MenuItem>
         <MenuItem
           onClick={() => {
-            handleCloseMenu();
+            handleCloseMenu()
             // Add manage tenants handler
           }}
         >
@@ -138,7 +138,7 @@ function PropertyCard({ property }: { property: PropertyRow }) {
         </MenuItem>
       </Menu>
     </Card>
-  );
+  )
 }
 
 function PropertyCardSkeleton() {
@@ -157,5 +157,5 @@ function PropertyCardSkeleton() {
         </Box>
       </CardContent>
     </Card>
-  );
+  )
 }

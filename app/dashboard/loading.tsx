@@ -1,7 +1,7 @@
-'use client';
+'use client'
 
-import { Box, Card, CardContent, Grid, Skeleton, Stack } from '@mui/material';
-import { motion } from 'framer-motion';
+import { Box, Card, CardContent, Grid, Skeleton, Stack } from '@mui/material'
+import { motion } from 'framer-motion'
 
 export function LoadingSkeleton() {
   return (
@@ -28,16 +28,12 @@ export function LoadingSkeleton() {
         <Skeleton variant="rectangular" height={200} />
       </div>
     </div>
-  );
+  )
 }
 
 export default function DashboardLoading() {
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
       {/* Welcome Text Skeleton */}
       <Stack spacing={1} mb={4}>
         <Skeleton variant="text" width={300} height={40} />
@@ -95,31 +91,17 @@ export default function DashboardLoading() {
           <Card>
             <Box sx={{ p: 3 }}>
               <Stack spacing={2}>
-                <Stack
-                  direction="row"
-                  justifyContent="space-between"
-                  alignItems="center"
-                >
+                <Stack direction="row" justifyContent="space-between" alignItems="center">
                   <Skeleton variant="text" width={150} height={32} />
                   <Stack direction="row" spacing={1}>
                     {[...Array(4)].map((_, index) => (
-                      <Skeleton
-                        key={index}
-                        variant="rounded"
-                        width={80}
-                        height={32}
-                      />
+                      <Skeleton key={index} variant="rounded" width={80} height={32} />
                     ))}
                   </Stack>
                 </Stack>
                 <Stack spacing={2}>
                   {[...Array(4)].map((_, index) => (
-                    <Stack
-                      key={index}
-                      direction="row"
-                      spacing={2}
-                      alignItems="center"
-                    >
+                    <Stack key={index} direction="row" spacing={2} alignItems="center">
                       <Skeleton variant="circular" width={40} height={40} />
                       <Stack spacing={1} flex={1}>
                         <Skeleton variant="text" width="60%" height={24} />
@@ -135,5 +117,5 @@ export default function DashboardLoading() {
         </Grid>
       </Grid>
     </motion.div>
-  );
+  )
 }

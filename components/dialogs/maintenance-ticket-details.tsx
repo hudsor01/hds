@@ -1,25 +1,25 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button'
 import type {
   MaintenanceStatus,
   MaintenanceRequestWithRelations,
   UpdateMaintenanceRequest,
   Comment,
-} from '@/types/maintenance_requests';
-import type { SelectChangeEvent } from '@mui/material';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { Label } from '@/components/ui/label';
-import { Select, SelectItem } from '@/components/ui/select';
-import Textarea from '@/components/ui/textarea';
-import { useState } from 'react';
-import { Clock, MessageSquare } from 'react-feather';
+} from '@/types/maintenance_requests'
+import type { SelectChangeEvent } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { Label } from '@/components/ui/label'
+import { Select, SelectItem } from '@/components/ui/select'
+import Textarea from '@/components/ui/textarea'
+import { useState } from 'react'
+import { Clock, MessageSquare } from 'react-feather'
 
 interface MaintenanceTicketDetailsProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  ticket: MaintenanceRequestWithRelations;
-  onUpdateAction: (data: UpdateMaintenanceRequest) => Promise<void>;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  ticket: MaintenanceRequestWithRelations
+  onUpdateAction: (data: UpdateMaintenanceRequest) => Promise<void>
 }
 
 export function MaintenanceTicketDetails({
@@ -28,63 +28,54 @@ export function MaintenanceTicketDetails({
   ticket,
   onUpdateAction,
 }: MaintenanceTicketDetailsProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [status, setStatus] = useState<MaintenanceStatus>(ticket.status);
-  const [comment, setComment] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [status, setStatus] = useState<MaintenanceStatus>(ticket.status)
+  const [comment, setComment] = useState('')
 
   const handleStatusChange = async (event: SelectChangeEvent<unknown>) => {
-    const newStatus = event.target.value as MaintenanceStatus;
-    setStatus(newStatus);
-    setIsLoading(true);
+    const newStatus = event.target.value as MaintenanceStatus
+    setStatus(newStatus)
+    setIsLoading(true)
 
     try {
       await onUpdateAction({
         id: ticket.id,
         status: newStatus,
-      });
+      })
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleAddComment = async () => {
-    if (!comment.trim()) return;
+    if (!comment.trim()) return
 
-    setIsLoading(true);
+    setIsLoading(true)
     try {
       const newComment: Comment = {
         content: comment,
         created_at: new Date().toISOString(),
-      };
+      }
 
       await onUpdateAction({
         id: ticket.id,
         comments: [...(ticket.comments || []), newComment],
-      } as UpdateMaintenanceRequest);
-      setComment('');
+      } as UpdateMaintenanceRequest)
+      setComment('')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => onOpenChangeAction(false)}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={() => onOpenChangeAction(false)} maxWidth="md" fullWidth>
       <DialogTitle>Maintenance Ticket Details</DialogTitle>
       <DialogContent>
         <div className="space-y-6">
           {/* Status */}
           <div className="space-y-2">
             <Label>Status</Label>
-            <Select
-              value={status}
-              onChange={handleStatusChange}
-              disabled={isLoading}
-            >
+            <Select value={status} onChange={handleStatusChange} disabled={isLoading}>
               <SelectItem value="pending">Pending</SelectItem>
               <SelectItem value="in_progress">In Progress</SelectItem>
               <SelectItem value="completed">Completed</SelectItem>
@@ -136,10 +127,7 @@ export function MaintenanceTicketDetails({
                   placeholder="Type your comment..."
                   disabled={isLoading}
                 />
-                <Button
-                  onClick={handleAddComment}
-                  disabled={isLoading || !comment.trim()}
-                >
+                <Button onClick={handleAddComment} disabled={isLoading || !comment.trim()}>
                   <MessageSquare className="mr-2 h-4 w-4" />
                   Add
                 </Button>
@@ -149,5 +137,5 @@ export function MaintenanceTicketDetails({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

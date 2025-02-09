@@ -1,25 +1,25 @@
-import { StatusBadge } from '@/components/ui/status-badge';
-import { Button } from '@mui/material';
+import { StatusBadge } from '@/components/ui/status-badge'
+import { Button } from '@mui/material'
 import {
   DataGrid,
   type GridColDef,
   type GridFilterModel,
   type GridPaginationModel,
   type GridSortModel,
-} from '@mui/x-data-grid';
-import { Edit, Trash } from 'react-feather';
+} from '@mui/x-data-grid'
+import { Edit, Trash } from 'react-feather'
 
 interface DataTableProps {
-  columns: GridColDef[];
-  rows: any[];
-  loading?: boolean;
-  onEdit?: (row: any) => void;
-  onDelete?: (row: any) => void;
-  onSortModelChange?: (model: GridSortModel) => void;
-  onFilterModelChange?: (model: GridFilterModel) => void;
-  onPaginationModelChange?: (model: GridPaginationModel) => void;
-  paginationModel?: GridPaginationModel;
-  rowCount?: number;
+  columns: GridColDef[]
+  rows: any[]
+  loading?: boolean
+  onEdit?: (row: any) => void
+  onDelete?: (row: any) => void
+  onSortModelChange?: (model: GridSortModel) => void
+  onFilterModelChange?: (model: GridFilterModel) => void
+  onPaginationModelChange?: (model: GridPaginationModel) => void
+  paginationModel?: GridPaginationModel
+  rowCount?: number
 }
 
 export function DataTable({
@@ -66,7 +66,7 @@ export function DataTable({
         </div>
       ),
     },
-  ];
+  ]
 
   return (
     <div className="h-[600px] w-full">
@@ -92,26 +92,26 @@ export function DataTable({
         }}
       />
     </div>
-  );
+  )
 }
 
 // Helper function to render status badges in table cells
 export const renderStatusCell = (params: any) => {
-  return <StatusBadge status={params.value.toLowerCase()} />;
-};
+  return <StatusBadge status={params.value.toLowerCase()} />
+}
 
 // Helper function to render currency values
 export const renderCurrencyCell = (params: any) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
-  }).format(params.value);
-};
+  }).format(params.value)
+}
 
 // Helper function to render dates
 export const renderDateCell = (params: any) => {
   return new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short',
-  }).format(new Date(params.value));
-};
+  }).format(new Date(params.value))
+}

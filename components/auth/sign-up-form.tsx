@@ -1,60 +1,53 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import {
-  Alert,
-  Box,
-  Button,
-  CircularProgress,
-  TextField,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
+import { useState } from 'react'
+import { Alert, Box, Button, CircularProgress, TextField, Typography } from '@mui/material'
+import Link from 'next/link'
 
 interface SignUpFormProps {
-  redirectTo?: string;
+  redirectTo?: string
 }
 
 export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const [success, setSuccess] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     name: '',
-  });
+  })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
+    e.preventDefault()
+    setIsLoading(true)
+    setError(null)
 
     try {
       const response = await fetch('/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
-      });
+      })
 
-      const data = await response.json();
+      const data = await response.json()
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to sign up');
+        throw new Error(data.error || 'Failed to sign up')
       }
 
-      setSuccess(true);
+      setSuccess(true)
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : 'An error occurred')
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+    const { name, value } = e.target
+    setFormData((prev) => ({ ...prev, [name]: value }))
+  }
 
   if (success) {
     return (
@@ -63,11 +56,10 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
           Check your email
         </Typography>
         <Typography color="text.secondary">
-          We've sent you a confirmation link. Please check your email to
-          complete your registration.
+          We've sent you a confirmation link. Please check your email to complete your registration.
         </Typography>
       </Box>
-    );
+    )
   }
 
   return (
@@ -89,13 +81,7 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
         </Alert>
       )}
 
-      <TextField
-        label="Name"
-        name="name"
-        value={formData.name}
-        onChange={handleChange}
-        fullWidth
-      />
+      <TextField label="Name" name="name" value={formData.name} onChange={handleChange} fullWidth />
 
       <TextField
         label="Email"
@@ -136,14 +122,11 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
       <Box sx={{ mt: 2, textAlign: 'center' }}>
         <Typography variant="body2" color="text.secondary">
           Already have an account?{' '}
-          <Link
-            href="/sign-in"
-            style={{ color: '#007FFF', textDecoration: 'none' }}
-          >
+          <Link href="/sign-in" style={{ color: '#007FFF', textDecoration: 'none' }}>
             Sign in
           </Link>
         </Typography>
       </Box>
     </Box>
-  );
+  )
 }

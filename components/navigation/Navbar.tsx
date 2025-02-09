@@ -1,18 +1,10 @@
-'use client';
+'use client'
 
-import { gradientStyles } from '@/utils/styles';
-import {
-  AppBar,
-  Box,
-  Button,
-  Container,
-  Stack,
-  Toolbar,
-  Typography,
-} from '@mui/material';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LogIn } from 'react-feather';
+import { gradientStyles } from '@/utils/styles'
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LogIn } from 'react-feather'
 
 const publicNavItems = [
   { name: 'Home', href: '/' },
@@ -20,11 +12,11 @@ const publicNavItems = [
   { name: 'Pricing', href: '/pricing' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
-];
+]
 
 export default function Navbar() {
-  const { isSignedIn, isLoaded } = useAuth();
-  const pathname = usePathname();
+  const { isSignedIn, isLoaded } = useAuth()
+  const pathname = usePathname()
 
   return (
     <AppBar
@@ -63,15 +55,10 @@ export default function Navbar() {
             }}
           >
             {publicNavItems.map((item) => (
-              <Link
-                key={item.name}
-                href={item.href}
-                style={{ textDecoration: 'none' }}
-              >
+              <Link key={item.name} href={item.href} style={{ textDecoration: 'none' }}>
                 <Button
                   sx={{
-                    color:
-                      pathname === item.href ? 'primary.main' : 'text.primary',
+                    color: pathname === item.href ? 'primary.main' : 'text.primary',
                     fontWeight: pathname === item.href ? 600 : 400,
                     '&:hover': {
                       color: 'primary.main',
@@ -86,9 +73,7 @@ export default function Navbar() {
           </Stack>
 
           {/* Right Side - Auth/Dashboard */}
-          <Box
-            sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}
-          >
+          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
             {isLoaded &&
               (isSignedIn ? (
                 <>
@@ -134,5 +119,5 @@ export default function Navbar() {
         </Toolbar>
       </Container>
     </AppBar>
-  );
+  )
 }

@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
+import { Button } from '@/components/ui/buttons/button'
 
 export function OauthSignIn() {
   return (
@@ -10,5 +10,5 @@ export function OauthSignIn() {
         Continue with Github
       </Button>
     </div>
-  );
+  )
 }

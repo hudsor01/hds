@@ -1,20 +1,17 @@
-import { prisma } from '@/lib/prisma/prisma';
-import { createClient } from '@/utils/supabase/server';
-import { NextRequest, NextResponse } from 'next/server';
+import { prisma } from '@/lib/prisma/prisma'
+import { createClient } from '@/utils/supabase/server'
+import { NextRequest, NextResponse } from 'next/server'
 
-export async function GET(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (error || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const lease = await prisma.leases.findUnique({
@@ -35,42 +32,35 @@ export async function GET(
         created_at: true,
         status: true,
       },
-    });
+    })
 
     if (!lease) {
-      return NextResponse.json({ error: 'Lease not found' }, { status: 404 });
+      return NextResponse.json({ error: 'Lease not found' }, { status: 404 })
     }
 
-    return NextResponse.json(lease);
+    return NextResponse.json(lease)
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error fetching lease' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error fetching lease' }, { status: 500 })
   }
 }
 
-export async function PATCH(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (error || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const json = await request.json();
+    const json = await request.json()
 
     // Ensure dates are in ISO format
-    if (json.start_date)
-      json.start_date = new Date(json.start_date).toISOString();
-    if (json.end_date) json.end_date = new Date(json.end_date).toISOString();
+    if (json.start_date) json.start_date = new Date(json.start_date).toISOString()
+    if (json.end_date) json.end_date = new Date(json.end_date).toISOString()
 
     const lease = await prisma.leases.update({
       where: {
@@ -91,43 +81,34 @@ export async function PATCH(
         created_at: true,
         status: true,
       },
-    });
+    })
 
-    return NextResponse.json(lease);
+    return NextResponse.json(lease)
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error updating lease' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error updating lease' }, { status: 500 })
   }
 }
 
-export async function DELETE(
-  request: NextRequest,
-  { params }: { params: { id: string } },
-) {
+export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient();
+    const supabase = await createClient()
     const {
       data: { user },
       error,
-    } = await supabase.auth.getUser();
+    } = await supabase.auth.getUser()
 
     if (error || !user) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     await prisma.leases.delete({
       where: {
         user_id: params.id,
       },
-    });
+    })
 
-    return new NextResponse(null, { status: 204 });
+    return new NextResponse(null, { status: 204 })
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Error deleting lease' },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Error deleting lease' }, { status: 500 })
   }
 }

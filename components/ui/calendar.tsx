@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import * as React from 'react';
-import { DayPicker } from 'react-day-picker';
-import { buttonVariants } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
+import * as React from 'react'
+import { DayPicker } from 'react-day-picker'
+import { buttonVariants } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 
-export type CalendarProps = React.ComponentProps<typeof DayPicker>;
+export type CalendarProps = React.ComponentProps<typeof DayPicker>
 
 export function Calendar({
   className,
@@ -23,7 +23,7 @@ export function Calendar({
       }}
       {...props}
     />
-  );
+  )
 }
 
-Calendar.displayName = 'Calendar';
+Calendar.displayName = 'Calendar'

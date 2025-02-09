@@ -1,12 +1,12 @@
-'use client';
+'use client'
 
-import { supabase, useUser } from '@/app/auth/lib/auth/config';
-import { PropertyDialog } from '@/components/properties/property-dialog';
-import type { Property, PropertyCardData } from '@/types/property';
-import AddIcon from '@mui/icons-material/Add';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import SearchIcon from '@mui/icons-material/Search';
+import { supabase, useUser } from '@/app/auth/lib/auth/config'
+import { PropertyDialog } from '@/components/properties/property-dialog'
+import type { Property, PropertyCardData } from '@/types/property'
+import AddIcon from '@mui/icons-material/Add'
+import DeleteIcon from '@mui/icons-material/Delete'
+import EditIcon from '@mui/icons-material/Edit'
+import SearchIcon from '@mui/icons-material/Search'
 import {
   Box,
   Button,
@@ -18,42 +18,38 @@ import {
   TextField,
   Tooltip,
   Typography,
-} from '@mui/material';
-import Grid from '@mui/material/Grid';
-import { alpha, useTheme } from '@mui/material/styles';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
-import { useEffect, useState } from 'react';
+} from '@mui/material'
+import Grid from '@mui/material/Grid'
+import { alpha, useTheme } from '@mui/material/styles'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import { useEffect, useState } from 'react'
 
 const containerVariants = {
   initial: { opacity: 0 },
   animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
-};
+}
 
 const itemVariants = {
   initial: { y: 20, opacity: 0 },
   animate: { y: 0, opacity: 1 },
-};
+}
 
 export default function PropertiesPage() {
-  const theme = useTheme();
-  const { user } = useUser();
-  const [properties, setProperties] = useState<PropertyCardData[]>([]);
-  const [search, setSearch] = useState('');
-  const [openDialog, setOpenDialog] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState<
-    PropertyCardData | undefined
-  >();
-  const [loading, setLoading] = useState(true);
+  const theme = useTheme()
+  const { user } = useUser()
+  const [properties, setProperties] = useState<PropertyCardData[]>([])
+  const [search, setSearch] = useState('')
+  const [openDialog, setOpenDialog] = useState(false)
+  const [selectedProperty, setSelectedProperty] = useState<PropertyCardData | undefined>()
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function fetchProperties() {
       try {
-        const { data, error } = await supabase
-          .from('properties')
-          .select('*, units(*)');
+        const { data, error } = await supabase.from('properties').select('*, units(*)')
 
-        if (error) throw error;
+        if (error) throw error
 
         if (data) {
           const transformedData: PropertyCardData[] = data.map((property) => ({
@@ -66,55 +62,52 @@ export default function PropertiesPage() {
             bedrooms: property.units[0]?.bedrooms || 0,
             bathrooms: property.units[0]?.bathrooms || 0,
             image: property.image_url || '/properties/default.jpg',
-          }));
-          setProperties(transformedData);
+          }))
+          setProperties(transformedData)
         }
       } catch (error) {
-        console.error('Error fetching properties:', error);
+        console.error('Error fetching properties:', error)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
     }
 
-    void fetchProperties();
-  }, []);
+    void fetchProperties()
+  }, [])
 
   const handleEdit = async (property: PropertyCardData) => {
-    setSelectedProperty(property);
-    setOpenDialog(true);
-  };
+    setSelectedProperty(property)
+    setOpenDialog(true)
+  }
 
-  const { remove: deleteProperty, loading: deleteLoading } =
-    useDashboardCrud<Property>({
-      table: 'properties',
-      onSuccess: () => {
-        setProperties((prev) =>
-          prev.filter((p) => p.id !== selectedProperty?.id),
-        );
-      },
-      onError: (error) => {
-        console.error('Error deleting property:', error);
-      },
-    });
+  const { remove: deleteProperty, loading: deleteLoading } = useDashboardCrud<Property>({
+    table: 'properties',
+    onSuccess: () => {
+      setProperties((prev) => prev.filter((p) => p.id !== selectedProperty?.id))
+    },
+    onError: (error) => {
+      console.error('Error deleting property:', error)
+    },
+  })
 
   const handleDelete = async (id: string) => {
     try {
-      await deleteProperty(id);
+      await deleteProperty(id)
     } catch (error) {
-      console.error('Error deleting property:', error);
+      console.error('Error deleting property:', error)
     }
-  };
+  }
 
   const filteredProperties = properties.filter(
     (property) =>
       property.title.toLowerCase().includes(search.toLowerCase()) ||
-      property.address.toLowerCase().includes(search.toLowerCase()),
-  );
+      property.address.toLowerCase().includes(search.toLowerCase())
+  )
 
   const convertToProperty = (cardData: PropertyCardData): Property => {
-    const [street, cityState] = cardData.address.split(',');
-    const [city, stateZip] = (cityState || '').trim().split(',');
-    const [state, zipCode] = (stateZip || '').trim().split(' ');
+    const [street, cityState] = cardData.address.split(',')
+    const [city, stateZip] = (cityState || '').trim().split(',')
+    const [state, zipCode] = (stateZip || '').trim().split(' ')
 
     return {
       id: cardData.id,
@@ -142,23 +135,17 @@ export default function PropertiesPage() {
       organization_id: '1', // Replace with actual organization ID
       createdAt: new Date(),
       updatedAt: new Date(),
-    };
-  };
+    }
+  }
 
   return (
-    <motion.div
-      variants={containerVariants}
-      initial="initial"
-      animate="animate"
-    >
+    <motion.div variants={containerVariants} initial="initial" animate="animate">
       {/* Header */}
       <Box sx={{ mb: 4 }}>
         <Typography variant="h4" gutterBottom>
           Properties
         </Typography>
-        <Typography color="text.secondary">
-          Manage your property portfolio
-        </Typography>
+        <Typography color="text.secondary">Manage your property portfolio</Typography>
       </Box>
 
       {/* Actions */}
@@ -185,8 +172,8 @@ export default function PropertiesPage() {
           variant="contained"
           startIcon={<AddIcon />}
           onClick={() => {
-            setSelectedProperty(undefined);
-            setOpenDialog(true);
+            setSelectedProperty(undefined)
+            setOpenDialog(true)
           }}
           sx={{ minWidth: 200 }}
         >
@@ -243,9 +230,7 @@ export default function PropertiesPage() {
                     />
                     <Chip
                       label={property.status}
-                      color={
-                        property.status === 'available' ? 'success' : 'primary'
-                      }
+                      color={property.status === 'available' ? 'success' : 'primary'}
                       sx={{
                         position: 'absolute',
                         top: 16,
@@ -260,39 +245,23 @@ export default function PropertiesPage() {
                     <Typography variant="subtitle1" noWrap paragraph>
                       {property.title}
                     </Typography>
-                    <Typography
-                      variant="body2"
-                      color="text.secondary"
-                      noWrap
-                      sx={{ mb: 2 }}
-                    >
+                    <Typography variant="body2" color="text.secondary" noWrap sx={{ mb: 2 }}>
                       {property.address}
                     </Typography>
 
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={3}
-                      sx={{ mb: 2 }}
-                    >
+                    <Stack direction="row" alignItems="center" spacing={3} sx={{ mb: 2 }}>
                       <Stack direction="row" alignItems="center" spacing={1}>
-                        <Typography variant="subtitle1">
-                          ${property.price}
-                        </Typography>
+                        <Typography variant="subtitle1">${property.price}</Typography>
                         <Typography variant="caption" color="text.secondary">
                           /month
                         </Typography>
                       </Stack>
                       <Stack direction="row" spacing={1}>
-                        <Typography variant="body2">
-                          {property.bedrooms} beds
-                        </Typography>
+                        <Typography variant="body2">{property.bedrooms} beds</Typography>
                         <Typography variant="body2" color="text.secondary">
                           •
                         </Typography>
-                        <Typography variant="body2">
-                          {property.bathrooms} baths
-                        </Typography>
+                        <Typography variant="body2">{property.bathrooms} baths</Typography>
                       </Stack>
                     </Stack>
 
@@ -303,11 +272,9 @@ export default function PropertiesPage() {
                           onClick={() => handleEdit(property)}
                           sx={{
                             color: 'primary.main',
-                            bgcolor: (theme) =>
-                              alpha(theme.palette.primary.main, 0.08),
+                            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
                             '&:hover': {
-                              bgcolor: (theme) =>
-                                alpha(theme.palette.primary.main, 0.16),
+                              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
                             },
                           }}
                         >
@@ -320,11 +287,9 @@ export default function PropertiesPage() {
                           onClick={() => handleDelete(property.id)}
                           sx={{
                             color: 'error.main',
-                            bgcolor: (theme) =>
-                              alpha(theme.palette.error.main, 0.08),
+                            bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
                             '&:hover': {
-                              bgcolor: (theme) =>
-                                alpha(theme.palette.error.main, 0.16),
+                              bgcolor: (theme) => alpha(theme.palette.error.main, 0.16),
                             },
                           }}
                         >
@@ -344,9 +309,7 @@ export default function PropertiesPage() {
       <PropertyDialog
         open={openDialog}
         onOpenChangeAction={setOpenDialog}
-        property={
-          selectedProperty ? convertToProperty(selectedProperty) : undefined
-        }
+        property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
         onSubmitAction={async (data) => {
           try {
             const { create, update } = useDashboardCrud<Property>({
@@ -363,8 +326,8 @@ export default function PropertiesPage() {
                             type: result.type,
                             status: result.status,
                           }
-                        : p,
-                    );
+                        : p
+                    )
                   }
                   return [
                     ...prev,
@@ -379,35 +342,35 @@ export default function PropertiesPage() {
                       bathrooms: data.units?.[0]?.bathrooms || 0,
                       image: '/properties/default.jpg',
                     },
-                  ];
-                });
-                setOpenDialog(false);
+                  ]
+                })
+                setOpenDialog(false)
               },
               onError: (error) => {
-                console.error('Error saving property:', error);
+                console.error('Error saving property:', error)
               },
-            });
+            })
 
             if (!user?.id) {
-              throw new Error('User not authenticated');
+              throw new Error('User not authenticated')
             }
 
             const propertyData = {
               ...data,
               owner_id: user.id,
               organization_id: user.id, // Using user.id as organization_id
-            } as const;
+            } as const
 
             if (selectedProperty) {
-              await update(selectedProperty.id, propertyData);
+              await update(selectedProperty.id, propertyData)
             } else {
-              await create(propertyData);
+              await create(propertyData)
             }
           } catch (error) {
-            console.error('Error saving property:', error);
+            console.error('Error saving property:', error)
           }
         }}
       />
     </motion.div>
-  );
+  )
 }

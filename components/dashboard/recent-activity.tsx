@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import type { RecentActivity } from '@/auth/lib/types/dashboard';
+import type { RecentActivity } from '@/auth/lib/types/dashboard'
 import {
   Box,
   Card,
@@ -13,20 +13,13 @@ import {
   Typography,
   alpha,
   useTheme,
-} from '@mui/material';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
-import {
-  AlertTriangle,
-  Clock,
-  DollarSign,
-  ExternalLink,
-  FileText,
-  User,
-} from 'react-feather';
+} from '@mui/material'
+import { motion } from 'framer-motion'
+import { useState } from 'react'
+import { AlertTriangle, Clock, DollarSign, ExternalLink, FileText, User } from 'react-feather'
 
 interface RecentActivityListProps {
-  activities: RecentActivity[];
+  activities: RecentActivity[]
 }
 
 const containerVariants = {
@@ -35,50 +28,46 @@ const containerVariants = {
     opacity: 1,
     transition: { staggerChildren: 0.05 },
   },
-};
+}
 
 const itemVariants = {
   hidden: { opacity: 0, x: -10 },
   show: { opacity: 1, x: 0 },
-};
+}
 
 export function RecentActivityList({ activities }: RecentActivityListProps) {
-  const theme = useTheme();
-  const [filter, setFilter] = useState<
-    'ALL' | 'APPLICATION' | 'MAINTENANCE' | 'PAYMENT'
-  >('ALL');
+  const theme = useTheme()
+  const [filter, setFilter] = useState<'ALL' | 'APPLICATION' | 'MAINTENANCE' | 'PAYMENT'>('ALL')
 
   const getActivityIcon = (type: RecentActivity['type']) => {
     switch (type) {
       case 'APPLICATION':
-        return User;
+        return User
       case 'MAINTENANCE':
-        return AlertTriangle;
+        return AlertTriangle
       case 'PAYMENT':
-        return DollarSign;
+        return DollarSign
       default:
-        return FileText;
+        return FileText
     }
-  };
+  }
 
-  const getStatusColor = (
-    status: RecentActivity['status'],
-  ): 'success' | 'warning' | 'info' => {
+  const getStatusColor = (status: RecentActivity['status']): 'success' | 'warning' | 'info' => {
     switch (status) {
       case 'COMPLETED':
-        return 'success';
+        return 'success'
       case 'IN_PROGRESS':
-        return 'warning';
+        return 'warning'
       case 'PENDING':
-        return 'info';
+        return 'info'
       default:
-        return 'info';
+        return 'info'
     }
-  };
+  }
 
   const filteredActivities = activities.filter(
-    (activity) => filter === 'ALL' || activity.type === filter,
-  );
+    (activity) => filter === 'ALL' || activity.type === filter
+  )
 
   return (
     <Card
@@ -89,12 +78,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
       }}
     >
       <Box sx={{ p: { xs: 2, sm: 3 } }}>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          sx={{ mb: 3 }}
-        >
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ mb: 3 }}>
           <Typography
             variant="h6"
             sx={{
@@ -154,11 +138,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
           </Box>
         </Stack>
 
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="show"
-        >
+        <motion.div variants={containerVariants} initial="hidden" animate="show">
           {filteredActivities.length === 0 ? (
             <Box
               sx={{
@@ -179,8 +159,8 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
           ) : (
             <Stack spacing={2}>
               {filteredActivities.map((activity) => {
-                const Icon = getActivityIcon(activity.type);
-                const statusColor = getStatusColor(activity.status);
+                const Icon = getActivityIcon(activity.type)
+                const statusColor = getStatusColor(activity.status)
 
                 return (
                   <motion.div key={activity.id} variants={itemVariants}>
@@ -191,24 +171,16 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                         transition: 'all 0.2s ease-in-out',
                         '&:hover': {
                           bgcolor: alpha(theme.palette[statusColor].main, 0.02),
-                          borderColor: alpha(
-                            theme.palette[statusColor].main,
-                            0.2,
-                          ),
+                          borderColor: alpha(theme.palette[statusColor].main, 0.2),
                         },
                       }}
                     >
-                      <Stack
-                        direction="row"
-                        spacing={2}
-                        alignItems="flex-start"
-                      >
+                      <Stack direction="row" spacing={2} alignItems="flex-start">
                         <Box
                           sx={{
                             p: 1,
                             borderRadius: 1,
-                            bgcolor: (theme) =>
-                              alpha(theme.palette[statusColor].main, 0.12),
+                            bgcolor: (theme) => alpha(theme.palette[statusColor].main, 0.12),
                             color: `${statusColor}.main`,
                             display: 'flex',
                             alignItems: 'center',
@@ -258,15 +230,12 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                             }}
                           >
                             <Box component="span">
-                              {new Date(activity.timestamp).toLocaleDateString(
-                                undefined,
-                                {
-                                  month: 'short',
-                                  day: 'numeric',
-                                  hour: 'numeric',
-                                  minute: 'numeric',
-                                },
-                              )}
+                              {new Date(activity.timestamp).toLocaleDateString(undefined, {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: 'numeric',
+                                minute: 'numeric',
+                              })}
                             </Box>
                             <Chip
                               label={activity.status.replace('_', ' ')}
@@ -285,9 +254,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                                 sx={{
                                   fontWeight: 600,
                                   color:
-                                    statusColor === 'success'
-                                      ? 'success.main'
-                                      : 'text.primary',
+                                    statusColor === 'success' ? 'success.main' : 'text.primary',
                                 }}
                               >
                                 ${activity.amount.toLocaleString()}
@@ -303,8 +270,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               color: 'text.secondary',
                               '&:hover': {
                                 color: 'primary.main',
-                                bgcolor: (theme) =>
-                                  alpha(theme.palette.primary.main, 0.08),
+                                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
                               },
                             }}
                           >
@@ -314,12 +280,12 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                       </Stack>
                     </Card>
                   </motion.div>
-                );
+                )
               })}
             </Stack>
           )}
         </motion.div>
       </Box>
     </Card>
-  );
+  )
 }

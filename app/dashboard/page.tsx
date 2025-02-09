@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { Card } from '@/components/ui/cards/card';
-import { Box, Container, Grid, Typography } from '@mui/material';
-import { redirect } from 'next/navigation';
-import { BarChart2, DollarSign, Home as HomeIcon, Users } from 'react-feather';
+import { Card } from '@/components/ui/cards/card'
+import { Box, Container, Grid, Typography } from '@mui/material'
+import { redirect } from 'next/navigation'
+import { BarChart2, DollarSign, Home as HomeIcon, Users } from 'react-feather'
 
 const stats = [
   {
@@ -34,13 +34,13 @@ const stats = [
     changeType: 'increase',
     icon: BarChart2,
   },
-];
+]
 
 export default async function DashboardPage() {
-  const { userId } = await auth();
+  const { userId } = await auth()
 
   if (!userId) {
-    redirect('/sign-in');
+    redirect('/sign-in')
   }
 
   return (
@@ -72,12 +72,8 @@ export default async function DashboardPage() {
                 </div>
               </div>
               <div className="mt-4 flex items-center">
-                <span className="text-success-500 text-sm font-medium">
-                  {stat.change}
-                </span>
-                <span className="ml-2 text-sm text-muted-foreground">
-                  from last month
-                </span>
+                <span className="text-success-500 text-sm font-medium">{stat.change}</span>
+                <span className="ml-2 text-sm text-muted-foreground">from last month</span>
               </div>
             </Card>
           </Grid>
@@ -86,5 +82,5 @@ export default async function DashboardPage() {
 
       {/* Add more dashboard sections here */}
     </Container>
-  );
+  )
 }

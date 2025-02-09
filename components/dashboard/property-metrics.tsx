@@ -1,14 +1,14 @@
 // components/dashboard/property-metrics.tsx
-'use client';
+'use client'
 
-import { formatCurrency } from '@/lib/utils';
-import TrendingDownIcon from '@mui/icons-material/TrendingDown';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import { useQuery } from '@tanstack/react-query';
+import { formatCurrency } from '@/lib/utils'
+import TrendingDownIcon from '@mui/icons-material/TrendingDown'
+import TrendingUpIcon from '@mui/icons-material/TrendingUp'
+import Box from '@mui/material/Box'
+import Grid from '@mui/material/Grid'
+import Paper from '@mui/material/Paper'
+import Typography from '@mui/material/Typography'
+import { useQuery } from '@tanstack/react-query'
 
 // components/dashboard/property-metrics.tsx
 
@@ -16,10 +16,10 @@ export function PropertyMetrics() {
   const { data: metrics, isLoading } = useQuery({
     queryKey: ['propertyMetrics'],
     queryFn: async () => {
-      const response = await fetch('/api/dashboard/metrics');
-      return response.json();
+      const response = await fetch('/api/dashboard/metrics')
+      return response.json()
     },
-  });
+  })
 
   const stats = [
     {
@@ -46,7 +46,7 @@ export function PropertyMetrics() {
       trend: metrics?.maintenanceTrend || 0,
       trendText: 'vs last month',
     },
-  ];
+  ]
 
   return (
     <Grid container spacing={3}>
@@ -89,7 +89,7 @@ export function PropertyMetrics() {
         </Grid>
       ))}
     </Grid>
-  );
+  )
 }
 
 PropertyMetrics.Skeleton = function Skeleton() {
@@ -108,17 +108,13 @@ PropertyMetrics.Skeleton = function Skeleton() {
             }}
           >
             <Box sx={{ animation: 'pulse 2s infinite' }}>
-              <Box
-                sx={{ bgcolor: 'grey.200', height: 20, width: 100, mb: 2 }}
-              />
-              <Box
-                sx={{ bgcolor: 'grey.200', height: 40, width: 150, mb: 1 }}
-              />
+              <Box sx={{ bgcolor: 'grey.200', height: 20, width: 100, mb: 2 }} />
+              <Box sx={{ bgcolor: 'grey.200', height: 40, width: 150, mb: 1 }} />
               <Box sx={{ bgcolor: 'grey.200', height: 20, width: 80 }} />
             </Box>
           </Paper>
         </Grid>
       ))}
     </Grid>
-  );
-};
+  )
+}

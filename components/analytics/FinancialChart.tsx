@@ -1,35 +1,23 @@
 // components/FinancialChart.tsx
-'use client';
+'use client'
 
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/cards/card';
-import {
-  Bar,
-  BarChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis,
-} from 'recharts';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
+import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
 
 // components/FinancialChart.tsx
 
 // components/FinancialChart.tsx
 
 interface FinancialData {
-  month: string;
-  revenue: number;
-  expenses: number;
-  profit: number;
+  month: string
+  revenue: number
+  expenses: number
+  profit: number
 }
 
 interface FinancialChartProps {
-  data: FinancialData[];
-  title?: string;
+  data: FinancialData[]
+  title?: string
 }
 
 export default function FinancialChart({
@@ -44,10 +32,7 @@ export default function FinancialChart({
       <CardContent>
         <div className="h-[400px] w-full">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart
-              data={data}
-              margin={{ top: 20, right: 30, left: 20, bottom: 5 }}
-            >
+            <BarChart data={data} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
               <XAxis dataKey="month" />
               <YAxis />
               <Tooltip
@@ -66,5 +51,5 @@ export default function FinancialChart({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -1,16 +1,16 @@
-'use client';
+'use client'
 
-import { Box, Paper } from '@mui/material';
-import { useTheme } from '@mui/material/styles';
-import { useVirtualizer } from '@tanstack/react-virtual';
-import { motion } from 'framer-motion';
-import { useRef } from 'react';
+import { Box, Paper } from '@mui/material'
+import { useTheme } from '@mui/material/styles'
+import { useVirtualizer } from '@tanstack/react-virtual'
+import { motion } from 'framer-motion'
+import { useRef } from 'react'
 
 interface VirtualizedListProps<T> {
-  items: T[];
-  renderItem: (item: T, index: number) => React.ReactNode;
-  estimateSize?: number;
-  overscan?: number;
+  items: T[]
+  renderItem: (item: T, index: number) => React.ReactNode
+  estimateSize?: number
+  overscan?: number
 }
 
 export function VirtualizedList<T>({
@@ -19,15 +19,15 @@ export function VirtualizedList<T>({
   estimateSize = 64,
   overscan = 5,
 }: VirtualizedListProps<T>) {
-  const theme = useTheme();
-  const parentRef = useRef<HTMLDivElement>(null);
+  const theme = useTheme()
+  const parentRef = useRef<HTMLDivElement>(null)
 
   const virtualizer = useVirtualizer({
     count: items.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => estimateSize,
     overscan,
-  });
+  })
 
   return (
     <Paper
@@ -80,5 +80,5 @@ export function VirtualizedList<T>({
         ))}
       </Box>
     </Paper>
-  );
+  )
 }

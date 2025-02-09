@@ -1,5 +1,5 @@
-import { type EmailMetricsProps } from '@/types/analytics';
-import { DataGrid } from '@mui/x-data-grid';
+import { type EmailMetricsProps } from '@/types/analytics'
+import { DataGrid } from '@mui/x-data-grid'
 
 export function EmailMetricsTable({ data }: EmailMetricsProps) {
   const columns = [
@@ -12,7 +12,7 @@ export function EmailMetricsTable({ data }: EmailMetricsProps) {
       headerName: 'Open Rate',
       valueFormatter: (params: any) => `${params.value}%`,
     },
-  ];
+  ]
 
-  return <DataGrid rows={data} columns={columns} autoHeight />;
+  return <DataGrid rows={data} columns={columns} autoHeight />
 }

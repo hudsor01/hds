@@ -1,6 +1,6 @@
 // components/dashboard/stats.tsx
-import { Card } from '@/components/ui/cards/card';
-import { DollarSign, Home, Tool, User } from 'react-feather';
+import { Card } from '@/components/ui/cards/card'
+import { DollarSign, Home, Tool, User } from 'react-feather'
 
 export function DashboardStats() {
   return (
@@ -34,29 +34,23 @@ export function DashboardStats() {
         trendDirection="up"
       />
     </div>
-  );
+  )
 }
 
 interface StatCardProps {
-  title: string;
-  value: string;
-  trend: string;
-  icon: React.ComponentType<{ className?: string }>;
-  trendDirection: 'up' | 'down' | 'neutral';
+  title: string
+  value: string
+  trend: string
+  icon: React.ComponentType<{ className?: string }>
+  trendDirection: 'up' | 'down' | 'neutral'
 }
 
-function StatCard({
-  title,
-  value,
-  trend,
-  icon: Icon,
-  trendDirection,
-}: StatCardProps) {
+function StatCard({ title, value, trend, icon: Icon, trendDirection }: StatCardProps) {
   const trendColor = {
     up: 'text-green-600',
     down: 'text-red-600',
     neutral: 'text-gray-600',
-  }[trendDirection];
+  }[trendDirection]
 
   return (
     <Card className="p-6">
@@ -69,7 +63,7 @@ function StatCard({
         <Icon className="h-12 w-12 text-pastel-blue-500" />
       </div>
     </Card>
-  );
+  )
 }
 
 // Skeleton loader for the stats section
@@ -82,5 +76,5 @@ DashboardStats.Skeleton = function StatsSkeleton() {
         </Card>
       ))}
     </div>
-  );
-};
+  )
+}

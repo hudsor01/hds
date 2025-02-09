@@ -1,15 +1,15 @@
 // components/properties/property-actions-menu.tsx
-import BuildIcon from '@mui/icons-material/Build';
-import HomeWorkIcon from '@mui/icons-material/HomeWork';
-import PersonAddIcon from '@mui/icons-material/PersonAdd';
-import ReceiptIcon from '@mui/icons-material/Receipt';
-import SpeedDial from '@mui/material/SpeedDial';
-import SpeedDialAction from '@mui/material/SpeedDialAction';
-import SpeedDialIcon from '@mui/material/SpeedDialIcon';
-import { useRouter } from 'next/navigation';
+import BuildIcon from '@mui/icons-material/Build'
+import HomeWorkIcon from '@mui/icons-material/HomeWork'
+import PersonAddIcon from '@mui/icons-material/PersonAdd'
+import ReceiptIcon from '@mui/icons-material/Receipt'
+import SpeedDial from '@mui/material/SpeedDial'
+import SpeedDialAction from '@mui/material/SpeedDialAction'
+import SpeedDialIcon from '@mui/material/SpeedDialIcon'
+import { useRouter } from 'next/navigation'
 
 export function PropertyActionsMenu() {
-  const router = useRouter();
+  const router = useRouter()
 
   const actions = [
     {
@@ -32,7 +32,7 @@ export function PropertyActionsMenu() {
       name: 'Record Payment',
       action: () => router.push('/payments/new'),
     },
-  ];
+  ]
 
   return (
     <SpeedDial
@@ -49,5 +49,5 @@ export function PropertyActionsMenu() {
         />
       ))}
     </SpeedDial>
-  );
+  )
 }

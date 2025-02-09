@@ -1,25 +1,22 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import type {
-  MaintenancePriority,
-  NewMaintenanceRequest,
-} from '@/types/maintenance_requests';
-import type { PropertyUnit } from '@/types/property';
-import type { Property } from '@/types/types';
-import type { SelectChangeEvent } from '@mui/material';
-import { Dialog, DialogContent, DialogTitle } from '@mui/material';
-import { Label } from '@/components/ui/label';
-import { Select, SelectItem } from '@/components/ui/select';
-import Textarea from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { useState } from 'react';
+import { Button } from '@/components/ui/buttons/button'
+import type { MaintenancePriority, NewMaintenanceRequest } from '@/types/maintenance_requests'
+import type { PropertyUnit } from '@/types/property'
+import type { Property } from '@/types/types'
+import type { SelectChangeEvent } from '@mui/material'
+import { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { Label } from '@/components/ui/label'
+import { Select, SelectItem } from '@/components/ui/select'
+import Textarea from '@/components/ui/textarea'
+import { Input } from '@/components/ui/input'
+import { useState } from 'react'
 
 interface MaintenanceTicketDialogProps {
-  open: boolean;
-  onOpenChangeAction: (open: boolean) => void;
-  onSubmitAction: (data: NewMaintenanceRequest) => Promise<void>;
-  properties: Array<Property & { units: PropertyUnit[] }>;
+  open: boolean
+  onOpenChangeAction: (open: boolean) => void
+  onSubmitAction: (data: NewMaintenanceRequest) => Promise<void>
+  properties: Array<Property & { units: PropertyUnit[] }>
 }
 
 export function MaintenanceTicketDialog({
@@ -28,16 +25,16 @@ export function MaintenanceTicketDialog({
   onSubmitAction,
   properties,
 }: MaintenanceTicketDialogProps) {
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedProperty, setSelectedProperty] = useState('');
-  const [selectedUnit, setSelectedUnit] = useState('');
+  const [isLoading, setIsLoading] = useState(false)
+  const [selectedProperty, setSelectedProperty] = useState('')
+  const [selectedUnit, setSelectedUnit] = useState('')
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setIsLoading(true);
+    e.preventDefault()
+    setIsLoading(true)
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(e.currentTarget)
       const data: NewMaintenanceRequest = {
         property_id: formData.get('property_id') as string,
         unit_id: formData.get('unit_id') as string,
@@ -45,25 +42,19 @@ export function MaintenanceTicketDialog({
         title: formData.get('title') as string,
         description: formData.get('description') as string,
         priority: formData.get('priority') as MaintenancePriority,
-      };
+      }
 
-      await onSubmitAction(data);
-      onOpenChangeAction(false);
+      await onSubmitAction(data)
+      onOpenChangeAction(false)
     } finally {
-      setIsLoading(false);
+      setIsLoading(false)
     }
-  };
+  }
 
-  const selectedPropertyUnits =
-    properties.find((p) => p.id === selectedProperty)?.units || [];
+  const selectedPropertyUnits = properties.find((p) => p.id === selectedProperty)?.units || []
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => onOpenChangeAction(false)}
-      maxWidth="md"
-      fullWidth
-    >
+    <Dialog open={open} onClose={() => onOpenChangeAction(false)} maxWidth="md" fullWidth>
       <DialogTitle>New Maintenance Request</DialogTitle>
       <DialogContent>
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
@@ -74,9 +65,9 @@ export function MaintenanceTicketDialog({
                 name="property_id"
                 value={selectedProperty}
                 onChange={(event: SelectChangeEvent<unknown>) => {
-                  const value = event.target.value as string;
-                  setSelectedProperty(value);
-                  setSelectedUnit('');
+                  const value = event.target.value as string
+                  setSelectedProperty(value)
+                  setSelectedUnit('')
                 }}
                 placeholder="Select a property"
               >
@@ -94,7 +85,7 @@ export function MaintenanceTicketDialog({
                 name="unit_id"
                 value={selectedUnit}
                 onChange={(event: SelectChangeEvent<unknown>) => {
-                  setSelectedUnit(event.target.value as string);
+                  setSelectedUnit(event.target.value as string)
                 }}
                 disabled={!selectedProperty}
                 placeholder="Select a unit"
@@ -154,5 +145,5 @@ export function MaintenanceTicketDialog({
         </form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

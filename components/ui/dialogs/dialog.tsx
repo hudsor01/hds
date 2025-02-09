@@ -1,4 +1,4 @@
-import type { DialogProps } from '../../../types/mui';
+import type { DialogProps } from '../../../types/mui'
 import {
   DialogActions,
   DialogContent,
@@ -6,9 +6,9 @@ import {
   DialogTitle,
   IconButton,
   Dialog as MuiDialog,
-} from '@mui/material';
-import * as React from 'react';
-import { X } from 'react-feather';
+} from '@mui/material'
+import * as React from 'react'
+import { X } from 'react-feather'
 
 const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
   ({ open, onClose, title, description, children, footer }, ref) => {
@@ -37,19 +37,17 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
 
         <DialogContent>
           {description && (
-            <DialogContentText id="dialog-description">
-              {description}
-            </DialogContentText>
+            <DialogContentText id="dialog-description">{description}</DialogContentText>
           )}
           {children}
         </DialogContent>
 
         {footer && <DialogActions>{footer}</DialogActions>}
       </MuiDialog>
-    );
-  },
-);
+    )
+  }
+)
 
-Dialog.displayName = 'Dialog';
+Dialog.displayName = 'Dialog'
 
-export { Dialog };
+export { Dialog }

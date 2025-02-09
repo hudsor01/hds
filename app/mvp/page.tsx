@@ -1,22 +1,22 @@
-'use client';
+'use client'
 
-import { WaitlistForm } from '@/components/features/marketing/waitlist-form';
-import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
-import BuildIcon from '@mui/icons-material/Build';
-import BusinessIcon from '@mui/icons-material/Business';
-import PeopleIcon from '@mui/icons-material/People';
-import StorefrontIcon from '@mui/icons-material/Storefront';
-import VpnKeyIcon from '@mui/icons-material/VpnKey';
-import { Card } from 'components/ui/cards/card';
-import { motion } from 'framer-motion';
-import Image from 'next/image';
+import { WaitlistForm } from '@/components/features/marketing/waitlist-form'
+import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn'
+import BuildIcon from '@mui/icons-material/Build'
+import BusinessIcon from '@mui/icons-material/Business'
+import PeopleIcon from '@mui/icons-material/People'
+import StorefrontIcon from '@mui/icons-material/Storefront'
+import VpnKeyIcon from '@mui/icons-material/VpnKey'
+import { Card } from 'components/ui/cards/card'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
 
 // Animation variants
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.5 },
-};
+}
 
 const staggerChildren = {
   animate: {
@@ -24,7 +24,7 @@ const staggerChildren = {
       staggerChildren: 0.1,
     },
   },
-};
+}
 
 // Features data
 const features = [
@@ -37,8 +37,7 @@ const features = [
   {
     icon: <StorefrontIcon className="h-6 w-6" />,
     title: 'Property Managers',
-    description:
-      'Manage multiple properties effortlessly with our comprehensive management suite.',
+    description: 'Manage multiple properties effortlessly with our comprehensive management suite.',
   },
   {
     icon: <VpnKeyIcon className="h-6 w-6" />,
@@ -61,10 +60,9 @@ const features = [
   {
     icon: <PeopleIcon className="h-6 w-6" />,
     title: 'Real Estate Agents',
-    description:
-      'Seamless property listings, tenant matching, and commission tracking.',
+    description: 'Seamless property listings, tenant matching, and commission tracking.',
   },
-];
+]
 
 export default function MVPLandingPage() {
   return (
@@ -91,9 +89,7 @@ export default function MVPLandingPage() {
               variants={fadeInUp}
               className="mb-8 inline-block rounded-full bg-[#A7C7E7]/10 px-4 py-1.5"
             >
-              <span className="text-sm font-medium text-[#A7C7E7]">
-                Early Access Available
-              </span>
+              <span className="text-sm font-medium text-[#A7C7E7]">Early Access Available</span>
             </motion.div>
 
             <motion.h1
@@ -107,19 +103,14 @@ export default function MVPLandingPage() {
             </motion.h1>
 
             {/* Stats Section */}
-            <motion.div
-              variants={fadeInUp}
-              className="mt-8 flex justify-center gap-8"
-            >
+            <motion.div variants={fadeInUp} className="mt-8 flex justify-center gap-8">
               {[
                 ['Properties Managed', '1000+'],
                 ['Customer Satisfaction', '98%'],
                 ['Time Saved', '40%'],
               ].map(([label, value]) => (
                 <div key={label} className="text-center">
-                  <div className="text-3xl font-bold text-[#A7C7E7]">
-                    {value}
-                  </div>
+                  <div className="text-3xl font-bold text-[#A7C7E7]">{value}</div>
                   <div className="text-sm text-gray-600">{label}</div>
                 </div>
               ))}
@@ -161,18 +152,14 @@ export default function MVPLandingPage() {
                   <div className="rounded-lg bg-[#A7C7E7]/10 p-2 transition-colors group-hover:bg-[#A7C7E7]/20">
                     {feature.icon}
                   </div>
-                  <h3 className="font-roboto font-medium text-gray-900">
-                    {feature.title}
-                  </h3>
+                  <h3 className="font-roboto font-medium text-gray-900">{feature.title}</h3>
                 </div>
-                <p className="mt-4 text-sm text-gray-600">
-                  {feature.description}
-                </p>
+                <p className="mt-4 text-sm text-gray-600">{feature.description}</p>
               </Card>
             ))}
           </motion.div>
         </motion.div>
       </section>
     </div>
-  );
+  )
 }
