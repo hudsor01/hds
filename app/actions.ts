@@ -1,12 +1,10 @@
 'use server';
 
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/server';
 import { revalidatePath } from 'next/cache';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
-import type { Database } from '@/types/database.types';
-import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 
 declare const process: {
   env: {
@@ -16,9 +14,6 @@ declare const process: {
     NEXT_PUBLIC_SITE_URL: string;
   };
 };
-
-declare const console: Console;
-declare const setTimeout: (callback: () => void, ms: number) => NodeJS.Timeout;
 
 interface SubscribeData {
   email: string;
@@ -32,10 +27,7 @@ interface ContactFormData {
   company?: string;
 }
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-);
+const supabase = createClient();
 
 const authSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -44,7 +36,7 @@ const authSchema = z.object({
 
 export async function subscribeToWaitlist(data: SubscribeData) {
   try {
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
 
     if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
       return {
@@ -146,7 +138,7 @@ export async function startFreeTrial(data: SubscribeData) {
       };
     }
 
-    cookieStore.set('trial_tier', data.tier, {
+    (await cookieStore).set('trial_tier', data.tier, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -170,7 +162,7 @@ export async function signInWithEmail(formData: FormData) {
       password: formData.get('password'),
     });
 
-    const { error } = await supabase.auth.signInWithPassword(credentials);
+    const { error } = await (await supabase).auth.signInWithPassword(credentials);
 
     if (error) {
       return { error: error.message };
@@ -193,7 +185,7 @@ export async function signUpWithEmail(formData: FormData) {
       password: formData.get('password'),
     });
 
-    const { error } = await supabase.auth.signUp(credentials);
+    const { error } = await (await supabase).auth.signUp(credentials);
     return error ? { error: error.message } : { success: true };
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -205,7 +197,7 @@ export async function signUpWithEmail(formData: FormData) {
 
 export async function signOut() {
   try {
-    const { error } = await supabase.auth.signOut();
+    const { error } = await (await supabase).auth.signOut();
     if (error) {
       return { error: error.message };
     }
@@ -221,7 +213,7 @@ export async function getSession() {
   try {
     const {
       data: { session },
-    } = await supabase.auth.getSession();
+    } = await (await supabase).auth.getSession();
     return session;
   } catch (error) {
     console.error('Session error:', error);
@@ -236,7 +228,9 @@ export async function forgotPasswordAction(formData: FormData) {
       return { error: 'Email is required' };
     }
 
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    const { error } = await (
+      await supabase
+    ).auth.resetPasswordForEmail(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/update-password`,
     });
 

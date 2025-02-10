@@ -1,14 +1,17 @@
-import './globals.css'
-import { AuthProvider } from '@/components/providers/auth-provider'
-import { Providers } from '@/components/providers/providers'
+import './globals.css';
+import { AuthProvider } from '@/components/providers/auth-provider';
+import { Providers } from '@/components/providers/providers';
 
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
-import { Toaster } from 'sonner'
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import type { Metadata } from 'next';
+import { Roboto } from 'next/font/google';
+import { Toaster } from 'sonner';
 
-const inter = Inter({ subsets: ['latin'] })
+const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+});
 
 export const metadata: Metadata = {
   title: 'Property Manager',
@@ -16,16 +19,16 @@ export const metadata: Metadata = {
   icons: {
     icon: '/favicon.ico',
   },
-}
+};
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={roboto.className} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={inter.className}>
+      <body>
         <Providers>
           <AuthProvider>
             {children}
@@ -36,5 +39,5 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <SpeedInsights />
       </body>
     </html>
-  )
+  );
 }
