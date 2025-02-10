@@ -1,10 +1,10 @@
-'use client'
+'use client';
 
-import { gradientStyles } from '@/utils/styles'
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-import { LogIn } from 'react-feather'
+import { gradientStyles } from '@/utils/styles';
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import { LogIn } from 'react-feather';
 
 const publicNavItems = [
   { name: 'Home', href: '/' },
@@ -12,11 +12,10 @@ const publicNavItems = [
   { name: 'Pricing', href: '/pricing' },
   { name: 'About', href: '/about' },
   { name: 'Contact', href: '/contact' },
-]
+];
 
 export default function Navbar() {
-  const { isSignedIn, isLoaded } = useAuth()
-  const pathname = usePathname()
+  const pathname = usePathname();
 
   return (
     <AppBar
@@ -44,7 +43,7 @@ export default function Navbar() {
             </Typography>
           </Link>
 
-          {/* Center Navigation - Public Pages */}
+          {/* Center Navigation */}
           <Stack
             direction="row"
             spacing={1}
@@ -54,7 +53,7 @@ export default function Navbar() {
               display: { xs: 'none', md: 'flex' },
             }}
           >
-            {publicNavItems.map((item) => (
+            {publicNavItems.map(item => (
               <Link key={item.name} href={item.href} style={{ textDecoration: 'none' }}>
                 <Button
                   sx={{
@@ -72,52 +71,27 @@ export default function Navbar() {
             ))}
           </Stack>
 
-          {/* Right Side - Auth/Dashboard */}
+          {/* Right Side */}
           <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
-            {isLoaded &&
-              (isSignedIn ? (
-                <>
-                  <Link href="/dashboard" style={{ textDecoration: 'none' }}>
-                    <Button
-                      variant="contained"
-                      sx={{
-                        ...gradientStyles.background,
-                        '&:hover': gradientStyles.backgroundHover,
-                      }}
-                    >
-                      Dashboard
-                    </Button>
-                  </Link>
-                  <UserButton
-                    afterSignOutUrl="/"
-                    appearance={{
-                      elements: {
-                        avatarBox: 'h-10 w-10',
-                      },
-                    }}
-                  />
-                </>
-              ) : (
-                <Link href="/sign-in" style={{ textDecoration: 'none' }}>
-                  <Button
-                    variant="outlined"
-                    startIcon={<LogIn size={18} />}
-                    sx={{
-                      borderColor: 'primary.main',
-                      color: 'primary.main',
-                      '&:hover': {
-                        borderColor: 'primary.dark',
-                        ...gradientStyles.background,
-                      },
-                    }}
-                  >
-                    Sign In
-                  </Button>
-                </Link>
-              ))}
+            <Link href="/sign-in" style={{ textDecoration: 'none' }}>
+              <Button
+                variant="outlined"
+                startIcon={<LogIn size={18} />}
+                sx={{
+                  borderColor: 'primary.main',
+                  color: 'primary.main',
+                  '&:hover': {
+                    borderColor: 'primary.dark',
+                    ...gradientStyles.background,
+                  },
+                }}
+              >
+                Sign In
+              </Button>
+            </Link>
           </Box>
         </Toolbar>
       </Container>
     </AppBar>
-  )
+  );
 }

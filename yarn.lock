@@ -3415,7 +3415,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/postcss@npm:^4.0.6":
+"@tailwindcss/postcss@npm:^4.0.4":
   version: 4.0.6
   resolution: "@tailwindcss/postcss@npm:4.0.6"
   dependencies:
@@ -3447,6 +3447,25 @@ __metadata:
   version: 5.66.0
   resolution: "@tanstack/query-core@npm:5.66.0"
   checksum: 10/ba8623c0272e36d3ce616afa024d43e07e6b69170219b32eb4f60156fee9ac4ffa74d2fbb999739b6dea757b75966e76129271f4224f06c59deee24a72944da4
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-devtools@npm:5.65.0":
+  version: 5.65.0
+  resolution: "@tanstack/query-devtools@npm:5.65.0"
+  checksum: 10/029f4caca347cc9194a594b17084af8448da9a218dbd22340c3a9ae67f1d0deef9e1074864558975c2192afeca3b4a71b6190ee735d05c6fff47014a71560718
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query-devtools@npm:^5.66.0":
+  version: 5.66.0
+  resolution: "@tanstack/react-query-devtools@npm:5.66.0"
+  dependencies:
+    "@tanstack/query-devtools": "npm:5.65.0"
+  peerDependencies:
+    "@tanstack/react-query": ^5.66.0
+    react: ^18 || ^19
+  checksum: 10/4a2381a80de448a049e6fceedd1d9e4c810c8f85586cb4e2f9a23dc588697fc7295f106567ae4a5722027cf494593d8ce3fa326821b429c472caa21313c8b8cc
   languageName: node
   linkType: hard
 
@@ -4073,7 +4092,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@vercel/speed-insights@npm:^1.2.0":
+"@vercel/speed-insights@npm:^1.1.0":
   version: 1.2.0
   resolution: "@vercel/speed-insights@npm:1.2.0"
   peerDependencies:
@@ -7195,9 +7214,10 @@ __metadata:
     "@supabase/supabase-js": "npm:^2.48.1"
     "@tailwindcss/aspect-ratio": "npm:^0.4.2"
     "@tailwindcss/forms": "npm:^0.5.10"
-    "@tailwindcss/postcss": "npm:^4.0.6"
+    "@tailwindcss/postcss": "npm:^4.0.4"
     "@tailwindcss/typography": "npm:^0.5.16"
     "@tanstack/react-query": "npm:^5.66.0"
+    "@tanstack/react-query-devtools": "npm:^5.66.0"
     "@tanstack/react-virtual": "npm:^3.13.0"
     "@trivago/prettier-plugin-sort-imports": "npm:^5.2.2"
     "@types/express": "npm:^5.0.0"
@@ -7210,7 +7230,7 @@ __metadata:
     "@typescript-eslint/types": "npm:^8.23.0"
     "@vercel/analytics": "npm:^1.4.1"
     "@vercel/postgres": "npm:^0.10.0"
-    "@vercel/speed-insights": "npm:^1.2.0"
+    "@vercel/speed-insights": "npm:^1.1.0"
     autoprefixer: "npm:^10.4.20"
     axios: "npm:^1.7.9"
     class-variance-authority: "npm:^0.7.1"
