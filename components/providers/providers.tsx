@@ -9,9 +9,7 @@ type AuthContextType = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  // @ts-expect-error - password is used in implementation
   signIn: (email: string, password: string) => Promise<void>;
-  // @ts-expect-error - password is used in implementation
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;

@@ -7,6 +7,8 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { Toaster } from 'sonner';
+import { Navbar } from '@/components/navbar';
+import { Footer } from '@/components/footer';
 
 const roboto = Roboto({
   weight: ['400', '500', '700'],
@@ -31,7 +33,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <Providers>
           <AuthProvider>
-            {children}
+            <Navbar />
+            <main>{children}</main>
+            <Footer />
             <Toaster position="top-center" expand={true} richColors />
           </AuthProvider>
         </Providers>
