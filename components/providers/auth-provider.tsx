@@ -4,6 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
+import type { Session } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
@@ -108,7 +109,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function signOut() {
     try {
-      await supabase.auth.signOut();
+      await (await supabase).auth.signOut();
       setUser(null);
       setSession(null);
     } catch (error) {
@@ -119,7 +120,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function resetPassword(email: string) {
     try {
-      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      const { error } = await (
+        await supabase
+      ).auth.resetPasswordForEmail(email, {
         redirectTo: `${window.location.origin}/auth/callback`,
       });
 

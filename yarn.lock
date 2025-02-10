@@ -3408,7 +3408,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@tailwindcss/postcss@npm:^4.0.4":
+"@tailwindcss/postcss@npm:^4.0.5":
   version: 4.0.5
   resolution: "@tailwindcss/postcss@npm:4.0.5"
   dependencies:
@@ -7201,7 +7201,7 @@ __metadata:
     "@supabase/supabase-js": "npm:^2.48.1"
     "@tailwindcss/aspect-ratio": "npm:^0.4.2"
     "@tailwindcss/forms": "npm:^0.5.10"
-    "@tailwindcss/postcss": "npm:^4.0.4"
+    "@tailwindcss/postcss": "npm:^4.0.5"
     "@tailwindcss/typography": "npm:^0.5.16"
     "@tanstack/react-query": "npm:^5.66.0"
     "@tanstack/react-virtual": "npm:^3.13.0"

@@ -1,16 +1,17 @@
 'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
-import { createClient } from '@/utils/supabase/server';
-import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
-import type { Database } from '@/types/database.types';
+import { createClient } from '@/utils/supabase/client';
+import type { Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
 
 type AuthContextType = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
+  // @ts-expect-error - password is used in implementation
   signIn: (email: string, password: string) => Promise<void>;
+  // @ts-expect-error - password is used in implementation
   signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -18,29 +19,21 @@ type AuthContextType = {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const supabase = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-);
-
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
+  const supabase = createClient();
 
   useEffect(() => {
-    async function getUser() {
+    const getUser = async () => {
       try {
         const {
           data: { user },
           error,
         } = await supabase.auth.getUser();
-
-        if (error) {
-          throw error;
-        }
-
+        if (error) throw error;
         setUser(user);
       } catch (error) {
         console.error('Error loading user:', error);
@@ -48,65 +41,63 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } finally {
         setIsLoading(false);
       }
-    }
+    };
 
     getUser();
 
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event: AuthChangeEvent, session) => {
+    } = supabase.auth.onAuthStateChange(async (event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
       setIsLoading(false);
 
-      switch (event) {
-        case 'SIGNED_IN':
-          router.refresh();
-          break;
-        case 'SIGNED_OUT':
-          router.refresh();
-          router.push('/sign-in');
-          break;
-        case 'USER_UPDATED':
-          setUser(session?.user ?? null);
-          router.refresh();
-          break;
-        case 'TOKEN_REFRESHED':
-          router.refresh();
-          break;
+      if (event === 'SIGNED_IN') router.refresh();
+      if (event === 'SIGNED_OUT') {
+        router.refresh();
+        router.push('/sign-in');
       }
+      if (event === 'USER_UPDATED') {
+        setUser(session?.user ?? null);
+        router.refresh();
+      }
+      if (event === 'TOKEN_REFRESHED') router.refresh();
     });
 
     return () => {
       subscription.unsubscribe();
     };
-  }, [supabase, router]);
+  }, [router, supabase]);
 
-  async function signIn(email: string, password: string) {
-    try {
+  const value = {
+    user,
+    session,
+    isLoading,
+    signIn: async (email: string, password: string) => {
       const { error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
-
       if (error) throw error;
-    } catch (error) {
-      console.error('Error signing in:', error);
-      throw error;
-    }
-  }
-
-  async function signUp(email: string, password: string) {
-    try {
+    },
+    signUp: async (email: string, password: string) => {
       const { error } = await supabase.auth.signUp({
         email,
         password,
       });
-    } catch (error) {
-      console.error('Error signing up:', error);
-      throw error;
-    }
-  }
+      if (error) throw error;
+    },
+    signOut: async () => {
+      const { error } = await supabase.auth.signOut();
+      if (error) throw error;
+    },
+    resetPassword: async (email: string) => {
+      const { error } = await supabase.auth.resetPasswordForEmail(email);
+      if (error) throw error;
+    },
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

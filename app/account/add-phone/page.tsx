@@ -2,7 +2,7 @@
 import * as React from 'react';
 
 import { useUser } from '@/app/auth/lib/auth/config';
-
+import type { PhoneNumberResource } from '@supabase/supabase-js';
 export default function Page() {
   const { user, loading } = useUser();
   const [phone, setPhone] = React.useState('');
