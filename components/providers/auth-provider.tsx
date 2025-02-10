@@ -4,14 +4,13 @@ import { createContext, useContext, useEffect, useState } from 'react';
 import { createClient } from '@/utils/supabase/server';
 import type { AuthChangeEvent, Session, User } from '@supabase/supabase-js';
 import { useRouter } from 'next/navigation';
-import type { Session } from '@supabase/supabase-js';
 
 type AuthContextType = {
   user: User | null;
   session: Session | null;
   isLoading: boolean;
-  signIn: (email: string) => Promise<void>;
-  signUp: () => Promise<void>;
+  signIn: (email: string, password: string) => Promise<void>;
+  signUp: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
 };
