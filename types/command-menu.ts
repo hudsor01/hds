@@ -1,5 +1,5 @@
 import type React from 'react';
-import { Dialog } from '@mui/material';
+
 export interface CommandItem {
   id: string;
   title: string;
@@ -15,12 +15,8 @@ export interface CommandMenuProps {
   onClose: () => void;
 }
 
-interface CommandDialogProps {
+export interface CommandDialogProps {
   children: React.ReactNode;
   open: boolean;
-  _onOpenChange: () => void;
+  onOpenChange: (open: boolean) => void;
 }
-
-export const CommandDialog = ({ children, open, _onOpenChange }: CommandDialogProps) => {
-  return <Dialog open={open} onClose={_onOpenChange}>{children}</Dialog>;
-};

@@ -1,18 +1,19 @@
 import './globals.css';
 import { AuthProvider } from '@/components/providers/auth-provider';
 import { Providers } from '@/components/providers/providers';
-
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import type { Metadata } from 'next';
 import { Roboto } from 'next/font/google';
 import { Toaster } from 'sonner';
-import { Navbar } from '@/components/navbar';
-import { Footer } from '@/components/footer';
+import { Navbar } from '@/components/layout/navbar';
+import { Footer } from '@/components/layout/footer';
 
+// Configure Roboto font with variable fonts
 const roboto = Roboto({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
+  variable: '--font-roboto',
 });
 
 export const metadata: Metadata = {
@@ -25,18 +26,18 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={roboto.className} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <meta name="viewport" content="initial-scale=1, width=device-width" />
+        {/* Next.js automatically adds viewport meta - remove manual declaration */}
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>
+      <body className={roboto.className}>
         <Providers>
           <AuthProvider>
             <Navbar />
-            <main>{children}</main>
+            <main className="min-h-[calc(100vh-140px)]">{children}</main>
             <Footer />
-            <Toaster position="top-center" expand={true} richColors />
+            <Toaster position="top-center" expand richColors />
           </AuthProvider>
         </Providers>
         <Analytics />

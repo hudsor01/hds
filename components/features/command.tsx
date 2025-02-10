@@ -10,22 +10,23 @@ import {
   CommandItem as CommandPrimitiveItem,
   CommandSeparator as CommandPrimitiveSeparator,
 } from 'cmdk';
-import { Dialog } from '@mui/material';
-import { Search } from '@mui/icons-material';
+import {
+  Dialog,
+  DialogContent,
+  Box,
+  TextField,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
+import { Search, X } from 'react-feather';
 import clsx from 'clsx';
-
-const useKeyboardShortcut = () => {
-  React.useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault();
-        setOpen(prev => !prev);
-      }
-    };
-    document.addEventListener('keydown', handler);
-    return () => document.removeEventListener('keydown', handler);
-  }, []);
-};
+import type { CommandMenuProps, CommandItem } from '@/types/command-menu';
+import { useRouter } from 'next/navigation';
 
 export const CommandDialog = ({
   children,
@@ -148,28 +149,134 @@ export const CommandItem = React.forwardRef<
 ));
 CommandItem.displayName = CommandPrimitiveItem.displayName;
 
-export const CommandMenu = () => {
-  const [open, setOpen] = React.useState(false);
+export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
+  const [search, setSearch] = React.useState<string>('');
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
+  const router = useRouter();
 
-  useKeyboardShortcut();
+  const filteredItems: CommandItem[] = items.filter(
+    item =>
+      item.title.toLowerCase().includes(search.toLowerCase()) ||
+      (item.description && item.description.toLowerCase().includes(search.toLowerCase()))
+  );
+
+  React.useEffect(() => {
+    setSelectedIndex(0);
+  }, [search]);
+
+  React.useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (!open) return;
+
+      switch (e.key) {
+        case 'ArrowDown':
+          e.preventDefault();
+          if (filteredItems.length > 0) {
+            setSelectedIndex(i => (i + 1) % filteredItems.length);
+          }
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          if (filteredItems.length > 0) {
+            setSelectedIndex(i => (i - 1 + filteredItems.length) % filteredItems.length);
+          }
+          break;
+        case 'Enter':
+          e.preventDefault();
+          if (filteredItems[selectedIndex]) {
+            filteredItems[selectedIndex].action();
+            onClose();
+          }
+          break;
+        case 'Escape':
+          e.preventDefault();
+          onClose();
+          break;
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [open, filteredItems, selectedIndex, onClose]);
 
   return (
-    <CommandDialog open={open} onOpenChange={setOpen}>
-      <CommandInput placeholder="Type a command or search..." />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        <CommandGroup heading="Suggestions">
-          <CommandItem>Calendar</CommandItem>
-          <CommandItem>Search Emoji</CommandItem>
-          <CommandItem>Calculator</CommandItem>
-        </CommandGroup>
-        <CommandSeparator />
-        <CommandGroup heading="Settings">
-          <CommandItem>Profile</CommandItem>
-          <CommandItem>Billing</CommandItem>
-          <CommandItem>Settings</CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </CommandDialog>
+    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+      <DialogContent sx={{ p: 0 }}>
+        <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
+          <TextField
+            autoFocus
+            fullWidth
+            placeholder="Search commands..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            InputProps={{
+              startAdornment: (
+                <InputAdornment position="start">
+                  <Search size={20} />
+                </InputAdornment>
+              ),
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton size="small" onClick={onClose}>
+                    <X size={20} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+          />
+        </Box>
+        <List sx={{ py: 0 }}>
+          {filteredItems.map((item, index) => (
+            <ListItem key={item.id} disablePadding>
+              <ListItemButton
+                onClick={() => {
+                  item.action();
+                  onClose();
+                }}
+                selected={index === selectedIndex}
+                sx={{
+                  cursor: 'pointer',
+                  '&:hover': {
+                    bgcolor: 'action.hover',
+                  },
+                  '&.Mui-selected': {
+                    bgcolor: 'primary.light',
+                    '&:hover': {
+                      bgcolor: 'primary.light',
+                    },
+                  },
+                }}
+              >
+                {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
+                <ListItemText
+                  primary={item.title}
+                  secondary={item.description}
+                  primaryTypographyProps={{ variant: 'subtitle2' }}
+                  secondaryTypographyProps={{ variant: 'caption' }}
+                />
+                {item.shortcut && (
+                  <Box sx={{ display: 'flex', gap: 0.5, ml: 2 }}>
+                    {item.shortcut.map((key, i) => (
+                      <Box
+                        key={i}
+                        sx={{
+                          px: 1,
+                          py: 0.5,
+                          borderRadius: 1,
+                          bgcolor: 'action.selected',
+                          fontSize: '0.75rem',
+                        }}
+                      >
+                        {key}
+                      </Box>
+                    ))}
+                  </Box>
+                )}
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </DialogContent>
+    </Dialog>
   );
-};
+}

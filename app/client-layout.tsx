@@ -3,7 +3,7 @@
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Toaster } from 'sonner'
-import Navbar from '../components/navigation/Navbar'
+import Navbar from '../components/layout/navbar'
 import { Providers } from './providers'
 
 export default function ClientLayout({ children }: { children: React.ReactNode }) {

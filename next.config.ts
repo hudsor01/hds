@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
     optimizePackageImports: ['@mui/material', '@mui/icons-material'],
     typedRoutes: true,
   },
+  optimizeFonts: true,
   images: {
     domains: ['www.hudsondigitalsolutions.com'],
     formats: ['image/avif', 'image/webp'],
