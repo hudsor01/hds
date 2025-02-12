@@ -1,6 +1,6 @@
 'use client'
 
-import { TimeSeriesData } from '@/types/analytics'
+import { TimeSeriesData } from '@/types'
 import { Card, CardContent, CardHeader, useTheme } from '@mui/material'
 import {
   Area,
@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts'
 
 interface AnalyticsChartProps {
@@ -25,7 +25,7 @@ export default function AnalyticsChart({
   data,
   valuePrefix = '',
   valueSuffix = '',
-  color,
+  color
 }: AnalyticsChartProps) {
   const theme = useTheme()
 
@@ -44,7 +44,7 @@ export default function AnalyticsChart({
               top: 10,
               right: 30,
               left: 0,
-              bottom: 0,
+              bottom: 0
             }}
           >
             <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
@@ -62,7 +62,7 @@ export default function AnalyticsChart({
               formatter={(value: number) => formatValue(value)}
               contentStyle={{
                 backgroundColor: theme.palette.background.paper,
-                border: `1px solid ${theme.palette.divider}`,
+                border: `1px solid ${theme.palette.divider}`
               }}
             />
             <Area

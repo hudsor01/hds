@@ -5,7 +5,7 @@ import { withRateLimit } from '@/lib/rate-limit'
 
 const signInSchema = z.object({
   email: z.string().email(),
-  password: z.string(),
+  password: z.string()
 })
 
 export async function POST(request: Request) {
@@ -18,7 +18,7 @@ export async function POST(request: Request) {
 
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: body.email,
-        password: body.password,
+        password: body.password
       })
 
       if (signInError) {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
 
       return NextResponse.json({
         user: data.user,
-        session: data.session,
+        session: data.session
       })
     } catch (error) {
       if (error instanceof z.ZodError) {

@@ -27,14 +27,14 @@ export async function GET(request: NextRequest) {
           where: {
             OR: [
               { name: { contains: query, mode: 'insensitive' } },
-              { address: { contains: query, mode: 'insensitive' } },
-            ],
+              { address: { contains: query, mode: 'insensitive' } }
+            ]
           },
           take: limit,
           skip: (page - 1) * limit,
           include: {
-            units: true,
-          },
+            units: true
+          }
         })
         break
 
@@ -43,18 +43,18 @@ export async function GET(request: NextRequest) {
           where: {
             OR: [
               { name: { contains: query, mode: 'insensitive' } },
-              { email: { contains: query, mode: 'insensitive' } },
-            ],
+              { email: { contains: query, mode: 'insensitive' } }
+            ]
           },
           take: limit,
           skip: (page - 1) * limit,
           include: {
             leases: {
               include: {
-                unit: true,
-              },
-            },
-          },
+                unit: true
+              }
+            }
+          }
         })
         break
 
@@ -63,18 +63,18 @@ export async function GET(request: NextRequest) {
           where: {
             OR: [
               { description: { contains: query, mode: 'insensitive' } },
-              { status: { contains: query, mode: 'insensitive' } },
-            ],
+              { status: { contains: query, mode: 'insensitive' } }
+            ]
           },
           take: limit,
           skip: (page - 1) * limit,
           include: {
             unit: {
               include: {
-                property: true,
-              },
-            },
-          },
+                property: true
+              }
+            }
+          }
         })
         break
 
@@ -83,28 +83,28 @@ export async function GET(request: NextRequest) {
         const [properties, tenants, maintenance] = await Promise.all([
           prisma.property.findMany({
             where: {
-              name: { contains: query, mode: 'insensitive' },
+              name: { contains: query, mode: 'insensitive' }
             },
-            take: limit,
+            take: limit
           }),
           prisma.tenant.findMany({
             where: {
-              name: { contains: query, mode: 'insensitive' },
+              name: { contains: query, mode: 'insensitive' }
             },
-            take: limit,
+            take: limit
           }),
           prisma.maintenanceRequest.findMany({
             where: {
-              description: { contains: query, mode: 'insensitive' },
+              description: { contains: query, mode: 'insensitive' }
             },
-            take: limit,
-          }),
+            take: limit
+          })
         ])
 
         results = {
           properties,
           tenants,
-          maintenance,
+          maintenance
         }
     }
 
@@ -113,7 +113,7 @@ export async function GET(request: NextRequest) {
       type,
       page,
       limit,
-      results,
+      results
     })
   } catch (error) {
     console.error('Search error:', error)

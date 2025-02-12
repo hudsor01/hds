@@ -16,7 +16,7 @@ export function PropertyCard({
   name,
   address,
   units,
-  occupancy,
+  occupancy
 }: PropertyCardProps): React.ReactElement {
   return (
     <Card className="flex items-center space-x-4 p-4">
@@ -25,16 +25,16 @@ export function PropertyCard({
       </div>
       <div className="flex-1 space-y-1">
         <h3 className="font-medium">{name}</h3>
-        <p className="text-sm text-muted-foreground">{address}</p>
+        <p className="text-muted-foreground text-sm">{address}</p>
       </div>
       <div className="flex items-center space-x-4">
         <div className="text-right">
           <p className="text-sm font-medium">{units}</p>
-          <p className="text-xs text-muted-foreground">Total Units</p>
+          <p className="text-muted-foreground text-xs">Total Units</p>
         </div>
         <div className="text-right">
           <p className="text-sm font-medium">{occupancy}</p>
-          <p className="text-xs text-muted-foreground">Occupancy</p>
+          <p className="text-muted-foreground text-xs">Occupancy</p>
         </div>
       </div>
     </Card>

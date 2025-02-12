@@ -10,8 +10,8 @@ const StyledPopover = styled(MuiPopover)(({ theme }) => ({
     borderRadius: theme.shape.borderRadius,
     boxShadow: theme.shadows[4],
     padding: theme.spacing(2),
-    backgroundColor: theme.palette.background.paper,
-  },
+    backgroundColor: theme.palette.background.paper
+  }
 }))
 
 export interface PopoverProps extends Omit<MuiPopoverProps, 'open'> {
@@ -48,11 +48,11 @@ export const Popover = React.forwardRef<HTMLDivElement, PopoverProps>(
           onClose={handleClose}
           anchorOrigin={{
             vertical: 'bottom',
-            horizontal: 'center',
+            horizontal: 'center'
           }}
           transformOrigin={{
             vertical: 'top',
-            horizontal: 'center',
+            horizontal: 'center'
           }}
           {...props}
         >
@@ -79,7 +79,7 @@ export const PopoverContent = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'outline-hidden z-50 w-72 rounded-md bg-popover p-4 text-popover-foreground shadow-md',
+      'outline-hidden bg-popover text-popover-foreground z-50 w-72 rounded-md p-4 shadow-md',
       className
     )}
     {...props}

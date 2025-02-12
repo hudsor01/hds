@@ -39,7 +39,7 @@ const Spinner = ({
             position: 'absolute',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'center'
           }}
         >
           <Typography
@@ -47,7 +47,7 @@ const Spinner = ({
             component="div"
             sx={{
               color: 'text.secondary',
-              fontSize: `${Number(size) * 0.25}px`,
+              fontSize: `${Number(size) * 0.25}px`
             }}
           >{`${Math.round(value)}%`}</Typography>
         </Box>

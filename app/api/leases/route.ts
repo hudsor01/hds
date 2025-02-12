@@ -13,7 +13,7 @@ const leaseSchema = z.object({
   depositAmount: z.number().positive('Deposit amount must be positive'),
   payment_day: z.number().min(1).max(31),
   documents: z.array(z.string()).default([]),
-  lease_status: z.enum(['Pending', 'Active', 'Terminated', 'Expired']).default('Pending'),
+  lease_status: z.enum(['Pending', 'Active', 'Terminated', 'Expired']).default('Pending')
 })
 
 export async function GET(req: NextRequest) {
@@ -121,8 +121,8 @@ export async function POST(req: NextRequest) {
         user_id: userId,
         type: 'LEASE',
         title: 'New Lease Created',
-        message: `A new lease has been created for property ID: ${validatedData.property_id}`,
-      },
+        message: `A new lease has been created for property ID: ${validatedData.property_id}`
+      }
     ])
 
     return NextResponse.json({ data: lease }, { status: 201 })
@@ -183,8 +183,8 @@ export async function PUT(req: NextRequest) {
           user_id: userId,
           type: 'LEASE',
           title: 'Lease Updated',
-          message: `Lease status updated to ${validatedData.lease_status}`,
-        },
+          message: `Lease status updated to ${validatedData.lease_status}`
+        }
       ])
     }
 

@@ -10,7 +10,7 @@ interface MousePosition {
 function MousePosition(): MousePosition {
   const [mousePosition, setMousePosition] = useState<MousePosition>({
     x: 0,
-    y: 0,
+    y: 0
   })
 
   useEffect(() => {
@@ -62,7 +62,7 @@ const Particles: React.FC<ParticlesProps> = ({
   refresh = false,
   color = '#ffffff',
   vx = 0,
-  vy = 0,
+  vy = 0
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasContainerRef = useRef<HTMLDivElement>(null)
@@ -180,7 +180,7 @@ const Particles: React.FC<ParticlesProps> = ({
       targetAlpha,
       dx,
       dy,
-      magnetism,
+      magnetism
     }
   }
 
@@ -235,7 +235,7 @@ const Particles: React.FC<ParticlesProps> = ({
         circle.x + circle.translateX - circle.size,
         canvasSize.current.w - circle.x - circle.translateX - circle.size,
         circle.y + circle.translateY - circle.size,
-        canvasSize.current.h - circle.y - circle.translateY - circle.size,
+        canvasSize.current.h - circle.y - circle.translateY - circle.size
       ]
       const closestEdge = edge.reduce((a, b) => Math.min(a, b))
       const remapClosestEdge = parseFloat(remapValue(closestEdge, 0, 20, 0, 1).toFixed(2))

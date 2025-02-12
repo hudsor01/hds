@@ -11,7 +11,7 @@ import { z } from 'zod'
 
 // Schema for form validation
 const forgotPasswordSchema = z.object({
-  email: z.string().min(1, 'Email is required').email('Please enter a valid email address'),
+  email: z.string().min(1, 'Email is required').email('Please enter a valid email address')
 })
 
 type ForgotPasswordFormValues = z.infer<typeof forgotPasswordSchema>
@@ -30,12 +30,12 @@ export const ForgotPasswordForm = ({ onSubmit, redirectToLogin }: ForgotPassword
     control,
     handleSubmit,
     formState: { errors },
-    reset,
+    reset
   } = useForm<ForgotPasswordFormValues>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      email: '',
-    },
+      email: ''
+    }
   })
 
   const handleFormSubmit = async (data: ForgotPasswordFormValues) => {
@@ -68,7 +68,7 @@ export const ForgotPasswordForm = ({ onSubmit, redirectToLogin }: ForgotPassword
         width: '100%',
         maxWidth: 400,
         mx: 'auto',
-        mt: 4,
+        mt: 4
       }}
     >
       <Typography variant="h5" component="h2" gutterBottom align="center">
@@ -119,10 +119,10 @@ export const ForgotPasswordForm = ({ onSubmit, redirectToLogin }: ForgotPassword
                   <EmailIcon
                     sx={{
                       mr: 1,
-                      color: errors.email ? 'error.main' : 'action.active',
+                      color: errors.email ? 'error.main' : 'action.active'
                     }}
                   />
-                ),
+                )
               }}
             />
           )}

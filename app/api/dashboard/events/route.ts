@@ -29,14 +29,14 @@ export async function GET() {
         isControllerClosed = true
         clearInterval(pingInterval)
       }
-    },
+    }
   })
 
   return new Response(stream, {
     headers: {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
-      Connection: 'keep-alive',
-    },
+      Connection: 'keep-alive'
+    }
   })
 }

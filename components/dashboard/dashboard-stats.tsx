@@ -14,13 +14,13 @@ const cardVariants = {
   initial: { scale: 0.96, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   hover: { scale: 1.02, transition: { duration: 0.2 } },
-  tap: { scale: 0.98 },
+  tap: { scale: 0.98 }
 }
 
 const iconVariants = {
   initial: { rotate: -10, scale: 0.9 },
   animate: { rotate: 0, scale: 1 },
-  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
+  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } }
 }
 
 export function DashboardStats({ stats }: DashboardStatsProps) {
@@ -34,7 +34,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.properties,
       description: 'Total number of properties in your portfolio',
       color: 'primary',
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.12)} 0%, ${alpha(theme.palette.primary.dark, 0.12)} 100%)`,
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.primary.light, 0.12)} 0%, ${alpha(theme.palette.primary.dark, 0.12)} 100%)`
     },
     {
       title: 'Active Tenants',
@@ -43,20 +43,20 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.tenants,
       description: 'Number of current active tenants',
       color: 'success',
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.success.light, 0.12)} 0%, ${alpha(theme.palette.success.dark, 0.12)} 100%)`,
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.success.light, 0.12)} 0%, ${alpha(theme.palette.success.dark, 0.12)} 100%)`
     },
     {
       title: 'Monthly Revenue',
       value: new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD',
-        maximumFractionDigits: 0,
+        maximumFractionDigits: 0
       }).format(stats.monthlyRevenue),
       icon: DollarSign,
       percentageChange: stats.percentageChanges.revenue,
       description: 'Total monthly revenue from all properties',
       color: 'info',
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.info.light, 0.12)} 0%, ${alpha(theme.palette.info.dark, 0.12)} 100%)`,
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.info.light, 0.12)} 0%, ${alpha(theme.palette.info.dark, 0.12)} 100%)`
     },
     {
       title: 'Occupancy Rate',
@@ -65,8 +65,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
       percentageChange: stats.percentageChanges.occupancy,
       description: 'Current occupancy rate across all properties',
       color: 'warning',
-      gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.12)} 0%, ${alpha(theme.palette.warning.dark, 0.12)} 100%)`,
-    },
+      gradient: `linear-gradient(135deg, ${alpha(theme.palette.warning.light, 0.12)} 0%, ${alpha(theme.palette.warning.dark, 0.12)} 100%)`
+    }
   ] as const
 
   return (
@@ -98,8 +98,8 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
                     boxShadow: theme.shadows[8],
-                    borderColor: alpha(theme.palette[item.color].main, 0.4),
-                  },
+                    borderColor: alpha(theme.palette[item.color].main, 0.4)
+                  }
                 }}
               >
                 <motion.div
@@ -113,7 +113,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     justifyContent: 'center',
                     marginBottom: theme.spacing(2),
                     background: `linear-gradient(135deg, ${theme.palette[item.color].light} 0%, ${theme.palette[item.color].dark} 100%)`,
-                    boxShadow: `0 2px 10px 0 ${alpha(theme.palette[item.color].main, 0.3)}`,
+                    boxShadow: `0 2px 10px 0 ${alpha(theme.palette[item.color].main, 0.3)}`
                   }}
                 >
                   <item.icon width={24} height={24} color="#fff" />
@@ -125,7 +125,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     mb: 1,
                     fontWeight: 700,
                     color: theme.palette[item.color].dark,
-                    fontSize: { xs: '1.5rem', sm: '1.75rem' },
+                    fontSize: { xs: '1.5rem', sm: '1.75rem' }
                   }}
                 >
                   {item.value}
@@ -137,7 +137,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     mb: 1,
                     opacity: 0.8,
                     color: theme.palette[item.color].dark,
-                    fontWeight: 500,
+                    fontWeight: 500
                   }}
                 >
                   {item.title}
@@ -152,7 +152,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     mt: 'auto',
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'flex-start',
+                    justifyContent: 'flex-start'
                   }}
                 >
                   <TrendingUp
@@ -164,7 +164,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                       color:
                         item.percentageChange >= 0
                           ? theme.palette.success.main
-                          : theme.palette.error.main,
+                          : theme.palette.error.main
                     }}
                   />
                   <Typography
@@ -172,7 +172,7 @@ export function DashboardStats({ stats }: DashboardStatsProps) {
                     variant="subtitle2"
                     sx={{
                       fontWeight: 600,
-                      color: item.percentageChange >= 0 ? 'success.main' : 'error.main',
+                      color: item.percentageChange >= 0 ? 'success.main' : 'error.main'
                     }}
                   >
                     {Math.abs(item.percentageChange)}%

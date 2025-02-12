@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material';
-import { Box, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material';
-import { useAuth } from '@/components/providers/auth-provider';
+import { useState } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material'
+import { Box, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material'
+import { useAuth } from '@/components/providers/auth-provider'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
@@ -14,27 +14,27 @@ const navigation = [
   { name: 'Maintenance', href: '/maintenance' },
   { name: 'Leases', href: '/leases' },
   { name: 'Payments', href: '/payments' },
-  { name: 'Settings', href: '/settings' },
-];
+  { name: 'Settings', href: '/settings' }
+]
 
 const publicNavigation = [
   { name: 'Home', href: '/' },
   { name: 'Features', href: '/features' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-];
+  { name: 'Contact', href: '/contact' }
+]
 
 export function MobileNav() {
-  const [isOpen, setIsOpen] = useState(false);
-  const pathname = usePathname();
-  const { user } = useAuth();
+  const [isOpen, setIsOpen] = useState(false)
+  const pathname = usePathname()
+  const { user } = useAuth()
 
   const toggleDrawer = () => {
-    setIsOpen(!isOpen);
-  };
+    setIsOpen(!isOpen)
+  }
 
-  const navItems = user ? navigation : publicNavigation;
+  const navItems = user ? navigation : publicNavigation
 
   return (
     <>
@@ -57,8 +57,8 @@ export function MobileNav() {
         sx={{
           '& .MuiDrawer-paper': {
             width: 240,
-            boxSizing: 'border-box',
-          },
+            boxSizing: 'border-box'
+          }
         }}
       >
         <List>
@@ -71,8 +71,8 @@ export function MobileNav() {
               sx={{
                 backgroundColor: pathname === item.href ? 'action.selected' : 'transparent',
                 '&:hover': {
-                  backgroundColor: 'action.hover',
-                },
+                  backgroundColor: 'action.hover'
+                }
               }}
             >
               <ListItemText primary={item.name} />
@@ -81,14 +81,14 @@ export function MobileNav() {
         </List>
       </Drawer>
     </>
-  );
+  )
 }
 
 export function DesktopNav() {
-  const pathname = usePathname();
-  const { user } = useAuth();
+  const pathname = usePathname()
+  const { user } = useAuth()
 
-  const navItems = user ? navigation : publicNavigation;
+  const navItems = user ? navigation : publicNavigation
 
   return (
     <Box sx={{ display: { xs: 'none', md: 'flex' }, gap: 2 }}>
@@ -101,13 +101,13 @@ export function DesktopNav() {
             width: 'auto',
             backgroundColor: pathname === item.href ? 'action.selected' : 'transparent',
             '&:hover': {
-              backgroundColor: 'action.hover',
-            },
+              backgroundColor: 'action.hover'
+            }
           }}
         >
           <ListItemText primary={item.name} />
         </ListItem>
       ))}
     </Box>
-  );
+  )
 }

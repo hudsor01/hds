@@ -19,20 +19,20 @@ export default function SettingsPage() {
   const tabs = [
     {
       label: 'General',
-      content: <GeneralSettings />,
+      content: <GeneralSettings />
     },
     {
       label: 'Notifications',
-      content: <NotificationSettings />,
+      content: <NotificationSettings />
     },
     {
       label: 'Security',
-      content: <SecuritySettings />,
+      content: <SecuritySettings />
     },
     {
       label: 'Billing',
-      content: <BillingSettings />,
-    },
+      content: <BillingSettings />
+    }
   ]
 
   return (

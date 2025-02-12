@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/buttons/button'
 import type {
   MaintenanceRequest,
   NewMaintenanceRequest,
-  UpdateMaintenanceRequest,
+  UpdateMaintenanceRequest
 } from '@/types/maintenance_requests'
 import type { Property } from '@/types/property'
 import type { SelectChangeEvent } from '@mui/material'
@@ -15,7 +15,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from 'components/ui/dialog'
 import { Input } from 'components/ui/input'
 import { Label } from 'components/ui/label'
@@ -55,13 +55,13 @@ export function MaintenanceRequestDialog(
         tenantId: formData.get('tenantId') as string,
         title: formData.get('title') as string,
         description: formData.get('description') as string,
-        priority: formData.get('priority') as keyof typeof PRIORITY_LEVELS,
+        priority: formData.get('priority') as keyof typeof PRIORITY_LEVELS
       }
 
       if (props.request) {
         await (props as MaintenanceRequestEditDialogProps).onSubmitAction({
           ...data,
-          id: props.request.id,
+          id: props.request.id
         })
       } else {
         await (props as MaintenanceRequestDialogProps).onSubmitAction(data as NewMaintenanceRequest)
@@ -72,7 +72,7 @@ export function MaintenanceRequestDialog(
     }
   }
 
-  const selectedPropertyUnits = props.properties.find((p) => p.id === selectedProperty)?.units || []
+  const selectedPropertyUnits = props.properties.find(p => p.id === selectedProperty)?.units || []
 
   return (
     <Dialog open={props.open} onOpenChange={props.onOpenChangeAction}>
@@ -99,7 +99,7 @@ export function MaintenanceRequestDialog(
                 }}
                 placeholder="Select a property"
               >
-                {props.properties.map((property) => (
+                {props.properties.map(property => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>
@@ -115,7 +115,7 @@ export function MaintenanceRequestDialog(
                 disabled={!selectedProperty}
                 placeholder="Select a unit"
               >
-                {selectedPropertyUnits.map((unit) => (
+                {selectedPropertyUnits.map(unit => (
                   <SelectItem key={unit.id} value={unit.id}>
                     Unit {unit.number}
                   </SelectItem>

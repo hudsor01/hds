@@ -13,30 +13,30 @@ const StyledSlider = styled(MuiSlider)(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
     border: `2px solid ${theme.palette.primary.main}`,
     '&:hover': {
-      boxShadow: `0 0 0 8px ${theme.palette.primary.main}20`,
+      boxShadow: `0 0 0 8px ${theme.palette.primary.main}20`
     },
     '&.Mui-active': {
-      boxShadow: `0 0 0 12px ${theme.palette.primary.main}20`,
-    },
+      boxShadow: `0 0 0 12px ${theme.palette.primary.main}20`
+    }
   },
   '& .MuiSlider-track': {
     height: 4,
-    backgroundColor: theme.palette.primary.main,
+    backgroundColor: theme.palette.primary.main
   },
   '& .MuiSlider-rail': {
     height: 4,
     backgroundColor: theme.palette.primary.light,
-    opacity: 0.38,
+    opacity: 0.38
   },
   '& .MuiSlider-mark': {
     backgroundColor: theme.palette.primary.main,
     height: 8,
     width: 1,
-    marginTop: -2,
+    marginTop: -2
   },
   '& .MuiSlider-markActive': {
-    backgroundColor: theme.palette.background.paper,
-  },
+    backgroundColor: theme.palette.background.paper
+  }
 }))
 
 export interface SliderProps extends MuiSliderProps {

@@ -15,7 +15,7 @@ export default function RateLimitPage() {
           justifyContent: 'center',
           minHeight: '100vh',
           textAlign: 'center',
-          py: 8,
+          py: 8
         }}
       >
         <FadeIn delay={0.2}>
@@ -23,7 +23,7 @@ export default function RateLimitPage() {
             size={80}
             style={{
               color: '#007FFF',
-              marginBottom: '2rem',
+              marginBottom: '2rem'
             }}
           />
         </FadeIn>
@@ -36,7 +36,7 @@ export default function RateLimitPage() {
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 2,
+              mb: 2
             }}
           >
             Too Many Requests
@@ -63,8 +63,8 @@ export default function RateLimitPage() {
             sx={{
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               '&:hover': {
-                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-              },
+                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+              }
             }}
           >
             Try Again

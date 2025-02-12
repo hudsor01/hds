@@ -3,8 +3,6 @@ import { Box, Card, CardContent, CardHeader, Grid } from '@mui/material'
 import { BarChart, LineChart } from '@mui/x-charts'
 
 export default async function AnalyticsPage() {
-  const stats = await getWaitlistStats()
-
   return (
     <Box sx={{ p: 4 }}>
       <Grid container spacing={3}>
@@ -55,6 +53,6 @@ async function getWaitlistStats(): Promise<{
     signups: [],
     dates: [],
     counts: [],
-    emailMetrics: [],
+    emailMetrics: []
   }
 }

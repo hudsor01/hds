@@ -9,7 +9,7 @@ import {
   Link,
   Preview,
   Section,
-  Text,
+  Text
 } from '@react-email/components'
 
 interface WelcomeEmailProps {
@@ -63,13 +63,13 @@ export default function WelcomeEmail({ position, referralCode }: WelcomeEmailPro
 const main = {
   backgroundColor: '#ffffff',
   fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
 }
 
 const container = {
   margin: '0 auto',
   padding: '20px 0 48px',
-  maxWidth: '560px',
+  maxWidth: '560px'
 }
 
 const h1 = {
@@ -77,14 +77,14 @@ const h1 = {
   fontSize: '24px',
   fontWeight: '600',
   lineHeight: '40px',
-  margin: '0 0 20px',
+  margin: '0 0 20px'
 }
 
 const text = {
   color: '#1a1a1a',
   fontSize: '16px',
   lineHeight: '26px',
-  margin: '16px 0',
+  margin: '16px 0'
 }
 
 const section = {
@@ -92,7 +92,7 @@ const section = {
   border: 'solid 1px #dedede',
   borderRadius: '8px',
   margin: '40px 0',
-  backgroundColor: '#f9f9f9',
+  backgroundColor: '#f9f9f9'
 }
 
 const code = {
@@ -102,7 +102,7 @@ const code = {
   letterSpacing: '4px',
   padding: '16px 0',
   textAlign: 'center' as const,
-  color: '#007FFF',
+  color: '#007FFF'
 }
 
 const button = {
@@ -113,21 +113,21 @@ const button = {
   textDecoration: 'none',
   textAlign: 'center' as const,
   display: 'block',
-  width: '100%',
+  width: '100%'
 }
 
 const hr = {
   borderColor: '#dedede',
-  margin: '20px 0',
+  margin: '20px 0'
 }
 
 const footer = {
   color: '#666666',
   fontSize: '14px',
-  margin: '0',
+  margin: '0'
 }
 
 const link = {
   color: '#007FFF',
-  textDecoration: 'underline',
+  textDecoration: 'underline'
 }

@@ -6,7 +6,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts'
 
 interface AnalyticsChartProps {
@@ -22,7 +22,7 @@ export default function AnalyticsChart({
   data,
   valuePrefix = '',
   valueSuffix = '',
-  color,
+  color
 }: AnalyticsChartProps) {
   const theme = useTheme()
   const chartColor = color || theme.palette.primary.main
@@ -41,22 +41,22 @@ export default function AnalyticsChart({
                 top: 10,
                 right: 30,
                 left: 0,
-                bottom: 0,
+                bottom: 0
               }}
             >
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis
                 dataKey="timestamp"
-                tickFormatter={(value) => new Date(value).toLocaleDateString()}
+                tickFormatter={value => new Date(value).toLocaleDateString()}
               />
               <YAxis
-                tickFormatter={(value) => `${valuePrefix}${value.toLocaleString()}${valueSuffix}`}
+                tickFormatter={value => `${valuePrefix}${value.toLocaleString()}${valueSuffix}`}
               />
               <Tooltip
                 formatter={(value: number) =>
                   `${valuePrefix}${value.toLocaleString()}${valueSuffix}`
                 }
-                labelFormatter={(label) => new Date(label).toLocaleDateString()}
+                labelFormatter={label => new Date(label).toLocaleDateString()}
               />
               <Area
                 type="monotone"

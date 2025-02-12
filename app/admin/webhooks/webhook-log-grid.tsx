@@ -17,7 +17,7 @@ const EVENT_TYPE_COLORS: Record<string, 'info' | 'success' | 'warning' | 'error'
   'session.ended': 'info',
   'organization.created': 'success',
   'organization.updated': 'info',
-  'organization.deleted': 'error',
+  'organization.deleted': 'error'
 }
 
 export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
@@ -39,13 +39,13 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
                 color={EVENT_TYPE_COLORS[value as WebhookEventType] || 'default'}
                 size="small"
               />
-            ),
+            )
           },
           {
             field: 'created_at',
             headerName: 'Time',
             width: 200,
-            valueFormatter: ({ value }) => new Date(value as string).toLocaleString(),
+            valueFormatter: ({ value }) => new Date(value as string).toLocaleString()
           },
           {
             field: 'success',
@@ -57,7 +57,7 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
                 color={value ? 'success' : 'error'}
                 size="small"
               />
-            ),
+            )
           },
           {
             field: 'payload',
@@ -74,24 +74,24 @@ export function WebhookLogGrid({ logs }: WebhookLogGridProps) {
               >
                 View Payload
               </Button>
-            ),
-          },
+            )
+          }
         ]}
         autoHeight
         disableRowSelectionOnClick
         slots={{ toolbar: GridToolbar }}
         slotProps={{
           toolbar: {
-            showQuickFilter: true,
-          },
+            showQuickFilter: true
+          }
         }}
         initialState={{
           pagination: {
-            paginationModel: { pageSize: 10 },
+            paginationModel: { pageSize: 10 }
           },
           sorting: {
-            sortModel: [{ field: 'created_at', sort: 'desc' }],
-          },
+            sortModel: [{ field: 'created_at', sort: 'desc' }]
+          }
         }}
       />
 

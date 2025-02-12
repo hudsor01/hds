@@ -11,7 +11,7 @@ export function FeatureCard({
   description,
   icon: Icon,
   delay = 0,
-  onView,
+  onView
 }: FeatureCardProps) {
   const ref = useRef<HTMLDivElement>(null)
   const isInView = useInView(ref, { once: true })
@@ -32,18 +32,18 @@ export function FeatureCard({
         viewport={{ once: true }}
         style={{ display: 'block' }}
       >
-        <Card className="group relative overflow-hidden p-6 transition-colors hover:bg-accent">
+        <Card className="hover:bg-accent group relative overflow-hidden p-6 transition-colors">
           <div className="space-y-4">
-            <div className="inline-flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 transition-colors group-hover:bg-primary/20">
+            <div className="bg-primary/10 group-hover:bg-primary/20 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors">
               <Icon
-                className="h-6 w-6 text-primary transition-transform group-hover:scale-110"
+                className="text-primary h-6 w-6 transition-transform group-hover:scale-110"
                 aria-hidden="true"
               />
             </div>
             <h3 className="text-xl font-bold">{title}</h3>
             <p className="text-muted-foreground">{description}</p>
           </div>
-          <div className="bg-linear-to-r absolute inset-x-0 bottom-0 h-px from-transparent via-primary/20 to-transparent" />
+          <div className="bg-linear-to-r via-primary/20 absolute inset-x-0 bottom-0 h-px from-transparent to-transparent" />
         </Card>
       </motion.div>
     </Tooltip>

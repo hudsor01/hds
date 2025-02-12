@@ -1,8 +1,7 @@
 import type { EmailTemplate } from '../components/emails/templates'
 
+// Base types
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
-
-// Common types
 export type Timestamp = string
 export type UUID = string
 export type Money = number
@@ -11,19 +10,19 @@ export type PhoneNumber = string
 export type ImageUrl = string
 export type DocumentUrl = string
 
-// Status enums
+// Status Enums
 export enum UserStatus {
   ACTIVE = 'active',
   INACTIVE = 'inactive',
   SUSPENDED = 'suspended',
-  PENDING = 'pending',
+  PENDING = 'pending'
 }
 
 export enum PropertyStatus {
   AVAILABLE = 'available',
   OCCUPIED = 'occupied',
   MAINTENANCE = 'maintenance',
-  INACTIVE = 'inactive',
+  INACTIVE = 'inactive'
 }
 
 export enum LeaseStatus {
@@ -32,32 +31,31 @@ export enum LeaseStatus {
   ACTIVE = 'active',
   TERMINATED = 'terminated',
   EXPIRED = 'expired',
-  RENEWED = 'renewed',
+  RENEWED = 'renewed'
 }
 
-export enum PaymentStatus {
-  PENDING = 'pending',
-  COMPLETED = 'completed',
-  FAILED = 'failed',
-  REFUNDED = 'refunded',
-  CANCELLED = 'cancelled',
-}
+// Constants
+export const PROPERTY_TYPES = {
+  SINGLE_FAMILY: 'Single Family',
+  MULTI_FAMILY: 'Multi Family',
+  APARTMENT: 'Apartment',
+  CONDO: 'Condo',
+  COMMERCIAL: 'Commercial'
+} as const
 
-export enum MaintenanceStatus {
-  PENDING = 'pending',
-  IN_PROGRESS = 'in_progress',
-  COMPLETED = 'completed',
-  CANCELLED = 'cancelled',
-}
+export const PROPERTY_STATUS = {
+  ACTIVE: 'Active',
+  INACTIVE: 'Inactive',
+  MAINTENANCE: 'Under Maintenance',
+  DEVELOPMENT: 'Under Development'
+} as const
 
-export enum MaintenancePriority {
-  LOW = 'low',
-  MEDIUM = 'medium',
-  HIGH = 'high',
-  EMERGENCY = 'emergency',
-}
-
-export type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant'
+export const LEASE_STATUS = {
+  active: 'active',
+  pending: 'pending',
+  expired: 'expired',
+  terminated: 'terminated'
+} as const
 
 export interface UseDashboardUpdatesProps {
   table: string
@@ -66,13 +64,77 @@ export interface UseDashboardUpdatesProps {
   onDelete: (id: string) => void
 }
 
-export interface Activity {
+export const PAYMENT_FREQUENCY = {
+  monthly: 'monthly',
+  quarterly: 'quarterly',
+  annually: 'annually'
+} as const
+
+export enum PaymentStatus {
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  REFUNDED = 'refunded',
+  CANCELLED = 'cancelled'
+}
+
+export enum MaintenanceStatus {
+  PENDING = 'pending',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled'
+}
+
+export enum MaintenancePriority {
+  LOW = 'low',
+  MEDIUM = 'medium',
+  HIGH = 'high',
+  EMERGENCY = 'emergency'
+}
+
+export type ActivityType = 'property' | 'payment' | 'maintenance' | 'tenant'
+
+// Database Interfaces
+export interface Property {
   id: string
-  type: ActivityType
-  title: string
-  description: string
-  timestamp: Date
-  metadata?: Record<string, any>
+  created_at: string
+  name: string
+  address: string
+  city: string
+  state: string
+  zip_code: string
+  type: string
+  status: string
+  owner_id: string
+  organization_id: string
+  bedrooms?: number
+  bathrooms?: number
+  square_feet?: number
+  updated_at?: string
+}
+
+export interface Unit {
+  id: string
+  created_at: string
+  property_id: string
+  unit_number: string
+  bedrooms: number
+  bathrooms: number
+  square_feet: number
+  rent_amount: number
+  status: 'vacant' | 'occupied' | 'maintenance'
+}
+
+export interface Tenant {
+  id: string
+  created_at: string
+  first_name: string
+  last_name: string
+  email: string
+  phone: string
+  status: 'active' | 'inactive' | 'pending'
+  user_id?: string
+  updated_at?: string
 }
 
 export interface Lease {
@@ -85,41 +147,100 @@ export interface Lease {
   status: 'active' | 'pending' | 'expired'
   created_at: string
   updated_at: string
+  propertyName?: string
+  tenantName?: string
+  securityDeposit?: number
+  paymentFrequency?: keyof typeof PAYMENT_FREQUENCY
+  documents?: LeaseDocument[]
+  termsAccepted?: boolean
+  utilityResponsibilities?: {
+    electricity: 'tenant' | 'landlord'
+    water: 'tenant' | 'landlord'
+    gas: 'tenant' | 'landlord'
+    internet: 'tenant' | 'landlord'
+  }
+}
+
+export interface LeaseDocument {
+  id: string
+  type: 'lease_agreement' | 'addendum' | 'termination_notice'
+  url: string
+  uploadedAt: Date
 }
 
 export interface MaintenanceRequest {
   id: string
-  property_id: string
+  created_at: string
+  unit_id: string
   tenant_id: string
+  title: string
   description: string
-  priority: 'low' | 'medium' | 'high'
-  status: 'open' | 'in_progress' | 'completed'
-  created_at: string
-  updated_at: string
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+  assigned_to?: string
+  completed_at?: string
+  property_id?: string
+  updated_at?: string
 }
 
-export interface Property {
+export interface Activity {
   id: string
-  owner_id: string
-  address: string
-  type: 'apartment' | 'house' | 'condo'
-  bedrooms: number
-  bathrooms: number
-  square_feet: number
-  created_at: string
-  updated_at: string
+  type: ActivityType
+  title: string
+  description: string
+  timestamp: Date
+  metadata?: Record<string, any>
 }
 
-export interface Tenant {
-  id: string
-  user_id: string
-  name: string
+// Waitlist related types
+export interface WaitlistEntry extends BaseRecord {
   email: string
-  phone: string
-  created_at: string
-  updated_at: string
+  status: 'active' | 'invited' | 'converted'
+  position: number | null
+  source?: string
+  referralCode?: string
 }
 
+export interface EmailEvent extends BaseRecord {
+  waitlistId: string
+  template: string
+  sentAt: Date
+  openedAt?: Date
+  clickedAt?: Date
+  status: 'sent' | 'delivered' | 'opened' | 'clicked' | 'failed'
+  metadata?: Record<string, any>
+}
+
+export interface AnalyticsEvent extends BaseRecord {
+  eventType: 'signup' | 'email_open' | 'email_click' | 'conversion'
+  waitlistId: string
+  metadata?: Record<string, any>
+}
+
+export interface WaitlistResponse {
+  entry: WaitlistEntry
+  position: number
+  estimatedAccessDate?: Date
+}
+
+export interface EmailStats {
+  sent: number
+  opened: number
+  clicked: number
+  openRate: number
+  clickRate: number
+  averageTimeToOpen?: number
+}
+
+export interface WaitlistStats {
+  totalSignups: number
+  activeMembers: number
+  conversionRate: number
+  growthRate: number
+  emailMetrics: Record<EmailTemplate, EmailStats>
+}
+
+// Database schema type
 export type Database = {
   public: {
     Tables: {
@@ -285,9 +406,8 @@ export type Database = {
   }
 }
 
-// Helper type to reference tables directly
+// Helper types
 export type DatabaseTables = Database['public']['Tables']
-
 type PublicSchema = Database[Extract<keyof Database, 'public'>]
 
 export type Tables<
@@ -297,7 +417,7 @@ export type Tables<
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
         Database[PublicTableNameOrOptions['schema']]['Views'])
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
       Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
@@ -317,7 +437,7 @@ export type TablesInsert<
   PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Insert: infer I
@@ -336,7 +456,7 @@ export type TablesUpdate<
   PublicTableNameOrOptions extends keyof PublicSchema['Tables'] | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicTableNameOrOptions['schema']]['Tables']
-    : never = never,
+    : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
       Update: infer U
@@ -355,85 +475,14 @@ export type Enums<
   PublicEnumNameOrOptions extends keyof PublicSchema['Enums'] | { schema: keyof Database },
   EnumName extends PublicEnumNameOrOptions extends { schema: keyof Database }
     ? keyof Database[PublicEnumNameOrOptions['schema']]['Enums']
-    : never = never,
+    : never = never
 > = PublicEnumNameOrOptions extends { schema: keyof Database }
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never
 
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof PublicSchema['CompositeTypes']
-    | { schema: keyof Database },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof Database
-  }
-    ? keyof Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes']
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
-  ? Database[PublicCompositeTypeNameOrOptions['schema']]['CompositeTypes'][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof PublicSchema['CompositeTypes']
-    ? PublicSchema['CompositeTypes'][PublicCompositeTypeNameOrOptions]
-    : never
-
-// types/database.ts
 interface BaseRecord {
   id: string
   createdAt: Date
-}
-
-export interface WaitlistEntry extends BaseRecord {
-  email: string
-  status: 'active' | 'invited' | 'converted'
-  position: number | null
-  source?: string
-  referralCode?: string
-}
-
-export interface EmailEvent extends BaseRecord {
-  waitlistId: string
-  template: string // Assuming EmailTemplate is a string type
-  sentAt: Date
-  openedAt?: Date
-  clickedAt?: Date
-  status: 'sent' | 'delivered' | 'opened' | 'clicked' | 'failed'
-  metadata?: Record<string, any>
-}
-
-export interface AnalyticsEvent extends BaseRecord {
-  eventType: 'signup' | 'email_open' | 'email_click' | 'conversion'
-  waitlistId: string
-  metadata?: Record<string, any>
-}
-
-// types/api.ts
-export interface WaitlistResponse {
-  entry: WaitlistEntry
-  position: number
-  estimatedAccessDate?: Date
-}
-
-export interface EmailStats {
-  sent: number
-  opened: number
-  clicked: number
-  openRate: number
-  clickRate: number
-  averageTimeToOpen?: number
-}
-
-export interface WaitlistStats {
-  totalSignups: number
-  activeMembers: number
-  conversionRate: number
-  growthRate: number
-  emailMetrics: Record<EmailTemplate, EmailStats>
-}
-
-export interface Session {
-  id: string
-  userId: string
-  sessionToken: string
-  expires: Date
 }

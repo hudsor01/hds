@@ -4,7 +4,7 @@ import { Box, Typography } from '@mui/material'
 export async function ServerProfile() {
   const supabase = await createClient()
   const {
-    data: { user },
+    data: { user }
   } = await supabase.auth.getCurrentUser()
 
   if (!user) {

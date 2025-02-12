@@ -1,65 +1,65 @@
-'use client';
-import * as React from 'react';
+'use client'
+import * as React from 'react'
 
-import { useUser } from '@/app/auth/lib/auth/config';
-import type { PhoneNumberResource } from '@supabase/supabase-js';
+import { useUser } from '@/app/auth/lib/auth/config'
+import type { PhoneNumberResource } from '@supabase/supabase-js'
 export default function Page() {
-  const { user, loading } = useUser();
-  const [phone, setPhone] = React.useState('');
-  const [code, setCode] = React.useState('');
-  const [isVerifying, setIsVerifying] = React.useState(false);
-  const [successful, setSuccessful] = React.useState(false);
-  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>();
+  const { user, loading } = useUser()
+  const [phone, setPhone] = React.useState('')
+  const [code, setCode] = React.useState('')
+  const [isVerifying, setIsVerifying] = React.useState(false)
+  const [successful, setSuccessful] = React.useState(false)
+  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>()
 
-  if (loading) return null;
+  if (loading) return null
 
   if (!loading && !user?.id) {
-    return <p>You must be logged in to access this page</p>;
+    return <p>You must be logged in to access this page</p>
   }
 
   // Handle addition of the phone number
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
 
     try {
       // Add unverified phone number to user
-      const res = user?.createPhoneNumber({ phoneNumber: phone });
+      const res = user?.createPhoneNumber({ phoneNumber: phone })
       // Reload user to get updated User object
-      await user?.reload();
+      await user?.reload()
 
       // Create a reference to the new phone number to use related methods
-      const phoneNumber = user?.phoneNumbers.find(a => a.id === res.id);
-      setPhoneObj(phoneNumber);
+      const phoneNumber = user?.phoneNumbers.find(a => a.id === res.id)
+      setPhoneObj(phoneNumber)
 
       // Send the user an SMS with the verification code
-      phoneNumber?.prepareVerification();
+      phoneNumber?.prepareVerification()
 
       // Set to true to display second form
       // and capture the OTP code
-      setIsVerifying(true);
+      setIsVerifying(true)
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+      console.error(JSON.stringify(err, null, 2))
     }
-  };
+  }
 
   // Handle the submission of the verification form
   const verifyCode = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault()
     try {
       // Verify that the provided code matches the code sent to the user
-      const phoneVerifyAttempt = await phoneObj?.attemptVerification({ code });
+      const phoneVerifyAttempt = await phoneObj?.attemptVerification({ code })
 
       if (phoneVerifyAttempt?.verification.status === 'verified') {
-        setSuccessful(true);
+        setSuccessful(true)
       } else {
         // If the status is not complete, check why. User may need to
         // complete further steps.
-        console.error(JSON.stringify(phoneVerifyAttempt, null, 2));
+        console.error(JSON.stringify(phoneVerifyAttempt, null, 2))
       }
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2));
+      console.error(JSON.stringify(err, null, 2))
     }
-  };
+  }
 
   // Display a success message if the phone number was added successfully
   if (successful) {
@@ -67,7 +67,7 @@ export default function Page() {
       <>
         <h1>Phone added</h1>
       </>
-    );
+    )
   }
 
   // Display the verification form to capture the OTP code
@@ -93,7 +93,7 @@ export default function Page() {
           </form>
         </div>
       </>
-    );
+    )
   }
 
   // Display the initial form to capture the phone number
@@ -118,5 +118,5 @@ export default function Page() {
         </form>
       </div>
     </>
-  );
+  )
 }

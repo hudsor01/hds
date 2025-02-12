@@ -4,9 +4,9 @@ export const containerVariants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.3,
-    },
-  },
+      delayChildren: 0.3
+    }
+  }
 }
 
 export const itemVariants = {
@@ -16,7 +16,7 @@ export const itemVariants = {
     y: 0,
     filter: 'blur(0px)',
     transition: {
-      duration: 0.5,
-    },
-  },
+      duration: 0.5
+    }
+  }
 }

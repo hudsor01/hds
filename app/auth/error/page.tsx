@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { Button } from '@/components/ui/buttons/button';
-import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
+import { Button } from '@/components/ui/buttons/button'
+import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 export default function AuthErrorPage() {
-  const searchParams = useSearchParams();
+  const searchParams = useSearchParams()
   const errorMessage =
-    searchParams.get('message') || 'There was a problem authenticating your account.';
+    searchParams.get('message') || 'There was a problem authenticating your account.'
 
   return (
     <div className="flex min-h-screen flex-col items-center justify-center p-4">
@@ -24,5 +24,5 @@ export default function AuthErrorPage() {
         </div>
       </div>
     </div>
-  );
+  )
 }

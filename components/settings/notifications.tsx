@@ -7,7 +7,7 @@ import {
   FormGroup,
   FormHelperText,
   Switch,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useState } from 'react'
 
@@ -16,28 +16,28 @@ export function NotificationSettings() {
     email: {
       marketing: true,
       security: true,
-      updates: false,
+      updates: false
     },
     push: {
       newMessages: true,
       newActivity: true,
-      reminders: true,
+      reminders: true
     },
     desktop: {
       alerts: true,
-      sounds: true,
-    },
+      sounds: true
+    }
   })
 
   const handleChange =
     (category: keyof typeof settings, setting: string) =>
     (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSettings((prev) => ({
+      setSettings(prev => ({
         ...prev,
         [category]: {
           ...prev[category],
-          [setting]: event.target.checked,
-        },
+          [setting]: event.target.checked
+        }
       }))
     }
 

@@ -5,7 +5,7 @@ import type {
   MaintenanceStatus,
   MaintenanceRequestWithRelations,
   UpdateMaintenanceRequest,
-  Comment,
+  Comment
 } from '@/types/maintenance_requests'
 import type { SelectChangeEvent } from '@mui/material'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
@@ -26,7 +26,7 @@ export function MaintenanceTicketDetails({
   open,
   onOpenChangeAction,
   ticket,
-  onUpdateAction,
+  onUpdateAction
 }: MaintenanceTicketDetailsProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<MaintenanceStatus>(ticket.status)
@@ -40,7 +40,7 @@ export function MaintenanceTicketDetails({
     try {
       await onUpdateAction({
         id: ticket.id,
-        status: newStatus,
+        status: newStatus
       })
     } finally {
       setIsLoading(false)
@@ -54,12 +54,12 @@ export function MaintenanceTicketDetails({
     try {
       const newComment: Comment = {
         content: comment,
-        created_at: new Date().toISOString(),
+        created_at: new Date().toISOString()
       }
 
       await onUpdateAction({
         id: ticket.id,
-        comments: [...(ticket.comments || []), newComment],
+        comments: [...(ticket.comments || []), newComment]
       } as UpdateMaintenanceRequest)
       setComment('')
     } finally {
@@ -97,7 +97,7 @@ export function MaintenanceTicketDetails({
                 {new Date(ticket.created_at).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'long',
-                  day: 'numeric',
+                  day: 'numeric'
                 })}
               </span>
             </div>
@@ -123,7 +123,7 @@ export function MaintenanceTicketDetails({
               <div className="flex space-x-2">
                 <Textarea
                   value={comment}
-                  onChange={(e) => setComment(e.target.value)}
+                  onChange={e => setComment(e.target.value)}
                   placeholder="Type your comment..."
                   disabled={isLoading}
                 />

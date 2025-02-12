@@ -1,4 +1,4 @@
-import type { LeaseFormProps } from '../../types/lease'
+import type { LeaseFormProps } from '@/types'
 import { useCreateLease, useUpdateLease } from '@/hooks/use-leases'
 import { zodResolver } from '@hookform/resolvers/zod'
 import Box from '@mui/material/Box'
@@ -21,8 +21,8 @@ const leaseSchema = z.object({
     electricity: z.enum(['tenant', 'landlord']),
     water: z.enum(['tenant', 'landlord']),
     gas: z.enum(['tenant', 'landlord']),
-    internet: z.enum(['tenant', 'landlord']),
-  }),
+    internet: z.enum(['tenant', 'landlord'])
+  })
 })
 
 type LeaseFormData = z.infer<typeof leaseSchema>
@@ -34,7 +34,7 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm<LeaseFormData>({
     resolver: zodResolver(leaseSchema),
     defaultValues: initialData || {
@@ -43,9 +43,9 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
         electricity: 'tenant',
         water: 'tenant',
         gas: 'tenant',
-        internet: 'tenant',
-      },
-    },
+        internet: 'tenant'
+      }
+    }
   })
 
   const onSubmit = async (data: LeaseFormData) => {
@@ -114,8 +114,8 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
                   textField: {
                     fullWidth: true,
                     error: !!errors.startDate,
-                    helperText: errors.startDate?.message,
-                  },
+                    helperText: errors.startDate?.message
+                  }
                 }}
               />
             )}
@@ -134,8 +134,8 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
                   textField: {
                     fullWidth: true,
                     error: !!errors.endDate,
-                    helperText: errors.endDate?.message,
-                  },
+                    helperText: errors.endDate?.message
+                  }
                 }}
               />
             )}

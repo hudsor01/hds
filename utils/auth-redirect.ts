@@ -42,7 +42,7 @@ export const publicPaths = [
   '/',
   '/about',
   '/contact',
-  '/pricing',
+  '/pricing'
 ]
 
 export function isPublicPath(path: string): boolean {

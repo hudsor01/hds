@@ -4,7 +4,7 @@ import { type Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Forgot Password',
-  description: 'Reset your password by entering your email address',
+  description: 'Reset your password by entering your email address'
 }
 
 export default function ForgotPasswordPage() {
@@ -17,7 +17,7 @@ export default function ForgotPasswordPage() {
           flexDirection: 'column',
           justifyContent: 'center',
           alignItems: 'center',
-          py: 4,
+          py: 4
         }}
       >
         <Box sx={{ width: '100%', maxWidth: 400, textAlign: 'center', mb: 4 }}>

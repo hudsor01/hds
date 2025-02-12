@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { Dialog, DialogContent } from '@mui/material';
-import { cn } from '@/lib/utils';
-import * as React from 'react';
-import { Search } from '@mui/icons-material';
+import { Dialog, DialogContent } from '@mui/material'
+import { cn } from '@/lib/utils'
+import * as React from 'react'
+import { Search } from '@mui/icons-material'
 
 interface CommandProps {
-  children: React.ReactNode;
-  className?: string;
+  children: React.ReactNode
+  className?: string
 }
 
 export function Command({ children, className }: CommandProps) {
@@ -22,7 +22,7 @@ export function Command({ children, className }: CommandProps) {
       </div>
       {children}
     </div>
-  );
+  )
 }
 
 export function CommandDialog({ children, ...props }: { children: React.ReactNode }) {
@@ -34,5 +34,5 @@ export function CommandDialog({ children, ...props }: { children: React.ReactNod
         </Command>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

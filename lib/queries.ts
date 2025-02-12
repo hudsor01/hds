@@ -5,20 +5,20 @@ import { PaymentStatus, PaymentType, Prisma } from '@prisma/client'
 export const getPaymentsByTenant = async (tenantId: string) => {
   return prisma.payments.findMany({
     where: { tenant_id: tenantId },
-    orderBy: { created_at: 'desc' },
+    orderBy: { created_at: 'desc' }
   })
 }
 
 export const getPaymentsByLease = async (leaseId: string) => {
   const lease = await prisma.leases.findUnique({
-    where: { user_id: leaseId },
+    where: { user_id: leaseId }
   })
 
   if (!lease) return []
 
   return prisma.payments.findMany({
     where: { tenant_id: lease.tenant_id },
-    orderBy: { created_at: 'desc' },
+    orderBy: { created_at: 'desc' }
   })
 }
 
@@ -39,9 +39,9 @@ export const getPaginatedPayments = async (
       params.endDate && {
         created_at: {
           gte: params.startDate,
-          lte: params.endDate,
-        },
-      }),
+          lte: params.endDate
+        }
+      })
   }
 
   return getPaginatedResults(
@@ -50,7 +50,7 @@ export const getPaginatedPayments = async (
         where,
         orderBy: { created_at: 'desc' },
         skip,
-        take,
+        take
       }),
     () => prisma.payments.count({ where }),
     params
@@ -73,8 +73,8 @@ export const getLeaseWithDetails = async (leaseId: string) => {
       payment_day: true,
       documents: true,
       created_at: true,
-      status: true,
-    },
+      status: true
+    }
   })
 }
 
@@ -84,8 +84,8 @@ export const getActiveLeasesByProperty = async (propertyId: string) => {
       property_id: propertyId,
       status: 'Active',
       end_date: {
-        gte: new Date(),
-      },
+        gte: new Date()
+      }
     },
     select: {
       user_id: true,
@@ -97,9 +97,9 @@ export const getActiveLeasesByProperty = async (propertyId: string) => {
       rent_amount: true,
       depositAmount: true,
       payment_day: true,
-      status: true,
+      status: true
     },
-    orderBy: { start_date: 'desc' },
+    orderBy: { start_date: 'desc' }
   })
 }
 
@@ -129,12 +129,12 @@ export const getPropertyWithDetails = async (propertyId: string) => {
           last_name: true,
           email: true,
           phone: true,
-          status: true,
-        },
+          status: true
+        }
       },
       maintenance_requests: {
         where: {
-          status: 'PENDING',
+          status: 'PENDING'
         },
         select: {
           id: true,
@@ -142,10 +142,10 @@ export const getPropertyWithDetails = async (propertyId: string) => {
           description: true,
           status: true,
           priority: true,
-          created_at: true,
-        },
-      },
-    },
+          created_at: true
+        }
+      }
+    }
   })
 }
 
@@ -165,9 +165,9 @@ export const getPaginatedProperties = async (
       OR: [
         { name: { contains: params.search } },
         { address: { contains: params.search } },
-        { city: { contains: params.search } },
-      ],
-    }),
+        { city: { contains: params.search } }
+      ]
+    })
   }
 
   return getPaginatedResults(
@@ -188,8 +188,8 @@ export const getPaginatedProperties = async (
               id: true,
               first_name: true,
               last_name: true,
-              status: true,
-            },
+              status: true
+            }
           },
           maintenance_requests: {
             where: { status: 'PENDING' },
@@ -197,13 +197,13 @@ export const getPaginatedProperties = async (
               id: true,
               title: true,
               status: true,
-              priority: true,
-            },
-          },
+              priority: true
+            }
+          }
         },
         orderBy: { created_at: 'desc' },
         skip,
-        take,
+        take
       }),
     () => prisma.properties.count({ where }),
     params

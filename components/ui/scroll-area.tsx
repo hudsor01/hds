@@ -8,15 +8,15 @@ const StyledScrollArea = styled(Box)(({ theme }) => ({
   overflow: 'auto',
   '&::-webkit-scrollbar': {
     width: '8px',
-    backgroundColor: 'transparent',
+    backgroundColor: 'transparent'
   },
   '&::-webkit-scrollbar-thumb': {
     backgroundColor: theme.palette.divider,
     borderRadius: '4px',
     '&:hover': {
-      backgroundColor: theme.palette.action.hover,
-    },
-  },
+      backgroundColor: theme.palette.action.hover
+    }
+  }
 }))
 
 const ScrollArea = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(

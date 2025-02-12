@@ -58,7 +58,7 @@ export function TypographyP({ children, className, ...props }: TypographyProps) 
 export function TypographyBlockquote({ children, className, ...props }: TypographyProps) {
   return (
     <blockquote
-      className={cn('mt-6 border-l-2 border-blue-500 pl-6 italic text-muted-foreground', className)}
+      className={cn('text-muted-foreground mt-6 border-l-2 border-blue-500 pl-6 italic', className)}
       {...props}
     >
       {children}
@@ -68,7 +68,7 @@ export function TypographyBlockquote({ children, className, ...props }: Typograp
 
 export function TypographyLead({ children, className, ...props }: TypographyProps) {
   return (
-    <p className={cn('text-xl text-muted-foreground', className)} {...props}>
+    <p className={cn('text-muted-foreground text-xl', className)} {...props}>
       {children}
     </p>
   )
@@ -92,7 +92,7 @@ export function TypographySmall({ children, className, ...props }: TypographyPro
 
 export function TypographyMuted({ children, className, ...props }: TypographyProps) {
   return (
-    <p className={cn('text-sm text-muted-foreground', className)} {...props}>
+    <p className={cn('text-muted-foreground text-sm', className)} {...props}>
       {children}
     </p>
   )
@@ -102,7 +102,7 @@ export function TypographyInlineCode({ children, className, ...props }: Typograp
   return (
     <code
       className={cn(
-        'relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
+        'bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
         className
       )}
       {...props}

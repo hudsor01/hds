@@ -9,12 +9,12 @@ const StyledLinearProgress = styled(MuiLinearProgress)(({ theme }) => ({
   height: 8,
   borderRadius: theme.shape.borderRadius,
   [`&.MuiLinearProgress-root`]: {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.action.hover
   },
   [`& .MuiLinearProgress-bar`]: {
     borderRadius: theme.shape.borderRadius,
-    backgroundColor: theme.palette.primary.main,
-  },
+    backgroundColor: theme.palette.primary.main
+  }
 }))
 
 export interface ProgressProps extends Omit<LinearProgressProps, 'value'> {

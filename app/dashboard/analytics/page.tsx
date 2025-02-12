@@ -6,25 +6,22 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
 const PerformanceChart = dynamic(
-  () => import('components/dashboard/performance-chart').then((mod) => mod.PerformanceChart),
+  () => import('components/dashboard/performance-chart').then(mod => mod.PerformanceChart),
   {
-    ssr: false,
+    ssr: false
   }
 )
 
 const DonutChart = dynamic(
-  () => import('components/dashboard/donut-chart').then((mod) => mod.DonutChart),
+  () => import('components/dashboard/donut-chart').then(mod => mod.DonutChart),
   {
-    ssr: false,
+    ssr: false
   }
 )
 
-const BarChart = dynamic(
-  () => import('components/dashboard/bar-chart').then((mod) => mod.BarChart),
-  {
-    ssr: false,
-  }
-)
+const BarChart = dynamic(() => import('components/dashboard/bar-chart').then(mod => mod.BarChart), {
+  ssr: false
+})
 
 export default function AnalyticsPage() {
   const {
@@ -32,7 +29,7 @@ export default function AnalyticsPage() {
     tenantActivity,
     propertyOccupancy,
     revenueDistribution,
-    tenantInsights,
+    tenantInsights
   } = MOCK_ANALYTICS_DATA
 
   return (
@@ -54,10 +51,10 @@ export default function AnalyticsPage() {
                 Financial Performance
               </Typography>
               <PerformanceChart
-                data={financialPerformance.monthlyTrend.map((item) => ({
+                data={financialPerformance.monthlyTrend.map(item => ({
                   name: item.month,
                   revenue: item.revenue,
-                  expenses: item.expenses,
+                  expenses: item.expenses
                 }))}
               />
             </Paper>
@@ -73,7 +70,7 @@ export default function AnalyticsPage() {
                 data={[
                   { name: 'New Leases', value: tenantActivity.newLeases },
                   { name: 'Renewals', value: tenantActivity.renewals },
-                  { name: 'Move-outs', value: tenantActivity.moveOuts },
+                  { name: 'Move-outs', value: tenantActivity.moveOuts }
                 ]}
               />
             </Paper>
@@ -88,7 +85,7 @@ export default function AnalyticsPage() {
               <DonutChart
                 data={Object.entries(revenueDistribution).map(([name, value]) => ({
                   name,
-                  value,
+                  value
                 }))}
               />
             </Paper>
@@ -103,7 +100,7 @@ export default function AnalyticsPage() {
               <BarChart
                 data={Object.entries(propertyOccupancy).map(([name, value]) => ({
                   name,
-                  value,
+                  value
                 }))}
               />
             </Paper>

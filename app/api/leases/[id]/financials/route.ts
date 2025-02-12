@@ -12,7 +12,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     // First verify access to the lease
     const lease = await prisma.leases.findUnique({
       where: {
-        user_id: params.id,
+        user_id: params.id
       },
       select: {
         tenant_id: true,
@@ -21,8 +21,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         end_date: true,
         rent_amount: true,
         depositAmount: true,
-        status: true,
-      },
+        status: true
+      }
     })
 
     if (!lease) {
@@ -34,22 +34,22 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
       where: {
         tenant_id: lease.tenant_id,
         payment_type: {
-          in: [PaymentType.RENT, PaymentType.DEPOSIT],
+          in: [PaymentType.RENT, PaymentType.DEPOSIT]
         },
         payment_status: {
-          in: [PaymentStatus.COMPLETED],
-        },
+          in: [PaymentStatus.COMPLETED]
+        }
       },
       orderBy: {
-        created_at: 'desc',
+        created_at: 'desc'
       },
       select: {
         payment_amount: true,
         payment_type: true,
         payment_status: true,
         created_at: true,
-        processed_at: true,
-      },
+        processed_at: true
+      }
     })
 
     const totalPaid = payments.reduce((sum, payment) => sum + payment.payment_amount, 0)
@@ -61,14 +61,14 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         property_id: lease.property_id,
         start_date: lease.start_date,
         end_date: lease.end_date,
-        status: lease.status,
+        status: lease.status
       },
       financials: {
         total_paid: totalPaid,
         total_due: totalDue,
         balance,
-        payment_history: payments,
-      },
+        payment_history: payments
+      }
     })
   } catch (error) {
     return NextResponse.json({ error: 'Error calculating lease financials' }, { status: 500 })

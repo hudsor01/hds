@@ -23,7 +23,7 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
   try {
     const supabase = await createClient()
     const {
-      data: { session },
+      data: { session }
     } = await supabase.auth.getSession()
 
     const response = await fetch(input, {
@@ -31,8 +31,8 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
       headers: {
         'Content-Type': 'application/json',
         ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
-        ...init?.headers,
-      },
+        ...init?.headers
+      }
     })
 
     if (!response.ok) {
@@ -59,7 +59,7 @@ export async function fetchData<T>(
 export async function createData<T>(endpoint: string, payload: unknown): Promise<BaseResponse<T>> {
   const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}`, {
     method: 'POST',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   })
   return response.json()
 }
@@ -71,7 +71,7 @@ export async function updateData<T>(
 ): Promise<BaseResponse<T>> {
   const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
     method: 'PUT',
-    body: JSON.stringify(payload),
+    body: JSON.stringify(payload)
   })
   return response.json()
 }
@@ -81,7 +81,7 @@ export async function deleteData<T>(
   id: string | number
 ): Promise<BaseResponse<T>> {
   const response = await fetchWithErrorHandling(`${API_BASE_URL}${endpoint}/${id}`, {
-    method: 'DELETE',
+    method: 'DELETE'
   })
   return response.json()
 }
@@ -93,7 +93,7 @@ export const withValidation = <T>(schema: ZodSchema<T>) => {
       return await schema.parseAsync(req.body)
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new Error(error.errors.map((e) => e.message).join(', '))
+        throw new Error(error.errors.map(e => e.message).join(', '))
       }
       throw error
     }
@@ -119,12 +119,12 @@ function handleError(error: unknown): ApiError {
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: 'ERROR',
+      code: 'ERROR'
     }
   }
   return {
     message: 'An unexpected error occurred',
-    code: 'UNKNOWN_ERROR',
+    code: 'UNKNOWN_ERROR'
   }
 }
 
@@ -137,7 +137,7 @@ export const api = {
     } catch (error) {
       return {
         data: {} as T,
-        error: handleError(error),
+        error: handleError(error)
       }
     }
   },
@@ -149,7 +149,7 @@ export const api = {
     } catch (error) {
       return {
         data: {} as T,
-        error: handleError(error),
+        error: handleError(error)
       }
     }
   },
@@ -161,7 +161,7 @@ export const api = {
     } catch (error) {
       return {
         data: {} as T,
-        error: handleError(error),
+        error: handleError(error)
       }
     }
   },
@@ -173,17 +173,17 @@ export const api = {
     } catch (error) {
       return {
         data: {} as T,
-        error: handleError(error),
+        error: handleError(error)
       }
     }
-  },
+  }
 }
 
 export const apiClient = axios.create({
   baseURL: '/api',
   headers: {
-    'Content-Type': 'application/json',
-  },
+    'Content-Type': 'application/json'
+  }
 })
 
 export const handleApiError = (error: unknown) => {

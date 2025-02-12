@@ -6,7 +6,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from '@/components/ui/dialog'
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
@@ -25,7 +25,7 @@ export function TwoFactorSetup() {
     try {
       setIsLoading(true)
       const response = await fetch('/api/auth/2fa/setup', {
-        method: 'POST',
+        method: 'POST'
       })
       const data = await response.json()
 
@@ -48,7 +48,7 @@ export function TwoFactorSetup() {
       const response = await fetch('/api/auth/2fa/verify', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ token: verificationCode }),
+        body: JSON.stringify({ token: verificationCode })
       })
       const data = await response.json()
 
@@ -85,7 +85,7 @@ export function TwoFactorSetup() {
           <div className="space-y-4">
             {setupStep === 'initial' && (
               <div className="space-y-4">
-                <p className="text-sm text-muted-foreground">
+                <p className="text-muted-foreground text-sm">
                   Two-factor authentication adds an extra layer of security to your account. Once
                   enabled, you will need to enter a code from your authenticator app when signing
                   in.
@@ -125,7 +125,7 @@ export function TwoFactorSetup() {
                     type="text"
                     placeholder="Enter 6-digit code"
                     value={verificationCode}
-                    onChange={(e) => setVerificationCode(e.target.value)}
+                    onChange={e => setVerificationCode(e.target.value)}
                     maxLength={6}
                   />
                 </div>

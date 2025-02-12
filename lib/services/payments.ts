@@ -24,21 +24,21 @@ export async function createPaymentIntent({
   currency = 'usd',
   payment_method_types = ['card'],
   description,
-  metadata,
+  metadata
 }: CreatePaymentIntent) {
   return stripe.paymentIntents.create({
     amount: Math.round(amount * 100), // Convert to cents
     currency,
     payment_method_types,
     description,
-    metadata,
+    metadata
   })
 }
 
 export async function createCustomer(email: string, metadata?: Record<string, string>) {
   return stripe.customers.create({
     email,
-    metadata,
+    metadata
   })
 }
 
@@ -46,7 +46,7 @@ export async function createSubscription({ customerId, priceId, metadata }: Crea
   return stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
-    metadata,
+    metadata
   })
 }
 
@@ -57,13 +57,13 @@ export async function cancelSubscription(subscriptionId: string) {
 export async function getPaymentMethods(customerId: string) {
   return stripe.paymentMethods.list({
     customer: customerId,
-    type: 'card',
+    type: 'card'
   })
 }
 
 export async function attachPaymentMethod(customerId: string, paymentMethodId: string) {
   return stripe.paymentMethods.attach(paymentMethodId, {
-    customer: customerId,
+    customer: customerId
   })
 }
 
@@ -74,7 +74,7 @@ export async function detachPaymentMethod(paymentMethodId: string) {
 export async function createRefund(paymentIntentId: string, amount?: number) {
   return stripe.refunds.create({
     payment_intent: paymentIntentId,
-    amount: amount ? Math.round(amount * 100) : undefined, // Convert to cents if specified
+    amount: amount ? Math.round(amount * 100) : undefined // Convert to cents if specified
   })
 }
 
@@ -97,8 +97,8 @@ export async function savePaymentRecord(
       {
         user_id: userId,
         ...data,
-        payment_date: new Date().toISOString(),
-      },
+        payment_date: new Date().toISOString()
+      }
     ])
     .select()
     .single()
@@ -117,7 +117,7 @@ export async function updatePaymentStatus(
     .update({
       payment_status: status,
       stripe_event: stripeEvent,
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     })
     .eq('id', paymentId)
     .select()

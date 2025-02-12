@@ -10,7 +10,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts'
 
 // components/dashboard/revenue-chart.tsx
@@ -23,10 +23,10 @@ export function RevenueChart() {
     queryFn: async () => {
       const response = await fetch('/api/dashboard/revenue')
       return response.json()
-    },
+    }
   })
 
-  if (isLoading) return <RevenueChart.Skeleton />;
+  if (isLoading) return <RevenueChart.Skeleton />
 
   return (
     <Card className="p-6">

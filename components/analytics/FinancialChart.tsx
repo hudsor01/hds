@@ -22,7 +22,7 @@ interface FinancialChartProps {
 
 export default function FinancialChart({
   data,
-  title = 'Financial Overview',
+  title = 'Financial Overview'
 }: FinancialChartProps) {
   return (
     <Card className="w-full">
@@ -39,7 +39,7 @@ export default function FinancialChart({
                 formatter={(value: number) =>
                   new Intl.NumberFormat('en-US', {
                     style: 'currency',
-                    currency: 'USD',
+                    currency: 'USD'
                   }).format(value)
                 }
               />

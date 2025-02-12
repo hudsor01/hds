@@ -17,7 +17,7 @@ export function VirtualizedList<T>({
   items,
   renderItem,
   estimateSize = 64,
-  overscan = 5,
+  overscan = 5
 }: VirtualizedListProps<T>) {
   const theme = useTheme()
   const parentRef = useRef<HTMLDivElement>(null)
@@ -26,7 +26,7 @@ export function VirtualizedList<T>({
     count: items.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => estimateSize,
-    overscan,
+    overscan
   })
 
   return (
@@ -41,28 +41,28 @@ export function VirtualizedList<T>({
         position: 'relative',
         '&::-webkit-scrollbar': {
           width: 6,
-          height: 6,
+          height: 6
         },
         '&::-webkit-scrollbar-track': {
-          background: 'transparent',
+          background: 'transparent'
         },
         '&::-webkit-scrollbar-thumb': {
           background: theme.palette.divider,
-          borderRadius: 3,
+          borderRadius: 3
         },
         '&::-webkit-scrollbar-thumb:hover': {
-          background: theme.palette.text.disabled,
-        },
+          background: theme.palette.text.disabled
+        }
       }}
     >
       <Box
         sx={{
           height: `${virtualizer.getTotalSize()}px`,
           width: '100%',
-          position: 'relative',
+          position: 'relative'
         }}
       >
-        {virtualizer.getVirtualItems().map((virtualItem) => (
+        {virtualizer.getVirtualItems().map(virtualItem => (
           <Box
             key={virtualItem.key}
             data-index={virtualItem.index}
@@ -72,7 +72,7 @@ export function VirtualizedList<T>({
               top: 0,
               left: 0,
               width: '100%',
-              transform: `translateY(${virtualItem.start}px)`,
+              transform: `translateY(${virtualItem.start}px)`
             }}
           >
             {renderItem(items[virtualItem.index], virtualItem.index)}

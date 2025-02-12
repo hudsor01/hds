@@ -10,7 +10,7 @@ const documentSchema = z.object({
   property_id: z.string().uuid('Invalid property ID').optional(),
   lease_id: z.string().uuid('Invalid lease ID').optional(),
   url: z.string().url('Invalid document URL'),
-  size: z.number().positive('File size must be positive'),
+  size: z.number().positive('File size must be positive')
 })
 
 export async function GET(req: NextRequest) {
@@ -117,9 +117,9 @@ export async function POST(req: NextRequest) {
           document_id: document.id,
           document_type: validatedData.type,
           property_id: validatedData.property_id,
-          lease_id: validatedData.lease_id,
-        },
-      },
+          lease_id: validatedData.lease_id
+        }
+      }
     ])
 
     return NextResponse.json({ data: document }, { status: 201 })

@@ -24,7 +24,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: metrics, error: metricsError } = await supabase.rpc(
       'calculate_portfolio_metrics',
       {
-        p_organization_id: params.id,
+        p_organization_id: params.id
       }
     )
 
@@ -34,7 +34,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const currentYear = new Date().getFullYear()
     const { data: growth, error: growthError } = await supabase.rpc('calculate_yoy_growth', {
       p_organization_id: params.id,
-      p_year: currentYear,
+      p_year: currentYear
     })
 
     if (growthError) throw growthError
@@ -50,16 +50,16 @@ export async function GET(request: Request, { params }: { params: { id: string }
     // Get current month's financial reports for all properties
     const currentDate = new Date()
     const propertyReports = await Promise.all(
-      properties.map(async (property) => {
+      properties.map(async property => {
         const { data: report } = await supabase.rpc('generate_property_financial_report', {
           p_property_id: property.id,
           p_year: currentDate.getFullYear(),
-          p_month: currentDate.getMonth() + 1,
+          p_month: currentDate.getMonth() + 1
         })
         return {
           property_id: property.id,
           property_name: property.name,
-          report,
+          report
         }
       })
     )
@@ -67,7 +67,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     return NextResponse.json({
       portfolio_metrics: metrics,
       yoy_growth: growth,
-      property_reports: propertyReports,
+      property_reports: propertyReports
     })
   } catch (error) {
     return NextResponse.json({ error: 'Error calculating portfolio metrics' }, { status: 500 })

@@ -8,7 +8,7 @@ export default function Loading() {
     <div className="mx-auto max-w-7xl px-4 py-12">
       <Skeleton className="mb-8 h-12 w-[250px]" />
       <div className="grid gap-8 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Card key={i} className="p-6">
             <Skeleton className="mb-4 h-8 w-[120px]" />
             <Skeleton className="mb-2 h-4 w-full" />

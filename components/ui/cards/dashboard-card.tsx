@@ -19,7 +19,7 @@ export function DashboardCard({ title, subtitle, action, children }: DashboardCa
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            mb: subtitle ? 0.5 : 2,
+            mb: subtitle ? 0.5 : 2
           }}
         >
           <Box>

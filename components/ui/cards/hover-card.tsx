@@ -11,7 +11,7 @@ export function HoverCard({ children }: HoverCardProps) {
     <motion.div
       whileHover={{
         scale: 1.02,
-        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.2)',
+        boxShadow: '0 10px 30px -10px rgba(0,0,0,0.2)'
       }}
       transition={{ type: 'spring', stiffness: 300 }}
     >

@@ -8,7 +8,7 @@ const paymentIntentSchema = z.object({
   currency: z.string().length(3).default('usd'),
   payment_method_types: z.array(z.string()).default(['card']),
   description: z.string().optional(),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string()).optional()
 })
 
 export async function POST(req: NextRequest) {
@@ -25,13 +25,13 @@ export async function POST(req: NextRequest) {
       ...validatedData,
       metadata: {
         ...validatedData.metadata,
-        userId,
-      },
+        userId
+      }
     })
 
     return NextResponse.json({
       clientSecret: paymentIntent.client_secret,
-      id: paymentIntent.id,
+      id: paymentIntent.id
     })
   } catch (error) {
     if (error instanceof z.ZodError) {

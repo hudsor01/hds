@@ -3,8 +3,8 @@ export default function robots() {
     rules: {
       userAgent: '*',
       allow: '/',
-      disallow: '/admin/',
+      disallow: '/admin/'
     },
-    sitemap: 'https://hudsondigitalsolutions.com/sitemap.xml',
+    sitemap: 'https://hudsondigitalsolutions.com/sitemap.xml'
   }
 }

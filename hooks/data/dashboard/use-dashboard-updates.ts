@@ -1,12 +1,12 @@
 import { supabase } from '@/lib/supabase'
-import type { UseDashboardUpdatesProps } from '@/types/database.types'
+import type { UseDashboardUpdatesProps } from '@/types/db.types'
 import { useCallback, useEffect } from 'react'
 
 export function useDashboardUpdates({
   table,
   select = '*',
   onUpdate,
-  onDelete,
+  onDelete
 }: UseDashboardUpdatesProps) {
   const handleUpdates = useCallback(() => {
     const channel = supabase
@@ -16,9 +16,9 @@ export function useDashboardUpdates({
         {
           event: 'UPDATE',
           schema: 'public',
-          table,
+          table
         },
-        (payload) => {
+        payload => {
           const data = payload.new
           onUpdate(data)
         }
@@ -28,9 +28,9 @@ export function useDashboardUpdates({
         {
           event: 'DELETE',
           schema: 'public',
-          table,
+          table
         },
-        (payload) => {
+        payload => {
           const id = payload.old.id
           onDelete(id)
         }

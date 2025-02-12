@@ -24,14 +24,14 @@ export async function GET() {
     uptime: process.uptime(),
     database: await checkDatabase(),
     email: await checkEmailService(),
-    timestamp: Date.now(),
+    timestamp: Date.now()
   }
 
   const isHealthy = Object.values(health).every(
-    (status) => status === 'healthy' || typeof status === 'number'
+    status => status === 'healthy' || typeof status === 'number'
   )
 
   return Response.json(health, {
-    status: isHealthy ? 200 : 503,
+    status: isHealthy ? 200 : 503
   })
 }

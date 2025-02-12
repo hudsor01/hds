@@ -13,7 +13,7 @@ import type {
   MaintenanceStatus,
   MaintenanceRequestWithRelations,
   NewMaintenanceRequest,
-  UpdateMaintenanceRequest,
+  UpdateMaintenanceRequest
 } from '@/types/maintenance_requests'
 
 export default function MaintenancePage() {
@@ -28,7 +28,7 @@ export default function MaintenancePage() {
       toast({
         title: 'Error',
         description: 'Failed to load maintenance tickets',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }, [error, toast])
@@ -38,9 +38,9 @@ export default function MaintenancePage() {
       const response = await fetch('/api/maintenance', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       })
 
       if (!response.ok) {
@@ -49,14 +49,14 @@ export default function MaintenancePage() {
 
       toast({
         title: 'Success',
-        description: 'Maintenance ticket created successfully',
+        description: 'Maintenance ticket created successfully'
       })
       setIsCreateDialogOpen(false)
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to create maintenance ticket',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -66,9 +66,9 @@ export default function MaintenancePage() {
       const response = await fetch(`/api/maintenance/${data.id}`, {
         method: 'PATCH',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(data)
       })
 
       if (!response.ok) {
@@ -77,14 +77,14 @@ export default function MaintenancePage() {
 
       toast({
         title: 'Success',
-        description: 'Maintenance ticket updated successfully',
+        description: 'Maintenance ticket updated successfully'
       })
       setSelectedTicket(null)
     } catch (error) {
       toast({
         title: 'Error',
         description: 'Failed to update maintenance ticket',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -121,7 +121,7 @@ export default function MaintenancePage() {
     return (
       <div className="flex h-[50vh] items-center justify-center">
         <div className="text-center">
-          <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent"></div>
+          <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
           <p className="mt-2 text-sm text-gray-500">Loading tickets...</p>
         </div>
       </div>

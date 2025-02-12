@@ -19,7 +19,7 @@ export async function ProtectedRoute({ children, allowedRoles }: ProtectedRouteP
   try {
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error || !user) {

@@ -9,7 +9,7 @@ export const SearchUsers = () => {
   return (
     <div>
       <form
-        onSubmit={(e) => {
+        onSubmit={e => {
           e.preventDefault()
           const form = e.currentTarget
           const formData = new FormData(form)

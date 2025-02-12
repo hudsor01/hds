@@ -6,7 +6,7 @@ declare global {
 
 const prismaClientOptions: Prisma.PrismaClientOptions = {
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  errorFormat: 'pretty' as const,
+  errorFormat: 'pretty' as const
 }
 
 export const prisma = globalThis.prisma || new PrismaClient(prismaClientOptions)
@@ -21,7 +21,7 @@ export const handlePrismaError = (error: unknown) => {
   if (error instanceof Error) {
     return {
       error: error.message,
-      code: error.name === 'PrismaClientKnownRequestError' ? 400 : 500,
+      code: error.name === 'PrismaClientKnownRequestError' ? 400 : 500
     }
   }
   return { error: 'An unexpected error occurred', code: 500 }

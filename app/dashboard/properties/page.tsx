@@ -17,7 +17,7 @@ import {
   Stack,
   TextField,
   Tooltip,
-  Typography,
+  Typography
 } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import { alpha, useTheme } from '@mui/material/styles'
@@ -27,12 +27,12 @@ import { useEffect, useState } from 'react'
 
 const containerVariants = {
   initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { staggerChildren: 0.1 } },
+  animate: { opacity: 1, transition: { staggerChildren: 0.1 } }
 }
 
 const itemVariants = {
   initial: { y: 20, opacity: 0 },
-  animate: { y: 0, opacity: 1 },
+  animate: { y: 0, opacity: 1 }
 }
 
 export default function PropertiesPage() {
@@ -52,7 +52,7 @@ export default function PropertiesPage() {
         if (error) throw error
 
         if (data) {
-          const transformedData: PropertyCardData[] = data.map((property) => ({
+          const transformedData: PropertyCardData[] = data.map(property => ({
             id: property.id,
             title: property.name,
             address: property.address,
@@ -61,7 +61,7 @@ export default function PropertiesPage() {
             price: property.units[0]?.price || 0,
             bedrooms: property.units[0]?.bedrooms || 0,
             bathrooms: property.units[0]?.bathrooms || 0,
-            image: property.image_url || '/properties/default.jpg',
+            image: property.image_url || '/properties/default.jpg'
           }))
           setProperties(transformedData)
         }
@@ -83,11 +83,11 @@ export default function PropertiesPage() {
   const { remove: deleteProperty, loading: deleteLoading } = useDashboardCrud<Property>({
     table: 'properties',
     onSuccess: () => {
-      setProperties((prev) => prev.filter((p) => p.id !== selectedProperty?.id))
+      setProperties(prev => prev.filter(p => p.id !== selectedProperty?.id))
     },
-    onError: (error) => {
+    onError: error => {
       console.error('Error deleting property:', error)
-    },
+    }
   })
 
   const handleDelete = async (id: string) => {
@@ -99,7 +99,7 @@ export default function PropertiesPage() {
   }
 
   const filteredProperties = properties.filter(
-    (property) =>
+    property =>
       property.title.toLowerCase().includes(search.toLowerCase()) ||
       property.address.toLowerCase().includes(search.toLowerCase())
   )
@@ -128,13 +128,13 @@ export default function PropertiesPage() {
           status: cardData.status,
           property_id: cardData.id,
           createdAt: new Date(),
-          updatedAt: new Date(),
-        },
+          updatedAt: new Date()
+        }
       ],
       owner_id: '1', // Replace with actual owner ID
       organization_id: '1', // Replace with actual organization ID
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     }
   }
 
@@ -157,14 +157,14 @@ export default function PropertiesPage() {
       >
         <TextField
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={e => setSearch(e.target.value)}
           placeholder="Search properties..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
                 <SearchIcon />
               </InputAdornment>
-            ),
+            )
           }}
           sx={{ flex: 1 }}
         />
@@ -188,7 +188,7 @@ export default function PropertiesPage() {
             py: 10,
             textAlign: 'center',
             borderStyle: 'dashed',
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
+            bgcolor: theme => alpha(theme.palette.primary.main, 0.04)
           }}
         >
           <Image
@@ -207,7 +207,7 @@ export default function PropertiesPage() {
         </Card>
       ) : (
         <Grid container spacing={3}>
-          {filteredProperties.map((property) => (
+          {filteredProperties.map(property => (
             <Grid item xs={12} sm={6} md={4} key={property.id}>
               <motion.div variants={itemVariants}>
                 <Card
@@ -215,9 +215,9 @@ export default function PropertiesPage() {
                     height: '100%',
                     '&:hover': {
                       boxShadow: 16,
-                      transform: 'translateY(-4px)',
+                      transform: 'translateY(-4px)'
                     },
-                    transition: 'all 0.2s',
+                    transition: 'all 0.2s'
                   }}
                 >
                   {/* Property Image */}
@@ -235,7 +235,7 @@ export default function PropertiesPage() {
                         position: 'absolute',
                         top: 16,
                         right: 16,
-                        borderRadius: 1,
+                        borderRadius: 1
                       }}
                     />
                   </Box>
@@ -272,10 +272,10 @@ export default function PropertiesPage() {
                           onClick={() => handleEdit(property)}
                           sx={{
                             color: 'primary.main',
-                            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                            bgcolor: theme => alpha(theme.palette.primary.main, 0.08),
                             '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.primary.main, 0.16),
-                            },
+                              bgcolor: theme => alpha(theme.palette.primary.main, 0.16)
+                            }
                           }}
                         >
                           <EditIcon />
@@ -287,10 +287,10 @@ export default function PropertiesPage() {
                           onClick={() => handleDelete(property.id)}
                           sx={{
                             color: 'error.main',
-                            bgcolor: (theme) => alpha(theme.palette.error.main, 0.08),
+                            bgcolor: theme => alpha(theme.palette.error.main, 0.08),
                             '&:hover': {
-                              bgcolor: (theme) => alpha(theme.palette.error.main, 0.16),
-                            },
+                              bgcolor: theme => alpha(theme.palette.error.main, 0.16)
+                            }
                           }}
                         >
                           <DeleteIcon />
@@ -310,21 +310,21 @@ export default function PropertiesPage() {
         open={openDialog}
         onOpenChangeAction={setOpenDialog}
         property={selectedProperty ? convertToProperty(selectedProperty) : undefined}
-        onSubmitAction={async (data) => {
+        onSubmitAction={async data => {
           try {
             const { create, update } = useDashboardCrud<Property>({
               table: 'properties',
-              onSuccess: (result) => {
-                setProperties((prev) => {
+              onSuccess: result => {
+                setProperties(prev => {
                   if (selectedProperty) {
-                    return prev.map((p) =>
+                    return prev.map(p =>
                       p.id === result.id
                         ? {
                             ...p,
                             title: result.name,
                             address: `${result.address}, ${result.city}, ${result.state} ${result.zipCode}`,
                             type: result.type,
-                            status: result.status,
+                            status: result.status
                           }
                         : p
                     )
@@ -340,15 +340,15 @@ export default function PropertiesPage() {
                       price: data.units?.[0]?.price || 0,
                       bedrooms: data.units?.[0]?.bedrooms || 0,
                       bathrooms: data.units?.[0]?.bathrooms || 0,
-                      image: '/properties/default.jpg',
-                    },
+                      image: '/properties/default.jpg'
+                    }
                   ]
                 })
                 setOpenDialog(false)
               },
-              onError: (error) => {
+              onError: error => {
                 console.error('Error saving property:', error)
-              },
+              }
             })
 
             if (!user?.id) {
@@ -358,7 +358,7 @@ export default function PropertiesPage() {
             const propertyData = {
               ...data,
               owner_id: user.id,
-              organization_id: user.id, // Using user.id as organization_id
+              organization_id: user.id // Using user.id as organization_id
             } as const
 
             if (selectedProperty) {

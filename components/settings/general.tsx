@@ -8,7 +8,7 @@ import {
   FormHelperText,
   MenuItem,
   Select,
-  Typography,
+  Typography
 } from '@mui/material'
 
 export function GeneralSettings() {
@@ -20,7 +20,7 @@ export function GeneralSettings() {
     setTheme,
     setLanguage,
     setTimezone,
-    setDateFormat,
+    setDateFormat
   } = useUserPreferences()
 
   return (
@@ -39,7 +39,7 @@ export function GeneralSettings() {
           </Typography>
           <Select
             value={theme}
-            onChange={(e) => setTheme(e.target.value as typeof theme)}
+            onChange={e => setTheme(e.target.value as typeof theme)}
             size="small"
           >
             <MenuItem value="light">Light</MenuItem>
@@ -53,7 +53,7 @@ export function GeneralSettings() {
           <Typography variant="subtitle2" gutterBottom>
             Language
           </Typography>
-          <Select value={language} onChange={(e) => setLanguage(e.target.value)} size="small">
+          <Select value={language} onChange={e => setLanguage(e.target.value)} size="small">
             <MenuItem value="en">English</MenuItem>
             <MenuItem value="es">Spanish</MenuItem>
             <MenuItem value="fr">French</MenuItem>
@@ -65,7 +65,7 @@ export function GeneralSettings() {
           <Typography variant="subtitle2" gutterBottom>
             Timezone
           </Typography>
-          <Select value={timezone} onChange={(e) => setTimezone(e.target.value)} size="small">
+          <Select value={timezone} onChange={e => setTimezone(e.target.value)} size="small">
             <MenuItem value="UTC">UTC</MenuItem>
             <MenuItem value="EST">Eastern Time</MenuItem>
             <MenuItem value="PST">Pacific Time</MenuItem>
@@ -77,7 +77,7 @@ export function GeneralSettings() {
           <Typography variant="subtitle2" gutterBottom>
             Date Format
           </Typography>
-          <Select value={dateFormat} onChange={(e) => setDateFormat(e.target.value)} size="small">
+          <Select value={dateFormat} onChange={e => setDateFormat(e.target.value)} size="small">
             <MenuItem value="MM/DD/YYYY">MM/DD/YYYY</MenuItem>
             <MenuItem value="DD/MM/YYYY">DD/MM/YYYY</MenuItem>
             <MenuItem value="YYYY-MM-DD">YYYY-MM-DD</MenuItem>

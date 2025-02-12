@@ -9,7 +9,7 @@ export async function POST(req: Request) {
   const paymentIntent = await stripe.paymentIntents.create({
     amount: amount * 100,
     currency: 'usd',
-    metadata: { propertyId },
+    metadata: { propertyId }
   })
 
   return NextResponse.json({ clientSecret: paymentIntent.client_secret })

@@ -15,7 +15,7 @@ export function formatDate(date: Date | string) {
   return new Intl.DateTimeFormat('en-US', {
     month: 'long',
     day: 'numeric',
-    year: 'numeric',
+    year: 'numeric'
   }).format(new Date(date))
 }
 
@@ -32,7 +32,7 @@ export const isClient = !isServer
 /**
  * Delays execution for a specified number of milliseconds
  */
-export const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 /**
  * Safely access nested object properties

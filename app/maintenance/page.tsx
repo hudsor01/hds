@@ -14,7 +14,7 @@ import {
   TableHead,
   TableRow,
   Tabs,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useState } from 'react'
 import { Plus } from 'react-feather'
@@ -30,7 +30,7 @@ const mockTickets = [
     priority: 'Medium',
     status: 'PENDING',
     createdAt: '2024-01-15T10:30:00Z',
-    description: 'Kitchen sink faucet is leaking continuously.',
+    description: 'Kitchen sink faucet is leaking continuously.'
   },
   {
     id: '2',
@@ -41,7 +41,7 @@ const mockTickets = [
     priority: 'High',
     status: 'IN_PROGRESS',
     createdAt: '2024-01-14T15:45:00Z',
-    description: 'Air conditioning unit is not cooling properly.',
+    description: 'Air conditioning unit is not cooling properly.'
   },
   {
     id: '3',
@@ -52,8 +52,8 @@ const mockTickets = [
     priority: 'High',
     status: 'COMPLETED',
     createdAt: '2024-01-13T09:15:00Z',
-    description: 'Window in living room is cracked and needs replacement.',
-  },
+    description: 'Window in living room is cracked and needs replacement.'
+  }
 ]
 
 export default function MaintenancePage() {
@@ -68,22 +68,22 @@ export default function MaintenancePage() {
       case 'PENDING':
         return {
           bg: 'warning.light',
-          color: 'warning.dark',
+          color: 'warning.dark'
         }
       case 'IN_PROGRESS':
         return {
           bg: 'info.light',
-          color: 'info.dark',
+          color: 'info.dark'
         }
       case 'COMPLETED':
         return {
           bg: 'success.light',
-          color: 'success.dark',
+          color: 'success.dark'
         }
       default:
         return {
           bg: 'grey.200',
-          color: 'grey.700',
+          color: 'grey.700'
         }
     }
   }
@@ -93,22 +93,22 @@ export default function MaintenancePage() {
       case 'high':
         return {
           bg: 'error.light',
-          color: 'error.dark',
+          color: 'error.dark'
         }
       case 'medium':
         return {
           bg: 'warning.light',
-          color: 'warning.dark',
+          color: 'warning.dark'
         }
       case 'low':
         return {
           bg: 'success.light',
-          color: 'success.dark',
+          color: 'success.dark'
         }
       default:
         return {
           bg: 'grey.200',
-          color: 'grey.700',
+          color: 'grey.700'
         }
     }
   }
@@ -139,8 +139,8 @@ export default function MaintenancePage() {
               textTransform: 'none',
               borderRadius: 2,
               '&:hover': {
-                bgcolor: 'primary.dark',
-              },
+                bgcolor: 'primary.dark'
+              }
             }}
           >
             New Request
@@ -172,13 +172,13 @@ export default function MaintenancePage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTickets.map((ticket) => (
+              {mockTickets.map(ticket => (
                 <TableRow
                   key={ticket.id}
                   hover
                   sx={{
                     cursor: 'pointer',
-                    '&:last-child td, &:last-child th': { border: 0 },
+                    '&:last-child td, &:last-child th': { border: 0 }
                   }}
                 >
                   <TableCell>
@@ -203,7 +203,7 @@ export default function MaintenancePage() {
                         borderRadius: 1,
                         bgcolor: getPriorityColor(ticket.priority).bg,
                         color: getPriorityColor(ticket.priority).color,
-                        fontSize: '0.875rem',
+                        fontSize: '0.875rem'
                       }}
                     >
                       {ticket.priority}
@@ -218,7 +218,7 @@ export default function MaintenancePage() {
                         borderRadius: 1,
                         bgcolor: getStatusColor(ticket.status).bg,
                         color: getStatusColor(ticket.status).color,
-                        fontSize: '0.875rem',
+                        fontSize: '0.875rem'
                       }}
                     >
                       {ticket.status.replace('_', ' ')}

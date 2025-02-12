@@ -46,7 +46,7 @@ export function NavigationMenu({ className, items, ...props }: NavigationMenuPro
     <nav className={cn('relative z-10', className)} {...props}>
       <button
         onClick={handleClick}
-        className="focus-visible:outline-hidden inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        className="focus-visible:outline-hidden ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
       >
         Menu
       </button>
@@ -55,10 +55,10 @@ export function NavigationMenu({ className, items, ...props }: NavigationMenuPro
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button',
+          'aria-labelledby': 'basic-button'
         }}
       >
-        {items.map((item) => (
+        {items.map(item => (
           <Link
             key={item.href}
             href={item.href}
@@ -70,7 +70,7 @@ export function NavigationMenu({ className, items, ...props }: NavigationMenuPro
               <div>
                 <div className="text-sm font-medium">{item.title}</div>
                 {item.description && (
-                  <p className="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                  <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
                     {item.description}
                   </p>
                 )}

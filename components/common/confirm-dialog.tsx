@@ -21,7 +21,7 @@ export function ConfirmDialog({
   message,
   onConfirm,
   onCancel,
-  isLoading,
+  isLoading
 }: ConfirmDialogProps) {
   return (
     <Dialog open={open} onClose={onCancel}>

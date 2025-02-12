@@ -14,7 +14,7 @@ export default function AboutPage() {
               <Typography variant="h1" className="gradient-text text-4xl font-bold sm:text-5xl">
                 About HDS
               </Typography>
-              <Typography variant="h2" className="mx-auto max-w-2xl text-xl text-muted-foreground">
+              <Typography variant="h2" className="text-muted-foreground mx-auto max-w-2xl text-xl">
                 Transforming property management with modern technology and innovative solutions
               </Typography>
             </Box>
@@ -41,23 +41,23 @@ export default function AboutPage() {
                   {
                     title: 'Security First',
                     description:
-                      'We prioritize the security and privacy of your data above all else, implementing industry-leading security measures.',
+                      'We prioritize the security and privacy of your data above all else, implementing industry-leading security measures.'
                   },
                   {
                     title: 'Innovation',
                     description:
-                      'We continuously innovate and improve our solutions to meet the evolving needs of property managers.',
+                      'We continuously innovate and improve our solutions to meet the evolving needs of property managers.'
                   },
                   {
                     title: 'User-Centric',
                     description:
-                      'We design our solutions with property managers in mind, focusing on intuitive interfaces and efficient workflows.',
+                      'We design our solutions with property managers in mind, focusing on intuitive interfaces and efficient workflows.'
                   },
                   {
                     title: 'Data Integrity',
                     description:
-                      'We maintain the highest standards of data accuracy and reliability throughout our systems.',
-                  },
+                      'We maintain the highest standards of data accuracy and reliability throughout our systems.'
+                  }
                 ].map((value, index) => (
                   <Grid item xs={12} md={6} key={index}>
                     <Paper elevation={2} className="hover-card h-full p-6">

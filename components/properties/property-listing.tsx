@@ -24,7 +24,7 @@ export function PropertyListing() {
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 3,
+          mb: 3
         }}
       >
         <Box>

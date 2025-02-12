@@ -20,7 +20,7 @@ export default async function AdminDashboard(params: {
 
       <SearchUsers />
 
-      {users.map((user) => {
+      {users.map(user => {
         return (
           <div key={user.id}>
             <div>
@@ -29,7 +29,7 @@ export default async function AdminDashboard(params: {
 
             <div>
               {
-                user.emailAddresses.find((email) => email.id === user.primaryEmailAddressId)
+                user.emailAddresses.find(email => email.id === user.primaryEmailAddressId)
                   ?.emailAddress
               }
             </div>

@@ -15,23 +15,23 @@ export function PropertyActionsMenu() {
     {
       icon: <HomeWorkIcon />,
       name: 'Add Property',
-      action: () => router.push('/properties/new'),
+      action: () => router.push('/properties/new')
     },
     {
       icon: <PersonAddIcon />,
       name: 'Add Tenant',
-      action: () => router.push('/tenants/new'),
+      action: () => router.push('/tenants/new')
     },
     {
       icon: <BuildIcon />,
       name: 'Maintenance Request',
-      action: () => router.push('/maintenance/new'),
+      action: () => router.push('/maintenance/new')
     },
     {
       icon: <ReceiptIcon />,
       name: 'Record Payment',
-      action: () => router.push('/payments/new'),
-    },
+      action: () => router.push('/payments/new')
+    }
   ]
 
   return (
@@ -40,7 +40,7 @@ export function PropertyActionsMenu() {
       sx={{ position: 'fixed', bottom: 16, right: 16 }}
       icon={<SpeedDialIcon />}
     >
-      {actions.map((action) => (
+      {actions.map(action => (
         <SpeedDialAction
           key={action.name}
           icon={action.icon}

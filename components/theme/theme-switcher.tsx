@@ -6,7 +6,7 @@ import {
   DropdownMenuContent,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
-  DropdownMenuTrigger,
+  DropdownMenuTrigger
 } from './dropdown-menu'
 import { Monitor, Moon, Sun } from 'react-feather'
 import { useTheme } from 'next-themes'

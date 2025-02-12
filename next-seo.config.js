@@ -16,36 +16,36 @@ const defaultSEOConfig = {
         url: 'https://hds.vercel.app/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'HDS - Housing Data System',
-      },
-    ],
+        alt: 'HDS - Housing Data System'
+      }
+    ]
   },
   twitter: {
     handle: '@hds',
     site: '@hds',
-    cardType: 'summary_large_image',
+    cardType: 'summary_large_image'
   },
   additionalLinkTags: [
     {
       rel: 'icon',
-      href: '/favicon.ico',
+      href: '/favicon.ico'
     },
     {
       rel: 'apple-touch-icon',
       href: '/apple-touch-icon.png',
-      sizes: '180x180',
-    },
+      sizes: '180x180'
+    }
   ],
   additionalMetaTags: [
     {
       name: 'viewport',
-      content: 'width=device-width, initial-scale=1.0',
+      content: 'width=device-width, initial-scale=1.0'
     },
     {
       name: 'theme-color',
-      content: '#000000',
-    },
-  ],
+      content: '#000000'
+    }
+  ]
 }
 
 module.exports = defaultSEOConfig

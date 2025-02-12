@@ -11,5 +11,5 @@ export const emailTrackingService = {
      SET opened_at = NOW()
      WHERE id = ${emailId}
    `
-  },
+  }
 }

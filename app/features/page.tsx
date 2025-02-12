@@ -10,7 +10,7 @@ import {
   Home,
   MessageCircle,
   Settings,
-  Users,
+  Users
 } from 'react-feather'
 
 interface Feature {
@@ -23,48 +23,48 @@ const features: Feature[] = [
   {
     title: 'Property Management',
     description: 'Efficiently manage your properties with our comprehensive dashboard.',
-    icon: Home,
+    icon: Home
   },
   {
     title: 'Tenant Portal',
     description: 'Give tenants access to a dedicated portal for payments and maintenance requests.',
-    icon: Users,
+    icon: Users
   },
   {
     title: 'Financial Tracking',
     description: 'Track rent payments, expenses, and generate financial reports.',
-    icon: BarChart,
+    icon: BarChart
   },
   {
     title: 'Maintenance Management',
     description: 'Handle maintenance requests and track repairs efficiently.',
-    icon: Settings,
+    icon: Settings
   },
   {
     title: 'Document Management',
     description: 'Store and manage all property-related documents securely.',
-    icon: FileText,
+    icon: FileText
   },
   {
     title: 'Payment Processing',
     description: 'Process rent payments and security deposits electronically.',
-    icon: CreditCard,
+    icon: CreditCard
   },
   {
     title: 'Scheduling',
     description: 'Schedule viewings, maintenance, and other property-related events.',
-    icon: Calendar,
+    icon: Calendar
   },
   {
     title: 'Communication Hub',
     description: 'Streamline communication between property managers, owners, and tenants.',
-    icon: MessageCircle,
-  },
+    icon: MessageCircle
+  }
 ]
 
 export default function FeaturesPage() {
   return (
-    <Box className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-20">
+    <Box className="from-background to-muted/20 min-h-screen bg-gradient-to-b py-20">
       <Container maxWidth="lg">
         <Box className="mb-16 text-center">
           <Typography variant="h2" className="mb-4 font-bold">
@@ -85,7 +85,7 @@ export default function FeaturesPage() {
                   style={{ animationDelay: `${index * 100}ms` }}
                 >
                   <Box className="flex h-full flex-col">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 p-3">
+                    <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full p-3">
                       <Icon size={24} className="text-primary" />
                     </div>
                     <Typography variant="h6" className="mb-2 font-semibold">

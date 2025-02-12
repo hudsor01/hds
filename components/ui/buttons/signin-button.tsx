@@ -16,7 +16,7 @@ export function SignInButton() {
         signIn.create({
           strategy: 'email_link',
           identifier: 'user@example.com',
-          redirectUrl: '/dashboard',
+          redirectUrl: '/dashboard'
         })
       }}
     >

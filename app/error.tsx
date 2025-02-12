@@ -1,13 +1,13 @@
-'use client';
+'use client'
 
-import { FadeIn } from '@/components/animations/fade-in';
-import { Box, Button, Container, Typography } from '@mui/material';
-import { useEffect } from 'react';
-import { RefreshCw, Send } from 'react-feather';
+import { FadeIn } from '@/components/animations/fade-in'
+import { Box, Button, Container, Typography } from '@mui/material'
+import { useEffect } from 'react'
+import { RefreshCw, Send } from 'react-feather'
 
 interface ErrorProps {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }
 
 export default function Error({ error, reset }: ErrorProps) {
@@ -16,30 +16,30 @@ export default function Error({ error, reset }: ErrorProps) {
     console.error('Error:', {
       message: error.message,
       stack: error.stack,
-      digest: error.digest,
-    });
-  }, [error]);
+      digest: error.digest
+    })
+  }, [error])
 
   const isAuthError =
     error.message?.toLowerCase().includes('auth') ||
-    error.message?.toLowerCase().includes('unauthorized');
+    error.message?.toLowerCase().includes('unauthorized')
   const isNetworkError =
     error.message?.toLowerCase().includes('network') ||
-    error.message?.toLowerCase().includes('fetch');
+    error.message?.toLowerCase().includes('fetch')
 
   const getErrorTitle = () => {
-    if (isAuthError) return 'Authentication Error';
-    if (isNetworkError) return 'Network Error';
-    return 'Something Went Wrong';
-  };
+    if (isAuthError) return 'Authentication Error'
+    if (isNetworkError) return 'Network Error'
+    return 'Something Went Wrong'
+  }
 
   const getErrorMessage = () => {
     if (isAuthError)
-      return 'There was a problem with your authentication. Please try signing in again.';
+      return 'There was a problem with your authentication. Please try signing in again.'
     if (isNetworkError)
-      return 'There was a problem connecting to our servers. Please check your internet connection.';
-    return 'We encountered an unexpected error. Our team has been notified and is working to fix the issue.';
-  };
+      return 'There was a problem connecting to our servers. Please check your internet connection.'
+    return 'We encountered an unexpected error. Our team has been notified and is working to fix the issue.'
+  }
 
   return (
     <Container maxWidth="md">
@@ -51,7 +51,7 @@ export default function Error({ error, reset }: ErrorProps) {
           justifyContent: 'center',
           minHeight: '100vh',
           textAlign: 'center',
-          py: 8,
+          py: 8
         }}
       >
         <FadeIn delay={0.2}>
@@ -63,7 +63,7 @@ export default function Error({ error, reset }: ErrorProps) {
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 2,
+              mb: 2
             }}
           >
             {isAuthError ? '401' : '500'}
@@ -92,8 +92,8 @@ export default function Error({ error, reset }: ErrorProps) {
                 sx={{
                   background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-                  },
+                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+                  }
                 }}
               >
                 Try Again
@@ -106,8 +106,8 @@ export default function Error({ error, reset }: ErrorProps) {
                 sx={{
                   background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-                  },
+                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+                  }
                 }}
               >
                 Sign In
@@ -122,8 +122,8 @@ export default function Error({ error, reset }: ErrorProps) {
                 color: '#007FFF',
                 '&:hover': {
                   borderColor: '#0059B2',
-                  color: '#0059B2',
-                },
+                  color: '#0059B2'
+                }
               }}
             >
               Contact Support
@@ -132,5 +132,5 @@ export default function Error({ error, reset }: ErrorProps) {
         </FadeIn>
       </Box>
     </Container>
-  );
+  )
 }

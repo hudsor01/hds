@@ -1,4 +1,4 @@
-import type { BaseGridProps } from '@/types/grid'
+import type { BaseGridProps } from '@/types'
 import { Box } from '@mui/material'
 import { DataGrid, GridToolbar, type GridColDef, type GridRowParams } from '@mui/x-data-grid'
 
@@ -9,7 +9,7 @@ export function BaseDataGrid<T extends { id: string | number }>({
   pageSize = 10,
   onRowClick,
   customToolbar,
-  disableSelection,
+  disableSelection
 }: BaseGridProps<T> & {
   columns: GridColDef[]
   customToolbar?: typeof GridToolbar
@@ -26,14 +26,14 @@ export function BaseDataGrid<T extends { id: string | number }>({
         columns={columns}
         loading={isLoading}
         slots={{
-          toolbar: customToolbar || GridToolbar,
+          toolbar: customToolbar || GridToolbar
         }}
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize,
-            },
-          },
+              pageSize
+            }
+          }
         }}
         pageSizeOptions={[10, 25, 50]}
         checkboxSelection={!disableSelection}
@@ -42,8 +42,8 @@ export function BaseDataGrid<T extends { id: string | number }>({
         sx={{
           '& .MuiDataGrid-cell': {
             borderBottom: 1,
-            borderColor: 'divider',
-          },
+            borderColor: 'divider'
+          }
         }}
       />
     </Box>

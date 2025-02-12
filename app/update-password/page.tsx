@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Update Password | Property Manager',
-  description: 'Update your Property Manager account password',
+  description: 'Update your Property Manager account password'
 }
 
 export default function UpdatePasswordPage() {

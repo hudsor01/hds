@@ -11,9 +11,9 @@ export async function POST() {
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
         queryParams: {
           access_type: 'offline',
-          prompt: 'consent',
-        },
-      },
+          prompt: 'consent'
+        }
+      }
     })
 
     if (error) {

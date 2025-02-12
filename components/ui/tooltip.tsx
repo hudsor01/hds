@@ -14,14 +14,14 @@ const StyledTooltip = styled(({ className, ...props }: MuiTooltipProps) => (
     borderRadius: theme.shape.borderRadius,
     padding: theme.spacing(1, 1.5),
     fontSize: 12,
-    border: `1px solid ${theme.palette.divider}`,
+    border: `1px solid ${theme.palette.divider}`
   },
   [`& .MuiTooltip-arrow`]: {
     color: theme.palette.background.paper,
     '&:before': {
-      border: `1px solid ${theme.palette.divider}`,
-    },
-  },
+      border: `1px solid ${theme.palette.divider}`
+    }
+  }
 }))
 export const TooltipProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => (
   <>{children}</>

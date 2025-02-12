@@ -19,7 +19,7 @@ export function FormDialog({
   title,
   children,
   loading = false,
-  maxWidth = 'sm',
+  maxWidth = 'sm'
 }: FormDialogProps) {
   return (
     <Dialog
@@ -38,8 +38,8 @@ export function FormDialog({
             sx={{
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               '&:hover': {
-                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-              },
+                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+              }
             }}
           >
             {loading ? 'Saving...' : 'Save'}

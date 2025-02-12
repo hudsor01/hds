@@ -14,7 +14,7 @@ export const GlobalLoadingUI = React.memo(() => {
       </Stack>
 
       <Grid container spacing={4} alignItems="stretch">
-        {[0, 1, 2, 3, 4].map((index) => (
+        {[0, 1, 2, 3, 4].map(index => (
           <Grid item xs={12} sm={6} md={index === 2 ? 12 : 6} lg={12 / 5} key={index}>
             <Paper
               elevation={index === 2 ? 8 : 1}
@@ -26,8 +26,8 @@ export const GlobalLoadingUI = React.memo(() => {
                 ...(index === 2 && {
                   borderColor: 'primary.main',
                   borderWidth: 2,
-                  borderStyle: 'solid',
-                }),
+                  borderStyle: 'solid'
+                })
               }}
             >
               <Stack spacing={2}>

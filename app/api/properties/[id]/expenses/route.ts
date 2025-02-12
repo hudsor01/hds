@@ -30,7 +30,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
       {
         p_property_id: params.id,
         p_start_date: startDate,
-        p_end_date: endDate,
+        p_end_date: endDate
       }
     )
 
@@ -40,7 +40,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: metrics, error: metricsError } = await supabase.rpc('calculate_expense_metrics', {
       p_property_id: params.id,
       p_start_date: startDate,
-      p_end_date: endDate,
+      p_end_date: endDate
     })
 
     if (metricsError) throw metricsError
@@ -50,7 +50,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const { data: profitLoss, error: plError } = await supabase.rpc('calculate_profit_loss', {
       p_property_id: params.id,
       p_year: currentDate.getFullYear(),
-      p_month: currentDate.getMonth() + 1,
+      p_month: currentDate.getMonth() + 1
     })
 
     if (plError) throw plError
@@ -58,7 +58,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
     return NextResponse.json({
       expenses,
       metrics,
-      current_month_pl: profitLoss,
+      current_month_pl: profitLoss
     })
   } catch (error) {
     return NextResponse.json({ error: 'Error calculating property expenses' }, { status: 500 })
@@ -95,8 +95,8 @@ export async function POST(request: Request, { params }: { params: { id: string 
           amount: json.amount,
           date: json.date,
           description: json.description,
-          status: json.status || 'pending',
-        },
+          status: json.status || 'pending'
+        }
       ])
       .select()
       .single()

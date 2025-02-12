@@ -31,8 +31,8 @@ export default function ErrorBoundary({ error, resetAction }: ErrorBoundaryProps
           mt: 2,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
           '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-          },
+            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+          }
         }}
       >
         Try again

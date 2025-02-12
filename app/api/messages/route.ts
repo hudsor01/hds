@@ -9,12 +9,12 @@ const messageSchema = z.object({
   content: z.string().min(1, 'Message content is required'),
   attachments: z.array(z.string()).optional(),
   parent_id: z.string().uuid('Invalid parent message ID').optional(),
-  thread_id: z.string().uuid('Invalid thread ID').optional(),
+  thread_id: z.string().uuid('Invalid thread ID').optional()
 })
 
 const threadSchema = z.object({
   subject: z.string().min(1, 'Thread subject is required'),
-  participants: z.array(z.string().uuid('Invalid participant ID')),
+  participants: z.array(z.string().uuid('Invalid participant ID'))
 })
 
 export async function GET(req: NextRequest) {
@@ -91,8 +91,8 @@ export async function POST(req: NextRequest) {
         .insert([
           {
             subject: validatedData.subject,
-            participants: validatedData.participants,
-          },
+            participants: validatedData.participants
+          }
         ])
         .select()
         .single()
@@ -143,8 +143,8 @@ export async function POST(req: NextRequest) {
         .insert([
           {
             ...validatedData,
-            sender_id: userId,
-          },
+            sender_id: userId
+          }
         ])
         .select()
         .single()
@@ -160,7 +160,7 @@ export async function POST(req: NextRequest) {
           .from('message_threads')
           .update({
             last_message_id: message.id,
-            updated_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
           })
           .eq('id', validatedData.thread_id)
       }
@@ -175,9 +175,9 @@ export async function POST(req: NextRequest) {
           data: {
             message_id: message.id,
             thread_id: validatedData.thread_id,
-            sender_id: userId,
-          },
-        },
+            sender_id: userId
+          }
+        }
       ])
 
       return NextResponse.json({ data: message }, { status: 201 })

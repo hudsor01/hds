@@ -13,12 +13,12 @@ interface UIState {
 export const useUIStore = create<UIState>()(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         theme: 'system',
         sidebarOpen: false,
-        setTheme: (theme) => set({ theme }),
-        toggleSidebar: () => set((state) => ({ sidebarOpen: !state.sidebarOpen })),
-        setSidebarOpen: (open) => set({ sidebarOpen: open }),
+        setTheme: theme => set({ theme }),
+        toggleSidebar: () => set(state => ({ sidebarOpen: !state.sidebarOpen })),
+        setSidebarOpen: open => set({ sidebarOpen: open })
       }),
       { name: 'ui-store' }
     )
@@ -48,30 +48,30 @@ interface PreferencesState {
 export const usePreferencesStore = create<PreferencesState>()(
   devtools(
     persist(
-      (set) => ({
+      set => ({
         preferences: {
           notifications: {
             email: true,
             push: true,
-            sms: false,
+            sms: false
           },
           language: 'en',
-          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+          timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         },
         setPreference: (key, value) =>
-          set((state) => ({
-            preferences: { ...state.preferences, [key]: value },
+          set(state => ({
+            preferences: { ...state.preferences, [key]: value }
           })),
         setNotificationPreference: (type, enabled) =>
-          set((state) => ({
+          set(state => ({
             preferences: {
               ...state.preferences,
               notifications: {
                 ...state.preferences.notifications,
-                [type]: enabled,
-              },
-            },
-          })),
+                [type]: enabled
+              }
+            }
+          }))
       }),
       { name: 'preferences-store' }
     )
@@ -97,27 +97,27 @@ interface DashboardState {
 }
 
 export const useDashboardStore = create<DashboardState>()(
-  devtools((set) => ({
+  devtools(set => ({
     selectedPropertyId: null,
     selectedTenantId: null,
     filters: {
       status: [],
       type: [],
-      dateRange: [null, null],
+      dateRange: [null, null]
     },
-    setSelectedProperty: (id) => set({ selectedPropertyId: id }),
-    setSelectedTenant: (id) => set({ selectedTenantId: id }),
+    setSelectedProperty: id => set({ selectedPropertyId: id }),
+    setSelectedTenant: id => set({ selectedTenantId: id }),
     setFilter: (key, value) =>
-      set((state) => ({
-        filters: { ...state.filters, [key]: value },
+      set(state => ({
+        filters: { ...state.filters, [key]: value }
       })),
     resetFilters: () =>
       set({
         filters: {
           status: [],
           type: [],
-          dateRange: [null, null],
-        },
-      }),
+          dateRange: [null, null]
+        }
+      })
   }))
 )

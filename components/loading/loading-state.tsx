@@ -9,7 +9,7 @@ interface LoadingStateProps {
 
 export default function LoadingState({
   message = 'Loading...',
-  fullPage = false,
+  fullPage = false
 }: LoadingStateProps) {
   const content = (
     <Box
@@ -18,14 +18,14 @@ export default function LoadingState({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        py: 8,
+        py: 8
       }}
     >
       <CircularProgress
         size={40}
         sx={{
-          color: (theme) => theme.palette.primary.main,
-          mb: 2,
+          color: theme => theme.palette.primary.main,
+          mb: 2
         }}
       />
       <Typography color="text.secondary">{message}</Typography>
@@ -42,10 +42,10 @@ export default function LoadingState({
           right: 0,
           bottom: 0,
           bgcolor: 'background.default',
-          zIndex: (theme) => theme.zIndex.modal - 1,
+          zIndex: theme => theme.zIndex.modal - 1,
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'center',
+          justifyContent: 'center'
         }}
       >
         {content}

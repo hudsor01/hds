@@ -1,5 +1,5 @@
 import { prisma } from '@/prisma/seed'
-import type { Session } from '@/types/database.types'
+import type { Session } from '@/types/db.types'
 import { nanoid } from 'nanoid'
 
 export type { Session }
@@ -17,8 +17,8 @@ export class AuthService {
       data: {
         userId,
         sessionToken: nanoid(32),
-        expires: new Date(Date.now() + this.SESSION_DURATION),
-      },
+        expires: new Date(Date.now() + this.SESSION_DURATION)
+      }
     })
 
     return session
@@ -28,23 +28,23 @@ export class AuthService {
     return prisma.session.findMany({
       where: {
         userId,
-        expires: { gt: new Date() },
+        expires: { gt: new Date() }
       },
-      orderBy: { expires: 'desc' },
+      orderBy: { expires: 'desc' }
     })
   }
 
   async revokeSession(sessionId: string): Promise<void> {
     await prisma.session.update({
       where: { id: sessionId },
-      data: { expires: new Date() },
+      data: { expires: new Date() }
     })
   }
 
   async updateSessionActivity(sessionId: string): Promise<void> {
     await prisma.session.update({
       where: { id: sessionId },
-      data: { expires: new Date(Date.now() + this.SESSION_DURATION) },
+      data: { expires: new Date(Date.now() + this.SESSION_DURATION) }
     })
   }
 
@@ -52,8 +52,8 @@ export class AuthService {
     const now = new Date()
     await prisma.session.deleteMany({
       where: {
-        expires: { lt: now },
-      },
+        expires: { lt: now }
+      }
     })
   }
 }

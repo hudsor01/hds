@@ -18,14 +18,14 @@ export function useApiQuery<T>(
     queryFn: async () => {
       try {
         const response = await apiClient.get<BaseResponse<T>>(endpoint, {
-          params,
+          params
         })
         return response.data
       } catch (error) {
         throw new Error(handleApiError(error))
       }
     },
-    ...options?.queryOptions,
+    ...options?.queryOptions
   })
 }
 
@@ -44,13 +44,13 @@ export function useApiMutation<T, TVariables = unknown>(
         throw new Error(handleApiError(error))
       }
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: [endpoint] })
       options?.onSuccess?.(data.data)
     },
     onError: (error: Error) => {
       options?.onError?.(error)
-    },
+    }
   })
 }
 
@@ -69,13 +69,13 @@ export function useApiUpdate<T, TVariables = unknown>(
         throw new Error(handleApiError(error))
       }
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: [endpoint] })
       options?.onSuccess?.(data.data)
     },
     onError: (error: Error) => {
       options?.onError?.(error)
-    },
+    }
   })
 }
 
@@ -91,12 +91,12 @@ export function useApiDelete<T>(endpoint: string, options?: UseCrudOptions<T>) {
         throw new Error(handleApiError(error))
       }
     },
-    onSuccess: (data) => {
+    onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: [endpoint] })
       options?.onSuccess?.(data.data)
     },
     onError: (error: Error) => {
       options?.onError?.(error)
-    },
+    }
   })
 }

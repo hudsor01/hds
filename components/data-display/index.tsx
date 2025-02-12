@@ -86,7 +86,7 @@ export function PricingTier({
       sx={{
         borderColor: recommended ? 'primary.main' : undefined,
         borderWidth: recommended ? 2 : 1,
-        ...props.sx,
+        ...props.sx
       }}
     >
       <CardContent>

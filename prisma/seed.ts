@@ -9,8 +9,8 @@ async function main() {
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscription_status: 'active',
-    },
+      subscription_status: 'active'
+    }
   })
 
   // Create a test property
@@ -26,8 +26,8 @@ async function main() {
       owner_id: user.id,
       status: 'active',
       amenities: [],
-      images: [],
-    },
+      images: []
+    }
   })
 
   // Create a test tenant
@@ -44,10 +44,10 @@ async function main() {
       emergency_contact: {
         name: 'Lois Greer',
         phone: '214-316-2911',
-        relationship: 'Mother',
+        relationship: 'Mother'
       },
-      documents: [],
-    },
+      documents: []
+    }
   })
 }
 
@@ -55,7 +55,7 @@ main()
   .then(async () => {
     await prisma.$disconnect()
   })
-  .catch(async (e) => {
+  .catch(async e => {
     console.error(e)
     await prisma.$disconnect()
     process.exit(1)

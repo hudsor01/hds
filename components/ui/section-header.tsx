@@ -6,7 +6,7 @@ export function SectionHeader({
   title,
   subtitle,
   gradient = true,
-  className,
+  className
 }: {
   title: string
   subtitle?: string
@@ -15,7 +15,7 @@ export function SectionHeader({
 }) {
   return (
     <div className={cn('mb-16 text-center', className)}>
-      <h2 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-gray-100 sm:text-4xl">
+      <h2 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl dark:text-gray-100">
         {gradient ? (
           <>
             {title.split(' ').slice(0, -1).join(' ')}{' '}

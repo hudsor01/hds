@@ -29,15 +29,15 @@ export function NotificationsMenu({ anchorEl, onClose }: NotificationsMenuProps)
       type: 'maintenance',
       message: 'New maintenance request for 123 Main St',
       timestamp: new Date(),
-      read: false,
+      read: false
     },
     {
       id: '2',
       type: 'payment',
       message: 'Rent payment received for 456 Oak Ave',
       timestamp: new Date(),
-      read: false,
-    },
+      read: false
+    }
   ]
 
   const getIcon = (type: Notification['type']) => {
@@ -59,15 +59,15 @@ export function NotificationsMenu({ anchorEl, onClose }: NotificationsMenuProps)
       PaperProps={{
         sx: {
           width: 360,
-          maxHeight: 400,
-        },
+          maxHeight: 400
+        }
       }}
     >
       <Box sx={{ p: 2, borderBottom: 1, borderColor: 'divider' }}>
         <Typography variant="h6">Notifications</Typography>
       </Box>
 
-      {notifications.map((notification) => (
+      {notifications.map(notification => (
         <MenuItem
           key={notification.id}
           onClick={onClose}
@@ -76,7 +76,7 @@ export function NotificationsMenu({ anchorEl, onClose }: NotificationsMenuProps)
             px: 3,
             borderBottom: 1,
             borderColor: 'divider',
-            backgroundColor: notification.read ? 'inherit' : 'action.hover',
+            backgroundColor: notification.read ? 'inherit' : 'action.hover'
           }}
         >
           <ListItemIcon>{getIcon(notification.type)}</ListItemIcon>

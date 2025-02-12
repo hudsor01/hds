@@ -4,5 +4,5 @@ export enum EmailTemplate {
   EARLY_ACCESS = 'early-access',
   SPOT_AVAILABLE = 'spot-available',
   LAUNCH_REMINDER = 'launch-reminder',
-  MAINTENANCE = 'maintenance',
+  MAINTENANCE = 'maintenance'
 }

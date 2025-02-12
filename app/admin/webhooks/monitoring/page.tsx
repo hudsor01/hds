@@ -29,7 +29,7 @@ export default async function WebhookMonitoring() {
   function calculateSuccessRate(stats: WebhookStat[]): number {
     const total = stats.reduce((sum, stat) => sum + Number(stat.count), 0)
     const successful = stats
-      .filter((stat) => stat.status === 'success')
+      .filter(stat => stat.status === 'success')
       .reduce((sum, stat) => sum + Number(stat.count), 0)
     return total ? Math.round((successful / total) * 100) : 0
   }
@@ -48,7 +48,7 @@ export default async function WebhookMonitoring() {
               type: stat.event_type,
               count: 0,
               success: 0,
-              lastReceived: stat.last_received,
+              lastReceived: stat.last_received
             }
           }
           acc[stat.event_type].count += Number(stat.count)
@@ -61,18 +61,18 @@ export default async function WebhookMonitoring() {
       )
     ).map(([_, data]) => ({
       ...data,
-      success: Math.round((data.success / data.count) * 100),
+      success: Math.round((data.success / data.count) * 100)
     }))
   }
 
   function getFailedEvents(stats: WebhookStat[]) {
     return stats
-      .filter((stat) => stat.status !== 'success')
-      .map((stat) => ({
+      .filter(stat => stat.status !== 'success')
+      .map(stat => ({
         id: `${stat.event_type}-${stat.status}`,
         type: stat.event_type,
         error: stat.status,
-        created_at: stat.last_received,
+        created_at: stat.last_received
       }))
   }
 
@@ -81,7 +81,7 @@ export default async function WebhookMonitoring() {
       await fetch('/api/webhooks/retry', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ eventType: row.type, id: row.id }),
+        body: JSON.stringify({ eventType: row.type, id: row.id })
       })
     } catch (error) {
       console.error('Failed to retry webhook:', error)
@@ -128,20 +128,20 @@ export default async function WebhookMonitoring() {
                   width: 150,
                   renderCell: ({ value }) => (
                     <Chip label={`${value}%`} color={value > 95 ? 'success' : 'warning'} />
-                  ),
+                  )
                 },
                 {
                   field: 'lastReceived',
                   headerName: 'Last Received',
                   width: 200,
-                  valueFormatter: ({ value }) => new Date(value).toLocaleString(),
-                },
+                  valueFormatter: ({ value }) => new Date(value).toLocaleString()
+                }
               ]}
               autoHeight
               initialState={{
                 pagination: {
-                  paginationModel: { pageSize: 5 },
-                },
+                  paginationModel: { pageSize: 5 }
+                }
               }}
             />
           </Card>
@@ -162,7 +162,7 @@ export default async function WebhookMonitoring() {
                   field: 'created_at',
                   headerName: 'Time',
                   width: 200,
-                  valueFormatter: ({ value }) => new Date(value).toLocaleString(),
+                  valueFormatter: ({ value }) => new Date(value).toLocaleString()
                 },
                 {
                   field: 'actions',
@@ -172,14 +172,14 @@ export default async function WebhookMonitoring() {
                     <Button variant="contained" size="small" onClick={() => retryWebhook(row)}>
                       Retry
                     </Button>
-                  ),
-                },
+                  )
+                }
               ]}
               autoHeight
               initialState={{
                 pagination: {
-                  paginationModel: { pageSize: 5 },
-                },
+                  paginationModel: { pageSize: 5 }
+                }
               }}
             />
           </Card>

@@ -23,7 +23,7 @@ export function BackToTopButton() {
         right: 20,
         opacity: scrolled ? 1 : 0,
         transform: `translateY(${scrolled ? 0 : 20}px)`,
-        transition: 'all 0.2s',
+        transition: 'all 0.2s'
       }}
     >
       <ArrowUpward />

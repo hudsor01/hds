@@ -6,7 +6,7 @@ export async function withAuth(req: NextRequest, handler: (userId: string) => Pr
     const supabase = createClient()
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error || !user) {

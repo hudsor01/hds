@@ -9,7 +9,7 @@ export function useZodForm<TSchema extends ZodType>(
 ) {
   const form = useForm<TSchema['_input']>({
     ...props,
-    resolver: zodResolver(props.schema, undefined),
+    resolver: zodResolver(props.schema, undefined)
   })
 
   return form

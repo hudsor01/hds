@@ -8,13 +8,13 @@ import { motion } from 'framer-motion'
 const formVariants = {
   input: {
     focus: { scale: 1.01, boxShadow: '0 0 0 2px var(--primary)' },
-    error: { x: [0, -5, 5, -5, 5, 0], transition: { duration: 0.4 } },
+    error: { x: [0, -5, 5, -5, 5, 0], transition: { duration: 0.4 } }
   },
   button: {
     tap: { scale: 0.98 },
     hover: { scale: 1.02, backgroundColor: 'var(--primary-dark)' },
-    loading: { opacity: 0.8, transition: { repeat: Infinity, duration: 1 } },
-  },
+    loading: { opacity: 0.8, transition: { repeat: Infinity, duration: 1 } }
+  }
 }
 
 interface AnimatedInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -31,7 +31,7 @@ export function AnimatedInput({ error, ...props }: AnimatedInputProps) {
 
 export function AnimatedButton({
   children,
-  isLoading,
+  isLoading
 }: {
   children: React.ReactNode
   isLoading?: boolean

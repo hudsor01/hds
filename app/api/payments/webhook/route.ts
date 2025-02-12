@@ -57,6 +57,6 @@ export async function POST(req: NextRequest) {
 // Disable body parsing, we need the raw body for webhook signature verification
 export const config = {
   api: {
-    bodyParser: false,
-  },
+    bodyParser: false
+  }
 }

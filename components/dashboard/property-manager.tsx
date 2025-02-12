@@ -23,17 +23,17 @@ export function PropertyManager() {
     PropertyWithoutIdAndUnits
   >({
     table: 'properties',
-    select: '*, units(*)',
+    select: '*, units(*)'
   })
 
   useDashboardUpdates({
     table: 'properties',
     onUpdate: (data: Property) => {
-      setProperties((prev) => prev.map((p) => (p.id === data.id ? data : p)))
+      setProperties(prev => prev.map(p => (p.id === data.id ? data : p)))
     },
     onDelete: (id: string) => {
-      setProperties((prev) => prev.filter((p) => p.id !== id))
-    },
+      setProperties(prev => prev.filter(p => p.id !== id))
+    }
   })
 
   useEffect(() => {
@@ -75,7 +75,7 @@ export function PropertyManager() {
 
   const getOccupiedUnits = (units?: PropertyUnit[]) => {
     if (!units) return 0
-    return units.filter((unit) => unit.status === ('OCCUPIED' as PropertyStatus)).length
+    return units.filter(unit => unit.status === ('OCCUPIED' as PropertyStatus)).length
   }
 
   const getTotalUnits = (units?: PropertyUnit[]) => {
@@ -92,7 +92,7 @@ export function PropertyManager() {
           state: data.state,
           zipCode: data.zipCode,
           type: data.type,
-          status: data.status,
+          status: data.status
         }
         await handleUpdateProperty(selectedProperty, updateData)
       } else {
@@ -101,7 +101,7 @@ export function PropertyManager() {
           owner_id: 'default',
           organization_id: 'default',
           createdAt: new Date(),
-          updatedAt: new Date(),
+          updatedAt: new Date()
         }
         await create({ ...newPropertyData, units: [] })
       }
@@ -119,7 +119,7 @@ export function PropertyManager() {
       loading={loading}
       onItemCreated={(item: unknown) => {
         const property = item as Property
-        setProperties((prev) => [...prev, property])
+        setProperties(prev => [...prev, property])
       }}
     >
       <div className="mb-4 flex justify-end">
@@ -129,7 +129,7 @@ export function PropertyManager() {
         </Button>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-        {properties.map((property) => (
+        {properties.map(property => (
           <PropertyCard
             key={property.id}
             name={property.name}
@@ -146,7 +146,7 @@ export function PropertyManager() {
       </div>
       <PropertyDialog
         open={dialogOpen}
-        onOpenChangeAction={(open) => {
+        onOpenChangeAction={open => {
           setDialogOpen(open)
           if (!open) setSelectedProperty(null)
         }}

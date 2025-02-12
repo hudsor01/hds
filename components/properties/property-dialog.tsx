@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/buttons/button'
-import type { PropertyInsert, PropertyRow } from '@/types/property'
+import type { PropertyInsert, PropertyRow } from '@/types'
 import { Dialog } from '@/components/ui/dialogs/dialog'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -21,7 +21,7 @@ export function PropertyDialog({
   onOpenChangeAction,
   property,
   userId,
-  onSubmitAction,
+  onSubmitAction
 }: PropertyDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
@@ -45,7 +45,7 @@ export function PropertyDialog({
         rent_amount: Number(formData.get('rent_amount')),
         user_id: userId,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
 
       await onSubmitAction(propertyData)

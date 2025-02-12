@@ -18,15 +18,15 @@ export function DataTable({ columns, rows, loading = false, pageSize = 10 }: Dat
         initialState={{
           pagination: {
             paginationModel: {
-              pageSize,
-            },
-          },
+              pageSize
+            }
+          }
         }}
         pageSizeOptions={[5, 10, 25]}
         disableRowSelectionOnClick
         loading={loading}
         slots={{
-          loadingOverlay: LinearProgress as GridSlotsComponent['loadingOverlay'],
+          loadingOverlay: LinearProgress as GridSlotsComponent['loadingOverlay']
         }}
       />
     </Box>

@@ -26,8 +26,8 @@ export default function TenantsPage() {
       propertyName: 'Sunset Apartments',
       unitId: '101',
       leaseEnd: '12/30/2024',
-      status: 'active',
-    },
+      status: 'active'
+    }
   ])
 
   return (
@@ -47,9 +47,7 @@ export default function TenantsPage() {
         </div>
         <div className="rounded-lg bg-white p-4 shadow-sm">
           <h3 className="mb-1 text-sm text-gray-500">Active Leases</h3>
-          <p className="text-2xl font-bold">
-            {tenants.filter((t) => t.status === 'active').length}
-          </p>
+          <p className="text-2xl font-bold">{tenants.filter(t => t.status === 'active').length}</p>
         </div>
       </div>
 
@@ -81,7 +79,7 @@ export default function TenantsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200 bg-white">
-            {tenants.map((tenant) => (
+            {tenants.map(tenant => (
               <tr key={tenant.id}>
                 <td className="whitespace-nowrap px-6 py-4">
                   <div className="text-sm font-medium text-gray-900">{tenant.name}</div>

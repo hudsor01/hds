@@ -12,12 +12,12 @@ export async function POST() {
   try {
     const existingUser = await prisma.users.findFirst({
       where: {
-        id: userId,
+        id: userId
       },
       select: {
         id: true,
-        subscription_status: true,
-      },
+        subscription_status: true
+      }
     })
 
     if (!existingUser) {
@@ -26,17 +26,17 @@ export async function POST() {
 
     const updatedUser = await prisma.users.update({
       where: {
-        id: existingUser.id,
+        id: existingUser.id
       },
       data: {
         subscription_status: 'trialing',
-        trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000),
+        trialEndsAt: new Date(Date.now() + 14 * 24 * 60 * 60 * 1000)
       },
       select: {
         id: true,
         subscription_status: true,
-        trialEndsAt: true,
-      },
+        trialEndsAt: true
+      }
     })
 
     return NextResponse.json(updatedUser)

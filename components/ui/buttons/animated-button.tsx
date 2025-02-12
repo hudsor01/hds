@@ -8,8 +8,8 @@ const buttonVariants = {
   tap: { scale: 0.98 },
   hover: {
     scale: 1.02,
-    transition: { duration: 0.2 },
-  },
+    transition: { duration: 0.2 }
+  }
 }
 
 export const AnimatedButton = forwardRef<HTMLButtonElement, React.ComponentProps<typeof Button>>(

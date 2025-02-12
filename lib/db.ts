@@ -1,4 +1,4 @@
-import type { Database } from '@/types/database.types'
+import type { Database } from '@/types/db.types'
 import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
 import { createClient } from '@supabase/supabase-js'
 
@@ -9,7 +9,7 @@ declare global {
 
 const prismaClientOptions: Prisma.PrismaClientOptions = {
   log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  errorFormat: 'pretty' as const,
+  errorFormat: 'pretty' as const
 }
 
 export const prisma = globalThis.prisma || new PrismaClient(prismaClientOptions)
@@ -31,7 +31,7 @@ export const handlePrismaError = (error: unknown) => {
     const isPrismaError = error instanceof Prisma.PrismaClientKnownRequestError
     return {
       error: error.message,
-      code: isPrismaError ? mapPrismaErrorToHttpStatus(error) : 500,
+      code: isPrismaError ? mapPrismaErrorToHttpStatus(error) : 500
     }
   }
   return { error: 'An unexpected error occurred', code: 500 }
@@ -81,7 +81,7 @@ export async function getPaginatedResults<T>(
     total,
     page,
     limit,
-    totalPages: Math.ceil(total / limit),
+    totalPages: Math.ceil(total / limit)
   }
 }
 
@@ -90,20 +90,20 @@ export const payments = {
   getByTenant: async (tenantId: string) => {
     return prisma.payments.findMany({
       where: { tenant_id: tenantId },
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: 'desc' }
     })
   },
 
   getByLease: async (leaseId: string) => {
     const lease = await prisma.leases.findUnique({
-      where: { user_id: leaseId },
+      where: { user_id: leaseId }
     })
 
     if (!lease) return []
 
     return prisma.payments.findMany({
       where: { tenant_id: lease.tenant_id },
-      orderBy: { created_at: 'desc' },
+      orderBy: { created_at: 'desc' }
     })
   },
 
@@ -124,9 +124,9 @@ export const payments = {
         params.endDate && {
           created_at: {
             gte: params.startDate,
-            lte: params.endDate,
-          },
-        }),
+            lte: params.endDate
+          }
+        })
     }
 
     return getPaginatedResults(
@@ -135,12 +135,12 @@ export const payments = {
           where,
           orderBy: { created_at: 'desc' },
           skip,
-          take,
+          take
         }),
       () => prisma.payments.count({ where }),
       params
     )
-  },
+  }
 }
 
 // Lease Queries
@@ -160,8 +160,8 @@ export const leases = {
         payment_day: true,
         documents: true,
         created_at: true,
-        lease_status: true,
-      },
+        lease_status: true
+      }
     })
   },
 
@@ -171,8 +171,8 @@ export const leases = {
         property_id: propertyId,
         lease_status: 'Active',
         end_date: {
-          gte: new Date(),
-        },
+          gte: new Date()
+        }
       },
       select: {
         user_id: true,
@@ -184,11 +184,11 @@ export const leases = {
         rent_amount: true,
         depositAmount: true,
         payment_day: true,
-        lease_status: true,
+        lease_status: true
       },
-      orderBy: { start_date: 'desc' },
+      orderBy: { start_date: 'desc' }
     })
-  },
+  }
 }
 
 // Property Queries
@@ -218,22 +218,22 @@ export const properties = {
             last_name: true,
             email: true,
             phone: true,
-            tenant_status: true,
-          },
+            tenant_status: true
+          }
         },
         maintenance_requests: {
           where: {
-            status: 'PENDING',
+            status: 'PENDING'
           },
           select: {
             id: true,
             title: true,
             status: true,
             priority: true,
-            created_at: true,
-          },
-        },
-      },
+            created_at: true
+          }
+        }
+      }
     })
   },
 
@@ -253,9 +253,9 @@ export const properties = {
         OR: [
           { name: { contains: params.search } },
           { address: { contains: params.search } },
-          { city: { contains: params.search } },
-        ],
-      }),
+          { city: { contains: params.search } }
+        ]
+      })
     }
 
     return getPaginatedResults(
@@ -276,8 +276,8 @@ export const properties = {
                 id: true,
                 first_name: true,
                 last_name: true,
-                status: true,
-              },
+                status: true
+              }
             },
             maintenance_requests: {
               where: { status: 'PENDING' },
@@ -285,18 +285,18 @@ export const properties = {
                 id: true,
                 title: true,
                 status: true,
-                priority: true,
-              },
-            },
+                priority: true
+              }
+            }
           },
           orderBy: { created_at: 'desc' },
           skip,
-          take,
+          take
         }),
       () => prisma.properties.count({ where }),
       params
     )
-  },
+  }
 }
 
 // Connection Management

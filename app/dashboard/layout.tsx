@@ -52,11 +52,11 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             bottom: 0,
             zIndex: theme.zIndex.drawer,
             width: {
-              lg: sidebarCollapsed ? 80 : SIDEBAR_WIDTH,
+              lg: sidebarCollapsed ? 80 : SIDEBAR_WIDTH
             },
             transition: theme.transitions.create('width', {
-              duration: theme.transitions.duration.standard,
-            }),
+              duration: theme.transitions.duration.standard
+            })
           }}
         >
           {lgUp ? (
@@ -71,10 +71,10 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   borderRight: '1px solid',
                   borderColor: 'divider',
                   transition: theme.transitions.create('width', {
-                    duration: theme.transitions.duration.standard,
+                    duration: theme.transitions.duration.standard
                   }),
-                  overflowX: 'hidden',
-                },
+                  overflowX: 'hidden'
+                }
               }}
             >
               <Box sx={{ height: 64 }} /> {/* Header spacing */}
@@ -83,7 +83,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                   px: sidebarCollapsed ? 1 : 2,
                   py: 3,
                   height: 'calc(100% - 64px)',
-                  overflow: 'auto',
+                  overflow: 'auto'
                 }}
               >
                 <DashboardNav collapsed={sidebarCollapsed} />
@@ -100,8 +100,8 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
                 '& .MuiDrawer-paper': {
                   width: SIDEBAR_WIDTH,
                   boxSizing: 'border-box',
-                  overflowX: 'hidden',
-                },
+                  overflowX: 'hidden'
+                }
               }}
             >
               <Box sx={{ height: 64 }} /> {/* Header spacing */}
@@ -120,12 +120,12 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
             pt: '64px', // Header height
             ml: {
               xs: 0,
-              lg: sidebarCollapsed ? '80px' : `${SIDEBAR_WIDTH}px`,
+              lg: sidebarCollapsed ? '80px' : `${SIDEBAR_WIDTH}px`
             },
             transition: theme.transitions.create('margin', {
-              duration: theme.transitions.duration.standard,
+              duration: theme.transitions.duration.standard
             }),
-            overflow: 'auto',
+            overflow: 'auto'
           }}
         >
           <Box sx={{ p: 3 }}>{children}</Box>

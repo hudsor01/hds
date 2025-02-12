@@ -11,7 +11,7 @@ const userSettingsSchema = z.object({
   time_format: z.enum(['12h', '24h']).default('12h'),
   notifications_enabled: z.boolean().default(true),
   email_notifications: z.boolean().default(true),
-  sms_notifications: z.boolean().default(false),
+  sms_notifications: z.boolean().default(false)
 })
 
 const userSecuritySettingsSchema = z.object({
@@ -23,7 +23,7 @@ const userSecuritySettingsSchema = z.object({
   password_expires_at: z.string().datetime().optional(),
   require_password_change: z.boolean().default(false),
   security_questions: z.record(z.string(), z.string()).optional(),
-  login_notifications: z.boolean().default(true),
+  login_notifications: z.boolean().default(true)
 })
 
 export async function GET(req: NextRequest) {
@@ -54,7 +54,7 @@ export async function GET(req: NextRequest) {
                 two_factor_enabled: false,
                 max_sessions: 5,
                 require_password_change: false,
-                login_notifications: true,
+                login_notifications: true
               }
             : {
                 id: userId,
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
                 time_format: '12h',
                 notifications_enabled: true,
                 email_notifications: true,
-                sms_notifications: false,
+                sms_notifications: false
               }
 
         const { data: newSettings, error: createError } = await supabase
@@ -130,9 +130,9 @@ export async function PUT(req: NextRequest) {
         action: 'UPDATE',
         entity: settingsType === 'security' ? 'SECURITY_SETTINGS' : 'USER_SETTINGS',
         details: {
-          changes: validatedData,
-        },
-      },
+          changes: validatedData
+        }
+      }
     ])
 
     // Create notification for security-related changes
@@ -147,9 +147,9 @@ export async function PUT(req: NextRequest) {
           }`,
           data: {
             setting_type: 'security',
-            two_factor_enabled: validatedData.two_factor_enabled,
-          },
-        },
+            two_factor_enabled: validatedData.two_factor_enabled
+          }
+        }
       ])
     }
 
@@ -167,7 +167,7 @@ export async function PUT(req: NextRequest) {
 const systemSettingsSchema = z.object({
   key: z.string().min(1),
   value: z.any(),
-  description: z.string().optional(),
+  description: z.string().optional()
 })
 
 export async function POST(req: NextRequest) {
@@ -207,8 +207,8 @@ export async function POST(req: NextRequest) {
       {
         userId,
         entityType: 'SETTINGS',
-        newValues: validatedData,
-      },
+        newValues: validatedData
+      }
     ])
 
     return NextResponse.json({ data: setting }, { status: 201 })
@@ -269,8 +269,8 @@ export async function DELETE(req: NextRequest) {
         userId,
         entityType: 'SETTINGS',
         entityId: key,
-        oldValues: existingSetting,
-      },
+        oldValues: existingSetting
+      }
     ])
 
     return NextResponse.json({ message: 'System setting deleted successfully' }, { status: 200 })

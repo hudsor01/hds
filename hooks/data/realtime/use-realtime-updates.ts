@@ -16,9 +16,9 @@ export function useRealtimeUpdates(table: string, userId: string) {
           event: '*',
           schema: 'public',
           table,
-          filter: `user_id=eq.${userId}`,
+          filter: `user_id=eq.${userId}`
         },
-        (payload) => {
+        payload => {
           queryClient.invalidateQueries({ queryKey: [table] })
           toast.success(`${table} updated`)
         }

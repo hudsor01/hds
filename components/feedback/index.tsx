@@ -14,7 +14,7 @@ interface ErrorBoundaryState {
 
 export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   public state: ErrorBoundaryState = {
-    hasError: false,
+    hasError: false
   }
 
   public static getDerivedStateFromError(error: Error): ErrorBoundaryState {
@@ -86,7 +86,7 @@ export function EnvWarning({ missingVars }: EnvWarningProps) {
         The following environment variables are required but not set:
       </Typography>
       <ul>
-        {missingVars.map((variable) => (
+        {missingVars.map(variable => (
           <li key={variable}>{variable}</li>
         ))}
       </ul>

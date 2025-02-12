@@ -5,7 +5,7 @@ import {
   DialogContentText,
   DialogTitle,
   IconButton,
-  Dialog as MuiDialog,
+  Dialog as MuiDialog
 } from '@mui/material'
 import * as React from 'react'
 import { X } from 'react-feather'
@@ -27,7 +27,7 @@ const Dialog = React.forwardRef<HTMLDivElement, DialogProps>(
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.grey[500],
+            color: theme => theme.palette.grey[500]
           }}
         >
           <X size={20} />

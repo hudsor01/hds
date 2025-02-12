@@ -5,6 +5,6 @@ export async function getHeaders() {
   return {
     get: (name: string) => headersList.get(name),
     has: (name: string) => headersList.has(name),
-    entries: () => Array.from(headersList.entries()),
+    entries: () => Array.from(headersList.entries())
   }
 }

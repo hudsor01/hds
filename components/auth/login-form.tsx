@@ -21,7 +21,7 @@ export function LoginForm() {
     try {
       const result = await signIn.create({
         identifier: data.email,
-        password: data.password,
+        password: data.password
       })
 
       if (result.status === 'complete') {

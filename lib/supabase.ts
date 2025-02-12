@@ -1,4 +1,4 @@
-import type { Database } from '@/types/database.types'
+import type { Database } from '@/types/db.types'
 import { createClient } from '@supabase/supabase-js'
 
 // Load environment variables with fallbacks for test environment
@@ -12,20 +12,20 @@ export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: true,
-    detectSessionInUrl: true,
+    detectSessionInUrl: true
   },
   db: {
-    schema: 'public',
+    schema: 'public'
   },
   global: {
-    headers: { 'x-application-name': 'property-manager' },
+    headers: { 'x-application-name': 'property-manager' }
   },
   // Add retries for better reliability
   realtime: {
     params: {
-      eventsPerSecond: 10,
-    },
-  },
+      eventsPerSecond: 10
+    }
+  }
 })
 
 // Helper to handle database errors

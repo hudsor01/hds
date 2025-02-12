@@ -18,7 +18,7 @@ export function PropertySaleDialog({
   open,
   onOpenChangeAction,
   property,
-  onSubmitAction,
+  onSubmitAction
 }: PropertySaleDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
 
@@ -32,7 +32,7 @@ export function PropertySaleDialog({
         propertyId: property.id,
         salePrice: Number(formData.get('salePrice')),
         saleDate: new Date(formData.get('saleDate') as string).toISOString(),
-        notes: (formData.get('notes') as string) || undefined,
+        notes: (formData.get('notes') as string) || undefined
       }
 
       await onSubmitAction(data)

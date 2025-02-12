@@ -12,7 +12,7 @@ import {
   Tooltip,
   Typography,
   alpha,
-  useTheme,
+  useTheme
 } from '@mui/material'
 import { motion } from 'framer-motion'
 import { useState } from 'react'
@@ -26,13 +26,13 @@ const containerVariants = {
   hidden: { opacity: 0 },
   show: {
     opacity: 1,
-    transition: { staggerChildren: 0.05 },
-  },
+    transition: { staggerChildren: 0.05 }
+  }
 }
 
 const itemVariants = {
   hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0 },
+  show: { opacity: 1, x: 0 }
 }
 
 export function RecentActivityList({ activities }: RecentActivityListProps) {
@@ -66,7 +66,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
   }
 
   const filteredActivities = activities.filter(
-    (activity) => filter === 'ALL' || activity.type === filter
+    activity => filter === 'ALL' || activity.type === filter
   )
 
   return (
@@ -74,7 +74,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
       elevation={0}
       sx={{
         height: '100%',
-        bgcolor: 'background.default',
+        bgcolor: 'background.default'
       }}
     >
       <Box sx={{ p: { xs: 2, sm: 3 } }}>
@@ -83,7 +83,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
             variant="h6"
             sx={{
               fontWeight: 600,
-              fontSize: { xs: '1rem', sm: '1.25rem' },
+              fontSize: { xs: '1rem', sm: '1.25rem' }
             }}
           >
             Recent Activity
@@ -102,17 +102,17 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                 borderRadius: '16px !important',
                 borderColor: 'divider',
                 '&.Mui-selected': {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                  bgcolor: theme => alpha(theme.palette.primary.main, 0.08),
                   color: 'primary.main',
                   borderColor: 'primary.main',
                   '&:hover': {
-                    bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
-                  },
+                    bgcolor: theme => alpha(theme.palette.primary.main, 0.12)
+                  }
                 },
                 '&:hover': {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
-                },
-              },
+                  bgcolor: theme => alpha(theme.palette.primary.main, 0.04)
+                }
+              }
             }}
           >
             <ToggleButton value="ALL">All</ToggleButton>
@@ -127,10 +127,10 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
               size="small"
               sx={{
                 color: 'primary.main',
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+                bgcolor: theme => alpha(theme.palette.primary.main, 0.08),
                 '&:hover': {
-                  bgcolor: (theme) => alpha(theme.palette.primary.main, 0.12),
-                },
+                  bgcolor: theme => alpha(theme.palette.primary.main, 0.12)
+                }
               }}
             >
               <FileText size={20} />
@@ -145,7 +145,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                 py: 8,
                 textAlign: 'center',
                 borderRadius: 2,
-                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.04),
+                bgcolor: theme => alpha(theme.palette.primary.main, 0.04)
               }}
             >
               <Clock size={32} style={{ marginBottom: 16, opacity: 0.5 }} />
@@ -158,7 +158,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
             </Box>
           ) : (
             <Stack spacing={2}>
-              {filteredActivities.map((activity) => {
+              {filteredActivities.map(activity => {
                 const Icon = getActivityIcon(activity.type)
                 const statusColor = getStatusColor(activity.status)
 
@@ -171,8 +171,8 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                         transition: 'all 0.2s ease-in-out',
                         '&:hover': {
                           bgcolor: alpha(theme.palette[statusColor].main, 0.02),
-                          borderColor: alpha(theme.palette[statusColor].main, 0.2),
-                        },
+                          borderColor: alpha(theme.palette[statusColor].main, 0.2)
+                        }
                       }}
                     >
                       <Stack direction="row" spacing={2} alignItems="flex-start">
@@ -180,11 +180,11 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                           sx={{
                             p: 1,
                             borderRadius: 1,
-                            bgcolor: (theme) => alpha(theme.palette[statusColor].main, 0.12),
+                            bgcolor: theme => alpha(theme.palette[statusColor].main, 0.12),
                             color: `${statusColor}.main`,
                             display: 'flex',
                             alignItems: 'center',
-                            justifyContent: 'center',
+                            justifyContent: 'center'
                           }}
                         >
                           <Icon size={20} />
@@ -199,7 +199,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               display: '-webkit-box',
                               WebkitLineClamp: 1,
                               WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden',
+                              overflow: 'hidden'
                             }}
                           >
                             {activity.title}
@@ -212,7 +212,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               display: '-webkit-box',
                               WebkitLineClamp: 2,
                               WebkitBoxOrient: 'vertical',
-                              overflow: 'hidden',
+                              overflow: 'hidden'
                             }}
                           >
                             {activity.description}
@@ -226,7 +226,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               typography: 'caption',
                               color: 'text.secondary',
                               flexWrap: 'wrap',
-                              gap: 1,
+                              gap: 1
                             }}
                           >
                             <Box component="span">
@@ -234,7 +234,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                                 month: 'short',
                                 day: 'numeric',
                                 hour: 'numeric',
-                                minute: 'numeric',
+                                minute: 'numeric'
                               })}
                             </Box>
                             <Chip
@@ -245,7 +245,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               sx={{
                                 height: 20,
                                 fontSize: '0.75rem',
-                                fontWeight: 500,
+                                fontWeight: 500
                               }}
                             />
                             {activity.amount && (
@@ -253,8 +253,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                                 component="span"
                                 sx={{
                                   fontWeight: 600,
-                                  color:
-                                    statusColor === 'success' ? 'success.main' : 'text.primary',
+                                  color: statusColor === 'success' ? 'success.main' : 'text.primary'
                                 }}
                               >
                                 ${activity.amount.toLocaleString()}
@@ -270,8 +269,8 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
                               color: 'text.secondary',
                               '&:hover': {
                                 color: 'primary.main',
-                                bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-                              },
+                                bgcolor: theme => alpha(theme.palette.primary.main, 0.08)
+                              }
                             }}
                           >
                             <ExternalLink size={16} />

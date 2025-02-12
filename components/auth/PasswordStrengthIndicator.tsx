@@ -42,7 +42,7 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthProps): 
     'bg-yellow-500',
     'bg-blue-500',
     'bg-green-500',
-    'bg-green-600',
+    'bg-green-600'
   ][strength]
 
   return (

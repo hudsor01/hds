@@ -11,18 +11,18 @@ const contactInfo = [
   {
     title: 'Email',
     value: 'info@hudsondigitalsolutions.com',
-    icon: Mail,
+    icon: Mail
   },
   {
     title: 'Phone',
     value: '+1 (555) 123-4567',
-    icon: Phone,
+    icon: Phone
   },
   {
     title: 'Address',
     value: '123 Business Street, Suite 100, New York, NY 10001',
-    icon: MapPin,
-  },
+    icon: MapPin
+  }
 ]
 
 interface ContactFormData {
@@ -38,7 +38,7 @@ const initialFormData: ContactFormData = {
   lastName: '',
   email: '',
   phone: '',
-  message: '',
+  message: ''
 }
 
 export default function ContactPage() {
@@ -53,9 +53,9 @@ export default function ContactPage() {
       const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       })
 
       if (!response.ok) {
@@ -74,11 +74,11 @@ export default function ContactPage() {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
-    <Box className="min-h-screen bg-gradient-to-b from-background to-muted/20 py-20">
+    <Box className="from-background to-muted/20 min-h-screen bg-gradient-to-b py-20">
       <Container maxWidth="lg">
         <Box className="mb-16 text-center">
           <Typography variant="h2" className="mb-4 font-bold">
@@ -97,8 +97,8 @@ export default function ContactPage() {
               <Grid item xs={12} md={4} key={info.title}>
                 <Card className="h-full p-6 transition-all hover:-translate-y-1 hover:shadow-lg">
                   <Box className="flex flex-col items-center text-center">
-                    <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 p-3">
-                      <Icon className="h-6 w-6 text-primary" />
+                    <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full p-3">
+                      <Icon className="text-primary h-6 w-6" />
                     </div>
                     <Typography variant="h6" className="mb-2 font-semibold">
                       {info.title}
@@ -183,7 +183,7 @@ export default function ContactPage() {
                   height: 48,
                   borderRadius: 2,
                   textTransform: 'none',
-                  fontSize: '1.1rem',
+                  fontSize: '1.1rem'
                 }}
               >
                 Send Message

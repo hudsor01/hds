@@ -47,7 +47,7 @@ export function StatsChart({ data, title, formatter }: StatsChartProps) {
                 backgroundColor: 'rgb(31 41 55)',
                 border: 'none',
                 borderRadius: '0.5rem',
-                fontSize: '0.875rem',
+                fontSize: '0.875rem'
               }}
               formatter={(value: number) => [formatValue(value), title]}
               labelStyle={{ color: '#fff' }}

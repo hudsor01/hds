@@ -36,7 +36,7 @@ export function useToast() {
   }>({
     message: '',
     type: 'info',
-    open: false,
+    open: false
   })
 
   const showToast = useCallback(
@@ -47,7 +47,7 @@ export function useToast() {
   )
 
   const hideToast = useCallback(() => {
-    setToast((prev) => ({ ...prev, open: false }))
+    setToast(prev => ({ ...prev, open: false }))
   }, [])
 
   return { toast, showToast, hideToast }
@@ -66,7 +66,7 @@ export function usePreferences() {
   }, [preferences])
 
   const updatePreference = useCallback((key: string, value: unknown) => {
-    setPreferences((prev) => ({ ...prev, [key]: value }))
+    setPreferences(prev => ({ ...prev, [key]: value }))
   }, [])
 
   return { preferences, updatePreference }

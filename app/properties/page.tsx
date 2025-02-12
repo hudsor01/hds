@@ -11,22 +11,22 @@ const mockProperties = [
     name: 'Sunset Heights',
     address: '123 Sunset Blvd, Los Angeles, CA 90028',
     units: '24 Units',
-    occupancy: '92%',
+    occupancy: '92%'
   },
   {
     id: '2',
     name: 'Ocean View Apartments',
     address: '456 Ocean Drive, Miami Beach, FL 33139',
     units: '16 Units',
-    occupancy: '88%',
+    occupancy: '88%'
   },
   {
     id: '3',
     name: 'Mountain Lodge',
     address: '789 Pine Road, Aspen, CO 81611',
     units: '12 Units',
-    occupancy: '83%',
-  },
+    occupancy: '83%'
+  }
 ]
 
 export default function PropertiesPage() {
@@ -56,8 +56,8 @@ export default function PropertiesPage() {
               textTransform: 'none',
               borderRadius: 2,
               '&:hover': {
-                bgcolor: 'primary.dark',
-              },
+                bgcolor: 'primary.dark'
+              }
             }}
           >
             Add Property

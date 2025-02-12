@@ -11,24 +11,24 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     minWidth: 180,
     boxShadow: theme.shadows[4],
     '& .MuiMenu-list': {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1)
     },
     '& .MuiMenuItem-root': {
       fontSize: 14,
       padding: theme.spacing(1, 2),
       borderRadius: theme.shape.borderRadius,
       '&:hover': {
-        backgroundColor: theme.palette.action.hover,
+        backgroundColor: theme.palette.action.hover
       },
       '&.Mui-selected': {
         backgroundColor: theme.palette.primary.main,
         color: theme.palette.primary.contrastText,
         '&:hover': {
-          backgroundColor: theme.palette.primary.dark,
-        },
-      },
-    },
-  },
+          backgroundColor: theme.palette.primary.dark
+        }
+      }
+    }
+  }
 }))
 
 export interface ContextMenuProps extends Omit<MenuProps, 'open'> {
@@ -50,7 +50,7 @@ export const ContextMenu = React.memo(
             contextMenu === null
               ? {
                   mouseX: event.clientX,
-                  mouseY: event.clientY,
+                  mouseY: event.clientY
                 }
               : null
           )

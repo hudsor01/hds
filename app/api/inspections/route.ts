@@ -16,12 +16,12 @@ const inspectionSchema = z.object({
         category: z.string(),
         condition: z.enum(['EXCELLENT', 'GOOD', 'FAIR', 'POOR']),
         notes: z.string().optional(),
-        photos: z.array(z.string().url()).optional(),
+        photos: z.array(z.string().url()).optional()
       })
     )
     .optional(),
   notes: z.string().optional(),
-  report_url: z.string().url().optional(),
+  report_url: z.string().url().optional()
 })
 
 export async function GET(req: NextRequest) {
@@ -111,9 +111,9 @@ export async function POST(req: NextRequest) {
         data: {
           inspection_id: inspection.id,
           property_id: validatedData.property_id,
-          type: validatedData.inspection_type,
-        },
-      },
+          type: validatedData.inspection_type
+        }
+      }
     ])
 
     return NextResponse.json({ data: inspection }, { status: 201 })
@@ -183,9 +183,9 @@ export async function PUT(req: NextRequest) {
           data: {
             inspection_id: id,
             old_status: existingInspection.status,
-            new_status: validatedData.status,
-          },
-        },
+            new_status: validatedData.status
+          }
+        }
       ])
     }
 

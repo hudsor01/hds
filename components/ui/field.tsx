@@ -18,12 +18,12 @@ export const Field = React.forwardRef<HTMLDivElement, FieldProps>(
         {label && (
           <Label>
             {label}
-            {required && <span className="ml-1 text-destructive">*</span>}
+            {required && <span className="text-destructive ml-1">*</span>}
           </Label>
         )}
         {children}
-        {helperText && <p className="text-sm text-muted-foreground">{helperText}</p>}
-        {errorText && <p className="text-sm text-destructive">{errorText}</p>}
+        {helperText && <p className="text-muted-foreground text-sm">{helperText}</p>}
+        {errorText && <p className="text-destructive text-sm">{errorText}</p>}
       </div>
     )
   }

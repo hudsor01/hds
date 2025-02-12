@@ -7,7 +7,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     const supabase = await createClient()
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error || !user) {
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
     const lease = await prisma.leases.findUnique({
       where: {
-        user_id: params.id,
+        user_id: params.id
       },
       select: {
         user_id: true,
@@ -30,8 +30,8 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         payment_day: true,
         documents: true,
         created_at: true,
-        status: true,
-      },
+        status: true
+      }
     })
 
     if (!lease) {
@@ -49,7 +49,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
     const supabase = await createClient()
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error || !user) {
@@ -64,7 +64,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
     const lease = await prisma.leases.update({
       where: {
-        user_id: params.id,
+        user_id: params.id
       },
       data: json,
       select: {
@@ -79,8 +79,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
         payment_day: true,
         documents: true,
         created_at: true,
-        status: true,
-      },
+        status: true
+      }
     })
 
     return NextResponse.json(lease)
@@ -94,7 +94,7 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
     const supabase = await createClient()
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error || !user) {
@@ -103,8 +103,8 @@ export async function DELETE(request: NextRequest, { params }: { params: { id: s
 
     await prisma.leases.delete({
       where: {
-        user_id: params.id,
-      },
+        user_id: params.id
+      }
     })
 
     return new NextResponse(null, { status: 204 })

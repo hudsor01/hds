@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { containerVariants, itemVariants } from '@/lib/animation-variants';
-import { motion } from 'framer-motion';
-import Link from 'next/link';
+import { containerVariants, itemVariants } from '@/lib/animation-variants'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
 
 export default function Footer() {
   return (
@@ -21,5 +21,5 @@ export default function Footer() {
         </Link>
       </motion.div>
     </motion.div>
-  );
+  )
 }

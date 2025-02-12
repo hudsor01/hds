@@ -16,7 +16,7 @@ export function useAuth() {
     const getInitialSession = async () => {
       try {
         const {
-          data: { user },
+          data: { user }
         } = await supabase.auth.getUser()
         if (user) {
           const { data: profile } = await supabase
@@ -38,7 +38,7 @@ export function useAuth() {
 
     // Listen for auth changes
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (session?.user) {
         const { data: profile } = await supabase

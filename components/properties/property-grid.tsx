@@ -2,7 +2,7 @@
 'use client'
 
 import { formatCurrency } from '@/utils/format'
-import type { PropertyRow } from '@/types/property'
+import type { PropertyRow } from '@/types'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
@@ -25,7 +25,13 @@ interface PropertyGridProps {
   onManageTenants?: (property: PropertyRow) => void
 }
 
-export function PropertyGrid({ properties, isLoading, onEdit, onViewDetails, onManageTenants }: PropertyGridProps) {
+export function PropertyGrid({
+  properties,
+  isLoading,
+  onEdit,
+  onViewDetails,
+  onManageTenants
+}: PropertyGridProps) {
   if (isLoading) {
     return (
       <Grid container spacing={3}>
@@ -40,7 +46,7 @@ export function PropertyGrid({ properties, isLoading, onEdit, onViewDetails, onM
 
   return (
     <Grid container spacing={3}>
-      {properties.map((property) => (
+      {properties.map(property => (
         <Grid item xs={12} sm={6} md={4} key={property.id}>
           <PropertyCard
             property={property}
@@ -85,7 +91,7 @@ function PropertyCard({ property, onEdit, onViewDetails, onManageTenants }: Prop
           sx={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'flex-start',
+            alignItems: 'flex-start'
           }}
         >
           <Box>

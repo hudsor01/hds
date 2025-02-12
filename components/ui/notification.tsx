@@ -8,7 +8,7 @@ export function NotificationProvider() {
 
   return (
     <Stack spacing={2} sx={{ position: 'fixed', bottom: 24, right: 24, zIndex: 2000 }}>
-      {toasts.map((toast) => (
+      {toasts.map(toast => (
         <Snackbar
           key={toast.id}
           open

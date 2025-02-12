@@ -47,10 +47,10 @@ const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
       <SheetContext.Provider
         value={{
           open: isOpen,
-          onOpenChange: (o) => {
+          onOpenChange: o => {
             setIsOpen(o)
             onOpenChange?.(o)
-          },
+          }
         }}
       >
         <Dialog
@@ -68,8 +68,8 @@ const Sheet = React.forwardRef<HTMLDivElement, SheetProps>(
               height: side === 'top' || side === 'bottom' ? 'auto' : '100%',
               m: 0,
               maxHeight: '100vh',
-              borderRadius: 0,
-            },
+              borderRadius: 0
+            }
           }}
         >
           {children}
@@ -103,10 +103,10 @@ const SheetClose = React.forwardRef<
       ref={ref}
       type="button"
       className={cn(
-        'focus:outline-hidden absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none',
+        'focus:outline-hidden ring-offset-background focus:ring-ring absolute right-4 top-4 rounded-sm opacity-70 transition-opacity hover:opacity-100 focus:ring-2 focus:ring-offset-2 disabled:pointer-events-none',
         className
       )}
-      onClick={(e) => {
+      onClick={e => {
         onClick?.(e)
         onOpenChange(false)
       }}
@@ -136,7 +136,7 @@ const SheetContent = React.forwardRef<
       height: position === 'top' || position === 'bottom' ? 'auto' : '100%',
       m: 0,
       maxHeight: '100vh',
-      borderRadius: 0,
+      borderRadius: 0
     }}
     {...props}
   >
@@ -170,7 +170,7 @@ SheetFooter.displayName = 'SheetFooter'
 
 const SheetTitle = React.forwardRef<HTMLHeadingElement, React.HTMLAttributes<HTMLHeadingElement>>(
   ({ className, ...props }, ref) => (
-    <h3 ref={ref} className={cn('text-lg font-semibold text-foreground', className)} {...props} />
+    <h3 ref={ref} className={cn('text-foreground text-lg font-semibold', className)} {...props} />
   )
 )
 SheetTitle.displayName = 'SheetTitle'
@@ -179,7 +179,7 @@ const SheetDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+  <p ref={ref} className={cn('text-muted-foreground text-sm', className)} {...props} />
 ))
 SheetDescription.displayName = 'SheetDescription'
 
@@ -191,5 +191,5 @@ export {
   SheetFooter,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
+  SheetTrigger
 }

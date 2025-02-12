@@ -4,11 +4,11 @@ import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
 
 const resetSchema = z.object({
-  email: z.string().email(),
+  email: z.string().email()
 })
 
 const updateSchema = z.object({
-  password: z.string().min(8),
+  password: z.string().min(8)
 })
 
 export async function POST(request: Request) {
@@ -20,7 +20,7 @@ export async function POST(request: Request) {
       const supabase = await createClient()
 
       const { error } = await supabase.auth.resetPasswordForEmail(body.email, {
-        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/update-password`,
+        redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/update-password`
       })
 
       if (error) {
@@ -28,7 +28,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json({
-        message: 'Password reset email sent',
+        message: 'Password reset email sent'
       })
     } catch (error) {
       if (error instanceof z.ZodError) {
@@ -49,7 +49,7 @@ export async function PUT(request: Request) {
       const supabase = await createClient()
 
       const { error } = await supabase.auth.updateUser({
-        password: body.password,
+        password: body.password
       })
 
       if (error) {
@@ -57,7 +57,7 @@ export async function PUT(request: Request) {
       }
 
       return NextResponse.json({
-        message: 'Password updated successfully',
+        message: 'Password updated successfully'
       })
     } catch (error) {
       if (error instanceof z.ZodError) {

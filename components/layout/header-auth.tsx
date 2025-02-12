@@ -9,7 +9,7 @@ export default async function AuthButton() {
   const supabase = await createClient()
 
   const {
-    data: { user },
+    data: { user }
   } = await supabase.auth.getCurrentUser()
 
   if (!hasEnvVars) {

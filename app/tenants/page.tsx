@@ -12,7 +12,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from '@mui/material'
 import { Plus } from 'react-feather'
 
@@ -26,7 +26,7 @@ const mockTenants = [
     leaseStart: '2023-01-15',
     leaseEnd: '2024-01-14',
     rentAmount: 2500,
-    status: 'Active',
+    status: 'Active'
   },
   {
     id: '2',
@@ -36,7 +36,7 @@ const mockTenants = [
     leaseStart: '2023-03-01',
     leaseEnd: '2024-02-29',
     rentAmount: 2800,
-    status: 'Active',
+    status: 'Active'
   },
   {
     id: '3',
@@ -46,8 +46,8 @@ const mockTenants = [
     leaseStart: '2023-06-15',
     leaseEnd: '2024-06-14',
     rentAmount: 2200,
-    status: 'Active',
-  },
+    status: 'Active'
+  }
 ]
 
 export default function TenantsPage() {
@@ -77,8 +77,8 @@ export default function TenantsPage() {
               textTransform: 'none',
               borderRadius: 2,
               '&:hover': {
-                bgcolor: 'primary.dark',
-              },
+                bgcolor: 'primary.dark'
+              }
             }}
           >
             Add Tenant
@@ -100,13 +100,13 @@ export default function TenantsPage() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {mockTenants.map((tenant) => (
+              {mockTenants.map(tenant => (
                 <TableRow
                   key={tenant.id}
                   hover
                   sx={{
                     cursor: 'pointer',
-                    '&:last-child td, &:last-child th': { border: 0 },
+                    '&:last-child td, &:last-child th': { border: 0 }
                   }}
                 >
                   <TableCell>{tenant.name}</TableCell>
@@ -117,7 +117,7 @@ export default function TenantsPage() {
                   <TableCell>
                     {new Intl.NumberFormat('en-US', {
                       style: 'currency',
-                      currency: 'USD',
+                      currency: 'USD'
                     }).format(tenant.rentAmount)}
                   </TableCell>
                   <TableCell>
@@ -129,7 +129,7 @@ export default function TenantsPage() {
                         borderRadius: 1,
                         bgcolor: tenant.status === 'Active' ? 'success.light' : 'error.light',
                         color: tenant.status === 'Active' ? 'success.dark' : 'error.dark',
-                        fontSize: '0.875rem',
+                        fontSize: '0.875rem'
                       }}
                     >
                       {tenant.status}

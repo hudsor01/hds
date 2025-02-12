@@ -10,10 +10,7 @@ import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
-import {
-  type GridColDef,
-  type GridRenderCellParams,
-} from '@mui/x-data-grid'
+import { type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
 import { useState } from 'react'
 
 interface ExtendedPropertyTableProps extends PropertyTableProps {
@@ -27,7 +24,7 @@ export function PropertyTable({
   isLoading,
   onEdit,
   onViewDetails,
-  onManageTenants,
+  onManageTenants
 }: ExtendedPropertyTableProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [selectedProperty, setSelectedProperty] = useState<PropertyRow | null>(null)
@@ -56,7 +53,7 @@ export function PropertyTable({
             {params.row.address}
           </Typography>
         </Box>
-      ),
+      )
     },
     {
       field: 'property_status',
@@ -74,18 +71,18 @@ export function PropertyTable({
           }
           size="small"
         />
-      ),
+      )
     },
     {
       field: 'rent_amount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: ({ value }: { value: number }) => formatCurrency(value),
+      valueFormatter: ({ value }: { value: number }) => formatCurrency(value)
     },
     {
       field: 'property_type',
       headerName: 'Type',
-      width: 130,
+      width: 130
     },
     {
       field: 'actions',
@@ -94,7 +91,7 @@ export function PropertyTable({
       sortable: false,
       renderCell: (params: GridRenderCellParams<PropertyRow>) => (
         <>
-          <IconButton onClick={(e) => handleOpenMenu(e, params.row)}>
+          <IconButton onClick={e => handleOpenMenu(e, params.row)}>
             <MoreVertIcon />
           </IconButton>
           <Menu
@@ -134,8 +131,8 @@ export function PropertyTable({
             )}
           </Menu>
         </>
-      ),
-    },
+      )
+    }
   ]
 
   return <BaseDataGrid data={properties} columns={columns} isLoading={isLoading} pageSize={10} />

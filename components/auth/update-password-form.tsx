@@ -29,7 +29,7 @@ export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordF
       const response = await fetch('/auth/reset-password', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ password }),
+        body: JSON.stringify({ password })
       })
 
       const data = await response.json()
@@ -57,7 +57,7 @@ export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordF
         gap: 2,
         maxWidth: 'sm',
         mx: 'auto',
-        p: 3,
+        p: 3
       }}
     >
       {error && (
@@ -78,7 +78,7 @@ export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordF
         label="New Password"
         type="password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={e => setPassword(e.target.value)}
         required
         fullWidth
         helperText="Password must be at least 8 characters long"
@@ -88,7 +88,7 @@ export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordF
         label="Confirm New Password"
         type="password"
         value={confirmPassword}
-        onChange={(e) => setConfirmPassword(e.target.value)}
+        onChange={e => setConfirmPassword(e.target.value)}
         required
         fullWidth
         error={password !== confirmPassword && confirmPassword !== ''}
@@ -105,8 +105,8 @@ export default function UpdatePasswordForm({ redirectTo = '/' }: UpdatePasswordF
           height: 48,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
           '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-          },
+            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+          }
         }}
       >
         {isLoading ? <CircularProgress size={24} /> : 'Update Password'}

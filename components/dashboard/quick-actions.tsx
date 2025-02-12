@@ -15,29 +15,29 @@ const actions = [
     description: 'List a new property in your portfolio',
     icon: AddIcon,
     color: 'primary',
-    href: '/dashboard/properties/new' as Route,
+    href: '/dashboard/properties/new' as Route
   },
   {
     title: 'Manage Tenants',
     description: 'View and manage your tenants',
     icon: PeopleIcon,
     color: 'success',
-    href: '/dashboard/tenants' as Route,
+    href: '/dashboard/tenants' as Route
   },
   {
     title: 'Process Payments',
     description: 'Handle rent payments and invoices',
     icon: AttachMoneyIcon,
     color: 'info',
-    href: '/dashboard/payments' as Route,
+    href: '/dashboard/payments' as Route
   },
   {
     title: 'Settings',
     description: 'Configure your account settings',
     icon: SettingsIcon,
     color: 'warning',
-    href: '/dashboard/settings' as Route,
-  },
+    href: '/dashboard/settings' as Route
+  }
 ] as const
 
 const containerVariants = {
@@ -45,14 +45,14 @@ const containerVariants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-    },
-  },
+      staggerChildren: 0.1
+    }
+  }
 }
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0 }
 }
 
 export function QuickActions() {
@@ -64,7 +64,7 @@ export function QuickActions() {
       sx={{
         height: '100%',
         bgcolor: 'background.default',
-        p: { xs: 2, sm: 3 },
+        p: { xs: 2, sm: 3 }
       }}
     >
       <Typography
@@ -72,7 +72,7 @@ export function QuickActions() {
         sx={{
           mb: 3,
           fontWeight: 600,
-          fontSize: { xs: '1rem', sm: '1.25rem' },
+          fontSize: { xs: '1rem', sm: '1.25rem' }
         }}
       >
         Quick Actions
@@ -80,7 +80,7 @@ export function QuickActions() {
 
       <motion.div variants={containerVariants} initial="hidden" animate="show">
         <Stack spacing={2}>
-          {actions.map((action) => (
+          {actions.map(action => (
             <motion.div key={action.title} variants={itemVariants}>
               <Link href={action.href} style={{ textDecoration: 'none' }}>
                 <Card
@@ -95,8 +95,8 @@ export function QuickActions() {
                       bgcolor: alpha(theme.palette[action.color].main, 0.05),
                       transform: 'translateY(-2px)',
                       boxShadow: theme.shadows[4],
-                      borderColor: alpha(theme.palette[action.color].main, 0.2),
-                    },
+                      borderColor: alpha(theme.palette[action.color].main, 0.2)
+                    }
                   }}
                 >
                   <Stack direction="row" spacing={2} alignItems="center">
@@ -109,7 +109,7 @@ export function QuickActions() {
                         justifyContent: 'center',
                         borderRadius: 1,
                         bgcolor: alpha(theme.palette[action.color].main, 0.12),
-                        color: theme.palette[action.color].main,
+                        color: theme.palette[action.color].main
                       }}
                     >
                       <action.icon size={20} />
@@ -120,7 +120,7 @@ export function QuickActions() {
                         sx={{
                           fontWeight: 600,
                           color: 'text.primary',
-                          mb: 0.5,
+                          mb: 0.5
                         }}
                       >
                         {action.title}
@@ -129,7 +129,7 @@ export function QuickActions() {
                         variant="body2"
                         sx={{
                           color: 'text.secondary',
-                          fontSize: '0.8125rem',
+                          fontSize: '0.8125rem'
                         }}
                       >
                         {action.description}

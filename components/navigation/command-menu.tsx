@@ -10,7 +10,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  TextField,
+  TextField
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -22,7 +22,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
   const router = useRouter()
 
   const filteredItems = items.filter(
-    (item) =>
+    item =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       item.description?.toLowerCase().includes(search.toLowerCase())
   )
@@ -38,11 +38,11 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
       switch (e.key) {
         case 'ArrowDown':
           e.preventDefault()
-          setSelectedIndex((i) => (i + 1) % filteredItems.length)
+          setSelectedIndex(i => (i + 1) % filteredItems.length)
           break
         case 'ArrowUp':
           e.preventDefault()
-          setSelectedIndex((i) => (i - 1 + filteredItems.length) % filteredItems.length)
+          setSelectedIndex(i => (i - 1 + filteredItems.length) % filteredItems.length)
           break
         case 'Enter':
           e.preventDefault()
@@ -71,8 +71,8 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
       PaperProps={{
         sx: {
           borderRadius: 2,
-          maxHeight: '70vh',
-        },
+          maxHeight: '70vh'
+        }
       }}
     >
       <DialogContent sx={{ p: 0 }}>
@@ -82,7 +82,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
             fullWidth
             placeholder="Search commands..."
             value={search}
-            onChange={(e) => setSearch(e.target.value)}
+            onChange={e => setSearch(e.target.value)}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -95,7 +95,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                     <X size={20} />
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
         </Box>
@@ -112,14 +112,14 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                 sx={{
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: 'action.hover',
+                    bgcolor: 'action.hover'
                   },
                   '&.Mui-selected': {
                     bgcolor: 'primary.light',
                     '&:hover': {
-                      bgcolor: 'primary.light',
-                    },
-                  },
+                      bgcolor: 'primary.light'
+                    }
+                  }
                 }}
               >
                 {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
@@ -127,10 +127,10 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                   primary={item.title}
                   secondary={item.description}
                   primaryTypographyProps={{
-                    variant: 'subtitle2',
+                    variant: 'subtitle2'
                   }}
                   secondaryTypographyProps={{
-                    variant: 'caption',
+                    variant: 'caption'
                   }}
                 />
                 {item.shortcut && (
@@ -138,7 +138,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                     sx={{
                       display: 'flex',
                       gap: 0.5,
-                      ml: 2,
+                      ml: 2
                     }}
                   >
                     {item.shortcut.map((key, i) => (
@@ -149,7 +149,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                           py: 0.5,
                           borderRadius: 1,
                           bgcolor: 'action.selected',
-                          fontSize: '0.75rem',
+                          fontSize: '0.75rem'
                         }}
                       >
                         {key}

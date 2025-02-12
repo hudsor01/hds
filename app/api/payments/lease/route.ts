@@ -17,12 +17,12 @@ export async function POST(req: NextRequest) {
     // Verify lease belongs to user
     const lease = await prisma.leases.findUnique({
       where: {
-        user_id: body.leaseId,
+        user_id: body.leaseId
       },
       select: {
         tenant_id: true,
-        property_id: true,
-      },
+        property_id: true
+      }
     })
 
     if (!lease) {
@@ -37,8 +37,8 @@ export async function POST(req: NextRequest) {
         email: true,
         first_name: true,
         last_name: true,
-        stripe_customer_id: true,
-      },
+        stripe_customer_id: true
+      }
     })
 
     if (!tenant) {
@@ -53,15 +53,15 @@ export async function POST(req: NextRequest) {
         name: `${tenant.first_name} ${tenant.last_name}`,
         metadata: {
           tenantId: tenant.id,
-          userId,
-        },
+          userId
+        }
       })
       stripeCustomerId = customer.id
 
       // Update tenant with Stripe customer ID
       await prisma.tenants.update({
         where: { id: tenant.id },
-        data: { stripe_customer_id: customer.id },
+        data: { stripe_customer_id: customer.id }
       })
     }
 
@@ -73,8 +73,8 @@ export async function POST(req: NextRequest) {
         leaseId: body.leaseId,
         propertyId: lease.property_id,
         tenantId: lease.tenant_id,
-        payment_type: body.payment_type,
-      },
+        payment_type: body.payment_type
+      }
     })
 
     // Record the payment attempt
@@ -84,19 +84,19 @@ export async function POST(req: NextRequest) {
       payment_status: PaymentStatus.PENDING,
       payment_type: body.payment_type,
       description: body.description,
-      payment_intent_id: paymentIntent.id,
+      payment_intent_id: paymentIntent.id
     }
 
     await prisma.payments.create({ data: paymentRecord })
 
     return NextResponse.json({
-      clientSecret: paymentIntent.client_secret,
+      clientSecret: paymentIntent.client_secret
     })
   } catch (error) {
     console.error('Payment API Error:', error)
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : 'Error processing payment',
+        error: error instanceof Error ? error.message : 'Error processing payment'
       },
       { status: 500 }
     )
@@ -126,7 +126,7 @@ export async function GET(req: NextRequest) {
     // Verify lease belongs to user
     const lease = await prisma.leases.findUnique({
       where: { user_id: leaseId },
-      select: { tenant_id: true },
+      select: { tenant_id: true }
     })
 
     if (!lease) {
@@ -140,16 +140,16 @@ export async function GET(req: NextRequest) {
         endDate && {
           created_at: {
             gte: startDate,
-            lte: endDate,
-          },
-        }),
+            lte: endDate
+          }
+        })
     }
 
     const payments = await prisma.payments.findMany({
       where,
       orderBy: {
-        created_at: 'desc',
-      },
+        created_at: 'desc'
+      }
     })
 
     return NextResponse.json(payments)

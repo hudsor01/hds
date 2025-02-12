@@ -12,11 +12,11 @@ const updatePasswordSchema = z
   .object({
     currentPassword: z.string().min(8, 'Password must be at least 8 characters'),
     newPassword: z.string().min(8, 'Password must be at least 8 characters'),
-    confirmPassword: z.string(),
+    confirmPassword: z.string()
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine(data => data.newPassword === data.confirmPassword, {
     message: 'Passwords do not match',
-    path: ['confirmPassword'],
+    path: ['confirmPassword']
   })
 
 type UpdatePasswordFormValues = z.infer<typeof updatePasswordSchema>
@@ -33,9 +33,9 @@ export const UpdatePasswordForm = ({ onSubmitAction }: UpdatePasswordFormProps) 
     control,
     handleSubmit,
     reset,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = useForm<UpdatePasswordFormValues>({
-    resolver: zodResolver(updatePasswordSchema),
+    resolver: zodResolver(updatePasswordSchema)
   })
 
   const handleFormSubmit = async (data: UpdatePasswordFormValues) => {

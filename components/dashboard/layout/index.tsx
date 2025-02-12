@@ -18,9 +18,9 @@ const sidebarItems = [
   {
     title: 'Analytics',
     href: '/dashboard/analytics' as Route,
-    icon: BarChart2,
+    icon: BarChart2
   },
-  { title: 'Settings', href: '/dashboard/settings' as Route, icon: Settings },
+  { title: 'Settings', href: '/dashboard/settings' as Route, icon: Settings }
 ]
 
 interface DashboardLayoutProps {
@@ -39,7 +39,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         width: DRAWER_WIDTH,
         bgcolor: 'background.paper',
         borderRight: 1,
-        borderColor: 'divider',
+        borderColor: 'divider'
       }}
     >
       <Toolbar sx={{ minHeight: '64px!important', px: 2 }}>
@@ -73,13 +73,13 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
                     transition: 'all 0.2s',
                     '&:hover': {
                       bgcolor: 'action.hover',
-                      transform: 'translateX(4px)',
+                      transform: 'translateX(4px)'
                     },
                     '&.active': {
                       bgcolor: 'primary.light',
                       color: 'primary.main',
-                      fontWeight: 600,
-                    },
+                      fontWeight: 600
+                    }
                   }}
                 >
                   <Icon size={20} style={{ marginRight: 12 }} />
@@ -99,7 +99,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
         sx={{
           display: 'flex',
           minHeight: '100vh',
-          bgcolor: 'background.default',
+          bgcolor: 'background.default'
         }}
       >
         {/* Mobile Header */}
@@ -116,7 +116,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               borderColor: 'divider',
               p: 2,
               display: 'flex',
-              alignItems: 'center',
+              alignItems: 'center'
             }}
           >
             <IconButton onClick={() => setMobileOpen(true)}>
@@ -134,8 +134,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
               width: DRAWER_WIDTH,
               bgcolor: 'background.paper',
               border: 'none',
-              height: '100vh',
-            },
+              height: '100vh'
+            }
           }}
         >
           {drawer}
@@ -149,8 +149,8 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             '& .MuiDrawer-paper': {
               width: DRAWER_WIDTH,
               bgcolor: 'background.paper',
-              border: 'none',
-            },
+              border: 'none'
+            }
           }}
         >
           {drawer}
@@ -166,7 +166,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
             pt: { xs: 8, lg: 3 },
             px: { xs: 2, sm: 3, lg: 4 },
             pb: 3,
-            minHeight: '100vh',
+            minHeight: '100vh'
           }}
         >
           <Suspense fallback={<LoadingState />}>{children}</Suspense>

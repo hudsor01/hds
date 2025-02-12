@@ -12,13 +12,13 @@ interface AnimatedShinyTextProps {
 const AnimatedShinyText: FC<AnimatedShinyTextProps> = ({
   children,
   className,
-  shimmerWidth = 200,
+  shimmerWidth = 200
 }) => {
   return (
     <p
       style={
         {
-          '--shimmer-width': `${shimmerWidth}px`,
+          '--shimmer-width': `${shimmerWidth}px`
         } as CSSProperties
       }
       className={cn(

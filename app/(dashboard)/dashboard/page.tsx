@@ -8,7 +8,7 @@ import type {
   MaintenanceMetrics,
   PropertyMetrics,
   TenantMetrics,
-  TimeSeriesData,
+  TimeSeriesData
 } from '@/types/analytics'
 import { Grid, Typography } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
@@ -46,7 +46,7 @@ export default function DashboardPage() {
       return data
     },
     enabled: Boolean(role && (checkRole(role, 'admin') || permissions.includes('view_properties'))),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL
   })
 
   const { data: tenantMetrics, isLoading: loadingTenants } = useQuery<
@@ -60,7 +60,7 @@ export default function DashboardPage() {
       return data
     },
     enabled: Boolean(role && (permissions.includes('view_tenants') || role === 'TENANT')),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL
   })
 
   const { data: financialMetrics, isLoading: loadingFinances } = useQuery<
@@ -74,7 +74,7 @@ export default function DashboardPage() {
       return data
     },
     enabled: Boolean(role && (permissions.includes('view_finances') || role === 'TENANT')),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL
   })
 
   const { data: maintenanceMetrics, isLoading: loadingMaintenance } = useQuery<
@@ -88,7 +88,7 @@ export default function DashboardPage() {
       return data
     },
     enabled: Boolean(role && (permissions.includes('view_maintenance') || role === 'TENANT')),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL
   })
 
   const { data: trends } = useQuery<
@@ -102,7 +102,7 @@ export default function DashboardPage() {
       return data
     },
     enabled: Boolean(role && (permissions.includes('view_reports') || role === 'TENANT')),
-    refetchInterval: REFETCH_INTERVAL,
+    refetchInterval: REFETCH_INTERVAL
   })
 
   const getMetricTitle = () => {

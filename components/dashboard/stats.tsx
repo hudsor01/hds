@@ -49,7 +49,7 @@ function StatCard({ title, value, trend, icon: Icon, trendDirection }: StatCardP
   const trendColor = {
     up: 'text-green-600',
     down: 'text-red-600',
-    neutral: 'text-gray-600',
+    neutral: 'text-gray-600'
   }[trendDirection]
 
   return (
@@ -60,7 +60,7 @@ function StatCard({ title, value, trend, icon: Icon, trendDirection }: StatCardP
           <p className="mt-2 text-3xl font-semibold text-gray-900">{value}</p>
           <p className={`mt-2 text-sm ${trendColor}`}>{trend}</p>
         </div>
-        <Icon className="h-12 w-12 text-pastel-blue-500" />
+        <Icon className="text-pastel-blue-500 h-12 w-12" />
       </div>
     </Card>
   )

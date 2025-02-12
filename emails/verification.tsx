@@ -9,7 +9,7 @@ import {
   Link,
   Preview,
   Section,
-  Text,
+  Text
 } from '@react-email/components'
 
 interface VerificationEmailProps {
@@ -54,13 +54,13 @@ export default function VerificationEmail({ verificationUrl, expiresIn }: Verifi
 const main = {
   backgroundColor: '#ffffff',
   fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
 }
 
 const container = {
   margin: '0 auto',
   padding: '20px 0 48px',
-  maxWidth: '560px',
+  maxWidth: '560px'
 }
 
 const h1 = {
@@ -68,18 +68,18 @@ const h1 = {
   fontSize: '24px',
   fontWeight: '600',
   lineHeight: '40px',
-  margin: '0 0 20px',
+  margin: '0 0 20px'
 }
 
 const text = {
   color: '#444444',
   fontSize: '16px',
   lineHeight: '24px',
-  margin: '0 0 20px',
+  margin: '0 0 20px'
 }
 
 const buttonContainer = {
-  margin: '30px 0',
+  margin: '30px 0'
 }
 
 const button = {
@@ -93,22 +93,22 @@ const button = {
   textAlign: 'center' as const,
   textDecoration: 'none',
   width: '100%',
-  maxWidth: '260px',
+  maxWidth: '260px'
 }
 
 const link = {
   color: '#007FFF',
-  textDecoration: 'underline',
+  textDecoration: 'underline'
 }
 
 const hr = {
   borderColor: '#cccccc',
-  margin: '20px 0',
+  margin: '20px 0'
 }
 
 const footer = {
   color: '#898989',
   fontSize: '14px',
   lineHeight: '22px',
-  margin: '0',
+  margin: '0'
 }

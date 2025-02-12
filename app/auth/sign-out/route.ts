@@ -12,7 +12,7 @@ export async function POST() {
     }
 
     return NextResponse.json({
-      message: 'Signed out successfully',
+      message: 'Signed out successfully'
     })
   } catch (error) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })

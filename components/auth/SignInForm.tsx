@@ -5,7 +5,7 @@ import {
   Google as GoogleIcon,
   Login as LoginIcon,
   Visibility,
-  VisibilityOff,
+  VisibilityOff
 } from '@mui/icons-material'
 import { LoadingButton } from '@mui/lab'
 import {
@@ -19,7 +19,7 @@ import {
   Link,
   Paper,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -27,7 +27,7 @@ import { z } from 'zod'
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(1, 'Password is required'),
+  password: z.string().min(1, 'Password is required')
 })
 
 type SignInFormValues = z.infer<typeof signInSchema>
@@ -36,7 +36,7 @@ export const SignInForm = ({
   onSubmitAction,
   onGoogleSignInAction,
   onForgotPasswordAction,
-  onSignUpAction,
+  onSignUpAction
 }: {
   onSubmitAction: (data: SignInFormValues) => Promise<void>
   onGoogleSignInAction: () => Promise<void>
@@ -49,9 +49,9 @@ export const SignInForm = ({
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = useForm<SignInFormValues>({
-    resolver: zodResolver(signInSchema),
+    resolver: zodResolver(signInSchema)
   })
 
   const handleFormSubmit = async (data: SignInFormValues) => {
@@ -64,7 +64,7 @@ export const SignInForm = ({
   }
 
   const togglePasswordVisibility = () => {
-    setShowPassword((show) => !show)
+    setShowPassword(show => !show)
   }
 
   return (
@@ -138,7 +138,7 @@ export const SignInForm = ({
                       {showPassword ? <VisibilityOff /> : <Visibility />}
                     </IconButton>
                   </InputAdornment>
-                ),
+                )
               }}
             />
           )}

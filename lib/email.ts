@@ -16,7 +16,7 @@ export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
       to,
       subject,
       text,
-      html,
+      html
     })
     return { success: true, data: result }
   } catch (error) {

@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Reset Password | Property Manager',
-  description: 'Reset your Property Manager account password',
+  description: 'Reset your Property Manager account password'
 }
 
 export default function ForgotPasswordPage() {

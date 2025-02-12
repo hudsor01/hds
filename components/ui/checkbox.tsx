@@ -8,14 +8,14 @@ import * as React from 'react'
 const StyledCheckbox = styled(MuiCheckbox)(({ theme }) => ({
   padding: theme.spacing(0.5),
   '& .MuiSvgIcon-root': {
-    fontSize: 20,
+    fontSize: 20
   },
   '&.Mui-checked': {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
+    backgroundColor: theme.palette.action.hover
+  }
 }))
 
 export interface CheckboxProps extends Omit<MuiCheckboxProps, 'defaultChecked'> {
@@ -41,7 +41,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
         checked={checked}
         onChange={handleChange}
         className={cn(
-          'focus:outline-hidden h-4 w-4 rounded-sm border border-primary shadow-sm focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+          'focus:outline-hidden border-primary focus-visible:ring-ring h-4 w-4 rounded-sm border shadow-sm focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         {...props}

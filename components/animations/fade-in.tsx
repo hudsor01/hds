@@ -17,7 +17,7 @@ export function FadeIn({ children, delay = 0, duration = 0.5 }: FadeInProps) {
       transition={{
         duration,
         delay,
-        ease: 'easeOut',
+        ease: 'easeOut'
       }}
     >
       {children}

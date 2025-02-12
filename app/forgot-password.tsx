@@ -22,7 +22,7 @@ export default function App() {
     })
 
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
@@ -65,13 +65,13 @@ const ForgotPasswordPage: NextPage = () => {
     await signIn
       ?.create({
         strategy: 'reset_password_email_code',
-        identifier: email,
+        identifier: email
       })
-      .then((_) => {
+      .then(_ => {
         setSuccessfulCreation(true)
         setError('')
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('error', err.errors[0].longMessage)
         setError(err.errors[0].longMessage)
       })
@@ -86,9 +86,9 @@ const ForgotPasswordPage: NextPage = () => {
       ?.attemptFirstFactor({
         strategy: 'reset_password_email_code',
         code,
-        password,
+        password
       })
-      .then((result) => {
+      .then(result => {
         // Check if 2FA is required
         if (result.status === 'needs_second_factor') {
           setSecondFactor(true)
@@ -102,7 +102,7 @@ const ForgotPasswordPage: NextPage = () => {
           console.log(result)
         }
       })
-      .catch((err) => {
+      .catch(err => {
         console.error('error', err.errors[0].longMessage)
         setError(err.errors[0].longMessage)
       })
@@ -112,7 +112,7 @@ const ForgotPasswordPage: NextPage = () => {
     <div
       style={{
         margin: 'auto',
-        maxWidth: '500px',
+        maxWidth: '500px'
       }}
     >
       <h1>Forgot Password?</h1>
@@ -120,7 +120,7 @@ const ForgotPasswordPage: NextPage = () => {
         style={{
           display: 'flex',
           flexDirection: 'column',
-          gap: '1em',
+          gap: '1em'
         }}
         onSubmit={!successfulCreation ? create : reset}
       >
@@ -131,7 +131,7 @@ const ForgotPasswordPage: NextPage = () => {
               type="email"
               placeholder="e.g john@doe.com"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={e => setEmail(e.target.value)}
             />
 
             <button>Send password reset code</button>
@@ -142,12 +142,12 @@ const ForgotPasswordPage: NextPage = () => {
         {successfulCreation && (
           <>
             <label htmlFor="password">Enter your new password</label>
-            <input type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
 
             <label htmlFor="password">
               Enter the password reset code that was sent to your email
             </label>
-            <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
+            <input type="text" value={code} onChange={e => setCode(e.target.value)} />
 
             <button>Reset</button>
             {error && <p>{error}</p>}

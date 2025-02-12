@@ -1,9 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/buttons/button'
-import type { MaintenancePriority, NewMaintenanceRequest } from '@/types/maintenance_requests'
-import type { PropertyUnit } from '@/types/property'
-import type { Property } from '@/types/types'
+import { Property, MaintenancePriority, NewMaintenanceRequest, PropertyUnit } from '@/types'
 import type { SelectChangeEvent } from '@mui/material'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { Label } from '@/components/ui/label'
@@ -23,7 +21,7 @@ export function MaintenanceTicketDialog({
   open,
   onOpenChangeAction,
   onSubmitAction,
-  properties,
+  properties
 }: MaintenanceTicketDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState('')
@@ -41,7 +39,7 @@ export function MaintenanceTicketDialog({
         tenant_id: formData.get('tenant_id') as string,
         title: formData.get('title') as string,
         description: formData.get('description') as string,
-        priority: formData.get('priority') as MaintenancePriority,
+        priority: formData.get('priority') as MaintenancePriority
       }
 
       await onSubmitAction(data)
@@ -51,7 +49,7 @@ export function MaintenanceTicketDialog({
     }
   }
 
-  const selectedPropertyUnits = properties.find((p) => p.id === selectedProperty)?.units || []
+  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || []
 
   return (
     <Dialog open={open} onClose={() => onOpenChangeAction(false)} maxWidth="md" fullWidth>
@@ -71,7 +69,7 @@ export function MaintenanceTicketDialog({
                 }}
                 placeholder="Select a property"
               >
-                {properties.map((property) => (
+                {properties.map(property => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>

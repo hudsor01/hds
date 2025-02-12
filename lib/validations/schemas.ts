@@ -25,7 +25,7 @@ export const propertySchema = z.object({
   description: z.string().optional(),
   created_at: dateSchema.optional(),
   updated_at: dateSchema.optional(),
-  user_id: idSchema.optional(),
+  user_id: idSchema.optional()
 })
 
 // Tenant schemas
@@ -35,7 +35,7 @@ export const tenantSchema = z.object({
   lastName: z.string().min(1),
   email: emailSchema,
   phone: phoneSchema,
-  status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING'])
 })
 
 // Lease schemas
@@ -47,7 +47,7 @@ export const leaseSchema = z.object({
   endDate: dateSchema,
   rentAmount: currencySchema,
   depositAmount: currencySchema,
-  status: z.enum(['ACTIVE', 'EXPIRED', 'TERMINATED']),
+  status: z.enum(['ACTIVE', 'EXPIRED', 'TERMINATED'])
 })
 
 // Maintenance schemas
@@ -60,7 +60,7 @@ export const maintenanceSchema = z.object({
   status: z.enum(['OPEN', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']),
   requestedBy: idSchema,
   assignedTo: idSchema.optional(),
-  dueDate: dateSchema.optional(),
+  dueDate: dateSchema.optional()
 })
 
 // Auth schemas
@@ -68,27 +68,27 @@ export const signUpSchema = z.object({
   email: emailSchema,
   password: passwordSchema,
   firstName: z.string().min(1),
-  lastName: z.string().min(1),
+  lastName: z.string().min(1)
 })
 
 export const signInSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1),
+  password: z.string().min(1)
 })
 
 export const resetPasswordSchema = z.object({
-  email: emailSchema,
+  email: emailSchema
 })
 
 export const updatePasswordSchema = z
   .object({
     currentPassword: z.string().min(1),
     newPassword: passwordSchema,
-    confirmPassword: z.string().min(1),
+    confirmPassword: z.string().min(1)
   })
-  .refine((data) => data.newPassword === data.confirmPassword, {
+  .refine(data => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
-    path: ['confirmPassword'],
+    path: ['confirmPassword']
   })
 
 // Settings schemas
@@ -96,10 +96,10 @@ export const userSettingsSchema = z.object({
   notifications: z.object({
     email: z.boolean(),
     push: z.boolean(),
-    sms: z.boolean(),
+    sms: z.boolean()
   }),
   theme: z.enum(['LIGHT', 'DARK', 'SYSTEM']),
-  language: z.enum(['en', 'es', 'fr']),
+  language: z.enum(['en', 'es', 'fr'])
 })
 
 // Export all schemas
@@ -112,5 +112,5 @@ export const schemas = {
   signIn: signInSchema,
   resetPassword: resetPasswordSchema,
   updatePassword: updatePasswordSchema,
-  userSettings: userSettingsSchema,
+  userSettings: userSettingsSchema
 } as const

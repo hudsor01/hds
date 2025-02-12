@@ -45,13 +45,13 @@ export const sendEmail = async (to: string, template: EmailTemplate, data: Recor
     [EmailTemplate.WELCOME]: WelcomeEmail,
     [EmailTemplate.EARLY_ACCESS]: EarlyAccessEmail,
     [EmailTemplate.SPOT_AVAILABLE]: SpotAvailableEmail,
-    [EmailTemplate.LAUNCH_REMINDER]: LaunchReminderEmail,
+    [EmailTemplate.LAUNCH_REMINDER]: LaunchReminderEmail
   }
 
   return resend.emails.send({
     from: 'PropertyPro <hello@propertypro.com>',
     to,
     subject: getSubject(template),
-    react: templates[template](data),
+    react: templates[template](data)
   })
 }

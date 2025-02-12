@@ -20,7 +20,7 @@ export const ratelimit = {
       return {
         success: true,
         remaining: MAX_REQUESTS - 1,
-        reset: now + WINDOW_MS,
+        reset: now + WINDOW_MS
       }
     }
 
@@ -30,7 +30,7 @@ export const ratelimit = {
       return {
         success: true,
         remaining: MAX_REQUESTS - 1,
-        reset: now + WINDOW_MS,
+        reset: now + WINDOW_MS
       }
     }
 
@@ -39,7 +39,7 @@ export const ratelimit = {
       return {
         success: true,
         remaining: MAX_REQUESTS - record.count,
-        reset: record.windowStart + WINDOW_MS,
+        reset: record.windowStart + WINDOW_MS
       }
     }
 
@@ -47,7 +47,7 @@ export const ratelimit = {
     return {
       success: false,
       remaining: 0,
-      reset: record.windowStart + WINDOW_MS,
+      reset: record.windowStart + WINDOW_MS
     }
-  },
+  }
 }

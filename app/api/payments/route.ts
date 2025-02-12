@@ -9,7 +9,7 @@ if (!stripeSecretKey) {
   throw new Error('STRIPE_SECRET_KEY environment variable is not defined.')
 }
 const stripe = new Stripe(stripeSecretKey, {
-  apiVersion: '2025-01-27.acacia',
+  apiVersion: '2025-01-27.acacia'
 })
 
 const paymentSchema = z.object({
@@ -23,7 +23,7 @@ const paymentSchema = z.object({
   payment_notes: z.string().optional(),
   payment_status: z
     .enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED'])
-    .default('PENDING'),
+    .default('PENDING')
 })
 
 export async function GET(req: NextRequest) {
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
         'LATE_FEE',
         'MAINTENANCE',
         'UTILITIES',
-        'OTHER',
+        'OTHER'
       ]
       if (allowedPaymentTypes.includes(type)) {
         query = query.eq('payment_type', type)
@@ -141,8 +141,8 @@ export async function POST(req: NextRequest) {
           tenant_id: validatedData.tenant_id,
           property_id: validatedData.property_id,
           lease_id: validatedData.lease_id,
-          payment_type: validatedData.payment_type,
-        },
+          payment_type: validatedData.payment_type
+        }
       })
     }
 
@@ -152,8 +152,8 @@ export async function POST(req: NextRequest) {
         {
           ...validatedData,
           payment_intent_id: paymentIntent?.id,
-          user_id: userId,
-        },
+          user_id: userId
+        }
       ])
       .select()
       .single()
@@ -174,17 +174,17 @@ export async function POST(req: NextRequest) {
           payment_id: payment.id,
           amount: validatedData.payment_amount,
           type: validatedData.payment_type,
-          status: validatedData.payment_status,
-        },
-      },
+          status: validatedData.payment_status
+        }
+      }
     ])
 
     return NextResponse.json(
       {
         data: {
           ...payment,
-          client_secret: paymentIntent?.client_secret,
-        },
+          client_secret: paymentIntent?.client_secret
+        }
       },
       { status: 201 }
     )
@@ -238,7 +238,7 @@ export async function PUT(req: NextRequest) {
     // Handle Stripe payment status updates if necessary
     if (validatedData.payment_status === 'REFUNDED' && existingPayment.payment_intent_id) {
       await stripe.refunds.create({
-        payment_intent: existingPayment.payment_intent_id,
+        payment_intent: existingPayment.payment_intent_id
       })
     }
 
@@ -265,9 +265,9 @@ export async function PUT(req: NextRequest) {
           data: {
             payment_id: id,
             old_status: existingPayment.payment_status,
-            new_status: validatedData.payment_status,
-          },
-        },
+            new_status: validatedData.payment_status
+          }
+        }
       ])
     }
 

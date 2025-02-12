@@ -11,7 +11,7 @@ const metrics = [
     icon: Home,
     color: 'primary' as const,
     percentageChange: 12.5,
-    tooltip: 'Total number of properties under management',
+    tooltip: 'Total number of properties under management'
   },
   {
     title: 'Active Tenants',
@@ -19,7 +19,7 @@ const metrics = [
     icon: Users,
     color: 'success' as const,
     percentageChange: 8.3,
-    tooltip: 'Number of current tenants across all properties',
+    tooltip: 'Number of current tenants across all properties'
   },
   {
     title: 'Maintenance Requests',
@@ -27,7 +27,7 @@ const metrics = [
     icon: Tool,
     color: 'warning' as const,
     percentageChange: -5.2,
-    tooltip: 'Open maintenance requests requiring attention',
+    tooltip: 'Open maintenance requests requiring attention'
   },
   {
     title: 'Active Leases',
@@ -35,7 +35,7 @@ const metrics = [
     icon: FileText,
     color: 'info' as const,
     percentageChange: 15.7,
-    tooltip: 'Number of active lease agreements',
+    tooltip: 'Number of active lease agreements'
   },
   {
     title: 'Monthly Revenue',
@@ -44,8 +44,8 @@ const metrics = [
     color: 'primary' as const,
     percentageChange: 10.2,
     tooltip: 'Total monthly revenue from all properties',
-    formatType: 'currency' as const,
-  },
+    formatType: 'currency' as const
+  }
 ]
 
 export function MetricsGrid() {
@@ -77,8 +77,8 @@ export function MetricsGrid() {
               '&:hover': {
                 transform: 'translateY(-4px)',
                 boxShadow: theme.shadows[4],
-                borderColor: alpha(theme.palette[metric.color].main, 0.24),
-              },
+                borderColor: alpha(theme.palette[metric.color].main, 0.24)
+              }
             }}
           >
             <Stack spacing={2}>
@@ -88,7 +88,7 @@ export function MetricsGrid() {
                     p: 1.5,
                     borderRadius: 2,
                     bgcolor: alpha(theme.palette[metric.color].main, 0.12),
-                    color: theme.palette[metric.color].main,
+                    color: theme.palette[metric.color].main
                   }}
                 >
                   <metric.icon size={24} />
@@ -101,7 +101,7 @@ export function MetricsGrid() {
                       color: metric.percentageChange > 0 ? 'success.main' : 'error.main',
                       display: 'flex',
                       alignItems: 'center',
-                      gap: 0.5,
+                      gap: 0.5
                     }}
                   >
                     {metric.percentageChange > 0 ? '↑' : '↓'}
@@ -116,7 +116,7 @@ export function MetricsGrid() {
                     ? new Intl.NumberFormat('en-US', {
                         style: 'currency',
                         currency: 'USD',
-                        maximumFractionDigits: 0,
+                        maximumFractionDigits: 0
                       }).format(metric.value)
                     : metric.value}
                 </Typography>

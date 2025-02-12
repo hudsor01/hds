@@ -7,7 +7,7 @@ export async function ServerAuth() {
   try {
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
 
     if (error) {

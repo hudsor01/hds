@@ -23,37 +23,37 @@ const presets = [
     label: 'Last 7 days',
     getValue: () => ({
       from: subDays(new Date(), 6),
-      to: new Date(),
-    }),
+      to: new Date()
+    })
   },
   {
     label: 'Last 30 days',
     getValue: () => ({
       from: subDays(new Date(), 29),
-      to: new Date(),
-    }),
+      to: new Date()
+    })
   },
   {
     label: 'Last 90 days',
     getValue: () => ({
       from: subDays(new Date(), 89),
-      to: new Date(),
-    }),
+      to: new Date()
+    })
   },
   {
     label: 'Last 12 months',
     getValue: () => ({
       from: subMonths(new Date(), 11),
-      to: new Date(),
-    }),
+      to: new Date()
+    })
   },
   {
     label: 'Year to date',
     getValue: () => ({
       from: startOfYear(new Date()),
-      to: new Date(),
-    }),
-  },
+      to: new Date()
+    })
+  }
 ]
 
 export function DateRangePicker({ value, onChangeAction, className }: DateRangePickerProps) {

@@ -21,7 +21,7 @@ export function checkRole(
     PROPERTY_OWNER: 70,
     MAINTENANCE: 60,
     TENANT: 50,
-    USER: 10,
+    USER: 10
   }
 
   const userRoleLevel = roleHierarchy[userRole] || 0

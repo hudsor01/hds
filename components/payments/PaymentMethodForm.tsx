@@ -10,7 +10,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { CardElement, useElements, useStripe } from '@stripe/react-stripe-js'
 import { useState } from 'react'
@@ -25,7 +25,7 @@ interface PaymentMethodFormProps {
 export default function PaymentMethodForm({
   onSuccess,
   onCancel,
-  defaultType = 'card',
+  defaultType = 'card'
 }: PaymentMethodFormProps) {
   const stripe = useStripe()
   const elements = useElements()
@@ -44,12 +44,12 @@ export default function PaymentMethodForm({
     notes: '',
     swift_bic: '',
     iban: '',
-    reference: '',
+    reference: ''
   })
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   const handleSubmit = async (event: React.FormEvent) => {
@@ -67,7 +67,7 @@ export default function PaymentMethodForm({
           }
           const { error, paymentMethod: stripeMethod } = await stripe.createPaymentMethod({
             type: 'card',
-            card: elements.getElement(CardElement)!,
+            card: elements.getElement(CardElement)!
           })
           if (error) {
             toast.error(error.message)
@@ -85,8 +85,8 @@ export default function PaymentMethodForm({
               routing_number: formData.routing_number,
               account_number: formData.account_number,
               account_type: formData.account_type,
-              account_holder_type: formData.account_holder_type,
-            },
+              account_holder_type: formData.account_holder_type
+            }
           }
           const achResponse = await api.post('/api/payments/methods/ach', achData)
           if (achResponse.error) throw new Error(achResponse.error.message)
@@ -102,8 +102,8 @@ export default function PaymentMethodForm({
               account_holder: formData.account_holder,
               check_number: formData.check_number,
               routing_number: formData.routing_number,
-              account_number: formData.account_number,
-            },
+              account_number: formData.account_number
+            }
           }
           const checkResponse = await api.post('/api/payments/methods/check', checkData)
           if (checkResponse.error) throw new Error(checkResponse.error.message)
@@ -117,8 +117,8 @@ export default function PaymentMethodForm({
             cash: {
               receipt_number: formData.receipt_number,
               received_by: formData.received_by,
-              notes: formData.notes,
-            },
+              notes: formData.notes
+            }
           }
           const cashResponse = await api.post('/api/payments/methods/cash', cashData)
           if (cashResponse.error) throw new Error(cashResponse.error.message)
@@ -136,8 +136,8 @@ export default function PaymentMethodForm({
               iban: formData.iban,
               routing_number: formData.routing_number,
               account_number: formData.account_number,
-              reference: formData.reference,
-            },
+              reference: formData.reference
+            }
           }
           const bankResponse = await api.post('/api/payments/methods/bank', bankData)
           if (bankResponse.error) throw new Error(bankResponse.error.message)
@@ -166,7 +166,7 @@ export default function PaymentMethodForm({
         <Select
           value={paymentType}
           label="Payment Type"
-          onChange={(e) => setPaymentType(e.target.value as PaymentMethodType)}
+          onChange={e => setPaymentType(e.target.value as PaymentMethodType)}
         >
           <MenuItem value="card">Credit/Debit Card</MenuItem>
           <MenuItem value="ach_debit">ACH Direct Debit</MenuItem>
@@ -185,13 +185,13 @@ export default function PaymentMethodForm({
                   fontSize: '16px',
                   color: '#424770',
                   '::placeholder': {
-                    color: '#aab7c4',
-                  },
+                    color: '#aab7c4'
+                  }
                 },
                 invalid: {
-                  color: '#9e2146',
-                },
-              },
+                  color: '#9e2146'
+                }
+              }
             }}
           />
         </Box>
@@ -226,10 +226,10 @@ export default function PaymentMethodForm({
                 <Select
                   name="account_type"
                   value={formData.account_type}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
+                  onChange={e =>
+                    setFormData(prev => ({
                       ...prev,
-                      account_type: e.target.value,
+                      account_type: e.target.value
                     }))
                   }
                 >
@@ -242,10 +242,10 @@ export default function PaymentMethodForm({
                 <Select
                   name="account_holder_type"
                   value={formData.account_holder_type}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
+                  onChange={e =>
+                    setFormData(prev => ({
                       ...prev,
-                      account_holder_type: e.target.value,
+                      account_holder_type: e.target.value
                     }))
                   }
                 >
@@ -361,8 +361,8 @@ export default function PaymentMethodForm({
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-            },
+              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+            }
           }}
         >
           {isLoading ? 'Saving...' : 'Save Payment Method'}

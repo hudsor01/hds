@@ -14,7 +14,7 @@ import {
   Tab,
   Tabs,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -48,12 +48,12 @@ export default function SettingsPage() {
 
   const { data: userSettings } = useQuery({
     queryKey: ['settings', 'user'],
-    queryFn: () => api.get('/api/settings?type=user'),
+    queryFn: () => api.get('/api/settings?type=user')
   })
 
   const { data: securitySettings } = useQuery({
     queryKey: ['settings', 'security'],
-    queryFn: () => api.get('/api/settings?type=security'),
+    queryFn: () => api.get('/api/settings?type=security')
   })
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: number) => {
@@ -74,7 +74,7 @@ export default function SettingsPage() {
         time_format: formData.get('time_format'),
         notifications_enabled: formData.get('notifications_enabled') === 'true',
         email_notifications: formData.get('email_notifications') === 'true',
-        sms_notifications: formData.get('sms_notifications') === 'true',
+        sms_notifications: formData.get('sms_notifications') === 'true'
       }
 
       await api.put('/api/settings', 'user', data)
@@ -97,7 +97,7 @@ export default function SettingsPage() {
         two_factor_enabled: formData.get('two_factor_enabled') === 'true',
         two_factor_method: formData.get('two_factor_method'),
         max_sessions: parseInt(formData.get('max_sessions') as string, 10),
-        login_notifications: formData.get('login_notifications') === 'true',
+        login_notifications: formData.get('login_notifications') === 'true'
       }
 
       await api.put('/api/settings', 'security', data)
@@ -226,8 +226,8 @@ export default function SettingsPage() {
                   sx={{
                     background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-                    },
+                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+                    }
                   }}
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
@@ -300,8 +300,8 @@ export default function SettingsPage() {
                   sx={{
                     background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                     '&:hover': {
-                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-                    },
+                      background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+                    }
                   }}
                 >
                   {loading ? 'Saving...' : 'Save Changes'}

@@ -39,7 +39,7 @@ function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
                 color: isPositive ? 'success.main' : 'error.main',
                 display: 'flex',
                 alignItems: 'center',
-                mt: 1,
+                mt: 1
               }}
             >
               {isPositive ? <TrendingUpIcon /> : <TrendingDownIcon />}
@@ -66,34 +66,34 @@ export function StatsOverview() {
       value: '12',
       trend: 8.5,
       icon: <HomeIcon sx={iconStyle} />,
-      trendLabel: 'vs last month',
+      trendLabel: 'vs last month'
     },
     {
       title: 'Monthly Revenue',
       value: '$24,500',
       trend: 12.3,
       icon: <AttachMoneyIcon sx={iconStyle} />,
-      trendLabel: 'vs last month',
+      trendLabel: 'vs last month'
     },
     {
       title: 'Active Tenants',
       value: '28',
       trend: 5.2,
       icon: <GroupIcon sx={iconStyle} />,
-      trendLabel: 'vs last month',
+      trendLabel: 'vs last month'
     },
     {
       title: 'Maintenance Requests',
       value: '5',
       trend: -2.4,
       icon: <BuildIcon sx={iconStyle} />,
-      trendLabel: 'vs last month',
-    },
+      trendLabel: 'vs last month'
+    }
   ]
 
   return (
     <Grid container spacing={3}>
-      {stats.map((stat) => (
+      {stats.map(stat => (
         <Grid key={stat.title} item xs={12} sm={6} md={3}>
           <StatCard {...stat} />
         </Grid>

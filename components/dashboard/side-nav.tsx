@@ -14,14 +14,14 @@ export function DashboardSideNav() {
     { name: 'Dashboard', href: '/dashboard', icon: Home },
     { name: 'Properties', href: '/dashboard/properties', icon: Box },
     { name: 'Tenants', href: '/dashboard/tenants', icon: Users },
-    { name: 'Documents', href: '/dashboard/documents', icon: FileText },
+    { name: 'Documents', href: '/dashboard/documents', icon: FileText }
   ]
 
   return (
     <>
       <aside
         className={cn(
-          'fixed left-0 top-0 z-50 h-screen border-r bg-background transition-all duration-300',
+          'bg-background fixed left-0 top-0 z-50 h-screen border-r transition-all duration-300',
           isCollapsed ? 'w-16' : 'w-64'
         )}
       >
@@ -29,7 +29,7 @@ export function DashboardSideNav() {
           {/* Collapse Button */}
           <button
             onClick={() => setIsCollapsed(!isCollapsed)}
-            className="border-b p-4 transition-colors hover:bg-accent"
+            className="hover:bg-accent border-b p-4 transition-colors"
           >
             {isCollapsed ? (
               <ChevronRight className="h-5 w-5" />
@@ -42,7 +42,7 @@ export function DashboardSideNav() {
           <nav className="flex-1 overflow-y-auto pb-20">
             {' '}
             {/* Padding for settings section */}
-            {navigation.map((item) => (
+            {navigation.map(item => (
               <Link
                 key={item.name}
                 href={item.href}
@@ -60,7 +60,7 @@ export function DashboardSideNav() {
           </nav>
 
           {/* Fixed Settings Section */}
-          <div className="absolute bottom-0 left-0 w-full border-t bg-background">
+          <div className="bg-background absolute bottom-0 left-0 w-full border-t">
             <Link
               href="/dashboard/settings"
               className={cn(

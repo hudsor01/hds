@@ -19,10 +19,10 @@ const pricingTiers = [
       'Basic tenant management',
       'Simple maintenance tracking',
       'Basic financial reporting',
-      'Email support',
+      'Email support'
     ],
     highlighted: false,
-    buttonText: 'Start Free Trial',
+    buttonText: 'Start Free Trial'
   },
   {
     title: 'Core',
@@ -37,10 +37,10 @@ const pricingTiers = [
       'Basic financial analytics',
       'Document storage',
       'Email & chat support',
-      'Mobile app access',
+      'Mobile app access'
     ],
     highlighted: false,
-    buttonText: 'Subscribe Now',
+    buttonText: 'Subscribe Now'
   },
   {
     title: 'Growth',
@@ -57,10 +57,10 @@ const pricingTiers = [
       'Priority support',
       'Custom branding',
       'API access',
-      'Team collaboration',
+      'Team collaboration'
     ],
     highlighted: true,
-    buttonText: 'Get Started',
+    buttonText: 'Get Started'
   },
   {
     title: 'Unlimited',
@@ -78,11 +78,11 @@ const pricingTiers = [
       '24/7 phone support',
       'Custom training',
       'Disaster recovery',
-      'Advanced security features',
+      'Advanced security features'
     ],
     highlighted: false,
-    buttonText: 'Contact Enterprise',
-  },
+    buttonText: 'Contact Enterprise'
+  }
 ]
 
 export default function PricingPage() {
@@ -91,10 +91,10 @@ export default function PricingPage() {
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
       <div className="text-center">
-        <h2 className="text-2xl font-bold tracking-tight text-foreground sm:text-3xl md:text-4xl">
+        <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
           Simple, transparent pricing
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-base text-muted-foreground sm:mt-4 sm:text-lg">
+        <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-base sm:mt-4 sm:text-lg">
           Choose the perfect plan for your property management needs
         </p>
       </div>
@@ -110,7 +110,7 @@ export default function PricingPage() {
             }`}
           >
             <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
-            <p className="mt-2 text-sm text-muted-foreground sm:text-base">{tier.description}</p>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">{tier.description}</p>
             <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
               <span className="text-4xl font-bold sm:text-5xl">{tier.price}</span>
               <span className="text-muted-foreground sm:ml-2">/{tier.duration}</span>
@@ -150,7 +150,7 @@ export default function PricingPage() {
 const PricingCheckoutButton = ({
   priceId,
   text,
-  highlighted,
+  highlighted
 }: {
   priceId: string | null
   text: string
@@ -179,7 +179,7 @@ const PricingCheckoutButton = ({
         const response = await fetch('/api/subscribe/free', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ trialDays: 14 }),
+          body: JSON.stringify({ trialDays: 14 })
         })
 
         if (response.ok) {
@@ -201,7 +201,7 @@ const PricingCheckoutButton = ({
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ priceId })
       })
 
       const data = await response.json()

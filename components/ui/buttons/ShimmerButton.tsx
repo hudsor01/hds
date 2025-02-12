@@ -22,15 +22,15 @@ export const ShimmerButton = ({
     const animateShimmer = async () => {
       await controls.start({
         transition: { duration: 0 },
-        backgroundPosition: '-100% 0',
+        backgroundPosition: '-100% 0'
       })
       controls.start({
         backgroundPosition: ['-100% 0', '200% 0'],
         transition: {
           duration: shimmerDuration,
           repeat: Infinity,
-          ease: 'linear',
-        },
+          ease: 'linear'
+        }
       })
     }
     animateShimmer()
@@ -57,7 +57,7 @@ export const ShimmerButton = ({
             ${shimmerColor} ${shimmerSize * 100 * 2}%,
             transparent ${shimmerSize * 100 * 3}%
           )`,
-          backgroundSize: '300% 100%',
+          backgroundSize: '300% 100%'
         }}
       />
 

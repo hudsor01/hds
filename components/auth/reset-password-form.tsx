@@ -19,7 +19,7 @@ export default function ResetPasswordForm() {
       const response = await fetch('/auth/reset-password', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email })
       })
 
       const data = await response.json()
@@ -59,7 +59,7 @@ export default function ResetPasswordForm() {
         gap: 2,
         maxWidth: 'sm',
         mx: 'auto',
-        p: 3,
+        p: 3
       }}
     >
       {error && (
@@ -80,7 +80,7 @@ export default function ResetPasswordForm() {
         label="Email"
         type="email"
         value={email}
-        onChange={(e) => setEmail(e.target.value)}
+        onChange={e => setEmail(e.target.value)}
         required
         fullWidth
       />
@@ -93,8 +93,8 @@ export default function ResetPasswordForm() {
           height: 48,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
           '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-          },
+            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+          }
         }}
       >
         {isLoading ? <CircularProgress size={24} /> : 'Send Reset Link'}

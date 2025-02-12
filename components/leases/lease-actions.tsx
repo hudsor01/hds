@@ -1,5 +1,5 @@
 import { useLeaseActions } from '@/hooks/use-leases'
-import { LEASE_STATUS } from '@/types/lease'
+import { LEASE_STATUS } from '@/types'
 import { IconButton, Menu, MenuItem } from '@mui/material'
 import { useState } from 'react'
 import { MoreVertical } from 'react-feather'
@@ -28,7 +28,7 @@ export function LeaseActions({ leaseId, leaseStatus }: LeaseActionsProps) {
 
   const handleRenew = async () => {
     await renew.mutateAsync({
-      newEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000), // 1 year from now
+      newEndDate: new Date(Date.now() + 365 * 24 * 60 * 60 * 1000) // 1 year from now
     })
     handleClose()
   }

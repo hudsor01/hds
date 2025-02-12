@@ -23,7 +23,7 @@ interface ActivityListProps {
 const statusColors = {
   completed: 'success',
   pending: 'warning',
-  failed: 'error',
+  failed: 'error'
 } as const
 
 const typeIcons = {
@@ -31,7 +31,7 @@ const typeIcons = {
   tenant: User,
   maintenance: Tool,
   lease: Key,
-  document: FileText,
+  document: FileText
 } as const
 
 const containerVariants = {
@@ -39,14 +39,14 @@ const containerVariants = {
   show: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-    },
-  },
+      staggerChildren: 0.1
+    }
+  }
 }
 
 const itemVariants = {
   hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0 }
 }
 
 export function ActivityList({ activities }: ActivityListProps) {
@@ -68,11 +68,11 @@ export function ActivityList({ activities }: ActivityListProps) {
           gap: 2,
           borderBottom: `1px solid ${theme.palette.divider}`,
           '&:last-child': {
-            borderBottom: 'none',
+            borderBottom: 'none'
           },
           '&:hover': {
-            bgcolor: alpha(theme.palette.primary.main, 0.04),
-          },
+            bgcolor: alpha(theme.palette.primary.main, 0.04)
+          }
         }}
       >
         <Box
@@ -80,7 +80,7 @@ export function ActivityList({ activities }: ActivityListProps) {
             p: 1,
             borderRadius: 1,
             bgcolor: alpha(theme.palette[statusColor].main, 0.1),
-            color: theme.palette[statusColor].main,
+            color: theme.palette[statusColor].main
           }}
         >
           <Icon size={20} />

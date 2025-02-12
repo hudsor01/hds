@@ -27,7 +27,7 @@ const mockProperties: Property[] = [
         bathrooms: 1,
         sqft: 800,
         rent: 2000,
-        status: 'occupied',
+        status: 'occupied'
       },
       {
         id: '102',
@@ -36,12 +36,12 @@ const mockProperties: Property[] = [
         bathrooms: 1,
         sqft: 600,
         rent: 1500,
-        status: 'vacant',
-      },
+        status: 'vacant'
+      }
     ],
     createdAt: new Date(),
-    updatedAt: new Date(),
-  },
+    updatedAt: new Date()
+  }
 ]
 
 const mockLeases: Lease[] = [
@@ -61,8 +61,8 @@ const mockLeases: Lease[] = [
     status: 'active',
     documents: [],
     createdAt: new Date(),
-    updatedAt: new Date(),
-  },
+    updatedAt: new Date()
+  }
 ]
 
 export default function LeasesPage() {
@@ -79,7 +79,7 @@ export default function LeasesPage() {
       id: Math.random().toString(),
       documents: [],
       createdAt: new Date(),
-      updatedAt: new Date(),
+      updatedAt: new Date()
     }
     setLeases([...leases, newLease])
   }
@@ -95,16 +95,16 @@ export default function LeasesPage() {
       id: selectedLease.id,
       documents: selectedLease.documents,
       createdAt: selectedLease.createdAt,
-      updatedAt: new Date(),
+      updatedAt: new Date()
     }
 
-    setLeases(leases.map((l) => (l.id === selectedLease.id ? updatedLease : l)))
+    setLeases(leases.map(l => (l.id === selectedLease.id ? updatedLease : l)))
   }
 
   const handleDeleteLease = async (leaseId: string) => {
     // In a real app, this would be an API call
     if (confirm('Are you sure you want to delete this lease?')) {
-      setLeases(leases.filter((l) => l.id !== leaseId))
+      setLeases(leases.filter(l => l.id !== leaseId))
     }
   }
 
@@ -156,7 +156,7 @@ export default function LeasesPage() {
               </tr>
             </thead>
             <tbody className="divide-y">
-              {leases.map((lease) => (
+              {leases.map(lease => (
                 <tr key={lease.id}>
                   <td className="px-6 py-4">{lease.propertyName}</td>
                   <td className="px-6 py-4">Unit {lease.unitNumber}</td>

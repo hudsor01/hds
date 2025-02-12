@@ -44,7 +44,7 @@ export function NotificationCenter() {
       message: 'Water leak reported at 123 Main St.',
       timestamp: new Date(),
       read: false,
-      category: 'maintenance',
+      category: 'maintenance'
     },
     {
       id: '2',
@@ -53,7 +53,7 @@ export function NotificationCenter() {
       message: 'Rent payment received for 456 Oak Ave.',
       timestamp: new Date(Date.now() - 30 * 60 * 1000),
       read: false,
-      category: 'payment',
+      category: 'payment'
     },
     {
       id: '3',
@@ -62,11 +62,11 @@ export function NotificationCenter() {
       message: 'Lease for 789 Pine St expires in 30 days.',
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       read: false,
-      category: 'lease',
-    },
+      category: 'lease'
+    }
   ]
 
-  const unreadCount = notifications.filter((n) => !n.read).length
+  const unreadCount = notifications.filter(n => !n.read).length
 
   const getIcon = (type: Notification['type']) => {
     switch (type) {
@@ -88,14 +88,14 @@ export function NotificationCenter() {
 
   const NotificationList = ({ notifications }: { notifications: Notification[] }) => (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
-      {notifications.map((notification) => (
+      {notifications.map(notification => (
         <ListItem
           key={notification.id}
           alignItems="flex-start"
           sx={{
             borderBottom: '1px solid',
             borderColor: 'divider',
-            bgcolor: notification.read ? 'inherit' : 'action.hover',
+            bgcolor: notification.read ? 'inherit' : 'action.hover'
           }}
           secondaryAction={
             <IconButton edge="end" size="small" onClick={() => handleMarkAsRead(notification.id)}>
@@ -117,7 +117,7 @@ export function NotificationCenter() {
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
                   {formatDistanceToNow(notification.timestamp, {
-                    addSuffix: true,
+                    addSuffix: true
                   })}
                 </Typography>
               </>
@@ -143,7 +143,7 @@ export function NotificationCenter() {
         open={open}
         onClose={() => setOpen(false)}
         PaperProps={{
-          sx: { width: { xs: '100%', sm: 400 } },
+          sx: { width: { xs: '100%', sm: 400 } }
         }}
       >
         <Box
@@ -152,7 +152,7 @@ export function NotificationCenter() {
             p: 2,
             alignItems: 'center',
             borderBottom: 1,
-            borderColor: 'divider',
+            borderColor: 'divider'
           }}
         >
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
@@ -175,7 +175,7 @@ export function NotificationCenter() {
 
         <Box sx={{ overflow: 'auto' }}>
           <NotificationList
-            notifications={currentTab === 0 ? notifications : notifications.filter((n) => !n.read)}
+            notifications={currentTab === 0 ? notifications : notifications.filter(n => !n.read)}
           />
 
           {notifications.length === 0 && (
@@ -192,7 +192,7 @@ export function NotificationCenter() {
             align="center"
             sx={{
               cursor: 'pointer',
-              '&:hover': { textDecoration: 'underline' },
+              '&:hover': { textDecoration: 'underline' }
             }}
             onClick={() => {
               // Implement mark all as read functionality

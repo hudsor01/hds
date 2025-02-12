@@ -16,7 +16,7 @@ export default function NotFound() {
           justifyContent: 'center',
           minHeight: '100vh',
           textAlign: 'center',
-          py: 8,
+          py: 8
         }}
       >
         <FadeIn delay={0.2}>
@@ -28,7 +28,7 @@ export default function NotFound() {
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              mb: 2,
+              mb: 2
             }}
           >
             404
@@ -57,8 +57,8 @@ export default function NotFound() {
                 sx={{
                   background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                   '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-                  },
+                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+                  }
                 }}
               >
                 Back to Dashboard
@@ -73,8 +73,8 @@ export default function NotFound() {
                   color: '#007FFF',
                   '&:hover': {
                     borderColor: '#0059B2',
-                    color: '#0059B2',
-                  },
+                    color: '#0059B2'
+                  }
                 }}
               >
                 Search Properties

@@ -13,7 +13,7 @@ export function LoadingSkeleton() {
 
       {/* Stats Grid Skeleton */}
       <div className="grid gap-4 md:grid-cols-3">
-        {[1, 2, 3].map((i) => (
+        {[1, 2, 3].map(i => (
           <Card key={i}>
             <CardContent>
               <Skeleton variant="text" width="60%" />

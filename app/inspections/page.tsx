@@ -15,7 +15,7 @@ const inspectionSchema = z.object({
   inspection_type: z.enum(['ROUTINE', 'MOVE_IN', 'MOVE_OUT', 'MAINTENANCE']),
   scheduled_date: z.string().datetime(),
   inspector_name: z.string().min(1, 'Inspector name is required'),
-  notes: z.string().optional(),
+  notes: z.string().optional()
 })
 
 const columns: GridColDef[] = [
@@ -25,22 +25,22 @@ const columns: GridColDef[] = [
     field: 'status',
     headerName: 'Status',
     width: 120,
-    renderCell: renderStatusCell,
+    renderCell: renderStatusCell
   },
   { field: 'inspector_name', headerName: 'Inspector', width: 150 },
   {
     field: 'scheduled_date',
     headerName: 'Scheduled Date',
     width: 200,
-    renderCell: renderDateCell,
+    renderCell: renderDateCell
   },
   {
     field: 'completed_date',
     headerName: 'Completed Date',
     width: 200,
-    renderCell: renderDateCell,
+    renderCell: renderDateCell
   },
-  { field: 'notes', headerName: 'Notes', width: 200 },
+  { field: 'notes', headerName: 'Notes', width: 200 }
 ]
 
 export default function InspectionsPage() {
@@ -48,12 +48,12 @@ export default function InspectionsPage() {
   const [selectedInspection, setSelectedInspection] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 10
   })
 
   const { data, isLoading } = useQuery({
     queryKey: ['inspections', paginationModel],
-    queryFn: () => api.get('/api/inspections'),
+    queryFn: () => api.get('/api/inspections')
   })
 
   const handleEdit = (inspection: any) => {
@@ -98,8 +98,8 @@ export default function InspectionsPage() {
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-            },
+              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+            }
           }}
         >
           New Inspection

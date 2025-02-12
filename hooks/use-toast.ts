@@ -42,24 +42,27 @@ const useToast = (): UseToastReturn => {
     setIsOpen(false)
   }, [])
 
-  const toast = useCallback(({ message, variant = 'default' }: Omit<ToastProps, 'open' | 'onClose'>) => {
-    setMessage(message)
-    setVariant(variant)
-    setIsOpen(true)
+  const toast = useCallback(
+    ({ message, variant = 'default' }: Omit<ToastProps, 'open' | 'onClose'>) => {
+      setMessage(message)
+      setVariant(variant)
+      setIsOpen(true)
 
-    const timeout = setTimeout(() => {
-      closeToast()
-    }, TOAST_REMOVE_DELAY)
+      const timeout = setTimeout(() => {
+        closeToast()
+      }, TOAST_REMOVE_DELAY)
 
-    return () => clearTimeout(timeout)
-  }, [closeToast])
+      return () => clearTimeout(timeout)
+    },
+    [closeToast]
+  )
 
   return {
     toast,
     isOpen,
     message,
     variant,
-    closeToast,
+    closeToast
   }
 }
 

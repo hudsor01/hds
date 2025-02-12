@@ -12,7 +12,7 @@ import {
   Link,
   Paper,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import React from 'react'
 import { Controller, useForm } from 'react-hook-form'
@@ -22,7 +22,7 @@ const signUpSchema = z.object({
   firstName: z.string().min(1, 'First name is required'),
   lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
 })
 
 type SignUpFormValues = z.infer<typeof signUpSchema>
@@ -39,9 +39,9 @@ export const SignUpForm = ({ onSubmit, onGoogleSignUp, onSignIn }: SignUpFormPro
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting }
   } = useForm<SignUpFormValues>({
-    resolver: zodResolver(signUpSchema),
+    resolver: zodResolver(signUpSchema)
   })
 
   const handleFormSubmit = async (data: SignUpFormValues) => {

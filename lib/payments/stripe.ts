@@ -9,8 +9,8 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   typescript: true,
   appInfo: {
     name: 'HDS Platform',
-    version: '1.0.0',
-  },
+    version: '1.0.0'
+  }
 })
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
@@ -19,7 +19,7 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 export async function createCheckoutSession({
   team,
-  priceId,
+  priceId
 }: {
   team: Team | null
   priceId: string
@@ -35,8 +35,8 @@ export async function createCheckoutSession({
     line_items: [
       {
         price: priceId,
-        quantity: 1,
-      },
+        quantity: 1
+      }
     ],
     mode: 'subscription',
     success_url: `${process.env.BASE_URL}/api/stripe/checkout?session_id={CHECKOUT_SESSION_ID}`,
@@ -45,8 +45,8 @@ export async function createCheckoutSession({
     client_reference_id: user.id.toString(),
     allow_promotion_codes: true,
     subscription_data: {
-      trial_period_days: 14,
-    },
+      trial_period_days: 14
+    }
   })
 
   redirect(session.url!)
@@ -70,7 +70,7 @@ export async function createCustomerPortalSession(team: Team) {
 
     const prices = await stripe.prices.list({
       product: product.id,
-      active: true,
+      active: true
     })
     if (prices.data.length === 0) {
       throw new Error("No active prices found for the team's product")
@@ -78,7 +78,7 @@ export async function createCustomerPortalSession(team: Team) {
 
     configuration = await stripe.billingPortal.configurations.create({
       business_profile: {
-        headline: 'Manage your subscription',
+        headline: 'Manage your subscription'
       },
       features: {
         subscription_update: {
@@ -88,26 +88,26 @@ export async function createCustomerPortalSession(team: Team) {
           products: [
             {
               product: product.id,
-              prices: prices.data.map((price) => price.id),
-            },
-          ],
+              prices: prices.data.map(price => price.id)
+            }
+          ]
         },
         subscription_cancel: {
           enabled: true,
           mode: 'at_period_end',
           cancellation_reason: {
             enabled: true,
-            options: ['too_expensive', 'missing_features', 'switched_service', 'unused', 'other'],
-          },
-        },
-      },
+            options: ['too_expensive', 'missing_features', 'switched_service', 'unused', 'other']
+          }
+        }
+      }
     })
   }
 
   return stripe.billingPortal.sessions.create({
     customer: team.stripeCustomerId,
     return_url: `${process.env.BASE_URL}/dashboard`,
-    configuration: configuration.id,
+    configuration: configuration.id
   })
 }
 
@@ -129,14 +129,14 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
       stripeSubscriptionId: subscriptionId,
       stripeProductId: plan?.product as string,
       planName: (plan?.product as Stripe.Product).name,
-      subscriptionStatus: status,
+      subscriptionStatus: status
     })
   } else if (status === 'canceled' || status === 'unpaid') {
     updateTeamSubscription(team.id, {
       stripeSubscriptionId: null,
       stripeProductId: null,
       planName: null,
-      subscriptionStatus: status,
+      subscriptionStatus: status
     })
   }
 }
@@ -145,31 +145,31 @@ export async function getStripePrices() {
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
-    type: 'recurring',
+    type: 'recurring'
   })
 
-  return prices.data.map((price) => ({
+  return prices.data.map(price => ({
     id: price.id,
     productId: typeof price.product === 'string' ? price.product : price.product.id,
     unitAmount: price.unit_amount,
     currency: price.currency,
     interval: price.recurring?.interval,
-    trialPeriodDays: price.recurring?.trial_period_days,
+    trialPeriodDays: price.recurring?.trial_period_days
   }))
 }
 
 export async function getStripeProducts() {
   const products = await stripe.products.list({
     active: true,
-    expand: ['data.default_price'],
+    expand: ['data.default_price']
   })
 
-  return products.data.map((product) => ({
+  return products.data.map(product => ({
     id: product.id,
     name: product.name,
     description: product.description,
     defaultPriceId:
-      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id,
+      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id
   }))
 }
 
@@ -195,7 +195,7 @@ if (!process.env.STRIPE_SECRET_KEY) {
 
 export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-01-27.acacia',
-  typescript: true,
+  typescript: true
 })
 
 export interface CreateCustomerParams {
@@ -215,7 +215,7 @@ export const createStripeCustomer = async ({ email, name, metadata }: CreateCust
   return stripe.customers.create({
     email,
     name,
-    metadata,
+    metadata
   })
 }
 
@@ -223,7 +223,7 @@ export const createPaymentIntent = async ({
   amount,
   currency = 'usd',
   customer,
-  metadata,
+  metadata
 }: CreatePaymentIntentParams) => {
   return stripe.paymentIntents.create({
     amount: Math.round(amount * 100), // Convert to cents
@@ -231,8 +231,8 @@ export const createPaymentIntent = async ({
     customer,
     metadata,
     automatic_payment_methods: {
-      enabled: true,
-    },
+      enabled: true
+    }
   })
 }
 
@@ -272,7 +272,7 @@ export const createSubscription = async (
   return stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
-    metadata,
+    metadata
   })
 }
 

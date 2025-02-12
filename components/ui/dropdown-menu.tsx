@@ -9,7 +9,7 @@ import {
   ListItemText,
   Menu,
   MenuItem,
-  styled,
+  styled
 } from '@mui/material'
 import * as React from 'react'
 import { Check, ChevronRight } from 'react-feather'
@@ -20,30 +20,30 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
     minWidth: 180,
     boxShadow: theme.shadows[4],
     '& .MuiMenu-list': {
-      padding: '4px 0',
+      padding: '4px 0'
     },
     '& .MuiMenuItem-root': {
       fontSize: theme.typography.pxToRem(14),
       '& .MuiSvgIcon-root': {
         fontSize: 18,
-        marginRight: theme.spacing(1.5),
-      },
-    },
-  },
+        marginRight: theme.spacing(1.5)
+      }
+    }
+  }
 }))
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   minHeight: 36,
   padding: '6px 16px',
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.action.hover
   },
   '&.Mui-selected': {
     backgroundColor: theme.palette.action.selected,
     '&:hover': {
-      backgroundColor: theme.palette.action.selected,
-    },
-  },
+      backgroundColor: theme.palette.action.selected
+    }
+  }
 }))
 
 export interface DropdownMenuProps extends Omit<MenuProps, 'open'> {
@@ -93,7 +93,7 @@ export const DropdownMenuItem = React.forwardRef<HTMLLIElement, DropdownMenuItem
     <StyledMenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
+        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm transition-colors',
         inset && 'pl-8',
         className
       )}
@@ -114,7 +114,7 @@ export const DropdownMenuSeparator = React.forwardRef<
   <Divider
     ref={ref}
     component="hr"
-    className={cn('-mx-1 my-1 h-px bg-muted', className)}
+    className={cn('bg-muted -mx-1 my-1 h-px', className)}
     {...props}
   />
 ))
@@ -127,7 +127,7 @@ export const DropdownMenuCheckItem = React.forwardRef<
   <StyledMenuItem
     ref={ref}
     className={cn(
-      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
+      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors',
       className
     )}
     {...props}
@@ -147,7 +147,7 @@ export const DropdownMenuSubItem = React.forwardRef<HTMLLIElement, DropdownMenuI
     <StyledMenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors focus:bg-accent focus:text-accent-foreground',
+        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors',
         className
       )}
       {...props}

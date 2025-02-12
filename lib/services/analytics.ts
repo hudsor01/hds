@@ -6,9 +6,10 @@ import type {
   MaintenanceMetrics,
   PropertyMetrics,
   TenantMetrics,
-  TimeSeriesData,
+  TimeSeriesData
 } from '@/types/analytics'
 import { endOfMonth, startOfMonth, subMonths } from 'date-fns'
+import { AnalyticsEvent, AnalyticsConfig, EmailStats, WaitlistStats } from '@/types'
 
 export async function getPropertyMetrics(userId: string): Promise<PropertyMetrics> {
   const { data: properties, error } = await supabase
@@ -19,7 +20,7 @@ export async function getPropertyMetrics(userId: string): Promise<PropertyMetric
   if (error) throw error
 
   const total = properties.length
-  const occupied = properties.filter((p) => p.property_status === 'OCCUPIED').length
+  const occupied = properties.filter(p => p.property_status === 'OCCUPIED').length
   const totalRent = properties.reduce((sum, p) => sum + Number(p.rent_amount), 0)
 
   const byType = properties.reduce(
@@ -44,7 +45,7 @@ export async function getPropertyMetrics(userId: string): Promise<PropertyMetric
     avg_rent: total ? totalRent / total : 0,
     total_revenue: totalRent,
     properties_by_type: byType,
-    properties_by_status: byStatus,
+    properties_by_status: byStatus
   }
 }
 
@@ -58,15 +59,15 @@ export async function getTenantMetrics(userId: string): Promise<TenantMetrics> {
   if (error) throw error
 
   const total = tenants.length
-  const active = tenants.filter((t) => t.tenant_status === 'ACTIVE').length
+  const active = tenants.filter(t => t.tenant_status === 'ACTIVE').length
   const moveIns = tenants.filter(
-    (t) =>
+    t =>
       t.move_in_date &&
       new Date(t.move_in_date) >= startOfThisMonth &&
       new Date(t.move_in_date) <= endOfThisMonth
   ).length
   const moveOuts = tenants.filter(
-    (t) =>
+    t =>
       t.move_out_date &&
       new Date(t.move_out_date) >= startOfThisMonth &&
       new Date(t.move_out_date) <= endOfThisMonth
@@ -86,7 +87,7 @@ export async function getTenantMetrics(userId: string): Promise<TenantMetrics> {
     move_ins_this_month: moveIns,
     move_outs_this_month: moveOuts,
     tenants_by_status: byStatus,
-    lease_renewals_due: 0, // TODO: Implement lease renewal calculation
+    lease_renewals_due: 0 // TODO: Implement lease renewal calculation
   }
 }
 
@@ -132,7 +133,7 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
   )
 
   const expectedPayments = payments.length
-  const receivedPayments = payments.filter((p) => p.payment_status === 'COMPLETED').length
+  const receivedPayments = payments.filter(p => p.payment_status === 'COMPLETED').length
 
   return {
     total_revenue: totalRevenue,
@@ -141,7 +142,7 @@ export async function getFinancialMetrics(userId: string): Promise<FinancialMetr
     revenue_by_type: revenueByType,
     expenses_by_category: expensesByCategory,
     payment_collection_rate: expectedPayments ? (receivedPayments / expectedPayments) * 100 : 0,
-    outstanding_balance: 0, // TODO: Implement outstanding balance calculation
+    outstanding_balance: 0 // TODO: Implement outstanding balance calculation
   }
 }
 
@@ -155,10 +156,10 @@ export async function getMaintenanceMetrics(userId: string): Promise<Maintenance
 
   const total = workOrders.length
   const open = workOrders.filter(
-    (wo) => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'
+    wo => wo.status !== 'COMPLETED' && wo.status !== 'CANCELLED'
   ).length
 
-  const completedOrders = workOrders.filter((wo) => wo.status === 'COMPLETED')
+  const completedOrders = workOrders.filter(wo => wo.status === 'COMPLETED')
   const avgCompletionTime =
     completedOrders.length > 0
       ? completedOrders.reduce((sum, wo) => {
@@ -200,7 +201,7 @@ export async function getMaintenanceMetrics(userId: string): Promise<Maintenance
     avg_completion_time: avgCompletionTime,
     work_orders_by_priority: byPriority,
     work_orders_by_status: byStatus,
-    maintenance_cost_by_property: costByProperty,
+    maintenance_cost_by_property: costByProperty
   }
 }
 
@@ -223,7 +224,7 @@ export async function getAnalyticsDashboard(
     getPropertyMetrics(userId),
     getTenantMetrics(userId),
     getFinancialMetrics(userId),
-    getMaintenanceMetrics(userId),
+    getMaintenanceMetrics(userId)
   ])
 
   const startDate = query?.start_date ? new Date(query.start_date) : subMonths(new Date(), 12)
@@ -232,7 +233,7 @@ export async function getAnalyticsDashboard(
   const [revenueTrend, occupancyTrend, expensesTrend] = await Promise.all([
     getTimeSeries(userId, 'revenue', startDate, endDate),
     getTimeSeries(userId, 'occupancy', startDate, endDate),
-    getTimeSeries(userId, 'expenses', startDate, endDate),
+    getTimeSeries(userId, 'expenses', startDate, endDate)
   ])
 
   return {
@@ -242,6 +243,6 @@ export async function getAnalyticsDashboard(
     maintenance_metrics: maintenanceMetrics,
     revenue_trend: revenueTrend,
     occupancy_trend: occupancyTrend,
-    expenses_trend: expensesTrend,
+    expenses_trend: expensesTrend
   }
 }

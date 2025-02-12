@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import {
   Dialog as MuiDialog,
   DialogContent as MuiDialogContent,
-  DialogTitle as MuiDialogTitle,
+  DialogTitle as MuiDialogTitle
 } from '@mui/material'
 import * as React from 'react'
 
@@ -43,7 +43,7 @@ const DialogContent = React.forwardRef<
 >(({ className, children, ...props }, ref) => (
   <MuiDialogContent
     ref={ref}
-    className={cn('relative bg-background p-6 shadow-lg sm:rounded-lg', className)}
+    className={cn('bg-background relative p-6 shadow-lg sm:rounded-lg', className)}
     {...props}
   >
     {children}
@@ -80,7 +80,7 @@ const DialogDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p ref={ref} className={cn('text-sm text-muted-foreground', className)} {...props} />
+  <p ref={ref} className={cn('text-muted-foreground text-sm', className)} {...props} />
 ))
 DialogDescription.displayName = 'DialogDescription'
 

@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
   Tooltip,
   XAxis,
-  YAxis,
+  YAxis
 } from 'recharts'
 
 interface PerformanceChartProps {

@@ -21,25 +21,25 @@ export const usePreferences = create<UserPreferences>()(
       animations: true,
       reducedMotion: false,
 
-      setFontSize: (size) => set({ fontSize: size }),
-      setAnimations: (enabled) => set({ animations: enabled }),
-      setReducedMotion: (enabled) => set({ reducedMotion: enabled }),
+      setFontSize: size => set({ fontSize: size }),
+      setAnimations: enabled => set({ animations: enabled }),
+      setReducedMotion: enabled => set({ reducedMotion: enabled }),
 
       sync: async () => {
         try {
           const response = await fetch(SYNC_ENDPOINT, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type': 'application/json'
             },
             body: JSON.stringify({
               preferences: {
                 fontSize: get().fontSize,
                 animations: get().animations,
-                reducedMotion: get().reducedMotion,
+                reducedMotion: get().reducedMotion
               },
-              lastSynced: get().lastSynced,
-            }),
+              lastSynced: get().lastSynced
+            })
           })
 
           if (response.ok) {
@@ -49,17 +49,17 @@ export const usePreferences = create<UserPreferences>()(
         } catch (error) {
           console.error('Failed to sync preferences:', error)
         }
-      },
+      }
     }),
     {
       name: 'user-preferences',
       storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
+      partialize: state => ({
         fontSize: state.fontSize,
         animations: state.animations,
         reducedMotion: state.reducedMotion,
-        lastSynced: state.lastSynced,
-      }),
+        lastSynced: state.lastSynced
+      })
     }
   )
 )

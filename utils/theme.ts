@@ -4,7 +4,7 @@ import { Roboto } from 'next/font/google'
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
-  display: 'swap',
+  display: 'swap'
 })
 
 // Define your Tailwind colors
@@ -17,7 +17,7 @@ const tailwindColors = {
   surface: '#FFFFFF',
   text: '#111827',
   textSecondary: '#6B7280',
-  border: '#E5E7EB',
+  border: '#E5E7EB'
 } as const
 
 export const theme = createTheme({
@@ -25,60 +25,60 @@ export const theme = createTheme({
     primary: {
       main: tailwindColors.primary,
       dark: tailwindColors.primaryHover,
-      contrastText: '#fff',
+      contrastText: '#fff'
     },
     secondary: {
       main: tailwindColors.secondary,
       dark: tailwindColors.secondaryHover,
-      contrastText: '#fff',
+      contrastText: '#fff'
     },
     background: {
       default: tailwindColors.background,
-      paper: tailwindColors.surface,
+      paper: tailwindColors.surface
     },
     text: {
       primary: tailwindColors.text,
-      secondary: tailwindColors.textSecondary,
-    },
+      secondary: tailwindColors.textSecondary
+    }
   },
   typography: {
     fontFamily: roboto.style.fontFamily,
     h1: {
       fontSize: '2.5rem',
-      fontWeight: 700,
+      fontWeight: 700
     },
     h2: {
       fontSize: '2rem',
-      fontWeight: 600,
+      fontWeight: 600
     },
     h3: {
       fontSize: '1.75rem',
-      fontWeight: 600,
+      fontWeight: 600
     },
     h4: {
       fontSize: '1.5rem',
-      fontWeight: 500,
+      fontWeight: 500
     },
     h5: {
       fontSize: '1.25rem',
-      fontWeight: 500,
+      fontWeight: 500
     },
     h6: {
       fontSize: '1rem',
-      fontWeight: 500,
+      fontWeight: 500
     },
     body1: {
       fontSize: '1rem',
-      lineHeight: 1.5,
+      lineHeight: 1.5
     },
     body2: {
       fontSize: '0.875rem',
-      lineHeight: 1.5,
+      lineHeight: 1.5
     },
     button: {
       textTransform: 'none',
-      fontWeight: 500,
-    },
+      fontWeight: 500
+    }
   },
   components: {
     MuiButton: {
@@ -87,18 +87,18 @@ export const theme = createTheme({
           textTransform: 'none',
           borderRadius: 8,
           padding: '8px 16px',
-          fontWeight: 500,
-        },
-      },
+          fontWeight: 500
+        }
+      }
     },
     MuiAppBar: {
       styleOverrides: {
         root: {
           backgroundColor: tailwindColors.surface,
           color: tailwindColors.text,
-          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)',
-        },
-      },
-    },
-  },
+          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)'
+        }
+      }
+    }
+  }
 } as ThemeOptions)

@@ -1,17 +1,14 @@
 'use client'
 
 import { Button } from '@/components/ui/buttons/button'
-import {
-  Dialog,
-  DialogContent,
-  DialogTitle,
-  TextField,
-  Select,
-  MenuItem,
-  Box,
-} from '@mui/material'
+import { Dialog, DialogContent, DialogTitle, TextField, Select, MenuItem, Box } from '@mui/material'
 import { useState } from 'react'
-import { PROPERTY_TYPES, PROPERTY_STATUS, type PropertyType, type PropertyStatus } from '@/types/property'
+import {
+  PROPERTY_TYPES,
+  PROPERTY_STATUS,
+  type PropertyType,
+  type PropertyStatus
+} from '@/types/property'
 import type { PropertyInsert } from '@/types/property'
 
 interface PropertyDialogProps {
@@ -25,9 +22,11 @@ export function PropertyDialog({
   open,
   onOpenChangeAction,
   onSubmitAction,
-  property,
+  property
 }: PropertyDialogProps) {
-  const [formData, setFormData] = useState<Omit<PropertyInsert, 'id' | 'created_at' | 'updated_at' | 'user_id'>>({
+  const [formData, setFormData] = useState<
+    Omit<PropertyInsert, 'id' | 'created_at' | 'updated_at' | 'user_id'>
+  >({
     name: property?.name || '',
     address: property?.address || '',
     city: property?.city || '',
@@ -35,7 +34,7 @@ export function PropertyDialog({
     zip: property?.zip || '',
     property_type: (property?.property_type || 'apartment') as PropertyType,
     property_status: (property?.property_status || 'active') as PropertyStatus,
-    rent_amount: property?.rent_amount || 0,
+    rent_amount: property?.rent_amount || 0
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -45,7 +44,7 @@ export function PropertyDialog({
       id: crypto.randomUUID(),
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
-      user_id: '',
+      user_id: ''
     })
     setFormData({
       name: '',
@@ -55,7 +54,7 @@ export function PropertyDialog({
       zip: '',
       property_type: 'apartment',
       property_status: 'active',
-      rent_amount: 0,
+      rent_amount: 0
     })
   }
 
@@ -70,7 +69,7 @@ export function PropertyDialog({
             fullWidth
             label="Property Name"
             value={formData.name}
-            onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+            onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
             required
             size="small"
             sx={{ mb: 2 }}
@@ -79,7 +78,7 @@ export function PropertyDialog({
             fullWidth
             label="Address"
             value={formData.address}
-            onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value }))}
+            onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))}
             required
             size="small"
             sx={{ mb: 2 }}
@@ -89,7 +88,7 @@ export function PropertyDialog({
               fullWidth
               label="City"
               value={formData.city}
-              onChange={(e) => setFormData((prev) => ({ ...prev, city: e.target.value }))}
+              onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
               required
               size="small"
             />
@@ -97,7 +96,7 @@ export function PropertyDialog({
               fullWidth
               label="State"
               value={formData.state}
-              onChange={(e) => setFormData((prev) => ({ ...prev, state: e.target.value }))}
+              onChange={e => setFormData(prev => ({ ...prev, state: e.target.value }))}
               required
               size="small"
             />
@@ -106,7 +105,7 @@ export function PropertyDialog({
             fullWidth
             label="ZIP Code"
             value={formData.zip}
-            onChange={(e) => setFormData((prev) => ({ ...prev, zip: e.target.value }))}
+            onChange={e => setFormData(prev => ({ ...prev, zip: e.target.value }))}
             required
             size="small"
             sx={{ mb: 2 }}
@@ -116,7 +115,7 @@ export function PropertyDialog({
             label="Monthly Rent"
             type="number"
             value={formData.rent_amount}
-            onChange={(e) => setFormData((prev) => ({ ...prev, rent_amount: Number(e.target.value) }))}
+            onChange={e => setFormData(prev => ({ ...prev, rent_amount: Number(e.target.value) }))}
             required
             size="small"
             sx={{ mb: 2 }}
@@ -125,7 +124,9 @@ export function PropertyDialog({
             fullWidth
             label="Property Type"
             value={formData.property_type}
-            onChange={(e) => setFormData((prev) => ({ ...prev, property_type: e.target.value as PropertyType }))}
+            onChange={e =>
+              setFormData(prev => ({ ...prev, property_type: e.target.value as PropertyType }))
+            }
             required
             size="small"
             sx={{ mb: 2 }}
@@ -140,7 +141,9 @@ export function PropertyDialog({
             fullWidth
             label="Status"
             value={formData.property_status}
-            onChange={(e) => setFormData((prev) => ({ ...prev, property_status: e.target.value as PropertyStatus }))}
+            onChange={e =>
+              setFormData(prev => ({ ...prev, property_status: e.target.value as PropertyStatus }))
+            }
             required
             size="small"
             sx={{ mb: 2 }}

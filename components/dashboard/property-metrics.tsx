@@ -18,7 +18,7 @@ export function PropertyMetrics() {
     queryFn: async () => {
       const response = await fetch('/api/dashboard/metrics')
       return response.json()
-    },
+    }
   })
 
   const stats = [
@@ -26,31 +26,31 @@ export function PropertyMetrics() {
       name: 'Total Properties',
       value: metrics?.totalProperties || 0,
       trend: metrics?.propertyTrend || 0,
-      trendText: 'from last month',
+      trendText: 'from last month'
     },
     {
       name: 'Monthly Revenue',
       value: formatCurrency(metrics?.monthlyRevenue || 0),
       trend: metrics?.revenueTrend || 0,
-      trendText: 'vs last month',
+      trendText: 'vs last month'
     },
     {
       name: 'Occupancy Rate',
       value: `${metrics?.occupancyRate || 0}%`,
       trend: metrics?.occupancyTrend || 0,
-      trendText: 'from last month',
+      trendText: 'from last month'
     },
     {
       name: 'Active Maintenance',
       value: metrics?.activeMaintenanceRequests || 0,
       trend: metrics?.maintenanceTrend || 0,
-      trendText: 'vs last month',
-    },
+      trendText: 'vs last month'
+    }
   ]
 
   return (
     <Grid container spacing={3}>
-      {stats.map((stat) => (
+      {stats.map(stat => (
         <Grid item xs={12} sm={6} md={3} key={stat.name}>
           <Paper
             elevation={0}
@@ -59,7 +59,7 @@ export function PropertyMetrics() {
               height: '100%',
               borderRadius: 2,
               border: '1px solid',
-              borderColor: 'divider',
+              borderColor: 'divider'
             }}
           >
             <Typography variant="subtitle2" color="text.secondary">
@@ -104,7 +104,7 @@ PropertyMetrics.Skeleton = function Skeleton() {
               height: '100%',
               borderRadius: 2,
               border: '1px solid',
-              borderColor: 'divider',
+              borderColor: 'divider'
             }}
           >
             <Box sx={{ animation: 'pulse 2s infinite' }}>

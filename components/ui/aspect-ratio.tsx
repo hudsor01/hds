@@ -15,7 +15,7 @@ export const AspectRatio = React.forwardRef<HTMLDivElement, AspectRatioProps>(
       className={cn('relative w-full', className)}
       style={{
         aspectRatio: ratio,
-        ...style,
+        ...style
       }}
       {...props}
     />

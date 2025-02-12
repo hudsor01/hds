@@ -14,7 +14,7 @@ const tenantSchema = z.object({
   move_in_date: z.string().datetime().optional(),
   move_out_date: z.string().datetime().optional(),
   emergency_contact: z.record(z.string(), z.any()).optional(),
-  documents: z.array(z.any()).optional(),
+  documents: z.array(z.any()).optional()
 })
 
 export async function GET(req: NextRequest) {
@@ -91,8 +91,8 @@ export async function POST(req: NextRequest) {
         user_id: userId,
         type: 'TENANT',
         title: 'New Tenant Added',
-        message: `${validatedData.first_name} ${validatedData.last_name} has been added as a tenant.`,
-      },
+        message: `${validatedData.first_name} ${validatedData.last_name} has been added as a tenant.`
+      }
     ])
 
     return NextResponse.json({ data: tenant }, { status: 201 })

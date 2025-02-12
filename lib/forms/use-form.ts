@@ -15,13 +15,13 @@ export function useForm<T extends z.ZodObject<any>>({
   schema,
   defaultValues,
   onSubmit,
-  onError,
+  onError
 }: UseFormOptions<T>) {
   const { showToast } = useToast()
 
   const form = useReactHookForm({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues as any,
+    defaultValues: defaultValues as any
   })
 
   const handleSubmit = useCallback(
@@ -39,7 +39,7 @@ export function useForm<T extends z.ZodObject<any>>({
 
   return {
     ...form,
-    handleSubmit: form.handleSubmit(handleSubmit),
+    handleSubmit: form.handleSubmit(handleSubmit)
   }
 }
 
@@ -78,8 +78,8 @@ export function createFormField<T extends z.ZodObject<any>>(schema: T) {
     getFieldProps: (name: keyof z.infer<T>) => ({
       name,
       required: isFieldRequired(schema, name as string),
-      validate: (value: any) => validateField(schema, name, value),
-    }),
+      validate: (value: any) => validateField(schema, name, value)
+    })
   }
 }
 

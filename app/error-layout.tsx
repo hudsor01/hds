@@ -13,7 +13,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
           background:
             'linear-gradient(180deg, rgba(0, 127, 255, 0.05) 0%, rgba(0, 89, 178, 0.05) 100%)',
           display: 'flex',
-          flexDirection: 'column',
+          flexDirection: 'column'
         }}
       >
         <Box
@@ -25,7 +25,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
             alignItems: 'center',
             borderBottom: '1px solid',
             borderColor: 'divider',
-            background: 'white',
+            background: 'white'
           }}
         >
           <Box
@@ -36,7 +36,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent',
-              m: 0,
+              m: 0
             }}
           >
             Property Manager

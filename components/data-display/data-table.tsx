@@ -5,7 +5,7 @@ import {
   type GridColDef,
   type GridFilterModel,
   type GridPaginationModel,
-  type GridSortModel,
+  type GridSortModel
 } from '@mui/x-data-grid'
 import { Edit, Trash } from 'react-feather'
 
@@ -32,7 +32,7 @@ export function DataTable({
   onFilterModelChange,
   onPaginationModelChange,
   paginationModel,
-  rowCount,
+  rowCount
 }: DataTableProps) {
   const columnsWithActions: GridColDef[] = [
     ...columns,
@@ -42,7 +42,7 @@ export function DataTable({
       width: 120,
       sortable: false,
       filterable: false,
-      renderCell: (params) => (
+      renderCell: params => (
         <div className="flex gap-2">
           {onEdit && (
             <Button
@@ -64,8 +64,8 @@ export function DataTable({
             </Button>
           )}
         </div>
-      ),
-    },
+      )
+    }
   ]
 
   return (
@@ -87,8 +87,8 @@ export function DataTable({
         getRowHeight={() => 'auto'}
         sx={{
           '& .MuiDataGrid-cell': {
-            padding: '8px',
-          },
+            padding: '8px'
+          }
         }}
       />
     </div>
@@ -104,7 +104,7 @@ export const renderStatusCell = (params: any) => {
 export const renderCurrencyCell = (params: any) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'USD',
+    currency: 'USD'
   }).format(params.value)
 }
 
@@ -112,6 +112,6 @@ export const renderCurrencyCell = (params: any) => {
 export const renderDateCell = (params: any) => {
   return new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
-    timeStyle: 'short',
+    timeStyle: 'short'
   }).format(new Date(params.value))
 }

@@ -15,13 +15,13 @@ export function FormContainer<T extends z.ZodObject<any>>({
   schema,
   defaultValues,
   onSubmit,
-  onError,
+  onError
 }: FormContainerProps<T>) {
   const methods = useForm({
     schema,
     defaultValues,
     onSubmit,
-    onError,
+    onError
   })
 
   return <RHFFormProvider {...(methods as UseFormReturn)}>{children}</RHFFormProvider>

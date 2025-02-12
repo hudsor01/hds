@@ -1,7 +1,7 @@
 import { LeaseActions } from './lease-actions'
 import { useLeases } from '@/hooks/use-leases'
 import { formatCurrency } from '@/lib/utils'
-import type { Lease } from '@/types/lease'
+import type { Lease } from '@/types'
 import AddIcon from '@mui/icons-material/Add'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -17,13 +17,13 @@ export function LeaseList() {
       field: 'propertyId',
       headerName: 'Property',
       width: 200,
-      valueGetter: ({ row }: { row: Lease }) => row.propertyName || 'N/A',
+      valueGetter: ({ row }: { row: Lease }) => row.propertyName || 'N/A'
     },
     {
       field: 'tenantId',
       headerName: 'Tenant',
       width: 200,
-      valueGetter: ({ row }: { row: Lease }) => row.tenantName || 'N/A',
+      valueGetter: ({ row }: { row: Lease }) => row.tenantName || 'N/A'
     },
     {
       field: 'status',
@@ -43,25 +43,25 @@ export function LeaseList() {
           }
           size="small"
         />
-      ),
+      )
     },
     {
       field: 'rentAmount',
       headerName: 'Rent',
       width: 130,
-      valueFormatter: ({ value }) => formatCurrency(value as number),
+      valueFormatter: ({ value }) => formatCurrency(value as number)
     },
     {
       field: 'startDate',
       headerName: 'Start Date',
       width: 130,
-      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy'),
+      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy')
     },
     {
       field: 'endDate',
       headerName: 'End Date',
       width: 130,
-      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy'),
+      valueFormatter: ({ value }) => format(new Date(value as string), 'MM/dd/yyyy')
     },
     {
       field: 'actions',
@@ -70,8 +70,8 @@ export function LeaseList() {
       sortable: false,
       renderCell: (params: GridRenderCellParams<Lease>) => (
         <LeaseActions leaseId={params.row.id} leaseStatus={params.row.status} />
-      ),
-    },
+      )
+    }
   ]
 
   return (
@@ -90,8 +90,8 @@ export function LeaseList() {
         disableRowSelectionOnClick
         initialState={{
           pagination: {
-            paginationModel: { pageSize: 10 },
-          },
+            paginationModel: { pageSize: 10 }
+          }
         }}
       />
     </Box>

@@ -11,29 +11,29 @@ const stats = [
     value: '12',
     change: '+2',
     changeType: 'increase',
-    icon: HomeIcon,
+    icon: HomeIcon
   },
   {
     name: 'Active Tenants',
     value: '48',
     change: '+5',
     changeType: 'increase',
-    icon: Users,
+    icon: Users
   },
   {
     name: 'Monthly Revenue',
     value: '$52,000',
     change: '+12%',
     changeType: 'increase',
-    icon: DollarSign,
+    icon: DollarSign
   },
   {
     name: 'Occupancy Rate',
     value: '94%',
     change: '+3%',
     changeType: 'increase',
-    icon: BarChart2,
-  },
+    icon: BarChart2
+  }
 ]
 
 export default async function DashboardPage() {
@@ -55,7 +55,7 @@ export default async function DashboardPage() {
       </Box>
 
       <Grid container spacing={4}>
-        {stats.map((stat) => (
+        {stats.map(stat => (
           <Grid item xs={12} sm={6} md={3} key={stat.name}>
             <Card className="p-6 transition-shadow hover:shadow-lg">
               <div className="flex items-center justify-between">
@@ -67,13 +67,13 @@ export default async function DashboardPage() {
                     {stat.name}
                   </Typography>
                 </div>
-                <div className="rounded-full bg-primary/10 p-3">
-                  <stat.icon className="h-6 w-6 text-primary" />
+                <div className="bg-primary/10 rounded-full p-3">
+                  <stat.icon className="text-primary h-6 w-6" />
                 </div>
               </div>
               <div className="mt-4 flex items-center">
                 <span className="text-success-500 text-sm font-medium">{stat.change}</span>
-                <span className="ml-2 text-sm text-muted-foreground">from last month</span>
+                <span className="text-muted-foreground ml-2 text-sm">from last month</span>
               </div>
             </Card>
           </Grid>

@@ -1,6 +1,6 @@
-'use client';
+'use client'
 
-import * as React from 'react';
+import * as React from 'react'
 import {
   Command as CommandPrimitive,
   CommandInput as CommandPrimitiveInput,
@@ -8,8 +8,8 @@ import {
   CommandEmpty as CommandPrimitiveEmpty,
   CommandGroup as CommandPrimitiveGroup,
   CommandItem as CommandPrimitiveItem,
-  CommandSeparator as CommandPrimitiveSeparator,
-} from 'cmdk';
+  CommandSeparator as CommandPrimitiveSeparator
+} from 'cmdk'
 import {
   Dialog,
   DialogContent,
@@ -21,28 +21,28 @@ import {
   ListItemIcon,
   ListItemText,
   IconButton,
-  InputAdornment,
-} from '@mui/material';
-import { Search, X } from 'react-feather';
-import clsx from 'clsx';
-import type { CommandMenuProps, CommandItem } from '@/types/command-menu';
-import { useRouter } from 'next/navigation';
+  InputAdornment
+} from '@mui/material'
+import { Search, X } from 'react-feather'
+import clsx from 'clsx'
+import type { CommandMenuProps, CommandItem } from '@/types/command-menu'
+import { useRouter } from 'next/navigation'
 
 export const CommandDialog = ({
   children,
   open,
-  onOpenChange,
+  onOpenChange
 }: {
-  children: React.ReactNode;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  children: React.ReactNode
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }) => {
   return (
     <Dialog open={open} onClose={() => onOpenChange(false)} fullWidth>
       <Command className={clsx('rounded-lg border shadow-md')}>{children}</Command>
     </Dialog>
-  );
-};
+  )
+}
 
 export const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -56,8 +56,8 @@ export const Command = React.forwardRef<
     )}
     {...props}
   />
-));
-Command.displayName = CommandPrimitive.displayName;
+))
+Command.displayName = CommandPrimitive.displayName
 
 export const CommandInput = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveInput>,
@@ -75,8 +75,8 @@ export const CommandInput = React.forwardRef<
       {...props}
     />
   </div>
-));
-CommandInput.displayName = CommandPrimitiveInput.displayName;
+))
+CommandInput.displayName = CommandPrimitiveInput.displayName
 
 export const CommandList = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveList>,
@@ -84,11 +84,11 @@ export const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitiveList
     ref={ref}
-    className={clsx('max-h-[300px] overflow-x-hidden overflow-y-auto', className)}
+    className={clsx('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
     {...props}
   />
-));
-CommandList.displayName = CommandPrimitiveList.displayName;
+))
+CommandList.displayName = CommandPrimitiveList.displayName
 
 export const CommandEmpty = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveEmpty>,
@@ -99,8 +99,8 @@ export const CommandEmpty = React.forwardRef<
     className={clsx('text-muted-foreground py-6 text-center text-sm')}
     {...props}
   />
-));
-CommandEmpty.displayName = CommandPrimitiveEmpty.displayName;
+))
+CommandEmpty.displayName = CommandPrimitiveEmpty.displayName
 
 export const CommandGroup = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveGroup>,
@@ -117,8 +117,8 @@ export const CommandGroup = React.forwardRef<
     )}
     {...props}
   />
-));
-CommandGroup.displayName = CommandPrimitiveGroup.displayName;
+))
+CommandGroup.displayName = CommandPrimitiveGroup.displayName
 
 export const CommandSeparator = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveSeparator>,
@@ -129,8 +129,8 @@ export const CommandSeparator = React.forwardRef<
     className={clsx('bg-border -mx-1 h-px', className)}
     {...props}
   />
-));
-CommandSeparator.displayName = CommandPrimitiveSeparator.displayName;
+))
+CommandSeparator.displayName = CommandPrimitiveSeparator.displayName
 
 export const CommandItem = React.forwardRef<
   React.ElementRef<typeof CommandPrimitiveItem>,
@@ -139,65 +139,65 @@ export const CommandItem = React.forwardRef<
   <CommandPrimitiveItem
     ref={ref}
     className={clsx(
-      'relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none',
+      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none',
       'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       'data-[selected]:bg-accent data-[selected]:text-accent-foreground',
       className
     )}
     {...props}
   />
-));
-CommandItem.displayName = CommandPrimitiveItem.displayName;
+))
+CommandItem.displayName = CommandPrimitiveItem.displayName
 
 export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
-  const [search, setSearch] = React.useState<string>('');
-  const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
-  const router = useRouter();
+  const [search, setSearch] = React.useState<string>('')
+  const [selectedIndex, setSelectedIndex] = React.useState<number>(0)
+  const router = useRouter()
 
   const filteredItems: CommandItem[] = items.filter(
     item =>
       item.title.toLowerCase().includes(search.toLowerCase()) ||
       (item.description && item.description.toLowerCase().includes(search.toLowerCase()))
-  );
+  )
 
   React.useEffect(() => {
-    setSelectedIndex(0);
-  }, [search]);
+    setSelectedIndex(0)
+  }, [search])
 
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (!open) return;
+      if (!open) return
 
       switch (e.key) {
         case 'ArrowDown':
-          e.preventDefault();
+          e.preventDefault()
           if (filteredItems.length > 0) {
-            setSelectedIndex(i => (i + 1) % filteredItems.length);
+            setSelectedIndex(i => (i + 1) % filteredItems.length)
           }
-          break;
+          break
         case 'ArrowUp':
-          e.preventDefault();
+          e.preventDefault()
           if (filteredItems.length > 0) {
-            setSelectedIndex(i => (i - 1 + filteredItems.length) % filteredItems.length);
+            setSelectedIndex(i => (i - 1 + filteredItems.length) % filteredItems.length)
           }
-          break;
+          break
         case 'Enter':
-          e.preventDefault();
+          e.preventDefault()
           if (filteredItems[selectedIndex]) {
-            filteredItems[selectedIndex].action();
-            onClose();
+            filteredItems[selectedIndex].action()
+            onClose()
           }
-          break;
+          break
         case 'Escape':
-          e.preventDefault();
-          onClose();
-          break;
+          e.preventDefault()
+          onClose()
+          break
       }
-    };
+    }
 
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [open, filteredItems, selectedIndex, onClose]);
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [open, filteredItems, selectedIndex, onClose])
 
   return (
     <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
@@ -221,7 +221,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                     <X size={20} />
                   </IconButton>
                 </InputAdornment>
-              ),
+              )
             }}
           />
         </Box>
@@ -230,21 +230,21 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
             <ListItem key={item.id} disablePadding>
               <ListItemButton
                 onClick={() => {
-                  item.action();
-                  onClose();
+                  item.action()
+                  onClose()
                 }}
                 selected={index === selectedIndex}
                 sx={{
                   cursor: 'pointer',
                   '&:hover': {
-                    bgcolor: 'action.hover',
+                    bgcolor: 'action.hover'
                   },
                   '&.Mui-selected': {
                     bgcolor: 'primary.light',
                     '&:hover': {
-                      bgcolor: 'primary.light',
-                    },
-                  },
+                      bgcolor: 'primary.light'
+                    }
+                  }
                 }}
               >
                 {item.icon && <ListItemIcon>{item.icon}</ListItemIcon>}
@@ -264,7 +264,7 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
                           py: 0.5,
                           borderRadius: 1,
                           bgcolor: 'action.selected',
-                          fontSize: '0.75rem',
+                          fontSize: '0.75rem'
                         }}
                       >
                         {key}
@@ -278,5 +278,5 @@ export function CommandMenu({ items, open, onClose }: CommandMenuProps) {
         </List>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

@@ -13,7 +13,7 @@ const navigation = [
   { name: 'Documents', href: routes.documents.index, icon: FileText },
   { name: 'Finances', href: routes.finances.index, icon: DollarSign },
   { name: 'Maintenance', href: routes.maintenance.index, icon: Tool },
-  { name: 'Settings', href: routes.settings, icon: Settings },
+  { name: 'Settings', href: routes.settings, icon: Settings }
 ]
 
 export function DashboardSidebar() {
@@ -23,7 +23,7 @@ export function DashboardSidebar() {
     <div className="shadow-xs flex h-full w-64 flex-col bg-white">
       <div className="flex flex-1 flex-col overflow-y-auto">
         <nav className="flex-1 space-y-1 px-2 py-4">
-          {navigation.map((item) => {
+          {navigation.map(item => {
             const isActive = pathname === item.href
             return (
               <Link

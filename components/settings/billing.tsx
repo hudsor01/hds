@@ -9,7 +9,7 @@ import {
   Divider,
   Grid,
   Stack,
-  Typography,
+  Typography
 } from '@mui/material'
 import { CreditCard, Download } from 'react-feather'
 
@@ -18,7 +18,7 @@ export function BillingSettings() {
     name: 'Professional',
     price: 29.99,
     billingCycle: 'monthly',
-    features: ['Up to 100 properties', 'Advanced analytics', 'Email support', 'API access'],
+    features: ['Up to 100 properties', 'Advanced analytics', 'Email support', 'API access']
   }
 
   const billingHistory = [
@@ -26,20 +26,20 @@ export function BillingSettings() {
       id: 'INV-2024-001',
       date: '2024-01-15',
       amount: 29.99,
-      status: 'paid',
+      status: 'paid'
     },
     {
       id: 'INV-2023-012',
       date: '2023-12-15',
       amount: 29.99,
-      status: 'paid',
+      status: 'paid'
     },
     {
       id: 'INV-2023-011',
       date: '2023-11-15',
       amount: 29.99,
-      status: 'paid',
-    },
+      status: 'paid'
+    }
   ]
 
   return (
@@ -111,7 +111,7 @@ export function BillingSettings() {
                       display: 'flex',
                       alignItems: 'center',
                       gap: 2,
-                      mt: 1,
+                      mt: 1
                     }}
                   >
                     <CreditCard size={20} />
@@ -140,14 +140,14 @@ export function BillingSettings() {
             </Typography>
             <Card variant="outlined">
               <Stack divider={<Divider />}>
-                {billingHistory.map((invoice) => (
+                {billingHistory.map(invoice => (
                   <Box
                     key={invoice.id}
                     sx={{
                       p: 2,
                       display: 'flex',
                       alignItems: 'center',
-                      justifyContent: 'space-between',
+                      justifyContent: 'space-between'
                     }}
                   >
                     <Stack spacing={0.5}>

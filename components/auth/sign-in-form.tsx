@@ -19,7 +19,7 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
   const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
+    password: ''
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -46,7 +46,7 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
 
     try {
       const response = await fetch('/auth/sign-in/google', {
-        method: 'POST',
+        method: 'POST'
       })
 
       const data = await response.json()
@@ -64,7 +64,7 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   return (
@@ -77,7 +77,7 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
         gap: 2,
         maxWidth: 'sm',
         mx: 'auto',
-        p: 3,
+        p: 3
       }}
     >
       {error && (
@@ -97,8 +97,8 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
           color: '#4285F4',
           '&:hover': {
             borderColor: '#357ABD',
-            color: '#357ABD',
-          },
+            color: '#357ABD'
+          }
         }}
       >
         {loading ? <CircularProgress size={24} /> : 'Continue with Google'}
@@ -140,8 +140,8 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
           height: 48,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
           '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-          },
+            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+          }
         }}
       >
         {loading ? <CircularProgress size={24} /> : 'Sign In'}

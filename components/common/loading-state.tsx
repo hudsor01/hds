@@ -14,7 +14,7 @@ export function LoadingState({ message = 'Loading...', size = 'medium' }: Loadin
         alignItems: 'center',
         justifyContent: 'center',
         p: 4,
-        gap: 2,
+        gap: 2
       }}
     >
       <CircularProgress size={size === 'small' ? 24 : size === 'medium' ? 40 : 56} />

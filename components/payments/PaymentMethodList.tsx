@@ -13,7 +13,7 @@ import {
   ListItemSecondaryAction,
   ListItemText,
   Skeleton,
-  Typography,
+  Typography
 } from '@mui/material'
 import type { PaymentMethod } from '@stripe/stripe-js'
 import { CreditCard, Trash2 } from 'react-feather'
@@ -28,7 +28,7 @@ interface PaymentMethodListProps {
 export default function PaymentMethodList({
   onAddNew,
   onSelect,
-  selectedId,
+  selectedId
 }: PaymentMethodListProps) {
   const { data: response, isLoading } = usePaymentMethods()
   const removePaymentMethod = useRemovePaymentMethod()
@@ -52,7 +52,7 @@ export default function PaymentMethodList({
           Payment Methods
         </Typography>
         <List>
-          {[1, 2].map((i) => (
+          {[1, 2].map(i => (
             <ListItem key={i}>
               <ListItemIcon>
                 <CreditCard />
@@ -75,7 +75,7 @@ export default function PaymentMethodList({
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
-          mb: 2,
+          mb: 2
         }}
       >
         <Typography variant="h6">Payment Methods</Typography>
@@ -86,8 +86,8 @@ export default function PaymentMethodList({
             sx={{
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               '&:hover': {
-                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-              },
+                background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+              }
             }}
           >
             Add New
@@ -105,7 +105,7 @@ export default function PaymentMethodList({
         </Card>
       ) : (
         <List>
-          {paymentMethods.map((method) => (
+          {paymentMethods.map(method => (
             <ListItem
               key={method.id}
               onClick={() => onSelect?.(method.id)}
@@ -113,8 +113,8 @@ export default function PaymentMethodList({
                 cursor: onSelect ? 'pointer' : 'default',
                 bgcolor: selectedId === method.id ? 'action.selected' : undefined,
                 '&:hover': {
-                  bgcolor: onSelect ? 'action.hover' : undefined,
-                },
+                  bgcolor: onSelect ? 'action.hover' : undefined
+                }
               }}
             >
               <ListItemIcon>
@@ -127,7 +127,7 @@ export default function PaymentMethodList({
               <ListItemSecondaryAction>
                 <IconButton
                   edge="end"
-                  onClick={(e) => {
+                  onClick={e => {
                     e.stopPropagation()
                     handleRemove(method.id)
                   }}

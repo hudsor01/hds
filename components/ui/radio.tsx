@@ -5,23 +5,23 @@ import {
   FormControlLabel,
   Radio as MuiRadio,
   RadioGroup as MuiRadioGroup,
-  styled,
+  styled
 } from '@mui/material'
 import * as React from 'react'
 
 const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
   '&.Mui-checked': {
-    color: theme.palette.primary.main,
-  },
+    color: theme.palette.primary.main
+  }
 }))
 
 const StyledFormControlLabel = styled(FormControlLabel)(({ theme }) => ({
   margin: 0,
   '& .MuiFormControlLabel-label': {
     fontSize: '0.875rem',
-    marginLeft: theme.spacing(1),
-  },
+    marginLeft: theme.spacing(1)
+  }
 }))
 
 export interface RadioGroupProps

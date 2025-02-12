@@ -8,7 +8,7 @@ import { z } from 'zod'
 // Validation schemas for different payment method types
 const cardSchema = z.object({
   type: z.literal('card'),
-  payment_method_id: z.string(),
+  payment_method_id: z.string()
 })
 
 const achSchema = z.object({
@@ -18,8 +18,8 @@ const achSchema = z.object({
     routing_number: z.string(),
     account_number: z.string(),
     account_type: z.enum(['checking', 'savings']),
-    account_holder_type: z.enum(['individual', 'company']),
-  }),
+    account_holder_type: z.enum(['individual', 'company'])
+  })
 })
 
 const checkSchema = z.object({
@@ -29,8 +29,8 @@ const checkSchema = z.object({
     account_holder: z.string(),
     check_number: z.string().optional(),
     routing_number: z.string().optional(),
-    account_number: z.string().optional(),
-  }),
+    account_number: z.string().optional()
+  })
 })
 
 const cashSchema = z.object({
@@ -38,8 +38,8 @@ const cashSchema = z.object({
   cash: z.object({
     receipt_number: z.string().optional(),
     received_by: z.string().optional(),
-    notes: z.string().optional(),
-  }),
+    notes: z.string().optional()
+  })
 })
 
 const bankTransferSchema = z.object({
@@ -51,8 +51,8 @@ const bankTransferSchema = z.object({
     iban: z.string().optional(),
     routing_number: z.string().optional(),
     account_number: z.string().optional(),
-    reference: z.string().optional(),
-  }),
+    reference: z.string().optional()
+  })
 })
 
 export async function POST(req: NextRequest, { params }: { params: { type: PaymentMethodType } }) {
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
         const cardData = cardSchema.parse(body)
         // Attach card payment method to customer in Stripe
         const stripeMethod = await stripe.paymentMethods.attach(cardData.payment_method_id, {
-          customer: userId, // Assuming userId is the Stripe customer ID
+          customer: userId // Assuming userId is the Stripe customer ID
         })
         paymentMethod = {
           type: 'card',
@@ -81,8 +81,8 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
             last4: stripeMethod.card!.last4,
             exp_month: stripeMethod.card!.exp_month,
             exp_year: stripeMethod.card!.exp_year,
-            funding: stripeMethod.card!.funding,
-          },
+            funding: stripeMethod.card!.funding
+          }
         }
         break
 
@@ -96,8 +96,8 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
           ach_debit: {
             ...achData.ach_debit,
             last4: achData.ach_debit.account_number.slice(-4),
-            status: 'pending',
-          },
+            status: 'pending'
+          }
         }
         break
 
@@ -107,7 +107,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
           type: 'check',
           status: 'active',
           created_at: new Date().toISOString(),
-          check: checkData.check,
+          check: checkData.check
         }
         break
 
@@ -117,7 +117,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
           type: 'cash',
           status: 'active',
           created_at: new Date().toISOString(),
-          cash: cashData.cash,
+          cash: cashData.cash
         }
         break
 
@@ -127,7 +127,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
           type: 'bank_transfer',
           status: 'active',
           created_at: new Date().toISOString(),
-          bank_transfer: bankData.bank_transfer,
+          bank_transfer: bankData.bank_transfer
         }
         break
 
@@ -141,8 +141,8 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
       .insert([
         {
           user_id: userId,
-          ...paymentMethod,
-        },
+          ...paymentMethod
+        }
       ])
       .select()
       .single()
@@ -209,7 +209,7 @@ export async function DELETE(
     }
 
     return NextResponse.json({
-      message: 'Payment method deleted successfully',
+      message: 'Payment method deleted successfully'
     })
   } catch (error) {
     console.error('Error in payment method DELETE route:', error)

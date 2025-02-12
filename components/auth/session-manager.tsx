@@ -26,9 +26,9 @@ const containerVariants: Variants = {
     opacity: 1,
     transition: {
       staggerChildren: 0.1,
-      delayChildren: 0.2,
-    },
-  },
+      delayChildren: 0.2
+    }
+  }
 }
 
 const itemVariants: Variants = {
@@ -39,14 +39,14 @@ const itemVariants: Variants = {
     transition: {
       type: 'spring',
       stiffness: 300,
-      damping: 24,
-    },
+      damping: 24
+    }
   },
   exit: {
     opacity: 0,
     scale: 0.95,
-    transition: { duration: 0.2 },
-  },
+    transition: { duration: 0.2 }
+  }
 }
 
 const loadingVariants: Variants = {
@@ -56,9 +56,9 @@ const loadingVariants: Variants = {
     transition: {
       duration: 2,
       repeat: Infinity,
-      ease: 'easeInOut',
-    },
-  },
+      ease: 'easeInOut'
+    }
+  }
 }
 
 export function SessionManager() {
@@ -88,12 +88,12 @@ export function SessionManager() {
     try {
       setIsRevoking(sessionId)
       const response = await fetch(`/api/auth/sessions/${sessionId}`, {
-        method: 'DELETE',
+        method: 'DELETE'
       })
 
       if (!response.ok) throw new Error('Failed to revoke session')
 
-      setSessions(sessions.filter((session) => session.id !== sessionId))
+      setSessions(sessions.filter(session => session.id !== sessionId))
       toast.success('Session revoked successfully')
     } catch (error) {
       toast.error(
@@ -159,9 +159,9 @@ export function SessionManager() {
               variants={loadingVariants}
               animate="animate"
             >
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="text-muted-foreground h-8 w-8 animate-spin" />
               <motion.p
-                className="text-sm text-muted-foreground"
+                className="text-muted-foreground text-sm"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
@@ -176,7 +176,7 @@ export function SessionManager() {
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               className="flex flex-col items-center justify-center py-12 text-center"
             >
-              <Globe className="mb-4 h-12 w-12 text-muted-foreground/50" />
+              <Globe className="text-muted-foreground/50 mb-4 h-12 w-12" />
               <p className="text-muted-foreground">No active sessions found</p>
             </motion.div>
           ) : (
@@ -201,10 +201,10 @@ export function SessionManager() {
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-muted-foreground text-sm">
                             {sessions[0].location}
                           </div>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <div className="text-muted-foreground flex items-center gap-1 text-xs">
                             <Clock className="h-3 w-3" />
                             Last active {format(new Date(sessions[0].lastActive), 'PPp')}
                           </div>
@@ -217,7 +217,7 @@ export function SessionManager() {
 
               <motion.div className="grid gap-4" variants={containerVariants}>
                 <AnimatePresence mode="popLayout">
-                  {sessions.map((session) => (
+                  {sessions.map(session => (
                     <motion.div
                       key={session.id}
                       layout
@@ -243,8 +243,8 @@ export function SessionManager() {
                               </span>
                             )}
                           </div>
-                          <div className="text-sm text-muted-foreground">{session.location}</div>
-                          <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                          <div className="text-muted-foreground text-sm">{session.location}</div>
+                          <div className="text-muted-foreground flex items-center gap-1 text-xs">
                             <Clock className="h-3 w-3" />
                             Last active {format(new Date(session.lastActive), 'PPp')}
                           </div>
@@ -268,9 +268,9 @@ export function SessionManager() {
                                 rotate: {
                                   duration: 1,
                                   repeat: Infinity,
-                                  ease: 'linear',
+                                  ease: 'linear'
                                 },
-                                scale: { duration: 0.5, repeat: Infinity },
+                                scale: { duration: 0.5, repeat: Infinity }
                               }}
                             >
                               {isRevoking === session.id ? (
@@ -292,7 +292,7 @@ export function SessionManager() {
                   variants={itemVariants}
                   className="flex items-center justify-between border-t pt-4"
                 >
-                  <div className="text-xs text-muted-foreground">
+                  <div className="text-muted-foreground text-xs">
                     Revoking a session will force a sign out on that device. The current session
                     cannot be revoked.
                   </div>

@@ -29,7 +29,7 @@ const features = [
           d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
         />
       </svg>
-    ),
+    )
   },
   {
     name: 'Easy Customization',
@@ -51,7 +51,7 @@ const features = [
           d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z"
         />
       </svg>
-    ),
+    )
   },
   {
     name: 'Modern Design',
@@ -73,25 +73,25 @@ const features = [
           d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"
         />
       </svg>
-    ),
-  },
+    )
+  }
 ]
 
 export function FeatureGrid() {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
-        <h1 className="text-2xl font-semibold capitalize text-gray-800 dark:text-white lg:text-3xl">
+        <h1 className="text-2xl font-semibold capitalize text-gray-800 lg:text-3xl dark:text-white">
           explore our <br /> awesome <span className="underline decoration-blue-200">Features</span>
         </h1>
 
-        <p className="mt-4 text-gray-500 dark:text-gray-300 xl:mt-6">
+        <p className="mt-4 text-gray-500 xl:mt-6 dark:text-gray-300">
           Discover how our property management platform can transform your business with these
           powerful features.
         </p>
 
         <div className="mt-8 grid grid-cols-1 gap-8 md:grid-cols-2 xl:mt-12 xl:grid-cols-3 xl:gap-12">
-          {features.map((feature) => (
+          {features.map(feature => (
             <div
               key={feature.name}
               className="space-y-3 rounded-xl border-2 border-blue-200 p-8 dark:border-blue-300"
@@ -108,7 +108,7 @@ export function FeatureGrid() {
 
               <Link
                 href="/features"
-                className="inline-flex transform rounded-full bg-blue-200 p-2 capitalize text-gray-800 transition-colors duration-300 hover:text-blue-400 hover:underline dark:bg-blue-400 dark:text-white dark:hover:text-blue-200 rtl:-scale-x-100"
+                className="inline-flex transform rounded-full bg-blue-200 p-2 capitalize text-gray-800 transition-colors duration-300 hover:text-blue-400 hover:underline rtl:-scale-x-100 dark:bg-blue-400 dark:text-white dark:hover:text-blue-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

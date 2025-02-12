@@ -9,7 +9,7 @@ export const emailService = {
       from: 'info@hudsondigitalsolutions.com',
       to: email,
       subject: 'Welcome to the Hudson Digital Property Management Waitlist!',
-      react: WelcomeEmail({ email }),
+      react: WelcomeEmail({ email })
     })
-  },
+  }
 }

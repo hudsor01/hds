@@ -10,7 +10,7 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
+  DialogTitle
 } from 'components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/ui/form'
 import { Input } from 'components/ui/input'
@@ -26,7 +26,7 @@ const tenantFormSchema = z.object({
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
   property: z.string().min(1, 'Please select a property'),
   unit: z.string().min(1, 'Unit number is required'),
-  leaseEnd: z.string().min(1, 'Lease end date is required'),
+  leaseEnd: z.string().min(1, 'Lease end date is required')
 })
 
 type TenantFormValues = z.infer<typeof tenantFormSchema>
@@ -52,7 +52,7 @@ export function TenantDialog({
   onOpenChangeAction,
   tenant,
   properties,
-  onSubmitAction,
+  onSubmitAction
 }: TenantDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState(tenant?.property || '')
@@ -65,8 +65,8 @@ export function TenantDialog({
       phone: '',
       property: '',
       unit: '',
-      leaseEnd: '',
-    },
+      leaseEnd: ''
+    }
   })
 
   const handleSubmit = async (data: TenantFormValues) => {
@@ -84,7 +84,7 @@ export function TenantDialog({
     }
   }
 
-  const selectedPropertyUnits = properties.find((p) => p.id === selectedProperty)?.units || []
+  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || []
 
   return (
     <Dialog open={open} onOpenChange={onOpenChangeAction}>
@@ -154,7 +154,7 @@ export function TenantDialog({
                     defaultValue={field.value}
                     placeholder="Select a property"
                   >
-                    {properties.map((property) => (
+                    {properties.map(property => (
                       <SelectItem key={property.id} value={property.id}>
                         {property.name}
                       </SelectItem>
@@ -178,7 +178,7 @@ export function TenantDialog({
                     disabled={!selectedProperty}
                     placeholder="Select a unit"
                   >
-                    {selectedPropertyUnits.map((unit) => (
+                    {selectedPropertyUnits.map(unit => (
                       <SelectItem key={unit} value={unit}>
                         {unit}
                       </SelectItem>

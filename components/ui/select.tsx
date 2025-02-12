@@ -8,17 +8,17 @@ import * as React from 'react'
 
 const StyledSelect = styled(MuiSelect)(({ theme }) => ({
   '& .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'rgba(0, 0, 0, 0.12)',
+    borderColor: 'rgba(0, 0, 0, 0.12)'
   },
   '&:hover .MuiOutlinedInput-notchedOutline': {
-    borderColor: 'rgba(0, 0, 0, 0.24)',
+    borderColor: 'rgba(0, 0, 0, 0.24)'
   },
   '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-    borderColor: theme.palette.primary.main,
+    borderColor: theme.palette.primary.main
   },
   '& .MuiSelect-icon': {
-    color: 'rgba(0, 0, 0, 0.54)',
-  },
+    color: 'rgba(0, 0, 0, 0.54)'
+  }
 }))
 
 export interface SelectProps extends Omit<MuiSelectProps, 'variant'> {
@@ -32,7 +32,7 @@ const Select = React.memo(
         <StyledSelect
           ref={ref}
           className={cn(
-            'focus:outline-hidden rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'focus:outline-hidden border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
             className
           )}
           displayEmpty
@@ -66,7 +66,7 @@ const SelectItem = React.forwardRef<HTMLLIElement, React.ComponentProps<typeof M
     <MenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm focus:bg-accent focus:text-accent-foreground',
+        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm',
         className
       )}
       {...props}

@@ -28,33 +28,33 @@ export function CalendarWidget() {
       date: new Date(),
       type: 'payment',
       title: 'Rent Due',
-      description: '5 properties have rent due',
+      description: '5 properties have rent due'
     },
     {
       id: '2',
       date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
       type: 'maintenance',
       title: 'Scheduled Maintenance',
-      description: 'HVAC inspection at 123 Main St',
+      description: 'HVAC inspection at 123 Main St'
     },
     {
       id: '3',
       date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
       type: 'lease',
       title: 'Lease Expiring',
-      description: 'Lease expires for 456 Oak Ave',
-    },
+      description: 'Lease expires for 456 Oak Ave'
+    }
   ]
 
   const getDayProps = (day: Date) => {
-    const dayEvents = events.filter((event) => isSameDay(event.date, day))
+    const dayEvents = events.filter(event => isSameDay(event.date, day))
 
     if (dayEvents.length === 0) return {}
 
     return {
       renderDay: (day: Date) => (
         <Tooltip
-          title={dayEvents.map((event) => (
+          title={dayEvents.map(event => (
             <div key={event.id}>
               <strong>{event.title}</strong>
               <br />
@@ -66,7 +66,7 @@ export function CalendarWidget() {
             {day.getDate()}
           </Badge>
         </Tooltip>
-      ),
+      )
     }
   }
 
@@ -77,12 +77,12 @@ export function CalendarWidget() {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <DateCalendar
             value={selectedDate}
-            onChange={(newDate) => setSelectedDate(newDate)}
+            onChange={newDate => setSelectedDate(newDate)}
             slots={{
-              day: (props) => {
+              day: props => {
                 const dayProps = getDayProps(props.day)
                 return dayProps.renderDay ? dayProps.renderDay(props.day) : props.children
-              },
+              }
             }}
           />
         </LocalizationProvider>

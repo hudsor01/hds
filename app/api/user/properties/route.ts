@@ -6,7 +6,7 @@ export async function GET() {
 
   if (!userId) {
     return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
-      status: 401,
+      status: 401
     })
   }
 

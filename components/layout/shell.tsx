@@ -26,7 +26,7 @@ export function Shell({ children }: { children: React.ReactNode }) {
       </nav>
 
       {/* Slim sidebar with icons + tooltips */}
-      <aside className="w-14 border-r bg-background/50 backdrop-blur-lg">
+      <aside className="bg-background/50 w-14 border-r backdrop-blur-lg">
         <SideNav />
       </aside>
 

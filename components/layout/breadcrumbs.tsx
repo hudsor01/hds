@@ -13,7 +13,7 @@ export function BreadcrumbNav() {
   const router = useRouter()
 
   // Generate breadcrumb items from pathname
-  const pathSegments = pathname.split('/').filter((segment) => segment)
+  const pathSegments = pathname.split('/').filter(segment => segment)
   const breadcrumbs = pathSegments.map((segment, index) => {
     const href = `/${pathSegments.slice(0, index + 1).join('/')}`
     const label = segment.charAt(0).toUpperCase() + segment.slice(1)
@@ -30,8 +30,8 @@ export function BreadcrumbNav() {
             display: 'flex',
             alignItems: 'center',
             '&:hover': {
-              textDecoration: 'underline',
-            },
+              textDecoration: 'underline'
+            }
           }}
         >
           {label}
@@ -48,8 +48,8 @@ export function BreadcrumbNav() {
           display: 'flex',
           alignItems: 'center',
           '&:hover': {
-            textDecoration: 'underline',
-          },
+            textDecoration: 'underline'
+          }
         }}
       >
         <HomeIcon sx={{ mr: 0.5, fontSize: 20 }} />

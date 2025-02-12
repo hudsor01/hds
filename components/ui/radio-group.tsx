@@ -7,21 +7,21 @@ import {
   FormControlLabel,
   Radio as MuiRadio,
   RadioGroup as MuiRadioGroup,
-  styled,
+  styled
 } from '@mui/material'
 import * as React from 'react'
 
 const StyledRadio = styled(MuiRadio)(({ theme }) => ({
   padding: theme.spacing(1),
   '& .MuiSvgIcon-root': {
-    fontSize: 20,
+    fontSize: 20
   },
   '&.Mui-checked': {
-    color: theme.palette.primary.main,
+    color: theme.palette.primary.main
   },
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
+    backgroundColor: theme.palette.action.hover
+  }
 }))
 
 export interface RadioGroupProps extends Omit<MuiRadioGroupProps, 'defaultValue'> {
@@ -68,7 +68,7 @@ export const RadioGroupItem = React.forwardRef<HTMLButtonElement, RadioGroupItem
         <StyledRadio
           ref={ref}
           className={cn(
-            'aspect-square focus:outline-hidden h-4 w-4 rounded-full border border-primary text-primary shadow-sm focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50',
+            'aspect-square focus:outline-hidden border-primary text-primary focus-visible:ring-ring h-4 w-4 rounded-full border shadow-sm focus-visible:ring-1 disabled:cursor-not-allowed disabled:opacity-50',
             className
           )}
           {...props}

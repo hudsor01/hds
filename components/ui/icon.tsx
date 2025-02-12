@@ -15,7 +15,7 @@ const iconMapping = {
   Mail: MailIcon,
   GitHub: GitHubIcon,
   AlertCircle: ErrorOutlineIcon,
-  Check: CheckCircleIcon,
+  Check: CheckCircleIcon
   // Map additional lucide icon names to their @mui/icons-material equivalents here
 }
 

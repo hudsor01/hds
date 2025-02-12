@@ -15,7 +15,7 @@ const vendorSchema = z.object({
   status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']).default('ACTIVE'),
   insurance_info: z.record(z.string(), z.any()).optional(),
   license_info: z.record(z.string(), z.any()).optional(),
-  notes: z.string().optional(),
+  notes: z.string().optional()
 })
 
 export async function GET(req: NextRequest) {
@@ -100,9 +100,9 @@ export async function POST(req: NextRequest) {
         data: {
           vendor_id: vendor.id,
           company_name: validatedData.company_name,
-          services: validatedData.services,
-        },
-      },
+          services: validatedData.services
+        }
+      }
     ])
 
     return NextResponse.json({ data: vendor }, { status: 201 })
@@ -167,9 +167,9 @@ export async function PUT(req: NextRequest) {
           data: {
             vendor_id: id,
             company_name: vendor.company_name,
-            new_status: validatedData.status,
-          },
-        },
+            new_status: validatedData.status
+          }
+        }
       ])
     }
 

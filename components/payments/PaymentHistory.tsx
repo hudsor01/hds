@@ -17,7 +17,7 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Typography,
+  Typography
 } from '@mui/material'
 import { DatePicker } from '@mui/x-date-pickers'
 import { useState } from 'react'
@@ -57,22 +57,22 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
     start_date: '',
     end_date: '',
     page: 1,
-    limit: 10,
+    limit: 10
   })
 
   const { data: response, isLoading } = usePaymentHistory(filters)
   const payments = (response as ApiResponse<Payment[]>)?.data || []
 
   const handleFilterChange = (key: string, value: any) => {
-    setFilters((prev) => ({
+    setFilters(prev => ({
       ...prev,
       [key]: value,
-      page: 1, // Reset page when filters change
+      page: 1 // Reset page when filters change
     }))
   }
 
   const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
-    setFilters((prev) => ({ ...prev, page }))
+    setFilters(prev => ({ ...prev, page }))
   }
 
   return (
@@ -89,10 +89,10 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
               <Select
                 value={filters.payment_type}
                 label="Payment Type"
-                onChange={(e) => handleFilterChange('payment_type', e.target.value)}
+                onChange={e => handleFilterChange('payment_type', e.target.value)}
               >
                 <MenuItem value="">All</MenuItem>
-                {PAYMENT_TYPES.map((type) => (
+                {PAYMENT_TYPES.map(type => (
                   <MenuItem key={type} value={type}>
                     {type.replace('_', ' ')}
                   </MenuItem>
@@ -106,10 +106,10 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
             <Select
               value={filters.payment_status}
               label="Status"
-              onChange={(e) => handleFilterChange('payment_status', e.target.value)}
+              onChange={e => handleFilterChange('payment_status', e.target.value)}
             >
               <MenuItem value="">All</MenuItem>
-              {PAYMENT_STATUSES.map((status) => (
+              {PAYMENT_STATUSES.map(status => (
                 <MenuItem key={status} value={status}>
                   {status.replace('_', ' ')}
                 </MenuItem>
@@ -120,7 +120,7 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
           <DatePicker
             label="Start Date"
             value={filters.start_date ? new Date(filters.start_date) : null}
-            onChange={(date) =>
+            onChange={date =>
               handleFilterChange('start_date', date?.toISOString().split('T')[0] || '')
             }
             slotProps={{ textField: { size: 'small' } }}
@@ -129,7 +129,7 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
           <DatePicker
             label="End Date"
             value={filters.end_date ? new Date(filters.end_date) : null}
-            onChange={(date) =>
+            onChange={date =>
               handleFilterChange('end_date', date?.toISOString().split('T')[0] || '')
             }
             slotProps={{ textField: { size: 'small' } }}
@@ -173,7 +173,7 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
                 </TableCell>
               </TableRow>
             ) : (
-              payments.map((payment) => (
+              payments.map(payment => (
                 <TableRow key={payment.id}>
                   <TableCell>{new Date(payment.payment_date).toLocaleDateString()}</TableCell>
                   <TableCell>{payment.payment_type.replace('_', ' ')}</TableCell>

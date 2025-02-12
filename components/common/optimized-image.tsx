@@ -20,7 +20,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   height,
   priority = false,
   className = '',
-  sizes = '100vw',
+  sizes = '100vw'
 }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(false)
@@ -28,7 +28,7 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
   // Calculate srcSet based on device sizes
   const generateSrcSet = () => {
     const widths = [640, 750, 828, 1080, 1200, 1920]
-    return widths.map((w) => `${src}?w=${w} ${w}w`).join(', ')
+    return widths.map(w => `${src}?w=${w} ${w}w`).join(', ')
   }
 
   return (

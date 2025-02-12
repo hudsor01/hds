@@ -5,7 +5,7 @@ export const createPropertySchema = z.object({
   address: z.string().min(1, 'Property address is required'),
   rentAmount: z.number().positive('Rent amount must be greater than 0'),
   images: z.array(z.string()).optional(),
-  occupancyStatus: z.enum(['VACANT', 'OCCUPIED', 'MAINTENANCE']).optional().default('VACANT'),
+  occupancyStatus: z.enum(['VACANT', 'OCCUPIED', 'MAINTENANCE']).optional().default('VACANT')
 })
 
 export type CreatePropertyInput = z.infer<typeof createPropertySchema>

@@ -15,7 +15,7 @@ import {
   StepLabel,
   Stepper,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
@@ -38,7 +38,7 @@ const initialData: OnboardingData = {
   state: '',
   propertyCount: '',
   propertyTypes: [],
-  managementStyle: '',
+  managementStyle: ''
 }
 
 const states = [
@@ -91,7 +91,7 @@ const states = [
   'WA',
   'WV',
   'WI',
-  'WY',
+  'WY'
 ]
 
 const propertyTypes = [
@@ -100,13 +100,13 @@ const propertyTypes = [
   'Apartment Building',
   'Condominium',
   'Townhouse',
-  'Commercial Property',
+  'Commercial Property'
 ]
 
 const managementStyles = [
   'Hands-on (Self-managed)',
   'Partially delegated',
-  'Fully delegated to property manager',
+  'Fully delegated to property manager'
 ]
 
 export default function OnboardingPage() {
@@ -127,8 +127,8 @@ export default function OnboardingPage() {
             propertyCount: formData.propertyCount,
             propertyTypes: formData.propertyTypes,
             managementStyle: formData.managementStyle,
-            onboardingCompleted: true,
-          },
+            onboardingCompleted: true
+          }
         })
 
         toast.success('Profile updated successfully!')
@@ -138,27 +138,27 @@ export default function OnboardingPage() {
         console.error('Error updating profile:', error)
       }
     } else {
-      setActiveStep((prevStep) => prevStep + 1)
+      setActiveStep(prevStep => prevStep + 1)
     }
   }
 
   const handleBack = () => {
-    setActiveStep((prevStep) => prevStep - 1)
+    setActiveStep(prevStep => prevStep - 1)
   }
 
   const handleTextChange =
     (field: keyof OnboardingData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        [field]: event.target.value,
+        [field]: event.target.value
       }))
     }
 
   const handleSelectChange =
     (field: keyof OnboardingData) => (event: SelectChangeEvent<string | string[]>) => {
-      setFormData((prev) => ({
+      setFormData(prev => ({
         ...prev,
-        [field]: event.target.value,
+        [field]: event.target.value
       }))
     }
 
@@ -202,7 +202,7 @@ export default function OnboardingPage() {
             <FormControl fullWidth required>
               <InputLabel>State</InputLabel>
               <Select value={formData.state} label="State" onChange={handleSelectChange('state')}>
-                {states.map((state) => (
+                {states.map(state => (
                   <MenuItem key={state} value={state}>
                     {state}
                   </MenuItem>
@@ -216,7 +216,7 @@ export default function OnboardingPage() {
                 label="Number of Properties"
                 onChange={handleSelectChange('propertyCount')}
               >
-                {['1-5', '6-10', '11-20', '21-50', '50+'].map((count) => (
+                {['1-5', '6-10', '11-20', '21-50', '50+'].map(count => (
                   <MenuItem key={count} value={count}>
                     {count}
                   </MenuItem>
@@ -236,7 +236,7 @@ export default function OnboardingPage() {
                 label="Property Types"
                 onChange={handleSelectChange('propertyTypes')}
               >
-                {propertyTypes.map((type) => (
+                {propertyTypes.map(type => (
                   <MenuItem key={type} value={type}>
                     {type}
                   </MenuItem>
@@ -251,7 +251,7 @@ export default function OnboardingPage() {
                 label="Management Style"
                 onChange={handleSelectChange('managementStyle')}
               >
-                {managementStyles.map((style) => (
+                {managementStyles.map(style => (
                   <MenuItem key={style} value={style}>
                     {style}
                   </MenuItem>
@@ -282,7 +282,7 @@ export default function OnboardingPage() {
         </Box>
 
         <Stepper activeStep={activeStep} className="mb-8">
-          {steps.map((label) => (
+          {steps.map(label => (
             <Step key={label}>
               <StepLabel>{label}</StepLabel>
             </Step>

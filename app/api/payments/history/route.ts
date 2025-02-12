@@ -11,7 +11,7 @@ const filterSchema = z.object({
   start_date: z.string().datetime().optional(),
   end_date: z.string().datetime().optional(),
   page: z.number().min(1).default(1),
-  limit: z.number().min(1).max(100).default(10),
+  limit: z.number().min(1).max(100).default(10)
 })
 
 export async function GET(req: NextRequest) {
@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
       start_date: searchParams.get('start_date') || undefined,
       end_date: searchParams.get('end_date') || undefined,
       page: Number(searchParams.get('page')) || 1,
-      limit: Number(searchParams.get('limit')) || 10,
+      limit: Number(searchParams.get('limit')) || 10
     }
 
     const validatedFilters = filterSchema.parse(filters)
@@ -53,8 +53,8 @@ export async function GET(req: NextRequest) {
         page: validatedFilters.page,
         limit: validatedFilters.limit,
         totalPages,
-        hasMore,
-      },
+        hasMore
+      }
     })
   } catch (error) {
     if (error instanceof z.ZodError) {

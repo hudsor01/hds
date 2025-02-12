@@ -4,7 +4,7 @@ import {
   DataTable,
   renderCurrencyCell,
   renderDateCell,
-  renderStatusCell,
+  renderStatusCell
 } from '@/components/ui/data-table'
 import { FormDialog } from '@/components/ui/dialogs/form-dialog'
 import { api } from '@/lib/api'
@@ -27,7 +27,7 @@ const workOrderSchema = z.object({
   completed_date: z.string().datetime().optional(),
   estimated_cost: z.number().positive('Estimated cost must be positive').optional(),
   actual_cost: z.number().positive('Actual cost must be positive').optional(),
-  notes: z.string().optional(),
+  notes: z.string().optional()
 })
 
 const columns: GridColDef[] = [
@@ -37,50 +37,50 @@ const columns: GridColDef[] = [
     field: 'vendor',
     headerName: 'Vendor',
     width: 200,
-    valueGetter: (params) => params.row.vendor?.company_name,
+    valueGetter: params => params.row.vendor?.company_name
   },
   {
     field: 'property',
     headerName: 'Property',
     width: 200,
-    valueGetter: (params) => params.row.property?.name,
+    valueGetter: params => params.row.property?.name
   },
   {
     field: 'priority',
     headerName: 'Priority',
     width: 120,
-    renderCell: renderStatusCell,
+    renderCell: renderStatusCell
   },
   {
     field: 'status',
     headerName: 'Status',
     width: 120,
-    renderCell: renderStatusCell,
+    renderCell: renderStatusCell
   },
   {
     field: 'scheduled_date',
     headerName: 'Scheduled Date',
     width: 200,
-    renderCell: renderDateCell,
+    renderCell: renderDateCell
   },
   {
     field: 'completed_date',
     headerName: 'Completed Date',
     width: 200,
-    renderCell: renderDateCell,
+    renderCell: renderDateCell
   },
   {
     field: 'estimated_cost',
     headerName: 'Est. Cost',
     width: 120,
-    renderCell: renderCurrencyCell,
+    renderCell: renderCurrencyCell
   },
   {
     field: 'actual_cost',
     headerName: 'Actual Cost',
     width: 120,
-    renderCell: renderCurrencyCell,
-  },
+    renderCell: renderCurrencyCell
+  }
 ]
 
 export default function WorkOrdersPage() {
@@ -88,22 +88,22 @@ export default function WorkOrdersPage() {
   const [selectedWorkOrder, setSelectedWorkOrder] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 10
   })
 
   const { data, isLoading } = useQuery({
     queryKey: ['work-orders', paginationModel],
-    queryFn: () => api.get('/api/work-orders'),
+    queryFn: () => api.get('/api/work-orders')
   })
 
   const { data: vendors } = useQuery({
     queryKey: ['vendors'],
-    queryFn: () => api.get('/api/vendors'),
+    queryFn: () => api.get('/api/vendors')
   })
 
   const { data: properties } = useQuery({
     queryKey: ['properties'],
-    queryFn: () => api.get('/api/properties'),
+    queryFn: () => api.get('/api/properties')
   })
 
   const handleEdit = (workOrder: any) => {
@@ -148,8 +148,8 @@ export default function WorkOrdersPage() {
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-            },
+              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+            }
           }}
         >
           New Work Order
@@ -184,7 +184,7 @@ export default function WorkOrdersPage() {
             fullWidth
             required
             SelectProps={{
-              native: true,
+              native: true
             }}
           >
             <option value="">Select a vendor</option>
@@ -200,7 +200,7 @@ export default function WorkOrdersPage() {
             fullWidth
             required
             SelectProps={{
-              native: true,
+              native: true
             }}
           >
             <option value="">Select a property</option>
@@ -216,7 +216,7 @@ export default function WorkOrdersPage() {
             fullWidth
             required
             SelectProps={{
-              native: true,
+              native: true
             }}
           >
             <option value="">Select priority</option>
@@ -231,7 +231,7 @@ export default function WorkOrdersPage() {
             fullWidth
             required
             SelectProps={{
-              native: true,
+              native: true
             }}
           >
             <option value="">Select status</option>

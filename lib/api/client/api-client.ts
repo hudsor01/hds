@@ -41,5 +41,5 @@ export const apiClient = {
   async delete<T>(url: string): Promise<T> {
     const response = await axios.delete<T>(url)
     return response.data
-  },
+  }
 }

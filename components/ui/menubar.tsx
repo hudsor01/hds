@@ -7,7 +7,7 @@ import {
   MenuList,
   styled,
   type MenuItemProps,
-  type MenuProps,
+  type MenuProps
 } from '@mui/material'
 import * as React from 'react'
 
@@ -15,16 +15,16 @@ const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {
     borderRadius: theme.shape.borderRadius,
     minWidth: 180,
-    boxShadow: theme.shadows[4],
-  },
+    boxShadow: theme.shadows[4]
+  }
 }))
 
 const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   fontSize: '0.875rem',
   padding: theme.spacing(1, 2),
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
-  },
+    backgroundColor: theme.palette.action.hover
+  }
 }))
 
 export interface MenubarProps extends Omit<MenuProps, 'open'> {

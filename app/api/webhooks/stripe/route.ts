@@ -33,13 +33,13 @@ export async function POST(request: Request) {
         await prisma.subscriptions.updateMany({
           where: {
             stripe_customer_id: customerId,
-            stripe_subscription_id: subscriptionId,
+            stripe_subscription_id: subscriptionId
           },
           data: {
             subscription_status: status,
             active_until: new Date(subscription.current_period_end * 1000),
-            updated_at: new Date(),
-          },
+            updated_at: new Date()
+          }
         })
 
         break
@@ -55,8 +55,8 @@ export async function POST(request: Request) {
             stripe_customer_id: null,
             stripe_subscription_id: null,
             subscription_status: 'cancelled',
-            updated_at: new Date(),
-          },
+            updated_at: new Date()
+          }
         })
 
         break
@@ -72,8 +72,8 @@ export async function POST(request: Request) {
             where: { stripe_subscription_id: invoice.subscription as string },
             data: {
               subscription_status: status,
-              updated_at: new Date(),
-            },
+              updated_at: new Date()
+            }
           })
         }
 

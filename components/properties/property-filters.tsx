@@ -1,5 +1,4 @@
-// components/properties/property-filters.tsx
-import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types/property'
+import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types'
 import SearchIcon from '@mui/icons-material/Search'
 import Box from '@mui/material/Box'
 import InputAdornment from '@mui/material/InputAdornment'
@@ -20,7 +19,7 @@ export function PropertyFilters() {
             <InputAdornment position="start">
               <SearchIcon />
             </InputAdornment>
-          ),
+          )
         }}
         defaultValue={searchParams.get('search') || ''}
       />

@@ -1,21 +1,21 @@
-'use client';
+'use client'
 
-import { gradientStyles } from '@/utils/styles';
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { LogIn } from 'react-feather';
+import { gradientStyles } from '@/utils/styles'
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { LogIn } from 'react-feather'
 
 const publicNavItems = [
   { name: 'Home', href: '/' },
   { name: 'Features', href: '/features' },
   { name: 'Pricing', href: '/pricing' },
   { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' },
-];
+  { name: 'Contact', href: '/contact' }
+]
 
 export default function Navbar() {
-  const pathname = usePathname();
+  const pathname = usePathname()
 
   return (
     <AppBar
@@ -25,7 +25,7 @@ export default function Navbar() {
       sx={{
         borderBottom: '1px solid',
         borderColor: 'divider',
-        bgcolor: 'background.default',
+        bgcolor: 'background.default'
       }}
     >
       <Container maxWidth="xl">
@@ -36,7 +36,7 @@ export default function Navbar() {
               variant="h5"
               sx={{
                 fontWeight: 700,
-                ...gradientStyles.text,
+                ...gradientStyles.text
               }}
             >
               Property Manager
@@ -50,7 +50,7 @@ export default function Navbar() {
             sx={{
               flexGrow: 1,
               justifyContent: 'center',
-              display: { xs: 'none', md: 'flex' },
+              display: { xs: 'none', md: 'flex' }
             }}
           >
             {publicNavItems.map(item => (
@@ -61,8 +61,8 @@ export default function Navbar() {
                     fontWeight: pathname === item.href ? 600 : 400,
                     '&:hover': {
                       color: 'primary.main',
-                      backgroundColor: 'transparent',
-                    },
+                      backgroundColor: 'transparent'
+                    }
                   }}
                 >
                   {item.name}
@@ -82,8 +82,8 @@ export default function Navbar() {
                   color: 'primary.main',
                   '&:hover': {
                     borderColor: 'primary.dark',
-                    ...gradientStyles.background,
-                  },
+                    ...gradientStyles.background
+                  }
                 }}
               >
                 Sign In
@@ -93,5 +93,5 @@ export default function Navbar() {
         </Toolbar>
       </Container>
     </AppBar>
-  );
+  )
 }

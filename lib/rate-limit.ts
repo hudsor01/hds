@@ -6,7 +6,7 @@ export const rateLimiter = rateLimit({
   max: 100, // Limit each IP to 100 requests per windowMs
   message: 'Too many requests from this IP, please try again later',
   standardHeaders: true,
-  legacyHeaders: false,
+  legacyHeaders: false
 })
 
 export async function withRateLimit(request: Request, handler: () => Promise<Response>) {

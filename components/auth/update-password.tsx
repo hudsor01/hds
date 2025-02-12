@@ -17,7 +17,7 @@ export function UpdatePassword() {
         type="password"
         placeholder="New password"
         value={password}
-        onChange={(e) => setPassword(e.target.value)}
+        onChange={e => setPassword(e.target.value)}
       />
       <Button type="submit">Update Password</Button>
     </form>

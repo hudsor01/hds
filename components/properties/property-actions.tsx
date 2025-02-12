@@ -30,7 +30,7 @@ export function PropertyActions({ propertyId, propertyName }: PropertyActionsPro
 
   return (
     <>
-      <IconButton onClick={(e) => setAnchorEl(e.currentTarget)}>
+      <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
         <MoreVertIcon />
       </IconButton>
 

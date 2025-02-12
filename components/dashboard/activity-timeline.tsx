@@ -1,14 +1,8 @@
-import { Activity, ActivityType } from '@/types/database.types'
+import { Activity, ActivityType } from '@/types'
 import BuildIcon from '@mui/icons-material/Build'
 import HomeIcon from '@mui/icons-material/Home'
 import PaymentIcon from '@mui/icons-material/Payment'
 import PersonIcon from '@mui/icons-material/Person'
-import Timeline from '@mui/lab/Timeline'
-import TimelineConnector from '@mui/lab/TimelineConnector'
-import TimelineContent from '@mui/lab/TimelineContent'
-import TimelineDot from '@mui/lab/TimelineDot'
-import TimelineItem from '@mui/lab/TimelineItem'
-import TimelineSeparator from '@mui/lab/TimelineSeparator'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -56,8 +50,8 @@ export function ActivityTimeline() {
       timestamp: new Date(),
       metadata: {
         amount: '$1,500',
-        property: '123 Main St',
-      },
+        property: '123 Main St'
+      }
     },
     {
       id: '2',
@@ -67,8 +61,8 @@ export function ActivityTimeline() {
       timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
       metadata: {
         priority: 'High',
-        property: '456 Oak Ave',
-      },
+        property: '456 Oak Ave'
+      }
     },
     {
       id: '3',
@@ -78,9 +72,9 @@ export function ActivityTimeline() {
       timestamp: new Date(Date.now() - 24 * 60 * 60 * 1000),
       metadata: {
         lease_term: '12 months',
-        property: '789 Pine St',
-      },
-    },
+        property: '789 Pine St'
+      }
+    }
   ]
 
   const displayedActivities = expanded ? activities : activities.slice(0, 3)
@@ -98,49 +92,39 @@ export function ActivityTimeline() {
         }
       />
       <CardContent>
-        <Timeline>
-          {displayedActivities.map((activity, index) => (
-            <TimelineItem key={activity.id}>
-              <TimelineSeparator>
-                <TimelineDot color={getTimelineDotColor(activity.type)}>
-                  {getActivityIcon(activity.type)}
-                </TimelineDot>
-                {index < displayedActivities.length - 1 && <TimelineConnector />}
-              </TimelineSeparator>
-              <TimelineContent>
-                <Typography variant="subtitle2" component="div">
-                  {activity.title}
-                </Typography>
-                <Typography variant="body2" color="text.secondary">
-                  {activity.description}
-                </Typography>
-                <Typography variant="caption" color="text.secondary">
-                  {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
-                </Typography>
-                {activity.metadata && (
-                  <Typography
-                    variant="caption"
-                    component="div"
-                    sx={{
-                      mt: 1,
-                      p: 1,
-                      bgcolor: 'action.hover',
-                      borderRadius: 1,
-                      display: 'inline-block',
-                    }}
-                  >
-                    {Object.entries(activity.metadata).map(([key, value]) => (
-                      <span key={key} style={{ marginRight: 8 }}>
-                        {key.replace('_', ' ')}: <strong>{value}</strong>
-                      </span>
-                    ))}
-                  </Typography>
-                )}
-              </TimelineContent>
-            </TimelineItem>
-          ))}
-        </Timeline>
+        {displayedActivities.map(activity => (
+          <div key={activity.id}>
+            <Typography variant="subtitle2" component="div">
+              {activity.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              {activity.description}
+            </Typography>
+            <Typography variant="caption" color="text.secondary">
+              {format(activity.timestamp, 'MMM d, yyyy h:mm a')}
+            </Typography>
+            {activity.metadata && (
+        <Typography
+          variant="caption"
+          component="div"
+          sx={{
+            mt: 1,
+            p: 1,
+            bgcolor: 'action.hover',
+            borderRadius: 1,
+            display: 'inline-block'
+          }}
+        >
+          {Object.entries(activity.metadata).map(([key, value]) => (
+            <span key={key} style={{ marginRight: 8 }}>
+            </Typography>
+          )}
+          </div>
+        ))}
       </CardContent>
+    </Card>
+        </Typography>
+      )}
     </Card>
   )
 }

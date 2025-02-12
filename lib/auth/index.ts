@@ -2,7 +2,7 @@ import { UserRole } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { createServerClient, createBrowserClient } from '@supabase/ssr'
-import type { Database } from '@/types/database.types'
+import type { Database } from '@/types/db.types'
 
 interface User {
   id: string
@@ -33,14 +33,14 @@ export async function checkRole(
           },
           remove(name: string, options: { path: string }) {
             // Cookie removal is handled by middleware
-          },
-        },
+          }
+        }
       }
     )
 
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
     if (error || !user) {
       return new NextResponse('Unauthorized', { status: 401 })
@@ -49,8 +49,8 @@ export async function checkRole(
     const dbUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: {
-        role: true,
-      },
+        role: true
+      }
     })
 
     if (!dbUser || !allowedRoles.includes(dbUser.role as UserRole)) {
@@ -83,14 +83,14 @@ export async function checkPermission(
           },
           remove(name: string, options: { path: string }) {
             // Cookie removal is handled by middleware
-          },
-        },
+          }
+        }
       }
     )
 
     const {
       data: { user },
-      error,
+      error
     } = await supabase.auth.getUser()
     if (error || !user) {
       return new NextResponse('Unauthorized', { status: 401 })
@@ -123,14 +123,14 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
         },
         remove(name: string, options: { path: string }) {
           // Cookie removal is handled by middleware
-        },
-      },
+        }
+      }
     }
   )
 
   const {
     data: { user },
-    error,
+    error
   } = await supabase.auth.getUser()
   if (error || !user) return null
 
@@ -140,8 +140,8 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       id: true,
       role: true,
       email: true,
-      name: true,
-    },
+      name: true
+    }
   })
 
   if (!dbUser) return null
@@ -151,14 +151,14 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
     role: dbUser.role as UserRole,
     email: dbUser.email,
     name: dbUser.name,
-    metadata: user.user_metadata,
+    metadata: user.user_metadata
   }
 }
 
 export async function getCurrentUserRole(userId: string): Promise<UserRole> {
   const user = await prisma.users.findUnique({
     where: { id: userId },
-    select: { role: true },
+    select: { role: true }
   })
   return (user?.role as UserRole) || 'USER'
 }
@@ -177,20 +177,20 @@ export async function updateUserRole(userId: string, role: UserRole, req: NextRe
         },
         remove(name: string, options: { path: string }) {
           // Cookie removal is handled by middleware
-        },
-      },
+        }
+      }
     }
   )
 
   // Update role in Prisma
   await prisma.users.update({
     where: { id: userId },
-    data: { role },
+    data: { role }
   })
 
   // Update role in Supabase user metadata
   await supabase.auth.updateUser({
-    data: { role },
+    data: { role }
   })
 }
 

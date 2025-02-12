@@ -8,7 +8,7 @@ export function CrudContainer<T extends BaseCrudItem>({
   title,
   children,
   loading = false,
-  className = '',
+  className = ''
 }: CrudContainerProps<T>) {
   useProtectedRoute()
 

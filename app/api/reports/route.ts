@@ -30,7 +30,7 @@ export async function GET(req: NextRequest) {
         const [properties, leases, expenses] = await Promise.all([
           prisma.properties.findMany({
             where: { user_id: userId },
-            select: { rent_amount: true },
+            select: { rent_amount: true }
           }),
           prisma.leases.findMany({
             where: {
@@ -38,27 +38,27 @@ export async function GET(req: NextRequest) {
               status: 'Active',
               created_at: {
                 gte: startDate,
-                lte: endDate,
-              },
+                lte: endDate
+              }
             },
             select: {
               rent_amount: true,
-              depositAmount: true,
-            },
+              depositAmount: true
+            }
           }),
           prisma.expenses.findMany({
             where: {
               created_by: userId,
               date: {
                 gte: startDate,
-                lte: endDate,
-              },
+                lte: endDate
+              }
             },
             select: {
               amount: true,
-              category: true,
-            },
-          }),
+              category: true
+            }
+          })
         ])
 
         const totalPotentialIncome = properties.reduce(
@@ -87,7 +87,7 @@ export async function GET(req: NextRequest) {
           netIncome: actualIncome - totalExpenses,
           occupancyRate: calculateOccupancyRate(properties.length, leases.length),
           expensesByCategory,
-          period: { startDate, endDate },
+          period: { startDate, endDate }
         })
       }
 
@@ -99,20 +99,20 @@ export async function GET(req: NextRequest) {
             include: {
               leases: {
                 where: {
-                  status: 'Active',
-                },
-              },
-            },
+                  status: 'Active'
+                }
+              }
+            }
           }),
           prisma.leases.findMany({
             where: {
               user_id: userId,
-              status: 'Active',
+              status: 'Active'
             },
             include: {
-              property: true,
-            },
-          }),
+              property: true
+            }
+          })
         ])
 
         const occupancyByPropertyType = properties.reduce(
@@ -122,7 +122,7 @@ export async function GET(req: NextRequest) {
               acc[type] = {
                 total: 0,
                 occupied: 0,
-                rate: 0,
+                rate: 0
               }
             }
             acc[type].total++
@@ -138,7 +138,7 @@ export async function GET(req: NextRequest) {
           occupiedProperties: activeLeases.length,
           overallOccupancyRate: calculateOccupancyRate(properties.length, activeLeases.length),
           occupancyByPropertyType,
-          period: { startDate, endDate },
+          period: { startDate, endDate }
         })
       }
 
@@ -149,12 +149,12 @@ export async function GET(req: NextRequest) {
             user_id: userId,
             created_at: {
               gte: startDate,
-              lte: endDate,
-            },
+              lte: endDate
+            }
           },
           include: {
-            property: true,
-          },
+            property: true
+          }
         })
 
         const requestsByStatus = maintenanceRequests.reduce(
@@ -191,7 +191,7 @@ export async function GET(req: NextRequest) {
           requestsByStatus,
           requestsByPriority,
           requestsByProperty,
-          period: { startDate, endDate },
+          period: { startDate, endDate }
         })
       }
 
@@ -202,12 +202,12 @@ export async function GET(req: NextRequest) {
             user_id: userId,
             created_at: {
               gte: startDate,
-              lte: endDate,
-            },
+              lte: endDate
+            }
           },
           include: {
-            property: true,
-          },
+            property: true
+          }
         })
 
         const leasesByStatus = leases.reduce(
@@ -230,15 +230,15 @@ export async function GET(req: NextRequest) {
 
         const upcomingRenewals = leases
           .filter(
-            (lease) =>
+            lease =>
               lease.status === 'Active' &&
               lease.end_date &&
               new Date(lease.end_date) <= new Date(new Date().setMonth(new Date().getMonth() + 2))
           )
-          .map((lease) => ({
+          .map(lease => ({
             leaseId: lease.user_id,
             propertyName: lease.property.name,
-            endDate: lease.end_date,
+            endDate: lease.end_date
           }))
 
         return NextResponse.json({
@@ -248,7 +248,7 @@ export async function GET(req: NextRequest) {
           upcomingRenewals,
           averageLeaseAmount:
             leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) / leases.length,
-          period: { startDate, endDate },
+          period: { startDate, endDate }
         })
       }
 

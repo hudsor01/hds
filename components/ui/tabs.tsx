@@ -34,11 +34,11 @@ const TabPanel = forwardRef<HTMLDivElement, TabPanelProps>(function TabPanel(
 const StyledTabs = styled(MuiTabs)(({ theme }) => ({
   '& .MuiTabs-indicator': {
     backgroundColor: theme.palette.primary.main,
-    height: 3,
+    height: 3
   },
   '& .MuiTabs-scrollButtons': {
-    width: 48,
-  },
+    width: 48
+  }
 }))
 
 const StyledTab = styled(MuiTab)(({ theme }) => ({
@@ -50,18 +50,18 @@ const StyledTab = styled(MuiTab)(({ theme }) => ({
   color: theme.palette.text.secondary,
   fontWeight: theme.typography.fontWeightRegular,
   transition: theme.transitions.create(['color'], {
-    duration: theme.transitions.duration.short,
+    duration: theme.transitions.duration.short
   }),
   '&:hover': {
-    color: theme.palette.text.primary,
+    color: theme.palette.text.primary
   },
   '&.Mui-selected': {
     color: theme.palette.primary.main,
-    fontWeight: theme.typography.fontWeightMedium,
+    fontWeight: theme.typography.fontWeightMedium
   },
   '&.Mui-focusVisible': {
-    backgroundColor: theme.palette.action.focus,
-  },
+    backgroundColor: theme.palette.action.focus
+  }
 }))
 
 interface TabItem {
@@ -93,7 +93,7 @@ export function Tabs({
   keepMounted = false,
   sx,
   tabPanelSx,
-  className,
+  className
 }: TabsProps) {
   return (
     <Box sx={{ width: '100%', ...sx }} className={className}>

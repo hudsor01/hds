@@ -28,7 +28,7 @@ export default function MaintenanceTracker({ propertyId }: { propertyId: string 
         toast({
           title: 'Error fetching maintenance requests',
           description: error.message,
-          variant: 'destructive',
+          variant: 'destructive'
         })
         return
       }
@@ -47,25 +47,25 @@ export default function MaintenanceTracker({ propertyId }: { propertyId: string 
           event: '*',
           schema: 'public',
           table: 'maintenance_requests',
-          filter: `property_id=eq.${propertyId}`,
+          filter: `property_id=eq.${propertyId}`
         },
-        (payload) => {
+        payload => {
           // Handle different types of changes
           if (payload.eventType === 'INSERT') {
-            setRequests((prev) => [payload.new as MaintenanceRequest, ...prev])
+            setRequests(prev => [payload.new as MaintenanceRequest, ...prev])
             toast({
               title: 'New maintenance request',
-              description: 'A new maintenance request has been created.',
+              description: 'A new maintenance request has been created.'
             })
           } else if (payload.eventType === 'UPDATE') {
-            setRequests((prev) =>
-              prev.map((request) =>
+            setRequests(prev =>
+              prev.map(request =>
                 request.id === payload.new.id ? (payload.new as MaintenanceRequest) : request
               )
             )
             toast({
               title: 'Maintenance request updated',
-              description: `Request status updated to ${payload.new.status}`,
+              description: `Request status updated to ${payload.new.status}`
             })
           }
         }
@@ -84,7 +84,7 @@ export default function MaintenanceTracker({ propertyId }: { propertyId: string 
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {requests.map((request) => (
+          {requests.map(request => (
             <div
               key={request.id}
               className="flex items-center justify-between rounded-lg border p-4"

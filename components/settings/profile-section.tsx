@@ -32,7 +32,7 @@ export function ProfileSection() {
     firstName: user?.firstName || '',
     lastName: user?.lastName || '',
     email: user?.emailAddresses[0]?.emailAddress || '',
-    phoneNumber: user?.phoneNumbers[0]?.phoneNumber || '',
+    phoneNumber: user?.phoneNumbers[0]?.phoneNumber || ''
   })
 
   if (!isLoaded) {
@@ -44,7 +44,7 @@ export function ProfileSection() {
     try {
       await user?.update({
         firstName: formData.firstName,
-        lastName: formData.lastName,
+        lastName: formData.lastName
       })
 
       setIsEditing(false)
@@ -70,7 +70,7 @@ export function ProfileSection() {
                 name="firstName"
                 type="text"
                 value={formData.firstName}
-                onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={e => setFormData({ ...formData, firstName: e.target.value })}
                 disabled={!isEditing}
                 className="mt-1"
               />
@@ -85,7 +85,7 @@ export function ProfileSection() {
                 name="lastName"
                 type="text"
                 value={formData.lastName}
-                onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
                 disabled={!isEditing}
                 className="mt-1"
               />

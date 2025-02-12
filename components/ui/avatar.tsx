@@ -10,8 +10,8 @@ const StyledAvatar = styled(MuiAvatar)(({ theme }) => ({
   color: theme.palette.primary.main,
   fontWeight: 500,
   '&.MuiAvatar-colorDefault': {
-    backgroundColor: theme.palette.grey[200],
-  },
+    backgroundColor: theme.palette.grey[200]
+  }
 }))
 
 export interface AvatarProps extends MuiAvatarProps {
@@ -48,7 +48,7 @@ export const AvatarFallback = React.forwardRef<
   <div
     ref={ref}
     className={cn(
-      'flex h-full w-full items-center justify-center rounded-full bg-muted',
+      'bg-muted flex h-full w-full items-center justify-center rounded-full',
       className
     )}
     {...props}

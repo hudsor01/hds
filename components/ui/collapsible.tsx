@@ -5,8 +5,8 @@ import * as React from 'react'
 
 const StyledCollapse = styled(Collapse)(({ theme }) => ({
   '& .MuiCollapse-wrapper': {
-    borderRadius: theme.shape.borderRadius,
-  },
+    borderRadius: theme.shape.borderRadius
+  }
 }))
 
 export interface CollapsibleProps extends React.ComponentProps<typeof Collapse> {

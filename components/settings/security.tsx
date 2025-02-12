@@ -9,7 +9,7 @@ import {
   FormHelperText,
   Switch,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useState } from 'react'
 
@@ -19,14 +19,14 @@ export function SecuritySettings() {
     sessionTimeout: 30,
     passwordExpiry: 90,
     loginNotifications: true,
-    deviceHistory: true,
+    deviceHistory: true
   })
 
   const handleSwitchChange =
     (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSettings((prev) => ({
+      setSettings(prev => ({
         ...prev,
-        [field]: event.target.checked,
+        [field]: event.target.checked
       }))
     }
 
@@ -34,9 +34,9 @@ export function SecuritySettings() {
     (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
       const value = parseInt(event.target.value, 10)
       if (!isNaN(value)) {
-        setSettings((prev) => ({
+        setSettings(prev => ({
           ...prev,
-          [field]: value,
+          [field]: value
         }))
       }
     }

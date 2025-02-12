@@ -26,7 +26,7 @@ export async function setupRecurringPayment(userId: string, config: RecurringPay
               currency: 'usd',
               product_data: {
                 name: config.description || 'Recurring Payment',
-                metadata: config.metadata,
+                metadata: config.metadata
               },
               recurring: {
                 interval:
@@ -35,20 +35,20 @@ export async function setupRecurringPayment(userId: string, config: RecurringPay
                     : config.frequency === 'weekly'
                       ? 'week'
                       : 'month',
-                interval_count: 1,
+                interval_count: 1
               },
-              unit_amount: Math.round(config.amount * 100),
+              unit_amount: Math.round(config.amount * 100)
             },
-            quantity: 1,
-          },
+            quantity: 1
+          }
         ],
-        iterations: 12, // Set a default of 12 payments
-      },
+        iterations: 12 // Set a default of 12 payments
+      }
     ],
     default_settings: {
       payment_method_types: ['card'],
-      default_payment_method: config.payment_method_id,
-    },
+      default_payment_method: config.payment_method_id
+    }
   })
 
   // Save the recurring payment configuration
@@ -66,8 +66,8 @@ export async function setupRecurringPayment(userId: string, config: RecurringPay
         description: config.description,
         stripe_schedule_id: schedule.id,
         status: 'ACTIVE',
-        next_payment_date: new Date(schedule.phases[0].start_date * 1000).toISOString(),
-      },
+        next_payment_date: new Date(schedule.phases[0].start_date * 1000).toISOString()
+      }
     ])
     .select()
     .single()
@@ -102,7 +102,7 @@ export async function updateRecurringPayment(
                 currency: 'usd',
                 product_data: {
                   name: updates.description || 'Recurring Payment',
-                  metadata: updates.metadata,
+                  metadata: updates.metadata
                 },
                 recurring: {
                   interval:
@@ -111,20 +111,20 @@ export async function updateRecurringPayment(
                       : updates.frequency === 'weekly'
                         ? 'week'
                         : 'month',
-                  interval_count: 1,
+                  interval_count: 1
                 },
-                unit_amount: Math.round((updates.amount || 0) * 100),
+                unit_amount: Math.round((updates.amount || 0) * 100)
               },
-              quantity: 1,
-            },
-          ],
-        },
+              quantity: 1
+            }
+          ]
+        }
       ],
       ...(updates.payment_method_id && {
         default_settings: {
-          default_payment_method: updates.payment_method_id,
-        },
-      }),
+          default_payment_method: updates.payment_method_id
+        }
+      })
     })
   }
 
@@ -133,7 +133,7 @@ export async function updateRecurringPayment(
     .from('recurring_payments')
     .update({
       ...updates,
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     })
     .eq('id', id)
     .eq('user_id', userId)
@@ -163,7 +163,7 @@ export async function cancelRecurringPayment(id: string, userId: string) {
     .from('recurring_payments')
     .update({
       status: 'CANCELLED',
-      updated_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
     })
     .eq('id', id)
     .eq('user_id', userId)

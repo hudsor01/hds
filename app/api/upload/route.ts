@@ -21,7 +21,7 @@ export async function POST(request: Request) {
     const path = `${user.id}/${new Date().getTime()}_${file.name}`
     const { data, error } = await supabase.storage.from('property-documents').upload(path, buffer, {
       contentType: file.type,
-      upsert: true,
+      upsert: true
     })
 
     if (error) {
@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     const {
-      data: { publicUrl },
+      data: { publicUrl }
     } = supabase.storage.from('property-documents').getPublicUrl(path)
 
     return NextResponse.json({ url: publicUrl })

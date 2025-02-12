@@ -10,6 +10,6 @@ export function formatCurrency(amount: number, locale = 'en-US', currency = 'USD
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
+    maximumFractionDigits: 0
   }).format(amount)
 }

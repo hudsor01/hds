@@ -20,13 +20,13 @@ const cardVariants = {
   initial: { scale: 0.96, opacity: 0 },
   animate: { scale: 1, opacity: 1 },
   hover: { scale: 1.02, transition: { duration: 0.2 } },
-  tap: { scale: 0.98 },
+  tap: { scale: 0.98 }
 }
 
 const iconVariants = {
   initial: { rotate: -10, scale: 0.9 },
   animate: { rotate: 0, scale: 1 },
-  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } },
+  hover: { rotate: 5, scale: 1.1, transition: { duration: 0.2 } }
 }
 
 export function MetricCard({
@@ -36,7 +36,7 @@ export function MetricCard({
   color,
   percentageChange,
   tooltip,
-  formatType = 'number',
+  formatType = 'number'
 }: MetricCardProps) {
   const theme = useTheme()
 
@@ -75,8 +75,8 @@ export function MetricCard({
             transition: 'all 0.3s ease-in-out',
             '&:hover': {
               boxShadow: theme.shadows[8],
-              borderColor: alpha(theme.palette[color].main, 0.4),
-            },
+              borderColor: alpha(theme.palette[color].main, 0.4)
+            }
           }}
         >
           <Box sx={{ display: 'flex', alignItems: 'center', mb: 1.5, gap: 1.5 }}>
@@ -90,7 +90,7 @@ export function MetricCard({
                 alignItems: 'center',
                 justifyContent: 'center',
                 background: `linear-gradient(135deg, ${theme.palette[color].light} 0%, ${theme.palette[color].dark} 100%)`,
-                boxShadow: `0 2px 8px 0 ${alpha(theme.palette[color].main, 0.3)}`,
+                boxShadow: `0 2px 8px 0 ${alpha(theme.palette[color].main, 0.3)}`
               }}
             >
               <Icon width={20} height={20} color="#fff" />
@@ -101,7 +101,7 @@ export function MetricCard({
               sx={{
                 fontWeight: 700,
                 color: theme.palette[color].dark,
-                fontSize: { xs: '1.25rem', sm: '1.5rem' },
+                fontSize: { xs: '1.25rem', sm: '1.5rem' }
               }}
             >
               {formattedValue}
@@ -114,7 +114,7 @@ export function MetricCard({
               opacity: 0.8,
               color: theme.palette[color].dark,
               fontWeight: 500,
-              mb: 0.5,
+              mb: 0.5
             }}
           >
             {title}
@@ -129,7 +129,7 @@ export function MetricCard({
                 mt: 'auto',
                 display: 'flex',
                 alignItems: 'center',
-                gap: 0.5,
+                gap: 0.5
               }}
             >
               <TrendingUp
@@ -137,7 +137,7 @@ export function MetricCard({
                 style={{
                   transform: percentageChange < 0 ? 'rotate(180deg)' : 'none',
                   color:
-                    percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main,
+                    percentageChange >= 0 ? theme.palette.success.main : theme.palette.error.main
                 }}
               />
               <Typography
@@ -145,7 +145,7 @@ export function MetricCard({
                 variant="caption"
                 sx={{
                   fontWeight: 600,
-                  color: percentageChange >= 0 ? 'success.main' : 'error.main',
+                  color: percentageChange >= 0 ? 'success.main' : 'error.main'
                 }}
               >
                 {Math.abs(percentageChange)}%

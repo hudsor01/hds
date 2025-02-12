@@ -9,15 +9,15 @@ const StyledToggleButton = styled(ToggleButton)(({ theme }) => ({
   borderRadius: theme.shape.borderRadius,
   border: 'none',
   '&:hover': {
-    backgroundColor: theme.palette.action.hover,
+    backgroundColor: theme.palette.action.hover
   },
   '&.Mui-selected': {
     backgroundColor: theme.palette.primary.main,
     color: theme.palette.primary.contrastText,
     '&:hover': {
-      backgroundColor: theme.palette.primary.dark,
-    },
-  },
+      backgroundColor: theme.palette.primary.dark
+    }
+  }
 }))
 
 export interface ToggleProps extends Omit<ToggleButtonProps, 'onChange'> {
@@ -40,7 +40,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         selected={pressed}
         onChange={handleChange}
         className={cn(
-          'focus-visible:outline-hidden inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors hover:bg-muted hover:text-muted-foreground focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+          'focus-visible:outline-hidden hover:bg-muted hover:text-muted-foreground focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50',
           className
         )}
         {...props}

@@ -1,5 +1,5 @@
 import { supabase } from '@/lib/supabase'
-import type { Database } from '@/types/database.types'
+import type { Database } from '@/types/db.types'
 import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 type WaitlistEvent = Database['public']['Tables']['waitlist_events']['Row']
@@ -12,13 +12,13 @@ type WaitlistEvent = Database['public']['Tables']['waitlist_events']['Row']
 describe.skip('Database Functions', () => {
   const testUser = {
     email: 'test@example.com',
-    name: 'Test User',
+    name: 'Test User'
   }
 
   const testReferral = {
     email: 'referred@example.com',
     name: 'Referred User',
-    referred_by: testUser.email,
+    referred_by: testUser.email
   }
 
   beforeAll(async () => {
@@ -100,7 +100,7 @@ describe.skip('Database Functions', () => {
     expect(events).toHaveLength(1)
     expect(events[0].event_data).toMatchObject({
       old_status: 'pending',
-      new_status: 'invited',
+      new_status: 'invited'
     })
   })
 

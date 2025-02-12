@@ -13,7 +13,7 @@ export function AnalyticsProvider({ children }: { children: React.ReactNode }) {
     va.track('pageview', {
       pathname,
       search: searchParams.toString(),
-      url,
+      url
     })
   }, [pathname, searchParams])
 

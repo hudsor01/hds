@@ -19,7 +19,7 @@ export function Calendar({
       className={className}
       classNames={{
         ...classNames,
-        button: buttonVariants({ variant: 'outline' }),
+        button: buttonVariants({ variant: 'outline' })
       }}
       {...props}
     />

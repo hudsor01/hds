@@ -14,7 +14,7 @@ const analyticsQuerySchema = z.object({
   end_date: z.string().datetime().optional(),
   property_id: z.string().uuid().optional(),
   group_by: z.string().optional(),
-  metrics: z.array(z.string()).optional(),
+  metrics: z.array(z.string()).optional()
 })
 
 export async function GET(req: NextRequest) {
@@ -43,7 +43,7 @@ export async function GET(req: NextRequest) {
       end_date: searchParams.get('end_date'),
       property_id: searchParams.get('property_id'),
       group_by: searchParams.get('group_by'),
-      metrics: searchParams.getAll('metrics'),
+      metrics: searchParams.getAll('metrics')
     }
 
     const validatedQuery = analyticsQuerySchema.parse(query)
@@ -61,14 +61,14 @@ export async function GET(req: NextRequest) {
     // Get fresh data with role context
     const analytics = await getAnalyticsDashboard(userId, {
       ...validatedQuery,
-      role: user.role,
+      role: user.role
     })
 
     // Update cache
     analyticsCache.set(cacheKey, {
       data: analytics,
       timestamp: now,
-      query: JSON.stringify(validatedQuery),
+      query: JSON.stringify(validatedQuery)
     })
 
     // Clean up old cache entries
@@ -113,7 +113,7 @@ export async function POST(req: NextRequest) {
     // Force refresh data with role context
     const analytics = await getAnalyticsDashboard(userId, {
       ...validatedQuery,
-      role: user.role,
+      role: user.role
     })
 
     // Update cache
@@ -121,7 +121,7 @@ export async function POST(req: NextRequest) {
     analyticsCache.set(cacheKey, {
       data: analytics,
       timestamp: Date.now(),
-      query: JSON.stringify(validatedQuery),
+      query: JSON.stringify(validatedQuery)
     })
 
     return NextResponse.json({ data: analytics, refreshed: true })

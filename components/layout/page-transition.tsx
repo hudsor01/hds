@@ -11,7 +11,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
       transition={{
         type: 'spring',
         stiffness: 260,
-        damping: 20,
+        damping: 20
       }}
     >
       {children}

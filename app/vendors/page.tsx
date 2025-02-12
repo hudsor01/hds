@@ -3,7 +3,7 @@
 import {
   DataTable,
   renderCurrencyCell,
-  renderStatusCell,
+  renderStatusCell
 } from '@/components/data-display/data-table'
 import { FormDialog } from '@/components/ui/dialogs/form-dialog'
 import { api } from '@/lib/api'
@@ -22,7 +22,7 @@ const vendorSchema = z.object({
   address: z.string().optional(),
   services: z.array(z.string()).min(1, 'At least one service must be specified'),
   rate: z.number().positive('Rate must be positive').optional(),
-  status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']).default('ACTIVE'),
+  status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']).default('ACTIVE')
 })
 
 const columns: GridColDef[] = [
@@ -35,26 +35,26 @@ const columns: GridColDef[] = [
     field: 'services',
     headerName: 'Services',
     width: 300,
-    renderCell: (params) => (
+    renderCell: params => (
       <div className="flex gap-1 overflow-x-auto">
         {params.value.map((service: string) => (
           <Chip key={service} label={service} size="small" />
         ))}
       </div>
-    ),
+    )
   },
   {
     field: 'rate',
     headerName: 'Rate',
     width: 120,
-    renderCell: renderCurrencyCell,
+    renderCell: renderCurrencyCell
   },
   {
     field: 'status',
     headerName: 'Status',
     width: 120,
-    renderCell: renderStatusCell,
-  },
+    renderCell: renderStatusCell
+  }
 ]
 
 const serviceOptions = [
@@ -66,7 +66,7 @@ const serviceOptions = [
   'Painting',
   'Carpentry',
   'Roofing',
-  'General Maintenance',
+  'General Maintenance'
 ]
 
 export default function VendorsPage() {
@@ -74,12 +74,12 @@ export default function VendorsPage() {
   const [selectedVendor, setSelectedVendor] = useState<any>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
-    pageSize: 10,
+    pageSize: 10
   })
 
   const { data, isLoading } = useQuery({
     queryKey: ['vendors', paginationModel],
-    queryFn: () => api.get('/api/vendors'),
+    queryFn: () => api.get('/api/vendors')
   })
 
   const handleEdit = (vendor: any) => {
@@ -124,8 +124,8 @@ export default function VendorsPage() {
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-            },
+              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+            }
           }}
         >
           New Vendor

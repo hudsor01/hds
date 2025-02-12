@@ -15,15 +15,15 @@ import Image from 'next/image'
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 },
+  transition: { duration: 0.5 }
 }
 
 const staggerChildren = {
   animate: {
     transition: {
-      staggerChildren: 0.1,
-    },
-  },
+      staggerChildren: 0.1
+    }
+  }
 }
 
 // Features data
@@ -32,36 +32,36 @@ const features = [
     icon: <BusinessIcon className="h-6 w-6" />,
     title: 'Property Owners',
     description:
-      'Streamline your property portfolio management with powerful analytics and automated workflows.',
+      'Streamline your property portfolio management with powerful analytics and automated workflows.'
   },
   {
     icon: <StorefrontIcon className="h-6 w-6" />,
     title: 'Property Managers',
-    description: 'Manage multiple properties effortlessly with our comprehensive management suite.',
+    description: 'Manage multiple properties effortlessly with our comprehensive management suite.'
   },
   {
     icon: <VpnKeyIcon className="h-6 w-6" />,
     title: 'Tenants',
     description:
-      'Easy rent payments, maintenance requests, and communication with property managers.',
+      'Easy rent payments, maintenance requests, and communication with property managers.'
   },
   {
     icon: <AssignmentTurnedInIcon className="h-6 w-6" />,
     title: 'Applicants',
     description:
-      'Streamlined application process with real-time status updates and document management.',
+      'Streamlined application process with real-time status updates and document management.'
   },
   {
     icon: <BuildIcon className="h-6 w-6" />,
     title: 'Vendors',
     description:
-      'Simplified job assignments, scheduling, and payment processing for maintenance work.',
+      'Simplified job assignments, scheduling, and payment processing for maintenance work.'
   },
   {
     icon: <PeopleIcon className="h-6 w-6" />,
     title: 'Real Estate Agents',
-    description: 'Seamless property listings, tenant matching, and commission tracking.',
-  },
+    description: 'Seamless property listings, tenant matching, and commission tracking.'
+  }
 ]
 
 export default function MVPLandingPage() {
@@ -107,7 +107,7 @@ export default function MVPLandingPage() {
               {[
                 ['Properties Managed', '1000+'],
                 ['Customer Satisfaction', '98%'],
-                ['Time Saved', '40%'],
+                ['Time Saved', '40%']
               ].map(([label, value]) => (
                 <div key={label} className="text-center">
                   <div className="text-3xl font-bold text-[#A7C7E7]">{value}</div>
@@ -143,7 +143,7 @@ export default function MVPLandingPage() {
             variants={fadeInUp}
             className="mt-24 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
           >
-            {features.map((feature) => (
+            {features.map(feature => (
               <Card
                 key={feature.title}
                 className="group p-6 transition-all duration-200 hover:border-[#A7C7E7]/50 hover:shadow-lg"

@@ -9,7 +9,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography,
+  Typography
 } from '@mui/material'
 import { useQuery } from '@tanstack/react-query'
 import { useState } from 'react'
@@ -26,7 +26,7 @@ export default function RecurringPaymentForm({
   propertyId,
   tenantId,
   onSuccess,
-  onCancel,
+  onCancel
 }: RecurringPaymentFormProps) {
   const [isLoading, setIsLoading] = useState(false)
   const [frequency, setFrequency] = useState('monthly')
@@ -35,7 +35,7 @@ export default function RecurringPaymentForm({
 
   const { data: paymentMethods } = useQuery({
     queryKey: ['payment-methods'],
-    queryFn: () => api.get('/api/payments/methods'),
+    queryFn: () => api.get('/api/payments/methods')
   })
 
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('')
@@ -57,7 +57,7 @@ export default function RecurringPaymentForm({
         frequency,
         payment_day: parseInt(paymentDay, 10),
         payment_method_id: selectedPaymentMethod,
-        description: `Recurring ${frequency} payment for property ${propertyId}`,
+        description: `Recurring ${frequency} payment for property ${propertyId}`
       })
 
       if (response.error) {
@@ -86,7 +86,7 @@ export default function RecurringPaymentForm({
           label="Amount"
           type="number"
           value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          onChange={e => setAmount(e.target.value)}
           required
           inputProps={{ min: 0, step: 0.01 }}
           fullWidth
@@ -94,7 +94,7 @@ export default function RecurringPaymentForm({
 
         <FormControl fullWidth required>
           <InputLabel>Frequency</InputLabel>
-          <Select value={frequency} onChange={(e) => setFrequency(e.target.value)}>
+          <Select value={frequency} onChange={e => setFrequency(e.target.value)}>
             <MenuItem value="weekly">Weekly</MenuItem>
             <MenuItem value="monthly">Monthly</MenuItem>
             <MenuItem value="yearly">Yearly</MenuItem>
@@ -105,11 +105,11 @@ export default function RecurringPaymentForm({
           label="Payment Day"
           type="number"
           value={paymentDay}
-          onChange={(e) => setPaymentDay(e.target.value)}
+          onChange={e => setPaymentDay(e.target.value)}
           required
           inputProps={{
             min: frequency === 'weekly' ? 0 : 1,
-            max: frequency === 'weekly' ? 6 : 31,
+            max: frequency === 'weekly' ? 6 : 31
           }}
           helperText={
             frequency === 'weekly' ? '0 = Sunday, 6 = Saturday' : 'Day of the month (1-31)'
@@ -121,7 +121,7 @@ export default function RecurringPaymentForm({
           <InputLabel>Payment Method</InputLabel>
           <Select
             value={selectedPaymentMethod}
-            onChange={(e) => setSelectedPaymentMethod(e.target.value)}
+            onChange={e => setSelectedPaymentMethod(e.target.value)}
           >
             {paymentMethods?.data?.map((method: any) => (
               <MenuItem key={method.id} value={method.id}>
@@ -145,8 +145,8 @@ export default function RecurringPaymentForm({
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {
-              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-            },
+              background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+            }
           }}
         >
           {isLoading ? 'Setting up...' : 'Set Up Recurring Payment'}

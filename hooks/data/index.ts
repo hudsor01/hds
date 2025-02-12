@@ -1,27 +1,26 @@
 import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '../api/use-api'
 import type { BaseQueryParams } from '@/types/common'
-import type { Lease, MaintenanceRequest, Tenant } from '@/types/database.types'
-import type { PropertyInsert, PropertyRow } from '@/types/property'
+import type { Lease, MaintenanceRequest, Tenant, Property } from '@/types/db.types'
 
 // Properties hooks
 export function useProperties(params?: BaseQueryParams) {
-  return useApiQuery<PropertyRow[]>('/api/properties', params)
+  return useApiQuery<Property[]>('/api/properties', params)
 }
 
 export function useProperty(id: string) {
-  return useApiQuery<PropertyRow>(`/api/properties/${id}`)
+  return useApiQuery<Property>(`/api/properties/${id}`)
 }
 
 export function useCreateProperty() {
-  return useApiMutation<PropertyRow, PropertyInsert>('/api/properties')
+  return useApiMutation<Property, Omit<Property, 'id'>>('/api/properties')
 }
 
 export function useUpdateProperty() {
-  return useApiUpdate<PropertyRow>('/api/properties')
+  return useApiUpdate<Property>('/api/properties')
 }
 
 export function useDeleteProperty() {
-  return useApiDelete<PropertyRow>('/api/properties')
+  return useApiDelete<Property>('/api/properties')
 }
 
 // Tenants hooks

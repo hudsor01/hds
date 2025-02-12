@@ -11,11 +11,11 @@ const StyledLabel = styled(MuiFormLabel)(({ theme }) => ({
   color: theme.palette.text.primary,
   '&.Mui-disabled': {
     cursor: 'not-allowed',
-    opacity: 0.7,
+    opacity: 0.7
   },
   '&.Mui-focused': {
-    color: theme.palette.primary.main,
-  },
+    color: theme.palette.primary.main
+  }
 }))
 
 export interface LabelProps extends FormLabelProps {

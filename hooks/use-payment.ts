@@ -32,7 +32,7 @@ interface PaginatedResponse<T> {
 export function usePaymentMethods() {
   return useQuery<ApiResponse<PaymentMethod[]>>({
     queryKey: ['payment-methods'],
-    queryFn: () => api.get('/api/payments/methods'),
+    queryFn: () => api.get('/api/payments/methods')
   })
 }
 
@@ -42,7 +42,7 @@ export function useAddPaymentMethod() {
   return useMutation({
     mutationFn: async (paymentMethod: PaymentMethod) => {
       const response = await api.post('/api/payments/methods', {
-        payment_method_id: paymentMethod.id,
+        payment_method_id: paymentMethod.id
       })
       if (response.error) throw new Error(response.error.message)
       return response.data
@@ -53,7 +53,7 @@ export function useAddPaymentMethod() {
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to add payment method')
-    },
+    }
   })
 }
 
@@ -72,7 +72,7 @@ export function useRemovePaymentMethod() {
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to remove payment method')
-    },
+    }
   })
 }
 
@@ -99,7 +99,7 @@ export function useSetupRecurringPayment() {
     },
     onError: (error: Error) => {
       toast.error(error.message || 'Failed to set up recurring payment')
-    },
+    }
   })
 }
 
@@ -114,7 +114,7 @@ export function useRecurringPayments(filters?: {
 
   return useQuery<ApiResponse<Payment[]>>({
     queryKey: ['recurring-payments', filters],
-    queryFn: () => api.get(`/api/payments/recurring${queryString}`),
+    queryFn: () => api.get(`/api/payments/recurring${queryString}`)
   })
 }
 
@@ -134,6 +134,6 @@ export function usePaymentHistory(filters?: {
 
   return useQuery<ApiResponse<Payment[]>>({
     queryKey: ['payment-history', filters],
-    queryFn: () => api.get(`/api/payments/history${queryString}`),
+    queryFn: () => api.get(`/api/payments/history${queryString}`)
   })
 }

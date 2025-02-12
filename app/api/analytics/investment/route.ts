@@ -16,7 +16,7 @@ export async function GET(request: Request) {
         'calculate_property_roi',
         {
           p_property_id: propertyId,
-          p_year: year,
+          p_year: year
         }
       )
 
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
         'calculate_portfolio_investment_metrics',
         {
           p_organization_id: organizationId,
-          p_year: year,
+          p_year: year
         }
       )
 
@@ -43,7 +43,7 @@ export async function GET(request: Request) {
         'generate_investment_performance_report',
         {
           p_organization_id: organizationId,
-          p_year: year,
+          p_year: year
         }
       )
 
@@ -51,7 +51,7 @@ export async function GET(request: Request) {
 
       return NextResponse.json({
         portfolioMetrics,
-        performanceReport,
+        performanceReport
       })
     }
 

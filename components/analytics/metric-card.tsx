@@ -1,6 +1,6 @@
 'use client'
 
-import { Trend } from '@/types/analytics'
+import { Trend } from '@/types'
 import { Box, Card, CardContent, CircularProgress, Typography } from '@mui/material'
 import { ArrowDownRight, ArrowUpRight } from 'react-feather'
 
@@ -19,14 +19,14 @@ export default function MetricCard({
   isLoading = false,
   icon,
   trend,
-  format = 'number',
+  format = 'number'
 }: MetricCardProps) {
   const formatValue = (val: number) => {
     switch (format) {
       case 'currency':
         return new Intl.NumberFormat('en-US', {
           style: 'currency',
-          currency: 'USD',
+          currency: 'USD'
         }).format(val)
       case 'percentage':
         return `${val}%`
@@ -53,7 +53,7 @@ export default function MetricCard({
         display: 'flex',
         flexDirection: 'column',
         position: 'relative',
-        overflow: 'hidden',
+        overflow: 'hidden'
       }}
     >
       <CardContent>
@@ -62,7 +62,7 @@ export default function MetricCard({
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            mb: 2,
+            mb: 2
           }}
         >
           <Typography variant="subtitle2" color="textSecondary" sx={{ fontWeight: 500 }}>
@@ -77,7 +77,7 @@ export default function MetricCard({
                 width: 40,
                 height: 40,
                 borderRadius: '50%',
-                backgroundColor: 'action.hover',
+                backgroundColor: 'action.hover'
               }}
             >
               {icon}
@@ -100,7 +100,7 @@ export default function MetricCard({
                   display: 'flex',
                   alignItems: 'center',
                   color: getTrendColor(trend.direction),
-                  mb: 0.5,
+                  mb: 0.5
                 }}
               >
                 {trend.direction === 'up' ? (

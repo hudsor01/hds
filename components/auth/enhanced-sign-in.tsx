@@ -11,7 +11,7 @@ const StyledAuthContainer = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   backgroundColor: theme.palette.background.default,
-  padding: theme.spacing(3),
+  padding: theme.spacing(3)
 }))
 
 export function EnhancedSignIn() {
@@ -23,7 +23,7 @@ export function EnhancedSignIn() {
           sx={{
             p: 4,
             backdropFilter: 'blur(20px)',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
+            backgroundColor: 'rgba(255, 255, 255, 0.9)'
           }}
         >
           <SignIn
@@ -34,27 +34,27 @@ export function EnhancedSignIn() {
                   fontWeight: 500,
                   backgroundColor: 'primary.main',
                   '&:hover': {
-                    backgroundColor: 'primary.dark',
-                  },
+                    backgroundColor: 'primary.dark'
+                  }
                 },
                 card: {
                   boxShadow: 'none',
-                  backgroundColor: 'transparent',
+                  backgroundColor: 'transparent'
                 },
                 headerTitle: {
                   fontSize: '24px',
-                  fontWeight: 600,
+                  fontWeight: 600
                 },
                 headerSubtitle: {
-                  fontSize: '16px',
+                  fontSize: '16px'
                 },
                 socialButtonsBlockButton: {
                   borderColor: 'divider',
                   '&:hover': {
-                    backgroundColor: 'action.hover',
-                  },
-                },
-              },
+                    backgroundColor: 'action.hover'
+                  }
+                }
+              }
             }}
           />
         </Paper>

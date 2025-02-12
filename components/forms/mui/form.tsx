@@ -21,7 +21,7 @@ export default function Form({
   handleNameChange,
   handleEmailChange,
   handleSubmit,
-  loading,
+  loading
 }: FormProps) {
   return (
     <motion.div
@@ -48,7 +48,7 @@ export default function Form({
       </motion.div>
       <motion.div
         variants={itemVariants}
-        className="mt-4 flex w-full items-center justify-center gap-1 text-muted-foreground"
+        className="text-muted-foreground mt-4 flex w-full items-center justify-center gap-1"
       >
         <p>For any queries, reach out at </p>
         <Link href="https://x.com/dickswayze" rel="noopener noreferrer" target="_blank">

@@ -7,7 +7,7 @@ export async function getRecentActivity() {
       title: 'Rent Payment Received',
       description: 'Payment received for Unit 101',
       timestamp: new Date(),
-      amount: 1500,
+      amount: 1500
     },
     {
       id: '2',
@@ -15,8 +15,8 @@ export async function getRecentActivity() {
       title: 'Maintenance Request',
       description: 'New maintenance request for Unit 203',
       timestamp: new Date(),
-      status: 'pending',
-    },
+      status: 'pending'
+    }
     // Add more mock data as needed
   ]
 }

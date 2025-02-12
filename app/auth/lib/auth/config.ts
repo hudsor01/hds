@@ -21,7 +21,7 @@ export function useSession() {
 
     // Listen for auth changes
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setSession(session)
     })
@@ -46,7 +46,7 @@ export function useUser() {
 
     // Listen for auth changes
     const {
-      data: { subscription },
+      data: { subscription }
     } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null)
     })
@@ -67,6 +67,6 @@ export const authConfig = {
     signUp: '/signup',
     forgotPassword: '/forgot-password',
     afterSignIn: '/dashboard',
-    afterSignUp: '/dashboard',
-  },
+    afterSignUp: '/dashboard'
+  }
 }

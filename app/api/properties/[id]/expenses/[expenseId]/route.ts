@@ -58,7 +58,7 @@ export async function PATCH(
         date: json.date,
         description: json.description,
         status: json.status,
-        paid_at: json.status === 'paid' ? new Date().toISOString() : null,
+        paid_at: json.status === 'paid' ? new Date().toISOString() : null
       })
       .eq('id', params.expenseId)
       .eq('property_id', params.id)

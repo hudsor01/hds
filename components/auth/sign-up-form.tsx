@@ -15,7 +15,7 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
-    name: '',
+    name: ''
   })
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -27,7 +27,7 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
       const response = await fetch('/auth/sign-up', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(formData)
       })
 
       const data = await response.json()
@@ -46,7 +46,7 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prev) => ({ ...prev, [name]: value }))
+    setFormData(prev => ({ ...prev, [name]: value }))
   }
 
   if (success) {
@@ -72,7 +72,7 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
         gap: 2,
         maxWidth: 'sm',
         mx: 'auto',
-        p: 3,
+        p: 3
       }}
     >
       {error && (
@@ -112,8 +112,8 @@ export default function SignUpForm({ redirectTo = '/' }: SignUpFormProps) {
           height: 48,
           background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
           '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)',
-          },
+            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
+          }
         }}
       >
         {isLoading ? <CircularProgress size={24} /> : 'Sign Up'}

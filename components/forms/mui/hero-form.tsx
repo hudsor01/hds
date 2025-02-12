@@ -7,7 +7,7 @@ export default function HeroForm() {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
   } = useForm()
 
   const onSubmit = (data: any) => {
@@ -28,8 +28,8 @@ export default function HeroForm() {
             '& .MuiOutlinedInput-root': {
               borderRadius: 2,
               bgcolor: 'background.paper',
-              boxShadow: 1,
-            },
+              boxShadow: 1
+            }
           }}
         />
         <Button
@@ -40,7 +40,7 @@ export default function HeroForm() {
             borderRadius: 2,
             px: 4,
             bgcolor: theme.palette.secondary.main,
-            '&:hover': { bgcolor: theme.palette.secondary.dark },
+            '&:hover': { bgcolor: theme.palette.secondary.dark }
           }}
         >
           Get Early Access

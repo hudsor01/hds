@@ -8,7 +8,7 @@ const notificationSchema = z.object({
   title: z.string().min(1, 'Title is required'),
   message: z.string().min(1, 'Message is required'),
   data: z.record(z.string(), z.any()).optional(),
-  read_at: z.string().datetime().nullable().optional(),
+  read_at: z.string().datetime().nullable().optional()
 })
 
 export async function GET(req: NextRequest) {

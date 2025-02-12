@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   TextField,
-  TextFieldProps,
+  TextFieldProps
 } from '@mui/material'
 import { Controller, useFormContext } from 'react-hook-form'
 
@@ -19,7 +19,7 @@ interface FormFieldProps extends Omit<TextFieldProps, 'name'> {
 export function FormInput({ name, label, ...props }: FormFieldProps) {
   const {
     register,
-    formState: { errors },
+    formState: { errors }
   } = useFormContext()
   const error = getFieldError(name, errors)
 
@@ -42,7 +42,7 @@ interface SelectFieldProps extends FormFieldProps {
 export function FormSelect({ name, label, options, ...props }: SelectFieldProps) {
   const {
     control,
-    formState: { errors },
+    formState: { errors }
   } = useFormContext()
   const error = getFieldError(name, errors)
 
@@ -54,7 +54,7 @@ export function FormSelect({ name, label, options, ...props }: SelectFieldProps)
         <FormControl fullWidth error={!!error}>
           <InputLabel>{label}</InputLabel>
           <Select variant="filled" {...field} {...props} label={label}>
-            {options.map((option) => (
+            {options.map(option => (
               <MenuItem key={option.value} value={option.value}>
                 {option.label}
               </MenuItem>
@@ -75,7 +75,7 @@ interface DateFieldProps extends FormFieldProps {
 export function FormDatePicker({ name, label, minDate, maxDate, ...props }: DateFieldProps) {
   const {
     control,
-    formState: { errors },
+    formState: { errors }
   } = useFormContext()
   const error = getFieldError(name, errors)
 
@@ -95,7 +95,7 @@ export function FormDatePicker({ name, label, minDate, maxDate, ...props }: Date
           InputLabelProps={{ shrink: true }}
           inputProps={{
             min: minDate?.toISOString().split('T')[0],
-            max: maxDate?.toISOString().split('T')[0],
+            max: maxDate?.toISOString().split('T')[0]
           }}
         />
       )}
@@ -110,7 +110,7 @@ interface CheckboxFieldProps extends Omit<FormFieldProps, 'label'> {
 export function FormCheckbox({ name, label, ...props }: CheckboxFieldProps) {
   const {
     control,
-    formState: { errors },
+    formState: { errors }
   } = useFormContext()
   const error = getFieldError(name, errors)
 

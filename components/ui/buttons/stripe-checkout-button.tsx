@@ -16,7 +16,7 @@ interface StripeCheckoutButtonProps {
 export function StripeCheckoutButton({
   priceId,
   variant = 'contained',
-  size = 'large',
+  size = 'large'
 }: StripeCheckoutButtonProps) {
   const { data: session } = useSession()
   const [loading, setLoading] = useState(false)
@@ -42,9 +42,9 @@ export function StripeCheckoutButton({
       const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ priceId }),
+        body: JSON.stringify({ priceId })
       })
 
       if (!response.ok) {
@@ -77,8 +77,8 @@ export function StripeCheckoutButton({
           variant === 'contained' ? 'linear-gradient(45deg, #635bff 0%, #a259ff 100%)' : undefined,
         fontWeight: 600,
         '&:hover': {
-          opacity: 0.9,
-        },
+          opacity: 0.9
+        }
       }}
     >
       {loading ? 'Loading...' : priceId ? 'Subscribe Now' : 'Start Free Trial'}

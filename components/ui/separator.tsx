@@ -8,8 +8,8 @@ import * as React from 'react'
 const StyledDivider = styled(MuiDivider)(({ theme }) => ({
   margin: theme.spacing(1, 0),
   '&.MuiDivider-vertical': {
-    margin: theme.spacing(0, 1),
-  },
+    margin: theme.spacing(0, 1)
+  }
 }))
 
 export type SeparatorProps = MuiDividerProps
@@ -20,7 +20,7 @@ export const Separator = React.forwardRef<HTMLHRElement, SeparatorProps>(
       ref={ref}
       orientation={orientation}
       className={cn(
-        'shrink-0 bg-border',
+        'bg-border shrink-0',
         orientation === 'horizontal' ? 'h-[1px] w-full' : 'h-full w-[1px]',
         className
       )}

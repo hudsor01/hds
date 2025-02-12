@@ -4,19 +4,18 @@ import { FormInput, FormSelect } from '@/components/forms/mui/form-fields'
 import { FormContainer } from '@/components/forms/mui/form-provider'
 import { useCreateProperty } from '@/hooks/data'
 import { propertySchema } from '@/lib/validations/schemas'
-import { PROPERTY_STATUS, PROPERTY_TYPES } from '@/types/property'
-import type { PropertyInsert } from '@/types/property'
+import { PROPERTY_STATUS, PROPERTY_TYPES, PropertyInsert } from '@/types'
 import { Button, Stack } from '@mui/material'
 import { z } from 'zod'
 
 const propertyTypes = Object.entries(PROPERTY_TYPES).map(([value, label]) => ({
   label,
-  value,
+  value
 }))
 
 const propertyStatuses = Object.entries(PROPERTY_STATUS).map(([value, label]) => ({
   label,
-  value,
+  value
 }))
 
 type PropertyFormData = z.infer<typeof propertySchema>
@@ -36,7 +35,7 @@ export function PropertyForm({ userId, onSuccess }: PropertyFormProps) {
         id: crypto.randomUUID(),
         user_id: userId,
         created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
       }
       await createProperty(propertyData)
       onSuccess?.()
@@ -51,7 +50,7 @@ export function PropertyForm({ userId, onSuccess }: PropertyFormProps) {
       defaultValues={{
         property_status: 'active',
         property_type: 'apartment',
-        rent_amount: 0,
+        rent_amount: 0
       }}
       onSubmit={handleSubmit}
     >

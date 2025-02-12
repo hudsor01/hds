@@ -7,13 +7,13 @@ import { getSubscription, getCurrentUser } from '@/utils/supabase/server'
 import type { SupabaseClient } from '@supabase/supabase-js'
 import { redirect } from 'next/navigation'
 import React from 'react'
-import type { Database } from '../../types/database.types'
+import type { Database } from '@/types/db.types'
 
 const AccountPage: React.FC = async () => {
   const [user, userDetails, subscription] = await Promise.all([
     getCurrentUser(supabase),
     userDetails(supabase),
-    getSubscription(supabase),
+    getSubscription(supabase)
   ])
 
   if (!user) {

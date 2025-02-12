@@ -16,7 +16,7 @@ const VIEW_TYPES = [
   'email_signin',
   'forgot_password',
   'update_password',
-  'signup',
+  'signup'
 ] as const
 type ViewType = (typeof VIEW_TYPES)[number]
 
@@ -31,7 +31,7 @@ function getAuthConfig(): AuthConfig {
   return {
     allowOauth: true,
     allowEmail: true,
-    allowPassword: true,
+    allowPassword: true
   }
 }
 
@@ -44,7 +44,7 @@ function getDefaultView(preferredView: string | null): ViewType {
 
 export default async function SignIn({
   params,
-  searchParams,
+  searchParams
 }: {
   params: { id: string }
   searchParams: { disable_button: boolean }
@@ -64,7 +64,7 @@ export default async function SignIn({
 
   // Check authentication status
   const {
-    data: { user },
+    data: { user }
   } = await supabase.auth.getCurrentUser()
 
   if (user && viewType !== 'update_password') {

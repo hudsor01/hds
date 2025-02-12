@@ -4,7 +4,7 @@ import { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Sign Up | Property Manager',
-  description: 'Create your Property Manager account',
+  description: 'Create your Property Manager account'
 }
 
 export default function SignUpPage() {

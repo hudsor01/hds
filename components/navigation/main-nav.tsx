@@ -7,14 +7,14 @@ const navigation = [
   { name: 'Dashboard', href: '/dashboard' },
   { name: 'Properties', href: '/properties' },
   { name: 'Tenant', href: '/tenant' },
-  { name: 'Settings', href: '/settings' },
+  { name: 'Settings', href: '/settings' }
 ]
 
 export function MainNav(): React.ReactElement {
   return (
     <nav>
       <Link href="/">Property Manager</Link>
-      {navigation.map((item) => (
+      {navigation.map(item => (
         <Link key={item.href} href={item.href}>
           {item.name}
         </Link>

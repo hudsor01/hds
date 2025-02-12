@@ -20,7 +20,7 @@ export function ActivityHeader({
   onFilterChangeAction,
   searchQuery,
   onSearchChangeAction,
-  onExportAction,
+  onExportAction
 }: ActivityHeaderProps) {
   const handleFilterChange = (_: React.MouseEvent, value: string | undefined) => {
     if (value) {
@@ -40,17 +40,17 @@ export function ActivityHeader({
 
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
         <div className="relative flex-1">
-          <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Search className="text-muted-foreground absolute left-2.5 top-2.5 h-4 w-4" />
           <Input
             placeholder="Search activities..."
             value={searchQuery}
-            onChange={(e) => onSearchChangeAction(e.target.value)}
+            onChange={e => onSearchChangeAction(e.target.value)}
             className="pl-8"
           />
         </div>
 
         <ToggleGroup defaultValue={filter} onChange={handleFilterChange}>
-          {ACTIVITY_FILTERS.map((filter) => (
+          {ACTIVITY_FILTERS.map(filter => (
             <ToggleGroupItem key={filter.value} value={filter.value}>
               {filter.label}
             </ToggleGroupItem>

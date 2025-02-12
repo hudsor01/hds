@@ -14,7 +14,7 @@ export function StaggeredList({
   children,
   delay = 0.2,
   duration = 0.5,
-  className = 'space-y-4',
+  className = 'space-y-4'
 }: StaggeredListProps) {
   const controls = useAnimation()
   const ref = useRef(null)
@@ -26,9 +26,9 @@ export function StaggeredList({
       opacity: 1,
       transition: {
         staggerChildren: delay,
-        delayChildren: 0.1,
-      },
-    },
+        delayChildren: 0.1
+      }
+    }
   }
 
   const itemVariants = {
@@ -38,9 +38,9 @@ export function StaggeredList({
       y: 0,
       transition: {
         duration: duration,
-        ease: 'easeOut',
-      },
-    },
+        ease: 'easeOut'
+      }
+    }
   }
 
   useEffect(() => {

@@ -2,7 +2,7 @@ import {
   cancelRecurringPayment,
   getRecurringPayments,
   setupRecurringPayment,
-  updateRecurringPayment,
+  updateRecurringPayment
 } from '@/lib/services/recurring-payments'
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -16,7 +16,7 @@ const recurringPaymentSchema = z.object({
   payment_day: z.number().min(1).max(31),
   payment_method_id: z.string(),
   description: z.string().optional(),
-  metadata: z.record(z.string()).optional(),
+  metadata: z.record(z.string()).optional()
 })
 
 export async function POST(req: NextRequest) {
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
     const filters = {
       tenant_id: searchParams.get('tenant_id') || undefined,
       property_id: searchParams.get('property_id') || undefined,
-      status: searchParams.get('status') || undefined,
+      status: searchParams.get('status') || undefined
     }
 
     const payments = await getRecurringPayments(userId, filters)

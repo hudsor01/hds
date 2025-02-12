@@ -13,7 +13,7 @@ export default function CTA() {
     >
       <motion.div variants={itemVariants}>
         <div className="flex items-center justify-center">
-          <div className="flex w-fit items-center justify-center rounded-full bg-muted/80 text-center">
+          <div className="bg-muted/80 flex w-fit items-center justify-center rounded-full text-center">
             <AnimatedShinyText className="px-4 py-1">
               <span>Coming soon!</span>
             </AnimatedShinyText>
