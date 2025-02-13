@@ -2,10 +2,14 @@
 
 import { Button } from '@/components/ui/buttons/button'
 import { loadStripe } from '@stripe/stripe-js'
-import type { Route } from 'next'
+import { Box, Container, Grid, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useSupabase } from '@/lib/supabase/auth'
+import { FaCheck } from 'react-icons/fa'
+import type { Route } from 'next'
+import { routes } from '@/routes'
 
 const pricingTiers = [
   {
@@ -67,7 +71,7 @@ const pricingTiers = [
     description: 'Enterprise-grade solution for large portfolios',
     price: 'Custom',
     duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_UNLIMITED,
+    priceId: null,
     features: [
       'Unlimited properties',
       'Everything in Elite',
@@ -83,95 +87,31 @@ const pricingTiers = [
     highlighted: false,
     buttonText: 'Contact Enterprise'
   }
-]
+] as const
 
-export default function PricingPage() {
-  const [selectedTier, setSelectedTier] = useState<string>('Growth')
-
-  return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
-      <div className="text-center">
-        <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
-          Simple, transparent pricing
-        </h2>
-        <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-base sm:mt-4 sm:text-lg">
-          Choose the perfect plan for your property management needs
-        </p>
-      </div>
-      <div className="mx-auto mt-16 grid max-w-lg gap-8 sm:max-w-none sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4">
-        {pricingTiers.map((tier, index) => (
-          <div
-            key={index}
-            onClick={() => setSelectedTier(tier.title)}
-            className={`cursor-pointer rounded-lg border p-8 transition-all duration-300 hover:shadow-lg ${
-              selectedTier === tier.title
-                ? 'ring-opacity-50 border-blue-500 ring-2 shadow-lg ring-blue-500'
-                : 'border-border hover:border-blue-200'
-            }`}
-          >
-            <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
-            <p className="text-muted-foreground mt-2 text-sm sm:text-base">{tier.description}</p>
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
-              <span className="text-4xl font-bold sm:text-5xl">{tier.price}</span>
-              <span className="text-muted-foreground sm:ml-2">/{tier.duration}</span>
-            </div>
-            <ul className="mt-8 space-y-4">
-              {tier.features.map((feature, featureIndex) => (
-                <li key={featureIndex} className="flex items-center">
-                  <svg
-                    className="h-5 w-5 text-green-500"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                  <span className="ml-3">{feature}</span>
-                </li>
-              ))}
-            </ul>
-            <PricingCheckoutButton
-              priceId={tier.priceId ?? null}
-              text={tier.buttonText}
-              highlighted={selectedTier === tier.title}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
-  )
-}
-
-const PricingCheckoutButton = ({
-  priceId,
-  text,
-  highlighted
-}: {
+interface PricingButtonProps {
   priceId: string | null
   text: string
   highlighted: boolean
-}) => {
+}
+
+function PricingButton({ priceId, text, highlighted }: PricingButtonProps) {
   const [isLoading, setIsLoading] = useState(false)
-  const { data: session } = useSession()
   const router = useRouter()
+  const { session } = useSupabase()
 
   const handleClick = async () => {
     try {
       setIsLoading(true)
 
-      if (text === 'Contact Sales') {
+      if (text === 'Contact Enterprise') {
         router.push(routes.contact as Route)
         return
       }
 
       if (!priceId) {
         if (!session) {
-          router.push(routes.auth.register as Route)
+          router.push(routes.auth.signUp as Route)
           return
         }
 
@@ -179,12 +119,12 @@ const PricingCheckoutButton = ({
         const response = await fetch('/api/subscribe/free', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ trialDays: 14 })
+          body: JSON.stringify({ trialDays: 45 })
         })
 
         if (response.ok) {
           router.push('/dashboard' as Route)
-          toast.success('Free trial activated! Enjoy your 14-day access.')
+          toast.success('Free trial activated! Enjoy your 45-day access.')
         } else {
           const error = await response.json()
           throw new Error(error.message || 'Failed to activate trial')
@@ -193,7 +133,7 @@ const PricingCheckoutButton = ({
       }
 
       if (!session) {
-        router.push(`${routes.auth.login}?callbackUrl=${encodeURIComponent('/pricing')}` as Route)
+        router.push(`${routes.auth.signIn}?next=${encodeURIComponent('/pricing')}` as Route)
         return
       }
 
@@ -205,15 +145,10 @@ const PricingCheckoutButton = ({
       })
 
       const data = await response.json()
+      if (!response.ok) throw new Error(data.error || 'Payment processing failed')
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Payment processing failed')
-      }
-
-      if (data.url) {
-        window.location.href = data.url
-      } else if (data.sessionId) {
-        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+      if (data.sessionId) {
         await stripe?.redirectToCheckout({ sessionId: data.sessionId })
       }
     } catch (error) {
@@ -230,13 +165,64 @@ const PricingCheckoutButton = ({
       variant={highlighted ? 'default' : 'outline'}
       onClick={handleClick}
       disabled={isLoading}
-      className={`mt-4 w-full font-semibold transition-all duration-300 ${
-        highlighted
-          ? 'scale-105 bg-blue-500 text-white hover:bg-blue-600'
-          : 'hover:scale-102 hover:border-blue-200'
+      className={`mt-4 w-full font-semibold ${
+        highlighted ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
       }`}
     >
       {isLoading ? 'Processing...' : text}
     </Button>
+  )
+}
+
+export default function PricingPage() {
+  const [selectedTier, setSelectedTier] = useState<string>('Growth')
+
+  return (
+    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
+      <div className="text-center">
+        <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
+          Simple, transparent pricing
+        </h2>
+        <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-base sm:mt-4 sm:text-lg">
+          Choose the perfect plan for your property management needs
+        </p>
+      </div>
+
+      <div className="mx-auto mt-16 grid max-w-lg gap-8 sm:max-w-none sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4">
+        {pricingTiers.map((tier, index) => (
+          <div
+            key={index}
+            onClick={() => setSelectedTier(tier.title)}
+            className={`cursor-pointer rounded-lg border p-8 transition-all duration-300 hover:shadow-lg ${
+              selectedTier === tier.title
+                ? 'ring-primary ring-opacity-50 ring-2 shadow-lg'
+                : 'hover:border-primary/20'
+            }`}
+          >
+            <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">{tier.description}</p>
+            <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
+              <span className="text-4xl font-bold sm:text-5xl">{tier.price}</span>
+              <span className="text-muted-foreground sm:ml-2">/{tier.duration}</span>
+            </div>
+
+            <ul className="mt-8 space-y-4">
+              {tier.features.map((feature, featureIndex) => (
+                <li key={featureIndex} className="flex items-center">
+                  <FaCheck className="text-primary h-5 w-5 flex-shrink-0" />
+                  <span className="ml-3">{feature}</span>
+                </li>
+              ))}
+            </ul>
+
+            <PricingButton
+              priceId={tier.priceId}
+              text={tier.buttonText}
+              highlighted={selectedTier === tier.title}
+            />
+          </div>
+        ))}
+      </div>
+    </div>
   )
 }

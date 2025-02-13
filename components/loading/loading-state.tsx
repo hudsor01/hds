@@ -8,7 +8,7 @@ interface LoadingScreenProps {
   sx?: SxProps<Theme>
 }
 
-export function LoadingScreen({ message = 'Loading...', sx }: LoadingScreenProps) {
+export function Loading({ message = 'Loading...', sx }: LoadingScreenProps) {
   const theme = useTheme()
 
   return (
