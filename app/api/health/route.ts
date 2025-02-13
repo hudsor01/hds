@@ -1,5 +1,6 @@
 import { emailService } from '@/lib/utils/email'
 import { prisma } from '@/prisma/seed'
+import { NextResponse } from 'next/server'
 
 async function checkDatabase() {
   try {
@@ -31,7 +32,7 @@ export async function GET() {
     status => status === 'healthy' || typeof status === 'number'
   )
 
-  return Response.json(health, {
+  return NextResponse.json(health, {
     status: isHealthy ? 200 : 503
   })
 }

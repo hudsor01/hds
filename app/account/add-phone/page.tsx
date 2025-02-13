@@ -1,7 +1,8 @@
 'use client'
 
 import * as React from 'react'
-import { useUser } from '@/app/auth/lib/auth/config'
+import { useUser } from '@supabase/ssr'
+import { supabase } from '../../../lib/supabase'
 import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
 import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
 
@@ -40,9 +41,7 @@ export default function PhoneVerificationPage() {
         throw new Error('Please enter a valid phone number in E.164 format (e.g., +12345678900)')
       }
 
-      const { error: phoneError } = (await user?.phone?.update({ phone })) || {
-        error: new Error('User not found')
-      }
+      const { error: phoneError } = await supabase.auth.update({ phone })
 
       if (phoneError) throw phoneError
 
@@ -61,9 +60,7 @@ export default function PhoneVerificationPage() {
     setIsSubmitting(true)
 
     try {
-      const { error: verifyError } = (await user?.phone?.verify({ code })) || {
-        error: new Error('User not found')
-      }
+      const { error: verifyError } = await supabase.auth.verify({ phone, token: code, type: 'sms' })
 
       if (verifyError) throw verifyError
 

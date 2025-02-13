@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/ssr'
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
@@ -28,8 +28,9 @@ const paymentSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -88,8 +89,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -101,7 +103,7 @@ export async function POST(req: NextRequest) {
       .from('properties')
       .select('id')
       .eq('id', validatedData.property_id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (propertyError || !property) {
@@ -112,7 +114,7 @@ export async function POST(req: NextRequest) {
       .from('tenants')
       .select('id')
       .eq('id', validatedData.tenant_id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (tenantError || !tenant) {
@@ -123,7 +125,7 @@ export async function POST(req: NextRequest) {
       .from('leases')
       .select('id')
       .eq('id', validatedData.lease_id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (leaseError || !lease) {
@@ -152,7 +154,7 @@ export async function POST(req: NextRequest) {
         {
           ...validatedData,
           payment_intent_id: paymentIntent?.id,
-          user_id: userId
+          user_id: user.id
         }
       ])
       .select()
@@ -166,7 +168,7 @@ export async function POST(req: NextRequest) {
     // Create notification for new payment
     await supabase.from('notifications').insert([
       {
-        user_id: userId,
+        user_id: user.id,
         type: 'PAYMENT',
         title: 'New Payment Created',
         message: `A new ${validatedData.payment_type} payment of $${validatedData.payment_amount} has been created`,
@@ -199,8 +201,9 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -258,7 +261,7 @@ export async function PUT(req: NextRequest) {
     if (validatedData.payment_status) {
       await supabase.from('notifications').insert([
         {
-          user_id: userId,
+          user_id: user.id,
           type: 'PAYMENT',
           title: 'Payment Status Updated',
           message: `Payment status updated to ${validatedData.payment_status}`,
@@ -283,8 +286,9 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

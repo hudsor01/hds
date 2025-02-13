@@ -1,6 +1,6 @@
 import { EmailMetricsTable } from '@/components/analytics/EmailMetricsTable'
 import { ErrorBoundary } from '@/components/error/error-boundary'
-import { getEmailMetrics } from '@/lib/services/analytics'
+import { getEmailMetrics } from '@supabase/ssr'
 import {
   Box,
   Card,

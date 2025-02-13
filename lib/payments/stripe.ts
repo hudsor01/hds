@@ -1,5 +1,5 @@
 import type { Team } from '@/types/team'
-import { createClient } from '@supabase/supabase-js'
+import { createClient } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
 import { getCurrentUser } from '../../app/auth'

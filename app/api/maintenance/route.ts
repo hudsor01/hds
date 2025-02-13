@@ -1,4 +1,5 @@
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@supabase/ssr'
+import { auth } from '@supabase/ssr'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     const supabase = await createClient()
     const {
       data: { user }
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getSession()
 
     if (!user?.id) {
       return NextResponse.json(
@@ -88,7 +89,7 @@ export async function POST(req: NextRequest) {
     const supabase = await createClient()
     const {
       data: { user }
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getSession()
 
     if (!user?.id) {
       return NextResponse.json(
@@ -188,7 +189,7 @@ export async function PUT(req: NextRequest) {
     const supabase = await createClient()
     const {
       data: { user }
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getSession()
 
     if (!user?.id) {
       return NextResponse.json(
@@ -283,7 +284,7 @@ export async function DELETE(req: NextRequest) {
     const supabase = await createClient()
     const {
       data: { user }
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getSession()
 
     if (!user?.id) {
       return NextResponse.json(

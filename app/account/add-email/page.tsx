@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { useUser } from '../../auth/lib/auth/config'
+import { useUser } from '@supabase/ssr'
 import { supabase } from '../../../lib/supabase'
 
 export default function Page() {
@@ -23,7 +23,7 @@ export default function Page() {
 
     try {
       // Add email to user's profile in Supabase
-      const { error } = await supabase.auth.updateUser({
+      const { error } = await supabase.auth.update({
         email: email
       })
 
@@ -41,7 +41,7 @@ export default function Page() {
   const verifyCode = async (e: React.FormEvent) => {
     e.preventDefault()
     try {
-      const { error } = await supabase.auth.verifyOtp({
+      const { error } = await supabase.auth.verify({
         email,
         token: code,
         type: 'email'

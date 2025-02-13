@@ -2,8 +2,8 @@ import CustomerPortalForm from '@/components/forms/CustomerPortalForm'
 import EmailForm from '@/components/forms/EmailForm'
 import NameForm from '@/components/forms/NameForm'
 import { ErrorBoundary } from '@/components/error/error-boundary'
-import { createServerClient } from '@/lib/supabase/server'
-import { getSubscription } from '@/utils/supabase/server'
+import { createServerClient } from '@supabase/ssr'
+import { getSubscription } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Container, Typography, Box, Alert, Skeleton } from '@mui/material'
@@ -17,7 +17,7 @@ export default async function AccountPage() {
     const {
       data: { user },
       error: userError
-    } = await supabase.auth.getUser()
+    } = await supabase.auth.getSession()
 
     if (!user || userError) {
       throw new Error(userError?.message || 'User not found')
