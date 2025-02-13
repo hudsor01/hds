@@ -1,70 +1,44 @@
 'use client'
 
-import type { ToastProps, ToastVariant } from '@/components/feedback/toast'
-import { useCallback, useState } from 'react'
+import { toast, type Toast as SonnerToast } from 'sonner'
 
-const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 6000
+export type ToastType = 'success' | 'error' | 'warning' | 'info' | 'default'
 
-type ToasterToast = ToastProps & {
-  id: string
-  title?: React.ReactNode
-  description?: React.ReactNode
+interface ToastOptions {
+  title?: string
+  description: string
+  duration?: number
+  type?: ToastType
 }
 
-let count = 0
-
-function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER
-  return count.toString()
-}
-
-interface State {
-  toasts: ToasterToast[]
-}
-
-const toastTimeouts = new Map<string, ReturnType<typeof setTimeout>>()
-
-interface UseToastReturn {
-  toast: (props: Omit<ToastProps, 'open' | 'onClose'>) => void
-  isOpen: boolean
-  message: string
-  variant: ToastVariant
-  closeToast: () => void
-}
-
-const useToast = (): UseToastReturn => {
-  const [isOpen, setIsOpen] = useState(false)
-  const [message, setMessage] = useState('')
-  const [variant, setVariant] = useState<ToastVariant>('default')
-
-  const closeToast = useCallback(() => {
-    setIsOpen(false)
-  }, [])
-
-  const toast = useCallback(
-    ({ message, variant = 'default' }: Omit<ToastProps, 'open' | 'onClose'>) => {
-      setMessage(message)
-      setVariant(variant)
-      setIsOpen(true)
-
-      const timeout = setTimeout(() => {
-        closeToast()
-      }, TOAST_REMOVE_DELAY)
-
-      return () => clearTimeout(timeout)
-    },
-    [closeToast]
-  )
-
-  return {
-    toast,
-    isOpen,
-    message,
-    variant,
-    closeToast
+class ToastError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'ToastError'
   }
 }
 
-export { useToast }
-export type { UseToastReturn }
+export function useToast() {
+  const showToast = ({ title, description, duration = 5000, type = 'default' }: ToastOptions) => {
+    try {
+      if (!description) {
+        throw new ToastError('Toast description is required')
+      }
+
+      if (type === 'default') {
+        toast(description, { duration })
+      } else {
+        toast[type](description, {
+          duration,
+          ...(title && { description, title })
+        })
+      }
+    } catch (error) {
+      console.error('Toast error:', error)
+      // Fallback to basic toast if something goes wrong
+      toast.error('Something went wrong while showing notification')
+    }
+  }
+
+  return { toast: showToast }
+}

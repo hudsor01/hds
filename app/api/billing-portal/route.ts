@@ -10,7 +10,9 @@ type SessionWithUser = Session & {
 
 export async function POST() {
   const supabase = createClient()
-  const { data: { session } } = await supabase.auth.getSession()
+  const {
+    data: { session }
+  } = await supabase.auth.getSession()
 
   if (!session?.user?.stripe_customer_id) {
     return NextResponse.json({ error: 'No Stripe customer ID found' }, { status: 400 })

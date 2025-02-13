@@ -1,13 +1,29 @@
 'use client'
 
 import * as React from 'react'
-import { useUser } from '@supabase/ssr'
+import { createBrowserClient } from '@supabase/ssr'
 import { supabase } from '../../../lib/supabase'
 import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
 import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
 
 export default function PhoneVerificationPage() {
-  const { user, loading } = useUser()
+  const [user, setUser] = React.useState<User | null>(null)
+  const [loading, setLoading] = React.useState(true)
+
+  React.useEffect(() => {
+    const client = createBrowserClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    )
+    const getUser = async () => {
+      const {
+        data: { user }
+      } = await client.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+    getUser()
+  }, [])
   const [phone, setPhone] = React.useState('')
   const [code, setCode] = React.useState('')
   const [isVerifying, setIsVerifying] = React.useState(false)
