@@ -1,20 +1,22 @@
 'use client'
 
-export function ProtectedComponent() {
-  const { isLoaded, isSignedIn, userId } = useAuth()
+import { useAuth } from '@/hooks/use-auth'
 
-  if (!isLoaded) {
+export function ProtectedComponent() {
+  const { user, loading } = useAuth()
+
+  if (loading) {
     return <div>Loading...</div>
   }
 
-  if (!isSignedIn) {
+  if (!user) {
     return <div>Please sign in to view this content</div>
   }
 
   return (
     <div>
       <h2>Protected Content</h2>
-      <p>User ID: {userId}</p>
+      <p>User ID: {user.id}</p>
     </div>
   )
 }

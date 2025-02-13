@@ -1,12 +1,7 @@
-// components/FinancialChart.tsx
 'use client'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
 import { Bar, BarChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-
-// components/FinancialChart.tsx
-
-// components/FinancialChart.tsx
 
 interface FinancialData {
   month: string
