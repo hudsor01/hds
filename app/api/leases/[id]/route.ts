@@ -1,10 +1,10 @@
 import { prisma } from '@/lib/prisma/prisma'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user },
       error
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 export async function PATCH(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user },
       error
@@ -91,7 +91,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 
 export async function DELETE(request: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user },
       error

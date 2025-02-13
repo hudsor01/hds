@@ -1,12 +1,12 @@
 'use client'
 
-import { Dialog } from '@mui/material'
+import React from 'react'
 import { useModalStore } from '@/hooks/use-modal'
-import { AnimatedModal } from './animated-modal'
 import { AnimatePresence } from 'framer-motion'
-import { useCallback, useEffect } from 'react'
+import type { ModalConfig } from '@/types/animation'
+import { useCallback, useEffect, ComponentType, FC } from 'react'
 
-export function ModalProvider() {
+export function ModalProvider(): React.ReactElement {
   const modals = useModalStore(state => state.modals)
   const closeModal = useModalStore(state => state.closeModal)
 
@@ -35,27 +35,10 @@ export function ModalProvider() {
   }, [modals.length])
 
   return (
-    <AnimatePresence mode="wait">
-      {modals.map(({ id, component, props }, index) => {
-        const isTopmost = index === modals.length - 1
-        return (
-          <AnimatedModal
-            key={id}
-            modalId={id}
-            component={component}
-            props={{
-              ...props,
-              // Only allow interaction with the topmost modal
-              style: {
-                ...props?.style,
-                pointerEvents: isTopmost ? 'auto' : 'none',
-                zIndex: 1300 + index
-              }
-            }}
-            open={true}
-            onClose={() => isTopmost && closeModal(id)}
-          />
-        )
+    <AnimatePresence>
+      {modals.map(modal => {
+        const Component = modal.component as unknown as ComponentType<any>
+        return <Component key={modal.id} onClose={() => closeModal(modal.id)} {...modal.props} />
       })}
     </AnimatePresence>
   )

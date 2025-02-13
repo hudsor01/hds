@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { stripe } from '@/lib/stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     const product = plan.product as Stripe.Product
 
     // Get user from session
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user },
       error: authError

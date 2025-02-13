@@ -1,16 +1,15 @@
-import FetchDataSteps from '@/components/tutorial/fetch-data-steps'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { Info } from 'react-feather'
 import { redirect } from 'next/navigation'
 
 export default async function ProtectedPage() {
-  const supabase = await createClient()
+  const supabase = await supabase()
 
   const {
-    data: { user }
-  } = await supabase.auth.getCurrentUser()
+    data: { session }
+  } = await supabase.auth.getSession()
 
-  if (!user) {
+  if (!session?.user) {
     return redirect('/sign-in')
   }
 
@@ -25,12 +24,11 @@ export default async function ProtectedPage() {
       <div className="flex flex-col items-start gap-2">
         <h2 className="mb-4 text-2xl font-bold">Your user details</h2>
         <pre className="max-h-32 overflow-auto rounded border p-3 font-mono text-xs">
-          {JSON.stringify(user, null, 2)}
+          {JSON.stringify(session?.user, null, 2)}
         </pre>
       </div>
       <div>
         <h2 className="mb-4 text-2xl font-bold">Next steps</h2>
-        <FetchDataSteps />
       </div>
     </div>
   )

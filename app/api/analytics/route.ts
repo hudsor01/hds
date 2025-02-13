@@ -1,5 +1,5 @@
 import { getAnalyticsDashboard } from '@supabase/ssr'
-import { supabase } from '@/lib/supabase'
+import supabase from '@/lib/supabase'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'

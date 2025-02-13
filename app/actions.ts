@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -27,7 +27,7 @@ interface ContactFormData {
   compunknown?: string
 }
 
-const supabase = createClient()
+const supabase = supabase()
 
 const authSchema = z.object({
   email: z.string().email('Invalid email address'),

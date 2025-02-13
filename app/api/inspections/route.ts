@@ -1,5 +1,5 @@
-import { supabase } from '@/lib/supabase'
-import { createClient } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
+import { supabase } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -26,7 +26,7 @@ const inspectionSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await createClient()
+    const { userId } = await supabase()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -70,7 +70,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await createClient()
+    const { userId } = await supabase()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -128,7 +128,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { userId } = await createClient()
+    const { userId } = await supabase()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -201,7 +201,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await createClient()
+    const { userId } = await supabase()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

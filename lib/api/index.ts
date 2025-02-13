@@ -1,7 +1,7 @@
 import { BaseQueryParams, BaseResponse } from '@/types/common'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ZodError, ZodSchema } from 'zod'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import axios, { AxiosError } from 'axios'
 
 export type ApiError = {
@@ -27,7 +27,7 @@ const DEFAULT_TIMEOUT = 30000 // 30 seconds
 // Enhanced fetch wrapper with timeout and detailed error handling
 async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit): Promise<Response> {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { session }
     } = await supabase.auth.getSession()

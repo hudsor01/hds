@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
@@ -8,7 +8,7 @@ export async function GET(request: Request) {
   const next = searchParams.get('next') ?? '/'
 
   if (code) {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const { error } = await supabase.auth.exchangeCode(code)
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)

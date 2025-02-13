@@ -1,6 +1,6 @@
 import { stripe } from '@/lib/payments/stripe'
 import { updatePaymentStatus } from '@/lib/services/payments'
-import { supabase } from '@/lib/supabase'
+import supabase from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 import type { Stripe } from 'stripe'
 

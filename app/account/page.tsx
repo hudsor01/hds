@@ -2,7 +2,7 @@ import CustomerPortalForm from '@/components/forms/CustomerPortalForm'
 import EmailForm from '@/components/forms/EmailForm'
 import NameForm from '@/components/forms/NameForm'
 import { ErrorBoundary } from '@/components/error/error-boundary'
-import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@/utils/supabase/server'
 import { getSubscription } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -11,7 +11,7 @@ import type { Subscription, UserDetails } from '@/types/database'
 
 export default async function AccountPage() {
   const cookieStore = cookies()
-  const supabase = createServerClient(cookieStore)
+  const supabase = createClient(cookieStore)
 
   try {
     const {

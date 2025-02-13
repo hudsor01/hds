@@ -1,5 +1,5 @@
 import type { Team } from '@/types/team'
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
 import { getCurrentUser } from '../../app/auth'
@@ -15,7 +15,7 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = createClient(supabaseUrl, supabaseKey)
+const supabase = supabase(supabaseUrl, supabaseKey)
 
 export async function createCheckoutSession({
   team,

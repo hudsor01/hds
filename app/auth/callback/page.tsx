@@ -2,7 +2,7 @@
 
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { createClient } from '@/utils/supabase/client'
+import supabase from '@/lib/supabase'
 import { Box, CircularProgress, Container, Typography } from '@mui/material'
 
 export default function AuthCallbackPage() {
@@ -13,7 +13,7 @@ export default function AuthCallbackPage() {
 
   useEffect(() => {
     const handleCallback = async () => {
-      const supabase = createClient()
+      const supabase = supabase()
 
       if (code) {
         try {

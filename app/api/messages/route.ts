@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'

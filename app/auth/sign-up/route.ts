@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
       const json = await request.json()
       const body = signUpSchema.parse(json)
 
-      const supabase = await createClient()
+      const supabase = await supabase()
 
       // Check if user already exists
       const { data: existingUser } = await supabase

@@ -1,33 +1,9 @@
+// lib/supabase.ts
 import type { Database } from '@/types/db.types'
-import { createClient } from '@supabase/supabase-js'
+import { SupabaseClient } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 
-// Load environment variables with fallbacks for test environment
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'http://localhost:54321'
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing required Supabase environment variables')
-}
-
-// Configure client with retries and timeouts
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
-  auth: {
-    persistSession: false,
-    autoRefreshToken: true,
-    detectSessionInUrl: true
-  },
-  db: {
-    schema: 'public'
-  },
-  global: {
-    headers: { 'x-application-name': 'property-manager' }
-  },
-  realtime: {
-    params: {
-      eventsPerSecond: 10
-    }
-  }
-})
+const supabaseClient: SupabaseClient<Database> = supabase
 
 // Enhanced error handling with specific error types
 export class DatabaseError extends Error {
@@ -56,36 +32,36 @@ export class AuthorizationError extends DatabaseError {
   }
 }
 
+function hasDetails(error: unknown): error is { details: string; code?: string } {
+  return typeof error === 'object' && error !== null && 'details' in error
+}
+
 export async function handleDatabaseError(error: unknown): Promise<never> {
+  console.log('Error object:', error)
   console.error('Database error:', error)
 
-  // Unique constraint violations
-  if (error?.code === '23505') {
+  if (hasDetails(error) && error.code === '23505') {
     throw new ValidationError('This record already exists.', error.details)
   }
 
-  // Foreign key violations
-  if (error?.code === '23503') {
+  if (hasDetails(error) && error.code === '23503') {
     throw new ValidationError('Referenced record does not exist.', error.details)
   }
 
-  // Permission errors
-  if (error?.code?.startsWith('28')) {
+  if (hasDetails(error) && error.code?.startsWith('28')) {
     throw new AuthorizationError('You do not have permission to perform this action.')
   }
 
-  // Rate limiting errors
-  if (error?.code === '429') {
+  if (hasDetails(error) && error.code === '429') {
     throw new DatabaseError(
-      'Too munknown requests. Please try again later.',
+      'Too many requests. Please try again later.',
       error.code,
       error.details,
       429
     )
   }
 
-  // Timeout errors
-  if (error?.code === '40001') {
+  if (hasDetails(error) && error.code === '40001') {
     throw new DatabaseError(
       'The operation timed out. Please try again.',
       error.code,
@@ -94,10 +70,11 @@ export async function handleDatabaseError(error: unknown): Promise<never> {
     )
   }
 
+  const errorDetails = hasDetails(error) ? error.details : undefined
   throw new DatabaseError(
     'An unexpected database error occurred. Please try again.',
-    error?.code,
-    error?.details,
+    typeof error === 'object' && error !== null ? (error as any).code : undefined,
+    errorDetails,
     500
   )
 }

@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/client'
+import supabase from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 import { useAuth } from './use-auth'
 
@@ -6,7 +6,7 @@ export function usePermissions() {
   const { user } = useAuth()
   const [permissions, setPermissions] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
-  const supabase = createClient()
+  const supabase = supabase()
 
   useEffect(() => {
     const fetchPermissions = async () => {

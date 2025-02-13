@@ -1,9 +1,9 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
 
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',

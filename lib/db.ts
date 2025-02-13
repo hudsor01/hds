@@ -1,6 +1,6 @@
 import type { Database } from '@/types/db.types'
 import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@supabase/supabase-js'
 
 // Prisma Client Initialization
 declare global {
@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Supabase Client Initialization
-export const supabase = createClient<Database>(
+export const supabase = supabase<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.NEXT_PUBLIC_SUPABASE_KEY!
 )
@@ -88,7 +88,7 @@ export async function getPaginatedResults<T>(
 // Payment Queries
 export const payments = {
   getByTenant: async (tenantId: string) => {
-    return prisma.payments.findMunknown({
+    return prisma.payments.findMany({
       where: { tenant_id: tenantId },
       orderBy: { created_at: 'desc' }
     })
@@ -101,7 +101,7 @@ export const payments = {
 
     if (!lease) return []
 
-    return prisma.payments.findMunknown({
+    return prisma.payments.findMany({
       where: { tenant_id: lease.tenant_id },
       orderBy: { created_at: 'desc' }
     })
@@ -131,7 +131,7 @@ export const payments = {
 
     return getPaginatedResults(
       (skip, take) =>
-        prisma.payments.findMunknown({
+        prisma.payments.findMany({
           where,
           orderBy: { created_at: 'desc' },
           skip,
@@ -166,7 +166,7 @@ export const leases = {
   },
 
   getActiveByProperty: async (propertyId: string) => {
-    return prisma.leases.findMunknown({
+    return prisma.leases.findMany({
       where: {
         property_id: propertyId,
         lease_status: 'Active',
@@ -260,7 +260,7 @@ export const properties = {
 
     return getPaginatedResults(
       (skip, take) =>
-        prisma.properties.findMunknown({
+        prisma.properties.findMany({
           where,
           select: {
             id: true,
@@ -308,4 +308,4 @@ export const connect = async () => {
   await prisma.$connect()
 }
 
-export { createClient }
+export { supabase }

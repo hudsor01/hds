@@ -18,7 +18,7 @@ describe('Animation System', () => {
     window.matchMedia = jest.fn().mockImplementation(query => ({
       matches: false,
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     }))
   })
 
@@ -28,7 +28,7 @@ describe('Animation System', () => {
         <TestComponent />
       </AnimationProvider>
     )
-    
+
     expect(screen.getByTestId('reduce-motion')).toHaveTextContent('false')
     expect(screen.getByTestId('duration')).toHaveTextContent('0.2')
   })
@@ -39,17 +39,17 @@ describe('Animation System', () => {
         <TestComponent />
       </AnimationProvider>
     )
-    
+
     await act(async () => {
       screen.getByText('Toggle Motion').click()
     })
-    
+
     expect(screen.getByTestId('reduce-motion')).toHaveTextContent('true')
-    
+
     await act(async () => {
       screen.getByText('Change Duration').click()
     })
-    
+
     expect(screen.getByTestId('duration')).toHaveTextContent('0.5')
   })
 
@@ -57,7 +57,7 @@ describe('Animation System', () => {
     window.matchMedia = jest.fn().mockImplementation(query => ({
       matches: query === '(prefers-reduced-motion: reduce)',
       addEventListener: jest.fn(),
-      removeEventListener: jest.fn(),
+      removeEventListener: jest.fn()
     }))
 
     render(
@@ -65,7 +65,7 @@ describe('Animation System', () => {
         <TestComponent />
       </AnimationProvider>
     )
-    
+
     expect(screen.getByTestId('reduce-motion')).toHaveTextContent('true')
   })
 })

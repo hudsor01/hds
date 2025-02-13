@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -29,7 +29,7 @@ const workOrderSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -101,7 +101,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -215,7 +215,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -325,7 +325,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()

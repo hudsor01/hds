@@ -1,7 +1,7 @@
 'use client'
 
 import { useRouter, redirect } from 'next/navigation'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import type { UserRole } from '@prisma/client'
 
 interface ProtectedRouteProps {
@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
 }
 
 export async function ProtectedRoute({ children, allowedRoles }: ProtectedRouteProps) {
-  const supabase = createClient()
+  const supabase = supabase()
   const router = useRouter()
 
   try {

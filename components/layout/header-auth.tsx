@@ -2,11 +2,11 @@ import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { signOutAction } from '@/app/actions'
 import { hasEnvVars } from '@/utils/supabase/check-env-vars'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import Link from 'next/link'
 
 export default async function AuthButton() {
-  const supabase = await createClient()
+  const supabase = await supabase()
 
   const {
     data: { user }

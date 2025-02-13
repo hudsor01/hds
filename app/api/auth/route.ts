@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 
 export async function POST(request: NextRequest) {
   const cookieStore = await cookies()
@@ -10,7 +10,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })
   }
 
-  const supabase = createClient()
+  const supabase = supabase()
 
   const { error } = await supabase.auth.signIn({ token })
 

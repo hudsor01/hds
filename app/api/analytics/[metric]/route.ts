@@ -5,7 +5,7 @@ import {
   getTenantMetrics,
   getTimeSeries
 } from '@/lib/services/analytics'
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -25,7 +25,7 @@ export async function GET(
   { params }: { params: { metric: string } }
 ): Promise<NextResponse> {
   try {
-    const supabase = await createClient()
+    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()

@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import supabase from '@/lib/supabase'
 import type { UseDashboardUpdatesProps } from '@/types/db.types'
 import { useCallback, useEffect } from 'react'
 

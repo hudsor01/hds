@@ -1,21 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
-import { DialogProps } from '@mui/material'
-import { ReactNode } from 'react'
-
-export interface ModalData {
-  id: string
-  component: ReactNode
-  props?: Omit<DialogProps, 'open' | 'onClose'>
-}
-
-interface ModalStore {
-  modals: ModalData[]
-  openModal: (modal: Omit<ModalData, 'id'>) => string
-  closeModal: (id: string) => void
-  clearModals: () => void
-}
+import type { ModalStore, ModalConfig } from '@/types/animation'
 
 export const useModalStore = create<ModalStore>(set => ({
   modals: [],

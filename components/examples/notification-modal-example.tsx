@@ -1,59 +1,54 @@
 'use client'
 
+import { Button } from '@mui/material'
 import { useToast } from '@/hooks/use-toast'
 import { useModalStore } from '@/hooks/use-modal'
-import { withModalLoading } from '@/components/ui/with-modal-loading'
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material'
+import { Dialog, DialogTitle, DialogContent, DialogActions, CircularProgress } from '@mui/material'
 import { useState } from 'react'
 
 async function simulateAsyncOperation() {
-  await new Promise(resolve => setTimeout(resolve, 1500))
+  await new Promise(resolve => setTimeout(resolve, 1000))
   if (Math.random() > 0.7) {
     throw new Error('Simulated error')
   }
-  return { data: 'Success!' }
+  return { success: true }
 }
 
-function ExampleModalContent({ onClose }: { onClose: () => void }) {
-  const [data, setData] = useState<string>()
+function ModalContent({ onClose }: { onClose: () => void }) {
+  const [loading, setLoading] = useState(false)
   const { toast } = useToast()
 
   const handleAction = async () => {
+    setLoading(true)
     try {
-      const result = await simulateAsyncOperation()
-      setData(result.data)
+      await simulateAsyncOperation()
       toast({
+        type: 'success',
         title: 'Success',
-        description: 'Operation completed successfully',
-        type: 'success'
+        description: 'Operation completed successfully'
       })
     } catch (error) {
       toast({
+        type: 'error',
         title: 'Error',
-        description: error instanceof Error ? error.message : 'An error occurred',
-        type: 'error'
+        description: error instanceof Error ? error.message : 'An error occurred'
       })
+    } finally {
+      setLoading(false)
     }
   }
 
   return (
     <>
-      <DialogTitle>Example Modal</DialogTitle>
-      <DialogContent>
-        <p>This modal demonstrates loading states and error handling</p>
-        {data && <p>Result: {data}</p>}
-      </DialogContent>
+      <DialogTitle>Test Modal</DialogTitle>
+      <DialogContent>{loading ? <CircularProgress /> : <div>Modal Content</div>}</DialogContent>
       <DialogActions>
-        <Button onClick={handleAction} variant="contained" color="primary">
-          Trigger Action
-        </Button>
+        <Button onClick={handleAction}>Trigger Action</Button>
         <Button onClick={onClose}>Close</Button>
       </DialogActions>
     </>
   )
 }
-
-const LoadingModalContent = withModalLoading(ExampleModalContent)
 
 export function ExampleUsage() {
   const { toast } = useToast()
@@ -62,29 +57,20 @@ export function ExampleUsage() {
   const handleShowToast = () => {
     toast({
       title: 'Hello',
-      description: 'This is an animated toast notification',
-      type: 'info'
+      description: 'This is an animated toast notification'
     })
   }
 
   const handleOpenModal = () => {
     const id = openModal({
-      component: <LoadingModalContent onClose={() => useModalStore.getState().closeModal(id)} />,
-      props: {
-        maxWidth: 'sm',
-        fullWidth: true
-      }
+      component: <ModalContent onClose={() => useModalStore.getState().closeModal(id)} />
     })
   }
 
   return (
-    <div style={{ display: 'flex', gap: '1rem' }}>
-      <Button onClick={handleShowToast} variant="contained" color="primary">
-        Show Toast
-      </Button>
-      <Button onClick={handleOpenModal} variant="contained" color="secondary">
-        Open Modal
-      </Button>
+    <div>
+      <Button onClick={handleShowToast}>Show Toast</Button>
+      <Button onClick={handleOpenModal}>Open Modal</Button>
     </div>
   )
 }

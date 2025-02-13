@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -15,7 +15,7 @@ const documentSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -62,7 +62,7 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -140,7 +140,7 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -194,7 +194,7 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()

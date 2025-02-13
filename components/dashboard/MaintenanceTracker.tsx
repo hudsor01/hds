@@ -4,13 +4,13 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
 import { useToast } from '@/hooks/use-toast'
 import { MaintenanceRequest } from '@/types/maintenance_requests'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 
 export default function MaintenanceTracker({ propertyId }: { propertyId: string }) {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([])
   const { toast } = useToast()
-  const supabase = createClient(
+  const supabase = supabase(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
   )

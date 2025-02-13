@@ -21,23 +21,7 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["./components/*"],
-      "@/lib/*": ["./lib/*"],
-      "@/types/*": ["./types/*"],
-      "@/utils/*": ["./utils/*"],
-      "@/hooks/*": ["./hooks/*"],
-      "@/styles/*": ["./styles/*"],
-      "@/config/*": ["./config/*"],
-      "@/assets/*": ["./assets/*"],
-      "@/prisma/*": ["./prisma/*"],
-      "@/supabase/*": ["./supabase/*"],
-      "@/emails/*": ["./emails/*"],
-      "@/middleware/*": ["./middleware/*"],
-      "@/app/*": ["./app/*"],
-      "@/bin/*": ["./bin/*"],
-      "@/public/*": ["./public/*"],
-      "@/auth/*": ["./auth/*"]
+      "@/*": ["*"]
     },
     "forceConsistentCasingInFileNames": true,
     "baseUrl": ".",

@@ -1,4 +1,4 @@
-import { createClient } from '@/utils/supabase/client'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export async function GET(
@@ -6,7 +6,7 @@ export async function GET(
   { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
 
     // Get expense with property details
     const { data: expense, error } = await supabase
@@ -46,7 +46,7 @@ export async function PATCH(
   { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
     const json = await request.json()
 
     // Update expense
@@ -91,7 +91,7 @@ export async function DELETE(
   { params }: { params: { id: string; expenseId: string } }
 ) {
   try {
-    const supabase = createClient()
+    const supabase = supabase()
 
     const { error } = await supabase
       .from('expenses')

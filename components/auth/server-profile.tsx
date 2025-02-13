@@ -1,8 +1,8 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/utils/supabase/server'
 import { Box, Typography } from '@mui/material'
 
 export async function ServerProfile() {
-  const supabase = await createClient()
+  const supabase = await supabase()
   const {
     data: { user }
   } = await supabase.auth.getCurrentUser()

@@ -3,7 +3,7 @@
 import { Button } from '@mui/material'
 import { Card, CardContent, CardHeader } from '@mui/material'
 import { useToast } from '@/hooks/use-toast'
-import { createClient } from '@/utils/supabase/client'
+import supabase from '@/lib/supabase'
 import { FileText, Trash2, Upload } from 'react-feather'
 import { useState } from 'react'
 
@@ -22,7 +22,7 @@ export default function FileManager({ propertyId }: FileManagerProps) {
   const [files, setFiles] = useState<FileData[]>([])
   const [uploading, setUploading] = useState(false)
   const { toast } = useToast()
-  const supabase = createClient()
+  const supabase = supabase()
 
   const uploadFile = async (file: globalThis.File) => {
     try {

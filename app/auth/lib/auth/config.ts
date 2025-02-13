@@ -1,11 +1,11 @@
-import { createClient, type Session, type User } from '@supabase/supabase-js'
+import { supabase, type Session, type User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
 // Create a singleton Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+export const supabase = supabase(supabaseUrl, supabaseAnonKey)
 
 // Hook to get the current session
 export function useSession() {

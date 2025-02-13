@@ -1,21 +1,16 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
-
-interface AnimationPreferences {
-  reduceMotion: boolean
-  duration: number
-  setReduceMotion: (value: boolean) => void
-  setDuration: (value: number) => void
-}
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import type { AnimationPreferences } from '@/types/animation'
 
 const AnimationContext = createContext<AnimationPreferences | undefined>(undefined)
 
+const DEFAULT_DURATION = 0.2
+
 export function AnimationProvider({ children }: { children: ReactNode }) {
   const [reduceMotion, setReduceMotion] = useState(false)
-  const [duration, setDuration] = useState(0.2)
+  const [duration, setDuration] = useState(DEFAULT_DURATION)
 
-  // Check user's system preferences
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
     setReduceMotion(mediaQuery.matches)

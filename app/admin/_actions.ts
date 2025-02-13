@@ -1,10 +1,10 @@
 'use server'
 
-import { createClient } from '@supabase/ssr'
+import { supabase } from '@supabase/ssr'
 import { checkRole } from '@/utils/roles'
 
 export async function setRole(formData: FormData): Promise<void> {
-  const supabase = await createClient()
+  const supabase = await supabase()
 
   const {
     data: { user }
@@ -27,7 +27,7 @@ export async function setRole(formData: FormData): Promise<void> {
 }
 
 export async function removeRole(formData: FormData): Promise<void> {
-  const supabase = await createClient()
+  const supabase = await supabase()
 
   const {
     data: { user }
