@@ -1,4 +1,4 @@
-import supabase from '@lib/supabase'
+import supabase from '@/lib/supabase'
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
@@ -28,7 +28,6 @@ const paymentSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -91,7 +90,6 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -205,7 +203,6 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -292,7 +289,6 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()

@@ -28,7 +28,7 @@ const publicNavigation = [
 export function MobileNav() {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user } = usesupabase.auth()
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen)
@@ -86,7 +86,7 @@ export function MobileNav() {
 
 export function DesktopNav() {
   const pathname = usePathname()
-  const { user } = useAuth()
+  const { user } = usesupabase.auth()
 
   const navItems = user ? navigation : publicNavigation
 

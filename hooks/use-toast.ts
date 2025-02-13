@@ -2,6 +2,7 @@
 
 import { toast as sonnerToast } from 'sonner'
 import { useState, useCallback } from 'react'
+import { Hooks, UI } from '@/types'
 
 export type ToastType = 'success' | 'error' | 'warning' | 'info' | 'default'
 
@@ -13,7 +14,7 @@ interface Toast {
   type?: ToastType
 }
 
-export function useToast() {
+export function useToast(): Hooks.UseToastReturn {
   const [toasts, setToasts] = useState<Toast[]>([])
 
   const addToast = useCallback(

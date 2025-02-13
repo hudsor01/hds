@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import supabase from '@/lib/supabase'
+import { User } from '@supabase/supabase-js'
 import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
 import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
 import { Forms, UI } from '@/types'
@@ -83,7 +84,11 @@ export default function PhoneVerificationPage() {
     setFormState(prevState => ({ ...prevState, error: null, isSubmitting: true }))
 
     try {
-      const { error: verifyError } = await supabase.auth.verify({ phone: formState.phone, token: formState.code, type: 'sms' })
+      const { error: verifyError } = await supabase.auth.verify({
+        phone: formState.phone,
+        token: formState.code,
+        type: 'sms'
+      })
 
       if (verifyError) throw verifyError
 
@@ -169,7 +174,7 @@ export default function PhoneVerificationPage() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <Box className="flex-center flex-col gap-4">
             <PhoneIcon color="primary" sx={{ fontSize: 48 }} />
-            <Typography variant="h4" component="h1"></Typography>
+            <Typography variant="h4" component="h1">
               Add Phone Number
             </Typography>
             <Typography color="text.secondary">

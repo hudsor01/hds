@@ -7,7 +7,8 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Container, Typography, Box, Alert, Skeleton } from '@mui/material'
 import { ReactNode } from 'react'
-import { Auth, API } from '@/types'
+import { Auth } from '@/types'
+import type { User } from '@supabase/supabase-js'
 
 async function getSubscription(
   supabase: typeof import('@/lib/supabase').default
@@ -44,8 +45,7 @@ export default async function AccountPage() {
     if (!user || userError) {
       throw new Error(userError?.message || 'User not found')
     }
-
-    const authUser = user as SupabaseUser
+    const authUser = user as User
 
     const [subscriptionResult, userDetailsResult] = await Promise.allSettled([
       getSubscription(supabase),
@@ -73,7 +73,7 @@ export default async function AccountPage() {
 
     const subscription = subscriptionResult.status === 'fulfilled' ? subscriptionResult.value : null
 
-    const userDetails = userDetailsResult.value.data as AccountUser
+    const userDetails = userDetailsResult.value.data as Auth.AccountUser
 
     return (
       <ErrorBoundary fallback={<ErrorFallback error={new Error('Something went wrong')} />}>

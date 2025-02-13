@@ -1,8 +1,9 @@
 'use client'
+import { Animations } from '@/types'
 
-export const listAnimation = {
+export const listAnimation: Animations.ListAnimation = {
   hidden: { opacity: 0, y: 20 },
-  visible: (index: number) => ({
+  visible: index => ({
     opacity: 1,
     y: 0,
     transition: {
@@ -13,7 +14,7 @@ export const listAnimation = {
   exit: { opacity: 0, y: -20 }
 }
 
-export const dataUpdateAnimation = {
+export const dataUpdateAnimation: Animations.DataUpdateAnimation = {
   hidden: { opacity: 0.6, scale: 0.98 },
   visible: {
     opacity: 1,
@@ -26,7 +27,7 @@ export const dataUpdateAnimation = {
   }
 }
 
-export const tabPanelAnimation = {
+export const tabPanelAnimation: Animations.TabPanelAnimation = {
   hidden: { opacity: 0, x: -10 },
   visible: {
     opacity: 1,
@@ -41,7 +42,7 @@ export const tabPanelAnimation = {
   }
 }
 
-export const chartAnimation = {
+export const chartAnimation: Animations.ChartAnimation = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: {
     opacity: 1,
@@ -54,7 +55,7 @@ export const chartAnimation = {
   }
 }
 
-export const filterAnimation = {
+export const filterAnimation: Animations.FilterAnimation = {
   hidden: { opacity: 0, height: 0 },
   visible: {
     opacity: 1,
@@ -76,7 +77,7 @@ export const filterAnimation = {
   }
 }
 
-export const notificationAnimation = {
+export const notificationAnimation: Animations.NotificationAnimation = {
   hidden: { opacity: 0, y: -20 },
   visible: {
     opacity: 1,
@@ -94,4 +95,14 @@ export const notificationAnimation = {
       duration: 0.2
     }
   }
+}
+
+// Animation preset map for easy lookup
+export const animationPresets: Animations.PresetMap = {
+  list: listAnimation,
+  dataUpdate: dataUpdateAnimation,
+  tabPanel: tabPanelAnimation,
+  chart: chartAnimation,
+  filter: filterAnimation,
+  notification: notificationAnimation
 }

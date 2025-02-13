@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
 
 export function useProtectedRoute() {
-  const { user, isLoading } = useAuth()
+  const { user, isLoading } = usesupabase.auth()
   const router = useRouter()
 
   useEffect(() => {

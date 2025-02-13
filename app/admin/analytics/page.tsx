@@ -1,6 +1,6 @@
 import { EmailMetricsTable } from '@/components/analytics/EmailMetricsTable'
 import { ErrorBoundary } from '@/components/error/error-boundary'
-import { getEmailMetrics } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import {
   Box,
   Card,
@@ -13,13 +13,34 @@ import {
 import { BarChart, LineChart } from '@mui/x-charts'
 import { Suspense } from 'react'
 
-async function getAnalyticsData() {
+async function getEmailMetrics(type: string) {
+  const { data, error } = await supabase.from('email_metrics').select('*').eq('type', type).single()
+
+  if (error) throw error
+  return data
+}
+
+async function getAnalyticsData(): Promise<{
+  dates: Date[]
+  counts: number[]
+  sent: number
+  opened: number
+  clicked: number
+  emailMetrics: Array<{
+    template: string
+    sent: number
+    opened: number
+    clicked: number
+    openRate: number
+    clickRate: number
+  }>
+}> {
   try {
-    const emailStats = await getEmailMetrics('system') // Replace with actual userId
+    const emailStats = await getEmailMetrics('system')
 
     return {
       dates: Array.from({ length: 30 }, (_, i) => new Date(Date.now() - i * 24 * 60 * 60 * 1000)),
-      counts: Array.from({ length: 30 }, () => Math.floor(Math.random() * 100)), // Replace with actual data
+      counts: Array.from({ length: 30 }, () => Math.floor(Math.random() * 100)),
       sent: emailStats.sent,
       opened: emailStats.opened,
       clicked: emailStats.clicked,

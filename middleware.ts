@@ -5,6 +5,7 @@ import { type Database } from '@/types/db.types'
 import { rateLimiter } from '@/lib/rate-limit'
 import { DatabaseError } from '@/lib/supabase'
 import { ZodError } from 'zod'
+import { toast } from 'sonner'
 
 // Define route protection
 const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password']
@@ -17,7 +18,11 @@ export async function middleware(request: NextRequest) {
     // Rate limiting for auth endpoints
     if (request.nextUrl.pathname.startsWith('/auth')) {
       const ip = request.headers.get('x-forwarded-for') || '127.0.0.1'
-      const { success } = await rateLimiter(ip)
+      const success: boolean = await rateLimiter(ip, request, {
+        uniqueTokenPerInterval: 500,
+        interval: 60 * 1000, // 1 minute
+        tokensPerInterval: 10
+      })
       if (!success) {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
       }

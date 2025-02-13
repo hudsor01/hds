@@ -1,6 +1,6 @@
 import type { Database } from '@/types/db.types'
 import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
-import { supabase } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 
 // Prisma Client Initialization
 declare global {

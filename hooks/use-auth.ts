@@ -6,7 +6,7 @@ interface AuthUser extends User {
   role?: string
 }
 
-export function useAuth() {
+export function usesupabase.auth() {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const supabase = supabase()

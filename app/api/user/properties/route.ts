@@ -2,7 +2,7 @@ import { sql } from '@vercel/postgres'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const { userId } = await auth()
+  const { userId } = await supabase.auth()
 
   if (!userId) {
     return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {

@@ -3,7 +3,7 @@
 import { useAuth } from '@/hooks/use-auth'
 
 export function ProtectedComponent() {
-  const { user, loading } = useAuth()
+  const { user, loading } = usesupabase.auth()
 
   if (loading) {
     return <div>Loading...</div>

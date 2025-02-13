@@ -21,8 +21,6 @@ export async function POST(request: Request) {
       const json = await request.json()
       const body = signUpSchema.parse(json)
 
-      const supabase = await supabase()
-
       // Check if user already exists
       const { data: existingUser } = await supabase
         .from('users')

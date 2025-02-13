@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/cards/card'
 import { useToast } from '@/hooks/use-toast'
 import { MaintenanceRequest } from '@/types/maintenance_requests'
-import { supabase } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 import { useEffect, useState } from 'react'
 
 export default function MaintenanceTracker({ propertyId }: { propertyId: string }) {

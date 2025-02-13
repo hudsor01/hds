@@ -37,7 +37,7 @@ const stats = [
 ]
 
 export default async function DashboardPage() {
-  const { userId } = await auth()
+  const { userId } = await supabase.auth()
 
   if (!userId) {
     redirect('/sign-in')

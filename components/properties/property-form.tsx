@@ -14,7 +14,7 @@ const propertyTypes = Object.entries(PROPERTY_TYPES).map(([value, label]) => ({
 }))
 
 const propertyStatuses = Object.entries(PROPERTY_STATUS).map(([value, label]) => ({
-  label,
+  label: label as string,
   value
 }))
 

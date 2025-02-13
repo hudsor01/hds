@@ -1,4 +1,4 @@
-import WelcomeTemplate from '../../../emails'
+import WelcomeTemplate from '@/emails/welcome'
 import { ratelimit } from '../../../lib/ratelimit'
 import { render } from '@react-email/render'
 import { NextRequest, NextResponse } from 'next/server'
@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     to: [email],
     subject: 'Thankyou for waitlisting the Hudson Digital Solutions - Property Management System!',
     replyTo: 'rhudsontspr@gmail.com',
-    html: await render(WelcomeTemplate({ userFirstname: firstname }))
+    html: await render(WelcomeTemplate({ position: firstname, referralCode: '' }))
   })
 
   if (error) {
