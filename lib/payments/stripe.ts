@@ -1,5 +1,5 @@
 import type { Team } from '@/types/team'
-import { supabase } from '@supabase/ssr'
+import supabase from '@lib/supabase'
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
 import { getCurrentUser } from '../../app/auth'

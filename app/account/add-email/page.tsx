@@ -1,15 +1,38 @@
 'use client'
 
 import * as React from 'react'
-import { useUser } from '@supabase/ssr'
-import { supabase } from '../../../lib/supabase'
+import supabase from '@/lib/supabase'
+import { Forms, UI } from '@/types'
 
-export default function Page() {
-  const { user, loading } = useUser()
-  const [email, setEmail] = React.useState('')
-  const [code, setCode] = React.useState('')
+type EmailVerificationState = {
+  email: string
+  code: string
+} & Forms.State
+
+export default function EmailAdditionPage() {
+  const [formState, setFormState] = React.useState<EmailVerificationState>({
+    email: '',
+    code: '',
+    isSubmitting: false,
+    error: null,
+    success: false
+  })
+
+  const [user, setUser] = React.useState<User | null>(null)
+  const [loading, setLoading] = React.useState(true)
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [successful, setSuccessful] = React.useState(false)
+
+  React.useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user }
+      } = await supabase.auth.getUser()
+      setUser(user)
+      setLoading(false)
+    }
+    getUser()
+  }, [])
 
   if (loading) return null
 
@@ -24,7 +47,7 @@ export default function Page() {
     try {
       // Add email to user's profile in Supabase
       const { error } = await supabase.auth.update({
-        email: email
+        email: formState.email
       })
 
       if (error) throw error
@@ -42,8 +65,8 @@ export default function Page() {
     e.preventDefault()
     try {
       const { error } = await supabase.auth.verify({
-        email,
-        token: code,
+        email: formState.email,
+        token: formState.code,
         type: 'email'
       })
 
@@ -73,11 +96,11 @@ export default function Page() {
             <div>
               <label htmlFor="code">Enter code</label>
               <input
-                onChange={e => setCode(e.target.value)}
+                onChange={e => setFormState({ ...formState, code: e.target.value })}
                 id="code"
                 name="code"
                 type="text"
-                value={code}
+                value={formState.code}
               />
             </div>
             <div>
@@ -98,11 +121,11 @@ export default function Page() {
           <div>
             <label htmlFor="email">Enter email address</label>
             <input
-              onChange={e => setEmail(e.target.value)}
+              onChange={e => setFormState({ ...formState, email: e.target.value })}
               id="email"
               name="email"
               type="email"
-              value={email}
+              value={formState.email}
             />
           </div>
           <div>

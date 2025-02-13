@@ -1,4 +1,4 @@
-import { supabase } from '@supabase/ssr'
+import supabase from '@lib/supabase'
 import { auth } from '@supabase/ssr'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
