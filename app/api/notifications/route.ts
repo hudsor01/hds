@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/ssr'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -23,6 +23,8 @@ export async function GET(req: NextRequest) {
     const unreadOnly = searchParams.get('unread_only') === 'true'
     const limit = parseInt(searchParams.get('limit') || '50', 10)
     const offset = parseInt(searchParams.get('offset') || '0', 10)
+
+    const supabase = createClient()
 
     let query = supabase
       .from('notifications')
@@ -63,6 +65,8 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const validatedData = notificationSchema.parse(body)
 
+    const supabase = createClient()
+
     const { data: notification, error } = await supabase
       .from('notifications')
       .insert([{ ...validatedData, user_id: userId }])
@@ -97,6 +101,8 @@ export async function PUT(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'Notification ID is required' }, { status: 400 })
     }
+
+    const supabase = createClient()
 
     // For marking as read
     if (updateData.markAsRead) {
@@ -153,6 +159,8 @@ export async function DELETE(req: NextRequest) {
     if (!id) {
       return NextResponse.json({ error: 'Notification ID is required' }, { status: 400 })
     }
+
+    const supabase = createClient()
 
     // Verify notification ownership
     const { data: notification, error: notificationCheckError } = await supabase

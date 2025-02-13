@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@supabase/ssr'
 import { checkRole } from '@/utils/roles'
 
 export async function setRole(formData: FormData): Promise<void> {
@@ -8,7 +8,7 @@ export async function setRole(formData: FormData): Promise<void> {
 
   const {
     data: { user }
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getSession()
 
   if (!checkRole(user?.email, 'admin')) {
     throw new Error('Not Authorized')
@@ -31,7 +31,7 @@ export async function removeRole(formData: FormData): Promise<void> {
 
   const {
     data: { user }
-  } = await supabase.auth.getUser()
+  } = await supabase.auth.getSession()
 
   if (!checkRole(user?.email, 'admin')) {
     throw new Error('Not Authorized')

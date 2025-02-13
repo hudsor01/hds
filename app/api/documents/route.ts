@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@supabase/ssr'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -15,8 +15,9 @@ const documentSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -28,7 +29,7 @@ export async function GET(req: NextRequest) {
     let query = supabase
       .from('documents')
       .select('*')
-      .eq('uploaded_by', userId)
+      .eq('uploaded_by', user.id)
       .order('created_at', { ascending: false })
 
     if (property_id) {
@@ -59,8 +60,9 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -73,7 +75,7 @@ export async function POST(req: NextRequest) {
         .from('properties')
         .select('id')
         .eq('id', validatedData.property_id)
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .single()
 
       if (propertyError || !property) {
@@ -87,7 +89,7 @@ export async function POST(req: NextRequest) {
         .from('leases')
         .select('id')
         .eq('id', validatedData.lease_id)
-        .eq('user_id', userId)
+        .eq('user_id', user.id)
         .single()
 
       if (leaseError || !lease) {
@@ -97,7 +99,7 @@ export async function POST(req: NextRequest) {
 
     const { data: document, error } = await supabase
       .from('documents')
-      .insert([{ ...validatedData, uploaded_by: userId }])
+      .insert([{ ...validatedData, uploaded_by: user.id }])
       .select()
       .single()
 
@@ -109,7 +111,7 @@ export async function POST(req: NextRequest) {
     // Create notification for new document
     await supabase.from('notifications').insert([
       {
-        user_id: userId,
+        user_id: user.id,
         type: 'DOCUMENT',
         title: 'New Document Added',
         message: `A new ${validatedData.type} document has been added: ${validatedData.name}`,
@@ -134,8 +136,9 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -153,7 +156,7 @@ export async function PUT(req: NextRequest) {
       .from('documents')
       .select('id')
       .eq('id', id)
-      .eq('uploaded_by', userId)
+      .eq('uploaded_by', user.id)
       .single()
 
     if (documentCheckError || !existingDocument) {
@@ -164,7 +167,7 @@ export async function PUT(req: NextRequest) {
       .from('documents')
       .update(validatedData)
       .eq('id', id)
-      .eq('uploaded_by', userId)
+      .eq('uploaded_by', user.id)
       .select()
       .single()
 
@@ -185,8 +188,9 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const { userId } = await auth()
-    if (!userId) {
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getSession()
+    if (!user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -200,7 +204,7 @@ export async function DELETE(req: NextRequest) {
       .from('documents')
       .select('url')
       .eq('id', id)
-      .eq('uploaded_by', userId)
+      .eq('uploaded_by', user.id)
       .single()
 
     if (documentCheckError || !document) {
@@ -221,7 +225,7 @@ export async function DELETE(req: NextRequest) {
       .from('documents')
       .delete()
       .eq('id', id)
-      .eq('uploaded_by', userId)
+      .eq('uploaded_by', user.id)
 
     if (error) {
       console.error('Error deleting document:', error)

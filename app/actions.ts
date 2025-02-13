@@ -1,6 +1,6 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { createClient } from '@supabase/ssr'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
@@ -162,7 +162,7 @@ export async function signInWithEmail(formData: FormData) {
       password: formData.get('password')
     })
 
-    const { error } = await (await supabase).auth.signInWithPassword(credentials)
+    const { error } = await (await supabase).auth.signIn(credentials)
 
     if (error) {
       return { error: error.message }
@@ -185,7 +185,7 @@ export async function signUpWithEmail(formData: FormData) {
       password: formData.get('password')
     })
 
-    const { error } = await (await supabase).auth.signUp(credentials)
+    const { error } = await (await supabase).auth.signUpWithPassword(credentials)
     return error ? { error: error.message } : { success: true }
   } catch (error) {
     if (error instanceof z.ZodError) {
@@ -230,7 +230,7 @@ export async function forgotPasswordAction(formData: FormData) {
 
     const { error } = await (
       await supabase
-    ).auth.resetPasswordForEmail(email, {
+    ).auth.resetPassword(email, {
       redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/update-password`
     })
 

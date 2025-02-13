@@ -1,4 +1,4 @@
-import { checkRole } from '@/utils/roles'
+import { checkRole } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
 import { SearchUsers } from './SearchUsers'
 import { removeRole, setRole } from './_actions'
