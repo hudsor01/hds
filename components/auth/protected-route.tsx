@@ -1,8 +1,5 @@
 'use client'
 
-import Alert from '@mui/material/Alert'
-import Box from '@mui/material/Box'
-import CircularProgress from '@mui/material/CircularProgress'
 import { useRouter, redirect } from 'next/navigation'
 import { createClient } from '@/utils/supabase/server'
 import type { UserRole } from '@prisma/client'

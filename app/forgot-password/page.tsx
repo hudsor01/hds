@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material'
-import ResetPasswordForm from '@/components/auth/reset-password-form'
+import { ForgotPasswordForm } from '@/components/auth/ForgotPasswordForm'
 import { Metadata } from 'next'
 
 export const metadata: Metadata = {
@@ -16,7 +16,7 @@ export default function ForgotPasswordPage() {
       <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
         No worries, we'll help you reset it
       </Typography>
-      <ResetPasswordForm />
+      <ForgotPasswordForm />
     </Container>
   )
 }

@@ -4,6 +4,7 @@ import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
 import Paper from '@mui/material/Paper'
 import { styled } from '@mui/material/styles'
+import { SignIn } from '@clerk/clerk-react'
 
 const StyledAuthContainer = styled(Box)(({ theme }) => ({
   minHeight: '100vh',
