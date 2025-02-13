@@ -19,7 +19,6 @@ interface Session {
   current: boolean
 }
 
-// Animation variants
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
   show: {

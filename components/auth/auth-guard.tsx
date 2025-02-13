@@ -2,18 +2,19 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
+import { useAuth } from '@/hooks/use-auth'
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { isLoaded, isSignedIn } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (isLoaded && !isSignedIn) {
+    if (!loading && !user) {
       router.push('/')
     }
-  }, [isLoaded, isSignedIn, router])
+  }, [loading, user, router])
 
-  if (!isLoaded || !isSignedIn) {
+  if (loading || !user) {
     return null
   }
 

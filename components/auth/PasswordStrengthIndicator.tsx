@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useTheme } from '@mui/material/styles'
 
 interface PasswordStrengthProps {
   password: string
@@ -10,6 +11,7 @@ interface PasswordStrengthProps {
 export function PasswordStrengthIndicator({ password }: PasswordStrengthProps): React.ReactElement {
   const [strength, setStrength] = useState(0)
   const [feedback, setFeedback] = useState('')
+  const theme = useTheme()
 
   useEffect(() => {
     const calculateStrength = (): number => {
@@ -37,19 +39,20 @@ export function PasswordStrengthIndicator({ password }: PasswordStrengthProps): 
   }, [password])
 
   const strengthColor = [
-    'bg-red-500',
-    'bg-orange-500',
-    'bg-yellow-500',
-    'bg-blue-500',
-    'bg-green-500',
-    'bg-green-600'
+    theme.palette.error.main,
+    theme.palette.warning.main,
+    theme.palette.info.main,
+    theme.palette.primary.main,
+    theme.palette.success.main,
+    theme.palette.success.dark
   ][strength]
 
   return (
     <div className="space-y-2">
       <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
         <motion.div
-          className={`h-full ${strengthColor}`}
+          className={`h-full`}
+          style={{ backgroundColor: strengthColor }}
           initial={{ width: 0 }}
           animate={{ width: `${(strength / 5) * 100}%` }}
           transition={{ duration: 0.3 }}

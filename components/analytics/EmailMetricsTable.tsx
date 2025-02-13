@@ -84,6 +84,18 @@ export function EmailMetricsTable({ data, isLoading, error }: EmailMetricsProps)
           sorting: { sortModel: [{ field: 'sent', sort: 'desc' }] }
         }}
         getRowId={row => row.template}
+        components={{
+          NoRowsOverlay: () => (
+            <Box sx={{ p: 3, textAlign: 'center' }}>
+              <Typography>No email metrics available.</Typography>
+            </Box>
+          ),
+          ErrorOverlay: () => (
+            <Box sx={{ p: 3, textAlign: 'center' }}>
+              <Typography color="error">Error loading email metrics.</Typography>
+            </Box>
+          )
+        }}
       />
     </ErrorBoundary>
   )
