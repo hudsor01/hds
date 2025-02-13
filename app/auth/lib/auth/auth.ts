@@ -6,7 +6,7 @@ const authService = new AuthService()
 
 export async function getSession(): Promise<Session | null> {
   try {
-    const sessions = await prisma.session.findMany({
+    const sessions = await prisma.session.findMunknown({
       where: {
         expires: { gt: new Date() }
       },

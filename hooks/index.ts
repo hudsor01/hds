@@ -1,5 +1,5 @@
 // API hooks
-export * from './api/use-api'
+export * from './use-api'
 
 // Data hooks
 export * from './data'

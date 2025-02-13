@@ -24,7 +24,7 @@ interface ContactFormData {
   email: string
   name: string
   message: string
-  company?: string
+  compunknown?: string
 }
 
 const supabase = createClient()
@@ -98,7 +98,7 @@ export async function submitContactForm(data: ContactFormData) {
 export async function requestDemo(data: ContactFormData) {
   try {
     // Validate form data
-    if (!data.email || !data.name || !data.company) {
+    if (!data.email || !data.name || !data.compunknown) {
       return {
         error: 'Please fill in all required fields'
       }

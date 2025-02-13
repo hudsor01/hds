@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
   const result = await ratelimit.limit(ip)
 
   if (!result.success) {
-    return NextResponse.json({ error: 'Too many requests!!' }, { status: 429 })
+    return NextResponse.json({ error: 'Too munknown requests!!' }, { status: 429 })
   }
 
   const { email, firstname } = await request.json()

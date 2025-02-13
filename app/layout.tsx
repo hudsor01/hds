@@ -4,7 +4,6 @@ import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '@/lib/theme'
 import type { Metadata } from 'next'
-import { AuthProvider } from '@/components/providers/auth-provider'
 import { Providers } from '@/components/providers/providers'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
@@ -13,42 +12,54 @@ import { Toaster } from 'sonner'
 import Navbar from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
 
-// Configure Roboto font with variable fonts
+// Configure Roboto font with variable fonts support
 const roboto = Roboto({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
-  variable: '--font-roboto'
+  variable: '--font-roboto',
+  display: 'swap',
+  preload: true
 })
 
 export const metadata: Metadata = {
-  title: 'Property Manager',
-  description: 'Manage your properties efficiently',
+  title: 'Hudson Digital Solutions',
+  description: 'Your comprehensive property management solution',
   icons: {
     icon: '/favicon.ico'
   }
 }
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+
+// Enhanced layout with Next.js 15's async features
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Using Next.js 15's async headers API
+  const { cookies } = await import('next/headers')
+  const cookieStore = await cookies()
+  const themePreference = cookieStore.get('theme')?.value
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={roboto.variable}>
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className={roboto.className}>
+      <body>
         <Providers>
-          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
+          <AppRouterCacheProvider options={{ enableCssLayer: true, key: 'mui-cache' }}>
             <ThemeProvider theme={theme}>
-              <CssBaseline />
-              {children}
+              <CssBaseline enableColorScheme />
+              <div className="flex min-h-screen flex-col">
+                <Navbar />
+                <main className="flex-1">{children}</main>
+                <Footer />
+              </div>
+              <Toaster
+                position="top-center"
+                expand
+                richColors
+                closeButton
+                theme={(themePreference as 'light' | 'dark' | 'system') || 'system'}
+              />
             </ThemeProvider>
           </AppRouterCacheProvider>
-          <AuthProvider>
-            <div className="flex min-h-screen flex-col">
-              <Navbar />
-              <main className="flex-1">{children}</main>
-              <Footer />
-            </div>
-            <Toaster position="top-center" expand richColors />
-          </AuthProvider>
         </Providers>
         <Analytics />
         <SpeedInsights />

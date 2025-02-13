@@ -16,7 +16,7 @@ export async function POST() {
   }
 
   const stripe = await getStripe()
-  const portalSession = await (stripe as any).billingPortal.sessions.create({
+  const portalSession = await (stripe as unknown).billingPortal.sessions.create({
     customer: session.user.stripe_customer_id,
     return_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard`
   })

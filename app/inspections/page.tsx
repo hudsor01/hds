@@ -45,7 +45,7 @@ const columns: GridColDef[] = [
 
 export default function InspectionsPage() {
   const [open, setOpen] = useState(false)
-  const [selectedInspection, setSelectedInspection] = useState<any>(null)
+  const [selectedInspection, setSelectedInspection] = useState<unknown>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10
@@ -56,12 +56,12 @@ export default function InspectionsPage() {
     queryFn: () => api.get('/api/inspections')
   })
 
-  const handleEdit = (inspection: any) => {
+  const handleEdit = (inspection: unknown) => {
     setSelectedInspection(inspection)
     setOpen(true)
   }
 
-  const handleDelete = async (inspection: any) => {
+  const handleDelete = async (inspection: unknown) => {
     if (window.confirm('Are you sure you want to delete this inspection?')) {
       try {
         await api.delete(`/api/inspections`, inspection.id)
@@ -72,7 +72,7 @@ export default function InspectionsPage() {
     }
   }
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: unknown) => {
     try {
       if (selectedInspection) {
         await api.put(`/api/inspections`, selectedInspection.id, formData)

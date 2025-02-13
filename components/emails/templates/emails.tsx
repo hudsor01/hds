@@ -40,7 +40,11 @@ export const LaunchReminderEmail = () => (
 )
 
 // Email sending service
-export const sendEmail = async (to: string, template: EmailTemplate, data: Record<string, any>) => {
+export const sendEmail = async (
+  to: string,
+  template: EmailTemplate,
+  data: Record<string, unknown>
+) => {
   const templates = {
     [EmailTemplate.WELCOME]: WelcomeEmail,
     [EmailTemplate.EARLY_ACCESS]: EarlyAccessEmail,

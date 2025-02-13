@@ -18,8 +18,8 @@ declare global {
       bathrooms?: number
       bedrooms?: number
       size?: number
-      features?: Record<string, any>
-      metadata?: Record<string, any>
+      features?: Record<string, unknown>
+      metadata?: Record<string, unknown>
       organization_id: string
       created_at: string
       updated_at: string
@@ -64,7 +64,7 @@ declare global {
           name: string
           uploaded_at: string
         }>
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       lease: {
         id: string
@@ -77,14 +77,14 @@ declare global {
         rent_amount: number
         deposit_amount: number
         payment_day: number
-        terms?: Record<string, any>
+        terms?: Record<string, unknown>
         documents?: Array<{
           type: string
           url: string
           name: string
           uploaded_at: string
         }>
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       maintenance: {
         id: string
@@ -101,7 +101,7 @@ declare global {
         scheduled_date?: string
         completed_date?: string
         notes?: string[]
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       payment: {
         id: string
@@ -112,7 +112,7 @@ declare global {
         date: string
         method?: string
         reference?: string
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       invoice: {
         id: string
@@ -125,7 +125,7 @@ declare global {
         payment_status?: string
         payment_method?: string
         payment_date?: string
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       event: {
         id: string
@@ -139,7 +139,7 @@ declare global {
         category?: string
         images?: string[]
         cost?: number
-        metadata?: Record<string, any>
+        metadata?: Record<string, unknown>
       }
       document: {
         id: string
@@ -173,7 +173,7 @@ declare global {
         name: string
         uploaded_at: string
       }>
-      metadata?: Record<string, any>
+      metadata?: Record<string, unknown>
     }
 
     // Lease-related JSON types
@@ -188,14 +188,14 @@ declare global {
       rent_amount: number
       deposit_amount: number
       payment_day: number
-      terms?: Record<string, any>
+      terms?: Record<string, unknown>
       documents?: Array<{
         type: string
         url: string
         name: string
         uploaded_at: string
       }>
-      metadata?: Record<string, any>
+      metadata?: Record<string, unknown>
     }
 
     // Payment-related JSON types
@@ -208,7 +208,7 @@ declare global {
       date: string
       method?: string
       reference?: string
-      metadata?: Record<string, any>
+      metadata?: Record<string, unknown>
     }
 
     // Maintenance-related JSON types
@@ -227,7 +227,7 @@ declare global {
       scheduled_date?: string
       completed_date?: string
       notes?: string[]
-      metadata?: Record<string, any>
+      metadata?: Record<string, unknown>
     }
 
     // User preferences and settings
@@ -248,7 +248,7 @@ declare global {
       timezone?: string
       currency?: string
       dateFormat?: string
-      metadata?: Record<string, any>
+      metadata?: Record<string, unknown>
     }
   }
 }

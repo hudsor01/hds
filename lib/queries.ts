@@ -3,7 +3,7 @@ import { PaymentStatus, PaymentType, Prisma } from '@prisma/client'
 
 // Payment queries
 export const getPaymentsByTenant = async (tenantId: string) => {
-  return prisma.payments.findMany({
+  return prisma.payments.findMunknown({
     where: { tenant_id: tenantId },
     orderBy: { created_at: 'desc' }
   })
@@ -16,7 +16,7 @@ export const getPaymentsByLease = async (leaseId: string) => {
 
   if (!lease) return []
 
-  return prisma.payments.findMany({
+  return prisma.payments.findMunknown({
     where: { tenant_id: lease.tenant_id },
     orderBy: { created_at: 'desc' }
   })
@@ -46,7 +46,7 @@ export const getPaginatedPayments = async (
 
   return getPaginatedResults(
     (skip, take) =>
-      prisma.payments.findMany({
+      prisma.payments.findMunknown({
         where,
         orderBy: { created_at: 'desc' },
         skip,
@@ -79,7 +79,7 @@ export const getLeaseWithDetails = async (leaseId: string) => {
 }
 
 export const getActiveLeasesByProperty = async (propertyId: string) => {
-  return prisma.leases.findMany({
+  return prisma.leases.findMunknown({
     where: {
       property_id: propertyId,
       status: 'Active',
@@ -172,7 +172,7 @@ export const getPaginatedProperties = async (
 
   return getPaginatedResults(
     (skip, take) =>
-      prisma.properties.findMany({
+      prisma.properties.findMunknown({
         where,
         select: {
           id: true,

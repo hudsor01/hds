@@ -13,8 +13,8 @@ const tenantSchema = z.object({
   tenant_status: z.enum(['active', 'inactive', 'pending']).default('pending'),
   move_in_date: z.string().datetime().optional(),
   move_out_date: z.string().datetime().optional(),
-  emergency_contact: z.record(z.string(), z.any()).optional(),
-  documents: z.array(z.any()).optional()
+  emergency_contact: z.record(z.string(), z.unknown()).optional(),
+  documents: z.array(z.unknown()).optional()
 })
 
 export async function GET(req: NextRequest) {

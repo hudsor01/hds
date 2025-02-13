@@ -2,13 +2,25 @@
 
 import { Button } from '@/components/ui/buttons/button'
 import { Property, MaintenancePriority, NewMaintenanceRequest, PropertyUnit } from '@/types'
-import type { SelectChangeEvent } from '@mui/material'
 import { Dialog, DialogContent, DialogTitle } from '@mui/material'
 import { Label } from '@/components/ui/label'
 import { Select, SelectItem } from '@/components/ui/select'
 import Textarea from '@/components/ui/textarea'
 import { Input } from '@/components/ui/input'
 import { useState } from 'react'
+import { z } from 'zod'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+
+const maintenanceSchema = z.object({
+  property_id: z.string().min(1, 'Property is required'),
+  unit_id: z.string().min(1, 'Unit is required'),
+  title: z.string().min(3, 'Title must be at least 3 characters'),
+  description: z.string().min(10, 'Description must be at least 10 characters'),
+  priority: z.enum(['low', 'medium', 'high', 'urgent'] as const)
+})
+
+type MaintenanceFormData = z.infer<typeof maintenanceSchema>
 
 interface MaintenanceTicketDialogProps {
   open: boolean
@@ -23,107 +35,109 @@ export function MaintenanceTicketDialog({
   onSubmitAction,
   properties
 }: MaintenanceTicketDialogProps) {
-  const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState('')
-  const [selectedUnit, setSelectedUnit] = useState('')
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    watch,
+    reset
+  } = useForm<MaintenanceFormData>({
+    resolver: zodResolver(maintenanceSchema)
+  })
 
+  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || []
+  const watchPropertyId = watch('property_id')
+
+  const onSubmit = async (data: MaintenanceFormData) => {
     try {
-      const formData = new FormData(e.currentTarget)
-      const data: NewMaintenanceRequest = {
-        property_id: formData.get('property_id') as string,
-        unit_id: formData.get('unit_id') as string,
-        tenant_id: formData.get('tenant_id') as string,
-        title: formData.get('title') as string,
-        description: formData.get('description') as string,
-        priority: formData.get('priority') as MaintenancePriority
-      }
-
       await onSubmitAction(data)
+      reset()
       onOpenChangeAction(false)
-    } finally {
-      setIsLoading(false)
+    } catch (error) {
+      console.error('Failed to create maintenance request:', error)
     }
   }
 
-  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || []
+  const handleSelectProperty = (value: string) => {
+    setSelectedProperty(value)
+  }
 
   return (
     <Dialog open={open} onClose={() => onOpenChangeAction(false)} maxWidth="md" fullWidth>
       <DialogTitle>New Maintenance Request</DialogTitle>
       <DialogContent>
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
           <div className="grid gap-4">
             <div className="space-y-2">
               <Label htmlFor="property_id">Property</Label>
               <Select
-                name="property_id"
+                {...register('property_id')}
                 value={selectedProperty}
-                onChange={(event: SelectChangeEvent<unknown>) => {
-                  const value = event.target.value as string
-                  setSelectedProperty(value)
-                  setSelectedUnit('')
+                onChange={e => {
+                  const value = e.target.value
+                  handleSelectProperty(value)
                 }}
-                placeholder="Select a property"
+                error={!!errors.property_id}
               >
+                <SelectItem value="">Select a property</SelectItem>
                 {properties.map(property => (
                   <SelectItem key={property.id} value={property.id}>
                     {property.name}
                   </SelectItem>
                 ))}
               </Select>
+              {errors.property_id && (
+                <p className="text-sm text-red-500">{errors.property_id.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="unit_id">Unit</Label>
-              <Select
-                name="unit_id"
-                value={selectedUnit}
-                onChange={(event: SelectChangeEvent<unknown>) => {
-                  setSelectedUnit(event.target.value as string)
-                }}
-                disabled={!selectedProperty}
-                placeholder="Select a unit"
-              >
-                {selectedPropertyUnits.map((unit: PropertyUnit) => (
+              <Select {...register('unit_id')} disabled={!watchPropertyId} error={!!errors.unit_id}>
+                <SelectItem value="">Select a unit</SelectItem>
+                {selectedPropertyUnits.map(unit => (
                   <SelectItem key={unit.id} value={unit.id}>
                     Unit {unit.number}
                   </SelectItem>
                 ))}
               </Select>
+              {errors.unit_id && <p className="text-sm text-red-500">{errors.unit_id.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
               <Input
-                id="title"
-                name="title"
+                {...register('title')}
                 placeholder="Brief description of the issue"
-                required
+                className={errors.title ? 'border-red-500' : ''}
               />
+              {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
-                id="description"
-                name="description"
+                {...register('description')}
                 placeholder="Detailed description of the maintenance issue"
-                required
+                className={errors.description ? 'border-red-500' : ''}
               />
+              {errors.description && (
+                <p className="text-sm text-red-500">{errors.description.message}</p>
+              )}
             </div>
 
             <div className="space-y-2">
               <Label htmlFor="priority">Priority</Label>
-              <Select name="priority" placeholder="Select priority level">
+              <Select {...register('priority')} error={!!errors.priority}>
+                <SelectItem value="">Select priority level</SelectItem>
                 <SelectItem value="low">Low</SelectItem>
                 <SelectItem value="medium">Medium</SelectItem>
                 <SelectItem value="high">High</SelectItem>
                 <SelectItem value="urgent">Urgent</SelectItem>
               </Select>
+              {errors.priority && <p className="text-sm text-red-500">{errors.priority.message}</p>}
             </div>
           </div>
 
@@ -131,13 +145,16 @@ export function MaintenanceTicketDialog({
             <Button
               type="button"
               variant="outline"
-              onClick={() => onOpenChangeAction(false)}
-              disabled={isLoading}
+              onClick={() => {
+                reset()
+                onOpenChangeAction(false)
+              }}
+              disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Creating...' : 'Create Request'}
+            <Button type="submit" disabled={isSubmitting}>
+              {isSubmitting ? 'Creating...' : 'Create Request'}
             </Button>
           </div>
         </form>

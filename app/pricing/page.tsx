@@ -105,7 +105,7 @@ export default function PricingPage() {
             onClick={() => setSelectedTier(tier.title)}
             className={`cursor-pointer rounded-lg border p-8 transition-all duration-300 hover:shadow-lg ${
               selectedTier === tier.title
-                ? 'border-blue-500 shadow-lg ring-2 ring-blue-500 ring-opacity-50'
+                ? 'ring-opacity-50 border-blue-500 ring-2 shadow-lg ring-blue-500'
                 : 'border-border hover:border-blue-200'
             }`}
           >

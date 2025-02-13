@@ -30,7 +30,7 @@ export async function POST(request: Request) {
         const status = subscription.status
 
         // Update subscription in database
-        await prisma.subscriptions.updateMany({
+        await prisma.subscriptions.updateMunknown({
           where: {
             stripe_customer_id: customerId,
             stripe_subscription_id: subscriptionId
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
         const customer = event.data.object as Stripe.Customer
 
         // Remove customer data from subscriptions
-        await prisma.subscriptions.updateMany({
+        await prisma.subscriptions.updateMunknown({
           where: { stripe_customer_id: customer.id },
           data: {
             stripe_customer_id: null,
@@ -68,7 +68,7 @@ export async function POST(request: Request) {
         const status = event.type === 'invoice.payment_succeeded' ? 'active' : 'past_due'
 
         if (invoice.subscription) {
-          await prisma.subscriptions.updateMany({
+          await prisma.subscriptions.updateMunknown({
             where: { stripe_subscription_id: invoice.subscription as string },
             data: {
               subscription_status: status,

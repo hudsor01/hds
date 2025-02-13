@@ -20,7 +20,7 @@ export function DashboardSidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="shadow-xs flex h-full w-64 flex-col bg-white">
+    <div className="flex h-full w-64 flex-col bg-white shadow-xs">
       <div className="flex flex-1 flex-col overflow-y-auto">
         <nav className="flex-1 space-y-1 px-2 py-4">
           {navigation.map(item => {

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
 const vendorSchema = z.object({
-  company_name: z.string().min(1, 'Company name is required'),
+  compunknown_name: z.string().min(1, 'Compunknown name is required'),
   contact_name: z.string().min(1, 'Contact name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 characters'),
@@ -13,8 +13,8 @@ const vendorSchema = z.object({
   rate: z.number().positive('Rate must be positive').optional(),
   rating: z.number().min(1).max(5).optional(),
   status: z.enum(['ACTIVE', 'INACTIVE', 'PENDING']).default('ACTIVE'),
-  insurance_info: z.record(z.string(), z.any()).optional(),
-  license_info: z.record(z.string(), z.any()).optional(),
+  insurance_info: z.record(z.string(), z.unknown()).optional(),
+  license_info: z.record(z.string(), z.unknown()).optional(),
   notes: z.string().optional()
 })
 
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
       .from('vendors')
       .select('*')
       .eq('user_id', userId)
-      .order('company_name', { ascending: true })
+      .order('compunknown_name', { ascending: true })
 
     if (status) {
       query = query.eq('status', status)
@@ -96,10 +96,10 @@ export async function POST(req: NextRequest) {
         user_id: userId,
         type: 'SYSTEM',
         title: 'New Vendor Added',
-        message: `${validatedData.company_name} has been added as a vendor`,
+        message: `${validatedData.compunknown_name} has been added as a vendor`,
         data: {
           vendor_id: vendor.id,
-          company_name: validatedData.company_name,
+          compunknown_name: validatedData.compunknown_name,
           services: validatedData.services
         }
       }
@@ -163,10 +163,10 @@ export async function PUT(req: NextRequest) {
           user_id: userId,
           type: 'SYSTEM',
           title: 'Vendor Status Updated',
-          message: `Vendor ${vendor.company_name} status updated to ${validatedData.status}`,
+          message: `Vendor ${vendor.compunknown_name} status updated to ${validatedData.status}`,
           data: {
             vendor_id: id,
-            company_name: vendor.company_name,
+            compunknown_name: vendor.compunknown_name,
             new_status: validatedData.status
           }
         }

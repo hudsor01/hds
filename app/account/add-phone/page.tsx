@@ -1,122 +1,186 @@
 'use client'
-import * as React from 'react'
 
+import * as React from 'react'
 import { useUser } from '@/app/auth/lib/auth/config'
-import type { PhoneNumberResource } from '@supabase/supabase-js'
-export default function Page() {
+import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
+import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
+
+export default function PhoneVerificationPage() {
   const { user, loading } = useUser()
   const [phone, setPhone] = React.useState('')
   const [code, setCode] = React.useState('')
   const [isVerifying, setIsVerifying] = React.useState(false)
   const [successful, setSuccessful] = React.useState(false)
-  const [phoneObj, setPhoneObj] = React.useState<PhoneNumberResource | undefined>()
+  const [error, setError] = React.useState<string | null>(null)
+  const [isSubmitting, setIsSubmitting] = React.useState(false)
 
-  if (loading) return null
+  if (loading) {
+    return (
+      <Box className="flex-center h-screen">
+        <CircularProgress />
+      </Box>
+    )
+  }
 
   if (!loading && !user?.id) {
-    return <p>You must be logged in to access this page</p>
+    return (
+      <Box className="p-4">
+        <Alert severity="error">You must be logged in to access this page</Alert>
+      </Box>
+    )
   }
 
-  // Handle addition of the phone number
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    setError(null)
+    setIsSubmitting(true)
 
     try {
-      // Add unverified phone number to user
-      const res = user?.createPhoneNumber({ phoneNumber: phone })
-      // Reload user to get updated User object
-      await user?.reload()
+      if (!phone.match(/^\+[1-9]\d{1,14}$/)) {
+        throw new Error('Please enter a valid phone number in E.164 format (e.g., +12345678900)')
+      }
 
-      // Create a reference to the new phone number to use related methods
-      const phoneNumber = user?.phoneNumbers.find(a => a.id === res.id)
-      setPhoneObj(phoneNumber)
+      const { error: phoneError } = (await user?.phone?.update({ phone })) || {
+        error: new Error('User not found')
+      }
 
-      // Send the user an SMS with the verification code
-      phoneNumber?.prepareVerification()
+      if (phoneError) throw phoneError
 
-      // Set to true to display second form
-      // and capture the OTP code
       setIsVerifying(true)
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2))
+      setError(err instanceof Error ? err.message : 'Failed to add phone number')
+      console.error('Phone addition error:', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  // Handle the submission of the verification form
   const verifyCode = async (e: React.FormEvent) => {
     e.preventDefault()
-    try {
-      // Verify that the provided code matches the code sent to the user
-      const phoneVerifyAttempt = await phoneObj?.attemptVerification({ code })
+    setError(null)
+    setIsSubmitting(true)
 
-      if (phoneVerifyAttempt?.verification.status === 'verified') {
-        setSuccessful(true)
-      } else {
-        // If the status is not complete, check why. User may need to
-        // complete further steps.
-        console.error(JSON.stringify(phoneVerifyAttempt, null, 2))
+    try {
+      const { error: verifyError } = (await user?.phone?.verify({ code })) || {
+        error: new Error('User not found')
       }
+
+      if (verifyError) throw verifyError
+
+      setSuccessful(true)
     } catch (err) {
-      console.error(JSON.stringify(err, null, 2))
+      setError(err instanceof Error ? err.message : 'Verification failed')
+      console.error('Verification error:', err)
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
-  // Display a success message if the phone number was added successfully
   if (successful) {
     return (
-      <>
-        <h1>Phone added</h1>
-      </>
+      <Box className="container-content py-8">
+        <Paper className="surface p-6">
+          <Box className="flex-center flex-col gap-4">
+            <CheckCircleIcon color="success" sx={{ fontSize: 48 }} />
+            <Typography variant="h4" component="h1">
+              Phone Number Verified Successfully
+            </Typography>
+            <Typography color="text.secondary">
+              Your phone number has been added to your account
+            </Typography>
+          </Box>
+        </Paper>
+      </Box>
     )
   }
 
-  // Display the verification form to capture the OTP code
   if (isVerifying) {
     return (
-      <>
-        <h1>Verify phone</h1>
-        <div>
-          <form onSubmit={e => verifyCode(e)}>
-            <div>
-              <label htmlFor="code">Enter code</label>
-              <input
-                onChange={e => setCode(e.target.value)}
-                id="code"
-                name="code"
-                type="text"
-                value={code}
-              />
-            </div>
-            <div>
-              <button type="submit">Verify</button>
-            </div>
+      <Box className="container-content py-8">
+        <Paper className="surface p-6">
+          <form onSubmit={verifyCode} className="space-y-6">
+            <Box className="flex-center flex-col gap-4">
+              <PhoneIcon color="primary" sx={{ fontSize: 48 }} />
+              <Typography variant="h4" component="h1">
+                Verify Your Phone Number
+              </Typography>
+              <Typography color="text.secondary">
+                Enter the verification code sent to {phone}
+              </Typography>
+            </Box>
+
+            {error && (
+              <Alert severity="error" className="mt-4">
+                {error}
+              </Alert>
+            )}
+
+            <TextField
+              fullWidth
+              label="Verification Code"
+              value={code}
+              onChange={e => setCode(e.target.value)}
+              disabled={isSubmitting}
+              placeholder="Enter 6-digit code"
+              inputProps={{ maxLength: 6, pattern: '[0-9]*' }}
+            />
+
+            <Button
+              fullWidth
+              type="submit"
+              variant="contained"
+              disabled={isSubmitting || code.length !== 6}
+              startIcon={isSubmitting ? <CircularProgress size={20} /> : <PhoneIcon />}
+            >
+              {isSubmitting ? 'Verifying...' : 'Verify Code'}
+            </Button>
           </form>
-        </div>
-      </>
+        </Paper>
+      </Box>
     )
   }
 
-  // Display the initial form to capture the phone number
   return (
-    <>
-      <h1>Add phone</h1>
-      <div>
-        <form onSubmit={e => handleSubmit(e)}>
-          <div>
-            <label htmlFor="phone">Enter phone number</label>
-            <input
-              onChange={e => setPhone(e.target.value)}
-              id="phone"
-              name="phone"
-              type="phone"
-              value={phone}
-            />
-          </div>
-          <div>
-            <button type="submit">Continue</button>
-          </div>
+    <Box className="container-content py-8">
+      <Paper className="surface p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          <Box className="flex-center flex-col gap-4">
+            <PhoneIcon color="primary" sx={{ fontSize: 48 }} />
+            <Typography variant="h4" component="h1">
+              Add Phone Number
+            </Typography>
+            <Typography color="text.secondary">
+              Add a phone number to enhance your account security
+            </Typography>
+          </Box>
+
+          {error && (
+            <Alert severity="error" className="mt-4">
+              {error}
+            </Alert>
+          )}
+
+          <TextField
+            fullWidth
+            label="Phone Number"
+            value={phone}
+            onChange={e => setPhone(e.target.value)}
+            disabled={isSubmitting}
+            placeholder="+12345678900"
+            helperText="Enter phone number in E.164 format (e.g., +12345678900)"
+          />
+
+          <Button
+            fullWidth
+            type="submit"
+            variant="contained"
+            disabled={isSubmitting || !phone}
+            startIcon={isSubmitting ? <CircularProgress size={20} /> : <PhoneIcon />}
+          >
+            {isSubmitting ? 'Adding...' : 'Add Phone Number'}
+          </Button>
         </form>
-      </div>
-    </>
+      </Paper>
+    </Box>
   )
 }

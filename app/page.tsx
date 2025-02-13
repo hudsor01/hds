@@ -1,19 +1,47 @@
-import { Hero } from '@/components/hero'
-import { Features } from '@/components/features'
-import { Pricing } from '@/components/pricing'
-import { About } from '@/components/about'
-import { Contact } from '@/components/contact'
-import { Newsletter } from '@/components/newsletter'
+'use client'
 
-export default function HomePage() {
+import { React, Suspense } from 'react'
+import { Features } from '@/components/features/feature-grid'
+import { LoadingSpinner } from '@/components/loading/loading-state'
+
+export default async function HomePage() {
   return (
-    <>
+    <main className="flex-1">
       <Hero />
-      <Features />
-      <Pricing />
+
+      <Suspense
+        fallback={
+          <div className="flex-center min-h-[400px]">
+            <LoadingSpinner />
+          </div>
+        }
+      >
+        <Features />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <div className="flex-center min-h-[600px]">
+            <LoadingSpinner />
+          </div>
+        }
+      >
+        <Pricing />
+      </Suspense>
+
       <About />
-      <Contact />
+
+      <Suspense
+        fallback={
+          <div className="flex-center min-h-[400px]">
+            <LoadingSpinner />
+          </div>
+        }
+      >
+        <Contact />
+      </Suspense>
+
       <Newsletter />
-    </>
+    </main>
   )
 }

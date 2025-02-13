@@ -55,25 +55,25 @@ export default function TenantsPage() {
         <table className="w-full">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Contact
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Property
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Unit
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Lease Ends
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-left text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-500">
+              <th className="px-6 py-3 text-right text-xs font-medium tracking-wider text-gray-500 uppercase">
                 Actions
               </th>
             </tr>
@@ -81,28 +81,28 @@ export default function TenantsPage() {
           <tbody className="divide-y divide-gray-200 bg-white">
             {tenants.map(tenant => (
               <tr key={tenant.id}>
-                <td className="whitespace-nowrap px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-gray-900">{tenant.name}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{tenant.email}</div>
                   <div className="text-sm text-gray-500">{tenant.phone}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{tenant.propertyName}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{tenant.unitId}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4">
+                <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm text-gray-500">{tenant.leaseEnd}</div>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4">
-                  <span className="inline-flex rounded-full bg-green-100 px-2 text-xs font-semibold capitalize leading-5 text-green-800">
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <span className="inline-flex rounded-full bg-green-100 px-2 text-xs leading-5 font-semibold text-green-800 capitalize">
                     {tenant.status}
                   </span>
                 </td>
-                <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                <td className="px-6 py-4 text-right text-sm font-medium whitespace-nowrap">
                   <Button variant="outline" className="text-blue-600 hover:text-blue-900">
                     ...
                   </Button>

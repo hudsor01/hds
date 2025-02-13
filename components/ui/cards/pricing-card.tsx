@@ -33,11 +33,11 @@ export function PricingCard({
       )}
     >
       {highlighted && (
-        <div className="bg-primary text-primary-foreground absolute -right-12 top-6 rotate-45 px-12 py-1 text-sm font-medium">
+        <div className="bg-primary text-primary-foreground absolute top-6 -right-12 rotate-45 px-12 py-1 text-sm font-medium">
           Popular
         </div>
       )}
-      <CardHeader className="space-y-2 pb-8 pt-6 text-center">
+      <CardHeader className="space-y-2 pt-6 pb-8 text-center">
         <CardTitle className="text-2xl font-bold">{title}</CardTitle>
         <CardDescription className="text-muted-foreground text-sm">{description}</CardDescription>
       </CardHeader>

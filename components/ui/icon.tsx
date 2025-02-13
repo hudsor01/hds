@@ -16,7 +16,6 @@ const iconMapping = {
   GitHub: GitHubIcon,
   AlertCircle: ErrorOutlineIcon,
   Check: CheckCircleIcon
-  // Map additional lucide icon names to their @mui/icons-material equivalents here
 }
 
 export interface IconProps {

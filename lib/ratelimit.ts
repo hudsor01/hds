@@ -3,10 +3,10 @@ const WINDOW_MS = 15 * 60 * 1000
 const MAX_REQUESTS = 100
 
 const rateLimitStore: Map<string, { count: number; windowStart: number }> =
-  (globalThis as any).__rateLimitStore || new Map()
+  (globalThis as unknown).__rateLimitStore || new Map()
 
-if (!(globalThis as any).__rateLimitStore) {
-  ;(globalThis as any).__rateLimitStore = rateLimitStore
+if (!(globalThis as unknown).__rateLimitStore) {
+  ;(globalThis as unknown).__rateLimitStore = rateLimitStore
 }
 
 export const ratelimit = {

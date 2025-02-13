@@ -11,10 +11,10 @@ import { Edit, Trash } from 'react-feather'
 
 interface DataTableProps {
   columns: GridColDef[]
-  rows: any[]
+  rows: unknown[]
   loading?: boolean
-  onEdit?: (row: any) => void
-  onDelete?: (row: any) => void
+  onEdit?: (row: unknown) => void
+  onDelete?: (row: unknown) => void
   onSortModelChange?: (model: GridSortModel) => void
   onFilterModelChange?: (model: GridFilterModel) => void
   onPaginationModelChange?: (model: GridPaginationModel) => void
@@ -96,12 +96,12 @@ export function DataTable({
 }
 
 // Helper function to render status badges in table cells
-export const renderStatusCell = (params: any) => {
+export const renderStatusCell = (params: unknown) => {
   return <StatusBadge status={params.value.toLowerCase()} />
 }
 
 // Helper function to render currency values
-export const renderCurrencyCell = (params: any) => {
+export const renderCurrencyCell = (params: unknown) => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD'
@@ -109,7 +109,7 @@ export const renderCurrencyCell = (params: any) => {
 }
 
 // Helper function to render dates
-export const renderDateCell = (params: any) => {
+export const renderDateCell = (params: unknown) => {
   return new Intl.DateTimeFormat('en-US', {
     dateStyle: 'medium',
     timeStyle: 'short'

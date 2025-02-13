@@ -1,6 +1,15 @@
 import { apiClient, handleApiError } from '@/lib/api'
-import { BaseQueryParams, BaseResponse } from '@/types/common'
 import { useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+
+interface BaseResponse<T> {
+  data: T
+  message?: string
+  status?: number
+}
+
+interface BaseQueryParams {
+  [key: string]: string | number | boolean | undefined
+}
 
 interface UseCrudOptions<T> {
   onSuccess?: (data: T) => void

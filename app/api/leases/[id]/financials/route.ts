@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Calculate lease financials
-    const payments = await prisma.payments.findMany({
+    const payments = await prisma.payments.findMunknown({
       where: {
         tenant_id: lease.tenant_id,
         payment_type: {

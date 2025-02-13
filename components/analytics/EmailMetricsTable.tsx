@@ -1,18 +1,90 @@
-import { type EmailMetricsProps } from '@/types'
-import { DataGrid } from '@mui/x-data-grid'
+import { ErrorBoundary } from '@/components/error/error-boundary'
+import { DataGrid, GridColDef } from '@mui/x-data-grid'
+import { Box, Typography } from '@mui/material'
 
-export function EmailMetricsTable({ data }: EmailMetricsProps) {
-  const columns = [
-    { field: 'template', headerName: 'Template' },
-    { field: 'sent', headerName: 'Sent' },
-    { field: 'opened', headerName: 'Opened' },
-    { field: 'clicked', headerName: 'Clicked' },
+export interface EmailMetrics {
+  template: string
+  sent: number
+  opened: number
+  clicked: number
+  openRate: number
+  clickRate: number
+}
+
+export interface EmailMetricsProps {
+  data: EmailMetrics[]
+  isLoading: boolean
+  error?: Error
+}
+
+interface CellParams {
+  value: number
+}
+
+export function EmailMetricsTable({ data, isLoading, error }: EmailMetricsProps) {
+  const columns: GridColDef[] = [
+    {
+      field: 'template',
+      headerName: 'Template',
+      flex: 1,
+      minWidth: 200
+    },
+    {
+      field: 'sent',
+      headerName: 'Sent',
+      width: 100,
+      type: 'number'
+    },
+    {
+      field: 'opened',
+      headerName: 'Opened',
+      width: 100,
+      type: 'number'
+    },
+    {
+      field: 'clicked',
+      headerName: 'Clicked',
+      width: 100,
+      type: 'number'
+    },
     {
       field: 'openRate',
       headerName: 'Open Rate',
-      valueFormatter: (params: any) => `${params.value}%`
+      width: 120,
+      valueFormatter: (params: CellParams) => `${params.value}%`,
+      type: 'number'
+    },
+    {
+      field: 'clickRate',
+      headerName: 'Click Rate',
+      width: 120,
+      valueFormatter: (params: CellParams) => `${params.value}%`,
+      type: 'number'
     }
   ]
 
-  return <DataGrid rows={data} columns={columns} autoHeight />
+  if (error) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography color="error">Error loading email metrics: {error.message}</Typography>
+      </Box>
+    )
+  }
+
+  return (
+    <ErrorBoundary>
+      <DataGrid
+        rows={data}
+        columns={columns}
+        loading={isLoading}
+        autoHeight
+        disableRowSelectionOnClick
+        initialState={{
+          pagination: { paginationModel: { pageSize: 10 } },
+          sorting: { sortModel: [{ field: 'sent', sort: 'desc' }] }
+        }}
+        getRowId={row => row.template}
+      />
+    </ErrorBoundary>
+  )
 }

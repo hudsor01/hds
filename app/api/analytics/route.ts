@@ -6,7 +6,7 @@ import { z } from 'zod'
 
 // Cache analytics data for 5 minutes
 const CACHE_TTL = 5 * 60 * 1000
-const analyticsCache = new Map<string, { data: any; timestamp: number; query: string }>()
+const analyticsCache = new Map<string, { data: unknown; timestamp: number; query: string }>()
 
 const analyticsQuerySchema = z.object({
   date_range: z.enum(['week', 'month', 'quarter', 'year', 'custom']).optional(),

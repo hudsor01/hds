@@ -17,7 +17,7 @@ import { useState } from 'react'
 import { toast } from 'sonner'
 
 interface PaymentMethodFormProps {
-  onSuccess?: (paymentMethod: any) => void
+  onSuccess?: (paymentMethod: unknown) => void
   onCancel?: () => void
   defaultType?: PaymentMethodType
 }
@@ -250,7 +250,7 @@ export default function PaymentMethodForm({
                   }
                 >
                   <MenuItem value="individual">Individual</MenuItem>
-                  <MenuItem value="company">Company</MenuItem>
+                  <MenuItem value="compunknown">Compunknown</MenuItem>
                 </Select>
               </FormControl>
             </>

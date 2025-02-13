@@ -1,20 +1,18 @@
-// components/properties/property-grid.tsx
 'use client'
 
-import { formatCurrency } from '@/utils/format'
-import type { PropertyRow } from '@/types'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardMedia from '@mui/material/CardMedia'
-import Chip from '@mui/material/Chip'
-import Grid from '@mui/material/Grid'
-import IconButton from '@mui/material/IconButton'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
-import Skeleton from '@mui/material/Skeleton'
-import Typography from '@mui/material/Typography'
+import { type PropertyRow } from '@/types'
+import {
+  Box,
+  Grid,
+  Card,
+  CardContent,
+  CardMedia,
+  Typography,
+  Menu,
+  MenuItem,
+  Skeleton
+} from '@mui/material'
+import { ErrorBoundary } from '@/components/error/error-boundary'
 import { useState } from 'react'
 
 interface PropertyGridProps {
@@ -23,6 +21,7 @@ interface PropertyGridProps {
   onEdit?: (property: PropertyRow) => void
   onViewDetails?: (property: PropertyRow) => void
   onManageTenants?: (property: PropertyRow) => void
+  error?: Error
 }
 
 export function PropertyGrid({
@@ -30,8 +29,17 @@ export function PropertyGrid({
   isLoading,
   onEdit,
   onViewDetails,
-  onManageTenants
+  onManageTenants,
+  error
 }: PropertyGridProps) {
+  if (error) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography color="error">Error loading properties: {error.message}</Typography>
+      </Box>
+    )
+  }
+
   if (isLoading) {
     return (
       <Grid container spacing={3}>
@@ -44,19 +52,29 @@ export function PropertyGrid({
     )
   }
 
+  if (!properties.length) {
+    return (
+      <Box sx={{ p: 3, textAlign: 'center' }}>
+        <Typography>No properties found</Typography>
+      </Box>
+    )
+  }
+
   return (
-    <Grid container spacing={3}>
-      {properties.map(property => (
-        <Grid item xs={12} sm={6} md={4} key={property.id}>
-          <PropertyCard
-            property={property}
-            onEdit={onEdit}
-            onViewDetails={onViewDetails}
-            onManageTenants={onManageTenants}
-          />
-        </Grid>
-      ))}
-    </Grid>
+    <ErrorBoundary>
+      <Grid container spacing={3}>
+        {properties.map(property => (
+          <Grid item xs={12} sm={6} md={4} key={property.id}>
+            <PropertyCard
+              property={property}
+              onEdit={onEdit}
+              onViewDetails={onViewDetails}
+              onManageTenants={onManageTenants}
+            />
+          </Grid>
+        ))}
+      </Grid>
+    </ErrorBoundary>
   )
 }
 

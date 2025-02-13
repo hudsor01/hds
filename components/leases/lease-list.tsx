@@ -8,9 +8,10 @@ import Button from '@mui/material/Button'
 import Chip from '@mui/material/Chip'
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { format } from 'date-fns'
+import { ErrorBoundary } from '@/components/error/error-boundary'
 
 export function LeaseList() {
-  const { data: leases, isLoading } = useLeases()
+  const { data: leases, isLoading, error } = useLeases()
 
   const columns: GridColDef<Lease>[] = [
     {
@@ -74,26 +75,41 @@ export function LeaseList() {
     }
   ]
 
-  return (
-    <Box>
-      <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
-        <Button variant="contained" startIcon={<AddIcon />} href="/leases/new">
-          Create Lease
-        </Button>
-      </Box>
+  if (error) {
+    return <div>Error loading leases: {error.message}</div>
+  }
 
-      <DataGrid<Lease>
-        rows={leases || []}
-        columns={columns}
-        loading={isLoading}
-        autoHeight
-        disableRowSelectionOnClick
-        initialState={{
-          pagination: {
-            paginationModel: { pageSize: 10 }
-          }
-        }}
-      />
-    </Box>
+  return (
+    <ErrorBoundary>
+      <Box>
+        <Box sx={{ mb: 3, display: 'flex', justifyContent: 'flex-end' }}>
+          <Button variant="contained" startIcon={<AddIcon />} href="/leases/new">
+            Create Lease
+          </Button>
+        </Box>
+
+        <DataGrid<Lease>
+          rows={leases || []}
+          columns={columns}
+          loading={isLoading}
+          autoHeight
+          disableRowSelectionOnClick
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10 }
+            },
+            sorting: {
+              sortModel: [{ field: 'startDate', sort: 'desc' }]
+            }
+          }}
+          getRowId={row => row.id}
+          sx={{
+            '& .MuiDataGrid-cell:focus': {
+              outline: 'none'
+            }
+          }}
+        />
+      </Box>
+    </ErrorBoundary>
   )
 }

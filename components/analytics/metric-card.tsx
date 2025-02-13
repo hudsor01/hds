@@ -2,21 +2,23 @@
 
 import { Trend } from '@/types'
 import { Box, Card, CardContent, CircularProgress, Typography } from '@mui/material'
-import { ArrowDownRight, ArrowUpRight } from 'react-feather'
+import { ArrowDownRight, ArrowUpRight, Minus } from 'react-feather'
 
 export interface MetricCardProps {
   title: string
-  value: number
-  isLoading?: boolean
-  icon?: React.ReactNode
+  value: number | string
   trend?: Trend
+  loading?: boolean
+  error?: Error
+  icon?: React.ReactNode
   format?: 'number' | 'currency' | 'percentage'
 }
 
 export default function MetricCard({
   title,
   value,
-  isLoading = false,
+  loading = false,
+  error,
   icon,
   trend,
   format = 'number'
@@ -44,6 +46,32 @@ export default function MetricCard({
       default:
         return '#6B7280' // gray
     }
+  }
+
+  const getTrendIcon = (direction: 'up' | 'down' | 'neutral') => {
+    switch (direction) {
+      case 'up':
+        return <ArrowUpRight size={20} />
+      case 'down':
+        return <ArrowDownRight size={20} />
+      default:
+        return <Minus size={20} />
+    }
+  }
+
+  if (loading) {
+    return (
+      <Card>
+        <CardContent>
+          <Typography variant="subtitle2" color="text.secondary">
+            {title}
+          </Typography>
+          <Box sx={{ mt: 1 }}>
+            <div className="h-6 w-24 animate-pulse rounded bg-gray-200" />
+          </Box>
+        </CardContent>
+      </Card>
+    )
   }
 
   return (
@@ -85,14 +113,14 @@ export default function MetricCard({
           )}
         </Box>
 
-        {isLoading ? (
-          <Box sx={{ display: 'flex', alignItems: 'center', height: 48 }}>
-            <CircularProgress size={24} />
-          </Box>
+        {error ? (
+          <Typography color="error" variant="body2">
+            {error.message}
+          </Typography>
         ) : (
           <Box sx={{ display: 'flex', alignItems: 'flex-end', gap: 1 }}>
             <Typography variant="h4" component="div">
-              {formatValue(value)}
+              {value !== null ? formatValue(value) : 'N/A'}
             </Typography>
             {trend && (
               <Box
@@ -103,11 +131,7 @@ export default function MetricCard({
                   mb: 0.5
                 }}
               >
-                {trend.direction === 'up' ? (
-                  <ArrowUpRight size={20} />
-                ) : trend.direction === 'down' ? (
-                  <ArrowDownRight size={20} />
-                ) : null}
+                {getTrendIcon(trend.direction)}
                 <Typography variant="body2" component="span" sx={{ fontWeight: 500 }}>
                   {trend.value}%
                 </Typography>

@@ -119,7 +119,7 @@ export async function GET(
     if (error instanceof Error) {
       if (error.message.includes('rate limit')) {
         return NextResponse.json(
-          { error: 'Too many requests. Please try again later.' },
+          { error: 'Too munknown requests. Please try again later.' },
           { status: 429 }
         )
       }

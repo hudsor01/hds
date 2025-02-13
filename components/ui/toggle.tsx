@@ -40,7 +40,7 @@ export const Toggle = React.forwardRef<HTMLButtonElement, ToggleProps>(
         selected={pressed}
         onChange={handleChange}
         className={cn(
-          'focus-visible:outline-hidden hover:bg-muted hover:text-muted-foreground focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-1 disabled:pointer-events-none disabled:opacity-50',
+          'hover:bg-muted hover:text-muted-foreground focus-visible:ring-ring inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:ring-1 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50',
           className
         )}
         {...props}

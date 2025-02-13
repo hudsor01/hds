@@ -193,7 +193,7 @@ export default function ContactPage() {
         </Card>
 
         <Card className="mt-16 w-full p-6">
-          <Box className="aspect-video relative">
+          <Box className="relative aspect-video">
             <iframe
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3022.1832416846336!2d-73.98784532342246!3d40.75479597138413!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c259a9b30eac9f%3A0xaca05ca48ab0c3a!2sEmpire%20State%20Building!5e0!3m2!1sen!2sus!4v1709701234567!5m2!1sen!2sus"
               width="100%"

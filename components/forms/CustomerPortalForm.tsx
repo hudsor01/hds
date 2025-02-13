@@ -1,7 +1,7 @@
 'use client'
 
 interface CustomerPortalFormProps {
-  subscription: any // Replace with a proper type if available.
+  subscription: unknown // Replace with a proper type if available.
 }
 
 export default function CustomerPortalForm({ subscription }: CustomerPortalFormProps) {

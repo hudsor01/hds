@@ -178,7 +178,7 @@ function getTeamByStripeCustomerId(customerId: string): Team | null {
 }
 
 function updateTeamSubscription(
-  id: any,
+  id: unknown,
   data: {
     stripeSubscriptionId: string | null
     stripeProductId: string | null

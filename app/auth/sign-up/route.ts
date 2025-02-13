@@ -53,7 +53,7 @@ export async function POST(request: Request) {
         // Handle specific error cases
         if (signUpError.message.includes('rate limit')) {
           return NextResponse.json(
-            { error: 'Too many signup attempts. Please try again later.' },
+            { error: 'Too munknown signup attempts. Please try again later.' },
             { status: 429 }
           )
         }

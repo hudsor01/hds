@@ -279,3 +279,175 @@ declare global {
     }
   }
 }
+
+export interface Property {
+  id: string
+  name: string
+  address: string
+  city: string
+  state: string
+  zip: string
+  units: PropertyUnit[]
+  user_id: string
+  created_at: Date
+  updated_at: Date
+}
+
+export interface PropertyUnit {
+  id: string
+  property_id: string
+  number: string
+  status: 'vacant' | 'occupied' | 'maintenance'
+}
+
+export interface PropertyRow extends Omit<Property, 'units'> {
+  property_type: string
+  property_status: string
+  rent_amount: number
+}
+
+export interface Trend {
+  value: number
+  direction: 'up' | 'down' | 'neutral'
+}
+
+export interface EmailMetrics {
+  template: string
+  sent: number
+  opened: number
+  clicked: number
+  openRate: number
+  clickRate: number
+}
+
+export interface EmailMetricsProps {
+  data: EmailMetrics[]
+  isLoading: boolean
+  error?: Error
+}
+
+export interface TimeSeriesData {
+  date: string
+  value: number
+}
+
+export interface LeaseFormProps {
+  initialData?: {
+    start_date: Date
+    end_date: Date
+    rent_amount: number
+    security_deposit: number
+    status: 'active' | 'pending' | 'expired' | 'terminated'
+    property_id: string
+    unit_id: string
+    tenant_id: string
+    tenant_name: string
+    payment_frequency: 'monthly' | 'quarterly' | 'annually'
+  }
+  onSuccess?: () => void
+}
+
+export interface MaintenanceRequest {
+  id?: string
+  property_id: string
+  unit_id: string
+  title: string
+  description: string
+  priority: MaintenancePriority
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+  created_at?: Date
+  updated_at?: Date
+}
+
+export type MaintenancePriority = 'low' | 'medium' | 'high' | 'urgent'
+
+export interface Session {
+  id: string
+  user_id: string
+  expires: Date
+  session_token: string
+  last_active: Date
+}
+
+export interface PropertyRow {
+  id: string
+  name: string
+  address: string
+  city: string
+  state: string
+  zip: string
+  property_type: string
+  property_status: string
+  rent_amount: number
+  user_id: string
+  created_at: string
+  updated_at: string
+}
+
+export interface Trend {
+  value: number
+  direction: 'up' | 'down' | 'neutral'
+}
+
+export interface EmailMetricsProps {
+  data: Array<{
+    template: string
+    sent: number
+    opened: number
+    clicked: number
+    openRate: number
+    clickRate: number
+  }>
+  isLoading: boolean
+  error?: Error
+}
+
+export interface TimeSeriesData {
+  date: string
+  value: number
+}
+
+export interface LeaseFormProps {
+  initialData?: Lease
+  onSuccess?: () => void
+}
+
+export interface MaintenanceRequest {
+  id: string
+  property_id: string
+  unit_id: string
+  title: string
+  description: string
+  priority: 'low' | 'medium' | 'high' | 'urgent'
+  status: 'open' | 'in_progress' | 'completed' | 'cancelled'
+  created_at: string
+  updated_at: string
+}
+
+export type NewMaintenanceRequest = Omit<
+  MaintenanceRequest,
+  'id' | 'created_at' | 'updated_at' | 'status'
+>
+
+export interface PropertyUnit {
+  id: string
+  number: string
+  property_id: string
+}
+
+export interface Lease {
+  id: string
+  property_id: string
+  unit_id: string
+  tenant_id: string
+  tenant_name: string
+  start_date: Date
+  end_date: Date
+  rent_amount: number
+  security_deposit: number
+  payment_frequency: 'monthly' | 'quarterly' | 'annually'
+  status: 'active' | 'pending' | 'expired' | 'terminated'
+  created_at: Date
+  updated_at: Date
+  documents?: string[]
+}

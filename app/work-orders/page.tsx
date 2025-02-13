@@ -37,7 +37,7 @@ const columns: GridColDef[] = [
     field: 'vendor',
     headerName: 'Vendor',
     width: 200,
-    valueGetter: params => params.row.vendor?.company_name
+    valueGetter: params => params.row.vendor?.compunknown_name
   },
   {
     field: 'property',
@@ -85,7 +85,7 @@ const columns: GridColDef[] = [
 
 export default function WorkOrdersPage() {
   const [open, setOpen] = useState(false)
-  const [selectedWorkOrder, setSelectedWorkOrder] = useState<any>(null)
+  const [selectedWorkOrder, setSelectedWorkOrder] = useState<unknown>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10
@@ -106,12 +106,12 @@ export default function WorkOrdersPage() {
     queryFn: () => api.get('/api/properties')
   })
 
-  const handleEdit = (workOrder: any) => {
+  const handleEdit = (workOrder: unknown) => {
     setSelectedWorkOrder(workOrder)
     setOpen(true)
   }
 
-  const handleDelete = async (workOrder: any) => {
+  const handleDelete = async (workOrder: unknown) => {
     if (window.confirm('Are you sure you want to delete this work order?')) {
       try {
         await api.delete(`/api/work-orders`, workOrder.id)
@@ -122,7 +122,7 @@ export default function WorkOrdersPage() {
     }
   }
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: unknown) => {
     try {
       if (selectedWorkOrder) {
         await api.put(`/api/work-orders`, selectedWorkOrder.id, formData)
@@ -188,9 +188,9 @@ export default function WorkOrdersPage() {
             }}
           >
             <option value="">Select a vendor</option>
-            {vendors?.data?.map((vendor: any) => (
+            {vendors?.data?.map((vendor: unknown) => (
               <option key={vendor.id} value={vendor.id}>
-                {vendor.company_name}
+                {vendor.compunknown_name}
               </option>
             ))}
           </TextField>
@@ -204,7 +204,7 @@ export default function WorkOrdersPage() {
             }}
           >
             <option value="">Select a property</option>
-            {properties?.data?.map((property: any) => (
+            {properties?.data?.map((property: unknown) => (
               <option key={property.id} value={property.id}>
                 {property.name}
               </option>

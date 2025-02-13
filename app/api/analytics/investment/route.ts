@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
     if (propertyId) {
       // Get property-specific ROI metrics
-      const { data: roiMetrics, error: roiError } = await (supabase as any).rpc(
+      const { data: roiMetrics, error: roiError } = await (supabase as unknown).rpc(
         'calculate_property_roi',
         {
           p_property_id: propertyId,
@@ -28,18 +28,17 @@ export async function GET(request: Request) {
     if (organizationId) {
       // Get organization-wide investment metrics
       const supabaseClient = createRouteHandlerClient({ cookies })
-      const { data: portfolioMetrics, error: portfolioError } = await (supabaseClient as any).rpc(
-        'calculate_portfolio_investment_metrics',
-        {
-          p_organization_id: organizationId,
-          p_year: year
-        }
-      )
+      const { data: portfolioMetrics, error: portfolioError } = await (
+        supabaseClient as unknown
+      ).rpc('calculate_portfolio_investment_metrics', {
+        p_organization_id: organizationId,
+        p_year: year
+      })
 
       if (portfolioError) throw portfolioError
 
       // Get investment performance report
-      const { data: performanceReport, error: reportError } = await (supabase as any).rpc(
+      const { data: performanceReport, error: reportError } = await (supabase as unknown).rpc(
         'generate_investment_performance_report',
         {
           p_organization_id: organizationId,

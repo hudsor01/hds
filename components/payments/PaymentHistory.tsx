@@ -63,7 +63,7 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
   const { data: response, isLoading } = usePaymentHistory(filters)
   const payments = (response as ApiResponse<Payment[]>)?.data || []
 
-  const handleFilterChange = (key: string, value: any) => {
+  const handleFilterChange = (key: string, value: unknown) => {
     setFilters(prev => ({
       ...prev,
       [key]: value,
@@ -207,10 +207,10 @@ export default function PaymentHistory({ propertyId, tenantId }: PaymentHistoryP
         </Table>
       </TableContainer>
 
-      {(response as any)?.metadata?.totalPages > 1 && (
+      {(response as unknown)?.metadata?.totalPages > 1 && (
         <Box sx={{ mt: 2, display: 'flex', justifyContent: 'center' }}>
           <Pagination
-            count={(response as any)?.metadata?.totalPages || 1}
+            count={(response as unknown)?.metadata?.totalPages || 1}
             page={filters.page}
             onChange={handlePageChange}
             color="primary"

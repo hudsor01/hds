@@ -8,24 +8,22 @@ import TextField from '@mui/material/TextField'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import { Controller, useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { ErrorBoundary } from '@/components/error/error-boundary'
 
-const leaseSchema = z.object({
-  propertyId: z.string().min(1, 'Property is required'),
-  tenantId: z.string().min(1, 'Tenant is required'),
-  startDate: z.date(),
-  endDate: z.date(),
-  rentAmount: z.number().min(0),
-  securityDeposit: z.number().min(0),
-  paymentFrequency: z.enum(['monthly', 'quarterly', 'annually']),
-  utilityResponsibilities: z.object({
-    electricity: z.enum(['tenant', 'landlord']),
-    water: z.enum(['tenant', 'landlord']),
-    gas: z.enum(['tenant', 'landlord']),
-    internet: z.enum(['tenant', 'landlord'])
-  })
+const leaseFormSchema = z.object({
+  startDate: z.coerce.date(),
+  endDate: z.coerce.date(),
+  rentAmount: z.coerce.number().positive(),
+  securityDeposit: z.coerce.number().positive(),
+  status: z.enum(['active', 'pending', 'expired', 'terminated']),
+  propertyId: z.string(),
+  unitId: z.string(),
+  tenantId: z.string(),
+  tenantName: z.string(),
+  paymentFrequency: z.enum(['monthly', 'quarterly', 'annually'])
 })
 
-type LeaseFormData = z.infer<typeof leaseSchema>
+type LeaseFormData = z.infer<typeof leaseFormSchema>
 
 export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
   const createLease = useCreateLease()
@@ -34,9 +32,10 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
   const {
     control,
     handleSubmit,
-    formState: { errors }
+    formState: { errors, isSubmitting },
+    watch
   } = useForm<LeaseFormData>({
-    resolver: zodResolver(leaseSchema),
+    resolver: zodResolver(leaseFormSchema),
     defaultValues: initialData || {
       paymentFrequency: 'monthly',
       utilityResponsibilities: {
@@ -47,6 +46,8 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
       }
     }
   })
+
+  const startDate = watch('startDate')
 
   const onSubmit = async (data: LeaseFormData) => {
     try {
@@ -62,98 +63,104 @@ export function LeaseForm({ initialData, onSuccess }: LeaseFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="propertyId"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Property"
-                select
-                fullWidth
-                error={!!errors.propertyId}
-                helperText={errors.propertyId?.message}
-              >
-                {/* Property options would come from API */}
-              </TextField>
-            )}
-          />
-        </Grid>
+    <ErrorBoundary>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Grid container spacing={3}>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="propertyId"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Property"
+                  select
+                  fullWidth
+                  error={!!errors.propertyId}
+                  helperText={errors.propertyId?.message}
+                  disabled={isSubmitting}
+                >
+                  {/* Property options would come from API */}
+                </TextField>
+              )}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="tenantId"
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                label="Tenant"
-                select
-                fullWidth
-                error={!!errors.tenantId}
-                helperText={errors.tenantId?.message}
-              >
-                {/* Tenant options would come from API */}
-              </TextField>
-            )}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="tenantId"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Tenant"
+                  select
+                  fullWidth
+                  error={!!errors.tenantId}
+                  helperText={errors.tenantId?.message}
+                  disabled={isSubmitting}
+                >
+                  {/* Tenant options would come from API */}
+                </TextField>
+              )}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="startDate"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="Start Date"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    error: !!errors.startDate,
-                    helperText: errors.startDate?.message
-                  }
-                }}
-              />
-            )}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  label="Start Date"
+                  minDate={new Date()}
+                  disabled={isSubmitting}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!errors.startDate,
+                      helperText: errors.startDate?.message
+                    }
+                  }}
+                />
+              )}
+            />
+          </Grid>
 
-        <Grid item xs={12} sm={6}>
-          <Controller
-            name="endDate"
-            control={control}
-            render={({ field }) => (
-              <DatePicker
-                {...field}
-                label="End Date"
-                slotProps={{
-                  textField: {
-                    fullWidth: true,
-                    error: !!errors.endDate,
-                    helperText: errors.endDate?.message
-                  }
-                }}
-              />
-            )}
-          />
-        </Grid>
+          <Grid item xs={12} sm={6}>
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  {...field}
+                  label="End Date"
+                  minDate={startDate || new Date()}
+                  disabled={isSubmitting || !startDate}
+                  slotProps={{
+                    textField: {
+                      fullWidth: true,
+                      error: !!errors.endDate,
+                      helperText: errors.endDate?.message
+                    }
+                  }}
+                />
+              )}
+            />
+          </Grid>
 
-        <Grid item xs={12}>
-          <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
-            <Button
-              type="submit"
-              variant="contained"
-              disabled={createLease.isPending || updateLease.isPending}
-            >
-              {initialData ? 'Update Lease' : 'Create Lease'}
-            </Button>
-          </Box>
+          {/* ...existing utility fields... */}
+
+          <Grid item xs={12}>
+            <Box sx={{ display: 'flex', gap: 2, justifyContent: 'flex-end' }}>
+              <Button type="submit" variant="contained" disabled={isSubmitting}>
+                {isSubmitting ? 'Saving...' : initialData ? 'Update Lease' : 'Create Lease'}
+              </Button>
+            </Box>
+          </Grid>
         </Grid>
-      </Grid>
-    </form>
+      </form>
+    </ErrorBoundary>
   )
 }

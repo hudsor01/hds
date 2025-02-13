@@ -93,7 +93,7 @@ export const DropdownMenuItem = React.forwardRef<HTMLLIElement, DropdownMenuItem
     <StyledMenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm transition-colors',
+        'focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-hidden transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50',
         inset && 'pl-8',
         className
       )}
@@ -127,7 +127,7 @@ export const DropdownMenuCheckItem = React.forwardRef<
   <StyledMenuItem
     ref={ref}
     className={cn(
-      'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors',
+      'focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50',
       className
     )}
     {...props}
@@ -147,7 +147,7 @@ export const DropdownMenuSubItem = React.forwardRef<HTMLLIElement, DropdownMenuI
     <StyledMenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm transition-colors',
+        'focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden transition-colors select-none data-disabled:pointer-events-none data-disabled:opacity-50',
         className
       )}
       {...props}

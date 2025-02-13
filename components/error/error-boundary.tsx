@@ -1,42 +1,77 @@
-'use client'
+import React from 'react'
+import { Button } from '@/components/ui/button'
+import { XCircle } from 'react-feather'
+import { Alert } from '@mui/material'
 
-import { Button, Container, Typography } from '@mui/material'
-import { useEffect } from 'react'
-import { AlertTriangle } from 'react-feather'
-
-interface ErrorBoundaryProps {
-  error: Error
-  resetAction: () => void
+interface Props {
+  children: React.ReactNode
 }
 
-export default function ErrorBoundary({ error, resetAction }: ErrorBoundaryProps) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Error:', error)
-  }, [error])
+interface State {
+  hasError: boolean
+  error: Error | null
+}
 
-  return (
-    <Container maxWidth="md" sx={{ py: 8, textAlign: 'center' }}>
-      <AlertTriangle size={48} className="mx-auto mb-4 text-red-500" />
-      <Typography variant="h4" gutterBottom>
-        Something went wrong!
-      </Typography>
-      <Typography color="text.secondary" paragraph>
-        {error.message || 'An unexpected error occurred. Please try again later.'}
-      </Typography>
-      <Button
-        variant="contained"
-        onClick={resetAction}
-        sx={{
-          mt: 2,
-          background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-          '&:hover': {
-            background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
-          }
-        }}
-      >
-        Try again
-      </Button>
-    </Container>
-  )
+export class ErrorBoundary extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props)
+    this.state = {
+      hasError: false,
+      error: null
+    }
+  }
+
+  static getDerivedStateFromError(error: Error): State {
+    return {
+      hasError: true,
+      error
+    }
+  }
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    console.error('Error caught by boundary:', error, errorInfo)
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="p-4">
+          <Alert
+            severity="error"
+            icon={<XCircle className="h-4 w-4" />}
+            action={
+              <Button
+                variant="outlined"
+                onClick={() => {
+                  this.setState({ hasError: false, error: null })
+                }}
+              >
+                Try again
+              </Button>
+            }
+          >
+            <div className="font-semibold">Something went wrong</div>
+            <div className="text-sm">
+              {this.state.error?.message || 'An unexpected error occurred'}
+            </div>
+          </Alert>
+        </div>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+export function withErrorBoundary<P extends object>(
+  Component: React.ComponentType<P>,
+  fallback?: React.ReactNode
+) {
+  return function WithErrorBoundary(props: P) {
+    return (
+      <ErrorBoundary fallback={fallback}>
+        <Component {...props} />
+      </ErrorBoundary>
+    )
+  }
 }

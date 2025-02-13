@@ -4,7 +4,7 @@ import { DataGrid, type GridColDef, type GridSlotsComponent } from '@mui/x-data-
 
 interface DataTableProps {
   columns: GridColDef[]
-  rows: any[]
+  rows: unknown[]
   loading?: boolean
   pageSize?: number
 }

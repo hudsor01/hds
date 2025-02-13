@@ -21,7 +21,7 @@ async function main() {
       city: 'Plano',
       state: 'Texas',
       zip: '75023',
-      type: 'Residential',
+      property_type: 'Residential',
       rent_amount: 2800,
       owner_id: user.id,
       status: 'active',
@@ -39,7 +39,7 @@ async function main() {
       last_name: 'Douglass',
       email: 'alicia@loishouseinplano.com',
       phone: '972-208-2863',
-      status: 'ACTIVE',
+      tenant_status: 'ACTIVE',
       move_in_date: new Date(),
       emergency_contact: {
         name: 'Lois Greer',

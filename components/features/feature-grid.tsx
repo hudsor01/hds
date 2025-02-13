@@ -81,7 +81,7 @@ export function FeatureGrid() {
   return (
     <section className="bg-white dark:bg-gray-900">
       <div className="container mx-auto px-6 py-10">
-        <h1 className="text-2xl font-semibold capitalize text-gray-800 lg:text-3xl dark:text-white">
+        <h1 className="text-2xl font-semibold text-gray-800 capitalize lg:text-3xl dark:text-white">
           explore our <br /> awesome <span className="underline decoration-blue-200">Features</span>
         </h1>
 
@@ -100,7 +100,7 @@ export function FeatureGrid() {
                 <feature.icon />
               </span>
 
-              <h1 className="text-xl font-semibold capitalize text-gray-700 dark:text-white">
+              <h1 className="text-xl font-semibold text-gray-700 capitalize dark:text-white">
                 {feature.name}
               </h1>
 
@@ -108,7 +108,7 @@ export function FeatureGrid() {
 
               <Link
                 href="/features"
-                className="inline-flex transform rounded-full bg-blue-200 p-2 capitalize text-gray-800 transition-colors duration-300 hover:text-blue-400 hover:underline rtl:-scale-x-100 dark:bg-blue-400 dark:text-white dark:hover:text-blue-200"
+                className="inline-flex transform rounded-full bg-blue-200 p-2 text-gray-800 capitalize transition-colors duration-300 hover:text-blue-400 hover:underline rtl:-scale-x-100 dark:bg-blue-400 dark:text-white dark:hover:text-blue-200"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

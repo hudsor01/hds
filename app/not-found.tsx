@@ -7,82 +7,44 @@ import { Home, Search } from 'react-feather'
 
 export default function NotFound() {
   return (
-    <Container maxWidth="md">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          textAlign: 'center',
-          py: 8
-        }}
-      >
-        <FadeIn delay={0.2}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: '8rem',
-              fontWeight: 700,
-              background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 2
-            }}
-          >
-            404
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.4}>
-          <Typography variant="h4" gutterBottom>
-            Page Not Found
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.6}>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
-            The page you're looking for doesn't exist or has been moved. Let's get you back on
-            track.
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.8}>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            <Link href="/dashboard" passHref style={{ textDecoration: 'none' }}>
-              <Button
-                variant="contained"
-                startIcon={<Home size={20} />}
-                sx={{
-                  background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
-                  }
-                }}
-              >
-                Back to Dashboard
-              </Button>
-            </Link>
-            <Link href="/search" passHref style={{ textDecoration: 'none' }}>
-              <Button
-                variant="outlined"
-                startIcon={<Search size={20} />}
-                sx={{
-                  borderColor: '#007FFF',
-                  color: '#007FFF',
-                  '&:hover': {
-                    borderColor: '#0059B2',
-                    color: '#0059B2'
-                  }
-                }}
-              >
-                Search Properties
-              </Button>
-            </Link>
-          </Box>
-        </FadeIn>
-      </Box>
-    </Container>
+    <main className="flex min-h-screen items-center justify-center bg-[#B7D1E2] p-4 dark:bg-[#89A5B7]">
+      <div className="w-full max-w-md rounded-xl bg-white/80 p-6 text-center shadow-lg backdrop-blur-sm md:p-8 dark:bg-gray-800/80">
+        <h1 className="mb-4 text-3xl font-bold text-gray-800 md:text-4xl dark:text-gray-100">
+          Oops! Page Not Found
+        </h1>
+        <div className="mb-8">
+          <p className="mb-2 text-gray-600 dark:text-gray-300">
+            The page you&apos;re looking for doesn&apos;t exist or has been moved.
+          </p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">
+            Please check the URL or navigate back home.
+          </p>
+        </div>
+        <Button
+          component={Link}
+          href="/"
+          variant="contained"
+          size="large"
+          sx={{
+            backgroundColor: '#96B5C6',
+            '&:hover': {
+              backgroundColor: '#7A9BB0'
+            },
+            fontFamily: 'inherit',
+            textTransform: 'none',
+            px: 6,
+            py: 1.5,
+            '@media (prefers-color-scheme: dark)': {
+              backgroundColor: '#7A9BB0',
+              '&:hover': {
+                backgroundColor: '#5E8299'
+              }
+            }
+          }}
+        >
+          Return Home
+        </Button>
+      </div>
+    </main>
   )
 }

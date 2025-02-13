@@ -66,7 +66,11 @@ export function PropertySaleDialog({
           </div>
           <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
-            <Input id="notes" name="notes" placeholder="Any additional details about the sale" />
+            <Input
+              id="notes"
+              name="notes"
+              placeholder="unknown additional details about the sale"
+            />
           </div>
         </div>
       </form>

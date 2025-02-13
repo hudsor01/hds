@@ -73,7 +73,7 @@ export default function MVPLandingPage() {
 
         {/* Background Blobs */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -left-4 top-0 h-72 w-72 rounded-full bg-[#A7C7E7]/20 blur-3xl" />
+          <div className="absolute top-0 -left-4 h-72 w-72 rounded-full bg-[#A7C7E7]/20 blur-3xl" />
           <div className="absolute -right-4 bottom-0 h-72 w-72 rounded-full bg-[#A7C7E7]/20 blur-3xl" />
         </div>
 

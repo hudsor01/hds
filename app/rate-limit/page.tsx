@@ -39,7 +39,7 @@ export default function RateLimitPage() {
               mb: 2
             }}
           >
-            Too Many Requests
+            Too Munknown Requests
           </Typography>
         </FadeIn>
 
@@ -51,7 +51,7 @@ export default function RateLimitPage() {
 
         <FadeIn delay={0.8}>
           <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
-            You've made too many requests in a short period. Please wait a moment before trying
+            You've made too munknown requests in a short period. Please wait a moment before trying
             again.
           </Typography>
         </FadeIn>

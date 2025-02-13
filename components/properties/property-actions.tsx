@@ -1,46 +1,88 @@
-// components/properties/property-actions.tsx
-import { ConfirmDialog } from '@/components/common/confirm-dialog'
-import { useDeleteProperty } from '@/hooks/use-properties'
-import DeleteIcon from '@mui/icons-material/Delete'
-import EditIcon from '@mui/icons-material/Edit'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import IconButton from '@mui/material/IconButton'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Menu from '@mui/material/Menu'
-import MenuItem from '@mui/material/MenuItem'
+'use client'
+
+import { useCallback, useState, useTransition } from 'react'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { IconButton, Menu, MenuItem, ListItemIcon, ListItemText, useTheme } from '@mui/material'
+import {
+  Delete as DeleteIcon,
+  Edit as EditIcon,
+  MoreVert as MoreVertIcon
+} from '@mui/icons-material'
+import { ConfirmDialog } from '@/components/common/confirm-dialog'
+import { toast } from 'sonner'
 
 interface PropertyActionsProps {
   propertyId: string
   propertyName: string
+  onSuccess?: () => void
 }
 
-export function PropertyActions({ propertyId, propertyName }: PropertyActionsProps) {
+export function PropertyActions({ propertyId, propertyName, onSuccess }: PropertyActionsProps) {
   const router = useRouter()
+  const theme = useTheme()
+  const [isPending, startTransition] = useTransition()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
-  const deleteProperty = useDeleteProperty()
 
-  const handleDelete = async () => {
-    await deleteProperty.mutateAsync(propertyId)
-    setShowDeleteDialog(false)
-  }
+  const handleOpenMenu = useCallback((event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget)
+  }, [])
+
+  const handleCloseMenu = useCallback(() => {
+    setAnchorEl(null)
+  }, [])
+
+  const handleEdit = useCallback(() => {
+    startTransition(() => {
+      router.push(`/properties/${propertyId}/edit`)
+      handleCloseMenu()
+    })
+  }, [propertyId, router, handleCloseMenu])
+
+  const handleDelete = useCallback(async () => {
+    try {
+      await deleteProperty.mutateAsync(propertyId)
+      toast.success('Property deleted successfully')
+      setShowDeleteDialog(false)
+      onSuccess?.()
+    } catch (error) {
+      toast.error('Failed to delete property. Please try again.')
+      console.error('Delete property error:', error)
+    }
+  }, [propertyId, deleteProperty, onSuccess])
+
+  const handleDeleteClick = useCallback(() => {
+    setShowDeleteDialog(true)
+    handleCloseMenu()
+  }, [handleCloseMenu])
 
   return (
     <>
-      <IconButton onClick={e => setAnchorEl(e.currentTarget)}>
+      <IconButton
+        onClick={handleOpenMenu}
+        aria-label="property actions"
+        disabled={isPending}
+        sx={{
+          '&:hover': {
+            backgroundColor: theme.palette.action.hover
+          }
+        }}
+      >
         <MoreVertIcon />
       </IconButton>
 
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={() => setAnchorEl(null)}>
-        <MenuItem
-          onClick={() => {
-            router.push(`/properties/${propertyId}/edit`)
-            setAnchorEl(null)
-          }}
-        >
+      <Menu
+        anchorEl={anchorEl}
+        open={Boolean(anchorEl)}
+        onClose={handleCloseMenu}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+        PaperProps={{
+          elevation: 3,
+          sx: { minWidth: 200 }
+        }}
+      >
+        <MenuItem onClick={handleEdit} disabled={isPending}>
           <ListItemIcon>
             <EditIcon fontSize="small" />
           </ListItemIcon>
@@ -48,11 +90,15 @@ export function PropertyActions({ propertyId, propertyName }: PropertyActionsPro
         </MenuItem>
 
         <MenuItem
-          onClick={() => {
-            setShowDeleteDialog(true)
-            setAnchorEl(null)
+          onClick={handleDeleteClick}
+          disabled={isPending}
+          sx={{
+            color: 'error.main',
+            '&:hover': {
+              backgroundColor: theme.palette.error.light,
+              color: theme.palette.error.contrastText
+            }
           }}
-          sx={{ color: 'error.main' }}
         >
           <ListItemIcon>
             <DeleteIcon fontSize="small" color="error" />
@@ -65,9 +111,12 @@ export function PropertyActions({ propertyId, propertyName }: PropertyActionsPro
         open={showDeleteDialog}
         title="Delete Property"
         message={`Are you sure you want to delete ${propertyName}? This action cannot be undone.`}
+        confirmLabel="Delete"
+        cancelLabel="Cancel"
         onConfirm={handleDelete}
         onCancel={() => setShowDeleteDialog(false)}
         isLoading={deleteProperty.isPending}
+        severity="error"
       />
     </>
   )

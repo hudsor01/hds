@@ -43,7 +43,7 @@ export function FeatureCard({
             <h3 className="text-xl font-bold">{title}</h3>
             <p className="text-muted-foreground">{description}</p>
           </div>
-          <div className="bg-linear-to-r via-primary/20 absolute inset-x-0 bottom-0 h-px from-transparent to-transparent" />
+          <div className="via-primary/20 absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent to-transparent" />
         </Card>
       </motion.div>
     </Tooltip>

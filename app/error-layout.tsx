@@ -2,6 +2,18 @@
 
 import theme from './theme'
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
+import { Roboto } from 'next/font/google'
+
+export const roboto = Roboto({
+  weight: ['400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap'
+})
+
+export const metadata = {
+  title: 'Page Not Found - Hudson Digital Solutions',
+  description: 'The requested page could not be found'
+}
 
 export default function ErrorLayout({ children }: { children: React.ReactNode }) {
   return (

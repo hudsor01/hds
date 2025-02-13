@@ -37,7 +37,7 @@ export const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, 
 /**
  * Safely access nested object properties
  */
-export function get(obj: any, path: string, defaultValue: any = undefined) {
+export function get(obj: unknown, path: string, defaultValue: unknown = undefined) {
   const travel = (regexp: RegExp) =>
     String.prototype.split
       .call(path, regexp)
@@ -66,7 +66,7 @@ export function generateId(length: number = 8) {
 /**
  * Debounces a function
  */
-export function debounce<T extends (...args: any[]) => any>(
+export function debounce<T extends (...args: unknown[]) => unknown>(
   func: T,
   wait: number
 ): (...args: Parameters<T>) => void {

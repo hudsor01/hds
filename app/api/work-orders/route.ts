@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
     // Verify vendor association
     const { data: vendor, error: vendorError } = await supabase
       .from('vendors')
-      .select('id, company_name')
+      .select('id, compunknown_name')
       .eq('id', validatedData.vendor_id)
       .eq('user_id', user.id)
       .single()
@@ -184,7 +184,7 @@ export async function POST(req: NextRequest) {
         user_id: user.id,
         type: 'SYSTEM',
         title: 'New Work Order Created',
-        message: `A new work order has been created for ${vendor.company_name}`,
+        message: `A new work order has been created for ${vendor.compunknown_name}`,
         data: {
           work_order_id: workOrder.id,
           vendor_id: validatedData.vendor_id,
@@ -260,7 +260,7 @@ export async function PUT(req: NextRequest) {
     if (validatedData.vendor_id && validatedData.vendor_id !== existingWorkOrder.vendor_id) {
       const { data: vendor, error: vendorError } = await supabase
         .from('vendors')
-        .select('id, company_name')
+        .select('id, compunknown_name')
         .eq('id', validatedData.vendor_id)
         .eq('user_id', user.id)
         .single()

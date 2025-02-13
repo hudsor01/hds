@@ -123,7 +123,7 @@ export default function RecurringPaymentForm({
             value={selectedPaymentMethod}
             onChange={e => setSelectedPaymentMethod(e.target.value)}
           >
-            {paymentMethods?.data?.map((method: any) => (
+            {paymentMethods?.data?.map((method: unknown) => (
               <MenuItem key={method.id} value={method.id}>
                 {method.card.brand} ending in {method.card.last4}
               </MenuItem>

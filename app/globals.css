@@ -1,70 +1,44 @@
 @import 'tailwindcss';
 
-/* Apply Tailwind's base styles */
-@import 'tailwindcss/base';
-
-/* Apply Tailwind's component classes */
-@import 'tailwindcss/components';
-
-/* Apply Tailwind's utility classes */
-@import 'tailwindcss/utilities';
-
-/* Apply custom base styles */
-@layer base {
-  :root {
-    --font-sans: 'Roboto', system-ui;
-    --font-display: 'Playfair Display', serif;
-
-    --background-app: theme(colors.gray.50);
-    --background-subtle: theme(colors.gray.100);
-    --background-ui: theme(colors.white);
-    --border-ui: theme(colors.gray.200);
-    --text-primary: theme(colors.gray.900);
-    --text-secondary: theme(colors.gray.600);
-    --text-tertiary: theme(colors.gray.400);
-  }
-
-  [data-theme='dark'] {
-    --background-app: theme(colors.gray.900);
-    --background-subtle: theme(colors.gray.800);
-    --background-ui: theme(colors.gray.850);
-    --border-ui: theme(colors.gray.700);
-    --text-primary: theme(colors.gray.100);
-    --text-secondary: theme(colors.gray.300);
-    --text-tertiary: theme(colors.gray.500);
-  }
-
-  html {
-    @apply antialiased;
-    font-family: var(--font-sans);
-  }
-
-  body {
-    @apply bg-background-app text-text-primary;
-  }
+:root {
+  --font-sans: 'Roboto', system-ui;
+  --font-display: 'Playfair Display', serif;
+  --background-app: #f9fafb;
+  --background-subtle: #f3f4f6;
+  --background-ui: #ffffff;
+  --border-ui: #e5e7eb;
+  --text-primary: #111827;
+  --text-secondary: #4b5563;
+  --text-tertiary: #9ca3af;
 }
 
-/* Custom components */
+[data-theme='dark'] {
+  --background-app: #111827;
+  --background-subtle: #1f2937;
+  --background-ui: #111827;
+  --border-ui: #374151;
+  --text-primary: #f3f4f6;
+  --text-secondary: #d1d5db;
+  --text-tertiary: #6b7280;
+}
+
 @layer components {
   .surface {
-    @apply bg-background-ui border-border-ui rounded-md border shadow-sm;
+    @apply rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800;
   }
 
   .input {
-    @apply bg-background-ui border-border-ui text-text-primary placeholder:text-text-tertiary focus:ring-primary-500 w-full rounded-md border px-3 py-2 focus:border-transparent focus:ring-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    @apply w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800;
   }
 
   .button {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors duration-200 focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
   }
 }
 
-/* Custom utilities */
 @layer utilities {
   .grid-stack {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: theme(spacing.4);
+    @apply grid gap-4;
   }
 
   .flex-center {
@@ -80,51 +54,37 @@
   }
 }
 
-/* High-performance animations */
+/* Add custom colors */
+.bg-pastel-blue {
+  background-color: #b7d1e2;
+}
+
+.bg-pastel-blue-dark {
+  background-color: #96b5c6;
+}
+
+.bg-pastel-blue-darker {
+  background-color: #7a9bb0;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .animate-in {
-    animation: enter 200ms ease-out;
+    @apply transition-all duration-200 ease-out;
   }
 
   .animate-out {
-    animation: exit 150ms ease-in forwards;
-  }
-
-  @keyframes enter {
-    from {
-      opacity: 0;
-      transform: translateY(8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes exit {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(4px);
-    }
+    @apply transition-all duration-150 ease-in;
   }
 }
 
-/* Accessibility and print */
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-    scroll-behavior: auto !important;
+    @apply !scroll-auto !transition-none !duration-[0.01ms];
   }
 }
 
 @media print {
   .no-print {
-    display: none !important;
+    @apply !hidden;
   }
 }

@@ -7,7 +7,7 @@ const notificationSchema = z.object({
   type: z.enum(['SYSTEM', 'MAINTENANCE', 'PAYMENT', 'LEASE', 'MESSAGE', 'ALERT']),
   title: z.string().min(1, 'Title is required'),
   message: z.string().min(1, 'Message is required'),
-  data: z.record(z.string(), z.any()).optional(),
+  data: z.record(z.string(), z.unknown()).optional(),
   read_at: z.string().datetime().nullable().optional()
 })
 

@@ -1,6 +1,11 @@
 import { sql } from '@vercel/postgres'
 
-export const logWebhookEvent = async (type: string, data: any, success: boolean, error?: any) => {
+export const logWebhookEvent = async (
+  type: string,
+  data: unknown,
+  success: boolean,
+  error?: unknown
+) => {
   await sql`
    INSERT INTO webhook_logs (
      event_type,

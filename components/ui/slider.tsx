@@ -47,7 +47,7 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
   ({ className, onValueChange, onChange, ...props }, ref) => {
     const handleChange = React.useCallback(
       (_: Event, value: number | number[], activeThumb: number) => {
-        onChange?.(_ as any, value, activeThumb)
+        onChange?.(_ as unknown, value, activeThumb)
         onValueChange?.(value)
       },
       [onChange, onValueChange]
@@ -56,7 +56,7 @@ export const Slider = React.forwardRef<HTMLSpanElement, SliderProps>(
     return (
       <StyledSlider
         ref={ref}
-        className={cn('relative flex w-full touch-none select-none items-center', className)}
+        className={cn('relative flex w-full touch-none items-center select-none', className)}
         onChange={handleChange}
         {...props}
       />

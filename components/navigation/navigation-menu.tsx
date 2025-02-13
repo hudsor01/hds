@@ -1,13 +1,13 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { Menu as MuiMenu, MenuItem as MuiMenuItem } from '@mui/material'
+import { useCallback, useState, useTransition } from 'react'
+import { Menu, MenuItem, IconButton } from '@mui/material'
+import { useRouter } from 'next/navigation'
 import type { Route } from 'next'
-import type { LinkProps } from 'next/link'
 import Link from 'next/link'
-import * as React from 'react'
+import MenuIcon from '@mui/icons-material/Menu'
 
-interface NavigationMenuProps extends React.HTMLAttributes<HTMLElement> {
+interface NavigationMenuProps {
   items: Array<{
     title: string
     href: Route
@@ -16,71 +16,79 @@ interface NavigationMenuProps extends React.HTMLAttributes<HTMLElement> {
   }>
 }
 
-interface MenuItemLinkProps extends LinkProps<string> {
-  className?: string
-  children?: React.ReactNode
-}
-
-const MenuItemLink = React.forwardRef<HTMLAnchorElement, MenuItemLinkProps>(
-  ({ href, className, children, ...props }, ref) => (
-    <Link ref={ref} href={href} className={className} {...props}>
-      {children}
-    </Link>
-  )
-)
-MenuItemLink.displayName = 'MenuItemLink'
-
-export function NavigationMenu({ className, items, ...props }: NavigationMenuProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
+export default function NavigationMenu({ items }: NavigationMenuProps) {
+  const router = useRouter()
+  const [isPending, startTransition] = useTransition()
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget)
-  }
+  }, [])
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setAnchorEl(null)
-  }
+  }, [])
+
+  const handleNavigation = useCallback(
+    (href: string) => {
+      startTransition(() => {
+        router.push(href)
+        handleClose()
+      })
+    },
+    [router, handleClose]
+  )
 
   return (
-    <nav className={cn('relative z-10', className)} {...props}>
-      <button
+    <nav>
+      <IconButton
         onClick={handleClick}
-        className="focus-visible:outline-hidden ring-offset-background hover:bg-accent hover:text-accent-foreground focus-visible:ring-ring inline-flex h-10 items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50"
+        color="inherit"
+        aria-label="menu"
+        aria-controls={open ? 'navigation-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
       >
-        Menu
-      </button>
-      <MuiMenu
+        <MenuIcon />
+      </IconButton>
+      <Menu
+        id="navigation-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-          'aria-labelledby': 'basic-button'
+          'aria-labelledby': 'navigation-button',
+          role: 'menu'
         }}
+        PaperProps={{
+          elevation: 3,
+          sx: { mt: 1.5 }
+        }}
+        transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
       >
         {items.map(item => (
-          <Link
+          <MenuItem
             key={item.href}
+            onClick={() => handleNavigation(item.href)}
+            component={Link}
             href={item.href}
-            className="flex items-center space-x-2 no-underline"
-            onClick={handleClose}
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1.5,
+              minWidth: 200
+            }}
           >
-            <MuiMenuItem className="w-full">
-              {item.icon}
-              <div>
-                <div className="text-sm font-medium">{item.title}</div>
-                {item.description && (
-                  <p className="text-muted-foreground line-clamp-2 text-sm leading-snug">
-                    {item.description}
-                  </p>
-                )}
-              </div>
-            </MuiMenuItem>
-          </Link>
+            {item.icon}
+            <div>
+              <div className="font-medium">{item.title}</div>
+              {item.description && <div className="text-sm text-gray-600">{item.description}</div>}
+            </div>
+          </MenuItem>
         ))}
-      </MuiMenu>
+      </Menu>
     </nav>
   )
 }
-
-export default NavigationMenu

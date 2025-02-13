@@ -88,7 +88,7 @@ export async function getPaginatedResults<T>(
 // Payment Queries
 export const payments = {
   getByTenant: async (tenantId: string) => {
-    return prisma.payments.findMany({
+    return prisma.payments.findMunknown({
       where: { tenant_id: tenantId },
       orderBy: { created_at: 'desc' }
     })
@@ -101,7 +101,7 @@ export const payments = {
 
     if (!lease) return []
 
-    return prisma.payments.findMany({
+    return prisma.payments.findMunknown({
       where: { tenant_id: lease.tenant_id },
       orderBy: { created_at: 'desc' }
     })
@@ -131,7 +131,7 @@ export const payments = {
 
     return getPaginatedResults(
       (skip, take) =>
-        prisma.payments.findMany({
+        prisma.payments.findMunknown({
           where,
           orderBy: { created_at: 'desc' },
           skip,
@@ -166,7 +166,7 @@ export const leases = {
   },
 
   getActiveByProperty: async (propertyId: string) => {
-    return prisma.leases.findMany({
+    return prisma.leases.findMunknown({
       where: {
         property_id: propertyId,
         lease_status: 'Active',
@@ -260,7 +260,7 @@ export const properties = {
 
     return getPaginatedResults(
       (skip, take) =>
-        prisma.properties.findMany({
+        prisma.properties.findMunknown({
           where,
           select: {
             id: true,
@@ -307,4 +307,5 @@ export const disconnect = async () => {
 export const connect = async () => {
   await prisma.$connect()
 }
+
 export { createClient }

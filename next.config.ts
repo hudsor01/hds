@@ -6,10 +6,8 @@ const nextConfig: NextConfig = {
     serverActions: {
       bodySizeLimit: '2mb'
     },
-    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
-    typedRoutes: true
+    optimizePackageImports: ['@mui/material', '@mui/icons-material']
   },
-  optimizeFonts: true,
   images: {
     domains: ['www.hudsondigitalsolutions.com'],
     formats: ['image/avif', 'image/webp']
@@ -18,13 +16,8 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false
   },
   eslint: {
-    dirs: ['app', 'components', 'lib', 'hooks', 'types', 'utils'], // Directories to lint
-    ignoreDuringBuilds: false // Ensure ESLint runs during builds
-  },
-  env: {
-    NEXT_PUBLIC_SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL,
-    SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SERVICE_ROLE_KEY,
-    DATABASE_URL: process.env.DATABASE_URL
+    dirs: ['app', 'components', 'lib', 'hooks', 'types', 'utils'],
+    ignoreDuringBuilds: false
   }
 }
 

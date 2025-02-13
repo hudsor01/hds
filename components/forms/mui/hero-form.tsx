@@ -10,7 +10,7 @@ export default function HeroForm() {
     formState: { errors }
   } = useForm()
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: unknown) => {
     // Handle email submission
     console.log(data)
   }

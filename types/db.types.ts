@@ -18,6 +18,31 @@ export enum UserStatus {
   PENDING = 'pending'
 }
 
+export interface UserDetails {
+  id: string
+  full_name: string | null
+  email: string | null
+  created_at: string
+  updated_at: string
+}
+
+export interface Subscription {
+  id: string
+  user_id: string
+  status: string
+  price_id: string | null
+  quantity: number | null
+  cancel_at_period_end: boolean
+  created_at: string
+  current_period_start: string
+  current_period_end: string
+  ended_at: string | null
+  cancel_at: string | null
+  canceled_at: string | null
+  trial_start: string | null
+  trial_end: string | null
+}
+
 export enum PropertyStatus {
   AVAILABLE = 'available',
   OCCUPIED = 'occupied',
@@ -60,7 +85,7 @@ export const LEASE_STATUS = {
 export interface UseDashboardUpdatesProps {
   table: string
   select?: string
-  onUpdate: (data: any) => void
+  onUpdate: (data: unknown) => void
   onDelete: (id: string) => void
 }
 
@@ -189,7 +214,7 @@ export interface Activity {
   title: string
   description: string
   timestamp: Date
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 // Waitlist related types
@@ -208,13 +233,13 @@ export interface EmailEvent extends BaseRecord {
   openedAt?: Date
   clickedAt?: Date
   status: 'sent' | 'delivered' | 'opened' | 'clicked' | 'failed'
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface AnalyticsEvent extends BaseRecord {
   eventType: 'signup' | 'email_open' | 'email_click' | 'conversion'
   waitlistId: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, unknown>
 }
 
 export interface WaitlistResponse {
@@ -482,7 +507,14 @@ export type Enums<
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
     : never
 
-interface BaseRecord {
+export interface BaseRecord {
   id: string
   createdAt: Date
+}
+
+export interface AnalyticsQuerySchemaType {
+  startDate: Date
+  endDate: Date
+  interval: 'day' | 'week' | 'month'
+  metrics: string[]
 }

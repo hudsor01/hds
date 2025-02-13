@@ -15,7 +15,7 @@ import { Plus } from 'react-feather'
 import { z } from 'zod'
 
 const vendorSchema = z.object({
-  company_name: z.string().min(1, 'Company name is required'),
+  compunknown_name: z.string().min(1, 'Compunknown name is required'),
   contact_name: z.string().min(1, 'Contact name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 characters'),
@@ -27,7 +27,7 @@ const vendorSchema = z.object({
 
 const columns: GridColDef[] = [
   { field: 'id', headerName: 'ID', width: 100 },
-  { field: 'company_name', headerName: 'Company Name', width: 200 },
+  { field: 'compunknown_name', headerName: 'Compunknown Name', width: 200 },
   { field: 'contact_name', headerName: 'Contact Name', width: 150 },
   { field: 'email', headerName: 'Email', width: 200 },
   { field: 'phone', headerName: 'Phone', width: 150 },
@@ -71,7 +71,7 @@ const serviceOptions = [
 
 export default function VendorsPage() {
   const [open, setOpen] = useState(false)
-  const [selectedVendor, setSelectedVendor] = useState<any>(null)
+  const [selectedVendor, setSelectedVendor] = useState<unknown>(null)
   const [paginationModel, setPaginationModel] = useState({
     page: 0,
     pageSize: 10
@@ -82,12 +82,12 @@ export default function VendorsPage() {
     queryFn: () => api.get('/api/vendors')
   })
 
-  const handleEdit = (vendor: any) => {
+  const handleEdit = (vendor: unknown) => {
     setSelectedVendor(vendor)
     setOpen(true)
   }
 
-  const handleDelete = async (vendor: any) => {
+  const handleDelete = async (vendor: unknown) => {
     if (window.confirm('Are you sure you want to delete this vendor?')) {
       try {
         await api.delete(`/api/vendors`, vendor.id)
@@ -98,7 +98,7 @@ export default function VendorsPage() {
     }
   }
 
-  const handleSubmit = async (formData: any) => {
+  const handleSubmit = async (formData: unknown) => {
     try {
       if (selectedVendor) {
         await api.put(`/api/vendors`, selectedVendor.id, formData)
@@ -153,7 +153,7 @@ export default function VendorsPage() {
         title={selectedVendor ? 'Edit Vendor' : 'New Vendor'}
       >
         <div className="grid gap-4">
-          <TextField label="Company Name" fullWidth required />
+          <TextField label="Compunknown Name" fullWidth required />
           <TextField label="Contact Name" fullWidth required />
           <TextField label="Email" type="email" fullWidth required />
           <TextField label="Phone" fullWidth required />

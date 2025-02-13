@@ -2,38 +2,50 @@ import { BaseQueryParams, BaseResponse } from '@/types/common'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { ZodError, ZodSchema } from 'zod'
 import { createClient } from '@/utils/supabase/server'
-import axios from 'axios'
+import axios, { AxiosError } from 'axios'
 
 export type ApiError = {
   message: string
   code?: string
   status?: number
+  details?: unknown
 }
 
 export type ApiResponse<T> = {
-  data: T
+  data: T | null
   error: ApiError | null
+  metadata?: {
+    timestamp: string
+    requestId?: string
+  }
 }
 
 // API client configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || ''
+const DEFAULT_TIMEOUT = 30000 // 30 seconds
 
-// Fetch wrapper with error handling
-async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
+// Enhanced fetch wrapper with timeout and detailed error handling
+async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit): Promise<Response> {
   try {
     const supabase = await createClient()
     const {
       data: { session }
     } = await supabase.auth.getSession()
 
+    const controller = new AbortController()
+    const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT)
+
     const response = await fetch(input, {
       ...init,
+      signal: controller.signal,
       headers: {
         'Content-Type': 'application/json',
         ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
         ...init?.headers
       }
     })
+
+    clearTimeout(timeoutId)
 
     if (!response.ok) {
       const error = await response.json().catch(() => ({ message: 'An error occurred' }))
@@ -42,6 +54,9 @@ async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit) {
 
     return response
   } catch (error) {
+    if (error instanceof Error && error.name === 'AbortError') {
+      throw new Error('Request timeout')
+    }
     throw handleError(error)
   }
 }
@@ -86,14 +101,23 @@ export async function deleteData<T>(
   return response.json()
 }
 
-// API Middleware for Next.js API routes
+// Enhanced API Middleware for Next.js API routes
 export const withValidation = <T>(schema: ZodSchema<T>) => {
-  return async (req: NextApiRequest) => {
+  return async (req: NextApiRequest, res: NextApiResponse<ApiResponse<T>>) => {
     try {
-      return await schema.parseAsync(req.body)
+      const validated = await schema.parseAsync(req.body)
+      return validated
     } catch (error) {
       if (error instanceof ZodError) {
-        throw new Error(error.errors.map(e => e.message).join(', '))
+        res.status(400).json({
+          data: null,
+          error: {
+            message: 'Validation error',
+            code: 'VALIDATION_ERROR',
+            details: error.errors
+          }
+        })
+        return
       }
       throw error
     }
@@ -101,27 +125,48 @@ export const withValidation = <T>(schema: ZodSchema<T>) => {
 }
 
 export const withErrorHandler = <T>(
-  handler: (req: NextApiRequest, res: NextApiResponse<BaseResponse<T>>) => Promise<void>
+  handler: (req: NextApiRequest, res: NextApiResponse<ApiResponse<T>>) => Promise<void>
 ) => {
-  return async (req: NextApiRequest, res: NextApiResponse<BaseResponse<T>>) => {
+  return async (req: NextApiRequest, res: NextApiResponse<ApiResponse<T>>) => {
     try {
       await handler(req, res)
     } catch (error) {
-      console.error(error)
-      const message = error instanceof Error ? error.message : 'Internal Server Error'
-      res.status(500).json({ data: null as T, error: message })
+      console.error('API Error:', error)
+
+      const apiError = handleError(error)
+      const status = apiError.status || 500
+
+      res.status(status).json({
+        data: null,
+        error: apiError,
+        metadata: {
+          timestamp: new Date().toISOString(),
+          requestId: req.headers['x-request-id'] as string
+        }
+      })
     }
   }
 }
 
-// Error handling
+// Enhanced error handling
 function handleError(error: unknown): ApiError {
+  if (error instanceof AxiosError) {
+    return {
+      message: error.response?.data?.message || error.message,
+      code: error.code,
+      status: error.response?.status,
+      details: error.response?.data
+    }
+  }
+
   if (error instanceof Error) {
     return {
       message: error.message,
-      code: 'ERROR'
+      code: 'ERROR',
+      details: error
     }
   }
+
   return {
     message: 'An unexpected error occurred',
     code: 'UNKNOWN_ERROR'

@@ -1,27 +1,53 @@
 'use client'
 
+import { signIn, signOut } from '@/auth'
 import { Button } from '@/components/ui/buttons/button'
-import { signOut } from '../../app/auth/lib/auth/auth'
+import { useTransition, useSession } from 'react'
 
 export function AuthButton() {
-  const { session, isLoaded } = useSession()
-  const isLoading = status === 'loading'
+  const { data: session, status } = useSession()
+  const [isPending, startTransition] = useTransition()
+  const isLoading = status === 'loading' || isPending
+
+  const handleSignIn = async () => {
+    startTransition(async () => {
+      try {
+        await signIn('google', { callbackUrl: '/dashboard' })
+      } catch (error) {
+        console.error('Sign in failed:', error)
+      }
+    })
+  }
+
+  const handleSignOut = async () => {
+    startTransition(async () => {
+      try {
+        await signOut({ callbackUrl: '/' })
+      } catch (error) {
+        console.error('Sign out failed:', error)
+      }
+    })
+  }
 
   if (isLoading) {
-    return <Button disabled>Loading...</Button>
+    return (
+      <Button disabled variant="outlined" className="w-full">
+        Loading...
+      </Button>
+    )
   }
 
   if (session) {
     return (
-      <Button variant="outline" onClick={() => signOut()}>
+      <Button variant="outlined" onClick={handleSignOut} className="w-full">
         Sign Out
       </Button>
     )
   }
 
-  function signIn(arg0: string): void {
-    throw new Error('Function not implemented.')
-  }
-
-  return <Button onClick={() => signIn('google')}>Sign In with Google</Button>
+  return (
+    <Button onClick={handleSignIn} className="w-full">
+      Sign In with Google
+    </Button>
+  )
 }

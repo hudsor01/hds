@@ -49,7 +49,7 @@ export function TypographyH4({ children, className, ...props }: TypographyProps)
 
 export function TypographyP({ children, className, ...props }: TypographyProps) {
   return (
-    <p className={cn('not-first:mt-6 leading-7', className)} {...props}>
+    <p className={cn('leading-7 not-first:mt-6', className)} {...props}>
       {children}
     </p>
   )
@@ -84,7 +84,7 @@ export function TypographyLarge({ children, className, ...props }: TypographyPro
 
 export function TypographySmall({ children, className, ...props }: TypographyProps) {
   return (
-    <small className={cn('text-sm font-medium leading-none', className)} {...props}>
+    <small className={cn('text-sm leading-none font-medium', className)} {...props}>
       {children}
     </small>
   )

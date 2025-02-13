@@ -166,7 +166,7 @@ export async function PUT(req: NextRequest) {
 // System settings (admin only)
 const systemSettingsSchema = z.object({
   key: z.string().min(1),
-  value: z.any(),
+  value: z.unknown(),
   description: z.string().optional()
 })
 

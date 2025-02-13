@@ -32,7 +32,7 @@ const Select = React.memo(
         <StyledSelect
           ref={ref}
           className={cn(
-            'focus:outline-hidden border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50',
+            'border-input bg-background ring-offset-background placeholder:text-muted-foreground focus:ring-ring rounded-md border px-3 py-2 text-sm focus:ring-2 focus:ring-offset-2 focus:outline-hidden disabled:cursor-not-allowed disabled:opacity-50',
             className
           )}
           displayEmpty
@@ -66,7 +66,7 @@ const SelectItem = React.forwardRef<HTMLLIElement, React.ComponentProps<typeof M
     <MenuItem
       ref={ref}
       className={cn(
-        'outline-hidden data-disabled:pointer-events-none data-disabled:opacity-50 focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm',
+        'focus:bg-accent focus:text-accent-foreground relative flex w-full cursor-default items-center rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50',
         className
       )}
       {...props}

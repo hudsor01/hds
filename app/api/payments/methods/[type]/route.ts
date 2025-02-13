@@ -18,7 +18,7 @@ const achSchema = z.object({
     routing_number: z.string(),
     account_number: z.string(),
     account_type: z.enum(['checking', 'savings']),
-    account_holder_type: z.enum(['individual', 'company'])
+    account_holder_type: z.enum(['individual', 'compunknown'])
   })
 })
 

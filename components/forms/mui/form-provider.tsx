@@ -3,14 +3,14 @@ import { PropsWithChildren } from 'react'
 import { FormProvider as RHFFormProvider, UseFormReturn } from 'react-hook-form'
 import { z } from 'zod'
 
-interface FormContainerProps<T extends z.ZodObject<any>> extends PropsWithChildren {
+interface FormContainerProps<T extends z.ZodObject<unknown>> extends PropsWithChildren {
   schema: T
   defaultValues?: Partial<z.infer<T>>
   onSubmit: (data: z.infer<T>) => Promise<void> | void
   onError?: (error: Error) => void
 }
 
-export function FormContainer<T extends z.ZodObject<any>>({
+export function FormContainer<T extends z.ZodObject<unknown>>({
   children,
   schema,
   defaultValues,

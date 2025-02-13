@@ -84,7 +84,7 @@ export const CommandList = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <CommandPrimitiveList
     ref={ref}
-    className={clsx('max-h-[300px] overflow-y-auto overflow-x-hidden', className)}
+    className={clsx('max-h-[300px] overflow-x-hidden overflow-y-auto', className)}
     {...props}
   />
 ))
@@ -139,7 +139,7 @@ export const CommandItem = React.forwardRef<
   <CommandPrimitiveItem
     ref={ref}
     className={clsx(
-      'relative flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none',
+      'relative flex cursor-default items-center rounded-sm px-2 py-1.5 text-sm outline-none select-none',
       'data-[disabled]:pointer-events-none data-[disabled]:opacity-50',
       'data-[selected]:bg-accent data-[selected]:text-accent-foreground',
       className

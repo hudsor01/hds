@@ -21,7 +21,7 @@ export function DashboardSideNav() {
     <>
       <aside
         className={cn(
-          'bg-background fixed left-0 top-0 z-50 h-screen border-r transition-all duration-300',
+          'bg-background fixed top-0 left-0 z-50 h-screen border-r transition-all duration-300',
           isCollapsed ? 'w-16' : 'w-64'
         )}
       >
