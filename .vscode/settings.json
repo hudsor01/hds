@@ -20,5 +20,6 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "WillLuke.nextjs.addTypesOnSave": true,
-  "WillLuke.nextjs.hasPrompted": true
+  "WillLuke.nextjs.hasPrompted": true,
+  "i18n-ally.localesPaths": ["app/api/messages"]
 }
