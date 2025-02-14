@@ -1,3 +1,4 @@
+
 import supabase from '@/lib/supabase'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
@@ -11,7 +12,7 @@ import { toast } from 'sonner'
 const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password']
 const protectedRoutes = ['/dashboard']
 
-export async function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest): Promise<NextResponse> {
   try {
     const requestUrl = new URL(request.url)
 
@@ -27,7 +28,6 @@ export async function middleware(request: NextRequest) {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
       }
     }
-
     const {
       data: { session }
     } = await supabase.auth.getSession()

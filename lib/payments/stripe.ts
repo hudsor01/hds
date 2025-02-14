@@ -176,6 +176,7 @@ export async function getStripeProducts(): Promise<
     defaultPriceId: string | null
   }>
 > {
+
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']
@@ -221,7 +222,7 @@ export interface CreatePaymentIntentParams {
   metadata: Record<string, string>
 }
 
-export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams) => {
+export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams): Promise<Stripe.Customer> => {
   return stripe.customers.create({
     email,
     name,
@@ -266,6 +267,7 @@ export const updateCustomer = async (
   customerId: string,
   data: Stripe.CustomerUpdateParams
 ): Promise<Stripe.Customer> => {
+
   return stripe.customers.update(customerId, data)
 }
 
@@ -279,6 +281,7 @@ export const retrievePaymentIntent = async (
 export const cancelPaymentIntent = async (
   paymentIntentId: string
 ): Promise<Stripe.PaymentIntent> => {
+  
   return stripe.paymentIntents.cancel(paymentIntentId)
 }
 
