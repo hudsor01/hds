@@ -105,6 +105,11 @@ export default function Footer() {
                 </button>
               </div>
             </form>
+            <div>
+              <p className="mt-4 text-sm text-gray-500">
+                Join 476 others on the waitlist. No spam, ever.
+              </p>
+            </div>
           </div>
         </div>
 

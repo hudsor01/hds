@@ -24,7 +24,11 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={`${roboto.variable} h-full scroll-smooth antialiased`}>
+    <html
+      lang="en"
+      className={`${roboto.variable} h-full scroll-smooth antialiased`}
+      suppressHydrationWarning
+    >
       <head>
         <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
@@ -36,7 +40,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
             <Footer />
           </div>
-          <Toaster position="top-center" expand richColors closeButton theme="system" />
+          <Toaster position="top-center" expand richColors closeButton />
         </Providers>
       </body>
     </html>

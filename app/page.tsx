@@ -4,7 +4,7 @@ import { PublicLayout } from '@/components/layout/public-layout'
 import { PageTransition } from '@/components/layout/page-transition'
 import { Container } from '@/components/ui/container'
 import { Card } from '@/components/ui/card'
-import { HeroSection } from '@/components/sections/HeroSection'
+import { HeroSection } from '@/components/sections/hero-section'
 import { Typography, Grid, Box } from '@mui/material'
 
 export default function HomePage() {
@@ -41,7 +41,7 @@ export default function HomePage() {
               ].map((feature, index) => (
                 <Grid item xs={12} md={4} key={feature.title}>
                   <Card
-                    variant="outlined"
+                    variant="default"
                     className="p-6 transition-shadow duration-300 hover:shadow-lg"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
