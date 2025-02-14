@@ -8,7 +8,7 @@ type SessionWithUser = Session & {
   }
 }
 
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   const supabase = supabase()
   const {
     data: { session }

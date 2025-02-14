@@ -13,7 +13,7 @@ const documentSchema = z.object({
   size: z.number().positive('File size must be positive')
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = supabase()
     const {
@@ -24,9 +24,9 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const property_id = searchParams.get('property_id')
-    const lease_id = searchParams.get('lease_id')
-    const type = searchParams.get('type')
+    const property_id: string | null = searchParams.get('property_id')
+    const lease_id: string | null = searchParams.get('lease_id')
+    const type: string | null = searchParams.get('type')
 
     let query = supabase
       .from('documents')
@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = supabase()
     const {
@@ -138,7 +138,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = supabase()
     const {
@@ -192,7 +192,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
     const supabase = supabase()
     const {

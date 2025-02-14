@@ -14,9 +14,9 @@ const filterSchema = z.object({
   limit: z.number().min(1).max(100).default(10)
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
+    const { userId }: { userId: string } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -37,13 +37,13 @@ export async function GET(req: NextRequest) {
     const payments = await getPaymentHistory(userId, validatedFilters)
 
     // Calculate pagination metadata
-    const total = payments.length
-    const totalPages = Math.ceil(total / validatedFilters.limit)
-    const hasMore = validatedFilters.page < totalPages
+    const total: number = payments.length
+    const totalPages: number = Math.ceil(total / validatedFilters.limit)
+    const hasMore: boolean = validatedFilters.page < totalPages
 
     // Paginate results
-    const start = (validatedFilters.page - 1) * validatedFilters.limit
-    const end = start + validatedFilters.limit
+    const start: number = (validatedFilters.page - 1) * validatedFilters.limit
+    const end: number = start + validatedFilters.limit
     const paginatedPayments = payments.slice(start, end)
 
     return NextResponse.json({
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
         hasMore
       }
     })
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
