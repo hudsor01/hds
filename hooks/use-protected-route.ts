@@ -5,14 +5,14 @@ import { useEffect } from 'react'
 import { useAuth } from '@/components/providers/auth-provider'
 
 export function useProtectedRoute() {
-  const { user, isLoading } = useAuth()
+  const { user, loading } = useAuth()
   const router = useRouter()
 
   useEffect(() => {
-    if (!isLoading && !user && window.location.pathname.startsWith('/dashboard')) {
+    if (!loading && !user && window.location.pathname.startsWith('/dashboard')) {
       router.push('/login')
     }
-  }, [user, isLoading, router])
+  }, [user, loading, router])
 
-  return { user, isLoading }
+  return { user, loading }
 }

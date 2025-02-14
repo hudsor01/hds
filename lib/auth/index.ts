@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createServerClient, createBrowserClient } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
 
 interface User {
@@ -49,7 +49,8 @@ export async function checkRole(
     const dbUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: {
-        role: true
+        role: true,
+        permissions: true
       }
     })
 
@@ -96,8 +97,14 @@ export async function checkPermission(
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const userPermissions = user.user_metadata?.permissions || []
-    if (!userPermissions.includes(permission)) {
+    const dbUser = await prisma.users.findUnique({
+      where: { id: user.id },
+      select: {
+        permissions: true
+      }
+    })
+
+    if (!dbUser?.permissions?.includes(permission)) {
       return new NextResponse('Forbidden', { status: 403 })
     }
 
@@ -140,7 +147,8 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       id: true,
       role: true,
       email: true,
-      name: true
+      name: true,
+      permissions: true
     }
   })
 
@@ -151,7 +159,9 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
     role: dbUser.role as UserRole,
     email: dbUser.email,
     name: dbUser.name,
-    metadata: user.user_metadata
+    metadata: {
+      permissions: dbUser.permissions
+    }
   }
 }
 
@@ -192,13 +202,4 @@ export async function updateUserRole(userId: string, role: UserRole, req: NextRe
   await supabase.auth.updateUser({
     data: { role }
   })
-}
-
-// Auth hook for client components
-export function useAuth() {
-  const supabase = createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  return supabase.auth
 }

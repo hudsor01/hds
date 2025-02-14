@@ -56,8 +56,8 @@ export default function Navbar() {
             {publicNavItems.map(item => (
               <Link key={item.name} href={item.href} style={{ textDecoration: 'none' }}>
                 <Button
+                  color={pathname === item.href ? 'primary' : 'inherit'}
                   sx={{
-                    color: pathname === item.href ? 'primary.main' : 'text.primary',
                     fontWeight: pathname === item.href ? 600 : 400,
                     '&:hover': {
                       color: 'primary.main',

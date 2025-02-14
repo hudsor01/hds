@@ -1,8 +1,7 @@
 import './globals.css'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 import { ThemeProvider } from '@mui/material/styles'
 import CssBaseline from '@mui/material/CssBaseline'
-import { theme } from '@/lib/theme'
+import { theme } from './theme'
 import type { Metadata } from 'next'
 import { Providers } from '@/components/providers/providers'
 import { Analytics } from '@vercel/analytics/react'
@@ -11,6 +10,7 @@ import { Roboto } from 'next/font/google'
 import { Toaster } from 'sonner'
 import Navbar from '@/components/layout/navbar'
 import Footer from '@/components/layout/footer'
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
 
 // Configure Roboto font with variable fonts support
 const roboto = Roboto({
@@ -37,13 +37,13 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   const themePreference = cookieStore.get('theme')?.value
 
   return (
-    <html lang="en" className={roboto.variable}>
+    <html lang="en">
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body>
+      <body className={'${roboto.className}'}>
         <Providers>
-          <AppRouterCacheProvider options={{ enableCssLayer: true, key: 'mui-cache' }}>
+          <AppRouterCacheProvider options={{ enableCssLayer: true }}>
             <ThemeProvider theme={theme}>
               <CssBaseline enableColorScheme />
               <div className="flex min-h-screen flex-col">

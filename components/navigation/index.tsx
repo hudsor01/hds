@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material'
 import { Box, Drawer, IconButton, List, ListItem, ListItemText } from '@mui/material'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useAuth } from '@/hooks/use-auth'
 
 const navigation = [
   { name: 'Dashboard', href: '/dashboard' },

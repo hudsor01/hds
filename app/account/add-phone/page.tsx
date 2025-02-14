@@ -2,7 +2,13 @@
 
 import * as React from 'react'
 import supabase from '@/lib/supabase'
-import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material'
+import Typography from '@mui/material'
+import Paper from '@mui/material'
+import Box from '@mui/material'
+import Alert from '@mui/material'
+import CircularProgress from '@mui/material'
 import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
 
 export default function PhoneVerificationPage() {

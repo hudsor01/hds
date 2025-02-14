@@ -2,8 +2,6 @@ import { createClient } from '@supabase/supabase-js'
 import { NextResponse, type NextRequest } from 'next/server'
 import { type Database } from '@/types/db.types'
 import { rateLimiter } from '@/lib/rate-limit'
-import { DatabaseError } from '@/lib/supabase'
-import { ZodError } from 'zod'
 
 // Define route protection
 const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password']
@@ -16,20 +14,15 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     // Rate limiting for auth endpoints
     if (request.nextUrl.pathname.startsWith('/auth')) {
       const ip = request.headers.get('x-forwarded-for') || '127.0.0.1'
-      const { success } = await rateLimiter(ip)
+      const { success } = await rateLimiter(ip, request, NextResponse)
       if (!success) {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
       }
     }
 
-    const supabase = createClient<Database>(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
     const {
       data: { session }
-    } = await supabase.auth.getSession()
+    } = supabase.auth.getSession()
 
     // Redirect to dashboard if logged in and trying to access auth routes
     if (session && authRoutes.includes(requestUrl.pathname)) {

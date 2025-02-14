@@ -1,7 +1,7 @@
 // lib/supabase.ts
 import type { Database } from '@/types/db.types'
 import { SupabaseClient } from '@supabase/supabase-js'
-import supabase from '@/lib/supabase'
+import supabase from '@/utils/supabase/client'
 
 const supabaseClient: SupabaseClient<Database> = supabase
 
