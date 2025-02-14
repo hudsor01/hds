@@ -1,6 +1,6 @@
 import { useScroll } from '@/hooks/ui'
 import { ArrowUpward } from '@mui/icons-material'
-import { Button, ButtonProps } from '@mui/material'
+import MuiButton from '@mui/material/Button'
 import { useEffect, useState } from 'react'
 
 // Back to Top Button
@@ -15,7 +15,7 @@ export function BackToTopButton() {
   if (!mounted) return null
 
   return (
-    <Button
+    <MuiButton
       onClick={scrollToTop}
       sx={{
         position: 'fixed',
@@ -27,7 +27,7 @@ export function BackToTopButton() {
       }}
     >
       <ArrowUpward />
-    </Button>
+    </MuiButton>
   )
 }
 
@@ -38,9 +38,9 @@ interface SubmitButtonProps extends ButtonProps {
 
 export function SubmitButton({ loading, children, ...props }: SubmitButtonProps) {
   return (
-    <Button type="submit" disabled={loading} {...props}>
+    <MuiButton type="submit" disabled={loading} {...props}>
       {loading ? 'Submitting...' : children}
-    </Button>
+    </MuiButton>
   )
 }
 
@@ -52,8 +52,8 @@ interface ThemeToggleProps extends ButtonProps {
 
 export function ThemeToggleButton({ theme, onToggle, ...props }: ThemeToggleProps) {
   return (
-    <Button onClick={onToggle} {...props}>
+    <MuiButton onClick={onToggle} {...props}>
       {theme === 'light' ? '🌙' : '☀️'}
-    </Button>
+    </MuiButton>
   )
 }

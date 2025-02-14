@@ -13,6 +13,7 @@ import {
   Settings,
   Users
 } from 'react-feather'
+import { Button } from '@/components/ui/button'
 
 const features = [
   {
@@ -146,6 +147,9 @@ export default function FeaturesPage() {
                     </motion.li>
                   ))}
                 </ul>
+                <Button variant="primary" className="mt-6">
+                  Learn More
+                </Button>
                 <div className="absolute inset-x-0 bottom-0 h-1 transform bg-[var(--primary-color)] transition-all duration-200 group-hover:h-1.5" />
               </motion.div>
             ))}

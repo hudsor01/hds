@@ -2,7 +2,7 @@
 
 import type { FeatureCardProps } from '@/types/feature-card'
 import { Tooltip } from '@mui/material'
-import { Card } from 'components/ui/cards/card'
+import MuiCard from '@mui/material/Card'
 import { motion, useInView } from 'framer-motion'
 import { useEffect, useRef } from 'react'
 
@@ -32,7 +32,7 @@ export function FeatureCard({
         viewport={{ once: true }}
         style={{ display: 'block' }}
       >
-        <Card className="hover:bg-accent group relative overflow-hidden p-6 transition-colors">
+        <MuiCard className="hover:bg-accent group relative overflow-hidden p-6 transition-colors">
           <div className="space-y-4">
             <div className="bg-primary/10 group-hover:bg-primary/20 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors">
               <Icon
@@ -44,7 +44,7 @@ export function FeatureCard({
             <p className="text-muted-foreground">{description}</p>
           </div>
           <div className="via-primary/20 absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent to-transparent" />
-        </Card>
+        </MuiCard>
       </motion.div>
     </Tooltip>
   )

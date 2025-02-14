@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from 'components/ui/cards/card'
+import MuiCard from '@mui/material/Card'
 import type { Icon } from 'react-feather'
 
 export interface StatsCardProps {
@@ -15,7 +15,7 @@ export interface StatsCardProps {
 
 export function StatsCard({ icon: Icon, label, value, trend }: StatsCardProps): React.ReactElement {
   return (
-    <Card className="flex items-center space-x-4 p-4">
+    <MuiCard className="flex items-center space-x-4 p-4">
       <div className="bg-primary/10 flex h-12 w-12 items-center justify-center rounded-lg">
         <Icon className="text-primary h-6 w-6" />
       </div>
@@ -30,6 +30,6 @@ export function StatsCard({ icon: Icon, label, value, trend }: StatsCardProps): 
           )}
         </div>
       </div>
-    </Card>
+    </MuiCard>
   )
 }

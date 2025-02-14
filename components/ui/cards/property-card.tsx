@@ -1,6 +1,6 @@
 'use client'
 
-import { Card } from 'components/ui/cards/card'
+import MuiCard from '@mui/material/Card'
 import { Home } from 'react-feather'
 
 export interface PropertyCardProps {
@@ -19,7 +19,7 @@ export function PropertyCard({
   occupancy
 }: PropertyCardProps): React.ReactElement {
   return (
-    <Card className="flex items-center space-x-4 p-4">
+    <MuiCard className="flex items-center space-x-4 p-4">
       <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100">
         <Home className="h-6 w-6 text-blue-600" />
       </div>
@@ -37,6 +37,6 @@ export function PropertyCard({
           <p className="text-muted-foreground text-xs">Occupancy</p>
         </div>
       </div>
-    </Card>
+    </MuiCard>
   )
 }

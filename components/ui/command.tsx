@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogContent } from '@mui/material'
+import { Dialog as MuiDialog, DialogContent as MuiDialogContent } from '@mui/material'
 import { cn } from '@/lib/utils'
 import * as React from 'react'
 import { Search } from '@mui/icons-material'
@@ -27,12 +27,12 @@ export function Command({ children, className }: CommandProps) {
 
 export function CommandDialog({ children, ...props }: { children: React.ReactNode }) {
   return (
-    <Dialog open={false} {...props}>
-      <DialogContent className="overflow-hidden p-0">
+    <MuiDialog open={false} {...props}>
+      <MuiDialogContent className="overflow-hidden p-0">
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium">
           {children}
         </Command>
-      </DialogContent>
-    </Dialog>
+      </MuiDialogContent>
+    </MuiDialog>
   )
 }

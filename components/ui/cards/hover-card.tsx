@@ -1,6 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
+import MuiCard from '@mui/material/Card'
 
 interface HoverCardProps {
   children: React.ReactNode
@@ -15,7 +16,7 @@ export function HoverCard({ children }: HoverCardProps) {
       }}
       transition={{ type: 'spring', stiffness: 300 }}
     >
-      {children}
+      <MuiCard>{children}</MuiCard>
     </motion.div>
   )
 }

@@ -10,6 +10,7 @@ import { PageTransition } from '@/components/layout/page-transition'
 import { Container } from '@/components/ui/container'
 import { Card } from '@/components/ui/card'
 import { HeroSection } from '@/components/sections/hero-section'
+import { Button } from '@/components/ui/button'
 
 const MotionCard = motion(Card)
 
@@ -77,6 +78,29 @@ export default function HomePage(): ReactElement {
                 </Grid2>
               ))}
             </Grid2>
+          </Container>
+        </section>
+        <section className="bg-background-ui relative py-12">
+          <Container>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-text-primary mb-12 text-3xl font-bold"
+            >
+              Join Our Waitlist
+            </motion.h2>
+            <form className="flex flex-col items-center">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="mb-4 w-full max-w-md rounded-md border border-gray-300 p-2"
+              />
+              <Button type="submit" variant="primary">
+                Join Waitlist
+              </Button>
+            </form>
           </Container>
         </section>
       </PageTransition>
