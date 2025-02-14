@@ -1,6 +1,5 @@
-// components/ui/dashboard-card.tsx
 import Box from '@mui/material/Box'
-import Paper from '@mui/material/Paper'
+import Card from '@mui/material/Card'
 import Typography from '@mui/material/Typography'
 
 interface DashboardCardProps {
@@ -12,7 +11,7 @@ interface DashboardCardProps {
 
 export function DashboardCard({ title, subtitle, action, children }: DashboardCardProps) {
   return (
-    <Paper sx={{ height: '100%' }}>
+    <Card sx={{ height: '100%' }}>
       <Box sx={{ p: 3 }}>
         <Box
           sx={{
@@ -36,6 +35,6 @@ export function DashboardCard({ title, subtitle, action, children }: DashboardCa
         </Box>
         {children}
       </Box>
-    </Paper>
+    </Card>
   )
 }

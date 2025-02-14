@@ -1,6 +1,7 @@
 'use client'
 
-import { Box, Card, Tooltip, Typography, alpha, useTheme } from '@mui/material'
+import { Box, Tooltip, Typography, alpha, useTheme } from '@mui/material'
+import MuiCard from '@mui/material/Card'
 import { motion } from 'framer-motion'
 import React from 'react'
 import type { Icon } from 'react-feather'
@@ -60,7 +61,7 @@ export function MetricCard({
         whileHover="hover"
         whileTap="tap"
       >
-        <Card
+        <MuiCard
           sx={{
             p: { xs: 1.5, sm: 2 },
             height: '100%',
@@ -152,7 +153,7 @@ export function MetricCard({
               </Typography>
             </Box>
           )}
-        </Card>
+        </MuiCard>
       </motion.div>
     </Tooltip>
   )

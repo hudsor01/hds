@@ -14,7 +14,8 @@ const navLinks = [
   { href: '/features', label: 'Features' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' }
+  { href: '/contact', label: 'Contact' },
+  { href: '/', label: 'Home' }
 ]
 
 export default function Navbar() {

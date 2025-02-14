@@ -2,21 +2,8 @@
 
 import { cn } from '@/lib/utils'
 import type { CheckboxProps as MuiCheckboxProps } from '@mui/material'
-import { FormControlLabel, Checkbox as MuiCheckbox, styled } from '@mui/material'
+import { FormControlLabel, Checkbox as MuiCheckbox } from '@mui/material'
 import * as React from 'react'
-
-const StyledCheckbox = styled(MuiCheckbox)(({ theme }) => ({
-  padding: theme.spacing(0.5),
-  '& .MuiSvgIcon-root': {
-    fontSize: 20
-  },
-  '&.Mui-checked': {
-    color: theme.palette.primary.main
-  },
-  '&:hover': {
-    backgroundColor: theme.palette.action.hover
-  }
-}))
 
 export interface CheckboxProps extends Omit<MuiCheckboxProps, 'defaultChecked'> {
   label?: React.ReactNode
@@ -35,7 +22,7 @@ export const Checkbox = React.forwardRef<HTMLButtonElement, CheckboxProps>(
     )
 
     const checkbox = (
-      <StyledCheckbox
+      <MuiCheckbox
         ref={ref}
         defaultChecked={defaultChecked}
         checked={checked}

@@ -1,7 +1,7 @@
 'use client'
 
 import { signIn } from '@/auth'
-import { Button } from '@/components/ui/buttons/button'
+import MuiButton from '@mui/material/Button'
 
 export default function SignIn() {
   return (
@@ -10,7 +10,7 @@ export default function SignIn() {
         await signIn('google')
       }}
     >
-      <Button type="submit">Sign in with Google</Button>
+      <MuiButton type="submit">Sign in with Google</MuiButton>
     </form>
   )
 }

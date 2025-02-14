@@ -146,6 +146,13 @@ export namespace Forms {
   export interface EmailFormProps {
     email: string
   }
+
+  export interface ContactFormProps {
+    name: string
+    email: string
+    subject: string
+    message: string
+  }
 }
 
 // Realtime related types

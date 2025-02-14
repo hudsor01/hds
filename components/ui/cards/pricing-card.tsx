@@ -1,16 +1,12 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
+import MuiButton from '@mui/material/Button'
+import MuiCard from '@mui/material/Card'
+import MuiCardContent from '@mui/material/CardContent'
+import MuiCardHeader from '@mui/material/CardHeader'
+import MuiCardActions from '@mui/material/CardActions'
 import { cn } from '@/lib/utils'
 import type { PricingCardProps } from '@/types/mui'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle
-} from 'components/ui/cards/card'
 import { Check } from 'react-feather'
 
 export function PricingCard({
@@ -24,7 +20,7 @@ export function PricingCard({
   onSubscribeAction
 }: PricingCardProps) {
   return (
-    <Card
+    <MuiCard
       className={cn(
         'relative flex h-full flex-col overflow-hidden transition-all duration-200',
         highlighted
@@ -37,11 +33,11 @@ export function PricingCard({
           Popular
         </div>
       )}
-      <CardHeader className="space-y-2 pt-6 pb-8 text-center">
-        <CardTitle className="text-2xl font-bold">{title}</CardTitle>
-        <CardDescription className="text-muted-foreground text-sm">{description}</CardDescription>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col">
+      <MuiCardHeader className="space-y-2 pt-6 pb-8 text-center">
+        <h3 className="text-2xl font-bold">{title}</h3>
+        <p className="text-muted-foreground text-sm">{description}</p>
+      </MuiCardHeader>
+      <MuiCardContent className="flex flex-1 flex-col">
         <div className="mb-8 flex items-baseline justify-center">
           <span className="text-4xl font-bold">{price}</span>
           <span className="text-muted-foreground ml-2 text-sm">{duration}</span>
@@ -54,19 +50,19 @@ export function PricingCard({
             </li>
           ))}
         </ul>
-      </CardContent>
-      <CardFooter>
-        <Button
+      </MuiCardContent>
+      <MuiCardActions>
+        <MuiButton
           onClick={onSubscribeAction}
           className={cn(
             'w-full transition-colors',
             highlighted ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
           )}
-          variant={highlighted ? 'default' : 'outline'}
+          variant={highlighted ? 'contained' : 'outlined'}
         >
           {buttonText}
-        </Button>
-      </CardFooter>
-    </Card>
+        </MuiButton>
+      </MuiCardActions>
+    </MuiCard>
   )
 }

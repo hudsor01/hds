@@ -10,13 +10,14 @@ import {
   PageDescription
 } from '@/components/ui/container'
 import { Card } from '@/components/ui/card'
-import { Users, Target, Shield } from 'react-feather'
+import { People, Target, Security } from '@mui/icons-material'
+import Grid from '@mui/material/Grid'
 
 const values = [
   {
     title: 'Customer First',
     description: "We build solutions that directly address our customers' needs and challenges.",
-    icon: Users
+    icon: People
   },
   {
     title: 'Innovation Driven',
@@ -27,7 +28,28 @@ const values = [
   {
     title: 'Trust & Security',
     description: 'Maintaining the highest standards of data security and user privacy.',
-    icon: Shield
+    icon: Security
+  }
+]
+
+const teamMembers = [
+  {
+    name: 'John Doe',
+    role: 'CEO',
+    image: '/images/john_doe.jpg',
+    bio: 'John is the visionary behind Hudson Digital Solutions with over 20 years of experience in the tech industry.'
+  },
+  {
+    name: 'Jane Smith',
+    role: 'CTO',
+    image: '/images/jane_smith.jpg',
+    bio: 'Jane leads our technology team, ensuring our platform is built with the latest and most reliable technologies.'
+  },
+  {
+    name: 'Emily Johnson',
+    role: 'COO',
+    image: '/images/emily_johnson.jpg',
+    bio: 'Emily oversees our operations, making sure everything runs smoothly and efficiently.'
   }
 ]
 
@@ -44,62 +66,94 @@ export default function AboutPage() {
               </PageDescription>
             </PageHeader>
 
-            <div className="grid gap-12 md:grid-cols-2">
-              <Card>
-                <div className="space-y-6 p-8">
-                  <h2 className="text-2xl font-semibold text-gray-900">Our Vision</h2>
-                  <div className="space-y-4">
-                    <p className="text-lg text-gray-700">
-                      Hudson Digital Solutions is revolutionizing property management through
-                      innovative digital solutions. Our platform is designed to streamline
-                      operations, reduce costs, and improve efficiency for property managers and
-                      owners.
-                    </p>
-                    <p className="text-lg text-gray-700">
-                      Founded with a vision to modernize property management, we're building tools
-                      that make day-to-day operations seamless and data-driven decision making
-                      accessible to everyone in the industry.
+            <Grid container spacing={4}>
+              <Grid item xs={12} md={6}>
+                <Card>
+                  <div className="space-y-6 p-8">
+                    <h2 className="text-2xl font-semibold text-gray-900">Our Vision</h2>
+                    <div className="space-y-4">
+                      <p className="text-lg text-gray-700">
+                        Hudson Digital Solutions is revolutionizing property management through
+                        innovative digital solutions. Our platform is designed to streamline
+                        operations, reduce costs, and improve efficiency for property managers and
+                        owners.
+                      </p>
+                      <p className="text-lg text-gray-700">
+                        Founded with a vision to modernize property management, we're building tools
+                        that make day-to-day operations seamless and data-driven decision making
+                        accessible to everyone in the industry.
+                      </p>
+                    </div>
+                  </div>
+                </Card>
+              </Grid>
+              <Grid item xs={12} md={6}>
+                <Card variant="highlight">
+                  <div className="p-8">
+                    <h2 className="mb-6 text-2xl font-semibold text-[var(--primary-color)]">
+                      Our Mission
+                    </h2>
+                    <p className="text-gray-600">
+                      To empower property managers and owners with intelligent tools that transform
+                      how they work, making property management more efficient, profitable, and
+                      enjoyable.
                     </p>
                   </div>
-                </div>
-              </Card>
-
-              <Card variant="highlight">
-                <div className="p-8">
-                  <h2 className="mb-6 text-2xl font-semibold text-[var(--primary-color)]">
-                    Our Mission
-                  </h2>
-                  <p className="text-gray-600">
-                    To empower property managers and owners with intelligent tools that transform
-                    how they work, making property management more efficient, profitable, and
-                    enjoyable.
-                  </p>
-                </div>
-              </Card>
-            </div>
+                </Card>
+              </Grid>
+            </Grid>
 
             <Section>
               <h2 className="mb-12 text-center text-3xl font-semibold text-gray-900">Our Values</h2>
-              <div className="grid gap-8 md:grid-cols-3">
+              <Grid container spacing={4}>
                 {values.map((value, index) => (
-                  <Card
-                    key={value.title}
-                    variant="interactive"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    <div className="p-6 text-center">
-                      <div className="bg-opacity-10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
-                        <value.icon className="h-6 w-6 text-[var(--primary-color)]" />
+                  <Grid item xs={12} md={4} key={value.title}>
+                    <Card
+                      variant="interactive"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.2 }}
+                      viewport={{ once: true }}
+                    >
+                      <div className="p-6 text-center">
+                        <div className="bg-opacity-10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
+                          <value.icon className="h-6 w-6 text-[var(--primary-color)]" />
+                        </div>
+                        <h3 className="mb-2 text-xl font-semibold text-gray-900">{value.title}</h3>
+                        <p className="text-gray-600">{value.description}</p>
                       </div>
-                      <h3 className="mb-2 text-xl font-semibold text-gray-900">{value.title}</h3>
-                      <p className="text-gray-600">{value.description}</p>
-                    </div>
-                  </Card>
+                    </Card>
+                  </Grid>
                 ))}
-              </div>
+              </Grid>
+            </Section>
+
+            <Section>
+              <h2 className="mb-12 text-center text-3xl font-semibold text-gray-900">Our Team</h2>
+              <Grid container spacing={4}>
+                {teamMembers.map((member, index) => (
+                  <Grid item xs={12} md={4} key={member.name}>
+                    <Card
+                      variant="interactive"
+                      initial={{ opacity: 0, y: 20 }}
+                      whileInView={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.5, delay: index * 0.2 }}
+                      viewport={{ once: true }}
+                    >
+                      <div className="p-6 text-center">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
+                        />
+                        <h3 className="mb-2 text-xl font-semibold text-gray-900">{member.name}</h3>
+                        <p className="text-gray-600">{member.role}</p>
+                        <p className="mt-4 text-gray-600">{member.bio}</p>
+                      </div>
+                    </Card>
+                  </Grid>
+                ))}
+              </Grid>
             </Section>
           </Container>
         </Section>

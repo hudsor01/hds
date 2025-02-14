@@ -1,7 +1,7 @@
 'use client'
 
 import { signIn, signOut } from '@/auth'
-import { Button } from '@/components/ui/buttons/button'
+import MuiButton from '@mui/material/Button'
 import { useTransition, useSession } from 'react'
 
 export function AuthButton() {
@@ -31,23 +31,23 @@ export function AuthButton() {
 
   if (isLoading) {
     return (
-      <Button disabled variant="outlined" className="w-full">
+      <MuiButton disabled variant="outlined" className="w-full">
         Loading...
-      </Button>
+      </MuiButton>
     )
   }
 
   if (session) {
     return (
-      <Button variant="outlined" onClick={handleSignOut} className="w-full">
+      <MuiButton variant="outlined" onClick={handleSignOut} className="w-full">
         Sign Out
-      </Button>
+      </MuiButton>
     )
   }
 
   return (
-    <Button onClick={handleSignIn} className="w-full">
+    <MuiButton onClick={handleSignIn} className="w-full">
       Sign In with Google
-    </Button>
+    </MuiButton>
   )
 }

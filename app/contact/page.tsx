@@ -14,6 +14,10 @@ import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Mail, Phone, MapPin, Send } from 'react-feather'
+import { Email } from '@mui/icons-material'
+import { Resend } from 'resend'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 interface ContactFormData {
   name: string
@@ -57,9 +61,29 @@ export default function ContactPage() {
     e.preventDefault()
     setIsSubmitting(true)
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500))
-    setIsSuccess(true)
+    try {
+      const { data, error } = await resend.emails.send({
+        from: 'Acme <onboarding@resend.dev>',
+        to: [formData.email],
+        subject: formData.subject,
+        react: (
+          <div>
+            <p>{formData.message}</p>
+          </div>
+        )
+      })
+
+      if (error) {
+        console.error('Error sending email:', error)
+        setIsSuccess(false)
+      } else {
+        setIsSuccess(true)
+      }
+    } catch (error) {
+      console.error('Error sending email:', error)
+      setIsSuccess(false)
+    }
+
     setIsSubmitting(false)
   }
 
