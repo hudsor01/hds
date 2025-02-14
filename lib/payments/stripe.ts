@@ -23,7 +23,7 @@ export async function createCheckoutSession({
 }: {
   team: Team | null
   priceId: string
-}) {
+}): Promise<void> {
   const user = await getCurrentUser(supabase)
 
   if (!team || !user) {
@@ -52,7 +52,7 @@ export async function createCheckoutSession({
   redirect(session.url!)
 }
 
-export async function createCustomerPortalSession(team: Team) {
+export async function createCustomerPortalSession(team: Team): Promise<Stripe.BillingPortal.Session> {
   if (!team.stripeCustomerId || !team.stripeProductId) {
     redirect('/pricing')
   }
@@ -111,7 +111,7 @@ export async function createCustomerPortalSession(team: Team) {
   })
 }
 
-export async function handleSubscriptionChange(subscription: Stripe.Subscription) {
+export async function handleSubscriptionChange(subscription: Stripe.Subscription): Promise<void> {
   const customerId = subscription.customer as string
   const subscriptionId = subscription.id
   const status = subscription.status
@@ -141,7 +141,14 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
   }
 }
 
-export async function getStripePrices() {
+export async function getStripePrices(): Promise<Array<{
+  id: string
+  productId: string
+  unitAmount: number | null
+  currency: string
+  interval: string | null
+  trialPeriodDays: number | null
+}>> {
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
@@ -158,7 +165,12 @@ export async function getStripePrices() {
   }))
 }
 
-export async function getStripeProducts() {
+export async function getStripeProducts(): Promise<Array<{
+  id: string
+  name: string
+  description: string | null
+  defaultPriceId: string | null
+}>> {
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']
@@ -185,7 +197,7 @@ function updateTeamSubscription(
     planName: string | null
     subscriptionStatus: 'active' | 'trialing' | 'canceled' | 'unpaid'
   }
-) {
+): void {
   throw new Error('Function not implemented.')
 }
 
@@ -211,7 +223,7 @@ export interface CreatePaymentIntentParams {
   metadata: Record<string, string>
 }
 
-export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams) => {
+export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams): Promise<Stripe.Customer> => {
   return stripe.customers.create({
     email,
     name,
@@ -224,7 +236,7 @@ export const createPaymentIntent = async ({
   currency = 'usd',
   customer,
   metadata
-}: CreatePaymentIntentParams) => {
+}: CreatePaymentIntentParams): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.create({
     amount: Math.round(amount * 100), // Convert to cents
     currency,
@@ -241,25 +253,25 @@ export const constructWebhookEvent = (
   payload: string | Buffer,
   signature: string,
   webhookSecret: string
-) => {
+): Stripe.Event => {
   return stripe.webhooks.constructEvent(payload, signature, webhookSecret)
 }
 
 // Customer utilities
-export const retrieveCustomer = async (customerId: string) => {
+export const retrieveCustomer = async (customerId: string): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
   return stripe.customers.retrieve(customerId)
 }
 
-export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams) => {
+export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams): Promise<Stripe.Customer> => {
   return stripe.customers.update(customerId, data)
 }
 
 // Payment utilities
-export const retrievePaymentIntent = async (paymentIntentId: string) => {
+export const retrievePaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.retrieve(paymentIntentId)
 }
 
-export const cancelPaymentIntent = async (paymentIntentId: string) => {
+export const cancelPaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.cancel(paymentIntentId)
 }
 
@@ -268,7 +280,7 @@ export const createSubscription = async (
   customerId: string,
   priceId: string,
   metadata?: Record<string, string>
-) => {
+): Promise<Stripe.Subscription> => {
   return stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
@@ -276,6 +288,6 @@ export const createSubscription = async (
   })
 }
 
-export const cancelSubscription = async (subscriptionId: string) => {
+export const cancelSubscription = async (subscriptionId: string): Promise<Stripe.Subscription> => {
   return stripe.subscriptions.cancel(subscriptionId)
 }

@@ -1,11 +1,11 @@
 import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '../use-api'
 import type { BaseQueryParams } from '@/types/common'
-import type { Lease, MaintenanceRequest, Tenant } from '@/types/db.types'
+import type { Lease, MaintenanceRequest, Tenant, Property } from '@/types/db.types'
 import { useState, useCallback, useTransition } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
-import type { Property, PropertyCreateInput, PropertyUpdateInput } from '@/types/db.types'
+import type { PropertyCreateInput, PropertyUpdateInput } from '@/types/db.types'
 
 export function useProperty(id: string) {
   return useApiQuery<Property>(`/api/properties/${id}`)
@@ -20,7 +20,7 @@ export function useUpdateProperty() {
 }
 
 interface UsePropertiesOptions {
-  onSuccess?: (data: any, action: 'create' | 'update' | 'delete') => void | Promise<void>
+  onSuccess?: (data: Property, action: 'create' | 'update' | 'delete') => void | Promise<void>
   onError?: (error: Error, action: 'create' | 'update' | 'delete') => void | Promise<void>
   showToasts?: boolean
   initialData?: Property[]

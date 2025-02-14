@@ -13,7 +13,7 @@ const nextConfig: NextConfig = {
     formats: ['image/avif', 'image/webp']
   },
   typescript: {
-    ignoreBuildErrors: true
+    ignoreBuildErrors: false
   },
   eslint: {
     dirs: ['app', 'components', 'lib', 'hooks', 'types', 'utils'],
