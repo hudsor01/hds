@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useAuth } from './use-auth'
 
 export function usePermissions() {
-  const { user } = useAuth()
+  const { user } = usesupabase.auth()
   const [permissions, setPermissions] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   const supabase = supabase()

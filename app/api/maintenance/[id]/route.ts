@@ -1,13 +1,8 @@
-import { supabase } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const supabase = supabase(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
     const { data: maintenanceRequest, error } = await supabase
       .from('maintenance_requests')
       .select(
@@ -33,10 +28,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
 export async function PATCH(request: Request, { params }: { params: { id: string } }) {
   try {
-    const supabase = supabase(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
     const json = await request.json()
 
     // If completing the request, set completed_at
@@ -70,11 +61,6 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
   try {
-    const supabase = supabase(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
     const { error } = await supabase.from('maintenance_requests').delete().eq('id', params.id)
 
     if (error) throw error

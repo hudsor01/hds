@@ -1,10 +1,13 @@
-import type { Team } from '@/types/team'
-import { supabase } from '@supabase/ssr'
+import { type Team } from '@/types'
+import supabase from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
-import { getCurrentUser } from '../../app/auth'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+if (!process.env.STRIPE_SECRET_KEY) {
+  throw new Error('Missing STRIPE_SECRET_KEY environment variable')
+}
+
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-01-27.acacia',
   typescript: true,
   appInfo: {
@@ -13,10 +16,6 @@ export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   }
 })
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
-const supabaseKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-const supabase = supabase(supabaseUrl, supabaseKey)
-
 export async function createCheckoutSession({
   team,
   priceId
@@ -24,7 +23,7 @@ export async function createCheckoutSession({
   team: Team | null
   priceId: string
 }): Promise<void> {
-  const user = await getCurrentUser(supabase)
+  const { data: user, error } = await supabase.auth.getUser()
 
   if (!team || !user) {
     redirect(`/sign-up?redirect=checkout&priceId=${priceId}`)
@@ -52,7 +51,9 @@ export async function createCheckoutSession({
   redirect(session.url!)
 }
 
-export async function createCustomerPortalSession(team: Team): Promise<Stripe.BillingPortal.Session> {
+export async function createCustomerPortalSession(
+  team: Team
+): Promise<Stripe.BillingPortal.Session> {
   if (!team.stripeCustomerId || !team.stripeProductId) {
     redirect('/pricing')
   }
@@ -141,14 +142,16 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
   }
 }
 
-export async function getStripePrices(): Promise<Array<{
-  id: string
-  productId: string
-  unitAmount: number | null
-  currency: string
-  interval: string | null
-  trialPeriodDays: number | null
-}>> {
+export async function getStripePrices(): Promise<
+  Array<{
+    id: string
+    productId: string
+    unitAmount: number | null
+    currency: string
+    interval: string | null
+    trialPeriodDays: number | null
+  }>
+> {
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
@@ -160,17 +163,20 @@ export async function getStripePrices(): Promise<Array<{
     productId: typeof price.product === 'string' ? price.product : price.product.id,
     unitAmount: price.unit_amount,
     currency: price.currency,
-    interval: price.recurring?.interval,
-    trialPeriodDays: price.recurring?.trial_period_days
+    interval: price.recurring?.interval ?? null,
+    trialPeriodDays: price.recurring?.trial_period_days ?? null
   }))
 }
 
-export async function getStripeProducts(): Promise<Array<{
-  id: string
-  name: string
-  description: string | null
-  defaultPriceId: string | null
-}>> {
+export async function getStripeProducts(): Promise<
+  Array<{
+    id: string
+    name: string
+    description: string | null
+    defaultPriceId: string | null
+  }>
+> {
+
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']
@@ -181,7 +187,9 @@ export async function getStripeProducts(): Promise<Array<{
     name: product.name,
     description: product.description,
     defaultPriceId:
-      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id
+      typeof product.default_price === 'string'
+        ? product.default_price
+        : (product.default_price?.id ?? null)
   }))
 }
 
@@ -200,15 +208,6 @@ function updateTeamSubscription(
 ): void {
   throw new Error('Function not implemented.')
 }
-
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing STRIPE_SECRET_KEY environment variable')
-}
-
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-01-27.acacia',
-  typescript: true
-})
 
 export interface CreateCustomerParams {
   email: string
@@ -258,20 +257,31 @@ export const constructWebhookEvent = (
 }
 
 // Customer utilities
-export const retrieveCustomer = async (customerId: string): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
+export const retrieveCustomer = async (
+  customerId: string
+): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
   return stripe.customers.retrieve(customerId)
 }
 
-export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams): Promise<Stripe.Customer> => {
+export const updateCustomer = async (
+  customerId: string,
+  data: Stripe.CustomerUpdateParams
+): Promise<Stripe.Customer> => {
+
   return stripe.customers.update(customerId, data)
 }
 
 // Payment utilities
-export const retrievePaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
+export const retrievePaymentIntent = async (
+  paymentIntentId: string
+): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.retrieve(paymentIntentId)
 }
 
-export const cancelPaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
+export const cancelPaymentIntent = async (
+  paymentIntentId: string
+): Promise<Stripe.PaymentIntent> => {
+  
   return stripe.paymentIntents.cancel(paymentIntentId)
 }
 

@@ -1,63 +1,109 @@
 'use client'
 
-import { Suspense } from 'react'
-import { Loading } from '@/components/loading/loading-state'
+import { type ReactElement } from 'react'
+import { motion } from 'framer-motion'
+import { Typography } from '@mui/material'
+import Grid2 from '@mui/material/Grid2'
 
-export default function HomePage() {
+import { PublicLayout } from '@/components/layout/public-layout'
+import { PageTransition } from '@/components/layout/page-transition'
+import { Container } from '@/components/ui/container'
+import { Card } from '@/components/ui/card'
+import { HeroSection } from '@/components/sections/hero-section'
+import { Button } from '@/components/ui/button'
+
+const MotionCard = motion(Card)
+
+interface Feature {
+  title: string
+  description: string
+}
+
+const features: Feature[] = [
+  {
+    title: 'Smart Management',
+    description: 'Streamline your property operations with AI-powered insights'
+  },
+  {
+    title: 'Real-time Analytics',
+    description: 'Make data-driven decisions with comprehensive reporting'
+  },
+  {
+    title: 'Automated Workflows',
+    description: 'Automate routine tasks and focus on what matters'
+  }
+]
+
+export default function HomePage(): ReactElement {
   return (
-    <main className="flex min-h-screen flex-col">
-      <section
-        id="hero"
-        className="relative h-screen min-h-[600px] bg-gradient-to-b from-gray-900 to-gray-800"
-      >
-        <div className="container mx-auto flex h-full items-center px-4">
-          <div className="max-w-2xl">
-            <h1 className="mb-6 text-5xl font-bold text-white">Hudson Digital Solutions</h1>
-            <p className="mb-8 text-xl text-gray-300">
-              Your comprehensive property management solution
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="features" className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">Our Features</h2>
-          <Suspense fallback={<Loading />}>
-            <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-              {/* Feature cards will be rendered here */}
-            </div>
-          </Suspense>
-        </div>
-      </section>
-
-      <section id="about" className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">About Us</h2>
-          <div className="mx-auto max-w-3xl text-center">
-            <p className="text-lg text-gray-600">
-              We provide innovative solutions for property management, making it easier for property
-              managers and owners to streamline their operations.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section id="pricing" className="bg-gray-50 py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">Pricing Plans</h2>
-          <div className="grid gap-8 md:grid-cols-3">
-            {/* Pricing cards will be rendered here */}
-          </div>
-        </div>
-      </section>
-
-      <section id="contact" className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">Contact Us</h2>
-          <div className="mx-auto max-w-xl">{/* Contact form will be rendered here */}</div>
-        </div>
-      </section>
-    </main>
+    <PublicLayout>
+      <PageTransition>
+        <HeroSection />
+        <section className="bg-background-ui relative py-12">
+          <Container>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-text-primary mb-12 text-3xl font-bold"
+            >
+              Coming Soon
+            </motion.h2>
+            <Grid2 container spacing={4}>
+              {features.map((feature, index) => (
+                <Grid2 key={feature.title} size={{ xs: 12, sm: 6, md: 4 }}>
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.2 }}
+                    viewport={{ once: true }}
+                  >
+                    <MotionCard
+                      variant="outline"
+                      className="p-6 transition-shadow duration-300 hover:shadow-lg"
+                    >
+                      <Typography
+                        variant="h5"
+                        component="h3"
+                        className="mb-4 text-[var(--primary-color)]"
+                      >
+                        {feature.title}
+                      </Typography>
+                      <Typography variant="body1" className="text-text-secondary">
+                        {feature.description}
+                      </Typography>
+                    </MotionCard>
+                  </motion.div>
+                </Grid2>
+              ))}
+            </Grid2>
+          </Container>
+        </section>
+        <section className="bg-background-ui relative py-12">
+          <Container>
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+              className="text-text-primary mb-12 text-3xl font-bold"
+            >
+              Join Our Waitlist
+            </motion.h2>
+            <form className="flex flex-col items-center">
+              <input
+                type="email"
+                placeholder="Enter your email"
+                className="mb-4 w-full max-w-md rounded-md border border-gray-300 p-2"
+              />
+              <Button type="submit" variant="primary">
+                Join Waitlist
+              </Button>
+            </form>
+          </Container>
+        </section>
+      </PageTransition>
+    </PublicLayout>
   )
 }

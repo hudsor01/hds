@@ -1,26 +1,30 @@
 'use client'
 
-import { containerVariants, itemVariants } from '@/lib/animation-variants'
-import { motion } from 'framer-motion'
+import { FooterContent } from './footer-content'
+import ClientOnly from '@/components/utils/client-only'
 import Link from 'next/link'
 
 export default function Footer() {
-  const currentYear = new Date().getFullYear()
-
   return (
-    <motion.footer
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-      className="bg-background text-muted-foreground mt-auto flex w-full items-center justify-center gap-1 border-t p-6 md:justify-start"
-    >
-      <motion.div variants={itemVariants}>
-        <Link href="/" className="flex items-center gap-1">
-          <span className="text-zinc-300 underline underline-offset-2 transition-all duration-200 ease-linear hover:text-yellow-200">
-            © {currentYear} Hudson Digital Solutions
-          </span>
+    <ClientOnly>
+      <FooterContent />
+      <div className="flex justify-center space-x-4 mt-4">
+        <Link href="/features" className="text-sm text-gray-600 hover:text-gray-900">
+          Features
         </Link>
-      </motion.div>
-    </motion.footer>
+        <Link href="/pricing" className="text-sm text-gray-600 hover:text-gray-900">
+          Pricing
+        </Link>
+        <Link href="/about" className="text-sm text-gray-600 hover:text-gray-900">
+          About
+        </Link>
+        <Link href="/contact" className="text-sm text-gray-600 hover:text-gray-900">
+          Contact
+        </Link>
+        <Link href="/" className="text-sm text-gray-600 hover:text-gray-900">
+          Home
+        </Link>
+      </div>
+    </ClientOnly>
   )
 }

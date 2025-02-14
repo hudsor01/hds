@@ -25,7 +25,6 @@ export async function GET(
   { params }: { params: { metric: string } }
 ): Promise<NextResponse> {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()

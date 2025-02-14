@@ -25,24 +25,27 @@ export function useAuth(): AuthContextType {
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
-  const supabaseClient: SupabaseClient = useMemo(() =>
-    createBrowserClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    ),
+  const supabaseClient: SupabaseClient = useMemo(
+    () =>
+      createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      ),
     []
   )
 
   useEffect(() => {
     const getInitialSession = async () => {
       try {
-        const { data: { user } } = await supabaseClient.auth.getUser()
+        const {
+          data: { user }
+        } = await supabaseClient.auth.getUser()
         if (user) {
-          const { data: profile } = await supabaseClient
+          const { data: profile } = (await supabaseClient
             .from('profiles')
             .select('role')
             .eq('id', user.id)
-            .single() as { data: Profile | null }
+            .single()) as { data: Profile | null }
 
           setUser({ ...user, role: profile?.role })
         }
@@ -55,14 +58,16 @@ export function useAuth(): AuthContextType {
 
     void getInitialSession()
 
-    const { data: { subscription } } = supabaseClient.auth.onAuthStateChange(
+    const {
+      data: { subscription }
+    } = supabaseClient.auth.onAuthStateChange(
       async (_event: AuthChangeEvent, session: Session | null) => {
         if (session?.user) {
-          const { data: profile } = await supabaseClient
+          const { data: profile } = (await supabaseClient
             .from('profiles')
             .select('role')
             .eq('id', session.user.id)
-            .single() as { data: Profile | null }
+            .single()) as { data: Profile | null }
 
           setUser({ ...session.user, role: profile?.role })
         } else {

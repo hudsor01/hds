@@ -2,6 +2,7 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@mui/material', '@emotion/react', '@emotion/styled'],
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'

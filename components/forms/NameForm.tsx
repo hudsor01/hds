@@ -1,10 +1,7 @@
 'use client'
+import { Forms } from '@/types'
 
-interface NameFormProps {
-  userName: string
-}
-
-export default function NameForm({ userName }: NameFormProps) {
+export default function NameForm({ userName, userId }: Forms.NameFormProps) {
   return (
     <div className="mb-4">
       <label htmlFor="name" className="block text-sm font-medium text-gray-700">

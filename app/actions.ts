@@ -1,6 +1,6 @@
 'use server'
 
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import { revalidatePath } from 'next/cache'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'

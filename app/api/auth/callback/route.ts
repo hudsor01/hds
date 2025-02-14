@@ -1,14 +1,13 @@
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 import { cookies } from 'next/headers'
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse> {
   const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/'
+  const code: string | null = searchParams.get('code')
+  const next: string = searchParams.get('next') ?? '/'
 
   if (code) {
-    const supabase = await supabase()
     const { error } = await supabase.auth.exchangeCode(code)
     if (!error) {
       return NextResponse.redirect(`${origin}${next}`)

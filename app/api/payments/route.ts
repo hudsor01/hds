@@ -1,4 +1,4 @@
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
@@ -26,9 +26,8 @@ const paymentSchema = z.object({
     .default('PENDING')
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -37,10 +36,10 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const property_id = searchParams.get('property_id')
-    const tenant_id = searchParams.get('tenant_id')
-    const status = searchParams.get('status')
-    const type = searchParams.get('type')
+    const property_id: string | null = searchParams.get('property_id')
+    const tenant_id: string | null = searchParams.get('tenant_id')
+    const status: string | null = searchParams.get('status')
+    const type: string | null = searchParams.get('type')
 
     let query = supabase
       .from('payments')
@@ -89,9 +88,8 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -203,9 +201,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -290,9 +287,8 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()

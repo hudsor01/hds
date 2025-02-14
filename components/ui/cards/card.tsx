@@ -4,35 +4,32 @@ import * as React from 'react'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
-const cardVariants = cva(
-  'rounded-lg border bg-card text-card-foreground shadow-sm',
-  {
-    variants: {
-      variant: {
-        default: 'shadow-sm',
-        elevated: 'shadow-md hover:shadow-lg transition-shadow',
-        ghost: 'border-none shadow-none',
-        outline: 'shadow-none',
-      },
-      size: {
-        default: '',
-        sm: 'p-4',
-        md: 'p-6',
-        lg: 'p-8',
-      },
-      hover: {
-        default: '',
-        lift: 'transition-all hover:-translate-y-1 hover:shadow-md',
-        highlight: 'transition-colors hover:bg-muted/50',
-      },
+const cardVariants = cva('rounded-lg border bg-card text-card-foreground shadow-sm', {
+  variants: {
+    variant: {
+      default: 'shadow-sm',
+      elevated: 'shadow-md hover:shadow-lg transition-shadow',
+      ghost: 'border-none shadow-none',
+      outline: 'shadow-none'
     },
-    defaultVariants: {
-      variant: 'default',
-      size: 'default',
-      hover: 'default',
+    size: {
+      default: '',
+      sm: 'p-4',
+      md: 'p-6',
+      lg: 'p-8'
     },
+    hover: {
+      default: '',
+      lift: 'transition-all hover:-translate-y-1 hover:shadow-md',
+      highlight: 'transition-colors hover:bg-muted/50'
+    }
+  },
+  defaultVariants: {
+    variant: 'default',
+    size: 'default',
+    hover: 'default'
   }
-)
+})
 
 interface CardProps
   extends React.HTMLAttributes<HTMLDivElement>,
@@ -54,16 +51,11 @@ const Card = React.forwardRef<HTMLDivElement, CardProps>(
 )
 Card.displayName = 'Card'
 
-const CardHeader = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex flex-col space-y-1.5 p-6', className)}
-    {...props}
-  />
-))
+const CardHeader = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('flex flex-col space-y-1.5 p-6', className)} {...props} />
+  )
+)
 CardHeader.displayName = 'CardHeader'
 
 interface CardTitleProps extends React.HTMLAttributes<HTMLHeadingElement> {
@@ -74,10 +66,7 @@ const CardTitle = React.forwardRef<HTMLHeadingElement, CardTitleProps>(
   ({ className, as: Comp = 'h3', ...props }, ref) => (
     <Comp
       ref={ref}
-      className={cn(
-        'text-2xl font-semibold leading-none tracking-tight',
-        className
-      )}
+      className={cn('text-2xl leading-none font-semibold tracking-tight', className)}
       {...props}
     />
   )
@@ -88,32 +77,22 @@ const CardDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, ...props }, ref) => (
-  <p
-    ref={ref}
-    className={cn('text-sm text-muted-foreground', className)}
-    {...props}
-  />
+  <p ref={ref} className={cn('text-muted-foreground text-sm', className)} {...props} />
 ))
 CardDescription.displayName = 'CardDescription'
 
-const CardContent = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
-))
+const CardContent = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('p-6 pt-0', className)} {...props} />
+  )
+)
 CardContent.displayName = 'CardContent'
 
-const CardFooter = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn('flex items-center p-6 pt-0', className)}
-    {...props}
-  />
-))
+const CardFooter = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ className, ...props }, ref) => (
+    <div ref={ref} className={cn('flex items-center p-6 pt-0', className)} {...props} />
+  )
+)
 CardFooter.displayName = 'CardFooter'
 
 export {

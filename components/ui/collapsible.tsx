@@ -1,15 +1,15 @@
 'use client'
 
-import { Collapse, styled } from '@mui/material'
+import { Collapse as MuiCollapse, styled } from '@mui/material'
 import * as React from 'react'
 
-const StyledCollapse = styled(Collapse)(({ theme }) => ({
+const StyledCollapse = styled(MuiCollapse)(({ theme }) => ({
   '& .MuiCollapse-wrapper': {
     borderRadius: theme.shape.borderRadius
   }
 }))
 
-export interface CollapsibleProps extends React.ComponentProps<typeof Collapse> {
+export interface CollapsibleProps extends React.ComponentProps<typeof MuiCollapse> {
   defaultOpen?: boolean
   onOpenChange?: (open: boolean) => void
 }

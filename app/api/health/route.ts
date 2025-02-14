@@ -2,7 +2,7 @@ import { emailService } from '@/lib/utils/email'
 import { prisma } from '@/prisma/seed'
 import { NextResponse } from 'next/server'
 
-async function checkDatabase() {
+async function checkDatabase(): Promise<string> {
   try {
     await prisma.$queryRaw`SELECT 1`
     return 'healthy'
@@ -11,7 +11,7 @@ async function checkDatabase() {
   }
 }
 
-async function checkEmailService() {
+async function checkEmailService(): Promise<string> {
   try {
     await emailService.sendWelcome('test@example.com')
     return 'healthy'
@@ -20,7 +20,7 @@ async function checkEmailService() {
   }
 }
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
   const health = {
     uptime: process.uptime(),
     database: await checkDatabase(),

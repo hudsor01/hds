@@ -5,6 +5,7 @@ import Button from '@mui/material/Button'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 import CircularProgress from '@mui/material/CircularProgress'
+import { forwardRef } from 'react'
 
 const buttonVariants = cva(
   'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
@@ -90,4 +91,16 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export { Button, buttonVariants }
+export { Button }
+
+export interface LoadingButtonProps extends React.ComponentProps<typeof MuiButton> {
+  loading?: boolean
+}
+
+export function LoadingButton({ loading, children, ...props }: LoadingButtonProps) {
+  return (
+    <MuiButton {...props} disabled={loading || props.disabled}>
+      {loading ? <CircularProgress size={24} /> : children}
+    </MuiButton>
+  )
+}

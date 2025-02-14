@@ -1,5 +1,4 @@
 import supabase from '@/lib/supabase'
-import { supabase } from '@supabase/ssr'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -24,7 +23,7 @@ const inspectionSchema = z.object({
   report_url: z.string().url().optional()
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase()
     if (!userId) {
@@ -32,9 +31,9 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const property_id = searchParams.get('property_id')
-    const status = searchParams.get('status')
-    const type = searchParams.get('type')
+    const property_id: string | null = searchParams.get('property_id')
+    const status: string | null = searchParams.get('status')
+    const type: string | null = searchParams.get('type')
 
     let query = supabase
       .from('inspections')
@@ -68,7 +67,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase()
     if (!userId) {
@@ -126,7 +125,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase()
     if (!userId) {
@@ -199,7 +198,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase()
     if (!userId) {

@@ -1,11 +1,11 @@
 import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '../use-api'
-import type { BaseQueryParams } from '@/types/common'
+import type { BaseQueryParams } from '@/types/types'
 import type { Lease, MaintenanceRequest, Tenant, Property } from '@/types/db.types'
 import { useState, useCallback, useTransition } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
-import type { PropertyCreateInput, PropertyUpdateInput } from '@/types/db.types'
+import type { PropertyCreateInput, PropertyUpdateInput } from '@/types/types'
 
 export function useProperty(id: string) {
   return useApiQuery<Property>(`/api/properties/${id}`)

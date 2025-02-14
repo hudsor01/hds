@@ -1,11 +1,9 @@
 'use server'
 
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import { checkRole } from '@/utils/roles'
 
 export async function setRole(formData: FormData): Promise<void> {
-  const supabase = await supabase()
-
   const {
     data: { user }
   } = await supabase.auth.getSession()
@@ -27,8 +25,6 @@ export async function setRole(formData: FormData): Promise<void> {
 }
 
 export async function removeRole(formData: FormData): Promise<void> {
-  const supabase = await supabase()
-
   const {
     data: { user }
   } = await supabase.auth.getSession()

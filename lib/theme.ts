@@ -21,7 +21,7 @@ const playfair = Playfair_Display({
 // Theme configuration using only components available in the specified @mui versions
 const themeOptions: ThemeOptions = {
   typography: {
-    fontFamily: roboto.style.fontFamily,
+    fontFamily: 'var(--font-sans)',
     h1: {
       fontFamily: playfair.style.fontFamily
     },
@@ -47,6 +47,7 @@ const themeOptions: ThemeOptions = {
     MuiButton: {
       styleOverrides: {
         root: {
+          textTransform: 'none',
           borderRadius: '8px'
         },
         contained: {
@@ -67,19 +68,26 @@ const themeOptions: ThemeOptions = {
   },
   palette: {
     primary: {
-      main: '#1976d2',
-      light: '#42a5f5',
-      dark: '#1565c0'
+      main: 'var(--color-primary)',
+      light: 'var(--color-primary-light)',
+      dark: 'var(--color-primary-dark)'
     },
     secondary: {
       main: '#9c27b0',
       light: '#ba68c8',
       dark: '#7b1fa2'
     },
+    text: {
+      primary: 'var(--color-text-primary)',
+      secondary: 'var(--color-text-secondary)'
+    },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff'
+      default: 'var(--color-background-app)',
+      paper: 'var(--color-background-ui)'
     }
+  },
+  shape: {
+    borderRadius: 8
   }
 }
 

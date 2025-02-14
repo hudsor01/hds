@@ -3,7 +3,7 @@ import { prisma } from '@/prisma/seed'
 import { NextResponse } from 'next/server'
 
 export async function POST() {
-  const { userId } = await auth()
+  const { userId } = await supabase.auth()
 
   if (!userId) {
     return new NextResponse('Unauthorized', { status: 401 })

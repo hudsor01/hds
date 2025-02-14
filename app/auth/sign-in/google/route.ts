@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server'
 
 export async function POST() {
   try {
-    const supabase = await supabase()
-
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
