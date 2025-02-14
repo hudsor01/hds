@@ -1,7 +1,11 @@
 'use client'
 
+import React, { ReactElement } from 'react'
 import { FadeIn } from '@/components/animations/fade-in'
-import { Box, Button, Container, Typography } from '@mui/material'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import Container from '@mui/material/Container'
+import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
 import { RefreshCw, Send } from 'react-feather'
 
@@ -10,7 +14,12 @@ interface ErrorProps {
   reset: () => void
 }
 
-export default function Error({ error, reset }: ErrorProps) {
+export const metadata = {
+  title: 'Error - Hudson Digital Solutions',
+  description: 'Something went wrong'
+}
+
+export default function Error({ error, reset }: ErrorProps): ReactElement {
   useEffect(() => {
     // Log the error to an error reporting service
     console.error('Error:', {
@@ -21,8 +30,8 @@ export default function Error({ error, reset }: ErrorProps) {
   }, [error])
 
   const isAuthError =
-    error.message?.toLowerCase().includes('auth') ||
-    error.message?.toLowerCase().includes('unauthorized')
+    error.message?.toLowerCase().includes('unauthorized') ||
+    error.message?.toLowerCase().includes('unauthenticated')
   const isNetworkError =
     error.message?.toLowerCase().includes('network') ||
     error.message?.toLowerCase().includes('fetch')
@@ -34,10 +43,12 @@ export default function Error({ error, reset }: ErrorProps) {
   }
 
   const getErrorMessage = () => {
-    if (isAuthError)
+    if (isAuthError) {
       return 'There was a problem with your authentication. Please try signing in again.'
-    if (isNetworkError)
+    }
+    if (isNetworkError) {
       return 'There was a problem connecting to our servers. Please check your internet connection.'
+    }
     return 'We encountered an unexpected error. Our team has been notified and is working to fix the issue.'
   }
 
@@ -88,7 +99,7 @@ export default function Error({ error, reset }: ErrorProps) {
               <Button
                 variant="contained"
                 startIcon={<RefreshCw size={20} />}
-                onClick={reset}
+                onClick={() => reset()}
                 sx={{
                   background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
                   '&:hover': {
@@ -116,7 +127,7 @@ export default function Error({ error, reset }: ErrorProps) {
             <Button
               variant="outlined"
               startIcon={<Send size={20} />}
-              href="mailto:support@example.com"
+              href="mailto:support@hudsondigitalsolutions.com"
               sx={{
                 borderColor: '#007FFF',
                 color: '#007FFF',

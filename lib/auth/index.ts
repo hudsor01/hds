@@ -1,7 +1,7 @@
 import { UserRole } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
-import { createServerClient, createBrowserClient } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
 
 interface User {
@@ -25,18 +25,21 @@ export async function checkRole(
       process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
       {
         cookies: {
-          get(name: string) {
-            return req.cookies.get(name)?.value
-          },
-          set(name: string, value: string, options: { path: string }) {
-            // Cookie setting is handled by middleware
-          },
-          remove(name: string, options: { path: string }) {
-            // Cookie removal is handled by middleware
-          }
-        }
-      }
-    )
+        getAll() {
+          const cookies: { [key: string]: string } = {};
+          req.cookies.getAll().forEach(cookie => {
+            cookies[cookie.name] = cookie.value;
+          });
+          return cookies;
+        },
+        setAll(cookies: { [key: string]: string }) {
+          Object.entries(cookies).forEach(([name, value]) => {
+            // Cookie setting is handled by middleware, pass the values to a custom property
+            (req as any).setCookieHeader = { name, value }
+          });
+        },
+      },
+    })
 
     const {
       data: { user },
@@ -49,7 +52,8 @@ export async function checkRole(
     const dbUser = await prisma.users.findUnique({
       where: { id: user.id },
       select: {
-        role: true
+        role: true,
+        permissions: true
       }
     })
 
@@ -96,8 +100,14 @@ export async function checkPermission(
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const userPermissions = user.user_metadata?.permissions || []
-    if (!userPermissions.includes(permission)) {
+    const dbUser = await prisma.users.findUnique({
+      where: { id: user.id },
+      select: {
+        permissions: true
+      }
+    })
+
+    if (!dbUser?.permissions?.includes(permission)) {
       return new NextResponse('Forbidden', { status: 403 })
     }
 
@@ -140,7 +150,8 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
       id: true,
       role: true,
       email: true,
-      name: true
+      name: true,
+      permissions: true
     }
   })
 
@@ -151,7 +162,9 @@ export async function getCurrentUser(req: NextRequest): Promise<User | null> {
     role: dbUser.role as UserRole,
     email: dbUser.email,
     name: dbUser.name,
-    metadata: user.user_metadata
+    metadata: {
+      permissions: dbUser.permissions
+    }
   }
 }
 
@@ -160,24 +173,28 @@ export async function getCurrentUserRole(userId: string): Promise<UserRole> {
     where: { id: userId },
     select: { role: true }
   })
-  return (user?.role as UserRole) || 'USER'
-}
-
 export async function updateUserRole(userId: string, role: UserRole, req: NextRequest) {
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
       cookies: {
-        get(name: string) {
-          return req.cookies.get(name)?.value
+        getAll() {
+          const cookies: { [key: string]: string } = {};
+          req.cookies.getAll().forEach(cookie => {
+            cookies[cookie.name] = cookie.value;
+          });
+          return cookies
         },
-        set(name: string, value: string, options: { path: string }) {
-          // Cookie setting is handled by middleware
-        },
-        remove(name: string, options: { path: string }) {
-          // Cookie removal is handled by middleware
+        setAll(cookies: { [key: string]: string }) {
+          Object.entries(cookies).forEach(([name, value]) => {
+            // Cookie setting is handled by middleware, pass the values to a custom property
+            (req as any).setCookieHeader = { name, value }
+          })
         }
+      }
+    }
+  )
       }
     }
   )
@@ -192,13 +209,4 @@ export async function updateUserRole(userId: string, role: UserRole, req: NextRe
   await supabase.auth.updateUser({
     data: { role }
   })
-}
-
-// Auth hook for client components
-export function usesupabase.auth() {
-  const supabase = createBrowserClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  return supabase.auth
 }

@@ -1,10 +1,11 @@
 'use client'
 
+import React, { ReactElement } from 'react'
 import { theme } from './theme'
 import { Box, CssBaseline, ThemeProvider } from '@mui/material'
 import { Roboto } from 'next/font/google'
 
-export const roboto = Roboto({
+const roboto = Roboto({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
   display: 'swap'
@@ -15,7 +16,11 @@ export const metadata = {
   description: 'The requested page could not be found'
 }
 
-export default function ErrorLayout({ children }: { children: React.ReactNode }) {
+export default function ErrorLayout({
+  children
+}: {
+  children: React.ReactNode
+}): React.ReactElement {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -27,6 +32,7 @@ export default function ErrorLayout({ children }: { children: React.ReactNode })
           display: 'flex',
           flexDirection: 'column'
         }}
+        className={roboto.className}
       >
         <Box
           component="header"

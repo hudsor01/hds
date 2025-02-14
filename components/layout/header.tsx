@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/button'
+import Button from '@mui/material/Button'
+import { containerVariants, itemVariants } from '@/lib/animation-variants'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { FaGithub } from 'react-icons/fa6'
@@ -36,7 +37,8 @@ export default function Header() {
   const pathname = usePathname()
 
   return (
-    <motion.div
+    <motion.header
+      className="bg-background-app py-4 shadow-md"
       variants={containerVariants}
       initial="hidden"
       animate="visible"

@@ -1,15 +1,21 @@
 'use client'
 
 import { useState } from 'react'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useAuth } from '@/hooks/use-auth'
 import { Alert, Box, Button, CircularProgress, Divider, TextField, Typography } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Google } from '@mui/icons-material'
+import { createBrowserClient } from '@supabase/ssr'
 
 interface SignInFormProps {
   onSuccess?: () => void
   redirectTo?: string
+}
+
+interface FormData {
+  email: string
+  password: string
 }
 
 export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormProps) {
@@ -22,13 +28,20 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
     password: ''
   })
 
+  const supabase = createBrowserClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     setLoading(true)
     setError(null)
-
     try {
-      const { error } = await signIn(formData.email, formData.password)
+      const { error } = await supabase.auth.signInWithPassword({
+        email: formData.email,
+        password: formData.password
+      })
       if (error) throw error
       onSuccess?.()
       router.push(redirectTo)
@@ -43,19 +56,14 @@ export default function SignInForm({ onSuccess, redirectTo = '/' }: SignInFormPr
   const handleGoogleSignIn = async () => {
     setLoading(true)
     setError(null)
-
     try {
-      const response = await fetch('/auth/sign-in/google', {
-        method: 'POST'
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}${redirectTo}`
+        }
       })
-
-      const data = await response.json()
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to sign in with Google')
-      }
-
-      window.location.href = data.url
+      if (error) throw error
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred')
       setLoading(false)

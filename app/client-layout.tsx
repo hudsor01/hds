@@ -6,7 +6,11 @@ import { Toaster } from 'sonner'
 import Navbar from '../components/layout/navbar'
 import { Providers } from '@/components/providers/providers'
 
-export default function ClientLayout({ children }: { children: React.ReactNode }) {
+interface ClientLayoutProps {
+  children: React.ReactNode
+}
+
+export default function ClientLayout({ children }: ClientLayoutProps) {
   return (
     <>
       <Providers>

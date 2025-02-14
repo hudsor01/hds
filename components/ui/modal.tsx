@@ -1,8 +1,8 @@
 'use client'
 
-import { Dialog } from '@mui/material'
-import { ReactNode } from 'react'
-import { ModalContext, useModalStore } from '@/hooks/use-modal'
+import Dialog from '@mui/material/Dialog'
+import { ReactNode, createContext } from 'react'
+import { useModalStore } from '@/hooks/use-modal'
 
 interface ModalProviderProps {
   children: ReactNode
@@ -10,6 +10,7 @@ interface ModalProviderProps {
 
 export function ModalProvider({ children }: ModalProviderProps) {
   const modalStore = useModalStore()
+  const ModalContext = createContext(modalStore)
 
   return (
     <ModalContext.Provider value={modalStore}>

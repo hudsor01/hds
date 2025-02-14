@@ -22,7 +22,11 @@ export interface CreatePaymentIntentParams {
   metadata: Record<string, string>
 }
 
-export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams): Promise<Stripe.Customer> => {
+export const createStripeCustomer = async ({
+  email,
+  name,
+  metadata
+}: CreateCustomerParams): Promise<Stripe.Customer> => {
   return stripe.customers.create({
     email,
     name,
@@ -57,20 +61,29 @@ export const constructWebhookEvent = (
 }
 
 // Customer utilities
-export const retrieveCustomer = async (customerId: string): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
+export const retrieveCustomer = async (
+  customerId: string
+): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
   return stripe.customers.retrieve(customerId)
 }
 
-export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams): Promise<Stripe.Customer> => {
+export const updateCustomer = async (
+  customerId: string,
+  data: Stripe.CustomerUpdateParams
+): Promise<Stripe.Customer> => {
   return stripe.customers.update(customerId, data)
 }
 
 // Payment utilities
-export const retrievePaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
+export const retrievePaymentIntent = async (
+  paymentIntentId: string
+): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.retrieve(paymentIntentId)
 }
 
-export const cancelPaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
+export const cancelPaymentIntent = async (
+  paymentIntentId: string
+): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.cancel(paymentIntentId)
 }
 

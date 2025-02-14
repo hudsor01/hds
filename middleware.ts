@@ -28,9 +28,10 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
         return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
       }
     }
+
     const {
       data: { session }
-    } = await supabase.auth.getSession()
+    } = supabase.auth.getSession()
 
     // Redirect to dashboard if logged in and trying to access auth routes
     if (session && authRoutes.includes(requestUrl.pathname)) {

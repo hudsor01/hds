@@ -1,21 +1,98 @@
-@theme {
-  --font-sans: "Roboto", system-ui;
-  --font-display: "Playfair Display", serif;
-  --primary-color: oklch(0.637 0.237 25.331);
-  --primary-color-light: oklch(0.702 0.237 25.331);
-  --primary-color-dark: oklch(0.572 0.237 25.331);
-  --background-app: oklch(0.99 0 0);
-  --background-subtle: oklch(0.97 0 0);
-  --background-ui: oklch(1 0 0);
-  --border-ui: oklch(0.91 0 0);
-  --text-primary: oklch(0.15 0 0);
-  --text-secondary: oklch(0.35 0 0);
-  --text-tertiary: oklch(0.65 0 0);
-  --radius-sm: 0.25rem;
-  --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.5rem;
-  --radius-full: 9999px;
-}
+'use client'
+
+import { createTheme } from '@mui/material/styles'
+import { Roboto } from 'next/font/google'
+
+const roboto = Roboto({
+  weight: ['300', '400', '500', '700'],
+  subsets: ['latin'],
+  display: 'swap'
+})
+
+export const theme = createTheme({
+  colorSchemes: { light: true, dark: true },
+  cssVariables: { colorSchemeSelector: 'class' },
+  typography: {
+    fontFamily: roboto.style.fontFamily
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none',
+          borderRadius: 8,
+          padding: '8px 16px',
+          fontWeight: 500
+        }
+      }
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: {
+          backgroundColor: '#FFFFFF',
+          color: '#111827',
+          boxShadow: '0 1px 3px 0 rgb(0 0 0 / 0.1)'
+        }
+      }
+    }
+  },
+  palette: {
+    primary: {
+      main: '#007FFF',
+      light: '#3399FF',
+      dark: '#0059B2',
+      contrastText: '#fff'
+    },
+    secondary: {
+      main: '#6B7280',
+      light: '#9CA3AF',
+      dark: '#4B5563',
+      contrastText: '#fff'
+    },
+    background: {
+      default: '#F9FAFB',
+      paper: '#FFFFFF'
+    }
+  },
+  typography: {
+    fontFamily: 'var(--font-roboto)',
+    h1: {
+      fontSize: '2.5rem',
+      fontWeight: 700
+    },
+    h2: {
+      fontSize: '2rem',
+      fontWeight: 600
+    },
+    h3: {
+      fontSize: '1.75rem',
+      fontWeight: 600
+    },
+    h4: {
+      fontSize: '1.5rem',
+      fontWeight: 500
+    },
+    h5: {
+      fontSize: '1.25rem',
+      fontWeight: 500
+    },
+    h6: {
+      fontSize: '1rem',
+      fontWeight: 500
+    },
+    body1: {
+      fontSize: '1rem',
+      lineHeight: 1.5
+    },
+    body2: {
+      fontSize: '0.875rem',
+      lineHeight: 1.5
+    },
+    button: {
+      textTransform: 'none',
+      fontWeight: 500
+    }
+  }
+})
+
+export default theme

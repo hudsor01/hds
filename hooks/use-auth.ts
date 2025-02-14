@@ -1,29 +1,51 @@
-import supabase from '@/lib/supabase'
-import { useEffect, useState } from 'react'
-import type { User } from '@supabase/supabase-js'
+'use client'
+
+import { createBrowserClient } from '@supabase/ssr'
+import { type SupabaseClient } from '@supabase/supabase-js'
+import { useEffect, useState, useMemo } from 'react'
+import { useRouter } from 'next/navigation'
+import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js'
+
+interface Profile {
+  role?: string
+}
 
 interface AuthUser extends User {
   role?: string
 }
 
-export function usesupabase.auth() {
+interface AuthContextType {
+  user: AuthUser | null
+  loading: boolean
+  signOut: () => Promise<void>
+}
+
+export function useAuth(): AuthContextType {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
-  const supabase = supabase()
+  const router = useRouter()
+
+  const supabaseClient: SupabaseClient = useMemo(
+    () =>
+      createBrowserClient(
+        process.env.NEXT_PUBLIC_SUPABASE_URL!,
+        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+      ),
+    []
+  )
 
   useEffect(() => {
-    // Get initial session
     const getInitialSession = async () => {
       try {
         const {
           data: { user }
-        } = await supabase.auth.getUser()
+        } = await supabaseClient.auth.getUser()
         if (user) {
-          const { data: profile } = await supabase
+          const { data: profile } = (await supabaseClient
             .from('profiles')
             .select('role')
             .eq('id', user.id)
-            .single()
+            .single()) as { data: Profile | null }
 
           setUser({ ...user, role: profile?.role })
         }
@@ -34,30 +56,41 @@ export function usesupabase.auth() {
       }
     }
 
-    getInitialSession()
+    void getInitialSession()
 
-    // Listen for auth changes
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (session?.user) {
-        const { data: profile } = await supabase
-          .from('profiles')
-          .select('role')
-          .eq('id', session.user.id)
-          .single()
+    } = supabaseClient.auth.onAuthStateChange(
+      async (_event: AuthChangeEvent, session: Session | null) => {
+        if (session?.user) {
+          const { data: profile } = (await supabaseClient
+            .from('profiles')
+            .select('role')
+            .eq('id', session.user.id)
+            .single()) as { data: Profile | null }
 
-        setUser({ ...session.user, role: profile?.role })
-      } else {
-        setUser(null)
+          setUser({ ...session.user, role: profile?.role })
+        } else {
+          setUser(null)
+        }
+        setLoading(false)
       }
-      setLoading(false)
-    })
+    )
 
     return () => {
       subscription.unsubscribe()
     }
-  }, [])
+  }, [supabaseClient, router])
 
-  return { user, loading }
+  const signOut = async () => {
+    try {
+      await supabaseClient.auth.signOut()
+      router.push('/login')
+    } catch (error) {
+      console.error('Error signing out:', error)
+      throw error
+    }
+  }
+
+  return { user, loading, signOut }
 }
