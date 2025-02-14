@@ -11,8 +11,6 @@ export async function GET(request: NextRequest) {
   const next = searchParams.get('next') ?? '/'
 
   if (token_hash && type) {
-    const supabase = await supabase()
-
     const { error } = await supabase.auth.verifyOtp({
       type,
       token_hash

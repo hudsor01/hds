@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 import { useAuth } from '@/hooks/use-auth'
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth()
+  const { user, loading } = usesupabase.auth()
   const router = useRouter()
 
   useEffect(() => {

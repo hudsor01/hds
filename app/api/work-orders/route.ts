@@ -29,7 +29,6 @@ const workOrderSchema = z.object({
 
 export async function GET(req: NextRequest) {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -101,7 +100,6 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -215,7 +213,6 @@ export async function POST(req: NextRequest) {
 
 export async function PUT(req: NextRequest) {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()
@@ -325,7 +322,6 @@ export async function PUT(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getUser()

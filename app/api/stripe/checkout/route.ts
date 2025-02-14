@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
     const product = plan.product as Stripe.Product
 
     // Get user from session
-    const supabase = await supabase()
+
     const {
       data: { user },
       error: authError

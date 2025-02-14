@@ -27,7 +27,6 @@ const DEFAULT_TIMEOUT = 30000 // 30 seconds
 // Enhanced fetch wrapper with timeout and detailed error handling
 async function fetchWithErrorHandling(input: RequestInfo, init?: RequestInit): Promise<Response> {
   try {
-    const supabase = await supabase()
     const {
       data: { session }
     } = await supabase.auth.getSession()

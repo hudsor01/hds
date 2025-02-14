@@ -14,8 +14,6 @@ export async function POST(request: Request) {
       const json = await request.json()
       const body = signInSchema.parse(json)
 
-      const supabase = await supabase()
-
       const { data, error: signInError } = await supabase.auth.signInWithPassword({
         email: body.email,
         password: body.password

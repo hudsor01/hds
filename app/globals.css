@@ -1,90 +1,39 @@
 @import 'tailwindcss';
+@import './theme.css';
 
-:root {
-  --font-sans: 'Roboto', system-ui;
-  --font-display: 'Playfair Display', serif;
-  --background-app: #f9fafb;
-  --background-subtle: #f3f4f6;
-  --background-ui: #ffffff;
-  --border-ui: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
+.bg-grid-pattern {
+  background-image:
+    linear-gradient(var(--color-primary) 1px, transparent 1px),
+    linear-gradient(to right, var(--color-primary) 1px, transparent 1px);
+  background-size: 50px 50px;
 }
 
-[data-theme='dark'] {
-  --background-app: #111827;
-  --background-subtle: #1f2937;
-  --background-ui: #111827;
-  --border-ui: #374151;
-  --text-primary: #f3f4f6;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #6b7280;
-}
-
+/* Register component styles */
 @layer components {
-  .surface {
-    @apply rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800;
-  }
-
-  .input {
-    @apply w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800;
-  }
-
   .button {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
-  }
-}
-
-@layer utilities {
-  .grid-stack {
-    @apply grid gap-4;
-  }
-
-  .flex-center {
-    @apply flex items-center justify-center;
+    border-radius: var(--radius-md);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    font-weight: 500;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 
-  .flex-between {
-    @apply flex items-center justify-between;
+  .button-primary {
+    background-color: var(--color-primary);
+    color: white;
+    &:hover {
+      background-color: var(--color-primary-dark);
+    }
   }
 
-  .text-display {
-    @apply font-display text-4xl leading-tight font-bold md:text-5xl;
-  }
-}
-
-/* Add custom colors */
-.bg-pastel-blue {
-  background-color: #b7d1e2;
-}
-
-.bg-pastel-blue-dark {
-  background-color: #96b5c6;
-}
-
-.bg-pastel-blue-darker {
-  background-color: #7a9bb0;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .animate-in {
-    @apply transition-all duration-200 ease-out;
-  }
-
-  .animate-out {
-    @apply transition-all duration-150 ease-in;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  * {
-    @apply !scroll-auto !transition-none !duration-[0.01ms];
-  }
-}
-
-@media print {
-  .no-print {
-    @apply !hidden;
+  .nav-link {
+    color: var(--color-text-secondary);
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    &:hover {
+      color: var(--color-primary);
+    }
   }
 }

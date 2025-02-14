@@ -1,4 +1,4 @@
-import { supabase } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 import { NextResponse, type NextRequest } from 'next/server'
 import type { Database } from '@/types/db.types'
 

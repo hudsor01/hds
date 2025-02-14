@@ -1,10 +1,10 @@
 import { cookies } from 'next/headers'
 import { NextRequest, NextResponse } from 'next/server'
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   const cookieStore = await cookies()
-  const { token } = await request.json()
+  const { token }: { token: string } = await request.json()
 
   if (!token) {
     return NextResponse.json({ error: 'Authentication failed' }, { status: 401 })

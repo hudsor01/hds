@@ -1,4 +1,4 @@
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -11,18 +11,18 @@ const notificationSchema = z.object({
   read_at: z.string().datetime().nullable().optional()
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
-    const type = searchParams.get('type')
-    const unreadOnly = searchParams.get('unread_only') === 'true'
-    const limit = parseInt(searchParams.get('limit') || '50', 10)
-    const offset = parseInt(searchParams.get('offset') || '0', 10)
+    const type: string | null = searchParams.get('type')
+    const unreadOnly: boolean = searchParams.get('unread_only') === 'true'
+    const limit: number = parseInt(searchParams.get('limit') || '50', 10)
+    const offset: number = parseInt(searchParams.get('offset') || '0', 10)
 
     const supabase = supabase()
 
@@ -55,9 +55,9 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -88,9 +88,9 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -148,14 +148,14 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const id = req.nextUrl.searchParams.get('id')
+    const id: string | null = req.nextUrl.searchParams.get('id')
     if (!id) {
       return NextResponse.json({ error: 'Notification ID is required' }, { status: 400 })
     }

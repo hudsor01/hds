@@ -1,13 +1,8 @@
-import { supabase } from '@supabase/supabase-js'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
-    const supabase = supabase(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    )
-
     // First verify access to the organization
     const { data: membership, error: membershipError } = await supabase
       .from('organization_members')

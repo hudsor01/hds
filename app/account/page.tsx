@@ -2,17 +2,40 @@ import CustomerPortalForm from '@/components/forms/CustomerPortalForm'
 import EmailForm from '@/components/forms/EmailForm'
 import NameForm from '@/components/forms/NameForm'
 import { ErrorBoundary } from '@/components/error/error-boundary'
-import { createClient } from '@/utils/supabase/server'
-import { getSubscription } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { Container, Typography, Box, Alert, Skeleton } from '@mui/material'
-import type { Subscription, UserDetails } from '@/types/database'
+import { ReactNode } from 'react'
+import { Auth } from '@/types'
+import type { User } from '@supabase/supabase-js'
+
+async function getSubscription(
+  supabase: typeof import('@/lib/supabase').default
+): Promise<Auth.Subscription | null> {
+  const { data: subscription, error } = await supabase
+    .from('subscriptions')
+    .select('*, prices(*, products(*))')
+    .eq('status', 'active')
+    .single()
+
+  if (error) {
+    console.error('Error loading subscription:', error.message)
+    return null
+  }
+
+  return subscription
+}
+
+const ErrorFallback = ({ error }: { error: Error }): ReactNode => (
+  <Container maxWidth="md" className="py-8">
+    <Alert severity="error" className="mb-4">
+      {error.message || 'Something went wrong. Please try again later.'}
+    </Alert>
+  </Container>
+)
 
 export default async function AccountPage() {
-  const cookieStore = cookies()
-  const supabase = createClient(cookieStore)
-
   try {
     const {
       data: { user },
@@ -22,6 +45,7 @@ export default async function AccountPage() {
     if (!user || userError) {
       throw new Error(userError?.message || 'User not found')
     }
+    const authUser = user as User
 
     const [subscriptionResult, userDetailsResult] = await Promise.allSettled([
       getSubscription(supabase),
@@ -49,18 +73,10 @@ export default async function AccountPage() {
 
     const subscription = subscriptionResult.status === 'fulfilled' ? subscriptionResult.value : null
 
-    const userDetails = userDetailsResult.value.data
+    const userDetails = userDetailsResult.value.data as Auth.AccountUser
 
     return (
-      <ErrorBoundary
-        fallback={
-          <Container maxWidth="md" className="py-8">
-            <Alert severity="error" className="mb-4">
-              Something went wrong. Please try again later.
-            </Alert>
-          </Container>
-        }
-      >
+      <ErrorBoundary fallback={<ErrorFallback error={new Error('Something went wrong')} />}>
         <Box component="section" className="min-h-screen">
           {/* Header Section */}
           <Box className="bg-gradient-to-b from-gray-900 to-black py-16 sm:py-24">
@@ -101,7 +117,7 @@ export default async function AccountPage() {
                 </Typography>
                 <Box className="space-y-6">
                   <NameForm userName={userDetails.full_name ?? ''} userId={userDetails.id} />
-                  <EmailForm userEmail={user.email ?? ''} userId={userDetails.id} />
+                  <EmailForm email={user.email ?? ''} />
                 </Box>
               </Box>
 

@@ -17,9 +17,9 @@ const analyticsQuerySchema = z.object({
   metrics: z.array(z.string()).optional()
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -89,9 +89,9 @@ export async function GET(req: NextRequest) {
 }
 
 // Endpoint to refresh analytics data
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -135,9 +135,9 @@ export async function POST(req: NextRequest) {
 }
 
 // Endpoint to clear analytics cache
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

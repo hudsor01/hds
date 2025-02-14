@@ -1,18 +1,21 @@
-import { checkRole } from '@supabase/ssr'
 import { redirect } from 'next/navigation'
 import { SearchUsers } from './SearchUsers'
 import { removeRole, setRole } from './_actions'
+import supabase from '../../lib/supabase'
+import { Auth } from '@/types/types' // Import the namespace
+
+const { User, EmailAddress } = Auth // Destructure the types from the namespace
 
 export default async function AdminDashboard(params: {
   searchParams: Promise<{ search?: string }>
 }) {
-  if (!checkRole('admin')) {
+  if (!(await checkRole('admin'))) {
     redirect('/')
   }
 
   const query = (await params.searchParams).search
 
-  const users = query ? (await client.users.getCurrentUserList({ query })).data : []
+  const users = query ? (await supabase.users.getCurrentUserList({ query })).data : []
 
   return (
     <>
@@ -20,7 +23,7 @@ export default async function AdminDashboard(params: {
 
       <SearchUsers />
 
-      {users.map(user => {
+      {users.map((user: User) => {
         return (
           <div key={user.id}>
             <div>
@@ -29,8 +32,9 @@ export default async function AdminDashboard(params: {
 
             <div>
               {
-                user.emailAddresses.find(email => email.id === user.primaryEmailAddressId)
-                  ?.emailAddress
+                user.emailAddresses.find(
+                  (email: EmailAddress) => email.id === user.primaryEmailAddressId
+                )?.emailAddress
               }
             </div>
 
@@ -57,4 +61,11 @@ export default async function AdminDashboard(params: {
       })}
     </>
   )
+}
+
+async function checkRole(role: string) {
+  const {
+    data: { user }
+  } = await supabase.auth.getUser()
+  return user?.user_metadata?.role === role
 }

@@ -1,13 +1,15 @@
-import { WebhookLogGrid } from '@/app/admin/webhooks/webhook-log-grid'
-import type { WebhookLog } from '@/types/webhooks'
 import { sql } from '@vercel/postgres'
 
 export default async function WebhookLogsPage() {
-  const { rows } = await sql<WebhookLog>`
+  const { rows } = await sql<Record<string, any>>`
    SELECT * FROM webhook_logs
    ORDER BY created_at DESC
    LIMIT 100
  `
 
-  return <WebhookLogGrid logs={rows} />
+  if (rows.length === 0) {
+    return <div>No webhook logs available.</div>
+  }
+
+  return <div>Webhook logs fetched successfully.</div>
 }

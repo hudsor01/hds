@@ -1,5 +1,4 @@
-import { supabase } from '@supabase/ssr'
-import { auth } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -24,9 +23,8 @@ const maintenanceRequestSchema = z.object({
   estimated_cost: z.number().min(0, 'Estimated cost cannot be negative').optional()
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -39,11 +37,11 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const property_id = searchParams.get('property_id')
-    const status = searchParams.get('status')
-    const priority = searchParams.get('priority')
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
+    const property_id: string | null = searchParams.get('property_id')
+    const status: string | null = searchParams.get('status')
+    const priority: string | null = searchParams.get('priority')
+    const page: number = parseInt(searchParams.get('page') || '1')
+    const limit: number = parseInt(searchParams.get('limit') || '10')
 
     let query = supabase
       .from('maintenance_requests')
@@ -84,9 +82,8 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -184,9 +181,8 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -279,9 +275,8 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = await supabase()
     const {
       data: { user }
     } = await supabase.auth.getSession()

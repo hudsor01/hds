@@ -5,7 +5,7 @@ import { motion } from 'framer-motion'
 import { forwardRef } from 'react'
 import { useAnimation } from '@/components/providers/animation-provider'
 
-const MotionBox = motion(Box)
+const MotionBox = motion(Box) as typeof motion.div
 
 interface ScrollContainerProps extends BoxProps {
   animate?: boolean

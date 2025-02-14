@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useState, useTransition } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter } from 'next/router'
 import { IconButton, Menu, MenuItem, ListItemIcon, ListItemText, useTheme } from '@mui/material'
 import {
   Delete as DeleteIcon,

@@ -1,97 +1,91 @@
 'use client'
 
-import { gradientStyles } from '@/utils/styles'
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
+import { Button } from '@/components/ui/button'
+import { motion } from 'framer-motion'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { LogIn } from 'react-feather'
+import { Menu, X } from 'react-feather'
+import { useState } from 'react'
 
-const publicNavItems = [
-  { name: 'Home', href: '/' },
-  { name: 'Features', href: '/features' },
-  { name: 'Pricing', href: '/pricing' },
-  { name: 'About', href: '/about' },
-  { name: 'Contact', href: '/contact' }
+const navLinks = [
+  { href: '/features', label: 'Features' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '/about', label: 'About' },
+  { href: '/contact', label: 'Contact' }
 ]
 
 export default function Navbar() {
   const pathname = usePathname()
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
 
   return (
-    <AppBar
-      position="sticky"
-      color="default"
-      elevation={0}
-      sx={{
-        borderBottom: '1px solid',
-        borderColor: 'divider',
-        bgcolor: 'background.default'
-      }}
-    >
-      <Container maxWidth="xl">
-        <Toolbar disableGutters sx={{ height: 70 }}>
-          {/* Logo */}
-          <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Typography
-              variant="h5"
-              sx={{
-                fontWeight: 700,
-                ...gradientStyles.text
-              }}
-            >
-              Property Manager
-            </Typography>
+    <nav className="bg-background-ui/80 fixed top-0 z-50 w-full backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4">
+        <div className="flex h-16 items-center justify-between">
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="text-primary text-xl font-bold">HDS</span>
           </Link>
 
-          {/* Center Navigation */}
-          <Stack
-            direction="row"
-            spacing={1}
-            sx={{
-              flexGrow: 1,
-              justifyContent: 'center',
-              display: { xs: 'none', md: 'flex' }
-            }}
-          >
-            {publicNavItems.map(item => (
-              <Link key={item.name} href={item.href} style={{ textDecoration: 'none' }}>
-                <Button
-                  sx={{
-                    color: pathname === item.href ? 'primary.main' : 'text.primary',
-                    fontWeight: pathname === item.href ? 600 : 400,
-                    '&:hover': {
-                      color: 'primary.main',
-                      backgroundColor: 'transparent'
-                    }
-                  }}
-                >
-                  {item.name}
-                </Button>
+          {/* Desktop Navigation */}
+          <div className="hidden items-center space-x-6 md:flex">
+            {navLinks.map(link => (
+              <Link
+                key={link.href}
+                href={link.href}
+                className={`nav-link relative ${pathname === link.href ? 'text-primary' : ''}`}
+              >
+                {link.label}
+                {pathname === link.href && (
+                  <motion.div
+                    layoutId="navbar-indicator"
+                    className="bg-primary absolute right-0 -bottom-1 left-0 h-0.5"
+                  />
+                )}
               </Link>
             ))}
-          </Stack>
+            <Button asChild>
+              <Link href="/sign-in">Sign In</Link>
+            </Button>
+          </div>
 
-          {/* Right Side */}
-          <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
-            <Link href="/sign-in" style={{ textDecoration: 'none' }}>
-              <Button
-                variant="outlined"
-                startIcon={<LogIn size={18} />}
-                sx={{
-                  borderColor: 'primary.main',
-                  color: 'primary.main',
-                  '&:hover': {
-                    borderColor: 'primary.dark',
-                    ...gradientStyles.background
-                  }
-                }}
-              >
-                Sign In
-              </Button>
+          {/* Mobile Menu Button */}
+          <button
+            className="flex items-center md:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="text-text-secondary h-6 w-6" />
+            ) : (
+              <Menu className="text-text-secondary h-6 w-6" />
+            )}
+          </button>
+        </div>
+      </div>
+
+      {/* Mobile Menu */}
+      <motion.div
+        initial={false}
+        animate={isMobileMenuOpen ? { height: 'auto', opacity: 1 } : { height: 0, opacity: 0 }}
+        className={`bg-background-ui overflow-hidden md:hidden ${isMobileMenuOpen ? 'border-b' : ''}`}
+      >
+        <div className="mx-auto space-y-4 px-4 py-6">
+          {navLinks.map(link => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className={`block py-2 text-lg ${
+                pathname === link.href ? 'text-primary' : 'text-text-secondary'
+              }`}
+              onClick={() => setIsMobileMenuOpen(false)}
+            >
+              {link.label}
             </Link>
-          </Box>
-        </Toolbar>
-      </Container>
-    </AppBar>
+          ))}
+          <Button asChild className="mt-4 w-full">
+            <Link href="/sign-in">Sign In</Link>
+          </Button>
+        </div>
+      </motion.div>
+    </nav>
   )
 }

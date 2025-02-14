@@ -57,7 +57,7 @@ const bankTransferSchema = z.object({
 
 export async function POST(req: NextRequest, { params }: { params: { type: PaymentMethodType } }) {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
@@ -167,7 +167,7 @@ export async function DELETE(
   { params }: { params: { type: PaymentMethodType } }
 ) {
   try {
-    const { userId } = await auth()
+    const { userId } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }

@@ -1,5 +1,5 @@
 import { getStripe } from '../../../utils/stripe/client'
-import { supabase } from '@supabase/ssr'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 type SessionWithUser = Session & {
@@ -8,7 +8,7 @@ type SessionWithUser = Session & {
   }
 }
 
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   const supabase = supabase()
   const {
     data: { session }

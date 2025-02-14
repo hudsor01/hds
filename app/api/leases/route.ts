@@ -1,5 +1,5 @@
 import supabase from '@/lib/supabase'
-import { auth } from '@supabase/ssr'
+
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -16,17 +16,17 @@ const leaseSchema = z.object({
   lease_status: z.enum(['Pending', 'Active', 'Terminated', 'Expired']).default('Pending')
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId }: { userId: string | null } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const searchParams = req.nextUrl.searchParams
-    const property_id = searchParams.get('property_id')
-    const tenant_id = searchParams.get('tenant_id')
-    const status = searchParams.get('status')
+    const searchParams: URLSearchParams = req.nextUrl.searchParams
+    const property_id: string | null = searchParams.get('property_id')
+    const tenant_id: string | null = searchParams.get('tenant_id')
+    const status: string | null = searchParams.get('status')
 
     let query = supabase.from('leases').select('*, properties(*), tenants(*)').eq('user_id', userId)
 
@@ -42,7 +42,7 @@ export async function GET(req: NextRequest) {
       query = query.eq('lease_status', status)
     }
 
-    const { data: leases, error } = await query
+    const { data: leases, error }: { data: any; error: any } = await query
 
     if (error) {
       console.error('Error fetching leases:', error)
@@ -56,18 +56,18 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId }: { userId: string | null } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json()
+    const body: any = await req.json()
     const validatedData = leaseSchema.parse(body)
 
     // Verify property ownership and tenant association
-    const { data: property, error: propertyError } = await supabase
+    const { data: property, error: propertyError }: { data: any; error: any } = await supabase
       .from('properties')
       .select('id')
       .eq('id', validatedData.property_id)
@@ -78,7 +78,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Property not found or unauthorized' }, { status: 404 })
     }
 
-    const { data: tenant, error: tenantError } = await supabase
+    const { data: tenant, error: tenantError }: { data: any; error: any } = await supabase
       .from('tenants')
       .select('id')
       .eq('id', validatedData.tenant_id)
@@ -90,7 +90,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check for existing active leases for this property
-    const { data: existingLeases, error: leaseCheckError } = await supabase
+    const { data: existingLeases, error: leaseCheckError }: { data: any; error: any } = await supabase
       .from('leases')
       .select('id')
       .eq('property_id', validatedData.property_id)
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Property already has an active lease' }, { status: 400 })
     }
 
-    const { data: lease, error } = await supabase
+    const { data: lease, error }: { data: any; error: any } = await supabase
       .from('leases')
       .insert([{ ...validatedData, user_id: userId }])
       .select()
@@ -135,15 +135,15 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId }: { userId: string | null } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json()
-    const { id, ...updateData } = body
+    const body: any = await req.json()
+    const { id, ...updateData }: { id: string; [key: string]: any } = body
 
     if (!id) {
       return NextResponse.json({ error: 'Lease ID is required' }, { status: 400 })
@@ -152,7 +152,7 @@ export async function PUT(req: NextRequest) {
     const validatedData = leaseSchema.partial().parse(updateData)
 
     // Verify lease ownership
-    const { data: existingLease, error: leaseCheckError } = await supabase
+    const { data: existingLease, error: leaseCheckError }: { data: any; error: any } = await supabase
       .from('leases')
       .select('id')
       .eq('id', id)
@@ -163,7 +163,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: 'Lease not found or unauthorized' }, { status: 404 })
     }
 
-    const { data: lease, error } = await supabase
+    const { data: lease, error }: { data: any; error: any } = await supabase
       .from('leases')
       .update(validatedData)
       .eq('id', id)
@@ -198,20 +198,20 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await auth()
+    const { userId }: { userId: string | null } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const id = req.nextUrl.searchParams.get('id')
+    const id: string | null = req.nextUrl.searchParams.get('id')
     if (!id) {
       return NextResponse.json({ error: 'Lease ID is required' }, { status: 400 })
     }
 
     // Verify lease ownership and status
-    const { data: lease, error: leaseCheckError } = await supabase
+    const { data: lease, error: leaseCheckError }: { data: any; error: any } = await supabase
       .from('leases')
       .select('lease_status')
       .eq('id', id)
@@ -226,7 +226,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: 'Cannot delete an active lease' }, { status: 400 })
     }
 
-    const { error } = await supabase.from('leases').delete().eq('id', id).eq('user_id', userId)
+    const { error }: { error: any } = await supabase.from('leases').delete().eq('id', id).eq('user_id', userId)
 
     if (error) {
       console.error('Error deleting lease:', error)

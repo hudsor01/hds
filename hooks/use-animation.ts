@@ -5,6 +5,7 @@ import { useCallback } from 'react'
 import { useAnimation } from '@/components/providers/animation-provider'
 import type { AnimationVariant } from '@/types/animation'
 import type { ComponentType } from 'react'
+import { Animations } from '@/types'
 
 interface AnimationOptions {
   duration?: number
@@ -26,7 +27,13 @@ interface AnimationStep {
   options?: AnimationOptions
 }
 
-export function useAnimationControl() {
+type UseAnimationReturn = {
+  animate: (config: Animations.AnimationConfig) => void
+  isAnimating: boolean
+  stop: () => void
+}
+
+export function useAnimationControl(): UseAnimationReturn {
   const controls = useFramerAnimation()
   const { reduceMotion, duration: defaultDuration } = useAnimation()
 

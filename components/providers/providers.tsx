@@ -1,46 +1,31 @@
 'use client'
 
-import { ThemeProvider } from 'next-themes'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from 'sonner'
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
+import { ThemeProvider } from '@mui/material/styles'
+import CssBaseline from '@mui/material/CssBaseline'
+import { theme } from '@/lib/theme'
 import { ModalProvider } from './modal-provider'
-import { GestureModalProvider } from './gesture-modal-provider'
 import { AnimationProvider } from './animation-provider'
-import { usePerformanceOptimization } from '@/hooks/use-performance-optimization'
+import { ReactNode } from 'react'
 
-function DynamicModalProvider() {
-  const [isTouch, setIsTouch] = useState(false)
-  const { capabilities } = usePerformanceOptimization()
-
-  useEffect(() => {
-    const checkTouch = () => {
-      setIsTouch('ontouchstart' in window || navigator.maxTouchPoints > 0)
-    }
-    checkTouch()
-    window.addEventListener('resize', checkTouch)
-    return () => window.removeEventListener('resize', checkTouch)
-  }, [])
-
-  // Use gesture modals only on touch devices with good performance
-  if (isTouch && capabilities.supportsHighPerformanceAnimations) {
-    return <GestureModalProvider />
-  }
-  return <ModalProvider />
+interface ProvidersProps {
+  children: ReactNode
 }
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export function Providers({ children }: ProvidersProps) {
   const [queryClient] = useState(() => new QueryClient())
 
   return (
-    <ThemeProvider attribute="class" enableSystem disableTransitionOnChange>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
       <AnimationProvider>
         <QueryClientProvider client={queryClient}>
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
-          <Toaster position="top-center" richColors expand />
-          <DynamicModalProvider />
+          <Toaster position="top-center" expand richColors />
         </QueryClientProvider>
       </AnimationProvider>
     </ThemeProvider>
