@@ -74,7 +74,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json()
+    const body: InspectionRequest = await req.json()
     const validatedData = inspectionSchema.parse(body)
 
     // Verify property ownership
