@@ -17,7 +17,7 @@ const threadSchema = z.object({
   participants: z.array(z.string().uuid('Invalid participant ID'))
 })
 
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase.auth()
     if (!userId) {
@@ -25,10 +25,10 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const thread_id = searchParams.get('thread_id')
-    const unread_only = searchParams.get('unread_only') === 'true'
-    const limit = parseInt(searchParams.get('limit') || '50', 10)
-    const offset = parseInt(searchParams.get('offset') || '0', 10)
+    const thread_id: string | null = searchParams.get('thread_id')
+    const unread_only: boolean = searchParams.get('unread_only') === 'true'
+    const limit: number = parseInt(searchParams.get('limit') || '50', 10)
+    const offset: number = parseInt(searchParams.get('offset') || '0', 10)
 
     let query
     if (thread_id) {
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase.auth()
     if (!userId) {
@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase.auth()
     if (!userId) {
@@ -249,7 +249,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function DELETE(req: NextRequest) {
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = await supabase.auth()
     if (!userId) {

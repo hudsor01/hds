@@ -4,7 +4,7 @@ import { paymentSchema, type PaymentRecord } from '@/types/payments'
 import { PaymentStatus } from '@prisma/client'
 import { NextRequest, NextResponse } from 'next/server'
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = getAuth(req)
     if (!userId) {
@@ -104,7 +104,7 @@ export async function POST(req: NextRequest) {
 }
 
 // Get payment history for a lease
-export async function GET(req: NextRequest) {
+export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
     const { userId } = getAuth(req)
     if (!userId) {
@@ -112,12 +112,12 @@ export async function GET(req: NextRequest) {
     }
 
     const { searchParams } = new URL(req.url)
-    const leaseId = searchParams.get('leaseId')
-    const status = searchParams.get('status')
-    const startDate = searchParams.get('startDate')
+    const leaseId: string | null = searchParams.get('leaseId')
+    const status: string | null = searchParams.get('status')
+    const startDate: Date | undefined = searchParams.get('startDate')
       ? new Date(searchParams.get('startDate')!)
       : undefined
-    const endDate = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined
+    const endDate: Date | undefined = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined
 
     if (!leaseId) {
       return NextResponse.json({ error: 'Lease ID is required' }, { status: 400 })

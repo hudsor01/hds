@@ -11,14 +11,14 @@ const paymentIntentSchema = z.object({
   metadata: z.record(z.string()).optional()
 })
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
+    const { userId }: { userId: string } = await supabase.auth()
     if (!userId) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body = await req.json()
+    const body: unknown = await req.json()
     const validatedData = paymentIntentSchema.parse(body)
 
     const paymentIntent = await createPaymentIntent({
@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
       clientSecret: paymentIntent.client_secret,
       id: paymentIntent.id
     })
-  } catch (error) {
+  } catch (error: unknown) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
