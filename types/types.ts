@@ -1,19 +1,37 @@
-import { ReactNode } from 'react'
+import { ReactNode, CSSProperties } from 'react'
 import { MotionProps, Variant, Variants } from 'framer-motion'
 import { User as SupabaseUser } from '@supabase/supabase-js'
 import { Prisma } from '@prisma/client'
+import type { text } from 'express'
+import { ButtonProps as MuiButtonProps } from '@mui/material'
 
 /** User authentication and account management types */
 export namespace Auth {
   /** Base user type with core properties */
-  export type User = {
+
+  export interface User {
     id: string
+    firstName: string
+    lastName: string
+    primaryEmailAddressId: string
+    emailAddresses: EmailAddress[]
+    publicMetadata: {
+      role?: string
+    }
+  }
+
+  export interface AccountUser {
+    id: string
+    full_name: string | null
     email: string
-    full_name?: string
     created_at: string
     updated_at: string
   }
 
+  interface EmailAddress {
+    id: string
+    emailAddress: string
+  }
   export interface AccountUser {
     id: string
     full_name: string | null
@@ -45,7 +63,7 @@ export namespace UI {
   /** Base props interface for UI components */
   export interface ComponentProps {
     className?: string
-    style?: React.CSSProperties
+    style?: CSSProperties
     children?: ReactNode
     mode: 'light' | 'dark' | 'system'
     color: 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success'
@@ -82,6 +100,12 @@ export namespace UI {
     }
     variants?: Variants
   }
+}
+
+export interface ButtonProps extends MuiButtonProps {
+  priceId?: string | null
+  text: string
+  highlighted?: boolean
 }
 
 // Form related types
@@ -177,6 +201,36 @@ export namespace API {
     data?: T
     error?: string
     code?: string
+  }
+
+  export interface WebhookLog {
+    id: string
+    event: string
+    event_type: WebhookEventType
+    created_at: Date
+    success: boolean
+    payload: string
+    url?: string
+    status?: number
+    request_body?: string
+    response_body?: string
+  }
+
+  export type WebhookEventType =
+    | 'user.created'
+    | 'user.updated'
+    | 'user.deleted'
+    | 'session.created'
+    | 'session.ended'
+    | 'organization.created'
+    | 'organization.updated'
+    | 'organization.deleted'
+
+  export interface WebhookPayload {
+    [key: string]: any
+  }
+  interface WebhookLogGridProps {
+    logs: WebhookLog[]
   }
 
   export type QueryParams = {
@@ -630,6 +684,15 @@ export namespace Payments {
   }
 }
 
+export type Team = {
+  id: string
+  stripeCustomerId?: string | null
+  stripeProductId?: string | null
+  stripeSubscriptionId?: string | null
+  planName?: string | null
+  subscriptionStatus?: 'active' | 'trialing' | 'canceled' | 'unpaid'
+}
+
 // Analytics and tracking types
 export namespace Analytics {
   export type Event = {
@@ -892,7 +955,7 @@ export namespace Config {
 export type WithChildren<T = {}> = T & { children: ReactNode }
 export type WithClassName<T = {}> = T & { className?: string }
 export type Nullable<T> = T | null
-export type Optional<T> = T | undefined
+export type MaybeUndefined<T> = T | undefined
 export type AsyncCallback<T = void> = (...args: any[]) => Promise<T>
 export type ErrorCallback = (error: Error) => void
 export type LoadingCallback = (loading: boolean) => void

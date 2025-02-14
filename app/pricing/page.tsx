@@ -1,228 +1,210 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
-import { loadStripe } from '@stripe/stripe-js'
-import { Box, Container, Grid, Typography } from '@mui/material'
-import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'sonner'
-import { useSupabase } from '@/lib/supabase/auth'
-import { FaCheck } from 'react-icons/fa'
-import type { Route } from 'next'
-import { routes } from '@/routes'
+import { PageTransition } from '@/components/layout/page-transition'
+import { PublicLayout } from '@/components/layout/public-layout'
+import {
+  Container,
+  Section,
+  PageHeader,
+  PageTitle,
+  PageDescription
+} from '@/components/ui/container'
+import { Card, CardHeader, CardContent, CardFooter } from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
+import { motion } from 'framer-motion'
+import { Check, X } from 'react-feather'
 
-const pricingTiers = [
+type BillingFrequency = 'monthly' | 'annually'
+
+const plans = [
   {
-    title: 'Free Trial',
-    description: 'Perfect for evaluating our platform',
-    price: '$0',
-    duration: '45 days',
-    priceId: null,
+    name: 'Starter',
+    description: 'Perfect for small property owners',
+    monthlyPrice: 49,
+    annualPrice: 470,
     features: [
-      'Up to 3 properties',
-      'Basic tenant management',
-      'Simple maintenance tracking',
-      'Basic financial reporting',
-      'Email support'
-    ],
-    highlighted: false,
-    buttonText: 'Start Free Trial'
-  },
-  {
-    title: 'Core',
-    description: 'For individual landlords and small portfolios',
-    price: '$29',
-    duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_CORE,
-    features: [
-      'Up to 10 properties',
-      'Advanced tenant screening',
-      'Maintenance request system',
-      'Basic financial analytics',
+      'Up to 5 properties',
+      'Basic reporting',
+      'Email support',
+      'Mobile app access',
+      'Tenant portal',
+      'Maintenance requests',
       'Document storage',
-      'Email & chat support',
-      'Mobile app access'
+      'Payment processing'
     ],
-    highlighted: false,
-    buttonText: 'Subscribe Now'
+    limitations: ['Advanced analytics', 'API access', 'Custom integrations', 'Dedicated support']
   },
   {
-    title: 'Growth',
-    description: 'Ideal for growing property management businesses',
-    price: '$69',
-    duration: 'per month',
-    priceId: process.env.NEXT_PUBLIC_STRIPE_PRICE_ID_GROWTH,
+    name: 'Professional',
+    description: 'Ideal for growing portfolios',
+    monthlyPrice: 99,
+    annualPrice: 950,
+    popular: true,
     features: [
-      'Up to 50 properties',
-      'Everything in Core',
-      'Automated rent collection',
-      'Advanced financial analytics',
-      'Document management',
+      'Up to 20 properties',
+      'Advanced analytics',
       'Priority support',
-      'Custom branding',
+      'Mobile app access',
+      'Tenant portal',
+      'Maintenance requests',
+      'Document storage',
+      'Payment processing',
       'API access',
+      'Custom reports',
       'Team collaboration'
     ],
-    highlighted: true,
-    buttonText: 'Get Started'
+    limitations: ['Custom integrations', 'Dedicated support', 'White-label options']
   },
   {
-    title: 'Unlimited',
-    description: 'Enterprise-grade solution for large portfolios',
-    price: 'Custom',
-    duration: 'per month',
-    priceId: null,
+    name: 'Enterprise',
+    description: 'For large property portfolios',
     features: [
       'Unlimited properties',
-      'Everything in Elite',
-      'Enterprise SLA',
-      'Dedicated account manager',
       'Custom integrations',
-      'On-premise deployment option',
-      '24/7 phone support',
-      'Custom training',
-      'Disaster recovery',
-      'Advanced security features'
+      'Dedicated support',
+      'White-label options',
+      'Mobile app access',
+      'Tenant portal',
+      'Maintenance requests',
+      'Document storage',
+      'Payment processing',
+      'API access',
+      'Custom reports',
+      'Team collaboration',
+      'Advanced analytics',
+      'Priority support'
     ],
-    highlighted: false,
-    buttonText: 'Contact Enterprise'
+    limitations: []
   }
-] as const
-
-interface PricingButtonProps {
-  priceId: string | null
-  text: string
-  highlighted: boolean
-}
-
-function PricingButton({ priceId, text, highlighted }: PricingButtonProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const router = useRouter()
-  const { session } = useSupabase()
-
-  const handleClick = async () => {
-    try {
-      setIsLoading(true)
-
-      if (text === 'Contact Enterprise') {
-        router.push(routes.contact as Route)
-        return
-      }
-
-      if (!priceId) {
-        if (!session) {
-          router.push(routes.auth.signUp as Route)
-          return
-        }
-
-        toast.loading('Setting up your trial...')
-        const response = await fetch('/api/subscribe/free', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ trialDays: 45 })
-        })
-
-        if (response.ok) {
-          router.push('/dashboard' as Route)
-          toast.success('Free trial activated! Enjoy your 45-day access.')
-        } else {
-          const error = await response.json()
-          throw new Error(error.message || 'Failed to activate trial')
-        }
-        return
-      }
-
-      if (!session) {
-        router.push(`${routes.auth.signIn}?next=${encodeURIComponent('/pricing')}` as Route)
-        return
-      }
-
-      toast.loading('Preparing checkout...')
-      const response = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ priceId })
-      })
-
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.error || 'Payment processing failed')
-
-      const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
-      if (data.sessionId) {
-        await stripe?.redirectToCheckout({ sessionId: data.sessionId })
-      }
-    } catch (error) {
-      console.error('Checkout error:', error)
-      toast.error(error instanceof Error ? error.message : 'Payment failed. Please try again.')
-    } finally {
-      setIsLoading(false)
-      toast.dismiss()
-    }
-  }
-
-  return (
-    <Button
-      variant={highlighted ? 'default' : 'outline'}
-      onClick={handleClick}
-      disabled={isLoading}
-      className={`mt-4 w-full font-semibold ${
-        highlighted ? 'bg-primary text-primary-foreground hover:bg-primary/90' : ''
-      }`}
-    >
-      {isLoading ? 'Processing...' : text}
-    </Button>
-  )
-}
+]
 
 export default function PricingPage() {
-  const [selectedTier, setSelectedTier] = useState<string>('Growth')
+  const [frequency, setFrequency] = useState<BillingFrequency>('monthly')
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-16 lg:px-8">
-      <div className="text-center">
-        <h2 className="text-foreground text-2xl font-bold tracking-tight sm:text-3xl md:text-4xl">
-          Simple, transparent pricing
-        </h2>
-        <p className="text-muted-foreground mx-auto mt-3 max-w-2xl text-base sm:mt-4 sm:text-lg">
-          Choose the perfect plan for your property management needs
-        </p>
-      </div>
+    <PublicLayout>
+      <PageTransition>
+        <Section>
+          <Container>
+            <PageHeader>
+              <PageTitle>Simple, Transparent Pricing</PageTitle>
+              <PageDescription>
+                Choose the perfect plan for your property management needs
+              </PageDescription>
+            </PageHeader>
 
-      <div className="mx-auto mt-16 grid max-w-lg gap-8 sm:max-w-none sm:grid-cols-2 lg:max-w-none lg:grid-cols-3 xl:grid-cols-4">
-        {pricingTiers.map((tier, index) => (
-          <div
-            key={index}
-            onClick={() => setSelectedTier(tier.title)}
-            className={`cursor-pointer rounded-lg border p-8 transition-all duration-300 hover:shadow-lg ${
-              selectedTier === tier.title
-                ? 'ring-primary ring-opacity-50 ring-2 shadow-lg'
-                : 'hover:border-primary/20'
-            }`}
-          >
-            <h3 className="text-xl font-bold sm:text-2xl">{tier.title}</h3>
-            <p className="text-muted-foreground mt-2 text-sm sm:text-base">{tier.description}</p>
-            <div className="mt-4 flex flex-col sm:flex-row sm:items-baseline">
-              <span className="text-4xl font-bold sm:text-5xl">{tier.price}</span>
-              <span className="text-muted-foreground sm:ml-2">/{tier.duration}</span>
+            <div className="mb-12 flex justify-center">
+              <Card variant="default" className="inline-flex p-1">
+                <div className="flex space-x-1">
+                  <Button
+                    variant={frequency === 'monthly' ? 'primary' : 'ghost'}
+                    size="sm"
+                    onClick={() => setFrequency('monthly')}
+                  >
+                    Monthly
+                  </Button>
+                  <Button
+                    variant={frequency === 'annually' ? 'primary' : 'ghost'}
+                    size="sm"
+                    onClick={() => setFrequency('annually')}
+                  >
+                    Annually
+                    <span className="ml-1 text-xs text-emerald-500">Save 20%</span>
+                  </Button>
+                </div>
+              </Card>
             </div>
 
-            <ul className="mt-8 space-y-4">
-              {tier.features.map((feature, featureIndex) => (
-                <li key={featureIndex} className="flex items-center">
-                  <FaCheck className="text-primary h-5 w-5 flex-shrink-0" />
-                  <span className="ml-3">{feature}</span>
-                </li>
+            <div className="grid gap-8 lg:grid-cols-3">
+              {plans.map((plan, index) => (
+                <Card
+                  key={plan.name}
+                  variant={plan.popular ? 'highlight' : 'interactive'}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.6 + index * 0.1 }}
+                  className="relative overflow-hidden"
+                >
+                  {plan.popular && (
+                    <div className="absolute top-[25px] right-[-35px] rotate-45 bg-[var(--primary-color)] px-10 py-1 text-sm text-white">
+                      Popular
+                    </div>
+                  )}
+                  <CardHeader>
+                    <h3 className="text-2xl font-bold text-gray-900">{plan.name}</h3>
+                    <p className="mt-2 text-sm text-gray-600">{plan.description}</p>
+                    {plan.monthlyPrice ? (
+                      <div className="mt-4">
+                        <div className="flex items-end">
+                          <span className="text-4xl font-bold text-gray-900">
+                            ${frequency === 'monthly' ? plan.monthlyPrice : plan.annualPrice}
+                          </span>
+                          <span className="ml-2 text-gray-600">
+                            /{frequency === 'monthly' ? 'month' : 'year'}
+                          </span>
+                        </div>
+                        {frequency === 'annually' && (
+                          <p className="mt-1 text-sm text-emerald-500">
+                            Save ${(plan.monthlyPrice * 12 - plan.annualPrice).toFixed(2)} annually
+                          </p>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="mt-4">
+                        <span className="text-4xl font-bold text-gray-900">Custom</span>
+                      </div>
+                    )}
+                  </CardHeader>
+                  <CardContent>
+                    <Button className="mb-8 w-full">
+                      {plan.name === 'Enterprise' ? 'Contact Sales' : 'Get Started'}
+                    </Button>
+                    <div>
+                      <h4 className="mb-4 text-sm font-semibold text-gray-900">
+                        Features included:
+                      </h4>
+                      <ul className="space-y-3">
+                        {plan.features.map(feature => (
+                          <li key={feature} className="flex items-start gap-2 text-sm">
+                            <Check className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-500" />
+                            <span>{feature}</span>
+                          </li>
+                        ))}
+                        {plan.limitations.map(limitation => (
+                          <li
+                            key={limitation}
+                            className="flex items-start gap-2 text-sm text-gray-400"
+                          >
+                            <X className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                            <span>{limitation}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
               ))}
-            </ul>
+            </div>
 
-            <PricingButton
-              priceId={tier.priceId}
-              text={tier.buttonText}
-              highlighted={selectedTier === tier.title}
-            />
-          </div>
-        ))}
-      </div>
-    </div>
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: 1 }}
+              className="mt-16 text-center"
+            >
+              <p className="text-sm text-gray-600">
+                All plans include access to our mobile app and customer support.
+                <br />
+                Need a custom plan?{' '}
+                <a href="/contact" className="text-[var(--primary-color)] hover:underline">
+                  Contact us
+                </a>
+              </p>
+            </motion.div>
+          </Container>
+        </Section>
+      </PageTransition>
+    </PublicLayout>
   )
 }

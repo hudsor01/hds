@@ -1,7 +1,8 @@
 'use client'
 
-import { Card } from '@/components/ui/cards/card'
-import { Box, Container, Grid, Typography } from '@mui/material'
+import { PageTransition } from '@/components/layout/page-transition'
+import { PublicLayout } from '@/components/layout/public-layout'
+import { motion } from 'framer-motion'
 import {
   BarChart,
   Calendar,
@@ -13,94 +14,144 @@ import {
   Users
 } from 'react-feather'
 
-interface Feature {
-  title: string
-  description: string
-  icon: typeof Home
-}
-
-const features: Feature[] = [
+const features = [
   {
     title: 'Property Management',
     description: 'Efficiently manage your properties with our comprehensive dashboard.',
-    icon: Home
+    icon: Home,
+    details: [
+      'Automated rent collection',
+      'Maintenance request tracking',
+      'Property portfolio dashboard',
+      'Tenant portal access'
+    ]
   },
   {
-    title: 'Tenant Portal',
-    description: 'Give tenants access to a dedicated portal for payments and maintenance requests.',
-    icon: Users
-  },
-  {
-    title: 'Financial Tracking',
-    description: 'Track rent payments, expenses, and generate financial reports.',
-    icon: BarChart
-  },
-  {
-    title: 'Maintenance Management',
-    description: 'Handle maintenance requests and track repairs efficiently.',
-    icon: Settings
-  },
-  {
-    title: 'Document Management',
-    description: 'Store and manage all property-related documents securely.',
-    icon: FileText
-  },
-  {
-    title: 'Payment Processing',
-    description: 'Process rent payments and security deposits electronically.',
-    icon: CreditCard
-  },
-  {
-    title: 'Scheduling',
-    description: 'Schedule viewings, maintenance, and other property-related events.',
-    icon: Calendar
+    title: 'Financial Tools',
+    description: 'Track and manage all your property-related finances in one place.',
+    icon: BarChart,
+    details: [
+      'Real-time financial reporting',
+      'Expense tracking',
+      'Budget management',
+      'Tax document preparation'
+    ]
   },
   {
     title: 'Communication Hub',
-    description: 'Streamline communication between property managers, owners, and tenants.',
-    icon: MessageCircle
+    description: 'Stay connected with tenants, owners, and maintenance staff.',
+    icon: MessageCircle,
+    details: [
+      'Integrated messaging system',
+      'Automated notifications',
+      'Document sharing',
+      'Announcement broadcasts'
+    ]
+  },
+  {
+    title: 'Analytics & Reporting',
+    description: 'Make data-driven decisions with comprehensive insights.',
+    icon: FileText,
+    details: [
+      'Custom report builder',
+      'Performance metrics',
+      'Occupancy tracking',
+      'Revenue analysis'
+    ]
+  },
+  {
+    title: 'Maintenance Management',
+    description: 'Streamline maintenance requests and vendor relationships.',
+    icon: Settings,
+    details: [
+      'Work order system',
+      'Vendor management',
+      'Preventive maintenance',
+      'Service history tracking'
+    ]
+  },
+  {
+    title: 'Security & Compliance',
+    description: 'Keep your data secure and maintain compliance standards.',
+    icon: CreditCard,
+    details: ['Data encryption', 'Access control', 'Audit trails', 'Compliance reporting']
   }
 ]
 
 export default function FeaturesPage() {
   return (
-    <Box className="from-background to-muted/20 min-h-screen bg-gradient-to-b py-20">
-      <Container maxWidth="lg">
-        <Box className="mb-16 text-center">
-          <Typography variant="h2" className="mb-4 font-bold">
-            Powerful Features for Property Management
-          </Typography>
-          <Typography variant="h5" color="text.secondary" className="mx-auto max-w-3xl">
-            Everything you need to manage your properties efficiently and grow your business
-          </Typography>
-        </Box>
+    <PublicLayout>
+      <PageTransition>
+        <div className="container mx-auto px-4 py-16">
+          <div className="mb-16 text-center">
+            <motion.h1
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8 }}
+              className="mb-6 text-4xl font-bold text-gray-900"
+            >
+              Platform Features
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              className="mx-auto max-w-2xl text-xl text-gray-600"
+            >
+              Everything you need to manage your properties efficiently and grow your portfolio
+            </motion.p>
+          </div>
 
-        <Grid container spacing={4}>
-          {features.map((feature, index) => {
-            const Icon = feature.icon
-            return (
-              <Grid item xs={12} sm={6} md={4} key={feature.title}>
-                <Card
-                  className="h-full p-6 transition-all hover:-translate-y-1 hover:shadow-lg"
-                  style={{ animationDelay: `${index * 100}ms` }}
-                >
-                  <Box className="flex h-full flex-col">
-                    <div className="bg-primary/10 mb-4 flex h-12 w-12 items-center justify-center rounded-full p-3">
-                      <Icon size={24} className="text-primary" />
-                    </div>
-                    <Typography variant="h6" className="mb-2 font-semibold">
-                      {feature.title}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                      {feature.description}
-                    </Typography>
-                  </Box>
-                </Card>
-              </Grid>
-            )
-          })}
-        </Grid>
-      </Container>
-    </Box>
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {features.map((feature, index) => (
+              <motion.div
+                key={feature.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="group surface relative overflow-hidden p-6"
+              >
+                <div className="mb-4 flex items-center gap-4">
+                  <div className="bg-opacity-10 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)] text-[var(--primary-color)]">
+                    <feature.icon size={24} />
+                  </div>
+                  <h3 className="text-xl font-semibold text-gray-900">{feature.title}</h3>
+                </div>
+                <p className="mb-6 text-gray-600">{feature.description}</p>
+                <ul className="space-y-3 text-gray-600">
+                  {feature.details.map((detail, i) => (
+                    <motion.li
+                      key={i}
+                      initial={{ opacity: 0, x: -20 }}
+                      whileInView={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.5, delay: 0.2 + i * 0.1 }}
+                      viewport={{ once: true }}
+                      className="flex items-center gap-2"
+                    >
+                      <svg
+                        className="h-5 w-5 text-[var(--primary-color)]"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                      {detail}
+                    </motion.li>
+                  ))}
+                </ul>
+                <div className="absolute inset-x-0 bottom-0 h-1 transform bg-[var(--primary-color)] transition-all duration-200 group-hover:h-1.5" />
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </PageTransition>
+    </PublicLayout>
   )
 }

@@ -6,7 +6,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { Toaster } from 'sonner'
 import { useState, useEffect } from 'react'
 import { ModalProvider } from './modal-provider'
-import { GestureModalProvider } from './gesture-modal-provider'
 import { AnimationProvider } from './animation-provider'
 import { usePerformanceOptimization } from '@/hooks/use-performance-optimization'
 
@@ -22,12 +21,6 @@ function DynamicModalProvider() {
     window.addEventListener('resize', checkTouch)
     return () => window.removeEventListener('resize', checkTouch)
   }, [])
-
-  // Use gesture modals only on touch devices with good performance
-  if (isTouch && capabilities.supportsHighPerformanceAnimations) {
-    return <GestureModalProvider />
-  }
-  return <ModalProvider />
 }
 
 export function Providers({ children }: { children: React.ReactNode }) {
@@ -40,7 +33,6 @@ export function Providers({ children }: { children: React.ReactNode }) {
           {children}
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster position="top-center" richColors expand />
-          <DynamicModalProvider />
         </QueryClientProvider>
       </AnimationProvider>
     </ThemeProvider>

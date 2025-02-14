@@ -39,6 +39,14 @@ export default async function WebhookMonitoring() {
   }
 
   function transformStatsForGrid(stats: WebhookStat[]) {
+    interface StatsAccumulator {
+      id: string
+      type: string
+      count: number
+      success: number
+      lastReceived: string
+    }
+
     return Object.entries(
       stats.reduce(
         (acc, stat) => {
@@ -57,7 +65,7 @@ export default async function WebhookMonitoring() {
           }
           return acc
         },
-        {} as Record<string, unknown>
+        {} as Record<string, StatsAccumulator>
       )
     ).map(([_, data]) => ({
       ...data,
