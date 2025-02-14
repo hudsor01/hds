@@ -1,39 +1,11 @@
-@import 'tailwindcss';
-@import './theme.css';
+@import "tailwindcss";
+@import "./theme.css";
 
+/* Custom patterns */
 .bg-grid-pattern {
   background-image:
     linear-gradient(var(--color-primary) 1px, transparent 1px),
     linear-gradient(to right, var(--color-primary) 1px, transparent 1px);
   background-size: 50px 50px;
-}
-
-/* Register component styles */
-@layer components {
-  .button {
-    border-radius: var(--radius-md);
-    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
-    font-weight: 500;
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-  }
-
-  .button-primary {
-    background-color: var(--color-primary);
-    color: white;
-    &:hover {
-      background-color: var(--color-primary-dark);
-    }
-  }
-
-  .nav-link {
-    color: var(--color-text-secondary);
-    transition-property: color;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 150ms;
-    &:hover {
-      color: var(--color-primary);
-    }
-  }
+  opacity: 0.1;
 }

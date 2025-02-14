@@ -1,26 +1,26 @@
 'use client'
 
-import { CircularProgress, Box } from '@mui/material'
-import { motion } from 'framer-motion'
-import { scaleInOut } from '@/lib/animation-variants'
+import { cn } from '@/lib/utils'
 
-const MotionBox = motion(Box)
+interface LoadingSpinnerProps {
+  className?: string
+  size?: 'sm' | 'md' | 'lg'
+}
 
-export function LoadingSpinner() {
+export function LoadingSpinner({ className, size = 'md' }: LoadingSpinnerProps) {
+  const sizeClasses = {
+    sm: 'h-4 w-4',
+    md: 'h-6 w-6',
+    lg: 'h-8 w-8'
+  }
+
   return (
-    <MotionBox
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        p: 4
-      }}
-      variants={scaleInOut}
-      initial="hidden"
-      animate="visible"
-      exit="exit"
-    >
-      <CircularProgress />
-    </MotionBox>
+    <div
+      className={cn(
+        'animate-spin rounded-full border-2 border-current border-t-transparent',
+        sizeClasses[size],
+        className
+      )}
+    />
   )
 }

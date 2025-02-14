@@ -2,11 +2,13 @@ import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
+  transpilePackages: ['@mui/material', '@emotion/react', '@emotion/styled'],
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
-    },
-    optimizePackageImports: ['@mui/material', '@mui/icons-material']
+    }
+    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
+    optimizeCss: true
   },
   images: {
     domains: ['www.hudsondigitalsolutions.com'],

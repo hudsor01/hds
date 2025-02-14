@@ -1,13 +1,18 @@
 'use client'
 
 import { createContext, useContext, useState, ReactNode, useEffect } from 'react'
+import { LazyMotion, domAnimation } from 'framer-motion'
 import type { AnimationPreferences } from '@/types/animation'
 
 const AnimationContext = createContext<AnimationPreferences | undefined>(undefined)
 
 const DEFAULT_DURATION = 0.2
 
-export function AnimationProvider({ children }: { children: ReactNode }) {
+interface AnimationProviderProps {
+  children: ReactNode
+}
+
+export function AnimationProvider({ children }: AnimationProviderProps) {
   const [reduceMotion, setReduceMotion] = useState(false)
   const [duration, setDuration] = useState(DEFAULT_DURATION)
 
@@ -21,16 +26,18 @@ export function AnimationProvider({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <AnimationContext.Provider
-      value={{
-        reduceMotion,
-        duration,
-        setReduceMotion,
-        setDuration
-      }}
-    >
-      {children}
-    </AnimationContext.Provider>
+    <LazyMotion features={domAnimation} strict>
+      <AnimationContext.Provider
+        value={{
+          reduceMotion,
+          duration,
+          setReduceMotion,
+          setDuration
+        }}
+      >
+        {children}
+      </AnimationContext.Provider>
+    </LazyMotion>
   )
 }
 

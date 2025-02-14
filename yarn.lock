@@ -1135,29 +1135,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@mui/material-nextjs@npm:^6.4.3":
-  version: 6.4.3
-  resolution: "@mui/material-nextjs@npm:6.4.3"
-  dependencies:
-    "@babel/runtime": "npm:^7.26.0"
-  peerDependencies:
-    "@emotion/cache": ^11.11.0
-    "@emotion/react": ^11.11.4
-    "@emotion/server": ^11.11.0
-    "@types/react": ^17.0.0 || ^18.0.0 || ^19.0.0
-    next: ^13.0.0 || ^14.0.0 || ^15.0.0
-    react: ^17.0.0 || ^18.0.0 || ^19.0.0
-  peerDependenciesMeta:
-    "@emotion/cache":
-      optional: true
-    "@emotion/server":
-      optional: true
-    "@types/react":
-      optional: true
-  checksum: 10/78438121896a51afb9e3c82272a65f6e806589ed4755ded21228f118f2f85540676400d1b746e8df4d5d1954a2c9ae6f48700d7bc9104ca2e6e14a53d0d29620
-  languageName: node
-  linkType: hard
-
 "@mui/material@npm:^6.4.4":
   version: 6.4.4
   resolution: "@mui/material@npm:6.4.4"
@@ -6111,7 +6088,6 @@ __metadata:
     "@modelcontextprotocol/sdk": "npm:^1.5.0"
     "@mui/icons-material": "npm:^6.4.4"
     "@mui/material": "npm:^6.4.4"
-    "@mui/material-nextjs": "npm:^6.4.3"
     "@mui/system": "npm:^6.4.3"
     "@mui/x-charts": "npm:^7.26.0"
     "@mui/x-data-grid": "npm:^7.26.0"
@@ -6166,6 +6142,7 @@ __metadata:
     helmet: "npm:^8.0.0"
     input-otp: "npm:^1.4.2"
     jiti: "npm:^2.4.2"
+    lightningcss: "npm:^1.24.0"
     next: "npm:^15.1.7"
     next-seo: "npm:^6.6.0"
     next-themes: "npm:^0.4.4"
@@ -7036,7 +7013,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lightningcss@npm:^1.29.1":
+"lightningcss@npm:^1.24.0, lightningcss@npm:^1.29.1":
   version: 1.29.1
   resolution: "lightningcss@npm:1.29.1"
   dependencies:

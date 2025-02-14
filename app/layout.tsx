@@ -20,13 +20,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" className={roboto.className} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body>
+      <body className="bg-background-app text-text-primary">
         <Providers>
-          <div className="flex min-h-screen flex-col bg-background-app">
+          <div className="relative flex min-h-screen flex-col">
             <Navbar />
             <main className="flex-grow">{children}</main>
             <Footer />

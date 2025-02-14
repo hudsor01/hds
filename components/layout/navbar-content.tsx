@@ -7,8 +7,6 @@ import { useState } from 'react'
 import { AnimatePresence, m } from 'framer-motion'
 import { Button } from '@/components/ui/button'
 import { Container } from '@/components/ui/container'
-import ClientOnly from '@/components/utils/client-only'
-import { NavbarContent } from './navbar-content'
 
 const navLinks = [
   { href: '/features', label: 'Features' },
@@ -16,14 +14,6 @@ const navLinks = [
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' }
 ]
-
-export default function Navbar() {
-  return (
-    <ClientOnly>
-      <NavbarContent />
-    </ClientOnly>
-  )
-}
 
 export function NavbarContent() {
   const pathname = usePathname()

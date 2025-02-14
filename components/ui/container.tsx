@@ -9,15 +9,13 @@ interface ContainerProps {
 }
 
 export function Container({ children, className }: ContainerProps) {
-  return <div className={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>{children}</div>
+  return (
+    <div className={cn('mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8', className)}>{children}</div>
+  )
 }
 
-export function Section({ className, children, ...props }: HTMLMotionProps<'section'>) {
-  return (
-    <motion.section className={cn('py-16 sm:py-20 md:py-24', className)} {...props}>
-      {children}
-    </motion.section>
-  )
+export function Section({ children, className }: ContainerProps) {
+  return <section className={cn('py-12 md:py-16 lg:py-20', className)}>{children}</section>
 }
 
 export function PageHeader({ children, className }: ContainerProps) {
