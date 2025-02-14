@@ -2,19 +2,26 @@
 
 import { PageTransition } from '@/components/layout/page-transition'
 import { PublicLayout } from '@/components/layout/public-layout'
-import { Container, Section, PageHeader, PageTitle, PageDescription } from '@/components/ui/container'
+import {
+  Container,
+  Section,
+  PageHeader,
+  PageTitle,
+  PageDescription
+} from '@/components/ui/container'
 import { Card } from '@/components/ui/card'
 import { Users, Target, Shield } from 'react-feather'
 
 const values = [
   {
     title: 'Customer First',
-    description: 'We build solutions that directly address our customers\' needs and challenges.',
+    description: "We build solutions that directly address our customers' needs and challenges.",
     icon: Users
   },
   {
     title: 'Innovation Driven',
-    description: 'Continuously pushing boundaries to deliver cutting-edge property management solutions.',
+    description:
+      'Continuously pushing boundaries to deliver cutting-edge property management solutions.',
     icon: Target
   },
   {
@@ -43,13 +50,15 @@ export default function AboutPage() {
                   <h2 className="text-2xl font-semibold text-gray-900">Our Vision</h2>
                   <div className="space-y-4">
                     <p className="text-lg text-gray-700">
-                      Hudson Digital Solutions is revolutionizing property management through innovative digital solutions.
-                      Our platform is designed to streamline operations, reduce costs, and improve efficiency for property
-                      managers and owners.
+                      Hudson Digital Solutions is revolutionizing property management through
+                      innovative digital solutions. Our platform is designed to streamline
+                      operations, reduce costs, and improve efficiency for property managers and
+                      owners.
                     </p>
                     <p className="text-lg text-gray-700">
-                      Founded with a vision to modernize property management, we're building tools that make day-to-day
-                      operations seamless and data-driven decision making accessible to everyone in the industry.
+                      Founded with a vision to modernize property management, we're building tools
+                      that make day-to-day operations seamless and data-driven decision making
+                      accessible to everyone in the industry.
                     </p>
                   </div>
                 </div>
@@ -57,10 +66,13 @@ export default function AboutPage() {
 
               <Card variant="highlight">
                 <div className="p-8">
-                  <h2 className="mb-6 text-2xl font-semibold text-[var(--primary-color)]">Our Mission</h2>
+                  <h2 className="mb-6 text-2xl font-semibold text-[var(--primary-color)]">
+                    Our Mission
+                  </h2>
                   <p className="text-gray-600">
-                    To empower property managers and owners with intelligent tools that transform how they work,
-                    making property management more efficient, profitable, and enjoyable.
+                    To empower property managers and owners with intelligent tools that transform
+                    how they work, making property management more efficient, profitable, and
+                    enjoyable.
                   </p>
                 </div>
               </Card>
@@ -79,7 +91,7 @@ export default function AboutPage() {
                     viewport={{ once: true }}
                   >
                     <div className="p-6 text-center">
-                      <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)] bg-opacity-10">
+                      <div className="bg-opacity-10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
                         <value.icon className="h-6 w-6 text-[var(--primary-color)]" />
                       </div>
                       <h3 className="mb-2 text-xl font-semibold text-gray-900">{value.title}</h3>

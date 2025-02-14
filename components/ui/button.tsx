@@ -9,7 +9,10 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
-  ({ className, children, disabled, loading, type = 'button', variant = 'primary', ...props }, ref) => {
+  (
+    { className, children, disabled, loading, type = 'button', variant = 'primary', ...props },
+    ref
+  ) => {
     const baseStyles = 'flex items-center justify-center font-medium rounded-md transition-colors'
     const variantStyles = {
       primary: 'bg-primary text-white hover:bg-primary-dark',
@@ -25,7 +28,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
           baseStyles,
           variantStyles[variant],
           'px-4 py-2',
-          'disabled:opacity-50 disabled:cursor-not-allowed',
+          'disabled:cursor-not-allowed disabled:opacity-50',
           className
         )}
         disabled={disabled || loading}

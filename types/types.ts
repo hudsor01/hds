@@ -1,8 +1,5 @@
 import { ReactNode, CSSProperties } from 'react'
-import { MotionProps, Variant, Variants } from 'framer-motion'
-import { User as SupabaseUser } from '@supabase/supabase-js'
-import { Prisma } from '@prisma/client'
-import type { text } from 'express'
+import { Variants } from 'framer-motion'
 import { ButtonProps as MuiButtonProps } from '@mui/material'
 
 /** User authentication and account management types */
@@ -49,13 +46,31 @@ export namespace Auth {
     current_period_end: string
     current_period_start: string
     prices?: {
-      products?: any
+      products?: string
     }
   }
 
   /** Available user roles in the system */
   export type Role = 'admin' | 'moderator' | 'user'
   export type PermissionLevel = 'none' | 'read' | 'write' | 'admin'
+  export type UserStatus = 'active' | 'inactive' | 'suspended'
+
+  /** User authentication status interface */
+  export interface AuthStatus {
+    isAuthenticated: boolean
+    userStatus: UserStatus
+  }
+
+  /** User information interface */
+  export interface UserInfo {
+    user: User
+    authStatus: AuthStatus
+  }
+
+  /** Additional user information interface */
+  export interface ExtendedUserInfo extends UserInfo {
+    permissions: PermissionLevel[]
+  }
 }
 
 /** UI component and styling related types */
@@ -67,6 +82,8 @@ export namespace UI {
     children?: ReactNode
     mode: 'light' | 'dark' | 'system'
     color: 'primary' | 'secondary' | 'error' | 'warning' | 'info' | 'success'
+    size?: Size
+    variant?: ButtonVariant
   }
 
   /** Component size variants */
@@ -117,7 +134,7 @@ export namespace Forms {
   }
 
   export type Validation = {
-    rule: (value: any) => boolean | Promise<boolean>
+    rule: () => boolean | Promise<boolean>
     message: string
   }
 
@@ -259,7 +276,7 @@ export namespace API {
   export type Payment = {
     method: {
       id: string
-      type: 'card' | 'bank_account'
+      type: 'card' | 'bank' | 'other'
       last4: string
       expMonth?: number
       expYear?: number
@@ -767,7 +784,7 @@ export namespace Services {
   // Email service types
   export type EmailService = {
     send: (options: EmailOptions) => Promise<void>
-    template: (name: string, data: Record<string, any>) => string
+    template: (templateName: string, data: Record<string, any>) => string
     track: (messageId: string) => Promise<EmailTrackingData>
   }
 
@@ -879,7 +896,7 @@ export namespace Services {
     log: (entry: LogEntry) => void
     debug: (message: string, context?: Record<string, any>) => void
     info: (message: string, context?: Record<string, any>) => void
-    warn: (message: string, context?: Record<string, any>) => void
+    warn: (message: string, _context?: Record<string, unknown>) => void
     error: (message: string, error?: Error, context?: Record<string, any>) => void
   }
 }
@@ -895,10 +912,6 @@ export namespace Config {
     SUPABASE_KEY: string
     STRIPE_KEY: string
     STRIPE_WEBHOOK_SECRET: string
-    EMAIL_FROM: string
-    AWS_REGION?: string
-    REDIS_URL?: string
-    SENTRY_DSN?: string
   }
 
   /** App-wide configuration */
@@ -909,7 +922,7 @@ export namespace Config {
     debug: boolean
     features: Record<string, boolean>
     maintenance: boolean
-    theme: UI.Theme
+    theme: UI.Toast
   }
 
   /** Service configuration */

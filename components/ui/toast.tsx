@@ -14,7 +14,7 @@ export function showToast({ title, message, type = 'info' }: ToastProps) {
     style: {
       background: 'var(--color-background-ui)',
       border: '1px solid var(--color-border-ui)',
-      color: 'var(--color-text-primary)',
+      color: 'var(--color-text-primary)'
     }
   }
 
@@ -33,7 +33,7 @@ export function showToast({ title, message, type = 'info' }: ToastProps) {
         ...styles,
         style: {
           ...styles.style,
-          borderLeft: '4px solid oklch(0.637 0.237 25.331)'  // Error color
+          borderLeft: '4px solid oklch(0.637 0.237 25.331)' // Error color
         }
       })
       break
@@ -42,7 +42,7 @@ export function showToast({ title, message, type = 'info' }: ToastProps) {
         ...styles,
         style: {
           ...styles.style,
-          borderLeft: '4px solid oklch(0.637 0.237 205.331)'  // Info color
+          borderLeft: '4px solid oklch(0.637 0.237 205.331)' // Info color
         }
       })
   }

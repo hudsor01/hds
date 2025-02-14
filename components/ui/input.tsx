@@ -13,11 +13,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
       <input
         type={type}
         className={cn(
-          'w-full rounded-md bg-background-ui px-3 py-2',
-          'border border-border-ui',
+          'bg-background-ui w-full rounded-md px-3 py-2',
+          'border-border-ui border',
           'text-text-primary placeholder:text-text-tertiary',
           'transition-colors duration-200',
-          'focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary',
+          'focus:border-primary focus:ring-primary focus:ring-1 focus:outline-none',
           'disabled:cursor-not-allowed disabled:opacity-50',
           error && 'border-red-500 focus:border-red-500 focus:ring-red-500',
           className

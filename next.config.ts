@@ -6,9 +6,8 @@ const nextConfig: NextConfig = {
   experimental: {
     serverActions: {
       bodySizeLimit: '2mb'
-    }
-    optimizePackageImports: ['@mui/material', '@mui/icons-material'],
-    optimizeCss: true
+    },
+    optimizePackageImports: ['@mui/material', '@mui/icons-material']
   },
   images: {
     domains: ['www.hudsondigitalsolutions.com'],

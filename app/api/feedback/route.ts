@@ -1,4 +1,4 @@
-import { sql } from '@vercel/postgres'
+import { createClient } from '@vercel/postgres'
 
 interface Feedback {
   type: string
@@ -8,7 +8,9 @@ interface Feedback {
 
 export async function POST(req: Request): Promise<Response> {
   const { type, message, metadata }: Feedback = await req.json()
-  await sql`
+  const client = createClient()
+  await client.connect()
+  await client.sql`
     INSERT INTO feedback (type, message, metadata)
     VALUES (${type}, ${message}, ${JSON.stringify(metadata)})
   `
