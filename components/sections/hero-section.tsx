@@ -1,3 +1,5 @@
+'use client'
+
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowRight } from 'react-feather'
@@ -19,14 +21,14 @@ export function HeroSection() {
   }
 
   return (
-    <section className="relative flex min-h-[85vh] items-center bg-gradient-to-br from-blue-500 via-white to-white">
+    <section className="from-primary via-background-ui to-background-ui relative flex min-h-[85vh] items-center bg-gradient-to-br">
       <div className="bg-grid-pattern absolute inset-0 opacity-10" />
       <Container>
         <PageHeader>
-          <PageTitle className="text-4xl font-bold text-gray-900">
+          <PageTitle className="text-text-primary text-4xl font-bold">
             Transform Your Property Management
           </PageTitle>
-          <PageDescription className="text-lg text-gray-700">
+          <PageDescription className="text-text-secondary text-lg">
             Join the waitlist for the next generation of property management software. Be the first
             to experience our innovative platform.
           </PageDescription>
@@ -50,7 +52,7 @@ export function HeroSection() {
                 type="submit"
                 disabled={isSubmitting || isSuccess}
                 loading={isSubmitting}
-                className="bg-blue-500 text-white hover:bg-blue-600"
+                className="bg-primary hover:bg-primary-dark text-white"
               >
                 {isSuccess ? (
                   "You're on the list!"
@@ -62,8 +64,8 @@ export function HeroSection() {
                 )}
               </Button>
             </form>
-            <p className="mt-4 text-sm text-gray-500">
-              Join {Math.floor(Math.random() * 100 + 400)} others on the waitlist. No spam, ever.
+            <p className="text-text-tertiary mt-4 text-sm">
+              Join 476 others on the waitlist. No spam, ever.
             </p>
           </motion.div>
         </PageHeader>

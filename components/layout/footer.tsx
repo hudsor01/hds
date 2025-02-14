@@ -1,124 +1,101 @@
 'use client'
 
+import { Container } from '@/components/ui/container'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { GitHub, Mail, Twitter } from 'react-feather'
-
-const footerLinks = {
-  product: [
-    { href: '/features', label: 'Features' },
-    { href: '/pricing', label: 'Pricing' },
-    { href: '/about', label: 'About' },
-    { href: '/contact', label: 'Contact' }
-  ],
-  company: [
-    { href: '/privacy', label: 'Privacy Policy' },
-    { href: '/terms', label: 'Terms of Service' },
-    { href: '/security', label: 'Security' },
-    { href: '/status', label: 'Status' }
-  ],
-  social: [
-    { href: 'mailto:info@hudsondigitalsolutions.com', label: 'Email', icon: Mail },
-    { href: 'https://twitter.com/hudsondigital', label: 'Twitter', icon: Twitter },
-    { href: 'https://github.com/hudson-digital', label: 'GitHub', icon: GitHub }
-  ]
-}
+import { useState } from 'react'
+import { GitHub, Twitter } from 'react-feather'
 
 export default function Footer() {
+  const [email, setEmail] = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    setIsSuccess(true)
+    setIsSubmitting(false)
+  }
+
   return (
-    <footer className="mt-auto bg-white">
-      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
-          {/* Brand Column */}
-          <div className="space-y-4">
-            <Link href="/" className="text-xl font-bold text-[var(--primary-color)]">
-              HDS
-            </Link>
-            <p className="text-sm text-gray-500">
-              Transforming property management with innovative digital solutions.
-            </p>
-            <div className="flex space-x-4">
-              {footerLinks.social.map(link => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  className="text-gray-400 transition-colors hover:text-[var(--primary-color)]"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <link.icon size={20} />
-                </a>
-              ))}
-            </div>
-          </div>
-
-          {/* Product Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Product</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.product.map(link => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-gray-500 transition-colors hover:text-[var(--primary-color)]"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Company Links */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Company</h3>
-            <ul className="mt-4 space-y-3">
-              {footerLinks.company.map(link => (
-                <li key={link.href}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-gray-500 transition-colors hover:text-[var(--primary-color)]"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-
-          {/* Newsletter Signup */}
-          <div>
-            <h3 className="text-sm font-semibold text-gray-900">Stay Updated</h3>
-            <p className="mt-4 text-sm text-gray-500">
-              Subscribe to our newsletter for product updates and industry insights.
-            </p>
-            <form className="mt-4">
-              <div className="flex max-w-md gap-x-2">
-                <input
+    <footer className="mt-auto border-t border-border-ui bg-background-ui">
+      <Container>
+        <div className="py-12">
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
+            <div>
+              <h2 className="text-2xl font-bold text-text-primary">Stay Updated</h2>
+              <p className="mt-4 text-text-secondary">
+                Join our newsletter to stay up to date on features and releases.
+              </p>
+              <form onSubmit={handleSubmit} className="mt-6 flex max-w-md gap-4">
+                <Input
                   type="email"
                   placeholder="Enter your email"
-                  className="input flex-1 text-sm"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
                   required
+                  disabled={isSubmitting || isSuccess}
                 />
-                <button type="submit" className="button-primary text-sm whitespace-nowrap">
-                  Subscribe
-                </button>
-              </div>
-            </form>
-            <div>
-              <p className="mt-4 text-sm text-gray-500">
+                <Button type="submit" disabled={isSubmitting || isSuccess}>
+                  {isSuccess ? 'Subscribed!' : 'Subscribe'}
+                </Button>
+              </form>
+              <p className="mt-4 text-sm text-text-tertiary">
                 Join 476 others on the waitlist. No spam, ever.
               </p>
             </div>
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <h3 className="font-semibold text-text-primary">Product</h3>
+                <ul className="mt-4 space-y-4">
+                  {[
+                    ['Features', '/features'],
+                    ['Pricing', '/pricing'],
+                    ['About', '/about']
+                  ].map(([label, href]) => (
+                    <li key={label}>
+                      <Link href={href} className="text-text-secondary hover:text-primary">
+                        {label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <h3 className="font-semibold text-text-primary">Connect</h3>
+                <ul className="mt-4 space-y-4">
+                  <li>
+                    <a
+                      href="https://twitter.com/hudsondigital"
+                      className="flex items-center text-text-secondary hover:text-primary"
+                    >
+                      <Twitter className="mr-2 h-4 w-4" />
+                      Twitter
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://github.com/hudsondigital"
+                      className="flex items-center text-text-secondary hover:text-primary"
+                    >
+                      <GitHub className="mr-2 h-4 w-4" />
+                      GitHub
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div className="mt-12 border-t border-border-ui pt-8">
+            <p className="text-center text-sm text-text-tertiary">
+              © {new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.
+            </p>
           </div>
         </div>
-
-        <div className="mt-12 border-t border-gray-200 pt-8">
-          <p className="text-center text-sm text-gray-500">
-            © {new Date().getFullYear()} Hudson Digital Solutions. All rights reserved.
-          </p>
-        </div>
-      </div>
+      </Container>
     </footer>
   )
 }

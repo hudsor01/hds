@@ -3,105 +3,37 @@
 import { cn } from '@/lib/utils'
 import { motion, HTMLMotionProps } from 'framer-motion'
 
-interface ContainerProps extends HTMLMotionProps<'div'> {
-  as?: 'section' | 'article' | 'main' | 'div'
-  size?: 'sm' | 'md' | 'lg' | 'xl' | 'full'
-  centered?: boolean
+interface ContainerProps {
   children: React.ReactNode
+  className?: string
 }
 
-const containerSizes = {
-  sm: 'max-w-3xl',
-  md: 'max-w-4xl',
-  lg: 'max-w-6xl',
-  xl: 'max-w-7xl',
-  full: 'max-w-full'
+export function Container({ children, className }: ContainerProps) {
+  return <div className={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>{children}</div>
 }
 
-export function Container({
-  as: Component = 'div',
-  size = 'xl',
-  centered = true,
-  className,
-  children,
-  ...props
-}: ContainerProps) {
-  const MotionComponent = motion[Component] as typeof motion.div
-
+export function Section({ className, children, ...props }: HTMLMotionProps<'section'>) {
   return (
-    <MotionComponent
-      className={cn(
-        'mx-auto px-4 sm:px-6 lg:px-8',
-        containerSizes[size],
-        centered && 'text-center',
-        className
-      )}
-      {...props}
-    >
-      {children}
-    </MotionComponent>
-  )
-}
-
-export function Section({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<'section'>) {
-  return (
-    <motion.section
-      className={cn('py-16 sm:py-20 md:py-24', className)}
-      {...props}
-    >
+    <motion.section className={cn('py-16 sm:py-20 md:py-24', className)} {...props}>
       {children}
     </motion.section>
   )
 }
 
-export function PageHeader({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<'div'>) {
+export function PageHeader({ children, className }: ContainerProps) {
+  return <div className={cn('mx-auto max-w-2xl text-center', className)}>{children}</div>
+}
+
+export function PageTitle({ children, className }: ContainerProps) {
   return (
-    <motion.div
-      className={cn('mb-12 space-y-4', className)}
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      {...props}
+    <h1
+      className={cn('text-text-primary text-4xl font-bold tracking-tight sm:text-6xl', className)}
     >
       {children}
-    </motion.div>
+    </h1>
   )
 }
 
-export function PageTitle({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<'h1'>) {
-  return (
-    <motion.h1
-      className={cn('text-4xl font-bold text-gray-900 sm:text-5xl', className)}
-      {...props}
-    >
-      {children}
-    </motion.h1>
-  )
-}
-
-export function PageDescription({
-  className,
-  children,
-  ...props
-}: HTMLMotionProps<'p'>) {
-  return (
-    <motion.p
-      className={cn('text-xl text-gray-600', className)}
-      {...props}
-    >
-      {children}
-    </motion.p>
-  )
+export function PageDescription({ children, className }: ContainerProps) {
+  return <p className={cn('text-text-secondary mt-6 text-lg leading-8', className)}>{children}</p>
 }

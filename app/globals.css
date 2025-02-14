@@ -1,109 +1,39 @@
 @import 'tailwindcss';
+@import './theme.css';
 
-:root {
-  --font-sans: 'Roboto', system-ui;
-  --font-display: 'Playfair Display', serif;
-  --primary-color: #7a9bb0; /* darker shade of pastel blue */
-  --primary-color-light: #96b5c6;
-  --primary-color-dark: #5d7d92;
-  --background-app: #f9fafb;
-  --background-subtle: #f3f4f6;
-  --background-ui: #ffffff;
-  --border-ui: #e5e7eb;
-  --text-primary: #111827;
-  --text-secondary: #4b5563;
-  --text-tertiary: #9ca3af;
-}
-
-[data-theme='dark'] {
-  --background-app: #111827;
-  --background-subtle: #1f2937;
-  --background-ui: #111827;
-  --border-ui: #374151;
-  --text-primary: #f3f4f6;
-  --text-secondary: #d1d5db;
-  --text-tertiary: #6b7280;
-}
-
-@layer components {
-  .surface {
-    @apply rounded-lg border border-gray-200 bg-white shadow-sm dark:border-gray-700 dark:bg-gray-800;
-  }
-
-  .input {
-    @apply w-full rounded-md border border-gray-300 bg-white px-3 py-2 shadow-sm focus:border-transparent focus:ring-2 focus:ring-[var(--primary-color)] focus:outline-none disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-700 dark:bg-gray-800;
-  }
-
-  .button {
-    @apply inline-flex items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
-  }
-
-  .button-primary {
-    @apply inline-flex items-center justify-center rounded-md bg-[var(--primary-color)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-[var(--primary-color-dark)] focus:ring-2 focus:ring-offset-2 focus:outline-none disabled:cursor-not-allowed disabled:opacity-50;
-  }
-
-  .nav-link {
-    @apply px-4 py-2 text-gray-700 transition-colors hover:text-[var(--primary-color)];
-  }
-}
-
-@layer utilities {
-  .grid-stack {
-    @apply grid gap-4;
-  }
-
-  .flex-center {
-    @apply flex items-center justify-center;
-  }
-
-  .flex-between {
-    @apply flex items-center justify-between;
-  }
-
-  .text-display {
-    @apply font-display text-4xl leading-tight font-bold md:text-5xl;
-  }
-}
-
-/* Add custom colors */
-.bg-pastel-blue {
-  background-color: #b7d1e2;
-}
-
-.bg-pastel-blue-dark {
-  background-color: #96b5c6;
-}
-
-.bg-pastel-blue-darker {
-  background-color: #7a9bb0;
-}
-
-/* Background Patterns */
 .bg-grid-pattern {
   background-image:
-    linear-gradient(var(--primary-color) 1px, transparent 1px),
-    linear-gradient(to right, var(--primary-color) 1px, transparent 1px);
+    linear-gradient(var(--color-primary) 1px, transparent 1px),
+    linear-gradient(to right, var(--color-primary) 1px, transparent 1px);
   background-size: 50px 50px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .animate-in {
-    @apply transition-all duration-200 ease-out;
+/* Register component styles */
+@layer components {
+  .button {
+    border-radius: var(--radius-md);
+    padding: calc(var(--spacing) * 2) calc(var(--spacing) * 4);
+    font-weight: 500;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
   }
 
-  .animate-out {
-    @apply transition-all duration-150 ease-in;
+  .button-primary {
+    background-color: var(--color-primary);
+    color: white;
+    &:hover {
+      background-color: var(--color-primary-dark);
+    }
   }
-}
 
-@media (prefers-reduced-motion: reduce) {
-  * {
-    @apply !scroll-auto !transition-none !duration-[0.01ms];
-  }
-}
-
-@media print {
-  .no-print {
-    @apply !hidden;
+  .nav-link {
+    color: var(--color-text-secondary);
+    transition-property: color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 150ms;
+    &:hover {
+      color: var(--color-primary);
+    }
   }
 }

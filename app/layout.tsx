@@ -9,38 +9,29 @@ import { Providers } from '@/components/providers/providers'
 const roboto = Roboto({
   weight: ['400', '500', '700'],
   subsets: ['latin'],
-  variable: '--font-roboto',
   display: 'swap',
   preload: true
 })
 
 export const metadata: Metadata = {
   title: 'Hudson Digital Solutions',
-  description: 'Your comprehensive property management solution',
-  icons: {
-    icon: '/favicon.ico'
-  }
+  description: 'Your comprehensive property management solution'
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html
-      lang="en"
-      className={`${roboto.variable} h-full scroll-smooth antialiased`}
-      suppressHydrationWarning
-    >
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <link rel="icon" href="/favicon.ico" />
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
       </head>
-      <body className="h-full">
+      <body>
         <Providers>
-          <div className="relative flex min-h-screen flex-col">
+          <div className="flex min-h-screen flex-col bg-background-app">
             <Navbar />
-            {children}
+            <main className="flex-grow">{children}</main>
             <Footer />
           </div>
-          <Toaster position="top-center" expand richColors closeButton />
+          <Toaster />
         </Providers>
       </body>
     </html>

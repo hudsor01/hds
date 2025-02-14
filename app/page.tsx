@@ -13,14 +13,14 @@ export default function HomePage() {
       <PageTransition>
         <HeroSection />
 
-        <section className="bg-white py-12">
+        <section className="bg-background-ui relative py-12">
           <Container>
             <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
-              className="mb-12 text-3xl font-bold text-gray-900"
+              className="text-text-primary mb-12 text-3xl font-bold"
             >
               Coming Soon
             </motion.h2>
@@ -42,7 +42,7 @@ export default function HomePage() {
                 <Grid item xs={12} md={4} key={feature.title}>
                   <Card
                     variant="default"
-                    className="p-6 transition-shadow duration-300 hover:shadow-lg"
+                    className="bg-background-ui text-text-primary p-6 transition-shadow duration-300 hover:shadow-lg"
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.5, delay: index * 0.2 }}
@@ -55,7 +55,7 @@ export default function HomePage() {
                     >
                       {feature.title}
                     </Typography>
-                    <Typography variant="body1" className="text-gray-600">
+                    <Typography variant="body1" className="text-text-secondary">
                       {feature.description}
                     </Typography>
                   </Card>
