@@ -3,21 +3,17 @@
 import * as React from 'react'
 import supabase from '@/lib/supabase'
 import Button from '@mui/material/Button'
-import TextField from '@mui/material'
-import Typography from '@mui/material'
-import Paper from '@mui/material'
-import Box from '@mui/material'
-import Alert from '@mui/material'
-import CircularProgress from '@mui/material'
-import { User } from '@supabase/supabase-js'
-import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
+import { TextField, Box, Typography, Paper, Alert, CircularProgress } from '@mui/material'
+import type { User } from '@supabase/supabase-js'
 import { Phone as PhoneIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
-import { Forms, UI } from '@/types'
 
 type VerificationProps = {
   phone: string
   code: string
-} & Forms.State
+  isSubmitting: boolean
+  error: string | null
+  success: boolean
+}
 
 export default function PhoneVerificationPage() {
   const [formState, setFormState] = React.useState<VerificationProps>({
@@ -63,35 +59,40 @@ export default function PhoneVerificationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setFormState(prevState => ({ ...prevState, error: null, isSubmitting: true }))
+    setFormState((prevState: VerificationProps) => ({ ...prevState, error: null, isSubmitting: true }))
 
     try {
       if (!formState.phone.match(/^\+[1-9]\d{1,14}$/)) {
         throw new Error('Please enter a valid phone number in E.164 format (e.g., +12345678900)')
       }
 
-      const { error: phoneError } = await supabase.auth.update({ phone: formState.phone })
+      const { error: phoneError } = await supabase.auth.signInWithOtp({
+        phone: formState.phone,
+        options: {
+          channel: 'sms'
+        }
+      })
 
       if (phoneError) throw phoneError
 
       setIsVerifying(true)
     } catch (err) {
-      setFormState(prevState => ({
+      setFormState((prevState: VerificationProps) => ({
         ...prevState,
-        error: err instanceof Error ? err.message : 'Failed to add phone number'
+        error: err instanceof Error ? err.message : 'Failed to send verification code'
       }))
       console.error('Phone addition error:', err)
     } finally {
-      setFormState(prevState => ({ ...prevState, isSubmitting: false }))
+      setFormState((prevState: VerificationProps) => ({ ...prevState, isSubmitting: false }))
     }
   }
 
   const verifyCode = async (e: React.FormEvent) => {
     e.preventDefault()
-    setFormState(prevState => ({ ...prevState, error: null, isSubmitting: true }))
+    setFormState((prevState: VerificationProps) => ({ ...prevState, error: null, isSubmitting: true }))
 
     try {
-      const { error: verifyError } = await supabase.auth.verify({
+      const { error: verifyError } = await supabase.auth.verifyOtp({
         phone: formState.phone,
         token: formState.code,
         type: 'sms'
@@ -101,13 +102,13 @@ export default function PhoneVerificationPage() {
 
       setSuccessful(true)
     } catch (err) {
-      setFormState(prevState => ({
+      setFormState((prevState: VerificationProps) => ({
         ...prevState,
         error: err instanceof Error ? err.message : 'Verification failed'
       }))
       console.error('Verification error:', err)
     } finally {
-      setFormState(prevState => ({ ...prevState, isSubmitting: false }))
+      setFormState((prevState: VerificationProps) => ({ ...prevState, isSubmitting: false }))
     }
   }
 
@@ -120,9 +121,7 @@ export default function PhoneVerificationPage() {
             <Typography variant="h4" component="h1">
               Phone Number Verified Successfully
             </Typography>
-            <Typography color="text.secondary">
-              Your phone number has been added to your account
-            </Typography>
+            <Typography color="text.secondary">Your phone number has been added to your account</Typography>
           </Box>
         </Paper>
       </Box>
@@ -139,9 +138,7 @@ export default function PhoneVerificationPage() {
               <Typography variant="h4" component="h1">
                 Verify Your Phone Number
               </Typography>
-              <Typography color="text.secondary">
-                Enter the verification code sent to {formState.phone}
-              </Typography>
+              <Typography color="text.secondary">Enter the verification code sent to {formState.phone}</Typography>
             </Box>
 
             {formState.error && (
@@ -154,16 +151,16 @@ export default function PhoneVerificationPage() {
               fullWidth
               label="Verification Code"
               value={formState.code}
-              onChange={e => setFormState(prevState => ({ ...prevState, code: e.target.value }))}
+              onChange={e => setFormState((prevState: VerificationProps) => ({ ...prevState, code: e.target.value }))}
               disabled={formState.isSubmitting}
               placeholder="Enter 6-digit code"
               inputProps={{ maxLength: 6, pattern: '[0-9]*' }}
             />
-
             <Button
               fullWidth
               type="submit"
               variant="contained"
+              color="primary"
               disabled={formState.isSubmitting || formState.code.length !== 6}
               startIcon={formState.isSubmitting ? <CircularProgress size={20} /> : <PhoneIcon />}
             >
@@ -184,9 +181,7 @@ export default function PhoneVerificationPage() {
             <Typography variant="h4" component="h1">
               Add Phone Number
             </Typography>
-            <Typography color="text.secondary">
-              Add a phone number to enhance your account security
-            </Typography>
+            <Typography color="text.secondary">Add a phone number to enhance your account security</Typography>
           </Box>
 
           {formState.error && (
@@ -199,16 +194,16 @@ export default function PhoneVerificationPage() {
             fullWidth
             label="Phone Number"
             value={formState.phone}
-            onChange={e => setFormState(prevState => ({ ...prevState, phone: e.target.value }))}
+            onChange={e => setFormState((prevState: VerificationProps) => ({ ...prevState, phone: e.target.value }))}
             disabled={formState.isSubmitting}
             placeholder="+12345678900"
             helperText="Enter phone number in E.164 format (e.g., +12345678900)"
           />
-
           <Button
             fullWidth
             type="submit"
             variant="contained"
+            color="primary"
             disabled={formState.isSubmitting || !formState.phone}
             startIcon={formState.isSubmitting ? <CircularProgress size={20} /> : <PhoneIcon />}
           >

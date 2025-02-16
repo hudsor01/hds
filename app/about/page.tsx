@@ -1,163 +1,249 @@
 'use client'
 
-import { PageTransition } from '@/components/layout/page-transition'
-import { PublicLayout } from '@/components/layout/public-layout'
-import {
-  Container,
-  Section,
-  PageHeader,
-  PageTitle,
-  PageDescription
-} from '@/components/ui/container'
-import { Card } from '@/components/ui/card'
-import { People, Target, Security } from '@mui/icons-material'
-import Grid from '@mui/material/Grid'
+import React from 'react'
+import type { JSX } from 'react'
+import { motion } from 'framer-motion'
+import { Box, Container, Typography, Card, CardContent, Avatar, useTheme, Stack } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import { Rocket, Groups, Lightbulb, TrendingUp } from '@mui/icons-material'
+import { PublicLayout } from '@/components/public-layout'
+import { toast } from 'sonner'
 
-const values = [
-  {
-    title: 'Customer First',
-    description: "We build solutions that directly address our customers' needs and challenges.",
-    icon: People
-  },
-  {
-    title: 'Innovation Driven',
-    description:
-      'Continuously pushing boundaries to deliver cutting-edge property management solutions.',
-    icon: Target
-  },
-  {
-    title: 'Trust & Security',
-    description: 'Maintaining the highest standards of data security and user privacy.',
-    icon: Security
+const fadeInUp = {
+  initial: { opacity: 0, y: 40 },
+  animate: { opacity: 1, y: 0 }
+}
+
+export default function AboutPage(): JSX.Element {
+  const theme = useTheme()
+
+  const showJoinTeamMessage = () => {
+    toast.success('Thank you for your interest! Our HR team will be in touch.')
   }
-]
 
-const teamMembers = [
-  {
-    name: 'John Doe',
-    role: 'CEO',
-    image: '/images/john_doe.jpg',
-    bio: 'John is the visionary behind Hudson Digital Solutions with over 20 years of experience in the tech industry.'
-  },
-  {
-    name: 'Jane Smith',
-    role: 'CTO',
-    image: '/images/jane_smith.jpg',
-    bio: 'Jane leads our technology team, ensuring our platform is built with the latest and most reliable technologies.'
-  },
-  {
-    name: 'Emily Johnson',
-    role: 'COO',
-    image: '/images/emily_johnson.jpg',
-    bio: 'Emily oversees our operations, making sure everything runs smoothly and efficiently.'
-  }
-]
+  const values = [
+    {
+      icon: Rocket,
+      title: 'Innovation',
+      description: 'Continuously pushing boundaries to deliver cutting-edge property management solutions.'
+    },
+    {
+      icon: Groups,
+      title: 'Customer Focus',
+      description: 'Building features and improvements based on real user feedback and needs.'
+    },
+    {
+      icon: Lightbulb,
+      title: 'Simplicity',
+      description: 'Making property management more accessible through intuitive design.'
+    },
+    {
+      icon: TrendingUp,
+      title: 'Growth',
+      description: `Supporting our customers' success and scaling their property portfolios.`
+    }
+  ]
 
-export default function AboutPage() {
+  const team = [
+    {
+      name: 'Alex Thompson',
+      role: 'CEO & Founder',
+      image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d',
+      bio: '15+ years in PropTech'
+    },
+    {
+      name: 'Maria Garcia',
+      role: 'CTO',
+      image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330',
+      bio: 'Ex-Google Engineer'
+    },
+    {
+      name: 'James Wilson',
+      role: 'Head of Product',
+      image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e',
+      bio: 'Product Management Expert'
+    },
+    {
+      name: 'Sarah Chen',
+      role: 'Head of Customer Success',
+      image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80',
+      bio: '10+ Years in Customer Support'
+    }
+  ]
+
   return (
-    <PublicLayout>
-      <PageTransition>
-        <Section>
-          <Container>
-            <PageHeader>
-              <PageTitle>About Hudson Digital Solutions</PageTitle>
-              <PageDescription>
-                Transforming property management through innovative digital solutions
-              </PageDescription>
-            </PageHeader>
+    <PublicLayout
+      title="About HDS Platform - Our Story and Team"
+      description="Learn about our mission to revolutionize property management and meet the team behind HDS Platform."
+    >
+      {/* Hero Section */}
+      <Box component="section" sx={{ textAlign: 'center', mb: 10 }}>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: '2.5rem', md: '4rem' },
+              fontWeight: 800,
+              mb: 3,
+              background: 'linear-gradient(45deg, #2196F3 30%, #21CBF3 90%)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            Revolutionizing Property Management
+          </Typography>
+          <Typography variant="h5" color="text.secondary" sx={{ maxWidth: 'md', mx: 'auto', mb: 5 }}>
+            We are building the future of property management software, making it easier for property owners to manage and grow
+            their portfolios.
+          </Typography>
+        </motion.div>
+      </Box>
 
-            <Grid container spacing={4}>
-              <Grid item xs={12} md={6}>
-                <Card>
-                  <div className="space-y-6 p-8">
-                    <h2 className="text-2xl font-semibold text-gray-900">Our Vision</h2>
-                    <div className="space-y-4">
-                      <p className="text-lg text-gray-700">
-                        Hudson Digital Solutions is revolutionizing property management through
-                        innovative digital solutions. Our platform is designed to streamline
-                        operations, reduce costs, and improve efficiency for property managers and
-                        owners.
-                      </p>
-                      <p className="text-lg text-gray-700">
-                        Founded with a vision to modernize property management, we're building tools
-                        that make day-to-day operations seamless and data-driven decision making
-                        accessible to everyone in the industry.
-                      </p>
-                    </div>
-                  </div>
-                </Card>
-              </Grid>
-              <Grid item xs={12} md={6}>
-                <Card variant="highlight">
-                  <div className="p-8">
-                    <h2 className="mb-6 text-2xl font-semibold text-[var(--primary-color)]">
-                      Our Mission
-                    </h2>
-                    <p className="text-gray-600">
-                      To empower property managers and owners with intelligent tools that transform
-                      how they work, making property management more efficient, profitable, and
-                      enjoyable.
-                    </p>
-                  </div>
-                </Card>
-              </Grid>
-            </Grid>
-
-            <Section>
-              <h2 className="mb-12 text-center text-3xl font-semibold text-gray-900">Our Values</h2>
-              <Grid container spacing={4}>
-                {values.map((value, index) => (
-                  <Grid item xs={12} md={4} key={value.title}>
+      {/* Values Section */}
+      <Box
+        component="section"
+        sx={{
+          py: 10,
+          backgroundColor: theme.palette.background.paper
+        }}
+      >
+        <Container maxWidth="lg">
+          <Grid container component="div" spacing={4}>
+            {values.map((value, index) => {
+              const Icon = value.icon
+              return (
+                <Grid xs={12} sm={6} md={3} key={index} component="div">
+                  <motion.div
+                    variants={fadeInUp}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.1 }}
+                  >
                     <Card
-                      variant="interactive"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.2 }}
-                      viewport={{ once: true }}
+                      elevation={0}
+                      sx={{
+                        height: '100%',
+                        backgroundColor: 'transparent',
+                        transition: 'transform 0.2s',
+                        '&:hover': {
+                          transform: 'translateY(-8px)'
+                        }
+                      }}
                     >
-                      <div className="p-6 text-center">
-                        <div className="bg-opacity-10 mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-[var(--primary-color)]">
-                          <value.icon className="h-6 w-6 text-[var(--primary-color)]" />
-                        </div>
-                        <h3 className="mb-2 text-xl font-semibold text-gray-900">{value.title}</h3>
-                        <p className="text-gray-600">{value.description}</p>
-                      </div>
+                      <CardContent sx={{ p: 3, textAlign: 'center' }}>
+                        <Box
+                          sx={{
+                            display: 'inline-flex',
+                            p: 2,
+                            borderRadius: '12px',
+                            backgroundColor: `${theme.palette.primary.main}15`,
+                            color: 'primary.main',
+                            mb: 2
+                          }}
+                        >
+                          <Icon />
+                        </Box>
+                        <Typography variant="h6" gutterBottom>
+                          {value.title}
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          {value.description}
+                        </Typography>
+                      </CardContent>
                     </Card>
-                  </Grid>
-                ))}
-              </Grid>
-            </Section>
+                  </motion.div>
+                </Grid>
+              )
+            })}
+          </Grid>
+        </Container>
+      </Box>
 
-            <Section>
-              <h2 className="mb-12 text-center text-3xl font-semibold text-gray-900">Our Team</h2>
-              <Grid container spacing={4}>
-                {teamMembers.map((member, index) => (
-                  <Grid item xs={12} md={4} key={member.name}>
-                    <Card
-                      variant="interactive"
-                      initial={{ opacity: 0, y: 20 }}
-                      whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.5, delay: index * 0.2 }}
-                      viewport={{ once: true }}
-                    >
-                      <div className="p-6 text-center">
-                        <img
-                          src={member.image}
-                          alt={member.name}
-                          className="mx-auto mb-4 h-24 w-24 rounded-full object-cover"
-                        />
-                        <h3 className="mb-2 text-xl font-semibold text-gray-900">{member.name}</h3>
-                        <p className="text-gray-600">{member.role}</p>
-                        <p className="mt-4 text-gray-600">{member.bio}</p>
-                      </div>
-                    </Card>
-                  </Grid>
-                ))}
+      {/* Team Section */}
+      <Box component="section" sx={{ py: 10 }}>
+        <Container maxWidth="lg">
+          <Typography variant="h2" align="center" sx={{ mb: 6 }}>
+            Meet Our Team
+          </Typography>
+
+          <Grid container component="div" spacing={4}>
+            {team.map((member, index) => (
+              <Grid xs={12} sm={6} md={3} key={index} component="div">
+                <motion.div
+                  variants={fadeInUp}
+                  initial="initial"
+                  whileInView="animate"
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 }}
+                >
+                  <Card
+                    elevation={0}
+                    sx={{
+                      height: '100%',
+                      textAlign: 'center',
+                      backgroundColor: 'transparent'
+                    }}
+                  >
+                    <CardContent>
+                      <Avatar
+                        src={member.image}
+                        alt={member.name}
+                        sx={{
+                          width: 120,
+                          height: 120,
+                          mx: 'auto',
+                          mb: 2,
+                          border: `3px solid ${theme.palette.primary.main}`
+                        }}
+                      />
+                      <Typography variant="h6" gutterBottom>
+                        {member.name}
+                      </Typography>
+                      <Typography variant="subtitle1" color="primary" gutterBottom>
+                        {member.role}
+                      </Typography>
+                      <Typography variant="body2" color="text.secondary">
+                        {member.bio}
+                      </Typography>
+                    </CardContent>
+                  </Card>
+                </motion.div>
               </Grid>
-            </Section>
-          </Container>
-        </Section>
-      </PageTransition>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Join Us Section */}
+      <Box
+        component="section"
+        sx={{
+          py: 10,
+          backgroundColor: theme.palette.background.paper,
+          textAlign: 'center'
+        }}
+      >
+        <Container maxWidth="md">
+          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
+            <Typography variant="h3" gutterBottom>
+              Join Our Team
+            </Typography>
+            <Typography variant="body1" color="text.secondary" sx={{ mb: 4 }}>
+              We are always looking for talented individuals who share our passion for innovation in property management.
+            </Typography>
+            <Stack direction="row" spacing={2} sx={{ justifyContent: 'center' }} onClick={showJoinTeamMessage}>
+              <motion.button
+                className="btn-primary rounded-full px-6 py-2"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                View Open Positions
+              </motion.button>
+            </Stack>
+          </motion.div>
+        </Container>
+      </Box>
     </PublicLayout>
   )
 }

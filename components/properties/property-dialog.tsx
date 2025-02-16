@@ -1,177 +1,152 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
-import type { PropertyInsert, PropertyRow } from '@/types'
-import { Dialog } from '@/components/ui/dialogs/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Select } from '@/components/ui/select'
+import { Button } from '@/components/button'
+import { Dialog, DialogContent, DialogTitle, TextField, Select, MenuItem, Box } from '@mui/material'
 import { useState } from 'react'
+import { PROPERTY_TYPES, PROPERTY_STATUS, type PropertyType, type PropertyStatus, type PropertyInsert } from '@/types/property'
 
 interface PropertyDialogProps {
   open: boolean
   onOpenChangeAction: (open: boolean) => void
-  property?: PropertyRow
-  userId: string
-  onSubmitAction: (property: PropertyInsert) => Promise<void>
+  onSubmitAction: (data: PropertyInsert) => Promise<void>
+  property?: PropertyInsert | null
 }
 
-export function PropertyDialog({
-  open,
-  onOpenChangeAction,
-  property,
-  userId,
-  onSubmitAction
-}: PropertyDialogProps) {
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
+export function PropertyDialog({ open, onOpenChangeAction, onSubmitAction, property }: PropertyDialogProps) {
+  const [formData, setFormData] = useState<Omit<PropertyInsert, 'id' | 'created_at' | 'updated_at' | 'user_id'>>({
+    name: property?.name || '',
+    address: property?.address || '',
+    city: property?.city || '',
+    state: property?.state || '',
+    zip: property?.zip || '',
+    property_type: (property?.property_type || 'apartment') as PropertyType,
+    property_status: (property?.property_status || 'active') as PropertyStatus,
+    rent_amount: property?.rent_amount || 0
+  })
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
-    setError('')
-
-    try {
-      const formData = new FormData(e.currentTarget)
-      const propertyData: PropertyInsert = {
-        id: crypto.randomUUID(),
-        name: formData.get('name') as string,
-        address: formData.get('address') as string,
-        city: formData.get('city') as string,
-        state: formData.get('state') as string,
-        zip: formData.get('zip') as string,
-        property_type: formData.get('property_type') as PropertyRow['property_type'],
-        property_status: formData.get('property_status') as PropertyRow['property_status'],
-        rent_amount: Number(formData.get('rent_amount')),
-        user_id: userId,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      }
-
-      await onSubmitAction(propertyData)
-      onOpenChangeAction(false)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save property')
-    } finally {
-      setIsLoading(false)
-    }
+    await onSubmitAction({
+      ...formData,
+      id: crypto.randomUUID(),
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+      user_id: ''
+    })
+    setFormData({
+      name: '',
+      address: '',
+      city: '',
+      state: '',
+      zip: '',
+      property_type: 'apartment',
+      property_status: 'active',
+      rent_amount: 0
+    })
   }
 
   return (
-    <Dialog
-      open={open}
-      onClose={() => onOpenChangeAction(false)}
-      title={property ? 'Edit Property' : 'Add Property'}
-    >
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <Label htmlFor="name">Property Name</Label>
-          <Input
-            id="name"
-            name="name"
-            defaultValue={property?.name}
+    <Dialog open={open} onClose={() => onOpenChangeAction(false)}>
+      <DialogContent>
+        <Box mb={2}>
+          <DialogTitle>{property ? 'Edit Property' : 'Add New Property'}</DialogTitle>
+        </Box>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <TextField
+            fullWidth
+            label="Property Name"
+            value={formData.name}
+            onChange={e => setFormData(prev => ({ ...prev, name: e.target.value }))}
             required
-            placeholder="Enter property name"
+            size="small"
+            sx={{ mb: 2 }}
           />
-        </div>
-
-        <div>
-          <Label htmlFor="address">Address</Label>
-          <Input
-            id="address"
-            name="address"
-            defaultValue={property?.address}
+          <TextField
+            fullWidth
+            label="Address"
+            value={formData.address}
+            onChange={e => setFormData(prev => ({ ...prev, address: e.target.value }))}
             required
-            placeholder="Enter street address"
+            size="small"
+            sx={{ mb: 2 }}
           />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="city">City</Label>
-            <Input
-              id="city"
-              name="city"
-              defaultValue={property?.city}
+          <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 2, mb: 2 }}>
+            <TextField
+              fullWidth
+              label="City"
+              value={formData.city}
+              onChange={e => setFormData(prev => ({ ...prev, city: e.target.value }))}
               required
-              placeholder="Enter city"
+              size="small"
             />
-          </div>
-          <div>
-            <Label htmlFor="state">State</Label>
-            <Input
-              id="state"
-              name="state"
-              defaultValue={property?.state}
+            <TextField
+              fullWidth
+              label="State"
+              value={formData.state}
+              onChange={e => setFormData(prev => ({ ...prev, state: e.target.value }))}
               required
-              placeholder="Enter state"
+              size="small"
             />
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="zip">ZIP Code</Label>
-          <Input
-            id="zip"
-            name="zip"
-            defaultValue={property?.zip}
+          </Box>
+          <TextField
+            fullWidth
+            label="ZIP Code"
+            value={formData.zip}
+            onChange={e => setFormData(prev => ({ ...prev, zip: e.target.value }))}
             required
-            placeholder="Enter ZIP code"
+            size="small"
+            sx={{ mb: 2 }}
           />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <Label htmlFor="property_type">Property Type</Label>
-            <Select name="property_type" defaultValue={property?.property_type} required>
-              <option value="apartment">Apartment</option>
-              <option value="house">House</option>
-              <option value="condo">Condo</option>
-              <option value="townhouse">Townhouse</option>
-              <option value="commercial">Commercial</option>
-            </Select>
-          </div>
-          <div>
-            <Label htmlFor="property_status">Status</Label>
-            <Select name="property_status" defaultValue={property?.property_status} required>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-              <option value="maintenance">Maintenance</option>
-              <option value="sold">Sold</option>
-            </Select>
-          </div>
-        </div>
-
-        <div>
-          <Label htmlFor="rent_amount">Monthly Rent</Label>
-          <Input
-            id="rent_amount"
-            name="rent_amount"
+          <TextField
+            fullWidth
+            label="Monthly Rent"
             type="number"
-            defaultValue={property?.rent_amount}
+            value={formData.rent_amount}
+            onChange={e => setFormData(prev => ({ ...prev, rent_amount: Number(e.target.value) }))}
             required
-            min={0}
-            step={0.01}
-            placeholder="Enter monthly rent"
+            size="small"
+            sx={{ mb: 2 }}
           />
-        </div>
-
-        {error && <div className="text-sm text-red-500">{error}</div>}
-
-        <div className="flex justify-end gap-3">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={() => onOpenChangeAction(false)}
-            disabled={isLoading}
+          <Select
+            fullWidth
+            label="Property Type"
+            value={formData.property_type}
+            onChange={e => setFormData(prev => ({ ...prev, property_type: e.target.value as PropertyType }))}
+            required
+            size="small"
+            sx={{ mb: 2 }}
           >
-            Cancel
-          </Button>
-          <Button type="submit" disabled={isLoading}>
-            {isLoading ? 'Saving...' : property ? 'Save Changes' : 'Add Property'}
-          </Button>
-        </div>
-      </form>
+            {Object.entries(PROPERTY_TYPES).map(([key, value]) => (
+              <MenuItem key={key} value={value}>
+                {key.replace(/_/g, ' ')}
+              </MenuItem>
+            ))}
+          </Select>
+          <Select
+            fullWidth
+            label="Status"
+            value={formData.property_status}
+            onChange={e => setFormData(prev => ({ ...prev, property_status: e.target.value as PropertyStatus }))}
+            required
+            size="small"
+            sx={{ mb: 2 }}
+          >
+            {Object.entries(PROPERTY_STATUS).map(([key, value]) => (
+              <MenuItem key={key} value={value}>
+                {key.replace(/_/g, ' ')}
+              </MenuItem>
+            ))}
+          </Select>
+          <Box display="flex" justifyContent="flex-end" gap={1}>
+            <Button variant="outline" onClick={() => onOpenChangeAction(false)}>
+              Cancel
+            </Button>
+            <Button type="submit" variant="default">
+              {property ? 'Update' : 'Create'}
+            </Button>
+          </Box>
+        </form>
+      </DialogContent>
     </Dialog>
   )
 }

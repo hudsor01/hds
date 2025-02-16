@@ -4,7 +4,7 @@ import { clsx, type ClassValue } from 'clsx'
  * Combines class names using clsx
  */
 export function cn(...inputs: ClassValue[]) {
-  return clsx(inputs)
+  return clsx(...inputs)
 }
 
 /**
@@ -77,10 +77,7 @@ export function generateId(length: number = 8) {
 /**
  * Debounces a function
  */
-export function debounce<T extends (...args: unknown[]) => unknown>(
-  func: T,
-  wait: number
-): (...args: Parameters<T>) => void {
+export function debounce<T extends (...args: unknown[]) => unknown>(func: T, wait: number): (...args: Parameters<T>) => void {
   let timeout: NodeJS.Timeout
   return function executedFunction(...args: Parameters<T>) {
     const later = () => {

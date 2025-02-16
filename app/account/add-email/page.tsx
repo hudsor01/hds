@@ -2,17 +2,17 @@
 
 import * as React from 'react'
 import supabase from '@/lib/supabase'
-import { User } from '@supabase/supabase-js'
+import { type User } from '@supabase/supabase-js'
 import { Button, TextField, Typography, Paper, Box, Alert, CircularProgress } from '@mui/material'
 import { Email as EmailIcon, CheckCircle as CheckCircleIcon } from '@mui/icons-material'
-import { Forms } from '@/types'
+import { type Forms } from '@/types'
 
 type EmailVerificationState = {
   email: string
   code: string
 } & Forms.State
 
-export default function EmailAdditionPage() {
+export default function EmailAdditionPage(): React.ReactElement {
   const [formState, setFormState] = React.useState<EmailVerificationState>({
     email: '',
     code: '',
@@ -49,7 +49,7 @@ export default function EmailAdditionPage() {
 
     try {
       // Add email to user's profile in Supabase
-      const { error } = await supabase.auth.update({
+      const { error } = await supabase.auth.updateUser({
         email: formState.email
       })
 

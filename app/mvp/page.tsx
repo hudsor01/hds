@@ -7,7 +7,7 @@ import BusinessIcon from '@mui/icons-material/Business'
 import PeopleIcon from '@mui/icons-material/People'
 import StorefrontIcon from '@mui/icons-material/Storefront'
 import VpnKeyIcon from '@mui/icons-material/VpnKey'
-import { Card } from 'components/ui/cards/card'
+import { Card } from '@/components/card'
 import { motion } from 'framer-motion'
 import Image from 'next/image'
 
@@ -31,8 +31,7 @@ const features = [
   {
     icon: <BusinessIcon className="h-6 w-6" />,
     title: 'Property Owners',
-    description:
-      'Streamline your property portfolio management with powerful analytics and automated workflows.'
+    description: 'Streamline your property portfolio management with powerful analytics and automated workflows.'
   },
   {
     icon: <StorefrontIcon className="h-6 w-6" />,
@@ -42,20 +41,17 @@ const features = [
   {
     icon: <VpnKeyIcon className="h-6 w-6" />,
     title: 'Tenants',
-    description:
-      'Easy rent payments, maintenance requests, and communication with property managers.'
+    description: 'Easy rent payments, maintenance requests, and communication with property managers.'
   },
   {
     icon: <AssignmentTurnedInIcon className="h-6 w-6" />,
     title: 'Applicants',
-    description:
-      'Streamlined application process with real-time status updates and document management.'
+    description: 'Streamlined application process with real-time status updates and document management.'
   },
   {
     icon: <BuildIcon className="h-6 w-6" />,
     title: 'Vendors',
-    description:
-      'Simplified job assignments, scheduling, and payment processing for maintenance work.'
+    description: 'Simplified job assignments, scheduling, and payment processing for maintenance work.'
   },
   {
     icon: <PeopleIcon className="h-6 w-6" />,
@@ -85,10 +81,7 @@ export default function MVPLandingPage() {
         >
           {/* Hero Content */}
           <div className="text-center">
-            <motion.div
-              variants={fadeInUp}
-              className="mb-8 inline-block rounded-full bg-[#A7C7E7]/10 px-4 py-1.5"
-            >
+            <motion.div variants={fadeInUp} className="mb-8 inline-block rounded-full bg-[#A7C7E7]/10 px-4 py-1.5">
               <span className="text-sm font-medium text-[#A7C7E7]">Early Access Available</span>
             </motion.div>
 
@@ -139,10 +132,7 @@ export default function MVPLandingPage() {
           </motion.div>
 
           {/* Features Grid */}
-          <motion.div
-            variants={fadeInUp}
-            className="mt-24 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3"
-          >
+          <motion.div variants={fadeInUp} className="mt-24 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {features.map(feature => (
               <Card
                 key={feature.title}

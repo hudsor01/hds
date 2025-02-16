@@ -1,4 +1,4 @@
-export default async function sitemap() {
+export default async function sitemap(): Promise<{ url: string; lastModified: Date }[]> {
   return [
     {
       url: 'https://hudsondigitalsolutions.com',

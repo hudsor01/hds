@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
-import { useAuth } from '@/components/providers/auth-provider'
+import { useAuth } from '@/components/auth/auth-provider'
 
 export function useProtectedRoute() {
   const { user, loading } = supabase.auth()

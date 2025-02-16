@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react'
 import { Plus, AlertTriangle, CheckCircle, Clock } from 'react-feather'
-import { Button } from '@/components/ui/buttons/button'
-import { Card } from '@/components/ui/cards/card'
-import { MaintenanceTicketDialog } from '@/components/dialogs/maintenance-ticket-dialog'
-import { MaintenanceTicketDetails } from '@/components/dialogs/maintenance-ticket-details'
+import { Button } from '@/components/button'
+import { Card } from '@/components/card'
+import { MaintenanceTicketDialog } from '@/components/maintenance-ticket-dialog'
+import { MaintenanceTicketDetails } from '@/components/maintenance-ticket-details'
 import { useToast } from '@/hooks/use-toast'
 import { useMaintenanceRequests } from '@/hooks/data'
 import type {
@@ -158,11 +158,7 @@ export default function MaintenancePage() {
                 </p>
                 <p className="text-sm">{ticket.description}</p>
               </div>
-              <Button
-                variant="outline"
-                className="px-3 py-1 text-sm"
-                onClick={() => setSelectedTicket(ticket)}
-              >
+              <Button variant="outline" className="px-3 py-1 text-sm" onClick={() => setSelectedTicket(ticket)}>
                 View Details
               </Button>
             </div>

@@ -1,7 +1,7 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
-import { Card } from '@/components/ui/cards/card'
+import { Button } from '@/components/button'
+import { Card } from '@/components/card'
 import {
   Box,
   Container,
@@ -10,7 +10,7 @@ import {
   InputLabel,
   MenuItem,
   Select,
-  SelectChangeEvent,
+  type SelectChangeEvent,
   Step,
   StepLabel,
   Stepper,
@@ -103,11 +103,7 @@ const propertyTypes = [
   'Commercial Property'
 ]
 
-const managementStyles = [
-  'Hands-on (Self-managed)',
-  'Partially delegated',
-  'Fully delegated to property manager'
-]
+const managementStyles = ['Hands-on (Self-managed)', 'Partially delegated', 'Fully delegated to property manager']
 
 export default function OnboardingPage() {
   const [activeStep, setActiveStep] = useState(0)
@@ -146,21 +142,19 @@ export default function OnboardingPage() {
     setActiveStep(prevStep => prevStep - 1)
   }
 
-  const handleTextChange =
-    (field: keyof OnboardingData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      setFormData(prev => ({
-        ...prev,
-        [field]: event.target.value
-      }))
-    }
+  const handleTextChange = (field: keyof OnboardingData) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: event.target.value
+    }))
+  }
 
-  const handleSelectChange =
-    (field: keyof OnboardingData) => (event: SelectChangeEvent<string | string[]>) => {
-      setFormData(prev => ({
-        ...prev,
-        [field]: event.target.value
-      }))
-    }
+  const handleSelectChange = (field: keyof OnboardingData) => (event: SelectChangeEvent<string | string[]>) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: event.target.value
+    }))
+  }
 
   const isStepValid = () => {
     switch (activeStep) {
@@ -187,13 +181,7 @@ export default function OnboardingPage() {
               onChange={handleTextChange('firstName')}
               required
             />
-            <TextField
-              fullWidth
-              label="Last Name"
-              value={formData.lastName}
-              onChange={handleTextChange('lastName')}
-              required
-            />
+            <TextField fullWidth label="Last Name" value={formData.lastName} onChange={handleTextChange('lastName')} required />
           </Box>
         )
       case 1:
@@ -211,11 +199,7 @@ export default function OnboardingPage() {
             </FormControl>
             <FormControl fullWidth required>
               <InputLabel>Number of Properties</InputLabel>
-              <Select
-                value={formData.propertyCount}
-                label="Number of Properties"
-                onChange={handleSelectChange('propertyCount')}
-              >
+              <Select value={formData.propertyCount} label="Number of Properties" onChange={handleSelectChange('propertyCount')}>
                 {['1-5', '6-10', '11-20', '21-50', '50+'].map(count => (
                   <MenuItem key={count} value={count}>
                     {count}
@@ -246,11 +230,7 @@ export default function OnboardingPage() {
             </FormControl>
             <FormControl fullWidth required>
               <InputLabel>Management Style</InputLabel>
-              <Select
-                value={formData.managementStyle}
-                label="Management Style"
-                onChange={handleSelectChange('managementStyle')}
-              >
+              <Select value={formData.managementStyle} label="Management Style" onChange={handleSelectChange('managementStyle')}>
                 {managementStyles.map(style => (
                   <MenuItem key={style} value={style}>
                     {style}

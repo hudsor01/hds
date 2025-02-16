@@ -1,121 +1,120 @@
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+import { signToken, verifyToken } from '@/lib/auth/session'
 
-import supabase from '@/lib/supabase'
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
-import { type Database } from '@/types/db.types'
-import { rateLimiter } from '@/lib/rate-limit'
-import { DatabaseError } from '@/lib/supabase'
-import { ZodError } from 'zod'
-import { toast } from 'sonner'
+// Define protected routes constant
+const PROTECTED_ROUTES = [
+  '/dashboard',
+  '/settings',
+  '/properties',
+  '/tenants',
+  '/leases',
+  '/maintenance'
+] as const
 
-// Define route protection
-const authRoutes = ['/login', '/signup', '/forgot-password', '/reset-password']
-const protectedRoutes = ['/dashboard']
+// Type for protected routes
+type ProtectedRoute = typeof PROTECTED_ROUTES[number]
 
+// Interface for session data
+interface SessionData {
+  userId: string
+  email: string
+  role: string
+  expires: string
+  [key: string]: unknown
+}
+
+// Error types
+class SessionError extends Error {
+  constructor(message: string) {
+    super(message)
+    this.name = 'SessionError'
+  }
+}
+
+/**
+ * Checks if a pathname is a protected route
+ * @param pathname - The pathname to check
+ * @returns boolean indicating if the route is protected
+ */
+function isProtectedRoute(pathname: string): boolean {
+  return PROTECTED_ROUTES.some(route => pathname.startsWith(route))
+}
+
+/**
+ * Middleware function to handle authentication and session management
+ * @param request - The incoming request
+ * @returns NextResponse
+ */
 export async function middleware(request: NextRequest): Promise<NextResponse> {
-  try {
-    const requestUrl = new URL(request.url)
+  const { pathname } = request.nextUrl
+  const sessionCookie = request.cookies.get('session')
+  const isProtected = isProtectedRoute(pathname)
 
-    // Rate limiting for auth endpoints
-    if (request.nextUrl.pathname.startsWith('/auth')) {
-      const ip = request.headers.get('x-forwarded-for') || '127.0.0.1'
-      const success: boolean = await rateLimiter(ip, request, {
-        uniqueTokenPerInterval: 500,
-        interval: 60 * 1000, // 1 minute
-        tokensPerInterval: 10
+  // Redirect to sign-in if accessing protected route without session
+  if (isProtected && !sessionCookie) {
+    return NextResponse.redirect(new URL('/sign-in', request.url))
+  }
+
+  let response = NextResponse.next()
+
+  if (sessionCookie) {
+    try {
+      // Verify and parse session token
+      const parsed = await verifyToken(sessionCookie.value) as SessionData
+      
+      // Set expiration for one day from now
+      const expiresInOneDay = new Date(Date.now() + 24 * 60 * 60 * 1000)
+
+      // Set new session cookie with updated expiration
+      response.cookies.set({
+        name: 'session',
+        value: await signToken({
+          ...parsed,
+          expires: expiresInOneDay.toISOString()
+        }),
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        expires: expiresInOneDay,
+        path: '/'
       })
-      if (!success) {
-        return NextResponse.json({ error: 'Too many requests' }, { status: 429 })
+
+      // Add user info to request headers for server components
+      response.headers.set('X-User-Id', parsed.userId)
+      response.headers.set('X-User-Role', parsed.role)
+      
+    } catch (error) {
+      // Handle session verification errors
+      console.error('Session verification failed:', error instanceof Error ? error.message : 'Unknown error')
+      
+      // Delete invalid session cookie
+      response.cookies.delete('session')
+      
+      // Redirect to sign-in if on protected route
+      if (isProtected) {
+        return NextResponse.redirect(new URL('/sign-in', request.url))
       }
     }
-
-    const {
-      data: { session }
-    } = supabase.auth.getSession()
-
-    // Redirect to dashboard if logged in and trying to access auth routes
-    if (session && authRoutes.includes(requestUrl.pathname)) {
-      return NextResponse.redirect(new URL('/dashboard', request.url))
-    }
-
-    // Redirect to login if not logged in and trying to access protected routes
-    if (!session && protectedRoutes.some(route => requestUrl.pathname.startsWith(route))) {
-      const redirectUrl = new URL('/login', request.url)
-      redirectUrl.searchParams.set('redirect', requestUrl.pathname)
-      return NextResponse.redirect(redirectUrl)
-    }
-
-    return NextResponse.next()
-  } catch (error) {
-    console.error('Middleware error:', error)
-    return NextResponse.next()
   }
+
+  return response
 }
 
-// Match these paths
+/**
+ * Middleware matcher configuration
+ * Excludes static files, API routes, and other special paths
+ */
 export const config = {
-  matcher: ['/dashboard/:path*', '/login', '/signup', '/forgot-password', '/reset-password']
-}
-
-export async function updateSession(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request
-  })
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value, options }) => request.cookies.set(name, value))
-          supabaseResponse = NextResponse.next({
-            request
-          })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        }
-      }
-    }
-  )
-
-  // Do not run code between createServerClient and
-  // supabase.auth.getUser(). A simple mistake could make it very hard to debug
-  // issues with users being randomly logged out.
-
-  // IMPORTANT: DO NOT REMOVE auth.getUser()
-
-  const {
-    data: { user }
-  } = await supabase.auth.getUser()
-
-  if (
-    !user &&
-    !request.nextUrl.pathname.startsWith('/login') &&
-    !request.nextUrl.pathname.startsWith('/auth')
-  ) {
-    // no user, potentially respond by redirecting the user to the login page
-    const url = request.nextUrl.clone()
-    url.pathname = '/login'
-    return NextResponse.redirect(url)
-  }
-
-  // IMPORTANT: You *must* return the supabaseResponse object as it is.
-  // If you're creating a new response object with NextResponse.next() make sure to:
-  // 1. Pass the request in it, like so:
-  //    const myNewResponse = NextResponse.next({ request })
-  // 2. Copy over the cookies, like so:
-  //    myNewResponse.cookies.setAll(supabaseResponse.cookies.getAll())
-  // 3. Change the myNewResponse object to fit your needs, but avoid changing
-  //    the cookies!
-  // 4. Finally:
-  //    return myNewResponse
-  // If this is not done, you may be causing the browser and server to go out
-  // of sync and terminate the user's session prematurely!
-
-  return supabaseResponse
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - public folder
+     */
+    '/((?!api|_next/static|_next/image|favicon.ico|public/).*)'
+  ]
 }

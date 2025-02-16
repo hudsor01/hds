@@ -1,17 +1,20 @@
 import type { NextConfig } from 'next'
 
 const nextConfig: NextConfig = {
+  experimental: {
+    typedRoutes: true
+  },
   reactStrictMode: true,
   transpilePackages: ['@mui/material', '@emotion/react', '@emotion/styled'],
-  experimental: {
-    serverActions: {
-      bodySizeLimit: '2mb'
-    },
-    optimizePackageImports: ['@mui/material', '@mui/icons-material', '@mui/system'],
-    scrollRestoration: true
-  },
   images: {
-    domains: ['www.hudsondigitalsolutions.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'www.hudsondigitalsolutions.com',
+        port: '',
+        pathname: '/**'
+      }
+    ],
     formats: ['image/avif', 'image/webp']
   },
   typescript: {

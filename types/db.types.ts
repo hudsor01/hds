@@ -1,5 +1,3 @@
-import type { EmailTemplate } from '../components/emails/templates'
-
 // Base types
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 export type Timestamp = string
@@ -262,7 +260,6 @@ export interface WaitlistStats {
   activeMembers: number
   conversionRate: number
   growthRate: number
-  emailMetrics: Record<EmailTemplate, EmailStats>
 }
 
 // Database schema type
@@ -436,12 +433,9 @@ export type DatabaseTables = Database['public']['Tables']
 type PublicSchema = Database[Extract<keyof Database, 'public'>]
 
 export type Tables<
-  PublicTableNameOrOptions extends
-    | keyof (PublicSchema['Tables'] & PublicSchema['Views'])
-    | { schema: keyof Database },
+  PublicTableNameOrOptions extends keyof (PublicSchema['Tables'] & PublicSchema['Views']) | { schema: keyof Database },
   TableName extends PublicTableNameOrOptions extends { schema: keyof Database }
-    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] &
-        Database[PublicTableNameOrOptions['schema']]['Views'])
+    ? keyof (Database[PublicTableNameOrOptions['schema']]['Tables'] & Database[PublicTableNameOrOptions['schema']]['Views'])
     : never = never
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &

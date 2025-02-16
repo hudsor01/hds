@@ -1,249 +1,125 @@
 'use server'
 
-import supabase from '@/lib/supabase'
-import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
+import { encodedRedirect } from '@/utils/utils'
+import { createClient } from '@/utils/supabase/server'
+import { headers } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { z } from 'zod'
+import type { RedirectFunction } from '@/types/auth'
 
-declare const process: {
-  env: {
-    NODE_ENV: 'development' | 'production'
-    NEXT_PUBLIC_SUPABASE_URL: string
-    NEXT_PUBLIC_SUPABASE_ANON_KEY: string
-    NEXT_PUBLIC_SITE_URL: string
+export async function signUpAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
+  const email = formData.get('email')
+  const password = formData.get('password')
+  const supabase = await createClient()
+  const headersList = await headers()
+  const origin = headersList.get('origin')
+
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+    return encodedRedirect('error', '/sign-up', 'Email and password are required')
   }
-}
 
-interface SubscribeData {
-  email: string
-  tier?: 'starter' | 'professional' | 'enterprise'
-}
-
-interface ContactFormData {
-  email: string
-  name: string
-  message: string
-  compunknown?: string
-}
-
-const supabase = supabase()
-
-const authSchema = z.object({
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters')
-})
-
-export async function subscribeToWaitlist(data: SubscribeData) {
-  try {
-    const cookieStore = await cookies()
-
-    if (!data.email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      return {
-        error: 'Please enter a valid email address'
-      }
+  const { error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      emailRedirectTo: `${origin}/auth/callback`
     }
+  })
 
-    await new Promise<void>(resolve => {
-      setTimeout(resolve, 1000)
-    })
-
-    cookieStore.set('subscribed', 'true', {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 365 // 1 year
-    })
-
-    revalidatePath('/')
-    return { success: true }
-  } catch (error) {
-    console.error('Subscription error:', error)
-    return {
-      error: 'Failed to subscribe. Please try again later.'
-    }
+  if (error) {
+    console.error(`Authentication error: ${error.code} - ${error.message}`)
+    return encodedRedirect('error', '/sign-up', error.message)
   }
+
+  return encodedRedirect(
+    'success',
+    '/sign-up',
+    'Thanks for signing up! Please check your email for a verification link.'
+  )
 }
 
-export async function submitContactForm(data: ContactFormData) {
-  try {
-    // Validate form data
-    if (!data.email || !data.name || !data.message) {
-      return {
-        error: 'Please fill in all required fields'
-      }
-    }
+export async function signInAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
+  const email = formData.get('email')
+  const password = formData.get('password')
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      return {
-        error: 'Please enter a valid email address'
-      }
-    }
-
-    // TODO: Integrate with your email service or CRM
-    // For now, we'll simulate a successful submission
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    revalidatePath('/contact')
-    return { success: true }
-  } catch (error) {
-    console.error('Contact form submission error:', error)
-    return {
-      error: 'Failed to submit form. Please try again later.'
-    }
+  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
+    return encodedRedirect('error', '/sign-in', 'Email and password are required')
   }
+
+  const supabase = await createClient()
+
+  const { error } = await supabase.auth.signInWithPassword({
+    email,
+    password
+  })
+
+  if (error) {
+    return encodedRedirect('error', '/sign-in', error.message)
+  }
+
+  return redirect('/protected')
 }
 
-export async function requestDemo(data: ContactFormData) {
-  try {
-    // Validate form data
-    if (!data.email || !data.name || !data.compunknown) {
-      return {
-        error: 'Please fill in all required fields'
-      }
-    }
+export async function forgotPasswordAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
+  const email = formData.get('email')
+  const supabase = await createClient()
+  const headersList = await headers()
+  const origin = headersList.get('origin')
+  const callbackUrl = formData.get('callbackUrl')
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(data.email)) {
-      return {
-        error: 'Please enter a valid email address'
-      }
-    }
-
-    // TODO: Integrate with your scheduling system
-    // For now, we'll simulate a successful demo request
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    revalidatePath('/demo')
-    return {
-      success: true,
-      message:
-        'Thank you for your interest! Our team will contact you shortly to schedule your demo.'
-    }
-  } catch (error) {
-    console.error('Demo request error:', error)
-    return {
-      error: 'Failed to request demo. Please try again later.'
-    }
+  if (!email || typeof email !== 'string') {
+    return encodedRedirect('error', '/forgot-password', 'Email is required')
   }
+
+  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${origin}/auth/callback?redirect_to=/protected/reset-password`
+  })
+
+  if (error) {
+    console.error(`Password reset error: ${error.message}`)
+    return encodedRedirect('error', '/forgot-password', 'Could not reset password')
+  }
+
+  if (callbackUrl && typeof callbackUrl === 'string') {
+    return redirect(callbackUrl)
+  }
+
+  return encodedRedirect(
+    'success',
+    '/forgot-password',
+    'Check your email for a link to reset your password.'
+  )
 }
 
-export async function startFreeTrial(data: SubscribeData) {
-  try {
-    const cookieStore = cookies()
+export async function resetPasswordAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
+  const supabase = await createClient()
+  const password = formData.get('password')
+  const confirmPassword = formData.get('confirmPassword')
 
-    if (!data.email || !data.tier) {
-      return {
-        error: 'Please provide both email and selected tier'
-      }
-    }
-
-    ;(await cookieStore).set('trial_tier', data.tier, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 14 // 14 days
-    })
-
-    redirect('/thank-you')
-  } catch (error) {
-    console.error('Free trial error:', error)
-    return {
-      error: 'Failed to start free trial. Please try again later.'
-    }
+  if (!password || !confirmPassword || typeof password !== 'string' || typeof confirmPassword !== 'string') {
+    return encodedRedirect(
+      'error',
+      '/protected/reset-password',
+      'Password and confirm password are required'
+    )
   }
+
+  if (password !== confirmPassword) {
+    return encodedRedirect('error', '/protected/reset-password', 'Passwords do not match')
+  }
+
+  const { error } = await supabase.auth.updateUser({
+    password
+  })
+
+  if (error) {
+    return encodedRedirect('error', '/protected/reset-password', 'Password update failed')
+  }
+
+  return encodedRedirect('success', '/protected/reset-password', 'Password updated')
 }
 
-export async function signInWithEmail(formData: FormData) {
-  try {
-    const credentials = authSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password')
-    })
-
-    const { error } = await (await supabase).auth.signIn(credentials)
-
-    if (error) {
-      return { error: error.message }
-    }
-
-    revalidatePath('/')
-    return { success: true }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { error: error.errors[0].message }
-    }
-    return { error: 'Authentication failed' }
-  }
-}
-
-export async function signUpWithEmail(formData: FormData) {
-  try {
-    const credentials = authSchema.parse({
-      email: formData.get('email'),
-      password: formData.get('password')
-    })
-
-    const { error } = await (await supabase).auth.signUpWithPassword(credentials)
-    return error ? { error: error.message } : { success: true }
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return { error: error.errors[0].message }
-    }
-    return { error: 'Registration failed' }
-  }
-}
-
-export async function signOut() {
-  try {
-    const { error } = await (await supabase).auth.signOut()
-    if (error) {
-      return { error: error.message }
-    }
-    revalidatePath('/')
-    return { success: true }
-  } catch (error) {
-    console.error('Logout error:', error)
-    return { error: 'Logout failed' }
-  }
-}
-
-export async function getSession() {
-  try {
-    const {
-      data: { session }
-    } = await (await supabase).auth.getSession()
-    return session
-  } catch (error) {
-    console.error('Session error:', error)
-    return null
-  }
-}
-
-export async function forgotPasswordAction(formData: FormData) {
-  try {
-    const email = formData.get('email')?.toString()
-    if (!email) {
-      return { error: 'Email is required' }
-    }
-
-    const { error } = await (
-      await supabase
-    ).auth.resetPassword(email, {
-      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/update-password`
-    })
-
-    if (error) {
-      return { error: error.message }
-    }
-
-    return {
-      success: true,
-      message: 'Password reset instructions have been sent to your email'
-    }
-  } catch (error) {
-    console.error('Password reset error:', error)
-    return { error: 'Password reset failed. Please try again.' }
-  }
+export async function signOutAction(): Promise<ReturnType<RedirectFunction>> {
+  const supabase = await createClient()
+  await supabase.auth.signOut()
+  return redirect('/sign-in')
 }

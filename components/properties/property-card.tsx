@@ -1,86 +1,161 @@
 'use client'
 
-import { Card, CardContent, Typography, Box, Chip, IconButton } from '@mui/material'
-import { motion } from 'framer-motion'
-import { withAnimation } from '@/components/animations/with-animation'
-import { dataUpdateAnimation } from '@/lib/property-animations'
-import { Edit, Star, LocationOn } from '@mui/icons-material'
+import { Card, CardContent, CardActionArea, Typography, Box, Chip, Stack } from '@mui/material'
+import { formatCurrency, formatNumber } from '@/utils/format'
+import { type Property, type PropertyStatus } from '@/types/properties'
+import { useRouter } from 'next/navigation'
+import Image from 'next/image'
+import { cn } from '@/lib/utils'
 
-const MotionCard = motion(Card)
+const statusColors: Record<PropertyStatus, string> = {
+  available: 'success.main',
+  rented: 'primary.main',
+  maintenance: 'warning.main',
+  listed: 'info.main',
+  inactive: 'text.disabled'
+}
+
+const statusLabels: Record<PropertyStatus, string> = {
+  available: 'Available',
+  rented: 'Rented',
+  maintenance: 'Under Maintenance',
+  listed: 'Listed',
+  inactive: 'Inactive'
+}
 
 interface PropertyCardProps {
-  property: {
-    id: string
-    name: string
-    address: string
-    status: 'available' | 'rented' | 'maintenance'
-    units: number
-    revenue: number
-  }
-  onEdit: (id: string) => void
-  isFeatured?: boolean
-  index?: number
+  property: Property
+  showActions?: boolean
+  className?: string
+  onPropertyClick?: (property: Property) => void
 }
 
-function PropertyCardContent({
+export function PropertyCard({
   property,
-  onEdit,
-  isFeatured = false,
-  index = 0
-}: PropertyCardProps) {
-  const statusColors = {
-    available: 'success',
-    rented: 'primary',
-    maintenance: 'warning'
+  showActions = true,
+  className,
+  onPropertyClick
+}: PropertyCardProps): JSX.Element {
+  const router = useRouter()
+
+  const handleClick = () => {
+    if (onPropertyClick) {
+      onPropertyClick(property)
+    } else if (showActions) {
+      router.push(`/properties/${property.id}`)
+    }
   }
+
+  const renderStatus = () => (
+    <Chip
+      size="small"
+      label={statusLabels[property.status]}
+      sx={{
+        bgcolor: statusColors[property.status],
+        color: 'white',
+        fontWeight: 500,
+        '& .MuiChip-label': {
+          px: 2
+        }
+      }}
+    />
+  )
 
   return (
-    <MotionCard
-      variants={dataUpdateAnimation}
-      initial="hidden"
-      animate="visible"
-      exit="hidden"
-      sx={{ position: 'relative' }}
-    >
-      {isFeatured && (
-        <Star
-          sx={{
-            position: 'absolute',
-            top: 8,
-            right: 8,
-            color: 'warning.main'
-          }}
-        />
+    <Card
+      elevation={1}
+      className={cn(
+        'transition-all duration-200',
+        showActions && 'hover:shadow-md hover:-translate-y-0.5',
+        className
       )}
+    >
+      <CardActionArea
+        onClick={handleClick}
+        component="div"
+        className="h-full flex flex-col"
+      >
+        {property.images?.[0] && (
+          <Box className="relative h-48 w-full bg-gray-100">
+            <Image
+              src={property.images[0]}
+              alt={property.address}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              priority={false}
+            />
+            <Box className="absolute top-3 right-3">
+              {renderStatus()}
+            </Box>
+          </Box>
+        )}
 
-      <CardContent>
-        <Typography variant="h6" gutterBottom>
-          {property.name}
-        </Typography>
-
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-          <LocationOn sx={{ mr: 1, fontSize: 16 }} />
-          <Typography variant="body2" color="text.secondary">
+        <CardContent className="flex-1 p-6">
+          <Typography variant="h6" gutterBottom className="line-clamp-2">
             {property.address}
           </Typography>
-        </Box>
 
-        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mb: 2 }}>
-          <Chip label={property.status} color={statusColors[property.status] as any} size="small" />
-          <Typography variant="body2">{property.units} units</Typography>
-        </Box>
+          <Stack spacing={3}>
+            <Box>
+              <Typography color="text.secondary" variant="body2">
+                Monthly Rent
+              </Typography>
+              <Typography variant="h6" color="primary.main" className="font-semibold">
+                {formatCurrency(property.monthly_rent)}
+              </Typography>
+            </Box>
 
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Typography variant="h6" color="primary">
-            ${property.revenue.toLocaleString()}/mo
-          </Typography>
-          <IconButton onClick={() => onEdit(property.id)} size="small" aria-label="edit property">
-            <Edit />
-          </IconButton>
-        </Box>
-      </CardContent>
-    </MotionCard>
+            <Stack direction="row" spacing={4} className="justify-between">
+              <Box>
+                <Typography color="text.secondary" variant="body2">
+                  Bedrooms
+                </Typography>
+                <Typography>{property.bedrooms}</Typography>
+              </Box>
+
+              <Box>
+                <Typography color="text.secondary" variant="body2">
+                  Bathrooms
+                </Typography>
+                <Typography>{property.bathrooms}</Typography>
+              </Box>
+
+              <Box>
+                <Typography color="text.secondary" variant="body2">
+                  Sq Ft
+                </Typography>
+                <Typography>{formatNumber(property.square_feet)}</Typography>
+              </Box>
+            </Stack>
+
+            {property.amenities?.length > 0 && (
+              <Box>
+                <Typography color="text.secondary" variant="body2" gutterBottom>
+                  Amenities
+                </Typography>
+                <Stack direction="row" flexWrap="wrap" gap={1}>
+                  {property.amenities.slice(0, 3).map(amenity => (
+                    <Chip
+                      key={amenity}
+                      label={amenity}
+                      size="small"
+                      className="bg-gray-100"
+                    />
+                  ))}
+                  {property.amenities.length > 3 && (
+                    <Chip
+                      label={`+${property.amenities.length - 3} more`}
+                      size="small"
+                      className="bg-gray-100"
+                    />
+                  )}
+                </Stack>
+              </Box>
+            )}
+          </Stack>
+        </CardContent>
+      </CardActionArea>
+    </Card>
   )
 }
-
-export const PropertyCard = withAnimation(PropertyCardContent, 'fade')

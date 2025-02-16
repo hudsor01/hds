@@ -1,11 +1,17 @@
-import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '../use-api'
-import type { BaseQueryParams } from '@/types/types'
-import type { Lease, MaintenanceRequest, Tenant, Property } from '@/types/db.types'
-import { useState, useCallback, useTransition } from 'react'
+/// <reference lib="dom" />
+
+import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '@/hooks/use-api'
+import { useState, useEffect, useCallback, useTransition } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
-import type { PropertyCreateInput, PropertyUpdateInput } from '@/types/types'
+import { useMediaQuery, useTheme } from '@mui/material'
+import type {
+  Property,
+  Tenant,
+  Lease,
+  QueryParams
+} from '@/types/types'
 
 export function useProperty(id: string) {
   return useApiQuery<Property>(`/api/properties/${id}`)
@@ -20,7 +26,7 @@ export function useUpdateProperty() {
 }
 
 interface UsePropertiesOptions {
-  onSuccess?: (data: Property, action: 'create' | 'update' | 'delete') => void | Promise<void>
+  onSuccess?: (data: Property | undefined, action: 'create' | 'update' | 'delete') => void | Promise<void>
   onError?: (error: Error, action: 'create' | 'update' | 'delete') => void | Promise<void>
   showToasts?: boolean
   initialData?: Property[]
@@ -129,12 +135,12 @@ export function useProperties({
     mutationFn: async (id: string) => {
       await axios.delete(`/api/properties/${id}`)
     },
-    onSuccess: (_, variables) => {
+    onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: PROPERTIES_QUERY_KEY })
       if (showToasts) {
         toast.success('Property deleted successfully')
       }
-      onSuccess?.(variables, 'delete')
+      onSuccess?.(undefined, 'delete')
     },
     onError: (err: PropertyError) => {
       setError(err)
@@ -167,19 +173,17 @@ export function useProperties({
   const updateProperty = useCallback(
     async (id: string, data: PropertyUpdateInput) => {
       let result: Property
-      startTransition(async () => {
-        try {
-          result = await updateMutation.mutateAsync({ id, data })
-          return result
-        } catch (err) {
-          const error = err as PropertyError
-          if (error.status === 422) {
-            toast.error('Please check the property details and try again')
-          }
-          throw error
+      try {
+        startTransition(() => {})
+        result = await updateMutation.mutateAsync({ id, data })
+      } catch (err) {
+        const error = err as PropertyError
+        if (error.status === 422) {
+          toast.error('Please check the property details and try again')
         }
-      })
-      return result!
+        throw error
+      }
+      return result
     },
     [updateMutation]
   )
@@ -262,38 +266,114 @@ export function useLeases(params?: BaseQueryParams) {
 }
 
 export function useLease(id: string) {
-  return useApiQuery<Lease>(`/api/leases/${id}`)
+  return useApiQuery<any>(`/api/leases/${id}`)
 }
 
 export function useCreateLease() {
-  return useApiMutation<Lease, Omit<Lease, 'id'>>('/api/leases')
+  return useApiMutation<any, any>('/api/leases')
 }
 
 export function useUpdateLease() {
-  return useApiUpdate<Lease>('/api/leases')
+  return useApiUpdate<any>('/api/leases')
 }
 
 export function useDeleteLease() {
-  return useApiDelete<Lease>('/api/leases')
+  return useApiDelete<any>('/api/leases')
+}
 }
 
-// Maintenance hooks
-export function useMaintenanceRequests(params?: BaseQueryParams) {
-  return useApiQuery<MaintenanceRequest[]>('/api/maintenance', params)
+export function useMaintenanceRequests(params?: QueryParams) {
+  return useApiQuery<any[]>('/api/maintenance', params)
 }
 
 export function useMaintenanceRequest(id: string) {
-  return useApiQuery<MaintenanceRequest>(`/api/maintenance/${id}`)
+  return useApiQuery<any>(`/api/maintenance/${id}`)
 }
 
 export function useCreateMaintenanceRequest() {
-  return useApiMutation<MaintenanceRequest, Omit<MaintenanceRequest, 'id'>>('/api/maintenance')
+  return useApiMutation<any, any>('/api/maintenance')
 }
 
 export function useUpdateMaintenanceRequest() {
-  return useApiUpdate<MaintenanceRequest>('/api/maintenance')
+  return useApiUpdate<any>('/api/maintenance')
 }
 
 export function useDeleteMaintenanceRequest() {
-  return useApiDelete<MaintenanceRequest>('/api/maintenance')
+  return useApiDelete<any>('/api/maintenance')
+}
+
+// Scroll position hook
+export function useScroll(threshold = 100) {
+  const [scrolled, setScrolled] = useState(false)
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > threshold)
+    }
+
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [threshold])
+
+  const scrollToTop = useCallback(() => {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }, [])
+
+  return { scrolled, scrollToTop }
+}
+
+// Toast notifications hook
+export function useToast() {
+  const [toast, setToast] = useState<{
+    message: string
+    type: 'success' | 'error' | 'info' | 'warning'
+    open: boolean
+  }>({
+    message: '',
+    type: 'info',
+    open: false
+  })
+
+  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') => {
+    setToast({ message, type, open: true })
+  }, [])
+
+  const hideToast = useCallback(() => {
+    setToast(prev => ({ ...prev, open: false }))
+  }, [])
+
+  return { toast, showToast, hideToast }
+}
+
+// User preferences hook
+interface Preferences {
+  [key: string]: any
+}
+
+export function usePreferences() {
+  const [preferences, setPreferences] = useState<Preferences>(() => {
+    if (typeof window === 'undefined') return {}
+    const storedPreferences = localStorage.getItem('user_preferences')
+    return storedPreferences ? JSON.parse(storedPreferences) : {}
+  })
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    localStorage.setItem('user_preferences', JSON.stringify(preferences))
+  }, [preferences])
+
+  const updatePreference = useCallback((key: string, value: unknown) => {
+    setPreferences(prev => ({ ...prev, [key]: value }))
+  }, [])
+
+  return { preferences, updatePreference }
+}
+
+export function useData<T>() {
+  return {
+    data: null as T | null,
+    error: null as string | null,
+    isLoading: false,
+    mutate: async () => {} // Add proper implementation
+  } as const
 }

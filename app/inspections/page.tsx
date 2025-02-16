@@ -1,6 +1,6 @@
 'use client'
 
-import { DataTable, renderDateCell, renderStatusCell } from '@/components/data-display/data-table'
+import { DataTable, renderDateCell, renderStatusCell } from '@/components/data-table'
 import { FormDialog } from '@/components/ui/dialogs/form-dialog'
 import { api } from '@/lib/api'
 import { Button, TextField } from '@mui/material'

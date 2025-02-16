@@ -2,11 +2,11 @@
 
 // Import your settings components here
 import { Box, Card, Container, Typography } from '@mui/material'
-import { BillingSettings } from 'components/settings/billing'
-import { GeneralSettings } from 'components/settings/general'
-import { NotificationSettings } from 'components/settings/notifications'
-import { SecuritySettings } from 'components/settings/security'
-import { Tabs } from 'components/ui/tabs'
+import { BillingSettings } from '@/components/billing'
+import { GeneralSettings } from '@/components/general'
+import { NotificationSettings } from '@/components/notifications'
+import { SecuritySettings } from '@/components/security'
+import { Tabs } from '@/components/tabs'
 import { useState } from 'react'
 
 export default function SettingsPage() {

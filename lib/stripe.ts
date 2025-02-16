@@ -1,10 +1,10 @@
 import Stripe from 'stripe'
 
-if (!process.env.STRIPE_SECRET_KEY) {
+if (!process.env['STRIPE_SECRET_KEY']) {
   throw new Error('Missing STRIPE_SECRET_KEY environment variable')
 }
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+export const stripe = new Stripe(process.env['STRIPE_SECRET_KEY'], {
   apiVersion: '2025-01-27.acacia',
   typescript: true
 })
@@ -22,11 +22,7 @@ export interface CreatePaymentIntentParams {
   metadata: Record<string, string>
 }
 
-export const createStripeCustomer = async ({
-  email,
-  name,
-  metadata
-}: CreateCustomerParams): Promise<Stripe.Customer> => {
+export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams): Promise<Stripe.Customer> => {
   return stripe.customers.create({
     email,
     name,
@@ -52,38 +48,25 @@ export const createPaymentIntent = async ({
 }
 
 // Webhook utilities
-export const constructWebhookEvent = (
-  payload: string | Buffer,
-  signature: string,
-  webhookSecret: string
-): Stripe.Event => {
+export const constructWebhookEvent = (payload: string | Buffer, signature: string, webhookSecret: string): Stripe.Event => {
   return stripe.webhooks.constructEvent(payload, signature, webhookSecret)
 }
 
 // Customer utilities
-export const retrieveCustomer = async (
-  customerId: string
-): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
+export const retrieveCustomer = async (customerId: string): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
   return stripe.customers.retrieve(customerId)
 }
 
-export const updateCustomer = async (
-  customerId: string,
-  data: Stripe.CustomerUpdateParams
-): Promise<Stripe.Customer> => {
+export const updateCustomer = async (customerId: string, data: Stripe.CustomerUpdateParams): Promise<Stripe.Customer> => {
   return stripe.customers.update(customerId, data)
 }
 
 // Payment utilities
-export const retrievePaymentIntent = async (
-  paymentIntentId: string
-): Promise<Stripe.PaymentIntent> => {
+export const retrievePaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.retrieve(paymentIntentId)
 }
 
-export const cancelPaymentIntent = async (
-  paymentIntentId: string
-): Promise<Stripe.PaymentIntent> => {
+export const cancelPaymentIntent = async (paymentIntentId: string): Promise<Stripe.PaymentIntent> => {
   return stripe.paymentIntents.cancel(paymentIntentId)
 }
 
@@ -96,7 +79,7 @@ export const createSubscription = async (
   return stripe.subscriptions.create({
     customer: customerId,
     items: [{ price: priceId }],
-    metadata
+    metadata: metadata || {}
   })
 }
 

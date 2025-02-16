@@ -1,0 +1,110 @@
+/* Base Layer */
+@layer base {
+  /* Modern CSS Reset */
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    border-color: var(--color-border);
+    border-style: solid;
+    border-width: 0;
+  }
+
+  /* Root Styles */
+  :root {
+    color-scheme: light dark;
+  }
+  html {
+    height: 100%;
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    tab-size: 4;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100%;
+    font-family: var(--font-sans);
+    font-size: var(--text-base);
+    font-weight: var(--font-weight-normal);
+    line-height: var(--leading-normal);
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    isolation: isolate;
+  }
+
+  /* Default Element Styles */
+  hr {
+    height: 0;
+    border-top-width: 1px;
+    color: inherit;
+  }
+  /* ...existing default element styles... */
+
+  /* Typography Defaults */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    color: var(--color-foreground);
+    font-weight: var(--font-weight-bold);
+    line-height: var(--leading-tight);
+  }
+  /* ...existing typography defaults... */
+
+  /* Selection Styles */
+  ::selection {
+    background-color: var(--color-primary-200);
+    color: var(--color-primary-900);
+  }
+
+  /* Focus Styles */
+  :focus-visible {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+
+  [data-focus-visible-added] {
+    outline: 2px solid var(--color-primary-500);
+    outline-offset: 2px;
+  }
+
+  /* Handle transitions */
+  @media (prefers-reduced-motion: no-preference) {
+    :root {
+      transition:
+        background-color var(--animate-normal) var(--ease-default),
+        border-color var(--animate-normal) var(--ease-default),
+        color var(--animate-normal) var(--ease-default);
+    }
+
+    * {
+      transition-property:
+        background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+      transition-duration: var(--animate-normal);
+      transition-timing-function: var(--ease-default);
+    }
+  }
+
+  /* Reduced Motion */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+
+  /* Dialog centering - explicit after v4 changes */
+  dialog {
+    margin: auto;
+  }
+}

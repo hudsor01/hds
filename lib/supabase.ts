@@ -1,9 +1,8 @@
-// lib/supabase.ts
 import type { Database } from '@/types/db.types'
 import { SupabaseClient } from '@supabase/supabase-js'
 import supabase from '@/utils/supabase/client'
 
-const supabaseClient: SupabaseClient<Database> = supabase
+export const supabaseClient: SupabaseClient<Database> = supabase
 
 // Enhanced error handling with specific error types
 export class DatabaseError extends Error {
@@ -53,30 +52,14 @@ export async function handleDatabaseError(error: unknown): Promise<never> {
   }
 
   if (hasDetails(error) && error.code === '429') {
-    throw new DatabaseError(
-      'Too many requests. Please try again later.',
-      error.code,
-      error.details,
-      429
-    )
+    throw new DatabaseError('Too many requests. Please try again later.', error.code, error.details, 429)
   }
 
   if (hasDetails(error) && error.code === '40001') {
-    throw new DatabaseError(
-      'The operation timed out. Please try again.',
-      error.code,
-      error.details,
-      408
-    )
+    throw new DatabaseError('The operation timed out. Please try again.', error.code, error.details, 408)
   }
 
-  const errorDetails = hasDetails(error) ? error.details : undefined
-  throw new DatabaseError(
-    'An unexpected database error occurred. Please try again.',
-    typeof error === 'object' && error !== null ? (error as any).code : undefined,
-    errorDetails,
-    500
-  )
+  throw new Error('Unknown error occurred.')
 }
 
 // Enhanced safe query utility with timeout and retry logic

@@ -2,10 +2,10 @@
 
 import { useAnimation as useFramerAnimation, AnimationControls } from 'framer-motion'
 import { useCallback } from 'react'
-import { useAnimation } from '@/components/providers/animation-provider'
+import { useAnimation } from '@/components/animation-provider'
 import type { AnimationVariant } from '@/types/animation'
 import type { ComponentType } from 'react'
-import { Animations } from '@/types'
+import { type Animations } from '@/types'
 
 interface AnimationOptions {
   duration?: number

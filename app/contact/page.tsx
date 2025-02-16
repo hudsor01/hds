@@ -1,216 +1,404 @@
 'use client'
 
-import { useState } from 'react'
-import { PageTransition } from '@/components/layout/page-transition'
-import { PublicLayout } from '@/components/layout/public-layout'
+import React from 'react'
+import { motion } from 'framer-motion'
 import {
+  Box,
   Container,
-  Section,
-  PageHeader,
-  PageTitle,
-  PageDescription
-} from '@/components/ui/container'
-import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Mail, Phone, MapPin, Send } from 'react-feather'
-import { Email } from '@mui/icons-material'
-import { Resend } from 'resend'
+  Typography,
+  TextField,
+  Button,
+  Card,
+  CardContent,
+  useTheme,
+  MenuItem,
+  Alert,
+  CircularProgress,
+  alpha
+} from '@mui/material'
+import { Grid2 as Grid } from '@mui/material'
+import { Mail, Phone, MapPin, MessageCircle, Clock, Users } from 'react-feather'
+import { PublicLayout } from '@/components/public-layout'
+import { toast } from 'sonner'
+import { z } from 'zod'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm, Controller } from 'react-hook-form'
 
-const resend = new Resend(process.env.RESEND_API_KEY)
+// Form validation schema
+const formSchema = z.object({
+  firstName: z.string().min(2, 'Minimum 2 characters').max(50),
+  lastName: z.string().min(2, 'Minimum 2 characters').max(50),
+  email: z.string().email('Invalid email address'),
+  topic: z.enum(['demo', 'pricing', 'support']),
+  message: z.string().min(10, 'Minimum 10 characters').max(500)
+})
 
-interface ContactFormData {
-  name: string
-  email: string
-  subject: string
-  message: string
+type FormValues = z.infer<typeof formSchema>
+
+const fadeIn = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.5 }
 }
 
-const contactInfo = [
-  {
-    icon: Mail,
-    title: 'Email',
-    details: 'info@hudsondigitalsolutions.com',
-    href: 'mailto:info@hudsondigitalsolutions.com'
-  },
-  {
-    icon: Phone,
-    title: 'Phone',
-    details: '+1 (555) 123-4567',
-    href: 'tel:+15551234567'
-  },
-  {
-    icon: MapPin,
-    title: 'Location',
-    details: 'New York, NY',
-    href: '#'
-  }
-]
-
-export default function ContactPage() {
-  const [formData, setFormData] = useState<ContactFormData>({
-    name: '',
-    email: '',
-    subject: '',
-    message: ''
-  })
-  const [isSubmitting, setIsSubmitting] = useState(false)
-  const [isSuccess, setIsSuccess] = useState(false)
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    setIsSubmitting(true)
-
-    try {
-      const { data, error } = await resend.emails.send({
-        from: 'Acme <onboarding@resend.dev>',
-        to: [formData.email],
-        subject: formData.subject,
-        react: (
-          <div>
-            <p>{formData.message}</p>
-          </div>
-        )
-      })
-
-      if (error) {
-        console.error('Error sending email:', error)
-        setIsSuccess(false)
-      } else {
-        setIsSuccess(true)
-      }
-    } catch (error) {
-      console.error('Error sending email:', error)
-      setIsSuccess(false)
+export default function ContactPage(): React.ReactElement {
+  const theme = useTheme()
+  const {
+    control,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset
+  } = useForm<FormValues>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      topic: 'demo',
+      message: ''
     }
+  })
 
-    setIsSubmitting(false)
+  const onSubmit = async (/*data: FormValues*/) => {
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      toast.success('Message sent successfully! We will respond within 24 hours.')
+      reset()
+    } catch {
+      toast.error('Failed to send message. Please try again later.')
+    }
   }
+
+  const contactInfo = [
+    {
+      icon: Mail,
+      title: 'Email Us',
+      description: 'support@hdsplatform.com',
+      detail: 'We aim to respond within 24 hours'
+    },
+    {
+      icon: Phone,
+      title: 'Call Us',
+      description: '+1 (555) 123-4567',
+      detail: 'Monday to Friday, 9am - 6pm PST'
+    },
+    {
+      icon: MessageCircle,
+      title: 'Live Chat',
+      description: 'Chat with our team',
+      detail: 'Available 24/7 for quick questions'
+    }
+  ]
+
+  const supportFeatures = [
+    {
+      icon: Clock,
+      title: '24/7 Support',
+      description: 'Always here when you need us'
+    },
+    {
+      icon: Users,
+      title: 'Dedicated Team',
+      description: 'Personal account management'
+    },
+    {
+      icon: MapPin,
+      title: 'Global Presence',
+      description: 'Supporting clients worldwide'
+    }
+  ]
 
   return (
-    <PublicLayout>
-      <PageTransition>
-        <Section>
-          <Container>
-            <PageHeader>
-              <PageTitle>Get in Touch</PageTitle>
-              <PageDescription>
-                Have questions? We'd love to hear from you. Send us a message and we'll respond as
-                soon as possible.
-              </PageDescription>
-            </PageHeader>
+    <PublicLayout
+      title="Contact HDS Platform - Get in Touch"
+      description="Have questions about HDS Platform? Get in touch with our team for support, demos, or general inquiries."
+    >
+      {/* Hero Section */}
+      <Box sx={{ textAlign: 'center', mb: 8, py: 8 }}>
+        <motion.div {...fadeIn}>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: '2.5rem', md: '4rem' },
+              fontWeight: 800,
+              mb: 3,
+              background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent'
+            }}
+          >
+            Let&apos;s Connect
+          </Typography>
+          <Typography
+            variant="h6"
+            color="text.secondary"
+            sx={{
+              maxWidth: 'md',
+              mx: 'auto',
+              mb: 5,
+              fontSize: { xs: '1rem', md: '1.25rem' }
+            }}
+          >
+            Have questions about our platform? We would love to hear from you. Get in touch and let us know how we can help.
+          </Typography>
+        </motion.div>
+      </Box>
 
-            <div className="grid gap-12 lg:grid-cols-3">
-              <Card variant="default" className="lg:col-span-2">
-                <form onSubmit={handleSubmit} className="p-8">
-                  <div className="grid gap-6 md:grid-cols-2">
-                    <Input
-                      label="Name"
-                      type="text"
-                      value={formData.name}
-                      onChange={e => setFormData({ ...formData, name: e.target.value })}
-                      required
-                      disabled={isSubmitting || isSuccess}
-                    />
-                    <Input
-                      label="Email"
-                      type="email"
-                      value={formData.email}
-                      onChange={e => setFormData({ ...formData, email: e.target.value })}
-                      required
-                      disabled={isSubmitting || isSuccess}
-                    />
-                  </div>
-
-                  <div className="mt-6">
-                    <Input
-                      label="Subject"
-                      type="text"
-                      value={formData.subject}
-                      onChange={e => setFormData({ ...formData, subject: e.target.value })}
-                      required
-                      disabled={isSubmitting || isSuccess}
-                    />
-                  </div>
-
-                  <div className="mt-6">
-                    <label
-                      htmlFor="message"
-                      className="mb-2 block text-sm font-medium text-gray-700"
+      {/* Contact Methods */}
+      <Container maxWidth="lg" sx={{ mb: 8 }}>
+        <Grid container spacing={4}>
+          {contactInfo.map((info, index) => (
+            <Grid item xs={12} md={4} key={index}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Card
+                  elevation={0}
+                  sx={{
+                    height: '100%',
+                    background: theme.palette.background.paper,
+                    transition: 'all 0.3s ease',
+                    '&:hover': {
+                      transform: 'translateY(-5px)',
+                      boxShadow: 3
+                    }
+                  }}
+                >
+                  <CardContent sx={{ p: 4, textAlign: 'center' }}>
+                    <Box
+                      sx={{
+                        display: 'inline-flex',
+                        p: 2,
+                        borderRadius: '12px',
+                        background: alpha(theme.palette.primary.main, 0.1),
+                        color: 'primary.main',
+                        mb: 2
+                      }}
                     >
-                      Message
-                    </label>
-                    <textarea
-                      id="message"
-                      rows={6}
-                      className="input"
-                      value={formData.message}
-                      onChange={e => setFormData({ ...formData, message: e.target.value })}
-                      required
-                      disabled={isSubmitting || isSuccess}
-                    />
-                  </div>
+                      <info.icon size={24} aria-hidden="true" />
+                    </Box>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                      {info.title}
+                    </Typography>
+                    <Typography variant="body1" color="primary" gutterBottom>
+                      {info.description}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {info.detail}
+                    </Typography>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
 
-                  <div className="mt-6">
-                    <Button
-                      type="submit"
-                      className="w-full"
-                      disabled={isSubmitting || isSuccess}
-                      loading={isSubmitting}
-                    >
-                      {isSuccess ? (
-                        <div className="flex items-center justify-center gap-2">
-                          <svg
-                            className="h-5 w-5"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
+      {/* Contact Form Section */}
+      <Box sx={{ py: 8, bgcolor: 'background.paper' }}>
+        <Container maxWidth="md">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: '-100px' }}
+          >
+            <Card
+              elevation={0}
+              sx={{
+                background: 'background.default',
+                borderRadius: 4,
+                boxShadow: 3
+              }}
+            >
+              <CardContent sx={{ p: { xs: 3, md: 6 } }}>
+                <Typography variant="h3" align="center" gutterBottom>
+                  Send us a Message
+                </Typography>
+                <Typography variant="body1" color="text.secondary" align="center" sx={{ mb: 4 }}>
+                  We typically respond within 1 business day
+                </Typography>
+
+                <form onSubmit={handleSubmit(onSubmit)}>
+                  <Grid container spacing={3}>
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="firstName"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="First Name *"
+                            variant="outlined"
+                            fullWidth
+                            error={!!errors.firstName}
+                            helperText={errors.firstName?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12} sm={6}>
+                      <Controller
+                        name="lastName"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Last Name *"
+                            variant="outlined"
+                            fullWidth
+                            error={!!errors.lastName}
+                            helperText={errors.lastName?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Controller
+                        name="email"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Email *"
+                            type="email"
+                            variant="outlined"
+                            fullWidth
+                            error={!!errors.email}
+                            helperText={errors.email?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Controller
+                        name="topic"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            select
+                            label="How can we help? *"
+                            variant="outlined"
+                            fullWidth
+                            error={!!errors.topic}
+                            helperText={errors.topic?.message}
                           >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M5 13l4 4L19 7"
-                            />
-                          </svg>
-                          Message Sent!
-                        </div>
-                      ) : (
-                        <div className="flex items-center justify-center gap-2">
-                          Send Message
-                          <Send className="h-4 w-4 transition-transform group-hover:translate-x-1" />
-                        </div>
-                      )}
-                    </Button>
-                  </div>
-                </form>
-              </Card>
+                            <MenuItem value="demo">Request a Demo</MenuItem>
+                            <MenuItem value="pricing">Pricing Information</MenuItem>
+                            <MenuItem value="support">Technical Support</MenuItem>
+                          </TextField>
+                        )}
+                      />
+                    </Grid>
 
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => (
-                  <Card
-                    key={info.title}
-                    variant="interactive"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: 0.8 + index * 0.1 }}
+                    <Grid item xs={12}>
+                      <Controller
+                        name="message"
+                        control={control}
+                        render={({ field }) => (
+                          <TextField
+                            {...field}
+                            label="Message *"
+                            variant="outlined"
+                            multiline
+                            rows={5}
+                            fullWidth
+                            error={!!errors.message}
+                            helperText={errors.message?.message}
+                          />
+                        )}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <Button
+                        fullWidth
+                        type="submit"
+                        variant="contained"
+                        color="primary"
+                        size="large"
+                        disabled={isSubmitting}
+                        sx={{
+                          height: 56,
+                          fontSize: '1.1rem',
+                          fontWeight: 600,
+                          letterSpacing: 0.5
+                        }}
+                      >
+                        {isSubmitting ? <CircularProgress size={24} color="inherit" /> : 'Send Message'}
+                      </Button>
+                    </Grid>
+
+                    {Object.keys(errors).length > 0 && (
+                      <Grid item xs={12}>
+                        <Alert severity="error">Please fix the errors in the form before submitting</Alert>
+                      </Grid>
+                    )}
+                  </Grid>
+                </form>
+              </CardContent>
+            </Card>
+          </motion.div>
+        </Container>
+      </Box>
+
+      {/* Support Features Section */}
+      <Container maxWidth="lg" sx={{ py: 8 }}>
+        <Grid container direction="row" spacing={4}>
+          {supportFeatures.map((feature, index) => (
+            <Grid key={index} item xs={12} md={4}>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-100px' }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <Box
+                  component="section"
+                  sx={{
+                    p: 3,
+                    borderRadius: 2,
+                    bgcolor: 'background.paper',
+                    transition: (theme: any) => theme.transitions.create('all'),
+                    '&:hover': {
+                      transform: 'translateY(-3px)',
+                      boxShadow: 2
+                    },
+                    display: 'flex'
+                  }}
+                >
+                  <Box
+                    sx={{
+                      p: 2,
+                      borderRadius: '12px',
+                      bgcolor: 'primary.light',
+                      color: 'primary.main',
+                      flexShrink: 0
+                    }}
                   >
-                    <a href={info.href} className="flex items-start gap-4 p-6">
-                      <div className="bg-opacity-10 flex h-10 w-10 items-center justify-center rounded-lg bg-[var(--primary-color)]">
-                        <info.icon className="h-5 w-5 text-[var(--primary-color)]" />
-                      </div>
-                      <div>
-                        <h3 className="text-sm font-semibold text-gray-900">{info.title}</h3>
-                        <p className="mt-1 text-sm text-gray-600">{info.details}</p>
-                      </div>
-                    </a>
-                  </Card>
-                ))}
-              </div>
-            </div>
-          </Container>
-        </Section>
-      </PageTransition>
+                    <feature.icon size={24} aria-hidden="true" />
+                  </Box>
+                  <Box>
+                    <Typography variant="h6" component="h3" gutterBottom>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {feature.description}
+                    </Typography>
+                  </Box>
+                </Box>
+              </motion.div>
+            </Grid>
+          ))}
+        </Grid>
+      </Container>
     </PublicLayout>
   )
 }

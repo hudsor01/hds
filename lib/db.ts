@@ -1,6 +1,6 @@
 import type { Database } from '@/types/db.types'
 import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
-import supabase from '@/lib/supabase'
+import { createClient } from '@supabase/supabase-js'
 
 // Prisma Client Initialization
 declare global {
@@ -19,24 +19,9 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Supabase Client Initialization
-export const supabase = supabase<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_KEY!
-)
+export const supabase = createClient<Database>(process.env['NEXT_PUBLIC_SUPABASE_URL']!, process.env['NEXT_PUBLIC_SUPABASE_KEY']!)
 
 // Error Handling
-export const handlePrismaError = (error: unknown) => {
-  console.error('Database Error:', error)
-  if (error instanceof Error) {
-    const isPrismaError = error instanceof Prisma.PrismaClientKnownRequestError
-    return {
-      error: error.message,
-      code: isPrismaError ? mapPrismaErrorToHttpStatus(error) : 500
-    }
-  }
-  return { error: 'An unexpected error occurred', code: 500 }
-}
-
 const mapPrismaErrorToHttpStatus = (error: Prisma.PrismaClientKnownRequestError): number => {
   switch (error.code) {
     case 'P2002': // Unique constraint violation
@@ -48,6 +33,18 @@ const mapPrismaErrorToHttpStatus = (error: Prisma.PrismaClientKnownRequestError)
     default:
       return 500
   }
+}
+
+export const handlePrismaError = (error: unknown) => {
+  console.error('Database Error:', error)
+  if (error instanceof Error) {
+    const isPrismaError = error instanceof Prisma.PrismaClientKnownRequestError
+    return {
+      error: error.message,
+      code: isPrismaError ? mapPrismaErrorToHttpStatus(error) : 500
+    }
+  }
+  return { error: 'An unexpected error occurred', code: 500 }
 }
 
 // Pagination Types & Utilities
@@ -280,7 +277,7 @@ export const properties = {
               }
             },
             maintenance_requests: {
-              where: { status: 'PENDING' },
+              where: { request_status: 'PENDING' },
               select: {
                 id: true,
                 title: true,
@@ -307,5 +304,3 @@ export const disconnect = async () => {
 export const connect = async () => {
   await prisma.$connect()
 }
-
-export { supabase }

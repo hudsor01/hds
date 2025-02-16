@@ -1,23 +1,20 @@
-import { supabase } from '@/utils/supabase/server'
-import type { NextRequest } from 'next/server'
+import { supabase } from '@/lib/supabase/server'
+import { createPropertySchema, updatePropertySchema, type Property } from '@/types/properties'
+import { type NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-declare const console: Console
+const queryParamsSchema = z.object({
+  page: z.coerce.number().min(1).default(1),
+  limit: z.coerce.number().min(1).max(100).default(10),
+  status: z.string().optional(),
+  type: z.string().optional(),
+  sort: z.enum(['created_at', 'monthly_rent', 'square_feet']).optional(),
+  order: z.enum(['asc', 'desc']).default('desc')
+})
 
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
-
-const propertySchema = z.object({
-  address: z.string().min(1, 'Address is required'),
-  type: z.enum(['apartment', 'house', 'condo', 'duplex', 'townhouse']),
-  bedrooms: z.number().min(0, 'Number of bedrooms cannot be negative'),
-  bathrooms: z.number().min(0, 'Number of bathrooms cannot be negative'),
-  square_feet: z.number().min(0, 'Square footage cannot be negative'),
-  description: z.string().optional(),
-  amenities: z.array(z.string()).optional(),
-  status: z.enum(['available', 'rented', 'maintenance']).optional()
-})
 
 export async function GET(req: NextRequest) {
   try {
@@ -33,25 +30,32 @@ export async function GET(req: NextRequest) {
     }
 
     const searchParams = req.nextUrl.searchParams
-    const page = parseInt(searchParams.get('page') || '1')
-    const limit = parseInt(searchParams.get('limit') || '10')
-    const status = searchParams.get('status')
-    const type = searchParams.get('type')
+    const query = queryParamsSchema.parse({
+      page: searchParams.get('page'),
+      limit: searchParams.get('limit'),
+      status: searchParams.get('status'),
+      type: searchParams.get('type'),
+      sort: searchParams.get('sort'),
+      order: searchParams.get('order')
+    })
 
-    let query = supabase
+    let supabaseQuery = supabase
       .from('properties')
-      .select('*, units(*)')
+      .select('*, units(*)', { count: 'exact' })
       .eq('owner_id', user.id)
-      .range((page - 1) * limit, page * limit - 1)
+      .range((query.page - 1) * query.limit, query.page * query.limit - 1)
 
-    if (status) {
-      query = query.eq('status', status)
+    if (query.status) {
+      supabaseQuery = supabaseQuery.eq('status', query.status)
     }
-    if (type) {
-      query = query.eq('type', type)
+    if (query.type) {
+      supabaseQuery = supabaseQuery.eq('type', query.type)
+    }
+    if (query.sort) {
+      supabaseQuery = supabaseQuery.order(query.sort, { ascending: query.order === 'asc' })
     }
 
-    const { data: properties, error, count } = await query
+    const { data: properties, error, count } = await supabaseQuery
 
     if (error) {
       console.error('Error fetching properties:', error)
@@ -59,15 +63,21 @@ export async function GET(req: NextRequest) {
     }
 
     return NextResponse.json({
-      data: properties,
+      data: properties as Property[],
       pagination: {
-        page,
-        limit,
+        page: query.page,
+        limit: query.limit,
         total: count || 0,
-        pages: count ? Math.ceil(count / limit) : 0
+        pages: count ? Math.ceil(count / query.limit) : 0
       }
     })
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json(
+        { error: 'Invalid query parameters', details: error.errors },
+        { status: 400 }
+      )
+    }
     console.error('Error in properties GET route:', error)
     return NextResponse.json({ error: 'Failed to fetch properties' }, { status: 500 })
   }
@@ -87,7 +97,7 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json()
-    const validatedData = propertySchema.parse(body)
+    const validatedData = createPropertySchema.parse(body)
 
     const { data: property, error } = await supabase
       .from('properties')
@@ -97,7 +107,6 @@ export async function POST(req: NextRequest) {
 
     if (error) {
       if (error.code === '23505') {
-        // Unique constraint violation
         return NextResponse.json(
           { error: 'A property with this address already exists' },
           { status: 409 }
@@ -107,7 +116,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ data: property }, { status: 201 })
+    return NextResponse.json({ data: property as Property }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -155,7 +164,7 @@ export async function PUT(req: NextRequest) {
       )
     }
 
-    const validatedData = propertySchema.partial().parse(updateData)
+    const validatedData = updatePropertySchema.parse(updateData)
 
     const { data: property, error } = await supabase
       .from('properties')
@@ -170,7 +179,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ data: property })
+    return NextResponse.json({ data: property as Property })
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
@@ -227,7 +236,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: error.message }, { status: 500 })
     }
 
-    return NextResponse.json({ message: 'Property deleted successfully' }, { status: 200 })
+    return NextResponse.json({ message: 'Property deleted successfully' })
   } catch (error) {
     console.error('Error in properties DELETE route:', error)
     return NextResponse.json({ error: 'Failed to delete property' }, { status: 500 })

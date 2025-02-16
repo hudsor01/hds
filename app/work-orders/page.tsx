@@ -188,11 +188,12 @@ export default function WorkOrdersPage() {
             }}
           >
             <option value="">Select a vendor</option>
-            {vendors?.data?.map((vendor: unknown) => (
-              <option key={vendor.id} value={vendor.id}>
-                {vendor.compunknown_name}
-              </option>
-            ))}
+            {Array.isArray(vendors?.data) &&
+              vendors.data.map((vendor: { id: string; compunknown_name: string }) => (
+                <option key={vendor.id} value={vendor.id}>
+                  {vendor.compunknown_name}
+                </option>
+              ))}
           </TextField>
           <TextField
             label="Property"
@@ -204,7 +205,7 @@ export default function WorkOrdersPage() {
             }}
           >
             <option value="">Select a property</option>
-            {properties?.data?.map((property: unknown) => (
+            {properties?.data?.map((property: { id: string; name: string }) => (
               <option key={property.id} value={property.id}>
                 {property.name}
               </option>

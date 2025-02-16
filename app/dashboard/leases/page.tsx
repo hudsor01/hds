@@ -1,10 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
-import type { Lease } from '@/types/lease'
-import { LEASE_STATUS } from '@/types/lease'
+import { Button } from '@/components/button'
+import type { Lease, type LEASE_STATUS } from '@/types/lease'
 import type { Property } from '@/types/property'
-import LeaseDialog from 'components/dialogs/lease-dialog'
+import LeaseDialog from '@/components/lease-dialog'
 import { useState } from 'react'
 import { Edit, Plus, Trash } from 'react-feather'
 
@@ -70,9 +69,7 @@ export default function LeasesPage() {
   const [selectedLease, setSelectedLease] = useState<Lease | undefined>()
   const [isDialogOpen, setIsDialogOpen] = useState(false)
 
-  const handleAddLease = async (
-    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>
-  ) => {
+  const handleAddLease = async (leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>) => {
     // In a real app, this would be an API call
     const newLease: Lease = {
       ...leaseData,
@@ -84,9 +81,7 @@ export default function LeasesPage() {
     setLeases([...leases, newLease])
   }
 
-  const handleEditLease = async (
-    leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>
-  ) => {
+  const handleEditLease = async (leaseData: Omit<Lease, 'id' | 'createdAt' | 'updatedAt' | 'documents'>) => {
     if (!selectedLease) return
 
     // In a real app, this would be an API call
@@ -162,14 +157,11 @@ export default function LeasesPage() {
                   <td className="px-6 py-4">Unit {lease.unitNumber}</td>
                   <td className="px-6 py-4">{lease.tenantName}</td>
                   <td className="px-6 py-4">
-                    {new Date(lease.startDate).toLocaleDateString()} -{' '}
-                    {new Date(lease.endDate).toLocaleDateString()}
+                    {new Date(lease.startDate).toLocaleDateString()} - {new Date(lease.endDate).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4">${lease.rentAmount.toLocaleString()}</td>
                   <td className="px-6 py-4">
-                    <span
-                      className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getStatusColor(lease.status)}`}
-                    >
+                    <span className={`rounded-full px-2 py-1 text-xs font-medium capitalize ${getStatusColor(lease.status)}`}>
                       {lease.status}
                     </span>
                   </td>

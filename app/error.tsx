@@ -1,12 +1,11 @@
 'use client'
 
-import React, { ReactElement } from 'react'
-import { FadeIn } from '@/components/animations/fade-in'
+import React, { type ReactElement, useEffect } from 'react'
+import { FadeIn } from '@/components/fade-in'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Container from '@mui/material/Container'
 import Typography from '@mui/material/Typography'
-import { useEffect } from 'react'
 import { RefreshCw, Send } from 'react-feather'
 
 interface ErrorProps {

@@ -1,7 +1,7 @@
 'use client'
 
-import { Card } from '@/components/ui/cards/card'
-import { Skeleton } from '@/components/ui/skeleton'
+import { Card } from '@/components/card'
+import { Skeleton } from '@/components/skeleton'
 
 export default function Loading() {
   return (

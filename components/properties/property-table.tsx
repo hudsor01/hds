@@ -1,163 +1,158 @@
 'use client'
 
-import { BaseDataGrid } from '@/components/common/data-grid'
-import { formatCurrency } from '@/utils/format'
-import type { PropertyRow, PropertyTableProps } from '@/types/index'
-import { MoreVert as MoreVertIcon } from '@mui/icons-material'
-import { Typography, Box, Chip, IconButton, Menu, MenuItem } from '@mui/material'
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useCallback, useMemo, useState } from 'react'
+import { useState } from 'react'
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from '@/components/ui/table'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import { Button } from '@/components/ui/button'
+import { Property, PropertyStatus } from '@/types/property'
+import { formatCurrency } from '@/lib/utils'
+import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
+import { Badge } from '@/components/ui/badge'
 
-interface ExtendedPropertyTableProps extends PropertyTableProps {
-  onEdit?: (property: PropertyRow) => void
-  onViewDetails?: (property: PropertyRow) => void
-  onManageTenants?: (property: PropertyRow) => void
+interface PropertyTableProps {
+  properties: Property[]
+  onEdit: (property: Property) => void
+  onDelete: (propertyId: string) => Promise<void>
 }
 
-interface MenuState {
-  anchorEl: HTMLElement | null
-  property: PropertyRow | null
-}
+export function PropertyTable({ properties, onEdit, onDelete }: PropertyTableProps) {
+  const [deleteId, setDeleteId] = useState<string | null>(null)
+  const [isDeleting, setIsDeleting] = useState(false)
 
-export function PropertyTable({
-  properties,
-  isLoading,
-  onEdit,
-  onViewDetails,
-  onManageTenants
-}: ExtendedPropertyTableProps) {
-  const [menuState, setMenuState] = useState<MenuState>({
-    anchorEl: null,
-    property: null
-  })
-
-  const handleOpenMenu = useCallback(
-    (event: React.MouseEvent<HTMLElement>, property: PropertyRow) => {
-      setMenuState({
-        anchorEl: event.currentTarget,
-        property
-      })
-    },
-    []
-  )
-
-  const handleCloseMenu = useCallback(() => {
-    setMenuState({
-      anchorEl: null,
-      property: null
-    })
-  }, [])
-
-  const getStatusColor = useCallback((status: string) => {
-    switch (status.toLowerCase()) {
-      case 'active':
-        return 'success'
-      case 'inactive':
-        return 'error'
-      default:
-        return 'warning'
+  const handleDelete = async () => {
+    if (!deleteId) return
+    
+    try {
+      setIsDeleting(true)
+      await onDelete(deleteId)
+    } catch (error) {
+      console.error('Error deleting property:', error)
+    } finally {
+      setIsDeleting(false)
+      setDeleteId(null)
     }
-  }, [])
+  }
 
-  const columns: GridColDef[] = useMemo(
-    () => [
-      {
-        field: 'name',
-        headerName: 'Property',
-        width: 250,
-        renderCell: (params: GridRenderCellParams<PropertyRow>) => (
-          <Box>
-            <Typography variant="body2" component="div">
-              {params.row.name}
-            </Typography>
-            <Typography variant="caption" color="text.secondary">
-              {params.row.address}
-            </Typography>
-          </Box>
-        )
-      },
-      {
-        field: 'property_status',
-        headerName: 'Status',
-        width: 130,
-        renderCell: (params: GridRenderCellParams<PropertyRow>) => (
-          <Chip label={params.value} color={getStatusColor(params.value)} size="small" />
-        )
-      },
-      {
-        field: 'rent_amount',
-        headerName: 'Rent',
-        width: 130,
-        valueFormatter: ({ value }: { value: number }) => formatCurrency(value)
-      },
-      {
-        field: 'property_type',
-        headerName: 'Type',
-        width: 130
-      },
-      {
-        field: 'actions',
-        headerName: 'Actions',
-        width: 100,
-        sortable: false,
-        renderCell: (params: GridRenderCellParams<PropertyRow>) => (
-          <>
-            <IconButton onClick={e => handleOpenMenu(e, params.row)} aria-label="property actions">
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={menuState.anchorEl}
-              open={Boolean(menuState.anchorEl) && menuState.property?.id === params.row.id}
-              onClose={handleCloseMenu}
-              transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-              anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-            >
-              {onEdit && (
-                <MenuItem
-                  onClick={() => {
-                    handleCloseMenu()
-                    onEdit(params.row)
-                  }}
-                >
-                  Edit
-                </MenuItem>
-              )}
-              {onViewDetails && (
-                <MenuItem
-                  onClick={() => {
-                    handleCloseMenu()
-                    onViewDetails(params.row)
-                  }}
-                >
-                  View Details
-                </MenuItem>
-              )}
-              {onManageTenants && (
-                <MenuItem
-                  onClick={() => {
-                    handleCloseMenu()
-                    onManageTenants(params.row)
-                  }}
-                >
-                  Manage Tenants
-                </MenuItem>
-              )}
-            </Menu>
-          </>
-        )
-      }
-    ],
-    [getStatusColor, handleOpenMenu, handleCloseMenu, onEdit, onViewDetails, onManageTenants]
-  )
+  const getStatusColor = (status: PropertyStatus) => {
+    switch (status) {
+      case PropertyStatus.ACTIVE:
+        return 'bg-green-500'
+      case PropertyStatus.INACTIVE:
+        return 'bg-gray-500'
+      case PropertyStatus.MAINTENANCE:
+        return 'bg-yellow-500'
+      case PropertyStatus.VACANT:
+        return 'bg-red-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
 
   return (
-    <BaseDataGrid
-      data={properties}
-      columns={columns}
-      isLoading={isLoading}
-      pageSize={10}
-      autoHeight
-      disableSelectionOnClick
-    />
+    <>
+      <div className="rounded-md border">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Property Name</TableHead>
+              <TableHead>Address</TableHead>
+              <TableHead>Type</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="text-right">Monthly Rent</TableHead>
+              <TableHead className="text-right">Current Value</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {properties.map((property) => (
+              <TableRow key={property.id}>
+                <TableCell className="font-medium">{property.name}</TableCell>
+                <TableCell>{`${property.address}, ${property.city}, ${property.state} ${property.zipCode}`}</TableCell>
+                <TableCell>{property.propertyType.replace('_', ' ')}</TableCell>
+                <TableCell>
+                  <Badge 
+                    variant="outline"
+                    className={cn("capitalize", getStatusColor(property.status))}
+                  >
+                    {property.status.toLowerCase()}
+                  </Badge>
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(property.monthlyRent)}
+                </TableCell>
+                <TableCell className="text-right">
+                  {formatCurrency(property.currentValue)}
+                </TableCell>
+                <TableCell className="text-right">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="icon">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => onEdit(property)}>
+                        <Pencil className="mr-2 h-4 w-4" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem 
+                        onClick={() => setDeleteId(property.id)}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
+
+      <AlertDialog open={!!deleteId} onOpenChange={() => setDeleteId(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Property</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete this property? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel disabled={isDeleting}>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleDelete}
+              disabled={isDeleting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {isDeleting ? 'Deleting...' : 'Delete'}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   )
 }

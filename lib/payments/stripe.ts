@@ -1,19 +1,10 @@
-import { type Team } from '@/types'
-import supabase from '@/lib/supabase'
-import { redirect } from 'next/navigation'
 import Stripe from 'stripe'
+import { redirect } from 'next/navigation'
+import { Team } from '@/lib/db/schema'
+import { getTeamByStripeCustomerId, getUser, updateTeamSubscription } from '@/lib/db/queries'
 
-if (!process.env.STRIPE_SECRET_KEY) {
-  throw new Error('Missing STRIPE_SECRET_KEY environment variable')
-}
-
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
-  apiVersion: '2025-01-27.acacia',
-  typescript: true,
-  appInfo: {
-    name: 'HDS Platform',
-    version: '1.0.0'
-  }
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2025-01-27.acacia'
 })
 
 export async function createCheckoutSession({
@@ -22,8 +13,8 @@ export async function createCheckoutSession({
 }: {
   team: Team | null
   priceId: string
-}): Promise<void> {
-  const { data: user, error } = await supabase.auth.getUser()
+}) {
+  const user = await getUser()
 
   if (!team || !user) {
     redirect(`/sign-up?redirect=checkout&priceId=${priceId}`)
@@ -51,9 +42,7 @@ export async function createCheckoutSession({
   redirect(session.url!)
 }
 
-export async function createCustomerPortalSession(
-  team: Team
-): Promise<Stripe.BillingPortal.Session> {
+export async function createCustomerPortalSession(team: Team) {
   if (!team.stripeCustomerId || !team.stripeProductId) {
     redirect('/pricing')
   }
@@ -112,12 +101,12 @@ export async function createCustomerPortalSession(
   })
 }
 
-export async function handleSubscriptionChange(subscription: Stripe.Subscription): Promise<void> {
+export async function handleSubscriptionChange(subscription: Stripe.Subscription) {
   const customerId = subscription.customer as string
   const subscriptionId = subscription.id
   const status = subscription.status
 
-  const team = getTeamByStripeCustomerId(customerId)
+  const team = await getTeamByStripeCustomerId(customerId)
 
   if (!team) {
     console.error('Team not found for Stripe customer:', customerId)
@@ -126,14 +115,14 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
 
   if (status === 'active' || status === 'trialing') {
     const plan = subscription.items.data[0]?.plan
-    updateTeamSubscription(team.id, {
+    await updateTeamSubscription(team.id, {
       stripeSubscriptionId: subscriptionId,
       stripeProductId: plan?.product as string,
       planName: (plan?.product as Stripe.Product).name,
       subscriptionStatus: status
     })
   } else if (status === 'canceled' || status === 'unpaid') {
-    updateTeamSubscription(team.id, {
+    await updateTeamSubscription(team.id, {
       stripeSubscriptionId: null,
       stripeProductId: null,
       planName: null,
@@ -142,16 +131,7 @@ export async function handleSubscriptionChange(subscription: Stripe.Subscription
   }
 }
 
-export async function getStripePrices(): Promise<
-  Array<{
-    id: string
-    productId: string
-    unitAmount: number | null
-    currency: string
-    interval: string | null
-    trialPeriodDays: number | null
-  }>
-> {
+export async function getStripePrices() {
   const prices = await stripe.prices.list({
     expand: ['data.product'],
     active: true,
@@ -163,20 +143,12 @@ export async function getStripePrices(): Promise<
     productId: typeof price.product === 'string' ? price.product : price.product.id,
     unitAmount: price.unit_amount,
     currency: price.currency,
-    interval: price.recurring?.interval ?? null,
-    trialPeriodDays: price.recurring?.trial_period_days ?? null
+    interval: price.recurring?.interval,
+    trialPeriodDays: price.recurring?.trial_period_days
   }))
 }
 
-export async function getStripeProducts(): Promise<
-  Array<{
-    id: string
-    name: string
-    description: string | null
-    defaultPriceId: string | null
-  }>
-> {
-
+export async function getStripeProducts() {
   const products = await stripe.products.list({
     active: true,
     expand: ['data.default_price']
@@ -187,117 +159,6 @@ export async function getStripeProducts(): Promise<
     name: product.name,
     description: product.description,
     defaultPriceId:
-      typeof product.default_price === 'string'
-        ? product.default_price
-        : (product.default_price?.id ?? null)
+      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id
   }))
-}
-
-function getTeamByStripeCustomerId(customerId: string): Team | null {
-  throw new Error('Function not implemented.')
-}
-
-function updateTeamSubscription(
-  id: unknown,
-  data: {
-    stripeSubscriptionId: string | null
-    stripeProductId: string | null
-    planName: string | null
-    subscriptionStatus: 'active' | 'trialing' | 'canceled' | 'unpaid'
-  }
-): void {
-  throw new Error('Function not implemented.')
-}
-
-export interface CreateCustomerParams {
-  email: string
-  name: string
-  metadata: Record<string, string>
-}
-
-export interface CreatePaymentIntentParams {
-  amount: number
-  currency?: string
-  customer: string
-  metadata: Record<string, string>
-}
-
-export const createStripeCustomer = async ({ email, name, metadata }: CreateCustomerParams): Promise<Stripe.Customer> => {
-  return stripe.customers.create({
-    email,
-    name,
-    metadata
-  })
-}
-
-export const createPaymentIntent = async ({
-  amount,
-  currency = 'usd',
-  customer,
-  metadata
-}: CreatePaymentIntentParams): Promise<Stripe.PaymentIntent> => {
-  return stripe.paymentIntents.create({
-    amount: Math.round(amount * 100), // Convert to cents
-    currency,
-    customer,
-    metadata,
-    automatic_payment_methods: {
-      enabled: true
-    }
-  })
-}
-
-// Webhook utilities
-export const constructWebhookEvent = (
-  payload: string | Buffer,
-  signature: string,
-  webhookSecret: string
-): Stripe.Event => {
-  return stripe.webhooks.constructEvent(payload, signature, webhookSecret)
-}
-
-// Customer utilities
-export const retrieveCustomer = async (
-  customerId: string
-): Promise<Stripe.Customer | Stripe.DeletedCustomer> => {
-  return stripe.customers.retrieve(customerId)
-}
-
-export const updateCustomer = async (
-  customerId: string,
-  data: Stripe.CustomerUpdateParams
-): Promise<Stripe.Customer> => {
-
-  return stripe.customers.update(customerId, data)
-}
-
-// Payment utilities
-export const retrievePaymentIntent = async (
-  paymentIntentId: string
-): Promise<Stripe.PaymentIntent> => {
-  return stripe.paymentIntents.retrieve(paymentIntentId)
-}
-
-export const cancelPaymentIntent = async (
-  paymentIntentId: string
-): Promise<Stripe.PaymentIntent> => {
-  
-  return stripe.paymentIntents.cancel(paymentIntentId)
-}
-
-// Subscription utilities
-export const createSubscription = async (
-  customerId: string,
-  priceId: string,
-  metadata?: Record<string, string>
-): Promise<Stripe.Subscription> => {
-  return stripe.subscriptions.create({
-    customer: customerId,
-    items: [{ price: priceId }],
-    metadata
-  })
-}
-
-export const cancelSubscription = async (subscriptionId: string): Promise<Stripe.Subscription> => {
-  return stripe.subscriptions.cancel(subscriptionId)
 }

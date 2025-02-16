@@ -10,20 +10,17 @@ import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
 const PerformanceChart = dynamic(
-  () => import('components/dashboard/performance-chart').then(mod => mod.PerformanceChart),
+  () => import('@/components/performance-chart').then(mod => mod.PerformanceChart),
   {
     ssr: false
   }
 )
 
-const DonutChart = dynamic(
-  () => import('components/dashboard/donut-chart').then(mod => mod.DonutChart),
-  {
-    ssr: false
-  }
-)
+const DonutChart = dynamic(() => import('@/components/donut-chart').then(mod => mod.DonutChart), {
+  ssr: false
+})
 
-const BarChart = dynamic(() => import('components/dashboard/bar-chart').then(mod => mod.BarChart), {
+const BarChart = dynamic(() => import('@/components/bar-chart').then(mod => mod.BarChart), {
   ssr: false
 })
 

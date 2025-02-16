@@ -1,45 +1,55 @@
 import { PrismaClient } from '@prisma/client'
 
-export const prisma = new PrismaClient()
+const prisma = new PrismaClient()
 
 async function main() {
-  // Create a test user first
-  const user = await prisma.users.create({
-    data: {
+  // Upsert test user
+  const user = await prisma.users.upsert({
+    where: { email: 'owner@example.com' },
+    update: {}, // No updates if exists
+    create: {
+      clerkId: 'test_owner_id',
+      role: 'USER',
       name: 'Test Owner',
       email: 'owner@example.com',
       image: 'https://example.com/avatar.jpg',
-      subscription_status: 'active'
+      subscription_status: 'inactive'
     }
   })
 
-  // Create a test property
-  const property = await prisma.properties.create({
-    data: {
+  // Upsert test property
+  const property = await prisma.properties.upsert({
+    where: {
+      id: user.id // Using user.id as property id for simplicity
+    },
+    update: {}, // No updates if exists
+    create: {
       name: 'Test Property',
       address: '3604 Steven Drive',
       city: 'Plano',
       state: 'Texas',
       zip: '75023',
       property_type: 'Residential',
+      property_status: 'active',
       rent_amount: 2800,
-      owner_id: user.id,
-      status: 'active',
-      amenities: [],
-      images: []
+      user_id: user.id
     }
   })
 
-  // Create a test tenant
-  await prisma.tenants.create({
-    data: {
+  // Upsert test tenant
+  await prisma.tenants.upsert({
+    where: {
+      id: property.id // Using property.id as tenant id for simplicity
+    },
+    update: {}, // No updates if exists
+    create: {
       property_id: property.id,
       user_id: user.id,
       first_name: 'Alicia',
       last_name: 'Douglass',
       email: 'alicia@loishouseinplano.com',
       phone: '972-208-2863',
-      tenant_status: 'ACTIVE',
+      tenant_status: 'active',
       move_in_date: new Date(),
       emergency_contact: {
         name: 'Lois Greer',
@@ -49,14 +59,16 @@ async function main() {
       documents: []
     }
   })
+
+  console.log('Seed completed successfully')
 }
 
 main()
-  .then(async () => {
-    await prisma.$disconnect()
-  })
   .catch(async e => {
     console.error(e)
     await prisma.$disconnect()
     process.exit(1)
+  })
+  .finally(async () => {
+    await prisma.$disconnect()
   })

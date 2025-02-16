@@ -1,9 +1,9 @@
 'use client'
 
-import { Button } from '@/components/ui/buttons/button'
+import { Button } from '@/components/button'
 import { Dialog } from '@/components/ui/dialogs/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
 import type { PropertyRow, PropertySale } from '@/types/property'
 import { useState } from 'react'
 
@@ -14,12 +14,7 @@ interface PropertySaleDialogProps {
   onSubmitAction: (data: PropertySale) => Promise<void>
 }
 
-export function PropertySaleDialog({
-  open,
-  onOpenChangeAction,
-  property,
-  onSubmitAction
-}: PropertySaleDialogProps) {
+export function PropertySaleDialog({ open, onOpenChangeAction, property, onSubmitAction }: PropertySaleDialogProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -66,11 +61,7 @@ export function PropertySaleDialog({
           </div>
           <div className="space-y-2">
             <Label htmlFor="notes">Notes</Label>
-            <Input
-              id="notes"
-              name="notes"
-              placeholder="unknown additional details about the sale"
-            />
+            <Input id="notes" name="notes" placeholder="unknown additional details about the sale" />
           </div>
         </div>
       </form>

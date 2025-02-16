@@ -21,5 +21,8 @@
   },
   "WillLuke.nextjs.addTypesOnSave": true,
   "WillLuke.nextjs.hasPrompted": true,
-  "i18n-ally.localesPaths": ["app/api/messages"]
+  "i18n-ally.localesPaths": [
+    "app/api/messages"
+  ],
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -1,109 +1,175 @@
 'use client'
 
-import { type ReactElement } from 'react'
-import { motion } from 'framer-motion'
-import { Typography } from '@mui/material'
-import Grid2 from '@mui/material/Grid2'
+import { PublicLayout } from '@/components/public-layout'
+import Image from 'next/image'
+import Link from 'next/link'
+import { Button, Card, CardContent, Typography, Box, Container, useTheme, styled } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import { Home, People, Description, Settings, BarChart, AccessTime } from '@mui/icons-material'
+import theme from './theme'
 
-import { PublicLayout } from '@/components/layout/public-layout'
-import { PageTransition } from '@/components/layout/page-transition'
-import { Container } from '@/components/ui/container'
-import { Card } from '@/components/ui/card'
-import { HeroSection } from '@/components/sections/hero-section'
-import { Button } from '@/components/ui/button'
-
-const MotionCard = motion(Card)
-
-interface Feature {
-  title: string
-  description: string
-}
-
-const features: Feature[] = [
+const features = [
   {
-    title: 'Smart Management',
-    description: 'Streamline your property operations with AI-powered insights'
+    icon: Home,
+    title: 'Property Management',
+    description: 'Streamline your property portfolio management with intuitive tools and real-time insights.'
   },
   {
-    title: 'Real-time Analytics',
-    description: 'Make data-driven decisions with comprehensive reporting'
+    icon: People,
+    title: 'Tenant Management',
+    description: 'Efficiently handle tenant relationships from applications to lease management.'
   },
   {
+    icon: Description,
+    title: 'Document Handling',
+    description: 'Digitize and organize all property-related documents in one secure location.'
+  },
+  {
+    icon: Settings,
+    title: 'Maintenance Tracking',
+    description: 'Stay on top of property maintenance with automated scheduling and tracking.'
+  },
+  {
+    icon: BarChart,
+    title: 'Financial Analytics',
+    description: 'Get detailed financial insights with comprehensive reporting and analytics.'
+  },
+  {
+    icon: AccessTime,
     title: 'Automated Workflows',
-    description: 'Automate routine tasks and focus on what matters'
+    description: 'Save time with automated processes for rent collection and maintenance requests.'
   }
 ]
 
-export default function HomePage(): ReactElement {
+const stats = [
+  { value: '98%', label: 'Customer Satisfaction' },
+  { value: '50%', label: 'Time Saved on Management' },
+  { value: '35%', label: 'Increase in ROI' },
+  { value: '24/7', label: 'Support Available' }
+]
+
+const FeatureCard = styled(Card)(({ theme }) => ({
+  transition: theme.transitions.create('transform'),
+  '&:hover': {
+    transform: 'translateY(-8px)',
+    boxShadow: theme.shadows[6]
+  }
+}))
+
+export default function HomePage() {
+  const theme = useTheme()
+
   return (
     <PublicLayout>
-      <PageTransition>
-        <HeroSection />
-        <section className="bg-background-ui relative py-12">
-          <Container>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-text-primary mb-12 text-3xl font-bold"
+      {/* Hero Section */}
+      <Box
+        sx={{
+          pt: { xs: 4, md: 12 },
+          pb: { xs: 8, md: 12 },
+          textAlign: 'center'
+        }}
+      >
+        <Container maxWidth="lg">
+          <Box sx={{ mb: 8 }}>
+            <Typography
+              variant="h1"
+              sx={{
+                fontSize: { xs: '2.5rem', md: '4rem' },
+                fontWeight: 900,
+                mb: 2,
+                background: `linear-gradient(45deg, ${theme.palette.primary.main} 30%, ${theme.palette.secondary.main} 90%)`,
+                WebkitBackgroundClip: 'text',
+                WebkitTextFillColor: 'transparent'
+              }}
             >
-              Coming Soon
-            </motion.h2>
-            <Grid2 container spacing={4}>
-              {features.map((feature, index) => (
-                <Grid2 key={feature.title} size={{ xs: 12, sm: 6, md: 4 }}>
-                  <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.5, delay: index * 0.2 }}
-                    viewport={{ once: true }}
-                  >
-                    <MotionCard
-                      variant="outline"
-                      className="p-6 transition-shadow duration-300 hover:shadow-lg"
-                    >
-                      <Typography
-                        variant="h5"
-                        component="h3"
-                        className="mb-4 text-[var(--primary-color)]"
-                      >
-                        {feature.title}
-                      </Typography>
-                      <Typography variant="body1" className="text-text-secondary">
-                        {feature.description}
-                      </Typography>
-                    </MotionCard>
-                  </motion.div>
-                </Grid2>
-              ))}
-            </Grid2>
-          </Container>
-        </section>
-        <section className="bg-background-ui relative py-12">
-          <Container>
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-              viewport={{ once: true }}
-              className="text-text-primary mb-12 text-3xl font-bold"
-            >
-              Join Our Waitlist
-            </motion.h2>
-            <form className="flex flex-col items-center">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="mb-4 w-full max-w-md rounded-md border border-gray-300 p-2"
-              />
-              <Button type="submit" variant="primary">
-                Join Waitlist
+              Manage Properties
+              <br />
+              with Confidence
+            </Typography>
+
+            <Typography variant="h5" color="text.secondary" sx={{ mb: 4, mx: 'auto', maxWidth: 800 }}>
+              A modern property management platform designed for residential property owners. Streamline your operations and boost
+              efficiency.
+            </Typography>
+
+            <Box sx={{ display: 'flex', gap: 3, justifyContent: 'center', mb: 8 }}>
+              <Button component={Link} href="/sign-up" variant="contained" size="large" sx={{ px: 4, py: 2, borderRadius: 8 }}>
+                Get Started
               </Button>
-            </form>
-          </Container>
-        </section>
-      </PageTransition>
+              <Button component={Link} href="/features" variant="outlined" size="large" sx={{ px: 4, py: 2, borderRadius: 8 }}>
+                Learn More
+              </Button>
+            </Box>
+          </Box>
+
+          {/* Dashboard Preview */}
+          <Box
+            sx={{
+              position: 'relative',
+              height: { xs: 300, md: 500 },
+              mx: 'auto',
+              maxWidth: 1200,
+              borderRadius: 4,
+              overflow: 'hidden',
+              boxShadow: 6
+            }}
+          >
+            <Image src="/dashboard-preview.png" alt="HDS Platform Dashboard" fill style={{ objectFit: 'cover' }} priority />
+          </Box>
+        </Container>
+      </Box>
+
+      {/* Features Grid */}
+      <Box sx={{ py: { xs: 8, md: 12 }, bgcolor: 'background.default' }}>
+        <Container>
+          <Grid container spacing={4}>
+            {features.map((feature, index) => (
+              <Grid item xs={12} sm={6} md={4} key={index}>
+                <FeatureCard>
+                  <CardContent sx={{ textAlign: 'center', py: 4 }}>
+                    <Box
+                      sx={{
+                        display: 'inline-flex',
+                        p: 2,
+                        borderRadius: 2,
+                        bgcolor: 'primary.light',
+                        color: 'primary.main',
+                        mb: 2
+                      }}
+                    >
+                      <feature.icon fontSize="large" />
+                    </Box>
+                    <Typography variant="h5" gutterBottom>
+                      {feature.title}
+                    </Typography>
+                    <Typography variant="body1" color="text.secondary">
+                      {feature.description}
+                    </Typography>
+                  </CardContent>
+                </FeatureCard>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
+
+      {/* Stats Section */}
+      <Box sx={{ py: { xs: 6, md: 10 } }}>
+        <Container>
+          <Grid container spacing={4}>
+            {stats.map((stat, index) => (
+              <Grid item xs={6} md={3} key={index} sx={{ textAlign: 'center' }}>
+                <Typography variant="h3" color="primary" gutterBottom>
+                  {stat.value}
+                </Typography>
+                <Typography variant="body1" color="text.secondary">
+                  {stat.label}
+                </Typography>
+              </Grid>
+            ))}
+          </Grid>
+        </Container>
+      </Box>
     </PublicLayout>
   )
 }

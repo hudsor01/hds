@@ -1,94 +1,54 @@
 'use client'
 
 import { createTheme } from '@mui/material/styles'
-import { ThemeOptions } from '@mui/material/styles'
-import { Playfair_Display, Roboto } from 'next/font/google'
+import { Playfair_Display as PlayfairDisplay, Roboto } from 'next/font/google'
 
-// Initialize fonts using the exact packages from the original package.json
-// Using @fontsource/playfair-display and @fontsource/roboto
-const roboto = Roboto({
+export const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
   subsets: ['latin'],
-  display: 'swap'
+  display: 'swap',
+  adjustFontFallback: false
 })
 
-const playfair = Playfair_Display({
+export const playfair = PlayfairDisplay({
   weight: ['400', '500', '600', '700'],
   subsets: ['latin'],
-  display: 'swap'
+  display: 'swap',
+  adjustFontFallback: false
 })
 
-// Theme configuration using only components available in the specified @mui versions
-const themeOptions: ThemeOptions = {
+export const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#2196F3',
+      light: '#64B5F6',
+      dark: '#1976D2',
+      contrastText: '#fff'
+    },
+    secondary: {
+      main: '#F50057',
+      light: '#FF4081',
+      dark: '#C51162',
+      contrastText: '#fff'
+    },
+    text: {
+      primary: '#1A2027',
+      secondary: '#3E5060'
+    },
+    background: {
+      default: '#F5F5F5',
+      paper: '#FFFFFF'
+    }
+  },
   typography: {
-    fontFamily: 'var(--font-sans)',
+    fontFamily: roboto.style.fontFamily,
     h1: {
       fontFamily: playfair.style.fontFamily
     },
     h2: {
       fontFamily: playfair.style.fontFamily
-    },
-    h3: {
-      fontFamily: playfair.style.fontFamily
-    },
-    button: {
-      textTransform: 'none'
     }
-  },
-  components: {
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          scrollBehavior: 'smooth',
-          WebkitFontSmoothing: 'antialiased'
-        }
-      }
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          textTransform: 'none',
-          borderRadius: '8px'
-        },
-        contained: {
-          boxShadow: 'none',
-          '&:hover': {
-            boxShadow: 'none'
-          }
-        }
-      }
-    },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: '12px'
-        }
-      }
-    }
-  },
-  palette: {
-    primary: {
-      main: 'var(--color-primary)',
-      light: 'var(--color-primary-light)',
-      dark: 'var(--color-primary-dark)'
-    },
-    secondary: {
-      main: '#9c27b0',
-      light: '#ba68c8',
-      dark: '#7b1fa2'
-    },
-    text: {
-      primary: 'var(--color-text-primary)',
-      secondary: 'var(--color-text-secondary)'
-    },
-    background: {
-      default: 'var(--color-background-app)',
-      paper: 'var(--color-background-ui)'
-    }
-  },
-  shape: {
-    borderRadius: 8
   }
-}
+})
 
-export const theme = createTheme(themeOptions)
+export default theme

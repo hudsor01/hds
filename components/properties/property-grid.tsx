@@ -1,50 +1,50 @@
 'use client'
 
-import { type PropertyRow } from '@/types'
-import {
-  Box,
-  Grid,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography,
-  Menu,
-  MenuItem,
-  Skeleton
-} from '@mui/material'
-import { ErrorBoundary } from '@/components/error/error-boundary'
-import { useState } from 'react'
+import { type Property } from '@/types/properties'
+import { Grid, Box, Typography } from '@mui/material'
+import { PropertyCard } from '@/components/properties/property-card'
+import { ErrorBoundary } from '@/components/error-boundary'
+import { cn } from '@/lib/utils'
 
-interface PropertyGridProps {
-  properties: PropertyRow[]
-  isLoading: boolean
-  onEdit?: (property: PropertyRow) => void
-  onViewDetails?: (property: PropertyRow) => void
-  onManageTenants?: (property: PropertyRow) => void
-  error?: Error
+export interface PropertyGridProps {
+  properties: Property[]
+  isLoading?: boolean
+  error?: Error | null
+  className?: string
+  onPropertyClick?: (property: Property) => void
+  showActions?: boolean
+  loadingCount?: number
 }
 
 export function PropertyGrid({
   properties,
   isLoading,
-  onEdit,
-  onViewDetails,
-  onManageTenants,
-  error
-}: PropertyGridProps) {
+  error,
+  className,
+  onPropertyClick,
+  showActions = true,
+  loadingCount = 6
+}: PropertyGridProps): JSX.Element {
+  // Handle error state
   if (error) {
     return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Typography color="error">Error loading properties: {error.message}</Typography>
+      <Box className="p-6 text-center">
+        <Typography color="error" variant="h6" gutterBottom>
+          Error loading properties
+        </Typography>
+        <Typography color="error.main" variant="body2">
+          {error.message}
+        </Typography>
       </Box>
     )
   }
 
+  // Handle loading state
   if (isLoading) {
     return (
-      <Grid container spacing={3}>
-        {[...Array(6)].map((_, index) => (
-          <Grid item xs={12} sm={6} md={4} key={index}>
+      <Grid container spacing={3} className={className}>
+        {Array.from({ length: loadingCount }, (_, index) => (
+          <Grid item xs={12} sm={6} md={4} key={`skeleton-${index}`}>
             <PropertyCardSkeleton />
           </Grid>
         ))}
@@ -52,25 +52,27 @@ export function PropertyGrid({
     )
   }
 
-  if (!properties.length) {
+  // Handle empty state
+  if (!properties?.length) {
     return (
-      <Box sx={{ p: 3, textAlign: 'center' }}>
-        <Typography>No properties found</Typography>
+      <Box className="p-6 text-center">
+        <Typography variant="h6" color="text.secondary" gutterBottom>
+          No properties found
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
+          Try adjusting your filters or add a new property
+        </Typography>
       </Box>
     )
   }
 
+  // Render property grid
   return (
-    <ErrorBoundary>
-      <Grid container spacing={3}>
+    <ErrorBoundary fallback={<ErrorMessage />}>
+      <Grid container spacing={3} className={cn('w-full', className)}>
         {properties.map(property => (
           <Grid item xs={12} sm={6} md={4} key={property.id}>
-            <PropertyCard
-              property={property}
-              onEdit={onEdit}
-              onViewDetails={onViewDetails}
-              onManageTenants={onManageTenants}
-            />
+            <PropertyCard property={property} showActions={showActions} onPropertyClick={onPropertyClick} />
           </Grid>
         ))}
       </Grid>
@@ -78,131 +80,38 @@ export function PropertyGrid({
   )
 }
 
-interface PropertyCardProps {
-  property: PropertyRow
-  onEdit?: (property: PropertyRow) => void
-  onViewDetails?: (property: PropertyRow) => void
-  onManageTenants?: (property: PropertyRow) => void
-}
-
-function PropertyCard({ property, onEdit, onViewDetails, onManageTenants }: PropertyCardProps) {
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
-
-  const handleOpenMenu = (event: React.MouseEvent<HTMLElement>) => {
-    setAnchorEl(event.currentTarget)
-  }
-
-  const handleCloseMenu = () => {
-    setAnchorEl(null)
-  }
-
+function PropertyCardSkeleton(): JSX.Element {
   return (
-    <Card sx={{ height: '100%' }}>
-      <CardMedia
-        component="img"
-        height="200"
-        image="/placeholder-property.jpg"
-        alt={property.name}
-      />
-      <CardContent>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'flex-start'
-          }}
-        >
-          <Box>
-            <Typography variant="h6" component="h2">
-              {property.name}
-            </Typography>
-            <Typography color="text.secondary" gutterBottom>
-              {property.address}
-            </Typography>
-          </Box>
-          <IconButton onClick={handleOpenMenu}>
-            <MoreVertIcon />
-          </IconButton>
+    <Box className="bg-card h-full w-full overflow-hidden rounded-lg">
+      <Box className="bg-muted aspect-video w-full animate-pulse" />
+      <Box className="space-y-4 p-6">
+        <Box className="space-y-2">
+          <Box className="bg-muted h-4 w-3/4 animate-pulse rounded" />
+          <Box className="bg-muted h-4 w-1/2 animate-pulse rounded" />
         </Box>
-
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="h5" color="primary">
-            {formatCurrency(property.rent_amount)}
-            <Typography component="span" variant="body2" color="text.secondary">
-              /month
-            </Typography>
-          </Typography>
+        <Box className="space-y-2 pt-4">
+          <Box className="bg-muted h-6 w-1/3 animate-pulse rounded" />
+          <Box className="bg-muted h-4 w-full animate-pulse rounded" />
         </Box>
-
-        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-          <Chip
-            label={property.property_status}
-            color={
-              property.property_status === 'active'
-                ? 'success'
-                : property.property_status === 'inactive'
-                  ? 'error'
-                  : 'warning'
-            }
-            size="small"
-          />
-          {property.property_type && (
-            <Chip label={property.property_type} size="small" variant="outlined" />
-          )}
+        <Box className="flex gap-2 pt-2">
+          <Box className="bg-muted h-8 w-20 animate-pulse rounded" />
+          <Box className="bg-muted h-8 w-20 animate-pulse rounded" />
+          <Box className="bg-muted h-8 w-20 animate-pulse rounded" />
         </Box>
-      </CardContent>
-
-      <Menu anchorEl={anchorEl} open={Boolean(anchorEl)} onClose={handleCloseMenu}>
-        {onEdit && (
-          <MenuItem
-            onClick={() => {
-              handleCloseMenu()
-              onEdit(property)
-            }}
-          >
-            Edit
-          </MenuItem>
-        )}
-        {onViewDetails && (
-          <MenuItem
-            onClick={() => {
-              handleCloseMenu()
-              onViewDetails(property)
-            }}
-          >
-            View Details
-          </MenuItem>
-        )}
-        {onManageTenants && (
-          <MenuItem
-            onClick={() => {
-              handleCloseMenu()
-              onManageTenants(property)
-            }}
-          >
-            Manage Tenants
-          </MenuItem>
-        )}
-      </Menu>
-    </Card>
+      </Box>
+    </Box>
   )
 }
 
-function PropertyCardSkeleton() {
+function ErrorMessage(): JSX.Element {
   return (
-    <Card>
-      <Skeleton variant="rectangular" height={200} />
-      <CardContent>
-        <Skeleton variant="text" width="60%" height={32} />
-        <Skeleton variant="text" width="40%" />
-        <Box sx={{ mt: 2 }}>
-          <Skeleton variant="text" width="30%" height={40} />
-        </Box>
-        <Box sx={{ mt: 2, display: 'flex', gap: 1 }}>
-          <Skeleton variant="rectangular" width={80} height={24} />
-          <Skeleton variant="rectangular" width={80} height={24} />
-        </Box>
-      </CardContent>
-    </Card>
+    <Box className="p-6 text-center">
+      <Typography variant="h6" color="error" gutterBottom>
+        Something went wrong
+      </Typography>
+      <Typography variant="body2" color="text.secondary">
+        There was an error loading the property grid. Please try refreshing the page.
+      </Typography>
+    </Box>
   )
 }

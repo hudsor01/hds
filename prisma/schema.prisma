@@ -6,141 +6,140 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  directUrl = env("DIRECT_URL")
-  schemas  = ["public", "auth", "admin"]
+  schemas  = ["public", "admin"]
 }
 
-// Core User Model
 model users {
-  id                  String    @id @default(uuid()) @db.Uuid
-  role                String    @default("USER")
-  name                String?
-  email               String    @unique
-  image               String?
-  created_at          DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at          DateTime  @default(now()) @db.Timestamptz(6)
-  deleted_at          DateTime? @db.Timestamptz(6)
-  stripe_customer_id  String?
-  subscription_status String?   @default("inactive")
-
-  // Relations
+  id                   String                 @id @default(uuid()) @db.Uuid
+  clerkId              String                 @unique
+  role                 String                 @default("USER")
+  name                 String?
+  email                String                 @unique
+  image                String?
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  deleted_at           DateTime?              @db.Timestamptz(6)
+  stripe_customer_id   String?
+  subscription_status  String?                @default("inactive")
+  sessions             Session[]
+  audit_logs           public_audit_logs[]
+  email_addresses      email_addresses[]
+  inspections          inspections[]          @relation("UserInspections")
+  invoices             invoices[]
+  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
+  payment_methods      payment_methods[]
+  payments             payments[]             @relation("UserPayments")
   properties           properties[]           @relation("UserProperties")
   tenants              tenants[]              @relation("UserTenancies")
-  maintenance_requests maintenance_requests[] @relation("UserMaintenanceRequests")
-  payments            payments[]             @relation("UserPayments")
-  sessions            Session[]
-  inspections          inspections[]          @relation("UserInspections")
+  transactions         transactions[]
   vendors              vendors[]              @relation("UserVendors")
   work_orders          work_orders[]          @relation("UserWorkOrders")
 
-  @@schema("public")
   @@index([email])
+  @@index([clerkId])
+  @@schema("public")
 }
 
 model properties {
-  id              String    @id @default(uuid()) @db.Uuid
-  name            String
-  address         String
-  city            String
-  state           String
-  zip             String
-  property_status String    @default("active")
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime  @default(now()) @db.Timestamptz(6)
-  property_type   String    @default("Residential")
-  rent_amount     Decimal   @db.Decimal(10, 2)
-  user_id         String    @db.Uuid
-
-  // Relations
-  User                 users                  @relation("UserProperties", fields: [user_id], references: [id])
+  id                   String                 @id @default(uuid()) @db.Uuid
+  name                 String
+  address              String
+  city                 String
+  state                String
+  zip                  String
+  property_status      String                 @default("active")
+  created_at           DateTime               @default(now()) @db.Timestamptz(6)
+  updated_at           DateTime               @default(now()) @db.Timestamptz(6)
+  property_type        String                 @default("Residential")
+  rent_amount          Decimal                @db.Decimal(10, 2)
+  user_id              String                 @db.Uuid
+  inspections          inspections[]          @relation("PropertyInspections")
+  leases               leases[]               @relation("PropertyLeases")
   maintenance_requests maintenance_requests[] @relation("PropertyMaintenanceRequests")
-  tenants             tenants[]              @relation("PropertyTenancies")
-  payments            payments[]             @relation("PropertyPayments")
-  leases              leases[]               @relation("PropertyLeases")
-  inspections         inspections[]          @relation("PropertyInspections")
+  payments             payments[]             @relation("PropertyPayments")
+  User                 users                  @relation("UserProperties", fields: [user_id], references: [id])
+  tenants              tenants[]              @relation("PropertyTenancies")
+  units                units[]
   work_orders          work_orders[]          @relation("PropertyWorkOrders")
 
-  @@schema("public")
   @@index([property_status])
   @@index([user_id])
+  @@index([user_id], map: "idx_properties_user")
+  @@schema("public")
 }
 
 model maintenance_requests {
-  id          String    @id @default(uuid()) @db.Uuid
+  id          String     @id @default(uuid()) @db.Uuid
   title       String
   description String
-  priority    String    @default("LOW")
-  created_at  DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at  DateTime  @default(now()) @db.Timestamptz(6)
-  property_id String    @db.Uuid
-  user_id     String    @db.Uuid
+  priority    String     @default("LOW")
+  created_at  DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime   @default(now()) @db.Timestamptz(6)
+  property_id String     @db.Uuid
+  user_id     String     @db.Uuid
+  property    properties @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
+  user        users      @relation("UserMaintenanceRequests", fields: [user_id], references: [id])
 
-  // Relations
-  property properties @relation("PropertyMaintenanceRequests", fields: [property_id], references: [id])
-  user     users      @relation("UserMaintenanceRequests", fields: [user_id], references: [id])
-
-  @@schema("public")
   @@index([property_id])
   @@index([user_id])
+  @@schema("public")
 }
 
 model tenants {
-  id                  String    @id @default(uuid()) @db.Uuid
-  property_id         String    @db.Uuid
-  first_name          String
-  last_name           String
-  email               String
-  phone               String?
-  tenant_status       String    @default("active")
-  move_in_date        DateTime? @db.Date
-  move_out_date       DateTime? @db.Date
-  emergency_contact   Json?     @default("{}")
-  documents           Json[]    @default([])
-  created_at          DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at          DateTime  @default(now()) @db.Timestamptz(6)
-  user_id             String    @db.Uuid
+  id                String     @id @default(uuid()) @db.Uuid
+  property_id       String     @db.Uuid
+  first_name        String
+  last_name         String
+  email             String
+  phone             String?
+  tenant_status     String     @default("active")
+  move_in_date      DateTime?  @db.Date
+  move_out_date     DateTime?  @db.Date
+  emergency_contact Json?      @default("{}")
+  documents         Json[]     @default([])
+  created_at        DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at        DateTime   @default(now()) @db.Timestamptz(6)
+  user_id           String     @db.Uuid
+  payments          payments[]
+  property          properties @relation("PropertyTenancies", fields: [property_id], references: [id])
+  User              users      @relation("UserTenancies", fields: [user_id], references: [id])
 
-  // Relations
-  User                 users                  @relation("UserTenancies", fields: [user_id], references: [id])
-  property             properties             @relation("PropertyTenancies", fields: [property_id], references: [id])
-  payments             payments[]
-
-  @@schema("public")
   @@index([tenant_status])
   @@index([property_id])
   @@index([email])
+  @@schema("public")
 }
 
 model accounts {
-  id                String  @id
-  user_id           String
-  account_type      String
-  provider          String
+  id                  String  @id
+  user_id             String
+  account_type        String
+  provider            String
   provider_account_id String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
+  refresh_token       String?
+  access_token        String?
+  expires_at          Int?
+  token_type          String?
+  scope               String?
+  id_token            String?
+  session_state       String?
 
   @@unique([provider, provider_account_id])
   @@schema("public")
 }
 
 model documents {
-  id          String    @id(map: "documents_pkey") @default(uuid()) @db.Uuid
+  id          String    @id @default(uuid()) @db.Uuid
   name        String
   description String?
   url         String
   type        String
   size        BigInt?
-  property_id  String?   @db.Uuid
-  lease_id     String?   @db.Uuid
-  uploaded_by  String    @db.Uuid
-  created_at   DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at   DateTime? @default(now()) @db.Timestamptz(6)
+  property_id String?   @db.Uuid
+  lease_id    String?   @db.Uuid
+  uploaded_by String    @db.Uuid
+  created_at  DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime? @default(now()) @db.Timestamptz(6)
 
   @@schema("public")
 }
@@ -197,9 +196,9 @@ model ip_blacklist {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model leases {
-  user_id       String    @id @default(uuid()) @db.Uuid
+  user_id       String     @id @default(uuid()) @db.Uuid
   tenant_id     String
-  property_id   String    @db.Uuid
+  property_id   String     @db.Uuid
   lease_type    LeaseType
   start_date    DateTime
   end_date      DateTime?
@@ -207,11 +206,9 @@ model leases {
   depositAmount Decimal
   payment_day   Int
   documents     String[]
-  created_at    DateTime  @default(now()) @db.Timestamptz(6)
-  lease_status        String?   @default("Pending")
-
-  // Relations
-  property properties @relation("PropertyLeases", fields: [property_id], references: [id])
+  created_at    DateTime   @default(now()) @db.Timestamptz(6)
+  lease_status  String?    @default("Pending")
+  property      properties @relation("PropertyLeases", fields: [property_id], references: [id])
 
   @@index([created_at])
   @@index([end_date])
@@ -274,15 +271,15 @@ model messages {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model notifications {
-  id         String            @id @default(uuid()) @db.Uuid
-  user_id    String            @db.Uuid
+  id         String           @id @default(uuid()) @db.Uuid
+  user_id    String           @db.Uuid
   type       NotificationType
   title      String
   message    String
-  data       Json?             @default("{}")
-  read_at    DateTime?         @db.Timestamptz(6)
-  created_at DateTime?         @default(now()) @db.Timestamptz(6)
-  updated_at DateTime?         @default(now()) @db.Timestamptz(6)
+  data       Json?            @default("{}")
+  read_at    DateTime?        @db.Timestamptz(6)
+  created_at DateTime?        @default(now()) @db.Timestamptz(6)
+  updated_at DateTime?        @default(now()) @db.Timestamptz(6)
 
   @@index([created_at])
   @@index([type])
@@ -295,7 +292,6 @@ model organizations {
   name       String
   created_at DateTime? @default(now()) @db.Timestamp(6)
   updated_at DateTime? @default(now()) @db.Timestamp(6)
-
 
   @@schema("public")
 }
@@ -316,34 +312,32 @@ model password_reset_requests {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model payments {
-  id                String    @id @default(uuid()) @db.Uuid
-  tenant_id         String    @db.Uuid
-  property_id       String    @db.Uuid
-  payment_amount    Decimal   @db.Decimal(10, 2)
-  payment_type      String
-  payment_method    String
-  payment_date      DateTime  @db.Date
-  payment_status    String    @default("PENDING")
-  payment_notes     String?
-  created_at        DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at        DateTime  @default(now()) @db.Timestamptz(6)
-  user_id           String    @db.Uuid
+  id             String     @id @default(uuid()) @db.Uuid
+  tenant_id      String     @db.Uuid
+  property_id    String     @db.Uuid
+  payment_amount Decimal    @db.Decimal(10, 2)
+  payment_status String     @default("PENDING")
+  payment_type   String
+  payment_method String
+  payment_date   DateTime   @db.Date
+  payment_notes  String?
+  created_at     DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime   @default(now()) @db.Timestamptz(6)
+  user_id        String     @db.Uuid
+  property       properties @relation("PropertyPayments", fields: [property_id], references: [id])
+  tenant         tenants    @relation(fields: [tenant_id], references: [id])
+  user           users      @relation("UserPayments", fields: [user_id], references: [id])
 
-  // Relations
-  tenant    tenants    @relation(fields: [tenant_id], references: [id])
-  property  properties @relation("PropertyPayments", fields: [property_id], references: [id])
-  user      users      @relation("UserPayments", fields: [user_id], references: [id])
-
-  @@schema("public")
   @@index([payment_status])
   @@index([tenant_id])
   @@index([property_id])
+  @@schema("public")
 }
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model profiles {
-  user_id    String    @id @unique(map: "profiles_id_key")
-  /// RLS_ENABLED
+  user_id String @id @unique(map: "profiles_id_key")
+
   @@schema("public")
 }
 
@@ -352,11 +346,11 @@ model rent_payment {
   id             String    @id @default(uuid()) @db.Uuid
   property_id    String    @db.Uuid
   tenant_id      String    @db.Uuid
-  payment_amount         Decimal   @db.Decimal(10, 2)
+  payment_amount Decimal   @db.Decimal(10, 2)
   due_date       DateTime  @db.Date
   paid_date      DateTime? @db.Date
-  payment_status         String    @default("pending")
-  PaymentMethod String?
+  payment_status String    @default("pending")
+  PaymentMethod  String?
   invoice_number String?
   transaction_id String?
   late_fee       Decimal?  @default(0) @db.Decimal(10, 2)
@@ -394,24 +388,24 @@ model security_audit_log {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model subscriptions {
-  id                    String    @id @default(uuid()) @db.Uuid
-  user_id               String?   @db.Uuid
-  product_id            String
-  subscription_status   String
-  subscription_type     String
+  id                      String    @id @default(uuid()) @db.Uuid
+  user_id                 String?   @db.Uuid
+  product_id              String
+  subscription_status     String
+  subscription_type       String
   subscription_start_date DateTime? @db.Date
   subscription_end_date   DateTime? @db.Date
   stripe_subscription_id  String?
   stripe_customer_id      String?
   stripe_product_id       String?
   stripe_price_id         String?
-  stripe_price_amount     Decimal? @db.Decimal(10, 2)
+  stripe_price_amount     Decimal?  @db.Decimal(10, 2)
   stripe_price_currency   String?
   stripe_price_interval   String?
   stripe_price_usage_type String?
-  created_at             DateTime? @default(now()) @db.Timestamptz(6)
-  updated_at             DateTime? @default(now()) @db.Timestamptz(6)
-  active_until           DateTime? @db.Timestamptz(6)
+  created_at              DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime? @default(now()) @db.Timestamptz(6)
+  active_until            DateTime? @db.Timestamptz(6)
 
   @@unique([user_id, product_id])
   @@index([active_until])
@@ -459,8 +453,8 @@ model user_profiles {
   email                    String    @unique
   phone                    String?
   avatar_url               String?
-  compunknown_name             String?
-  compunknown_position         String?
+  company_name             String?
+  company_position         String?
   timezone                 String?   @default("UTC")
   notification_preferences Json?     @default("{}")
   last_login_at            DateTime? @db.Timestamptz(6)
@@ -517,10 +511,12 @@ model user_settings {
 model waitlist_attempts {
   id         String   @id @default(uuid()) @db.Uuid
   identifier String
-  created_at DateTime @default(now()) @db.Timestamptz(6)
+  created_at DateTime @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
 
   @@index([created_at], map: "idx_waitlist_attempts_created_at")
   @@index([identifier], map: "idx_waitlist_attempts_identifier")
+  @@index([created_at])
+  @@index([identifier])
   @@schema("public")
 }
 
@@ -536,6 +532,7 @@ model verification_tokens {
   expires    DateTime @db.Timestamptz(6)
 
   @@id([identifier, token])
+  @@index([expires])
   @@schema("public")
 }
 
@@ -553,15 +550,15 @@ model organization_members {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model activity {
-  userId           String       @default(uuid()) @db.Uuid
-  activity_log_id  String       @default(uuid()) @db.Uuid
-  activity_type    ActivityType
-  entityType       EntityType
-  entityId         String
-  description      String
-  created_at       DateTime?    @default(now()) @db.Timestamptz(6)
-  updated_at       DateTime?    @default(now()) @db.Timestamptz(6)
-  id               String       @id(map: "activities_pkey") @default(uuid()) @db.Uuid
+  userId          String       @default(uuid()) @db.Uuid
+  activity_log_id String       @default(uuid()) @db.Uuid
+  activity_type   ActivityType
+  entityType      EntityType
+  entityId        String
+  description     String
+  created_at      DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime?    @default(now()) @db.Timestamptz(6)
+  id              String       @id(map: "activities_pkey") @default(uuid()) @db.Uuid
 
   @@index([activity_type], map: "activities_type_idx")
   @@schema("public")
@@ -569,224 +566,15 @@ model activity {
 
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model AdminAuditLog {
-  id         String      @id(map: "admin_audit_logs_pkey") @default(uuid()) @db.Uuid
-  userId     String?     @db.Uuid
+  id         String     @id(map: "admin_audit_logs_pkey") @default(uuid()) @db.Uuid
+  userId     String?    @db.Uuid
   entityType EntityType
-  entityId   String?     @db.Uuid
+  entityId   String?    @db.Uuid
   oldValues  Json?
   newValues  Json?
-  ipAddress  String?     @db.VarChar(45)
+  ipAddress  String?    @db.VarChar(45)
   userAgent  String?
-  created_at  DateTime?   @default(now()) @db.Timestamptz(6)
-
-  @@schema("public")
-}
-// System & User Management
-enum ActivityType {
-  CREATE
-  UPDATE
-  DELETE
-  LOGIN
-  LOGOUT
-  @@schema("public")
-}
-
-enum UserRole {
-  SUPER_ADMIN
-  ADMIN
-  PROPERTY_MANAGER
-  PROPERTY_OWNER
-  MAINTENANCE
-  TENANT
-  USER
-  @@schema("public")
-}
-
-enum EntityType {
-  USER
-  PROPERTY
-  TENANT
-  LEASE
-  PAYMENT
-  MAINTENANCE
-  DOCUMENT
-  SETTINGS
-  EMAIL_TEMPLATE
-  ROUTE
-  @@schema("public")
-}
-
-enum AuditAction {
-  CREATE
-  UPDATE
-  DELETE
-  LOGIN
-  LOGOUT
-  ADMIN_ACCESS
-  SETTINGS_CHANGE
-  PASSWORD_RESET
-  EMAIL_CHANGE
-  ROLE_CHANGE
-  @@schema("public")
-}
-
-// Property & Tenant Management
-enum PropertyType {
-  SINGLE_FAMILY
-  MULTI_FAMILY
-  APARTMENT
-  CONDO
-  TOWNHOUSE
-  COMMERCIAL
-  INDUSTRIAL
-  LAND
-  @@schema("public")
-}
-
-enum PropertyStatus {
-  AVAILABLE
-  OCCUPIED
-  VACANT
-  MAINTENANCE
-  RENOVATION
-  OFF_MARKET
-  @@schema("public")
-}
-
-enum TenantStatus {
-  ACTIVE
-  INACTIVE
-  PENDING
-  REJECTED
-  @@schema("public")
-}
-
-enum LeaseType {
-  FIXED_TERM
-  MONTH_TO_MONTH
-  WEEKLY
-  YEARLY
-  @@schema("public")
-}
-
-// Payments & Invoices
-enum PaymentStatus {
-  PENDING
-  PAID
-  COMPLETED
-  FAILED
-  CANCELLED
-  REFUNDED
-  OVERDUE
-  LATE
-  PARTIAL
-
-  @@schema("public")
-}
-
-enum PaymentMethod {
-  CASH
-  CHECK
-  CREDIT_CARD
-  BANK_TRANSFER
-  OTHER
-  @@schema("public")
-}
-
-enum PaymentType {
-  RENT
-  DEPOSIT
-  SUBSCRIPTION
-  LATE_FEE
-  MAINTENANCE
-  UTILITIES
-  SECURITY_DEPOSIT
-  OTHER
-
-  @@schema("public")
-}
-
-enum InvoiceStatus {
-  DRAFT
-  PENDING
-  PAID
-  OVERDUE
-  CANCELLED
-  @@schema("public")
-}
-
-enum InvoiceTemplateType {
-  STANDARD
-  CUSTOM
-  @@schema("public")
-}
-
-// Communication & Notifications
-enum MessageStatus {
-  SENT
-  DELIVERED
-  READ
-  FAILED
-  @@schema("public")
-}
-
-enum NotificationStatus {
-  UNREAD
-  READ
-  ARCHIVED
-  @@schema("public")
-}
-
-enum NotificationType {
-  SYSTEM
-  MAINTENANCE
-  PAYMENT
-  LEASE
-  MESSAGE
-  ALERT
-  @@schema("public")
-}
-
-// Maintenance & Requests
-enum RequestStatus {
-  PENDING
-  APPROVED
-  REJECTED
-  @@schema("public")
-}
-
-// Tools & Jobs
-enum ToolType {
-  PROPERTY_MANAGER
-  PROJECT_MANAGER
-  IMAGE_OPTIMIZER
-  DOCUMENT_MANAGER
-  @@schema("public")
-}
-
-enum ImageJobPriority {
-  LOW
-  MEDIUM
-  HIGH
-  @@schema("public")
-}
-
-enum ImageJobStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  FAILED
-  @@schema("public")
-}
-
-enum SubscriptionStatus {
-  ACTIVE
-  PAST_DUE
-  CANCELLED
-  INCOMPLETE
-  INCOMPLETE_EXPIRED
-  TRIALING
-  UNPAID
+  created_at DateTime?  @default(now()) @db.Timestamptz(6)
 
   @@schema("public")
 }
@@ -801,7 +589,6 @@ model Session {
   @@schema("public")
 }
 
-// Admin schema models
 model analytics {
   id         String    @id @default(uuid()) @db.Uuid
   created_by String    @db.Uuid
@@ -834,115 +621,93 @@ model settings {
 }
 
 model inspections {
-  id              String    @id @default(uuid()) @db.Uuid
-  property_id     String    @db.Uuid
-  user_id         String    @db.Uuid
+  id              String     @id @default(uuid()) @db.Uuid
+  property_id     String     @db.Uuid
+  user_id         String     @db.Uuid
   inspection_type String
-  status          String    @default("SCHEDULED")
-  scheduled_date  DateTime  @db.Timestamptz(6)
-  completed_date  DateTime? @db.Timestamptz(6)
+  status          String     @default("SCHEDULED")
+  scheduled_date  DateTime   @db.Timestamptz(6)
+  completed_date  DateTime?  @db.Timestamptz(6)
   inspector_name  String
-  findings        Json?     @default("[]")
+  findings        Json?      @default("[]")
   notes           String?
   report_url      String?
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime  @default(now()) @db.Timestamptz(6)
-
-  // Relations
+  created_at      DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at      DateTime   @default(now()) @db.Timestamptz(6)
   property        properties @relation("PropertyInspections", fields: [property_id], references: [id])
-  user           users      @relation("UserInspections", fields: [user_id], references: [id])
+  user            users      @relation("UserInspections", fields: [user_id], references: [id])
 
-  @@schema("public")
   @@index([property_id])
   @@index([user_id])
   @@index([status])
   @@index([inspection_type])
+  @@schema("public")
 }
 
 model vendors {
-  id              String    @id @default(uuid()) @db.Uuid
-  user_id         String    @db.Uuid
-  compunknown_name    String
-  contact_name    String
-  email           String
-  phone           String
-  address         String?
-  services        String[]
-  rate            Decimal?  @db.Decimal(10, 2)
-  rating          Int?      @db.SmallInt
-  status          String    @default("ACTIVE")
-  insurance_info  Json?
-  license_info    Json?
-  notes           String?
-  created_at      DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at      DateTime  @default(now()) @db.Timestamptz(6)
+  id             String        @id @default(uuid()) @db.Uuid
+  user_id        String        @db.Uuid
+  company_name   String
+  contact_name   String
+  email          String
+  phone          String
+  address        String?
+  services       String[]
+  rate           Decimal?      @db.Decimal(10, 2)
+  rating         Int?          @db.SmallInt
+  status         String        @default("ACTIVE")
+  insurance_info Json?
+  license_info   Json?
+  notes          String?
+  created_at     DateTime      @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime      @default(now()) @db.Timestamptz(6)
+  user           users         @relation("UserVendors", fields: [user_id], references: [id])
+  work_orders    work_orders[] @relation("VendorWorkOrders")
 
-  // Relations
-  user            users     @relation("UserVendors", fields: [user_id], references: [id])
-  work_orders     work_orders[] @relation("VendorWorkOrders")
-
-  @@schema("public")
   @@index([user_id])
   @@index([status])
   @@index([email])
+  @@schema("public")
 }
 
 model work_orders {
-  id              String    @id @default(uuid()) @db.Uuid
-  vendor_id       String    @db.Uuid
-  property_id     String    @db.Uuid
-  maintenance_id  String?   @db.Uuid
+  id             String     @id @default(uuid()) @db.Uuid
+  vendor_id      String     @db.Uuid
+  property_id    String     @db.Uuid
+  maintenance_id String?    @db.Uuid
   title          String
   description    String
-  priority       String    @default("LOW")
-  status         String    @default("PENDING")
-  scheduled_date DateTime  @db.Timestamptz(6)
-  completed_date DateTime? @db.Timestamptz(6)
-  estimated_cost Decimal?  @db.Decimal(10, 2)
-  actual_cost    Decimal?  @db.Decimal(10, 2)
+  priority       String     @default("LOW")
+  status         String     @default("PENDING")
+  scheduled_date DateTime   @db.Timestamptz(6)
+  completed_date DateTime?  @db.Timestamptz(6)
+  estimated_cost Decimal?   @db.Decimal(10, 2)
+  actual_cost    Decimal?   @db.Decimal(10, 2)
   notes          String?
-  created_at     DateTime  @default(now()) @db.Timestamptz(6)
-  updated_at     DateTime  @default(now()) @db.Timestamptz(6)
-  user_id        String    @db.Uuid
-
-  // Relations
-  vendor         vendors    @relation("VendorWorkOrders", fields: [vendor_id], references: [id])
+  created_at     DateTime   @default(now()) @db.Timestamptz(6)
+  updated_at     DateTime   @default(now()) @db.Timestamptz(6)
+  user_id        String     @db.Uuid
   property       properties @relation("PropertyWorkOrders", fields: [property_id], references: [id])
   user           users      @relation("UserWorkOrders", fields: [user_id], references: [id])
+  vendor         vendors    @relation("VendorWorkOrders", fields: [vendor_id], references: [id])
 
-  @@schema("public")
   @@index([vendor_id])
   @@index([property_id])
   @@index([status])
   @@index([user_id])
-}
-
-enum WaitlistStatus {
-  PENDING
-  ACTIVE
-  VERIFIED
-  BLOCKED
-
+  @@index([property_id], map: "idx_work_orders_property")
   @@schema("public")
 }
 
 model waitlist {
-  id            String         @id @default(uuid()) @db.Uuid
-  email         String         @unique
-  name          String?
+  id            String            @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email         String            @unique
   position      Int
-  status        WaitlistStatus @default(PENDING)
-  referral_code String?        @unique
+  status        String            @default("pending")
+  referral_code String            @unique
   referred_by   String?
-  email_verified Boolean       @default(false)
-  verified_at   DateTime?      @db.Timestamptz(6)
-  metadata      Json?          @default("{}")
-  created_at    DateTime       @default(now()) @db.Timestamptz(6)
-  updated_at    DateTime       @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  referrer      waitlist?      @relation("ReferralRelation", fields: [referred_by], references: [email])
-  referrals     waitlist[]     @relation("ReferralRelation")
+  created_at    DateTime?         @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  updated_at    DateTime?         @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
   events        waitlist_events[]
 
   @@index([position])
@@ -954,14 +719,12 @@ model waitlist {
 }
 
 model waitlist_events {
-  id        String   @id @default(uuid()) @db.Uuid
+  id        String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
   email     String
   type      String
-  metadata  Json?    @default("{}")
-  timestamp DateTime @default(now()) @db.Timestamptz(6)
-
-  // Relations
-  waitlist  waitlist @relation(fields: [email], references: [email])
+  metadata  Json?
+  timestamp DateTime? @default(dbgenerated("timezone('utc'::text, now())")) @db.Timestamptz(6)
+  waitlist  waitlist  @relation(fields: [email], references: [email], onDelete: NoAction, onUpdate: NoAction)
 
   @@index([email])
   @@index([type])
@@ -969,15 +732,479 @@ model waitlist_events {
   @@schema("public")
 }
 
-model WaitlistVerification {
-  id        String   @id @default(cuid())
-  email     String   @unique
-  token     String   @unique
-  expiresAt DateTime
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+model public_audit_logs {
+  id         String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id    String?   @db.Uuid
+  action     String
+  table_name String
+  record_id  String    @db.Uuid
+  old_data   Json?
+  new_data   Json?
+  ip_address String?   @db.Inet
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+  users      users?    @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  @@index([token])
-  @@index([email])
+  @@index([action], map: "idx_audit_logs_action")
+  @@index([created_at], map: "idx_audit_logs_created")
+  @@index([user_id], map: "idx_audit_logs_user")
+  @@map("audit_logs")
+  @@schema("public")
+}
+
+model email_addresses {
+  id            String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  email_address String    @unique
+  user_id       String?   @db.Uuid
+  verified      Boolean?  @default(false)
+  created_at    DateTime? @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime? @default(now()) @db.Timestamptz(6)
+  users         users?    @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([email_address], map: "idx_users_email")
+  @@schema("public")
+}
+
+model invoice_items {
+  id          String    @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  invoice_id  String?   @db.Uuid
+  description String
+  amount      Decimal   @db.Decimal(10, 2)
+  quantity    Int?      @default(1)
+  created_at  DateTime? @default(now())
+  invoices    invoices? @relation(fields: [invoice_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model invoices {
+  id            String          @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  customer_id   String?         @db.Uuid
+  amount        Decimal         @db.Decimal(10, 2)
+  status        invoice_status? @default(draft)
+  due_date      DateTime        @db.Date
+  created_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  updated_at    DateTime?       @default(now()) @db.Timestamptz(6)
+  invoice_items invoice_items[]
+  users         users?          @relation(fields: [customer_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([customer_id], map: "idx_invoices_customer")
+  @@schema("public")
+}
+
+model payment_methods {
+  id           String              @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id      String?             @db.Uuid
+  type         payment_method_type
+  last4        String
+  brand        String?
+  exp_month    Int?
+  exp_year     Int?
+  is_default   Boolean?            @default(false)
+  created_at   DateTime?           @default(now()) @db.Timestamptz(6)
+  users        users?              @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  transactions transactions[]
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model secrets {
+  key        String    @id
+  value      String
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model stripe_webhook_events {
+  id         String    @id
+  type       String
+  data       Json?
+  created_at DateTime? @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+model teams {
+  id                     String               @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  name                   String
+  stripe_customer_id     String?
+  stripe_product_id      String?
+  stripe_subscription_id String?
+  plan_name              String?
+  subscription_status    subscription_status? @default(trialing)
+  created_at             DateTime?            @default(now()) @db.Timestamptz(6)
+  updated_at             DateTime?            @default(now()) @db.Timestamptz(6)
+
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model transactions {
+  id                String           @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  user_id           String?          @db.Uuid
+  amount            Decimal          @db.Decimal(10, 2)
+  currency          String?          @default("USD")
+  status            payment_status?  @default(pending)
+  payment_method_id String?          @db.Uuid
+  description       String?
+  metadata          Json?            @default("{}")
+  created_at        DateTime?        @default(now()) @db.Timestamptz(6)
+  payment_methods   payment_methods? @relation(fields: [payment_method_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  users             users?           @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@index([user_id], map: "idx_transactions_user")
+  @@schema("public")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model units {
+  id          String       @id @default(dbgenerated("uuid_generate_v4()")) @db.Uuid
+  property_id String?      @db.Uuid
+  number      String
+  status      unit_status? @default(vacant)
+  type        String
+  rent        Decimal      @db.Decimal(10, 2)
+  lease_id    String?      @db.Uuid
+  created_at  DateTime?    @default(now()) @db.Timestamptz(6)
+  updated_at  DateTime?    @default(now()) @db.Timestamptz(6)
+  properties  properties?  @relation(fields: [property_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@index([property_id], map: "idx_units_property")
+  @@schema("public")
+}
+
+enum ActivityType {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+
+  @@schema("public")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  PROPERTY_MANAGER
+  PROPERTY_OWNER
+  MAINTENANCE
+  TENANT
+  USER
+
+  @@schema("public")
+}
+
+enum EntityType {
+  USER
+  PROPERTY
+  TENANT
+  LEASE
+  PAYMENT
+  MAINTENANCE
+  DOCUMENT
+  SETTINGS
+  EMAIL_TEMPLATE
+  ROUTE
+
+  @@schema("public")
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  LOGIN
+  LOGOUT
+  ADMIN_ACCESS
+  SETTINGS_CHANGE
+  PASSWORD_RESET
+  EMAIL_CHANGE
+  ROLE_CHANGE
+
+  @@schema("public")
+}
+
+enum PropertyType {
+  SINGLE_FAMILY
+  MULTI_FAMILY
+  APARTMENT
+  CONDO
+  TOWNHOUSE
+  COMMERCIAL
+  INDUSTRIAL
+  LAND
+
+  @@schema("public")
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  OCCUPIED
+  VACANT
+  MAINTENANCE
+  RENOVATION
+  OFF_MARKET
+
+  @@schema("public")
+}
+
+enum TenantStatus {
+  ACTIVE
+  INACTIVE
+  PENDING
+  REJECTED
+
+  @@schema("public")
+}
+
+enum LeaseType {
+  FIXED_TERM
+  MONTH_TO_MONTH
+  WEEKLY
+  YEARLY
+
+  @@schema("public")
+}
+
+enum PaymentStatus {
+  PENDING
+  PAID
+  COMPLETED
+  FAILED
+  CANCELLED
+  REFUNDED
+  OVERDUE
+  LATE
+  PARTIAL
+
+  @@schema("public")
+}
+
+enum PaymentMethod {
+  CASH
+  CHECK
+  CREDIT_CARD
+  BANK_TRANSFER
+  OTHER
+
+  @@schema("public")
+}
+
+enum PaymentType {
+  RENT
+  DEPOSIT
+  SUBSCRIPTION
+  LATE_FEE
+  MAINTENANCE
+  UTILITIES
+  SECURITY_DEPOSIT
+  OTHER
+
+  @@schema("public")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  PENDING
+  PAID
+  OVERDUE
+  CANCELLED
+
+  @@schema("public")
+}
+
+enum InvoiceTemplateType {
+  STANDARD
+  CUSTOM
+
+  @@schema("public")
+}
+
+enum MessageStatus {
+  SENT
+  DELIVERED
+  READ
+  FAILED
+
+  @@schema("public")
+}
+
+enum NotificationStatus {
+  UNREAD
+  READ
+  ARCHIVED
+
+  @@schema("public")
+}
+
+enum NotificationType {
+  SYSTEM
+  MAINTENANCE
+  PAYMENT
+  LEASE
+  MESSAGE
+  ALERT
+
+  @@schema("public")
+}
+
+enum RequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
+
+  @@schema("public")
+}
+
+enum ToolType {
+  PROPERTY_MANAGER
+  PROJECT_MANAGER
+  IMAGE_OPTIMIZER
+  DOCUMENT_MANAGER
+
+  @@schema("public")
+}
+
+enum ImageJobPriority {
+  LOW
+  MEDIUM
+  HIGH
+
+  @@schema("public")
+}
+
+enum ImageJobStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+
+  @@schema("public")
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  INCOMPLETE
+  INCOMPLETE_EXPIRED
+  TRIALING
+  UNPAID
+
+  @@schema("public")
+}
+
+enum invoice_status {
+  draft
+  open
+  paid
+  void
+  uncollectible
+
+  @@schema("public")
+}
+
+enum payment_method_type {
+  card
+  bank_transfer
+  digital_wallet
+
+  @@schema("public")
+}
+
+enum payment_status {
+  pending
+  processing
+  completed
+  failed
+  refunded
+
+  @@schema("public")
+}
+
+enum permission_level {
+  none
+  read
+  write
+  admin
+
+  @@schema("public")
+}
+
+enum property_status {
+  active
+  inactive
+  maintenance
+  development
+
+  @@schema("public")
+}
+
+enum property_type {
+  residential
+  commercial
+  industrial
+  mixed_use   @map("mixed-use")
+
+  @@schema("public")
+}
+
+enum role_type {
+  admin
+  moderator
+  user
+
+  @@schema("public")
+}
+
+enum subscription_status {
+  active
+  trialing
+  canceled
+  unpaid
+
+  @@schema("public")
+}
+
+enum tenant_status {
+  active
+  past
+  pending
+
+  @@schema("public")
+}
+
+enum unit_status {
+  vacant
+  occupied
+  maintenance
+
+  @@schema("public")
+}
+
+enum user_status {
+  active
+  inactive
+  suspended
+
+  @@schema("public")
+}
+
+enum work_order_priority {
+  low
+  medium
+  high
+
+  @@schema("public")
+}
+
+enum work_order_status {
+  open
+  in_progress
+  completed
+
   @@schema("public")
 }

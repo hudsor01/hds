@@ -1,6 +1,6 @@
 'use client'
 
-import { FadeIn } from '@/components/animations/fade-in'
+import { FadeIn } from '@/components/fade-in'
 import { Box, Button, Container, Typography } from '@mui/material'
 import { Clock } from 'react-feather'
 

@@ -1,15 +1,16 @@
-import { prisma } from '@/prisma/seed'
+import { prisma } from '@/lib/prisma'
 import { nanoid } from 'nanoid'
+import { type Session, type User } from '@supabase/supabase-js'
 import { TRPCError } from '@trpc/server'
 
-export interface Session {
+export interface AuthSession {
   id: string
-  user_id: string
-  session_token: string
+  userId: string
+  sessionToken: string
   expires: Date
-  user_agent?: string
-  ip_address?: string
-  last_active: Date
+  userAgent?: string
+  ipAddress?: string
+  lastActive: Date
 }
 
 export class AuthService {
@@ -17,15 +18,22 @@ export class AuthService {
 
   static async setupTwoFactor(userId: string): Promise<{ secret: string; qrCode: string }> {
     try {
-      const user = await prisma.users.findUnique({ where: { id: userId } })
+      const user = await prisma.user.findUnique({
+        where: { id: userId }
+      })
+
       if (!user) {
         throw new TRPCError({
           code: 'NOT_FOUND',
           message: 'User not found'
         })
       }
-      // Implementation placeholder
-      return { secret: '', qrCode: '' }
+
+      // Implementation placeholder - integrate with your 2FA provider
+      return {
+        secret: nanoid(),
+        qrCode: `https://api.qrserver.com/v1/create-qr-code/?data=${userId}`
+      }
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -35,19 +43,28 @@ export class AuthService {
     }
   }
 
-  async createSession(userId: string, userAgent: string, ipAddress: string): Promise<Session> {
+  async createSession(userId: string, userAgent: string, ipAddress: string): Promise<AuthSession> {
     try {
       const session = await prisma.session.create({
         data: {
-          user_id: userId,
-          session_token: nanoid(32),
+          userId,
+          sessionToken: nanoid(32),
           expires: new Date(Date.now() + this.SESSION_DURATION),
-          user_agent: userAgent,
-          ip_address: ipAddress,
-          last_active: new Date()
+          userAgent,
+          ipAddress,
+          lastActive: new Date()
         }
       })
-      return session
+
+      return {
+        id: session.id,
+        userId: session.userId,
+        sessionToken: session.sessionToken,
+        expires: session.expires,
+        userAgent: session.userAgent,
+        ipAddress: session.ipAddress,
+        lastActive: session.lastActive
+      }
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -57,15 +74,25 @@ export class AuthService {
     }
   }
 
-  async getSessions(userId: string): Promise<Session[]> {
+  async getSessions(userId: string): Promise<AuthSession[]> {
     try {
-      return await prisma.session.findMunknown({
+      const sessions = await prisma.session.findMany({
         where: {
-          user_id: userId,
+          userId,
           expires: { gt: new Date() }
         },
         orderBy: { expires: 'desc' }
       })
+
+      return sessions.map(session => ({
+        id: session.id,
+        userId: session.userId,
+        sessionToken: session.sessionToken,
+        expires: session.expires,
+        userAgent: session.userAgent,
+        ipAddress: session.ipAddress,
+        lastActive: session.lastActive
+      }))
     } catch (error) {
       throw new TRPCError({
         code: 'INTERNAL_SERVER_ERROR',
@@ -96,7 +123,7 @@ export class AuthService {
         where: { id: sessionId },
         data: {
           expires: new Date(Date.now() + this.SESSION_DURATION),
-          last_active: new Date()
+          lastActive: new Date()
         }
       })
     } catch (error) {
@@ -110,7 +137,7 @@ export class AuthService {
 
   async cleanupExpiredSessions(): Promise<void> {
     try {
-      await prisma.session.deleteMunknown({
+      await prisma.session.deleteMany({
         where: {
           expires: { lt: new Date() }
         }

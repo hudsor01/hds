@@ -1,9 +1,10 @@
 import { getPaginatedResults, PaginationParams, prisma } from '@/lib/db'
 import { PaymentStatus, PaymentType, Prisma } from '@prisma/client'
+import { MaintenanceRequest } from '@/types/db.types'
 
 // Payment queries
 export const getPaymentsByTenant = async (tenantId: string) => {
-  return prisma.payments.findMunknown({
+  return prisma.payments.findMany({
     where: { tenant_id: tenantId },
     orderBy: { created_at: 'desc' }
   })
@@ -16,7 +17,7 @@ export const getPaymentsByLease = async (leaseId: string) => {
 
   if (!lease) return []
 
-  return prisma.payments.findMunknown({
+  return prisma.payments.findMany({
     where: { tenant_id: lease.tenant_id },
     orderBy: { created_at: 'desc' }
   })
@@ -46,7 +47,7 @@ export const getPaginatedPayments = async (
 
   return getPaginatedResults(
     (skip, take) =>
-      prisma.payments.findMunknown({
+      prisma.payments.findMany({
         where,
         orderBy: { created_at: 'desc' },
         skip,
@@ -65,7 +66,6 @@ export const getLeaseWithDetails = async (leaseId: string) => {
       user_id: true,
       tenant_id: true,
       property_id: true,
-      type: true,
       start_date: true,
       end_date: true,
       rent_amount: true,
@@ -73,16 +73,16 @@ export const getLeaseWithDetails = async (leaseId: string) => {
       payment_day: true,
       documents: true,
       created_at: true,
-      status: true
+      lease_status: true
     }
   })
 }
 
 export const getActiveLeasesByProperty = async (propertyId: string) => {
-  return prisma.leases.findMunknown({
+  return prisma.leases.findMany({
     where: {
       property_id: propertyId,
-      status: 'Active',
+      lease_status: 'Active',
       end_date: {
         gte: new Date()
       }
@@ -91,13 +91,12 @@ export const getActiveLeasesByProperty = async (propertyId: string) => {
       user_id: true,
       tenant_id: true,
       property_id: true,
-      type: true,
       start_date: true,
       end_date: true,
       rent_amount: true,
       depositAmount: true,
       payment_day: true,
-      status: true
+      lease_status: true
     },
     orderBy: { start_date: 'desc' }
   })
@@ -129,20 +128,26 @@ export const getPropertyWithDetails = async (propertyId: string) => {
           last_name: true,
           email: true,
           phone: true,
-          status: true
+          tenant_status: true
         }
       },
       maintenance_requests: {
         where: {
-          status: 'PENDING'
+          maintenance_requests_status: 'PENDING'
         },
         select: {
           id: true,
           title: true,
           description: true,
-          status: true,
+          requests_status: true,
           priority: true,
           created_at: true
+        }
+      },
+      additional_details: {
+        select: {
+          detail_id: true,
+          description: true
         }
       }
     }
@@ -162,17 +167,13 @@ export const getPaginatedProperties = async (
     ...(params.status && { status: params.status }),
     ...(params.type && { type: params.type }),
     ...(params.search && {
-      OR: [
-        { name: { contains: params.search } },
-        { address: { contains: params.search } },
-        { city: { contains: params.search } }
-      ]
+      OR: [{ name: { contains: params.search } }, { address: { contains: params.search } }, { city: { contains: params.search } }]
     })
   }
 
   return getPaginatedResults(
     (skip, take) =>
-      prisma.properties.findMunknown({
+      prisma.properties.findMany({
         where,
         select: {
           id: true,
@@ -187,17 +188,16 @@ export const getPaginatedProperties = async (
             select: {
               id: true,
               first_name: true,
-              last_name: true,
-              status: true
+              last_name: true
             }
           },
           maintenance_requests: {
-            where: { status: 'PENDING' },
             select: {
               id: true,
               title: true,
-              status: true,
-              priority: true
+              description: true,
+              priority: true,
+              created_at: true
             }
           }
         },

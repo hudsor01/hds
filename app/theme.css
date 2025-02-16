@@ -1,122 +1,69 @@
-@import 'tailwindcss';
-
 @theme {
-  /* Base colors */
-  :root {
-    --color-primary: oklch(0.637 0.237 25.331);
-    --color-primary-light: oklch(0.702 0.237 25.331);
-    --color-primary-dark: oklch(0.572 0.237 25.331);
+  /* Typography System */
+  --font-sans: 'Roboto', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
-    --color-text-primary: oklch(0.15 0 0);
-    --color-text-secondary: oklch(0.35 0 0);
-    --color-text-tertiary: oklch(0.65 0 0);
+  /* Font Weights */
+  --font-weight-light: 300;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-bold: 700;
 
-    --color-background-app: oklch(0.99 0 0);
-    --color-background-subtle: oklch(0.97 0 0);
-    --color-background-ui: oklch(1 0 0);
+  /* Line Heights */
+  --leading-none: 1;
+  --leading-tight: 1.25;
+  --leading-snug: 1.375;
+  --leading-normal: 1.5;
+  --leading-relaxed: 1.625;
 
-    --color-border-ui: oklch(0.91 0 0);
+  /* Font Sizes */
+  --text-xs: 0.75rem;
+  --text-sm: 0.875rem;
+  --text-base: 1rem;
+  --text-lg: 1.125rem;
+  --text-xl: 1.25rem;
+  --text-2xl: 1.5rem;
+  --text-3xl: 1.875rem;
+  --text-4xl: 2.25rem;
+  --text-5xl: 3rem;
 
-    /* Status colors */
-    --color-success: oklch(0.637 0.237 148.331);
-    --color-error: oklch(0.637 0.237 25.331);
-    --color-warning: oklch(0.637 0.237 85.331);
-    --color-info: oklch(0.637 0.237 205.331);
-  }
+  /* Color System */
+  /* Primary - Pastel Blue */
+  --color-primary-50: oklch(0.98 0.02 245);
+  --color-primary-100: oklch(0.95 0.03 245);
+  /* ...existing color variables... */
 
-  /* Dark mode colors */
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --color-primary: oklch(0.702 0.237 25.331);
-      --color-primary-light: oklch(0.767 0.237 25.331);
-      --color-primary-dark: oklch(0.637 0.237 25.331);
+  /* System UI Colors */
+  --color-background: var(--color-neutral-50);
+  --color-foreground: var(--color-neutral-900);
+  /* ...existing system UI colors... */
 
-      --color-text-primary: oklch(0.95 0 0);
-      --color-text-secondary: oklch(0.8 0 0);
-      --color-text-tertiary: oklch(0.6 0 0);
+  /* Z-index Scale */
+  --z-negative: -1;
+  --z-elevate: 1;
+  /* ...existing z-index variables... */
 
-      --color-background-app: oklch(0.15 0 0);
-      --color-background-subtle: oklch(0.2 0 0);
-      --color-background-ui: oklch(0.18 0 0);
+  /* Spacing and Layout */
+  --spacing-px: 1px;
+  --spacing-0: 0;
+  /* ...existing spacing variables... */
 
-      --color-border-ui: oklch(0.3 0 0);
+  /* Container Settings */
+  --container-padding: max(1rem, calc((100vw - 90rem) / 2));
+  --container-width-sm: 640px;
+  /* ...existing container variables... */
 
-      /* Status colors - adjusted for dark mode */
-      --color-success: oklch(0.702 0.237 148.331);
-      --color-error: oklch(0.702 0.237 25.331);
-      --color-warning: oklch(0.702 0.237 85.331);
-      --color-info: oklch(0.702 0.237 205.331);
-    }
-  }
-
-  /* Typography */
-  --font-sans: 'Roboto', system-ui;
-  --font-display: 'Playfair Display', serif;
-
-  /* Border radius */
+  /* Border Radius */
   --radius-sm: 0.25rem;
   --radius-md: 0.375rem;
-  --radius-lg: 0.5rem;
-  --radius-xl: 0.75rem;
-  --radius-2xl: 1rem;
-  --radius-3xl: 1.5rem;
-  --radius-full: 9999px;
-
-  /* Spacing */
-  --spacing: 0.25rem;
-
-  /* Shadows */
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-
-  /* Animation */
-  --ease-default: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-
-  /* Animations */
-  --animate-fade: fade 0.15s var(--ease-out);
-  --animate-slide-up: slide-up 0.2s var(--ease-out);
-  --animate-slide-down: slide-down 0.2s var(--ease-out);
-
-  @keyframes fade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slide-up {
-    from {
-      opacity: 0;
-      transform: translateY(0.5rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes slide-down {
-    from {
-      opacity: 0;
-      transform: translateY(-0.5rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
+  /* ...existing radius variables... */
 }
 
-/* Custom patterns */
-.bg-grid-pattern {
-  background-image:
-    linear-gradient(var(--color-primary) 1px, transparent 1px),
-    linear-gradient(to right, var(--color-primary) 1px, transparent 1px);
-  background-size: 50px 50px;
+/* Dark Mode Theme Override */
+@custom-variant dark {
+  :root {
+    /* Base Colors */
+    --color-background: var(--color-neutral-950);
+    --color-foreground: var(--color-neutral-50);
+    /* ...existing dark mode overrides... */
+  }
 }

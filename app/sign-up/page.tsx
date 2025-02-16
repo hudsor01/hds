@@ -1,22 +1,43 @@
-import { Container, Typography } from '@mui/material'
-import SignUpForm from '@/components/auth/sign-up-form'
-import { Metadata } from 'next'
+import { signUpAction } from '@/app/actions'
+import { FormMessage, Message } from '@/components/form-message'
+import { SubmitButton } from '@/components/submit-button'
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
+import Link from 'next/link'
+import { SmtpMessage } from '../smtp-message'
 
-export const metadata: Metadata = {
-  title: 'Sign Up | Property Manager',
-  description: 'Create your Property Manager account'
-}
+export default async function Signup(props: { searchParams: Promise<Message> }) {
+  const searchParams = await props.searchParams
+  if ('message' in searchParams) {
+    return (
+      <div className="flex h-screen w-full flex-1 items-center justify-center gap-2 p-4 sm:max-w-md">
+        <FormMessage message={searchParams} />
+      </div>
+    )
+  }
 
-export default function SignUpPage() {
   return (
-    <Container maxWidth="sm" sx={{ py: 8 }}>
-      <Typography variant="h4" align="center" gutterBottom>
-        Create an account
-      </Typography>
-      <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
-        Join Property Manager to start managing your properties
-      </Typography>
-      <SignUpForm />
-    </Container>
+    <>
+      <form className="mx-auto flex max-w-64 min-w-64 flex-col">
+        <h1 className="text-2xl font-medium">Sign up</h1>
+        <p className="text text-foreground text-sm">
+          Already have an account?{' '}
+          <Link className="text-primary font-medium underline" href="/sign-in">
+            Sign in
+          </Link>
+        </p>
+        <div className="mt-8 flex flex-col gap-2 [&>input]:mb-3">
+          <Label htmlFor="email">Email</Label>
+          <Input name="email" placeholder="you@example.com" required />
+          <Label htmlFor="password">Password</Label>
+          <Input type="password" name="password" placeholder="Your password" minLength={6} required />
+          <SubmitButton formAction={signUpAction} pendingText="Signing up...">
+            Sign up
+          </SubmitButton>
+          <FormMessage message={searchParams} />
+        </div>
+      </form>
+      <SmtpMessage />
+    </>
   )
 }

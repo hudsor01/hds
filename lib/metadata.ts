@@ -7,12 +7,7 @@ interface GenerateMetadataOptions {
   ogImage?: string
 }
 
-export function generateMetadata({
-  title,
-  description,
-  noIndex = false,
-  ogImage
-}: GenerateMetadataOptions): Metadata {
+export function generateMetadata({ title, description, noIndex = false, ogImage }: GenerateMetadataOptions): Metadata {
   const baseTitle = 'Property Manager'
   const fullTitle = `${title} | ${baseTitle}`
   const baseDescription = 'Modern property management solution'

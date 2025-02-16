@@ -1,5 +1,5 @@
-import { EmailMetricsTable } from '@/components/analytics/EmailMetricsTable'
-import { ErrorBoundary } from '@/components/error/error-boundary'
+import { EmailMetricsTable } from '@/components/EmailMetricsTable'
+import { ErrorBoundary } from '@/components/error-boundary'
 import supabase from '@/lib/supabase'
 import {
   Box,
