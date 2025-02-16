@@ -1,68 +1,25 @@
 'use client'
 
-import HomeIcon from '@mui/icons-material/Home'
-import NavigateNextIcon from '@mui/icons-material/NavigateNext'
-import Box from '@mui/material/Box'
-import Breadcrumbs from '@mui/material/Breadcrumbs'
-import Typography from '@mui/material/Typography'
+import { usePathname } from 'next/navigation'
 import Link from 'next/link'
-import { usePathname, useRouter } from 'next/navigation'
 
-export function BreadcrumbNav() {
+export function Breadcrumbs() {
   const pathname = usePathname()
-  const router = useRouter()
-
-  // Generate breadcrumb items from pathname
-  const pathSegments = pathname.split('/').filter(segment => segment)
-  const breadcrumbs = pathSegments.map((segment, index) => {
-    const href = `/${pathSegments.slice(0, index + 1).join('/')}`
-    const label = segment.charAt(0).toUpperCase() + segment.slice(1)
-    const isLast = index === pathSegments.length - 1
-
-    return isLast ? (
-      <Typography key={href} color="text.primary" sx={{ display: 'flex', alignItems: 'center' }}>
-        {label}
-      </Typography>
-    ) : (
-      <Link key={href} href={href} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <Typography
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            '&:hover': {
-              textDecoration: 'underline'
-            }
-          }}
-        >
-          {label}
-        </Typography>
-      </Link>
-    )
-  })
-
-  // Add home link at the beginning
-  breadcrumbs.unshift(
-    <Link key="home" href="/dashboard" style={{ textDecoration: 'none', color: 'inherit' }}>
-      <Typography
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          '&:hover': {
-            textDecoration: 'underline'
-          }
-        }}
-      >
-        <HomeIcon sx={{ mr: 0.5, fontSize: 20 }} />
-        Dashboard
-      </Typography>
-    </Link>
-  )
+  const segments = pathname.split('/').filter(Boolean)
 
   return (
-    <Box sx={{ mb: 3, mt: 1 }}>
-      <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-        {breadcrumbs}
-      </Breadcrumbs>
-    </Box>
+    <nav className="text-muted-foreground flex space-x-2 text-sm">
+      <Link href="/" className="hover:text-foreground">
+        Home
+      </Link>
+      {segments.map((segment, index) => (
+        <div key={segment} className="flex items-center space-x-2">
+          <ChevronRight className="h-4 w-4" />
+          <Link href={`/${segments.slice(0, index + 1).join('/')}`} className="hover:text-foreground capitalize">
+            {segment}
+          </Link>
+        </div>
+      ))}
+    </nav>
   )
 }

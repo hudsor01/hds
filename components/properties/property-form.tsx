@@ -2,23 +2,10 @@
 
 import { useState } from 'react'
 import { Property, PropertyType, CreatePropertyInput } from '@/types/property'
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Button } from '@/components/button'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/form'
+import { Input } from '@/components/input'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/select'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -43,9 +30,9 @@ const propertyFormSchema = z.object({
     propertyTax: z.number().min(0, 'Property tax is required'),
     utilities: z.number().min(0, 'Utilities amount is required'),
     maintenance: z.number().min(0, 'Maintenance amount is required'),
-    other: z.number().min(0, 'Other expenses amount is required'),
+    other: z.number().min(0, 'Other expenses amount is required')
   }),
-  imageUrl: z.string().optional(),
+  imageUrl: z.string().optional()
 })
 
 type PropertyFormProps = {
@@ -79,9 +66,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
         propertyTax: 0,
         utilities: 0,
         maintenance: 0,
-        other: 0,
-      },
-    },
+        other: 0
+      }
+    }
   })
 
   const handleSubmit = async (data: z.infer<typeof propertyFormSchema>) => {
@@ -97,7 +84,7 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn("space-y-8", className)}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className={cn('space-y-8', className)}>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
           <FormField
             control={form.control}
@@ -112,24 +99,21 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               </FormItem>
             )}
           />
-          
+
           <FormField
             control={form.control}
             name="propertyType"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Property Type</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Select property type" />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {Object.values(PropertyType).map((type) => (
+                    {Object.values(PropertyType).map(type => (
                       <SelectItem key={type} value={type}>
                         {type.replace('_', ' ')}
                       </SelectItem>
@@ -204,9 +188,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Number of Units</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter number of units" 
+                  <Input
+                    type="number"
+                    placeholder="Enter number of units"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -223,9 +207,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Square Footage</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter square footage" 
+                  <Input
+                    type="number"
+                    placeholder="Enter square footage"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -242,9 +226,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Year Built</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter year built" 
+                  <Input
+                    type="number"
+                    placeholder="Enter year built"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -261,9 +245,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Purchase Price</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter purchase price" 
+                  <Input
+                    type="number"
+                    placeholder="Enter purchase price"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -280,9 +264,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Current Value</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter current value" 
+                  <Input
+                    type="number"
+                    placeholder="Enter current value"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -299,9 +283,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
               <FormItem>
                 <FormLabel>Monthly Rent</FormLabel>
                 <FormControl>
-                  <Input 
-                    type="number" 
-                    placeholder="Enter monthly rent" 
+                  <Input
+                    type="number"
+                    placeholder="Enter monthly rent"
                     {...field}
                     onChange={e => field.onChange(Number(e.target.value))}
                   />
@@ -322,9 +306,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Mortgage</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter mortgage payment" 
+                    <Input
+                      type="number"
+                      placeholder="Enter mortgage payment"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -341,9 +325,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Insurance</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter insurance cost" 
+                    <Input
+                      type="number"
+                      placeholder="Enter insurance cost"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -360,9 +344,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Property Tax</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter property tax" 
+                    <Input
+                      type="number"
+                      placeholder="Enter property tax"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -379,9 +363,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Utilities</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter utilities cost" 
+                    <Input
+                      type="number"
+                      placeholder="Enter utilities cost"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -398,9 +382,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Maintenance</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter maintenance cost" 
+                    <Input
+                      type="number"
+                      placeholder="Enter maintenance cost"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -417,9 +401,9 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
                 <FormItem>
                   <FormLabel>Other Expenses</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="number" 
-                      placeholder="Enter other expenses" 
+                    <Input
+                      type="number"
+                      placeholder="Enter other expenses"
                       {...field}
                       onChange={e => field.onChange(Number(e.target.value))}
                     />
@@ -432,12 +416,7 @@ export function PropertyForm({ initialData, onSubmit, onCancel, className }: Pro
         </div>
 
         <div className="flex justify-end space-x-4">
-          <Button
-            type="button"
-            variant="outline"
-            onClick={onCancel}
-            disabled={isLoading}
-          >
+          <Button type="button" variant="outline" onClick={onCancel} disabled={isLoading}>
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>

@@ -1,20 +1,14 @@
 'use client'
 
-import { useState } from 'react'
-import { PropertyForm } from '@/components/properties/property-form'
-import { PropertyTable } from '@/components/properties/property-table'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
-import { Property, CreatePropertyInput } from '@/types/property'
-import { useToast } from '@/components/ui/use-toast'
-import { supabaseClient } from '@/lib/supabase'
+import { useEffect, useState } from 'react'
+import { Button } from '@/components/button'
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/dialog'
+import { PropertyForm, PropertyTable } from '@/components/properties'
+import { type Property, type CreatePropertyInput } from '@/types/property'
+import { useToast } from '@/hooks/use-toast'
+import { createClient } from '@/utils/supabase/client'
+import { Skeleton } from '@mui/material'
+import { Add } from '@mui/icons-material'
 
 export default function PropertiesPage() {
   const [properties, setProperties] = useState<Property[]>([])
@@ -22,64 +16,59 @@ export default function PropertiesPage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null)
   const { toast } = useToast()
+  const supabase = createClient()
 
-  // Fetch properties
-  const fetchProperties = async () => {
+  useEffect(() => {
+    fetchProperties()
+  }, [])
+
+  async function fetchProperties() {
     try {
       setIsLoading(true)
-      const { data, error } = await supabaseClient
-        .from('properties')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const { data, error } = await supabase.from('properties').select('*').order('created_at', { ascending: false })
 
       if (error) throw error
 
-      setProperties(data)
+      setProperties(data || [])
     } catch (error) {
       console.error('Error fetching properties:', error)
       toast({
         title: 'Error',
         description: 'Failed to fetch properties. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setIsLoading(false)
     }
   }
 
-  // Create property
-  const handleCreate = async (data: CreatePropertyInput) => {
+  async function handleCreate(data: CreatePropertyInput) {
     try {
-      const { data: newProperty, error } = await supabaseClient
-        .from('properties')
-        .insert([data])
-        .select()
-        .single()
+      const { data: newProperty, error } = await supabase.from('properties').insert([data]).select().single()
 
       if (error) throw error
 
-      setProperties((prev) => [newProperty, ...prev])
+      setProperties(prev => [newProperty, ...prev])
       setIsDialogOpen(false)
       toast({
         title: 'Success',
-        description: 'Property created successfully.',
+        description: 'Property created successfully.'
       })
     } catch (error) {
       console.error('Error creating property:', error)
       toast({
         title: 'Error',
         description: 'Failed to create property. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
 
-  // Update property
-  const handleUpdate = async (data: CreatePropertyInput) => {
+  async function handleUpdate(data: CreatePropertyInput) {
     if (!selectedProperty) return
 
     try {
-      const { data: updatedProperty, error } = await supabaseClient
+      const { data: updatedProperty, error } = await supabase
         .from('properties')
         .update(data)
         .eq('id', selectedProperty.id)
@@ -88,48 +77,58 @@ export default function PropertiesPage() {
 
       if (error) throw error
 
-      setProperties((prev) =>
-        prev.map((p) => (p.id === selectedProperty.id ? updatedProperty : p))
-      )
+      setProperties(prev => prev.map(p => (p.id === selectedProperty.id ? updatedProperty : p)))
       setIsDialogOpen(false)
       setSelectedProperty(null)
       toast({
         title: 'Success',
-        description: 'Property updated successfully.',
+        description: 'Property updated successfully.'
       })
     } catch (error) {
       console.error('Error updating property:', error)
       toast({
         title: 'Error',
         description: 'Failed to update property. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
 
-  // Delete property
-  const handleDelete = async (propertyId: string) => {
+  async function handleDelete(propertyId: string) {
     try {
-      const { error } = await supabaseClient
-        .from('properties')
-        .delete()
-        .eq('id', propertyId)
+      const { error } = await supabase.from('properties').delete().eq('id', propertyId)
 
       if (error) throw error
 
-      setProperties((prev) => prev.filter((p) => p.id !== propertyId))
+      setProperties(prev => prev.filter(p => p.id !== propertyId))
       toast({
         title: 'Success',
-        description: 'Property deleted successfully.',
+        description: 'Property deleted successfully.'
       })
     } catch (error) {
       console.error('Error deleting property:', error)
       toast({
         title: 'Error',
         description: 'Failed to delete property. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <Skeleton variant="text" width={120} height={40} />
+          <Skeleton variant="rounded" width={150} height={40} />
+        </div>
+        <div className="space-y-2">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <Skeleton key={i} variant="rounded" height={64} />
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -137,40 +136,32 @@ export default function PropertiesPage() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Properties</h1>
         <Button onClick={() => setIsDialogOpen(true)}>
-          <Plus className="mr-2 h-4 w-4" />
+          <Add fontSize="small" className="mr-2" />
           Add Property
         </Button>
       </div>
 
-      {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
-        </div>
-      ) : (
-        <PropertyTable
-          properties={properties}
-          onEdit={(property) => {
-            setSelectedProperty(property)
-            setIsDialogOpen(true)
-          }}
-          onDelete={handleDelete}
-        />
-      )}
+      <PropertyTable
+        properties={properties}
+        onEdit={property => {
+          setSelectedProperty(property)
+          setIsDialogOpen(true)
+        }}
+        onDelete={handleDelete}
+      />
 
-      <Dialog 
-        open={isDialogOpen} 
-        onOpenChange={(open) => {
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={open => {
           setIsDialogOpen(open)
           if (!open) setSelectedProperty(null)
         }}
       >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>
-              {selectedProperty ? 'Edit Property' : 'Add Property'}
-            </DialogTitle>
+            <DialogTitle>{selectedProperty ? 'Edit Property' : 'Add Property'}</DialogTitle>
             <DialogDescription>
-              {selectedProperty 
+              {selectedProperty
                 ? 'Update the property details below.'
                 : 'Fill in the property details below to add a new property.'}
             </DialogDescription>

@@ -1,15 +1,8 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import { Badge } from '@/components/ui/badge'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/card'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table'
+import { Badge } from '@/components/badge'
 import { formatDistanceToNow } from 'date-fns'
 import { cn } from '@/lib/utils'
 
@@ -81,44 +74,22 @@ export function MaintenanceTracker({ requests, onViewRequest }: MaintenanceTrack
             </TableRow>
           </TableHeader>
           <TableBody>
-            {requests.map((request) => (
-              <TableRow 
-                key={request.id}
-                className="cursor-pointer hover:bg-muted/50"
-                onClick={() => onViewRequest(request)}
-              >
-                <TableCell className="font-medium">
-                  {request.propertyName}
-                </TableCell>
+            {requests.map(request => (
+              <TableRow key={request.id} className="hover:bg-muted/50 cursor-pointer" onClick={() => onViewRequest(request)}>
+                <TableCell className="font-medium">{request.propertyName}</TableCell>
                 <TableCell>{request.description}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant="outline"
-                    className={cn(
-                      "capitalize",
-                      getPriorityColor(request.priority)
-                    )}
-                  >
+                  <Badge variant="outline" className={cn('capitalize', getPriorityColor(request.priority))}>
                     {request.priority.toLowerCase()}
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <Badge 
-                    variant="outline"
-                    className={cn(
-                      "capitalize",
-                      getStatusColor(request.status)
-                    )}
-                  >
+                  <Badge variant="outline" className={cn('capitalize', getStatusColor(request.status))}>
                     {request.status.toLowerCase().replace('_', ' ')}
                   </Badge>
                 </TableCell>
-                <TableCell>
-                  {formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}
-                </TableCell>
-                <TableCell>
-                  {request.assignedTo || 'Unassigned'}
-                </TableCell>
+                <TableCell>{formatDistanceToNow(new Date(request.createdAt), { addSuffix: true })}</TableCell>
+                <TableCell>{request.assignedTo || 'Unassigned'}</TableCell>
               </TableRow>
             ))}
           </TableBody>

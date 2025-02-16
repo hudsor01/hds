@@ -1,3 +1,4 @@
+'use client'
 import { Box, CircularProgress, Typography } from '@mui/material'
 import { ErrorBoundary } from '@/components/error-boundary'
 

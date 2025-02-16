@@ -1,79 +1,152 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { useRef, useReducer } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/input'
 import { Label } from '@/components/label'
+import HCaptcha from '@hcaptcha/react-hcaptcha'
+import { z } from 'zod'
+
+const signUpSchema = z.object({
+  email: z.string().email('Invalid email address'),
+  password: z.string().min(8, 'Password must be at least 8 characters'),
+  fullName: z.string().min(2, 'Name must be at least 2 characters')
+})
+
+type FormState = {
+  isLoading: boolean
+  error: string | null
+  token: string | null
+}
+
+const initialState: FormState = {
+  isLoading: false,
+  error: null,
+  token: null
+}
+
+type Action =
+  | { type: 'SET_LOADING'; payload: boolean }
+  | { type: 'SET_ERROR'; payload: string | null }
+  | { type: 'SET_TOKEN'; payload: string | null }
+
+function reducer(state: FormState, action: Action): FormState {
+  switch (action.type) {
+    case 'SET_LOADING':
+      return { ...state, isLoading: action.payload }
+    case 'SET_ERROR':
+      return { ...state, error: action.payload }
+    case 'SET_TOKEN':
+      return { ...state, token: action.payload }
+    default:
+      return state
+  }
+}
 
 export default function LoginPage() {
+  const supabase = createClient()
   const captchaRef = useRef<HCaptcha>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [token, setToken] = useState<string | null>(null)
+  const [state, dispatch] = useReducer(reducer, initialState)
 
   const onVerify = (token: string) => {
-    setToken(token)
+    dispatch({ type: 'SET_TOKEN', payload: token })
   }
 
-  const handleSignup = async (formData: FormData) => {
-    try {
-      setIsLoading(true)
-      setError(null)
+  const validateForm = (formData: FormData) => {
+    const data = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+      fullName: formData.get('fullName')
+    }
 
-      if (!token) {
+    const result = signUpSchema.safeParse(data)
+    if (!result.success) {
+      const firstError = result.error.errors[0]
+      if (firstError) {
+        throw new Error(firstError.message)
+      } else {
+        throw new Error('Validation failed')
+      }
+    }
+
+    return result.data
+  }
+
+  const handleSignup = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    dispatch({ type: 'SET_LOADING', payload: true })
+    dispatch({ type: 'SET_ERROR', payload: null })
+
+    try {
+      if (!state.token) {
         throw new Error('Please complete the captcha')
       }
 
-      const email = formData.get('email') as string
-      const password = formData.get('password') as string
-      const fullName = formData.get('fullName') as string
+      const formData = new FormData(event.currentTarget)
+      const validatedData = validateForm(formData)
 
-      const supabase = createClient()
       const { error: signUpError } = await supabase.auth.signUp({
-        email,
-        password,
+        email: validatedData.email,
+        password: validatedData.password,
         options: {
-          data: { full_name: fullName },
-          captchaToken: token
+          data: { full_name: validatedData.fullName },
+          captchaToken: state.token,
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         }
       })
 
       if (signUpError) throw signUpError
+
+      // Redirect or show success message
+      window.location.href = '/verify'
     } catch (err) {
       console.error('Signup error:', err)
-      setError(err instanceof Error ? err.message : 'An error occurred')
+      dispatch({ type: 'SET_ERROR', payload: err instanceof Error ? err.message : 'An error occurred' })
       captchaRef.current?.resetCaptcha()
     } finally {
-      setIsLoading(false)
+      dispatch({ type: 'SET_LOADING', payload: false })
     }
   }
 
   return (
-    <div className="flex flex-col space-y-4 p-4">
-      <form className="space-y-4" action={handleSignup}>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" name="email" type="email" required />
-        </div>
+    <div className="flex min-h-screen flex-col items-center justify-center p-4">
+      <div className="w-full max-w-sm rounded-lg bg-white p-6 shadow-md">
+        <form className="space-y-4" onSubmit={handleSignup}>
+          <div>
+            <Label htmlFor="email">Email</Label>
+            <Input id="email" name="email" type="email" required />
+          </div>
 
-        <HCaptcha
-          ref={captchaRef}
-          sitekey={process.env['NEXT_PUBLIC_HCAPTCHA_SITE_KEY']!}
-          onVerify={onVerify}
-          onError={() => setError('Captcha verification failed')}
-        />
+          <div>
+            <Label htmlFor="password">Password</Label>
+            <Input id="password" name="password" type="password" required />
+          </div>
 
-        {error && <div className="text-sm text-red-500">{error}</div>}
+          <div>
+            <Label htmlFor="fullName">Full Name</Label>
+            <Input id="fullName" name="fullName" type="text" required />
+          </div>
 
-        <button
-          type="submit"
-          disabled={isLoading || !token}
-          className="bg-primary w-full rounded p-2 text-white disabled:opacity-50"
-        >
-          {isLoading ? 'Signing up...' : 'Sign up'}
-        </button>
-      </form>
+          <div className="flex w-full justify-center">
+            <HCaptcha
+              ref={captchaRef}
+              sitekey={process.env['NEXT_PUBLIC_HCAPTCHA_SITE_KEY']!}
+              onVerify={onVerify}
+              onError={() => dispatch({ type: 'SET_ERROR', payload: 'Captcha verification failed' })}
+            />
+          </div>
+
+          {state.error && <div className="text-sm text-red-500">{state.error}</div>}
+
+          <button
+            type="submit"
+            disabled={state.isLoading || !state.token}
+            className="bg-primary mt-4 w-full rounded p-2 text-white disabled:opacity-50"
+          >
+            {state.isLoading ? 'Signing up...' : 'Sign up'}
+          </button>
+        </form>
+      </div>
     </div>
   )
 }

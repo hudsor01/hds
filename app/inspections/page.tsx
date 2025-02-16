@@ -1,7 +1,7 @@
 'use client'
 
 import { DataTable, renderDateCell, renderStatusCell } from '@/components/data-table'
-import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { FormDialog } from '@/components/dialogs/form-dialog'
 import { api } from '@/lib/api'
 import { Button, TextField } from '@mui/material'
 import { type GridColDef } from '@mui/x-data-grid'
@@ -141,13 +141,7 @@ export default function InspectionsPage() {
             required
             // Add inspection type options
           />
-          <TextField
-            label="Scheduled Date"
-            type="datetime-local"
-            fullWidth
-            required
-            InputLabelProps={{ shrink: true }}
-          />
+          <TextField label="Scheduled Date" type="datetime-local" fullWidth required InputLabelProps={{ shrink: true }} />
           <TextField label="Inspector Name" fullWidth required />
           <TextField label="Notes" fullWidth multiline rows={4} />
         </div>

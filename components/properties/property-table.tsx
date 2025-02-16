@@ -1,24 +1,11 @@
 'use client'
 
 import { useState } from 'react'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/table'
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/dropdown-menu'
+import { Button } from '@/components/button'
 import { Property, PropertyStatus } from '@/types/property'
 import { formatCurrency } from '@/lib/utils'
-import { MoreHorizontal, Pencil, Trash2 } from 'lucide-react'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -27,9 +14,9 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog'
-import { Badge } from '@/components/ui/badge'
+  AlertDialogTitle
+} from '@/components/alert-dialog'
+import { Badge } from '@/components/badge'
 
 interface PropertyTableProps {
   properties: Property[]
@@ -43,7 +30,7 @@ export function PropertyTable({ properties, onEdit, onDelete }: PropertyTablePro
 
   const handleDelete = async () => {
     if (!deleteId) return
-    
+
     try {
       setIsDeleting(true)
       await onDelete(deleteId)
@@ -86,25 +73,18 @@ export function PropertyTable({ properties, onEdit, onDelete }: PropertyTablePro
             </TableRow>
           </TableHeader>
           <TableBody>
-            {properties.map((property) => (
+            {properties.map(property => (
               <TableRow key={property.id}>
                 <TableCell className="font-medium">{property.name}</TableCell>
                 <TableCell>{`${property.address}, ${property.city}, ${property.state} ${property.zipCode}`}</TableCell>
                 <TableCell>{property.propertyType.replace('_', ' ')}</TableCell>
                 <TableCell>
-                  <Badge 
-                    variant="outline"
-                    className={cn("capitalize", getStatusColor(property.status))}
-                  >
+                  <Badge variant="outline" className={cn('capitalize', getStatusColor(property.status))}>
                     {property.status.toLowerCase()}
                   </Badge>
                 </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(property.monthlyRent)}
-                </TableCell>
-                <TableCell className="text-right">
-                  {formatCurrency(property.currentValue)}
-                </TableCell>
+                <TableCell className="text-right">{formatCurrency(property.monthlyRent)}</TableCell>
+                <TableCell className="text-right">{formatCurrency(property.currentValue)}</TableCell>
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
@@ -117,10 +97,7 @@ export function PropertyTable({ properties, onEdit, onDelete }: PropertyTablePro
                         <Pencil className="mr-2 h-4 w-4" />
                         Edit
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => setDeleteId(property.id)}
-                        className="text-destructive"
-                      >
+                      <DropdownMenuItem onClick={() => setDeleteId(property.id)} className="text-destructive">
                         <Trash2 className="mr-2 h-4 w-4" />
                         Delete
                       </DropdownMenuItem>

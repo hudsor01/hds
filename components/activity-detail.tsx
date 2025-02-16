@@ -1,7 +1,7 @@
 'use client'
 
 import { PRIORITY_LABELS, STATUS_LABELS } from '../app/auth/lib/constants'
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/ui/sheet'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from 'components/sheet'
 import { format } from 'date-fns'
 import type { RecentActivity } from 'types/dashboard'
 
@@ -20,8 +20,7 @@ export function ActivityDetail({ activity, onCloseAction, open }: ActivityDetail
             <div>
               <h3 className="text-muted-foreground text-sm font-medium">Priority</h3>
               <p className="mt-1 text-sm">
-                {PRIORITY_LABELS[activity.priority.toLowerCase() as keyof typeof PRIORITY_LABELS] ||
-                  activity.priority}
+                {PRIORITY_LABELS[activity.priority.toLowerCase() as keyof typeof PRIORITY_LABELS] || activity.priority}
               </p>
             </div>
           )
@@ -60,9 +59,7 @@ export function ActivityDetail({ activity, onCloseAction, open }: ActivityDetail
 
           <div>
             <h3 className="text-muted-foreground text-sm font-medium">Status</h3>
-            <p className="mt-1 text-sm">
-              {STATUS_LABELS[activity.status as keyof typeof STATUS_LABELS] || activity.status}
-            </p>
+            <p className="mt-1 text-sm">{STATUS_LABELS[activity.status as keyof typeof STATUS_LABELS] || activity.status}</p>
           </div>
 
           {renderActivitySpecificDetails()}

@@ -3,18 +3,11 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signUpWithEmail } from '@/lib/auth/auth-utils'
-import { Button } from '@/components/ui/button'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/button'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/card'
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
+import { Alert, AlertDescription } from '@/components/alert'
 import Link from 'next/link'
 
 export default function SignUpPage() {
@@ -51,13 +44,11 @@ export default function SignUpPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            Enter your details to create your account
-          </CardDescription>
+          <CardDescription>Enter your details to create your account</CardDescription>
         </CardHeader>
         <form onSubmit={handleSubmit}>
           <CardContent className="space-y-4">
@@ -77,7 +68,7 @@ export default function SignUpPage() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={e => setEmail(e.target.value)}
                 required
                 placeholder="Enter your email"
               />
@@ -88,7 +79,7 @@ export default function SignUpPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={e => setPassword(e.target.value)}
                 required
                 placeholder="Enter your password"
               />
@@ -99,26 +90,19 @@ export default function SignUpPage() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
+                onChange={e => setConfirmPassword(e.target.value)}
                 required
                 placeholder="Confirm your password"
               />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={isLoading}
-            >
+            <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Creating account...' : 'Create account'}
             </Button>
-            <div className="text-sm text-center">
+            <div className="text-center text-sm">
               Already have an account?{' '}
-              <Link
-                href="/auth/signin"
-                className="text-primary hover:text-primary/80"
-              >
+              <Link href="/auth/signin" className="text-primary hover:text-primary/80">
                 Sign in
               </Link>
             </div>

@@ -1,15 +1,13 @@
 'use client'
 
 import * as React from 'react'
-import MuiButton from '@mui/material/Button'
+import { Slot } from '@radix-ui/react-slot'
 import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
-import CircularProgress from '@mui/material/CircularProgress'
-import { Slot } from '@radix-ui/react-slot'
-import type { JSX } from 'react'
+import { CircularProgress } from '@mui/material'
 
 const buttonVariants = cva(
-  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
+  'inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
   {
     variants: {
       variant: {
@@ -25,83 +23,32 @@ const buttonVariants = cva(
         sm: 'h-9 rounded-md px-3',
         lg: 'h-11 rounded-md px-8',
         icon: 'h-10 w-10'
-      },
-      animation: {
-        none: '',
-        rotate: 'hover:rotate-2 hover:scale-110',
-        'rotate-left': 'hover:-rotate-2 hover:scale-110'
       }
     },
     defaultVariants: {
       variant: 'default',
-      size: 'default',
-      animation: 'none'
+      size: 'default'
     }
   }
 )
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
   loading?: boolean
-  startIcon?: React.ReactNode
-  endIcon?: React.ReactNode
 }
 
 const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant,
-      size,
-      animation,
-      asChild = false,
-      loading = false,
-      disabled,
-      startIcon,
-      endIcon,
-      children,
-      ...props
-    },
-    ref
-  ) => {
+  ({ className, variant, size, asChild = false, loading = false, children, disabled, ...props }, ref) => {
     const Comp = asChild ? Slot : 'button'
-    const isDisabled = loading || disabled
 
     return (
-      <Comp
-        className={cn(buttonVariants({ variant, size, animation, className }))}
-        ref={ref}
-        disabled={isDisabled}
-        {...props}
-      >
-        {loading && (
-          <CircularProgress
-            size={16}
-            className="mr-2"
-            color={variant === 'default' ? 'inherit' : 'primary'}
-          />
-        )}
-        {!loading && startIcon && <span className="mr-2">{startIcon}</span>}
+      <Comp className={cn(buttonVariants({ variant, size, className }))} ref={ref} disabled={loading || disabled} {...props}>
+        {loading && <CircularProgress size={16} className="mr-2" />}
         {children}
-        {!loading && endIcon && <span className="ml-2">{endIcon}</span>}
       </Comp>
     )
   }
 )
 Button.displayName = 'Button'
 
-export { Button }
-
-export interface LoadingButtonProps extends React.ComponentProps<typeof MuiButton> {
-  loading?: boolean
-}
-
-export function LoadingButton({ loading, children, ...props }: LoadingButtonProps): JSX.Element {
-  return (
-    <MuiButton {...props} disabled={loading || props.disabled}>
-      {loading ? <CircularProgress size={24} /> : children}
-    </MuiButton>
-  )
-}
+export { Button, buttonVariants }

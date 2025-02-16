@@ -1,3 +1,5 @@
+'use client'
+
 import { LeaseActions } from './lease-actions'
 import { useLeases } from '@/hooks/use-leases'
 import { formatCurrency } from '@/lib/utils'

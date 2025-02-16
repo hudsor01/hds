@@ -1,146 +1,30 @@
 'use client'
 
-import React, { type ReactElement, useEffect } from 'react'
-import { FadeIn } from '@/components/fade-in'
-import Box from '@mui/material/Box'
-import Button from '@mui/material/Button'
-import Container from '@mui/material/Container'
-import Typography from '@mui/material/Typography'
-import { RefreshCw, Send } from 'react-feather'
+import { useEffect } from 'react'
+import { Button } from '@/components/button'
+import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
+import { ErrorOutline } from '@mui/icons-material'
 
-interface ErrorProps {
-  error: Error & { digest?: string }
-  reset: () => void
-}
-
-export const metadata = {
-  title: 'Error - Hudson Digital Solutions',
-  description: 'Something went wrong'
-}
-
-export default function Error({ error, reset }: ErrorProps): ReactElement {
+export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
-    // Log the error to an error reporting service
-    console.error('Error:', {
-      message: error.message,
-      stack: error.stack,
-      digest: error.digest
-    })
+    console.error(error)
   }, [error])
 
-  const isAuthError =
-    error.message?.toLowerCase().includes('unauthorized') ||
-    error.message?.toLowerCase().includes('unauthenticated')
-  const isNetworkError =
-    error.message?.toLowerCase().includes('network') ||
-    error.message?.toLowerCase().includes('fetch')
-
-  const getErrorTitle = () => {
-    if (isAuthError) return 'Authentication Error'
-    if (isNetworkError) return 'Network Error'
-    return 'Something Went Wrong'
-  }
-
-  const getErrorMessage = () => {
-    if (isAuthError) {
-      return 'There was a problem with your authentication. Please try signing in again.'
-    }
-    if (isNetworkError) {
-      return 'There was a problem connecting to our servers. Please check your internet connection.'
-    }
-    return 'We encountered an unexpected error. Our team has been notified and is working to fix the issue.'
-  }
-
   return (
-    <Container maxWidth="md">
-      <Box
-        sx={{
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          minHeight: '100vh',
-          textAlign: 'center',
-          py: 8
-        }}
-      >
-        <FadeIn delay={0.2}>
-          <Typography
-            variant="h1"
-            sx={{
-              fontSize: '8rem',
-              fontWeight: 700,
-              background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              mb: 2
-            }}
-          >
-            {isAuthError ? '401' : '500'}
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.4}>
-          <Typography variant="h4" gutterBottom>
-            {getErrorTitle()}
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.6}>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
-            {getErrorMessage()}
-          </Typography>
-        </FadeIn>
-
-        <FadeIn delay={0.8}>
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            {!isAuthError && (
-              <Button
-                variant="contained"
-                startIcon={<RefreshCw size={20} />}
-                onClick={() => reset()}
-                sx={{
-                  background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
-                  }
-                }}
-              >
-                Try Again
-              </Button>
-            )}
-            {isAuthError && (
-              <Button
-                variant="contained"
-                href="/sign-in"
-                sx={{
-                  background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
-                  '&:hover': {
-                    background: 'linear-gradient(45deg, #0059B2 30%, #004C99 90%)'
-                  }
-                }}
-              >
-                Sign In
-              </Button>
-            )}
-            <Button
-              variant="outlined"
-              startIcon={<Send size={20} />}
-              href="mailto:support@hudsondigitalsolutions.com"
-              sx={{
-                borderColor: '#007FFF',
-                color: '#007FFF',
-                '&:hover': {
-                  borderColor: '#0059B2',
-                  color: '#0059B2'
-                }
-              }}
-            >
-              Contact Support
-            </Button>
-          </Box>
-        </FadeIn>
-      </Box>
-    </Container>
+    <div className="flex min-h-[50vh] items-center justify-center p-4">
+      <div className="w-full max-w-md space-y-4">
+        <Alert variant="destructive" className="flex items-center gap-2">
+          <ErrorOutline className="h-5 w-5" />
+          <AlertTitle>Something went wrong!</AlertTitle>
+          <AlertDescription>{error.message || 'An unexpected error occurred'}</AlertDescription>
+        </Alert>
+        <div className="flex justify-center gap-4">
+          <Button onClick={reset}>Try again</Button>
+          <Button variant="outline" onClick={() => (window.location.href = '/')}>
+            Go home
+          </Button>
+        </div>
+      </div>
+    </div>
   )
 }

@@ -1,10 +1,11 @@
 import { clsx, type ClassValue } from 'clsx'
+import { twMerge } from 'tailwind-merge'
 
 /**
- * Combines class names using clsx
+ * Combines class names using clsx and twMerge
  */
 export function cn(...inputs: ClassValue[]) {
-  return clsx(...inputs)
+  return twMerge(clsx(inputs))
 }
 
 /**
@@ -87,4 +88,11 @@ export function debounce<T extends (...args: unknown[]) => unknown>(func: T, wai
     clearTimeout(timeout)
     timeout = setTimeout(later, wait)
   }
+}
+
+/**
+ * Delays execution for a specified number of milliseconds
+ */
+export function sleep(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
 }

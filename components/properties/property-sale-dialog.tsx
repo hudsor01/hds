@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/button'
-import { Dialog } from '@/components/ui/dialogs/dialog'
+import { Dialog } from '@/components/dialogs/dialog'
 import { Input } from '@/components/input'
 import { Label } from '@/components/label'
 import type { PropertyRow, PropertySale } from '@/types/property'

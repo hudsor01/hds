@@ -1,3 +1,5 @@
+'use client'
+
 import type { LeaseFormProps } from '@/types'
 import { useCreateLease, useUpdateLease } from '@/hooks/use-leases'
 import { zodResolver } from '@hookform/resolvers/zod'

@@ -1,27 +1,29 @@
 import * as React from 'react'
 import { DashboardLayout } from '@toolpad/core/DashboardLayout'
 import { PageContainer } from '@toolpad/core/PageContainer'
+import { ToolbarAccountOverride, SidebarFooterAccount } from '@/components/dashboard/layout'
+import { ErrorBoundary } from '@/components/error-boundary'
+import { Copyright } from '@/components/copyright'
 
-const ToolbarAccountOverride = () => {
-  return <div>Toolbar Account</div>;
-};
-
-const SidebarFooterAccount = () => {
-  return <div>Sidebar Footer Account</div>;
-};
-
-export default function Layout(props: { children: React.ReactNode }) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <DashboardLayout
-      slots={{
-        toolbarAccount: ToolbarAccountOverride,
-        sidebarFooter: SidebarFooterAccount
-      }}
-    >
-      <PageContainer>
-        {props.children}
-        <Copyright sx={{ my: 4 }} />
-      </PageContainer>
-    </DashboardLayout>
+    <ErrorBoundary>
+      <DashboardLayout
+        slots={{
+          toolbarAccount: ToolbarAccountOverride,
+          sidebarFooter: SidebarFooterAccount
+        }}
+        slotProps={{
+          pageContainer: {
+            maxWidth: 'xl'
+          }
+        }}
+      >
+        <PageContainer>
+          {children}
+          <Copyright sx={{ my: 4 }} />
+        </PageContainer>
+      </DashboardLayout>
+    </ErrorBoundary>
   )
 }

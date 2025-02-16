@@ -1,40 +1,27 @@
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import Typography from '@mui/material/Typography'
+'use client'
+
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/card'
+import { cn } from '@/lib/utils'
 
 interface DashboardCardProps {
   title: string
-  subtitle?: string
-  action?: React.ReactNode
-  children: React.ReactNode
+  value: string | number
+  description?: string
+  icon?: React.ReactNode
+  className?: string
 }
 
-export function DashboardCard({ title, subtitle, action, children }: DashboardCardProps) {
+export function DashboardCard({ title, value, description, icon, className }: DashboardCardProps) {
   return (
-    <Card sx={{ height: '100%' }}>
-      <Box sx={{ p: 3 }}>
-        <Box
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            mb: subtitle ? 0.5 : 2
-          }}
-        >
-          <Box>
-            <Typography variant="h6" component="h2">
-              {title}
-            </Typography>
-            {subtitle && (
-              <Typography variant="body2" color="text.secondary">
-                {subtitle}
-              </Typography>
-            )}
-          </Box>
-          {action && <Box>{action}</Box>}
-        </Box>
-        {children}
-      </Box>
+    <Card className={cn('', className)}>
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">{title}</CardTitle>
+        {icon}
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">{value}</div>
+        {description && <p className="text-muted-foreground text-xs">{description}</p>}
+      </CardContent>
     </Card>
   )
 }

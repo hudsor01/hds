@@ -1,4 +1,5 @@
-// components/dashboard/calendar-widget.tsx
+'use client'
+
 import Badge from '@mui/material/Badge'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'

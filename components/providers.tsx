@@ -1,25 +1,21 @@
 'use client'
 
+import { ThemeProvider as MuiThemeProvider } from '@mui/material'
+import { ThemeProvider as NextThemeProvider } from 'next-themes'
+import { SessionProvider } from 'next-auth/react'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
 import { theme } from '@/lib/theme'
-import { AnimationProvider } from './animation-provider'
-import { useState } from 'react'
+
+const queryClient = new QueryClient()
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  const [queryClient] = useState(() => new QueryClient())
-
   return (
-    <>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <CssBaseline />
-          <AnimationProvider>{children}</AnimationProvider>
-        </ThemeProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
-    </>
+    <QueryClientProvider client={queryClient}>
+      <NextThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <MuiThemeProvider theme={theme}>
+          <SessionProvider>{children}</SessionProvider>
+        </MuiThemeProvider>
+      </NextThemeProvider>
+    </QueryClientProvider>
   )
 }

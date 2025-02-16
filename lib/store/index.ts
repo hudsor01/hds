@@ -39,10 +39,7 @@ interface UserPreferences {
 interface PreferencesState {
   preferences: UserPreferences
   setPreference: <K extends keyof UserPreferences>(key: K, value: UserPreferences[K]) => void
-  setNotificationPreference: (
-    type: keyof UserPreferences['notifications'],
-    enabled: boolean
-  ) => void
+  setNotificationPreference: (type: keyof UserPreferences['notifications'], enabled: boolean) => void
 }
 
 export const usePreferencesStore = create<PreferencesState>()(
@@ -89,10 +86,7 @@ interface DashboardState {
   }
   setSelectedProperty: (id: string | null) => void
   setSelectedTenant: (id: string | null) => void
-  setFilter: <K extends keyof DashboardState['filters']>(
-    key: K,
-    value: DashboardState['filters'][K]
-  ) => void
+  setFilter: <K extends keyof DashboardState['filters']>(key: K, value: DashboardState['filters'][K]) => void
   resetFilters: () => void
 }
 

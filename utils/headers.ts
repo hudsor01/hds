@@ -5,6 +5,12 @@ export async function getHeaders() {
   return {
     get: (name: string) => headersList.get(name),
     has: (name: string) => headersList.has(name),
-    entries: () => Array.from(headersList.entries())
+    entries: () => {
+      const entries: [string, string][] = []
+      for (const [key, value] of headersList.entries()) {
+        entries.push([key, value])
+      }
+      return entries
+    }
   }
 }

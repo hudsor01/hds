@@ -1,3 +1,5 @@
+'use client'
+
 import NextLogo from './next-logo'
 import SupabaseLogo from './supabase-logo'
 
@@ -29,12 +31,7 @@ export default function Header() {
           Supabase
         </a>{' '}
         and{' '}
-        <a
-          href="https://nextjs.org/"
-          target="_blank"
-          className="font-bold hover:underline"
-          rel="noreferrer"
-        >
+        <a href="https://nextjs.org/" target="_blank" className="font-bold hover:underline" rel="noreferrer">
           Next.js
         </a>
       </p>

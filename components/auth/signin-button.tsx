@@ -1,26 +1,20 @@
 'use client'
 
-import { Button } from '@mui/material'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
 
-export function SignInButton() {
-  const { signIn } = useSignIn()
+interface SignInButtonProps {
+  className?: string
+}
 
+export function SignInButton({ className }: SignInButtonProps) {
   return (
-    <Button
-      variant="contained"
-      onClick={() => {
-        if (!signIn) {
-          console.error('signIn is undefined')
-          return
-        }
-        signIn.create({
-          strategy: 'email_link',
-          identifier: 'user@example.com',
-          redirectUrl: '/dashboard'
-        })
-      }}
+    <Button 
+      variant="ghost" 
+      asChild
+      className={className}
     >
-      Sign In
+      <Link href="/auth/signin">Sign In</Link>
     </Button>
   )
 }

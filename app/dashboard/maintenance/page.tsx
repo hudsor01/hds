@@ -1,190 +1,208 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { Plus, AlertTriangle, CheckCircle, Clock } from 'react-feather'
-import { Button } from '@/components/button'
-import { Card } from '@/components/card'
-import { MaintenanceTicketDialog } from '@/components/maintenance-ticket-dialog'
-import { MaintenanceTicketDetails } from '@/components/maintenance-ticket-details'
-import { useToast } from '@/hooks/use-toast'
-import { useMaintenanceRequests } from '@/hooks/data'
-import type {
-  MaintenancePriority,
-  MaintenanceStatus,
-  MaintenanceRequestWithRelations,
-  NewMaintenanceRequest,
-  UpdateMaintenanceRequest
-} from '@/types/maintenance_requests'
+import { MaintenanceRequestForm } from '@/components/maintenance/maintenance-request-form'
+import { MaintenanceRequestTable } from '@/components/maintenance/maintenance-request-table'
+import { Button } from '@/components/ui/button'
+import { Plus } from 'lucide-react'
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog'
+import { MaintenanceRequest, CreateMaintenanceRequestInput } from '@/types/maintenance'
+import { useToast } from '@/components/ui/use-toast'
+import { createClient } from '@/utils/supabase/client'
 
 export default function MaintenancePage() {
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false)
-  const [selectedTicket, setSelectedTicket] = useState<MaintenanceRequestWithRelations | null>(null)
+  const [requests, setRequests] = useState<MaintenanceRequest[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null)
   const { toast } = useToast()
-  const { data: response, isLoading, error } = useMaintenanceRequests()
-  const tickets = response?.data || []
+  const supabase = createClient()
 
   useEffect(() => {
-    if (error) {
+    fetchMaintenanceRequests()
+  }, [])
+
+  async function fetchMaintenanceRequests() {
+    try {
+      setIsLoading(true)
+      const { data, error } = await supabase
+        .from('maintenance_requests')
+        .select(`
+          *,
+          property:properties(id, name, address),
+          assigned_to:users(id, first_name, last_name, email)
+        `)
+        .order('created_at', { ascending: false })
+
+      if (error) throw error
+
+      setRequests(data || [])
+    } catch (error) {
+      console.error('Error fetching maintenance requests:', error)
       toast({
         title: 'Error',
-        description: 'Failed to load maintenance tickets',
-        variant: 'destructive'
+        description: 'Failed to fetch maintenance requests. Please try again.',
+        variant: 'destructive',
       })
+    } finally {
+      setIsLoading(false)
     }
-  }, [error, toast])
+  }
 
-  const handleCreateTicket = async (data: NewMaintenanceRequest) => {
+  async function handleCreate(data: CreateMaintenanceRequestInput) {
     try {
-      const response = await fetch('/api/maintenance', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+      const { data: newRequest, error } = await supabase
+        .from('maintenance_requests')
+        .insert([{
+          ...data,
+          status: 'PENDING',
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }])
+        .select(`
+          *,
+          property:properties(id, name, address),
+          assigned_to:users(id, first_name, last_name, email)
+        `)
+        .single()
 
-      if (!response.ok) {
-        throw new Error('Failed to create maintenance ticket')
-      }
+      if (error) throw error
 
+      setRequests((prev) => [newRequest, ...prev])
+      setIsDialogOpen(false)
       toast({
         title: 'Success',
-        description: 'Maintenance ticket created successfully'
+        description: 'Maintenance request created successfully.',
       })
-      setIsCreateDialogOpen(false)
     } catch (error) {
+      console.error('Error creating maintenance request:', error)
       toast({
         title: 'Error',
-        description: 'Failed to create maintenance ticket',
-        variant: 'destructive'
+        description: 'Failed to create maintenance request. Please try again.',
+        variant: 'destructive',
       })
     }
   }
 
-  const handleUpdateTicket = async (data: UpdateMaintenanceRequest) => {
+  async function handleUpdate(data: CreateMaintenanceRequestInput) {
+    if (!selectedRequest) return
+
     try {
-      const response = await fetch(`/api/maintenance/${data.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-      })
+      const { data: updatedRequest, error } = await supabase
+        .from('maintenance_requests')
+        .update({
+          ...data,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', selectedRequest.id)
+        .select(`
+          *,
+          property:properties(id, name, address),
+          assigned_to:users(id, first_name, last_name, email)
+        `)
+        .single()
 
-      if (!response.ok) {
-        throw new Error('Failed to update maintenance ticket')
-      }
+      if (error) throw error
 
+      setRequests((prev) =>
+        prev.map((request) => (request.id === selectedRequest.id ? updatedRequest : request))
+      )
+      setIsDialogOpen(false)
+      setSelectedRequest(null)
       toast({
         title: 'Success',
-        description: 'Maintenance ticket updated successfully'
+        description: 'Maintenance request updated successfully.',
       })
-      setSelectedTicket(null)
     } catch (error) {
+      console.error('Error updating maintenance request:', error)
       toast({
         title: 'Error',
-        description: 'Failed to update maintenance ticket',
-        variant: 'destructive'
+        description: 'Failed to update maintenance request. Please try again.',
+        variant: 'destructive',
       })
     }
   }
 
-  const getStatusIcon = (status: MaintenanceStatus) => {
-    switch (status) {
-      case 'pending':
-        return <Clock className="h-4 w-4 text-yellow-500" />
-      case 'in_progress':
-        return <AlertTriangle className="h-4 w-4 text-blue-500" />
-      case 'completed':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
-      default:
-        return null
-    }
-  }
+  async function handleDelete(requestId: string) {
+    try {
+      const { error } = await supabase
+        .from('maintenance_requests')
+        .delete()
+        .eq('id', requestId)
 
-  const getPriorityColor = (priority: MaintenancePriority) => {
-    switch (priority) {
-      case 'low':
-        return 'text-gray-500'
-      case 'medium':
-        return 'text-yellow-500'
-      case 'high':
-        return 'text-orange-500'
-      case 'urgent':
-        return 'text-red-500'
-      default:
-        return 'text-gray-500'
-    }
-  }
+      if (error) throw error
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[50vh] items-center justify-center">
-        <div className="text-center">
-          <div className="border-primary h-8 w-8 animate-spin rounded-full border-4 border-t-transparent"></div>
-          <p className="mt-2 text-sm text-gray-500">Loading tickets...</p>
-        </div>
-      </div>
-    )
+      setRequests((prev) => prev.filter((request) => request.id !== requestId))
+      toast({
+        title: 'Success',
+        description: 'Maintenance request deleted successfully.',
+      })
+    } catch (error) {
+      console.error('Error deleting maintenance request:', error)
+      toast({
+        title: 'Error',
+        description: 'Failed to delete maintenance request. Please try again.',
+        variant: 'destructive',
+      })
+    }
   }
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-2xl font-bold">Maintenance Tickets</h1>
-          <p className="text-gray-500">Manage and track maintenance requests</p>
-        </div>
-        <Button onClick={() => setIsCreateDialogOpen(true)}>
+        <h1 className="text-3xl font-bold">Maintenance Requests</h1>
+        <Button onClick={() => setIsDialogOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
-          New Ticket
+          Add Request
         </Button>
       </div>
 
-      <div className="grid gap-4">
-        {tickets.map((ticket: MaintenanceRequestWithRelations) => (
-          <Card key={ticket.id} className="p-4">
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <div className="flex items-center space-x-2">
-                  {getStatusIcon(ticket.status)}
-                  <h3 className="font-medium">{ticket.title}</h3>
-                  <span className={`text-sm ${getPriorityColor(ticket.priority)}`}>
-                    {ticket.priority.charAt(0).toUpperCase() + ticket.priority.slice(1)} Priority
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500">
-                  {ticket.property?.name} - Unit {ticket.unit?.number}
-                </p>
-                <p className="text-sm">{ticket.description}</p>
-              </div>
-              <Button variant="outline" className="px-3 py-1 text-sm" onClick={() => setSelectedTicket(ticket)}>
-                View Details
-              </Button>
-            </div>
-          </Card>
-        ))}
-        {tickets.length === 0 && (
-          <div className="text-center">
-            <p className="text-gray-500">No maintenance tickets found</p>
-          </div>
-        )}
-      </div>
-
-      <MaintenanceTicketDialog
-        open={isCreateDialogOpen}
-        onOpenChangeAction={setIsCreateDialogOpen}
-        onSubmitAction={handleCreateTicket}
-      />
-
-      {selectedTicket && (
-        <MaintenanceTicketDetails
-          open={Boolean(selectedTicket)}
-          onOpenChangeAction={() => setSelectedTicket(null)}
-          ticket={selectedTicket}
-          onUpdateAction={handleUpdateTicket}
+      {isLoading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      ) : (
+        <MaintenanceRequestTable
+          requests={requests}
+          onEdit={(request) => {
+            setSelectedRequest(request)
+            setIsDialogOpen(true)
+          }}
+          onDelete={handleDelete}
         />
       )}
+
+      <Dialog 
+        open={isDialogOpen} 
+        onOpenChange={(open) => {
+          setIsDialogOpen(open)
+          if (!open) setSelectedRequest(null)
+        }}
+      >
+        <DialogContent className="max-w-3xl">
+          <DialogHeader>
+            <DialogTitle>
+              {selectedRequest ? 'Edit Maintenance Request' : 'Add Maintenance Request'}
+            </DialogTitle>
+            <DialogDescription>
+              {selectedRequest 
+                ? 'Update the maintenance request details below.'
+                : 'Fill in the maintenance request details below.'}
+            </DialogDescription>
+          </DialogHeader>
+          <MaintenanceRequestForm
+            initialData={selectedRequest || undefined}
+            onSubmit={selectedRequest ? handleUpdate : handleCreate}
+            onCancel={() => setIsDialogOpen(false)}
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

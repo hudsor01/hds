@@ -1,69 +1,49 @@
-import { supabaseClient } from '@/lib/supabase'
-import { AuthError } from '@supabase/supabase-js'
+import { createClient } from '@/utils/supabase/server'
+import { cookies } from 'next/headers'
+import { redirect } from 'next/navigation'
 
-export async function signInWithEmail(email: string, password: string) {
+export async function getSession() {
+  const supabase = createClient()
   try {
-    const { data, error } = await supabaseClient.auth.signInWithPassword({
-      email,
-      password,
-    })
-
+    const { data: { session }, error } = await supabase.auth.getSession()
     if (error) throw error
-    return { data, error: null }
+    return session
   } catch (error) {
-    return { data: null, error: error as AuthError }
+    console.error('Error getting session:', error)
+    return null
   }
 }
 
-export async function signUpWithEmail(email: string, password: string) {
+export async function getUserDetails() {
+  const supabase = createClient()
   try {
-    const { data, error } = await supabaseClient.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`,
-      },
-    })
-
+    const { data: { user }, error } = await supabase.auth.getUser()
     if (error) throw error
-    return { data, error: null }
+    return user
   } catch (error) {
-    return { data: null, error: error as AuthError }
+    console.error('Error getting user:', error)
+    return null
   }
 }
 
-export async function resetPassword(email: string) {
-  try {
-    const { data, error } = await supabaseClient.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/auth/reset-password`,
-    })
-
-    if (error) throw error
-    return { data, error: null }
-  } catch (error) {
-    return { data: null, error: error as AuthError }
+export async function requireAuth() {
+  const session = await getSession()
+  if (!session) {
+    redirect('/auth/signin')
   }
+  return session
 }
 
-export async function updatePassword(password: string) {
+export async function checkAuth() {
+  const cookieStore = cookies()
+  const supabase = createClient()
+  
   try {
-    const { data, error } = await supabaseClient.auth.updateUser({
-      password,
-    })
-
+    const { data: { session }, error } = await supabase.auth.getSession()
     if (error) throw error
-    return { data, error: null }
+    return !!session
   } catch (error) {
-    return { data: null, error: error as AuthError }
-  }
-}
-
-export async function signOut() {
-  try {
-    const { error } = await supabaseClient.auth.signOut()
-    if (error) throw error
-    return { error: null }
-  } catch (error) {
-    return { error: error as AuthError }
+    console.error('Error checking auth:', error)
+    return false
   }
 }

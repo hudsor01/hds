@@ -1,7 +1,7 @@
 'use client'
 
 import { DataTable, renderCurrencyCell, renderStatusCell } from '@/components/data-table'
-import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { FormDialog } from '@/components/dialogs/form-dialog'
 import { api } from '@/lib/api'
 import { Button, Chip, TextField } from '@mui/material'
 import { type GridColDef } from '@mui/x-data-grid'

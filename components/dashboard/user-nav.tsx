@@ -7,11 +7,10 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { User } from 'lucide-react'
+  DropdownMenuTrigger
+} from '@/components/dropdown-menu'
+import { Button } from '@/components/button'
+import { Avatar, AvatarFallback } from '@/components/avatar'
 
 export function UserNav() {
   const { user, signOut } = useAuth()
@@ -21,7 +20,7 @@ export function UserNav() {
   const initials = user.email
     ?.split('@')[0]
     .split('.')
-    .map((n) => n[0])
+    .map(n => n[0])
     .join('')
     .toUpperCase()
 
@@ -37,16 +36,12 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col space-y-1">
-            <p className="text-sm font-medium leading-none">Account</p>
-            <p className="text-xs leading-none text-muted-foreground">
-              {user.email}
-            </p>
+            <p className="text-sm leading-none font-medium">Account</p>
+            <p className="text-muted-foreground text-xs leading-none">{user.email}</p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => signOut()}>
-          Log out
-        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => signOut()}>Log out</DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -1,26 +1,19 @@
 'use client'
+
 import * as React from 'react'
 import { alpha } from '@mui/material/styles'
 import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid2'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import StatCard from './StatCard'
-import HighlightedCard from './HighlightedCard'
-import SessionsChart from './SessionsChart'
-import PageViewsBarChart from './PageViewsBarChart'
-import CustomTreeView from './CustomTreeView'
-import ChartUserByCountry from './ChartUserByCountry'
+import { useMediaQuery, useTheme, Skeleton } from '@mui/material'
+import { StatCard, HighlightedCard, SessionsChart, PageViewsBarChart, CustomTreeView } from '@/components/dashboard'
+import { ChartUserByCountry } from '@/components/charts'
+import { ErrorBoundary } from '@/components/error-boundary'
+import type { StatCardProps } from '@/types/dashboard'
+import { DashboardSkeleton } from '@/components/dashboard/dashboard-skeleton'
 
-interface StatCardProps {
-  title: string
-  value: string
-  interval: string
-  trend: string
-  data: number[]
-}
-
-const data: StatCardProps[] = [
+const DASHBOARD_DATA: StatCardProps[] = [
   {
     title: 'Users',
     value: '14k',
@@ -54,62 +47,94 @@ const data: StatCardProps[] = [
 ]
 
 export default function DashboardContent() {
+  const [isLoading, setIsLoading] = React.useState(true)
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+
+  React.useEffect(() => {
+    // Simulate data loading
+    const timer = setTimeout(() => setIsLoading(false), 1000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  if (isLoading) {
+    return <DashboardSkeleton />
+  }
+
   return (
-    <Box sx={{ display: 'flex' }}>
-      <Box
-        component="main"
-        sx={theme => ({
-          flexGrow: 1,
-          backgroundColor: theme.vars
-            ? `rgba(${theme.vars.palette.background.defaultChannel} / 1)`
-            : alpha(theme.palette.background.default, 1),
-          overflow: 'auto'
-        })}
-      >
-        <Stack
-          spacing={2}
-          sx={{
-            alignItems: 'center',
-            mx: 3,
-            pb: 5,
-            mt: { xs: 8, md: 0 }
-          }}
+    <ErrorBoundary>
+      <Box sx={{ display: 'flex' }}>
+        <Box
+          component="main"
+          sx={theme => ({
+            flexGrow: 1,
+            backgroundColor: alpha(theme.palette.background.default, 1),
+            overflow: 'auto',
+            minHeight: '100vh'
+          })}
         >
-          <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
-            {/* cards */}
-            <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-              Overview
-            </Typography>
-            <Grid container spacing={2} columns={12} sx={{ mb: theme => theme.spacing(2) }}>
-              {data.map((card, index) => (
-                <Grid key={index} size={{ xs: 12, sm: 6, lg: 3 }}>
-                  <StatCard {...card} />
+          <Stack
+            spacing={2}
+            sx={{
+              alignItems: 'center',
+              mx: { xs: 2, sm: 3 },
+              pb: 5,
+              mt: { xs: 8, md: 0 }
+            }}
+          >
+            <Box sx={{ width: '100%', maxWidth: { sm: '100%', md: '1700px' } }}>
+              {/* cards */}
+              <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+                Overview
+              </Typography>
+              <Grid container spacing={2} columns={12} sx={{ mb: 2 }}>
+                {DASHBOARD_DATA.map((card, index) => (
+                  <Grid key={index} item xs={12} sm={6} lg={3}>
+                    <StatCard {...card} />
+                  </Grid>
+                ))}
+                <Grid item xs={12} sm={6} lg={3}>
+                  <HighlightedCard />
                 </Grid>
-              ))}
-              <Grid size={{ xs: 12, sm: 6, lg: 3 }}>
-                <HighlightedCard />
+                <Grid item xs={12} md={6}>
+                  <SessionsChart />
+                </Grid>
+                <Grid item xs={12} md={6}>
+                  <PageViewsBarChart />
+                </Grid>
               </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <SessionsChart />
+              <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
+                Details
+              </Typography>
+              <Grid container spacing={2} columns={12}>
+                <Grid item xs={12} lg={6}>
+                  <Stack spacing={2} direction={{ xs: 'column', sm: 'row' }}>
+                    <CustomTreeView />
+                    <ChartUserByCountry />
+                  </Stack>
+                </Grid>
               </Grid>
-              <Grid size={{ xs: 12, md: 6 }}>
-                <PageViewsBarChart />
-              </Grid>
-            </Grid>
-            <Typography component="h2" variant="h6" sx={{ mb: 2 }}>
-              Details
-            </Typography>
-            <Grid container spacing={2} columns={12}>
-              <Grid size={{ xs: 12, lg: 6 }}>
-                <Stack gap={2} direction={{ xs: 'column', sm: 'row' }}>
-                  <CustomTreeView />
-                  <ChartUserByCountry />
-                </Stack>
-              </Grid>
-            </Grid>
-          </Box>
-        </Stack>
+            </Box>
+          </Stack>
+        </Box>
       </Box>
+    </ErrorBoundary>
+  )
+}
+
+function DashboardSkeleton() {
+  return (
+    <Box sx={{ p: 3 }}>
+      <Stack spacing={2}>
+        <Skeleton height={40} width={200} />
+        <Grid container spacing={2}>
+          {[1, 2, 3, 4].map(i => (
+            <Grid key={i} item xs={12} sm={6} md={3}>
+              <Skeleton height={160} />
+            </Grid>
+          ))}
+        </Grid>
+      </Stack>
     </Box>
   )
 }

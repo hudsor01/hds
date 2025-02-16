@@ -48,6 +48,22 @@ export const theme = createTheme({
     h2: {
       fontFamily: playfair.style.fontFamily
     }
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          textTransform: 'none'
+        }
+      }
+    },
+    MuiDialog: {
+      styleOverrides: {
+        paper: {
+          borderRadius: '0.75rem'
+        }
+      }
+    }
   }
 })
 

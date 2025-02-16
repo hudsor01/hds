@@ -1,33 +1,26 @@
 'use client'
+
 import * as React from 'react'
 import Stack from '@mui/material/Stack'
 import MenuList from '@mui/material/MenuList'
 import Button from '@mui/material/Button'
 import AddIcon from '@mui/icons-material/Add'
 import Divider from '@mui/material/Divider'
-import {
-  Account,
-  AccountPreview,
-  AccountPreviewProps,
-  AccountPopoverFooter,
-  SignOutButton
-} from '@toolpad/core/Account'
-import { SidebarFooterProps } from '@toolpad/core/DashboardLayout'
+import { Account, AccountPreview, AccountPopoverFooter, SignOutButton } from '@toolpad/core/Account'
+import type { AccountPreviewProps, SidebarFooterProps } from '@/types/dashboard'
 
-function AccountSidebarPreview(props: AccountPreviewProps & { mini: boolean }) {
-  const { handleClick, open, mini } = props
-  return (
-    <Stack direction="column" p={0} overflow="hidden">
-      <Divider />
-      <AccountPreview
-        variant={mini ? 'condensed' : 'expanded'}
-        slotProps={{ avatarIconButton: { sx: mini ? { border: '0' } : {} } }}
-        handleClick={handleClick}
-        open={open}
-      />
-    </Stack>
-  )
-}
+const AccountSidebarPreview = ({ handleClick, open, mini, ...props }: AccountPreviewProps & { mini: boolean }) => (
+  <Stack direction="column" p={0} overflow="hidden">
+    <Divider />
+    <AccountPreview
+      variant={mini ? 'condensed' : 'expanded'}
+      slotProps={{ avatarIconButton: { sx: mini ? { border: '0' } : {} } }}
+      handleClick={handleClick}
+      open={open}
+      {...props}
+    />
+  </Stack>
+)
 
 function SidebarFooterAccountPopover({ mini }: { mini: boolean }) {
   return (

@@ -1,125 +1,97 @@
 'use server'
 
-import { encodedRedirect } from '@/utils/utils'
 import { createClient } from '@/utils/supabase/server'
-import { headers } from 'next/headers'
+import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
-import type { RedirectFunction } from '@/types/auth'
+import { z } from 'zod'
 
-export async function signUpAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
-  const email = formData.get('email')
-  const password = formData.get('password')
-  const supabase = await createClient()
-  const headersList = await headers()
-  const origin = headersList.get('origin')
+const profileSchema = z.object({
+  fullName: z.string().min(1).max(100),
+  avatarUrl: z.string().url().optional().nullable()
+})
 
-  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-    return encodedRedirect('error', '/sign-up', 'Email and password are required')
-  }
+const settingsSchema = z.object({
+  emailNotifications: z.boolean(),
+  pushNotifications: z.boolean(),
+  marketingEmails: z.boolean()
+})
 
-  const { error } = await supabase.auth.signUp({
-    email,
-    password,
-    options: {
-      emailRedirectTo: `${origin}/auth/callback`
-    }
+export async function updateUserProfile(formData: FormData) {
+  const validatedFields = profileSchema.safeParse({
+    fullName: formData.get('fullName'),
+    avatarUrl: formData.get('avatarUrl')
   })
 
-  if (error) {
-    console.error(`Authentication error: ${error.code} - ${error.message}`)
-    return encodedRedirect('error', '/sign-up', error.message)
+  if (!validatedFields.success) {
+    throw new Error('Invalid form data')
   }
 
-  return encodedRedirect(
-    'success',
-    '/sign-up',
-    'Thanks for signing up! Please check your email for a verification link.'
-  )
+  const supabase = createClient()
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+  if (userError) throw userError
+
+  const updates = {
+    full_name: formData.get('fullName'),
+    avatar_url: formData.get('avatarUrl'),
+    updated_at: new Date().toISOString()
+  }
+
+  const { error } = await supabase.from('profiles').update(updates).eq('id', user.id)
+
+  if (error) throw error
+
+  revalidatePath('/account')
+  redirect('/account')
 }
 
-export async function signInAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
-  const email = formData.get('email')
-  const password = formData.get('password')
-
-  if (!email || !password || typeof email !== 'string' || typeof password !== 'string') {
-    return encodedRedirect('error', '/sign-in', 'Email and password are required')
-  }
-
-  const supabase = await createClient()
-
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password
+export async function updateAccountSettings(formData: FormData) {
+  const validatedFields = settingsSchema.safeParse({
+    emailNotifications: formData.get('emailNotifications') === 'on',
+    pushNotifications: formData.get('pushNotifications') === 'on',
+    marketingEmails: formData.get('marketingEmails') === 'on'
   })
 
-  if (error) {
-    return encodedRedirect('error', '/sign-in', error.message)
+  if (!validatedFields.success) {
+    throw new Error('Invalid form data')
   }
 
-  return redirect('/protected')
+  const supabase = createClient()
+
+  const {
+    data: { user },
+    error: userError
+  } = await supabase.auth.getUser()
+  if (userError) throw userError
+
+  const updates = {
+    email_notifications: formData.get('emailNotifications') === 'on',
+    push_notifications: formData.get('pushNotifications') === 'on',
+    marketing_emails: formData.get('marketingEmails') === 'on',
+    updated_at: new Date().toISOString()
+  }
+
+  const { error } = await supabase.from('user_settings').update(updates).eq('user_id', user.id)
+
+  if (error) throw error
+
+  revalidatePath('/settings')
+  redirect('/settings')
 }
 
-export async function forgotPasswordAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
-  const email = formData.get('email')
-  const supabase = await createClient()
-  const headersList = await headers()
-  const origin = headersList.get('origin')
-  const callbackUrl = formData.get('callbackUrl')
+export async function deleteAccount() {
+  try {
+    const supabase = createClient()
 
-  if (!email || typeof email !== 'string') {
-    return encodedRedirect('error', '/forgot-password', 'Email is required')
+    const { error: deleteError } = await supabase.auth.admin.deleteUser((await supabase.auth.getUser()).data.user?.id ?? '')
+
+    if (deleteError) throw deleteError
+
+    redirect('/sign-in')
+  } catch (error) {
+    throw new Error('Failed to delete account. Please try again.')
   }
-
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${origin}/auth/callback?redirect_to=/protected/reset-password`
-  })
-
-  if (error) {
-    console.error(`Password reset error: ${error.message}`)
-    return encodedRedirect('error', '/forgot-password', 'Could not reset password')
-  }
-
-  if (callbackUrl && typeof callbackUrl === 'string') {
-    return redirect(callbackUrl)
-  }
-
-  return encodedRedirect(
-    'success',
-    '/forgot-password',
-    'Check your email for a link to reset your password.'
-  )
-}
-
-export async function resetPasswordAction(formData: FormData): Promise<ReturnType<RedirectFunction>> {
-  const supabase = await createClient()
-  const password = formData.get('password')
-  const confirmPassword = formData.get('confirmPassword')
-
-  if (!password || !confirmPassword || typeof password !== 'string' || typeof confirmPassword !== 'string') {
-    return encodedRedirect(
-      'error',
-      '/protected/reset-password',
-      'Password and confirm password are required'
-    )
-  }
-
-  if (password !== confirmPassword) {
-    return encodedRedirect('error', '/protected/reset-password', 'Passwords do not match')
-  }
-
-  const { error } = await supabase.auth.updateUser({
-    password
-  })
-
-  if (error) {
-    return encodedRedirect('error', '/protected/reset-password', 'Password update failed')
-  }
-
-  return encodedRedirect('success', '/protected/reset-password', 'Password updated')
-}
-
-export async function signOutAction(): Promise<ReturnType<RedirectFunction>> {
-  const supabase = await createClient()
-  await supabase.auth.signOut()
-  return redirect('/sign-in')
 }

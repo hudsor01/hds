@@ -2,16 +2,12 @@
 
 import { Suspense, useState, useCallback, useMemo } from 'react'
 import { Box, Button, Tab, Tabs, Typography, Container } from '@mui/material'
-import {
-  Add as AddIcon,
-  GridView as GridViewIcon,
-  ViewList as ViewListIcon
-} from '@mui/icons-material'
+import { Add as AddIcon, GridView as GridViewIcon, ViewList as ViewListIcon } from '@mui/icons-material'
 import { useProperties } from '@/hooks/data'
 import { PropertyFilters } from './property-filters'
 import { PropertyGrid } from './property-grid'
 import { PropertyTable } from './property-table'
-import { LoadingScreen } from '@/components/ui/feedback/loading-screen'
+import { LoadingScreen } from '@/components/feedback/loading-screen'
 import { useRouter } from 'next/navigation'
 
 type ViewType = 'grid' | 'table'
@@ -60,24 +56,9 @@ export function PropertyListing() {
           </Box>
 
           <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
-            <Tabs
-              value={view}
-              onChange={handleViewChange}
-              sx={{ mr: 2 }}
-              aria-label="view selection"
-            >
-              <Tab
-                icon={<GridViewIcon />}
-                value="grid"
-                aria-label="grid view"
-                sx={{ minWidth: 'auto' }}
-              />
-              <Tab
-                icon={<ViewListIcon />}
-                value="table"
-                aria-label="table view"
-                sx={{ minWidth: 'auto' }}
-              />
+            <Tabs value={view} onChange={handleViewChange} sx={{ mr: 2 }} aria-label="view selection">
+              <Tab icon={<GridViewIcon />} value="grid" aria-label="grid view" sx={{ minWidth: 'auto' }} />
+              <Tab icon={<ViewListIcon />} value="table" aria-label="table view" sx={{ minWidth: 'auto' }} />
             </Tabs>
 
             <Button

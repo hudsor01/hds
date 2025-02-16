@@ -58,9 +58,7 @@
     "@tanstack/react-query": "^5.66.0",
     "@tanstack/react-query-devtools": "^5.66.0",
     "@tanstack/react-virtual": "3.13.0",
-    "@toolpad/core": "0.12.0",
     "@trpc/server": "^10.45.2",
-    "@types/react-google-recaptcha": "2.1.9",
     "@typescript-eslint/utils": "8.24.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/postgres": "0.10.0",
@@ -97,7 +95,6 @@
     "react-email": "^3.0.7",
     "react-error-boundary": "^5.0.0",
     "react-feather": "2.0.10",
-    "react-google-recaptcha": "3.1.0",
     "react-hook-form": "^7.54.2",
     "react-hotkeys-hook": "^4.6.1",
     "react-icons": "^5.4.0",
@@ -116,7 +113,6 @@
     "sonner": "^1.7.4",
     "stripe": "^17.6.0",
     "svix": "^1.57.0",
-    "tailwindcss": "4.0.6",
     "tailwindcss-react-aria-components": "1.2.0",
     "tailwindcss-typography": "3.1.0",
     "typescript-eslint": "^8.24.0",
@@ -132,8 +128,8 @@
     "@next/bundle-analyzer": "^15.1.7",
     "@next/eslint-plugin-next": "^15.1.7",
     "@tailwindcss/aspect-ratio": "^0.4.2",
-    "@tailwindcss/forms": "^0.5.10",
-    "@tailwindcss/typography": "^0.5.16",
+    "@tailwindcss/forms": "^0.5.7",
+    "@tailwindcss/typography": "^0.5.10",
     "@types/express": "^5.0.0",
     "@types/node": "^22.13.4",
     "@types/papaparse": "^5.3.15",
@@ -148,7 +144,7 @@
     "@typescript-eslint/parser": "^8.24.0",
     "@typescript-eslint/type-utils": "^8.24.0",
     "@typescript-eslint/types": "^8.24.0",
-    "autoprefixer": "10.4.20",
+    "autoprefixer": "^10.4.16",
     "eslint": "^9.20.1",
     "eslint-config-next": "^15.1.7",
     "eslint-config-prettier": "^10.0.1",
@@ -160,11 +156,12 @@
     "globals": "15.15.0",
     "jiti": "^2.4.2",
     "lint-staged": "15.4.3",
-    "postcss": "8.5.2",
+    "postcss": "^8.4.32",
     "prettier": "^3.5.1",
     "prettier-plugin-sort-json": "4.1.1",
     "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwind-merge": "3.0.1",
+    "tailwindcss": "4.0.6",
     "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
@@ -177,11 +174,5 @@
   },
   "prisma": {
     "seed": "node --no-warnings --loader ts-node/esm prisma/seed.ts"
-  },
-  "postcss": {
-    "plugins": {
-      "tailwindcss": {},
-      "autoprefixer": {}
-    }
   }
 }

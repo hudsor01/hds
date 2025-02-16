@@ -1,3 +1,5 @@
+'use client'
+
 import { useScroll } from '@/hooks/ui'
 import { ArrowUpward } from '@mui/icons-material'
 import MuiButton from '@mui/material/Button'

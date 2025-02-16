@@ -1,20 +1,37 @@
-import { type RedirectType } from 'next/navigation'
-
-export type MessageType = 'success' | 'error' | 'info' | 'warning'
-
-export type RedirectFunction = (
-  type: MessageType,
-  path: string,
-  message: string
-) => {
-  status: number
-  redirect: true
-  type: RedirectType
-  destination: string
-}
+import { User, Session } from '@supabase/supabase-js'
 
 export interface AuthError {
-  code: string
   message: string
+  code?: string
   status?: number
+}
+
+export interface AuthState {
+  user: User | null
+  session: Session | null
+  isLoading: boolean
+  error: AuthError | null
+}
+
+export interface SignInCredentials {
+  email: string
+  password: string
+}
+
+export interface SignUpCredentials extends SignInCredentials {
+  confirmPassword: string
+}
+
+export interface ResetPasswordCredentials {
+  email: string
+}
+
+export interface UpdatePasswordCredentials {
+  password: string
+  confirmPassword: string
+}
+
+export interface AuthResponse<T = any> {
+  data: T | null
+  error: AuthError | null
 }

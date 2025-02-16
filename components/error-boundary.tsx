@@ -1,5 +1,8 @@
-import { Alert, Button, Stack, Typography } from '@mui/material'
-import { Component, ErrorInfo, ReactNode } from 'react'
+'use client'
+
+import { Component, type ErrorInfo, type ReactNode } from 'react'
+import { Alert, AlertTitle, Button, Stack } from '@mui/material'
+import { Error as ErrorIcon } from '@mui/icons-material'
 
 interface Props {
   children: ReactNode
@@ -9,6 +12,7 @@ interface Props {
 interface State {
   hasError: boolean
   error?: Error
+  errorInfo?: ErrorInfo
 }
 
 export class ErrorBoundary extends Component<Props, State> {
@@ -22,32 +26,32 @@ export class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo)
+    this.setState({ errorInfo })
   }
 
   private handleReset = () => {
-    this.setState({ hasError: false, error: undefined })
+    this.setState({ hasError: false, error: undefined, errorInfo: undefined })
   }
 
   public render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback
-      }
-
       return (
-        <Stack spacing={2} alignItems="center" sx={{ p: 4 }}>
-          <Alert severity="error" sx={{ width: '100%', maxWidth: 500 }}>
-            <Typography variant="h6" gutterBottom>
-              Something went wrong
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
+        this.props.fallback || (
+          <Stack spacing={2} alignItems="center" p={3}>
+            <Alert
+              severity="error"
+              icon={<ErrorIcon />}
+              action={
+                <Button color="inherit" size="small" onClick={this.handleReset}>
+                  Try Again
+                </Button>
+              }
+            >
+              <AlertTitle>Something went wrong</AlertTitle>
               {this.state.error?.message || 'An unexpected error occurred'}
-            </Typography>
-          </Alert>
-          <Button variant="contained" onClick={this.handleReset}>
-            Try Again
-          </Button>
-        </Stack>
+            </Alert>
+          </Stack>
+        )
       )
     }
 

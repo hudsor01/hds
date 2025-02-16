@@ -1,3 +1,5 @@
+'use client'
+
 import { useLeaseActions } from '@/hooks/use-leases'
 import { LEASE_STATUS } from '@/types'
 import { IconButton, Menu, MenuItem } from '@mui/material'

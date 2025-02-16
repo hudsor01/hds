@@ -1,19 +1,28 @@
-import supabase from '@/lib/supabase'
+import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
-import { cookies } from 'next/headers'
 
-export async function GET(request: Request): Promise<NextResponse> {
-  const { searchParams, origin } = new URL(request.url)
-  const code: string | null = searchParams.get('code')
-  const next: string = searchParams.get('next') ?? '/'
+export async function GET(request: Request) {
+  try {
+    const requestUrl = new URL(request.url)
+    const code = requestUrl.searchParams.get('code')
+    const next = requestUrl.searchParams.get('next') ?? '/dashboard'
 
-  if (code) {
-    const { error } = await supabase.auth.exchangeCode(code)
-    if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+    if (!code) {
+      throw new Error('No code provided')
     }
-  }
 
-  // Return the user to an error page with instructions
-  return NextResponse.redirect(`${origin}/auth/auth-error`)
+    const supabase = createClient()
+    const { error } = await supabase.auth.exchangeCodeForSession(code)
+
+    if (error) {
+      throw error
+    }
+
+    return NextResponse.redirect(new URL(next, requestUrl))
+  } catch (error) {
+    console.error('Auth callback error:', error)
+    return NextResponse.redirect(
+      new URL('/auth/sign-in?error=Could not authenticate user', request.url)
+    )
+  }
 }

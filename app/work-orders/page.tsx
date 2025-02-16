@@ -1,12 +1,7 @@
 'use client'
 
-import {
-  DataTable,
-  renderCurrencyCell,
-  renderDateCell,
-  renderStatusCell
-} from '@/components/ui/data-table'
-import { FormDialog } from '@/components/ui/dialogs/form-dialog'
+import { DataTable, renderCurrencyCell, renderDateCell, renderStatusCell } from '@/components/data-table'
+import { FormDialog } from '@/components/dialogs/form-dialog'
 import { api } from '@/lib/api'
 import { Button, TextField } from '@mui/material'
 import { type GridColDef } from '@mui/x-data-grid'
@@ -241,19 +236,8 @@ export default function WorkOrdersPage() {
             <option value="COMPLETED">Completed</option>
             <option value="CANCELLED">Cancelled</option>
           </TextField>
-          <TextField
-            label="Scheduled Date"
-            type="datetime-local"
-            fullWidth
-            required
-            InputLabelProps={{ shrink: true }}
-          />
-          <TextField
-            label="Completed Date"
-            type="datetime-local"
-            fullWidth
-            InputLabelProps={{ shrink: true }}
-          />
+          <TextField label="Scheduled Date" type="datetime-local" fullWidth required InputLabelProps={{ shrink: true }} />
+          <TextField label="Completed Date" type="datetime-local" fullWidth InputLabelProps={{ shrink: true }} />
           <TextField label="Estimated Cost" type="number" fullWidth />
           <TextField label="Actual Cost" type="number" fullWidth />
           <TextField label="Description" fullWidth required multiline rows={4} />

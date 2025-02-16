@@ -1,4 +1,6 @@
-import { Dialog } from '@/components/ui/dialogs/dialog'
+'use client'
+
+import { Dialog } from '@/components/dialog'
 import { Button } from '@mui/material'
 import { type ReactNode } from 'react'
 
@@ -12,15 +14,7 @@ interface FormDialogProps {
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
 }
 
-export function FormDialog({
-  open,
-  onClose,
-  onSubmit,
-  title,
-  children,
-  loading = false,
-  maxWidth = 'sm'
-}: FormDialogProps) {
+export function FormDialog({ open, onClose, onSubmit, title, children, loading = false, maxWidth = 'sm' }: FormDialogProps) {
   return (
     <Dialog
       open={open}
