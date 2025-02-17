@@ -6,7 +6,7 @@ import { BarChart, LineChart } from '@mui/x-charts'
 import { Suspense } from 'react'
 import Grid from '@mui/material/Grid2'
 
-async function getEmailMetrics(type: string) {
+async function getEmailMetrics(type: string): Promise<{ sent: number; opened: number; clicked: number }> {
   const { data, error } = await supabase.from('email_metrics').select('*').eq('type', type).single()
 
   if (error) throw error
@@ -54,7 +54,7 @@ async function getAnalyticsData(): Promise<{
   }
 }
 
-export default async function AnalyticsPage() {
+export default async function AnalyticsPage(): Promise<JSX.Element> {
   try {
     const stats = await getAnalyticsData()
 

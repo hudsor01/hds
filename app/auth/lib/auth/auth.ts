@@ -1,12 +1,12 @@
 import { AuthService } from './service'
 import { prisma } from '@/lib/prisma'
-import type { Session } from '@prisma/client'
+import type { Session, User } from '@prisma/client'
 
 const authService = new AuthService()
 
 export async function getSession(): Promise<Session | null> {
   try {
-    const sessions = await prisma.session.findMunknown({
+    const sessions = await prisma.session.findMany({
       where: {
         expires: { gt: new Date() }
       },
@@ -20,7 +20,7 @@ export async function getSession(): Promise<Session | null> {
   }
 }
 
-export async function signOut() {
+export async function signOut(): Promise<void> {
   try {
     const session = await getSession()
     if (session) {
@@ -33,7 +33,7 @@ export async function signOut() {
   }
 }
 
-export async function getCurrentUserProfile() {
+export async function getCurrentUserProfile(): Promise<User | null> {
   const session = await getSession()
   if (!session) return null
 
@@ -48,7 +48,7 @@ export async function getCurrentUserProfile() {
   }
 }
 
-export async function updateUserProfile(updates: { email?: string; password?: string; data?: Record<string, unknown> }) {
+export async function updateUserProfile(updates: { email?: string; password?: string; data?: Record<string, unknown> }): Promise<User> {
   const session = await getSession()
   if (!session) throw new Error('Not authenticated')
 

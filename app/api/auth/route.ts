@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { z } from 'zod'
-import { AuthError } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
+import { z, ZodError } from 'zod'
+import { AuthError, AuthResponse } from '@supabase/supabase-js'
 
 const authRequestSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -22,17 +22,19 @@ function isAuthError(error: unknown): error is AuthError {
   return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     const json = await request.json()
     const { type, ...data } = json
 
     const validatedType = authTypeSchema.parse(type)
 
+    const supabase = createClient()
+
     switch (validatedType) {
       case 'signin': {
         const validatedData = authRequestSchema.parse(data)
-        const { error } = await supabase.auth.signInWithPassword(validatedData)
+        const { error }: AuthResponse = await supabase.auth.signInWithPassword(validatedData)
 
         if (error) throw error
 
@@ -41,7 +43,7 @@ export async function POST(request: Request) {
 
       case 'signup': {
         const validatedData = authRequestSchema.parse(data)
-        const { error } = await supabase.auth.signUp({
+        const { error }: AuthResponse = await supabase.auth.signUp({
           ...validatedData,
           options: {
             emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
@@ -55,7 +57,7 @@ export async function POST(request: Request) {
 
       case 'reset-password': {
         const validatedData = passwordResetSchema.parse(data)
-        const { error } = await supabase.auth.resetPasswordForEmail(validatedData.email, {
+        const { error }: AuthResponse = await supabase.auth.resetPasswordForEmail(validatedData.email, {
           redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`
         })
 
@@ -66,7 +68,7 @@ export async function POST(request: Request) {
 
       case 'update-password': {
         const validatedData = passwordUpdateSchema.parse(data)
-        const { error } = await supabase.auth.updateUser({
+        const { error }: AuthResponse = await supabase.auth.updateUser({
           password: validatedData.password
         })
 
@@ -76,7 +78,7 @@ export async function POST(request: Request) {
       }
     }
   } catch (error) {
-    if (error instanceof z.ZodError) {
+    if (error instanceof ZodError) {
       return NextResponse.json(
         {
           error: 'Validation Error',
@@ -107,9 +109,10 @@ export async function POST(request: Request) {
   }
 }
 
-export async function DELETE() {
+export async function DELETE(): Promise<NextResponse> {
   try {
-    const { error } = await supabase.auth.signOut()
+    const supabase = createClient()
+    const { error }: AuthResponse = await supabase.auth.signOut()
 
     if (error) throw error
 

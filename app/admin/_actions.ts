@@ -9,7 +9,7 @@ const roleSchema = z.object({
   userId: z.string().uuid()
 })
 
-async function validateAdmin() {
+async function validateAdmin(): Promise<{ id: string }> {
   const supabase = createClient()
   const {
     data: { user },

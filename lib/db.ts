@@ -112,8 +112,8 @@ export const payments = {
       startDate?: Date
       endDate?: Date
     }
-  ) => {
-    const where = {
+  ): Promise<PaginatedResult<Prisma.paymentsGetPayload<{}>>> => {
+    const where: Prisma.paymentsWhereInput = {
       tenant_id: tenantId,
       ...(params.status && { payment_status: params.status }),
       ...(params.type && { payment_type: params.type }),
@@ -142,7 +142,7 @@ export const payments = {
 
 // Lease Queries
 export const leases = {
-  getWithDetails: async (leaseId: string) => {
+  getWithDetails: async (leaseId: string): Promise<Prisma.leasesGetPayload<{}> | null> => {
     return prisma.leases.findUnique({
       where: { user_id: leaseId },
       select: {
@@ -162,7 +162,7 @@ export const leases = {
     })
   },
 
-  getActiveByProperty: async (propertyId: string) => {
+  getActiveByProperty: async (propertyId: string): Promise<Prisma.leasesGetPayload<{}>[]> => {
     return prisma.leases.findMany({
       where: {
         property_id: propertyId,
@@ -190,7 +190,7 @@ export const leases = {
 
 // Property Queries
 export const properties = {
-  getWithDetails: async (propertyId: string) => {
+  getWithDetails: async (propertyId: string): Promise<Prisma.propertiesGetPayload<{}> | null> => {
     return prisma.properties.findUnique({
       where: { id: propertyId },
       select: {
@@ -241,7 +241,7 @@ export const properties = {
       type?: string
       search?: string
     }
-  ) => {
+  ): Promise<PaginatedResult<Prisma.propertiesGetPayload<{}>>> => {
     const where: Prisma.propertiesWhereInput = {
       user_id: userId,
       ...(params.status && { status: params.status }),
@@ -297,10 +297,10 @@ export const properties = {
 }
 
 // Connection Management
-export const disconnect = async () => {
+export const disconnect = async (): Promise<void> => {
   await prisma.$disconnect()
 }
 
-export const connect = async () => {
+export const connect = async (): Promise<void> => {
   await prisma.$connect()
 }

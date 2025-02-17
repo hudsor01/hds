@@ -4,13 +4,12 @@ import { Box, Tooltip, Typography, alpha, useTheme } from '@mui/material'
 import MuiCard from '@mui/material/Card'
 import { motion } from 'framer-motion'
 import React from 'react'
-import type { Icon } from 'react-feather'
-import { TrendingUp } from 'react-feather'
+import { TrendingUp, TrendingDown } from '@mui/icons-material'
 
 interface MetricCardProps {
   title: string
   value: string | number
-  icon: Icon
+  icon: React.ReactNode
   color: 'primary' | 'success' | 'info' | 'warning'
   percentageChange?: number
   tooltip?: string
@@ -33,7 +32,7 @@ const iconVariants = {
 export function MetricCard({
   title,
   value,
-  icon: Icon,
+  icon,
   color,
   percentageChange,
   tooltip,
@@ -88,7 +87,7 @@ export function MetricCard({
                 boxShadow: `0 2px 8px 0 ${alpha(theme.palette[color].main, 0.3)}`
               }}
             >
-              <Icon width={20} height={20} color="#fff" />
+              {icon}
             </motion.div>
 
             <Typography

@@ -9,7 +9,7 @@ interface SendEmailParams {
   html: string
 }
 
-export async function sendEmail({ to, subject, text, html }: SendEmailParams) {
+export async function sendEmail({ to, subject, text, html }: SendEmailParams): Promise<{ success: boolean; data?: unknown; error?: unknown }> {
   try {
     const result = await resend.emails.send({
       from: 'HDS Waitlist <waitlist@hudsondigitalsolutions.com>',

@@ -27,7 +27,7 @@ interface FailedEvent {
   created_at: string
 }
 
-async function getWebhookStats() {
+async function getWebhookStats(): Promise<WebhookStat[]> {
   const { rows } = await sql<WebhookStat>`
     SELECT
       event_type,
@@ -84,7 +84,7 @@ function getFailedEvents(stats: WebhookStat[]): FailedEvent[] {
     }))
 }
 
-export default async function WebhookMonitoring() {
+export default async function WebhookMonitoring(): Promise<JSX.Element> {
   const stats = await getWebhookStats()
 
   const eventTypeColumns: GridColDef[] = [
