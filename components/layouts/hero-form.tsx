@@ -11,7 +11,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
 const formSchema = z.object({
-  email: z.string().email('Please enter a valid email address'),
+  email: z.string().email('Please enter a valid email address')
 })
 
 type FormValues = z.infer<typeof formSchema>
@@ -19,7 +19,7 @@ type FormValues = z.infer<typeof formSchema>
 const StyledForm = styled('form')(({ theme }) => ({
   width: '100%',
   maxWidth: 600,
-  margin: '0 auto',
+  margin: '0 auto'
 }))
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
@@ -29,12 +29,12 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
     boxShadow: theme.shadows[1],
     transition: theme.transitions.create(['box-shadow', 'background-color']),
     '&:hover': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: theme.palette.action.hover
     },
     '&.Mui-focused': {
-      boxShadow: theme.shadows[2],
-    },
-  },
+      boxShadow: theme.shadows[2]
+    }
+  }
 }))
 
 const StyledButton = styled(Button)(({ theme }) => ({
@@ -43,18 +43,22 @@ const StyledButton = styled(Button)(({ theme }) => ({
   whiteSpace: 'nowrap',
   backgroundColor: theme.palette.secondary.main,
   '&:hover': {
-    backgroundColor: theme.palette.secondary.dark,
-  },
+    backgroundColor: theme.palette.secondary.dark
+  }
 }))
 
 export default function HeroForm() {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  
-  const { control, handleSubmit, formState: { errors } } = useForm<FormValues>({
+
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-    },
+      email: ''
+    }
   })
 
   const onSubmit = async (data: FormValues) => {
@@ -72,11 +76,13 @@ export default function HeroForm() {
 
   return (
     <StyledForm onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ 
-        display: 'flex', 
-        gap: 2,
-        flexDirection: { xs: 'column', sm: 'row' },
-      }}>
+      <Box
+        sx={{
+          display: 'flex',
+          gap: 2,
+          flexDirection: { xs: 'column', sm: 'row' }
+        }}
+      >
         <Controller
           name="email"
           control={control}
@@ -91,23 +97,18 @@ export default function HeroForm() {
             />
           )}
         />
-        
-        <StyledButton
-          type="submit"
-          variant="contained"
-          size="large"
-          disabled={isSubmitting}
-        >
+
+        <StyledButton type="submit" variant="contained" size="large" disabled={isSubmitting}>
           {isSubmitting ? 'Submitting...' : 'Get Early Access'}
         </StyledButton>
       </Box>
-      
-      <Typography 
-        variant="body2" 
+
+      <Typography
+        variant="body2"
         color="text.secondary"
-        sx={{ 
+        sx={{
           mt: 1,
-          textAlign: { xs: 'center', sm: 'left' },
+          textAlign: { xs: 'center', sm: 'left' }
         }}
       >
         Join our beta program. No credit card required.

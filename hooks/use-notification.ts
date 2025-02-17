@@ -19,12 +19,14 @@ interface NotificationStore {
 
 export const useNotification = create<NotificationStore>(set => ({
   notifications: [],
-  addNotification: notification =>
+  addNotification: notification => {
     set(state => ({
       notifications: [...state.notifications, { ...notification, id: Math.random().toString() }]
-    })),
-  removeNotification: id =>
+    }))
+  },
+  removeNotification: id => {
     set(state => ({
       notifications: state.notifications.filter(n => n.id !== id)
     }))
+  }
 }))

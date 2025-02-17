@@ -48,7 +48,7 @@ export function usePaymentMethods(filters?: UsePaymentMethodsFilters) {
     staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
     retry: (failureCount, error) => {
       // Don't retry on validation errors
-      if (error?.message?.includes('VALIDATION_ERROR')) return false
+      if (error.message.includes('VALIDATION_ERROR')) return false
       return failureCount < 3
     }
   })
@@ -238,7 +238,7 @@ export function usePaymentHistory(filters?: {
     },
     keepPreviousData: true, // Keep previous data while fetching new data
     retry: (failureCount, error) => {
-      if (error?.message?.includes('VALIDATION_ERROR')) return false
+      if (error.message.includes('VALIDATION_ERROR')) return false
       return failureCount < 3
     }
   })

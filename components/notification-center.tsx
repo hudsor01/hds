@@ -75,7 +75,13 @@ const NotificationList = ({ notifications, onMarkAsRead }: NotificationListProps
             }
           })}
           secondaryAction={
-            <IconButton edge="end" size="small" onClick={() => onMarkAsRead(notification.id)}>
+            <IconButton
+              edge="end"
+              size="small"
+              onClick={() => {
+                onMarkAsRead(notification.id)
+              }}
+            >
               <MoreVertIcon />
             </IconButton>
           }
@@ -149,8 +155,12 @@ export const NotificationCenter = () => {
     console.log('Marking notification as read:', id)
   }, [])
 
-  const handleClose = useCallback(() => setOpen(false), [])
-  const handleOpen = useCallback(() => setOpen(true), [])
+  const handleClose = useCallback(() => {
+    setOpen(false)
+  }, [])
+  const handleOpen = useCallback(() => {
+    setOpen(true)
+  }, [])
   const handleTabChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
     setCurrentTab(newValue)
   }, [])
@@ -198,12 +208,7 @@ export const NotificationCenter = () => {
           </IconButton>
         </Box>
 
-        <Tabs
-          value={currentTab}
-          onChange={handleTabChange}
-          variant="fullWidth"
-          sx={{ borderBottom: 1, borderColor: 'divider' }}
-        >
+        <Tabs value={currentTab} onChange={handleTabChange} variant="fullWidth" sx={{ borderBottom: 1, borderColor: 'divider' }}>
           <Tab label="All" />
           <Tab label="Unread" />
         </Tabs>

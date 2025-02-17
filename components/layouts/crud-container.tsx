@@ -25,8 +25,8 @@ export interface CrudContainerProps<T extends BaseCrudItem> {
 const StyledContainer = styled(Container)(({ theme }) => ({
   padding: theme.spacing(3),
   [theme.breakpoints.up('sm')]: {
-    padding: theme.spacing(4),
-  },
+    padding: theme.spacing(4)
+  }
 }))
 
 const HeaderBox = styled(Box)(({ theme }) => ({
@@ -35,8 +35,8 @@ const HeaderBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   [theme.breakpoints.up('sm')]: {
-    marginBottom: theme.spacing(4),
-  },
+    marginBottom: theme.spacing(4)
+  }
 }))
 
 const LoadingBox = styled(Box)(({ theme }) => ({
@@ -44,7 +44,7 @@ const LoadingBox = styled(Box)(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   minHeight: 256, // equivalent to h-64
-  padding: theme.spacing(4),
+  padding: theme.spacing(4)
 }))
 
 export function CrudContainer<T extends BaseCrudItem>({
@@ -57,37 +57,27 @@ export function CrudContainer<T extends BaseCrudItem>({
   useProtectedRoute()
 
   return (
-    <StyledContainer 
-      maxWidth="xl"
-      className={className}
-    >
+    <StyledContainer maxWidth="xl" className={className}>
       <HeaderBox>
-        <Typography 
-          variant="h4" 
+        <Typography
+          variant="h4"
           component="h1"
-          sx={{ 
+          sx={{
             fontWeight: 'bold',
             fontSize: {
               xs: '1.5rem', // text-2xl
-              sm: '1.875rem', // text-3xl
-            },
+              sm: '1.875rem' // text-3xl
+            }
           }}
         >
           {title}
         </Typography>
-        {actions && (
-          <Box sx={{ display: 'flex', gap: 2 }}>
-            {actions}
-          </Box>
-        )}
+        {actions && <Box sx={{ display: 'flex', gap: 2 }}>{actions}</Box>}
       </HeaderBox>
 
       {loading ? (
         <LoadingBox>
-          <CircularProgress 
-            size={40}
-            thickness={4}
-          />
+          <CircularProgress size={40} thickness={4} />
         </LoadingBox>
       ) : (
         children

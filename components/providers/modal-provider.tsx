@@ -1,9 +1,45 @@
 'use client'
 
-import React, { useCallback, useEffect, ComponentType, FC } from 'react'
+import React, { useCallback, useEffect, ComponentType } from 'react'
 import { useModalStore } from '@/hooks/use-modal'
-import { AnimatePresence } from 'framer-motion'
+import { Dialog, DialogProps, Backdrop, useTheme } from '@mui/material'
+import { AnimatePresence, motion } from 'framer-motion'
 import type { ModalConfig } from '@/types/animation'
+
+const MotionDialog = motion(Dialog)
+
+interface ModalWrapperProps extends DialogProps {
+  children: React.ReactNode
+  onClose: () => void
+}
+
+const ModalWrapper: React.FC<ModalWrapperProps> = ({ children, onClose, ...props }) => {
+  const theme = useTheme()
+
+  return (
+    <MotionDialog
+      open
+      onClose={onClose}
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{
+        duration: 0.2,
+        ease: 'easeInOut'
+      }}
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          borderRadius: theme.shape.borderRadius,
+          border: `1px solid ${theme.palette.divider}`
+        }
+      }}
+      {...props}
+    >
+      {children}
+    </MotionDialog>
+  )
+}
 
 export function ModalProvider(): React.ReactElement {
   const modals = useModalStore(state => state.modals)
@@ -39,10 +75,39 @@ export function ModalProvider(): React.ReactElement {
 
   return (
     <AnimatePresence>
-      {modals.map(modal => {
+      {modals.map((modal, index) => {
         const Component = modal.component as unknown as ComponentType<any>
-        return <Component key={modal.id} onClose={() => closeModal(modal.id)} {...modal.props} />
+        const isTopmost = index === modals.length - 1
+
+        return (
+          <ModalWrapper
+            key={modal.id}
+            onClose={() => closeModal(modal.id)}
+            // Stack modals with increasing z-index
+            style={{ zIndex: 1300 + index }}
+            // Only allow interaction with the topmost modal
+            aria-hidden={!isTopmost}
+            // Backdrop for each modal
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              transitionDuration: 200,
+              sx: {
+                backgroundColor: 'rgba(0, 0, 0, 0.5)',
+                // Stack backdrops with proper z-index
+                zIndex: -1
+              }
+            }}
+          >
+            <Component onClose={() => closeModal(modal.id)} {...modal.props} />
+          </ModalWrapper>
+        )
       })}
     </AnimatePresence>
   )
+}
+
+// Export types for use in components
+export interface ModalComponentProps {
+  onClose: () => void
+  [key: string]: any
 }

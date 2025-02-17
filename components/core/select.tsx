@@ -23,19 +23,11 @@ export interface SelectProps extends Omit<MuiSelectProps, 'onChange'> {
 
 const StyledFormControl = styled(FormControl)(({ theme }) => ({
   '& .MuiOutlinedInput-root': {
-    borderRadius: theme.shape.borderRadius,
-  },
+    borderRadius: theme.shape.borderRadius
+  }
 }))
 
-export function SelectField({
-  options,
-  label,
-  helperText,
-  error,
-  onChange,
-  value,
-  ...props
-}: SelectProps) {
+export function SelectField({ options, label, helperText, error, onChange, value, ...props }: SelectProps) {
   const handleChange = (event: SelectChangeEvent<unknown>) => {
     onChange?.(event.target.value)
   }
@@ -45,14 +37,8 @@ export function SelectField({
   return (
     <StyledFormControl fullWidth error={error}>
       {label && <InputLabel id={labelId}>{label}</InputLabel>}
-      <Select
-        labelId={labelId}
-        value={value}
-        label={label}
-        onChange={handleChange}
-        {...props}
-      >
-        {options.map((option) => (
+      <Select labelId={labelId} value={value} label={label} onChange={handleChange} {...props}>
+        {options.map(option => (
           <MenuItem key={option.value} value={option.value}>
             {option.label}
           </MenuItem>

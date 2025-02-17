@@ -1,11 +1,28 @@
 'use client'
 
-import { ACTIVITY_FILTERS, type ActivityType } from '@/auth/lib/constants'
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
-import { ToggleGroup, ToggleGroupItem } from '@/components/toggle-group'
+import DownloadIcon from '@mui/icons-material/Download'
+import SearchIcon from '@mui/icons-material/Search'
+import Box from '@mui/material/Box'
+import Button from '@mui/material/Button'
+import InputAdornment from '@mui/material/InputAdornment'
+import type { Theme } from '@mui/material/styles'
+import { styled } from '@mui/material/styles'
+import TextField from '@mui/material/TextField'
+import ToggleButton from '@mui/material/ToggleButton'
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup'
+import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import { Download, Search } from 'react-feather'
+
+export type ActivityType = 'SIGN_IN' | 'SIGN_OUT' | 'CREATE' | 'UPDATE' | 'DELETE'
+
+export const ACTIVITY_FILTERS = [
+  { value: 'ALL', label: 'All' },
+  { value: 'SIGN_IN', label: 'Sign In' },
+  { value: 'SIGN_OUT', label: 'Sign Out' },
+  { value: 'CREATE', label: 'Create' },
+  { value: 'UPDATE', label: 'Update' },
+  { value: 'DELETE', label: 'Delete' }
+] as const
 
 interface ActivityHeaderProps {
   filter: ActivityType | 'ALL'
@@ -14,6 +31,43 @@ interface ActivityHeaderProps {
   onSearchChangeAction: (value: string) => void
   onExportAction: () => void
 }
+const StyledBox = styled(Box)(({ theme }: { theme: Theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2)
+}))
+
+const HeaderBox = styled(Box)(() => ({
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'space-between'
+}))
+
+const FiltersBox = styled(Box)(({ theme }: { theme: Theme }) => ({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: theme.spacing(2),
+  [theme.breakpoints.up('sm')]: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  }
+}))
+
+const StyledToggleButtonGroup = styled(ToggleButtonGroup)(({ theme }: { theme: Theme }) => ({
+  gap: theme.spacing(1),
+  '& .MuiToggleButton-root': {
+    border: `1px solid ${theme.palette.divider}`,
+    borderRadius: theme.shape.borderRadius,
+    textTransform: 'none',
+    '&.Mui-selected': {
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText,
+      '&:hover': {
+        backgroundColor: theme.palette.primary.dark
+      }
+    }
+  }
+}))
 
 export function ActivityHeader({
   filter,
@@ -22,43 +76,52 @@ export function ActivityHeader({
   onSearchChangeAction,
   onExportAction
 }: ActivityHeaderProps) {
-  const handleFilterChange = (_: React.MouseEvent, value: string | undefined) => {
+  const handleFilterChange = (_: React.MouseEvent<HTMLElement>, value: string | null) => {
     if (value) {
       onFilterChangeAction(value as ActivityType | 'ALL')
     }
   }
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <h2 className="text-lg font-semibold">Recent Activity</h2>
-        <Button variant="outline" size="sm" onClick={onExportAction}>
-          <Download className="mr-2 h-4 w-4" />
+    <StyledBox>
+      <HeaderBox>
+        <Typography variant="h6" component="h2" sx={{ fontWeight: 600 }}>
+          Recent Activity
+        </Typography>
+
+        <Button variant="outlined" size="small" onClick={onExportAction} startIcon={<DownloadIcon />}>
           Export
         </Button>
-      </div>
+      </HeaderBox>
 
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-        <div className="relative flex-1">
-          <Search className="text-muted-foreground absolute top-2.5 left-2.5 h-4 w-4" />
-          <Input
-            placeholder="Search activities..."
-            value={searchQuery}
-            onChange={e => {
-              onSearchChangeAction(e.target.value)
-            }}
-            className="pl-8"
-          />
-        </div>
+      <FiltersBox>
+        <TextField
+          fullWidth
+          placeholder="Search activities..."
+          value={searchQuery}
+          onChange={e => {
+            onSearchChangeAction(e.target.value)
+          }}
+          slotProps={{
+            input: {
+              startAdornment: (
+                <InputAdornment position="start">
+                  <SearchIcon color="action" />
+                </InputAdornment>
+              )
+            }
+          }}
+          sx={{ flex: 1 }}
+        />
 
-        <ToggleGroup defaultValue={filter} onChange={handleFilterChange}>
+        <StyledToggleButtonGroup value={filter} exclusive onChange={handleFilterChange} aria-label="activity filter" size="small">
           {ACTIVITY_FILTERS.map(filter => (
-            <ToggleGroupItem key={filter.value} value={filter.value}>
+            <ToggleButton key={filter.value} value={filter.value} aria-label={filter.label}>
               {filter.label}
-            </ToggleGroupItem>
+            </ToggleButton>
           ))}
-        </ToggleGroup>
-      </div>
-    </div>
+        </StyledToggleButtonGroup>
+      </FiltersBox>
+    </StyledBox>
   )
 }

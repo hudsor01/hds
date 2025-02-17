@@ -1,6 +1,6 @@
 'use client'
 
-import { AuthError, User, Session } from '@supabase/supabase-js'
+import { AuthError, Session, User, createClient } from '@supabase/supabase-js'
 
 export class AuthenticationError extends Error {
   constructor(
@@ -38,7 +38,7 @@ export class AuthService {
         password
       })
 
-      if (result.error) throw result.error as AuthError
+      if (result.error) throw result.error
 
       return { data: result.data.user, error: null }
     } catch (error) {

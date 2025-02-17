@@ -11,28 +11,22 @@ export interface ContainerProps extends MuiContainerProps {
   component?: React.ElementType
 }
 
-export const Container = forwardRef<HTMLDivElement, ContainerProps>(
-  ({ children, ...props }, ref) => (
-    <MuiContainer
-      ref={ref}
-      maxWidth="lg"
-      {...props}
-    >
-      {children}
-    </MuiContainer>
-  )
-)
+export const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children, ...props }, ref) => (
+  <MuiContainer ref={ref} maxWidth="lg" {...props}>
+    {children}
+  </MuiContainer>
+))
 
 Container.displayName = 'Container'
 
 const StyledSection = styled('section')(({ theme }) => ({
   padding: theme.spacing(6),
   [theme.breakpoints.up('md')]: {
-    padding: theme.spacing(8),
+    padding: theme.spacing(8)
   },
   [theme.breakpoints.up('lg')]: {
-    padding: theme.spacing(10),
-  },
+    padding: theme.spacing(10)
+  }
 }))
 
 export function Section({ children, ...props }: ContainerProps) {
@@ -42,7 +36,7 @@ export function Section({ children, ...props }: ContainerProps) {
 const StyledPageHeader = styled(Box)(({ theme }) => ({
   maxWidth: '42rem', // equivalent to max-w-2xl
   margin: '0 auto',
-  textAlign: 'center',
+  textAlign: 'center'
 }))
 
 export function PageHeader({ children, ...props }: ContainerProps) {
@@ -55,8 +49,8 @@ const StyledPageTitle = styled(Typography)(({ theme }) => ({
   letterSpacing: '-0.025em',
   color: theme.palette.text.primary,
   [theme.breakpoints.up('sm')]: {
-    fontSize: theme.typography.h1.fontSize,
-  },
+    fontSize: theme.typography.h1.fontSize
+  }
 }))
 
 export function PageTitle({ children, ...props }: ContainerProps) {
@@ -71,7 +65,7 @@ const StyledPageDescription = styled(Typography)(({ theme }) => ({
   marginTop: theme.spacing(3),
   fontSize: theme.typography.h6.fontSize,
   lineHeight: 1.75,
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.secondary
 }))
 
 export function PageDescription({ children, ...props }: ContainerProps) {

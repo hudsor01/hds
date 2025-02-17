@@ -20,35 +20,15 @@ const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
   }
 }))
 
-export function CheckboxField({
-  label,
-  helperText,
-  error,
-  onChange,
-  checked,
-  ...props
-}: CheckboxFieldProps) {
+export function CheckboxField({ label, helperText, error, onChange, checked, ...props }: CheckboxFieldProps) {
   const handleChange = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     onChange?.(checked)
   }
 
   return (
     <StyledFormGroup>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={checked}
-            onChange={handleChange}
-            {...props}
-          />
-        }
-        label={label}
-      />
-      {helperText && (
-        <FormHelperText error={error}>
-          {helperText}
-        </FormHelperText>
-      )}
+      <FormControlLabel control={<Checkbox checked={checked} onChange={handleChange} {...props} />} label={label} />
+      {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
     </StyledFormGroup>
   )
 }

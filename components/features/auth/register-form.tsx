@@ -3,12 +3,10 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as z from 'zod'
 import { supabase } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Button, TextField, Box, Typography, CircularProgress } from '@mui/material'
 import { toast } from 'sonner'
 
 const registerSchema = z
@@ -29,7 +27,11 @@ export function RegisterForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<RegisterValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<RegisterValues>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
       name: '',
@@ -80,64 +82,82 @@ export function RegisterForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <Controller
           name="name"
+          control={control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Full Name</FormLabel>
-              <FormControl>
-                <Input placeholder="John Doe" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TextField
+              {...field}
+              label="Full Name"
+              placeholder="John Doe"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.name}
+              helperText={errors.name?.message}
+            />
           )}
         />
-        <FormField
-          control={form.control}
+        <Controller
           name="email"
+          control={control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="your@email.com" type="email" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TextField
+              {...field}
+              label="Email"
+              placeholder="your@email.com"
+              type="email"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.email}
+              helperText={errors.email?.message}
+            />
           )}
         />
-        <FormField
-          control={form.control}
+        <Controller
           name="password"
+          control={control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Create a password" type="password" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TextField
+              {...field}
+              label="Password"
+              placeholder="Create a password"
+              type="password"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.password}
+              helperText={errors.password?.message}
+            />
           )}
         />
-        <FormField
-          control={form.control}
+        <Controller
           name="confirmPassword"
+          control={control}
           render={({ field }) => (
-            <FormItem>
-              <FormLabel>Confirm Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Confirm your password" type="password" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
+            <TextField
+              {...field}
+              label="Confirm Password"
+              placeholder="Confirm your password"
+              type="password"
+              fullWidth
+              disabled={isLoading}
+              error={!!errors.confirmPassword}
+              helperText={errors.confirmPassword?.message}
+            />
           )}
         />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? 'Creating account...' : 'Create account'}
+        <Button type="submit" variant="contained" fullWidth disabled={isLoading} sx={{ mt: 2 }}>
+          {isLoading ? (
+            <>
+              <CircularProgress size={20} sx={{ mr: 1 }} />
+              Creating account...
+            </>
+          ) : (
+            'Create account'
+          )}
         </Button>
-      </form>
-    </Form>
+      </Box>
+    </Box>
   )
 }

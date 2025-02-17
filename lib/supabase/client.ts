@@ -1,14 +1,12 @@
-import { createBrowserClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
+import { createBrowserClient } from '@supabase/ssr'
 
-const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? ''
-const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? ''
+const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL']
+const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']
 
-export const createClient = () => {
+export const supabase = () => {
   return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey)
 }
-
-export const supabase = createClient()
 
 // Custom error classes for better error handling
 export class SupabaseError extends Error {

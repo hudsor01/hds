@@ -24,7 +24,11 @@ export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const { control, handleSubmit, formState: { errors } } = useForm<LoginValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -73,7 +77,7 @@ export function LoginForm() {
           />
         )}
       />
-      
+
       <Controller
         control={control}
         name="password"
@@ -91,12 +95,7 @@ export function LoginForm() {
         )}
       />
 
-      <Button
-        type="submit"
-        variant="contained"
-        disabled={isLoading}
-        fullWidth
-      >
+      <Button type="submit" variant="contained" disabled={isLoading} fullWidth>
         {isLoading ? 'Signing in...' : 'Sign in'}
       </Button>
     </Box>

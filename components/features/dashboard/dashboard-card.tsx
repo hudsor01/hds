@@ -1,7 +1,6 @@
 'use client'
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/core/Card/card'
-import { cn } from '@/lib/utils'
+import { Card, CardContent, Typography, Box } from '@mui/material'
 
 interface DashboardCardProps {
   title: string
@@ -11,16 +10,24 @@ interface DashboardCardProps {
   className?: string
 }
 
-export function DashboardCard({ title, value, description, icon, className }: DashboardCardProps) {
+export function DashboardCard({ title, value, description, icon }: DashboardCardProps) {
   return (
-    <Card className={cn('', className)}>
-      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-        <CardTitle className="text-sm font-medium">{title}</CardTitle>
-        {icon}
-      </CardHeader>
+    <Card>
       <CardContent>
-        <div className="text-2xl font-bold">{value}</div>
-        {description && <p className="text-muted-foreground text-xs">{description}</p>}
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Typography variant="subtitle2" color="text.secondary">
+            {title}
+          </Typography>
+          {icon && <Box sx={{ color: 'primary.main' }}>{icon}</Box>}
+        </Box>
+        <Typography variant="h4" component="div" gutterBottom>
+          {value}
+        </Typography>
+        {description && (
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   )

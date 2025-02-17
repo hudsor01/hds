@@ -21,7 +21,7 @@ const LayoutRoot = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   minHeight: '100vh',
-  backgroundColor: theme.palette.background.default,
+  backgroundColor: theme.palette.background.default
 }))
 
 const Main = styled('main')(({ theme }) => ({
@@ -31,15 +31,11 @@ const Main = styled('main')(({ theme }) => ({
   paddingBottom: theme.spacing(4),
   [theme.breakpoints.up('sm')]: {
     paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(5),
-  },
+    paddingBottom: theme.spacing(5)
+  }
 }))
 
-export function PublicLayout({ 
-  children, 
-  maxWidth = 'xl',
-  fullWidth = false,
-}: PublicLayoutProps) {
+export function PublicLayout({ children, maxWidth = 'xl', fullWidth = false }: PublicLayoutProps) {
   return (
     <LayoutRoot>
       <Analytics />
@@ -50,30 +46,30 @@ export function PublicLayout({
           style: {
             background: 'var(--mui-palette-background-paper)',
             color: 'var(--mui-palette-text-primary)',
-            border: '1px solid var(--mui-palette-divider)',
-          },
+            border: '1px solid var(--mui-palette-divider)'
+          }
         }}
       />
 
       <Navbar />
-      
+
       <Main>
         {fullWidth ? (
           children
         ) : (
-          <Container 
+          <Container
             maxWidth={maxWidth}
             sx={{
               height: '100%',
               display: 'flex',
-              flexDirection: 'column',
+              flexDirection: 'column'
             }}
           >
             {children}
           </Container>
         )}
       </Main>
-      
+
       <Footer />
     </LayoutRoot>
   )

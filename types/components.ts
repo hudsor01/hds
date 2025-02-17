@@ -1,10 +1,13 @@
 import { type ReactNode, type ErrorInfo } from 'react'
+import type { AlertColor } from '@mui/material'
 
+// Base Props
 export interface BaseProps {
   children?: ReactNode
   className?: string
 }
 
+// Dialog Types
 export interface DialogProps extends BaseProps {
   open: boolean
   onClose: () => void
@@ -13,6 +16,7 @@ export interface DialogProps extends BaseProps {
   footer?: ReactNode
 }
 
+// Grid Types
 export interface BaseGridProps<T> {
   data: T[]
   isLoading?: boolean
@@ -20,12 +24,13 @@ export interface BaseGridProps<T> {
   onRowClick?: (row: T) => void
 }
 
+// Activity Types
 export interface ActivityItem {
   id: string
   title: string
   description: string
   timestamp: Date
-  type: 'property' | 'payment' | 'maintenance' | 'tenant'
+  type: ActivityType
   metadata?: Record<string, string>
 }
 
@@ -40,6 +45,7 @@ export interface Activity {
   metadata?: Record<string, string>
 }
 
+// Typography Types
 export interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
   children: React.ReactNode
 }
@@ -48,22 +54,51 @@ export interface AlertTitleProps extends React.HTMLAttributes<HTMLHeadingElement
   children: React.ReactNode
 }
 
+// Toast System Types
+export type ToastType = 'success' | 'error' | 'warning' | 'info'
+
 export interface Toast {
   id: string
   title?: string
-  description: string
-  duration?: number
+  message: string
   type?: ToastType
+  duration?: number
+  action?: {
+    label: string
+    onClick: () => void
+  }
+  persist?: boolean
 }
 
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
+export interface ToastOptions {
+  title?: string
+  type?: ToastType
+  duration?: number
+  action?: {
+    label: string
+    onClick: () => void
+  }
+  persist?: boolean
+}
 
-export interface ToastContextType {
-  toasts: Toast[]
-  toast: (toast: Omit<Toast, 'id'>) => string
+export interface ToastContextValue {
+  addToast: (message: string, options?: ToastOptions) => string
   removeToast: (id: string) => void
+  removeAll: () => void
+  toasts: Toast[]
 }
 
+export interface ToastProviderProps {
+  children: React.ReactNode
+  maxToasts?: number
+  defaultDuration?: number
+  position?: {
+    vertical: 'top' | 'bottom'
+    horizontal: 'left' | 'right' | 'center'
+  }
+}
+
+// Error Boundary Types
 export interface Props {
   children: ReactNode
   fallback?: ReactNode
@@ -75,6 +110,7 @@ export interface State {
   errorInfo?: ErrorInfo | undefined
 }
 
+// Input Types
 export interface TextInputProps extends Omit<TextFieldProps, 'variant'> {
   label: string
   type?: string
@@ -98,6 +134,7 @@ export type TextFieldProps = {
 
 export type TextareaProps = React.TextareaHTMLAttributes<HTMLTextAreaElement>
 
+// Stats Types
 export interface StatCardProps {
   title: string
   value: string
@@ -106,3 +143,6 @@ export interface StatCardProps {
   trendDirection: string
   icon: React.ComponentType<{ className?: string }>
 }
+
+// Re-export for convenience
+export type { AlertColor }

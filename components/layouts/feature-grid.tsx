@@ -80,9 +80,12 @@ export function FeatureGrid() {
       <Box sx={{ maxWidth: 'lg', mx: 'auto', px: 3 }}>
         <Typography variant="h3" component="h1" sx={{ mb: 2 }}>
           explore our{' '}
-          <Box component="span" sx={{ 
-            borderBottom: theme => `4px solid ${theme.palette.primary.light}` 
-          }}>
+          <Box
+            component="span"
+            sx={{
+              borderBottom: theme => `4px solid ${theme.palette.primary.light}`
+            }}
+          >
             Features
           </Box>
         </Typography>

@@ -321,7 +321,9 @@ export function useScroll(threshold = 100) {
     }
 
     window.addEventListener('scroll', handleScroll)
-    return () => window.removeEventListener('scroll', handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll)
+    }
   }, [threshold])
 
   const scrollToTop = useCallback(() => {

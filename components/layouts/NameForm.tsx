@@ -1,19 +1,40 @@
 'use client'
-import { Forms } from '@/types'
 
-export default function NameForm({ userName, userId }: Forms.NameFormProps) {
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import { styled } from '@mui/material/styles'
+
+interface NameFormProps {
+  userName: string
+  userId: string
+}
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  '& .MuiInputBase-input.Mui-disabled': {
+    WebkitTextFillColor: theme.palette.text.primary,
+    cursor: 'default'
+  }
+}))
+
+export default function NameForm({ userName, userId }: NameFormProps) {
   return (
-    <div className="mb-4">
-      <label htmlFor="name" className="block text-sm font-medium text-gray-700">
-        Full Name
-      </label>
-      <input
+    <Box sx={{ mb: 3 }}>
+      <StyledTextField
         id="name"
-        type="text"
+        label="Full Name"
         value={userName}
-        readOnly
-        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+        fullWidth
+        disabled
+        variant="outlined"
+        InputProps={{
+          readOnly: true
+        }}
+        sx={{
+          '& .MuiInputLabel-root.Mui-disabled': {
+            color: 'text.secondary'
+          }
+        }}
       />
-    </div>
+    </Box>
   )
 }

@@ -31,14 +31,14 @@ const navLinks = [
 
 const StyledAppBar = styled(AppBar)(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
-  transition: theme.transitions.create(['background-color', 'box-shadow']),
+  transition: theme.transitions.create(['background-color', 'box-shadow'])
 }))
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   minHeight: 64,
   [theme.breakpoints.up('sm')]: {
-    minHeight: 70,
-  },
+    minHeight: 70
+  }
 }))
 
 const LogoButton = styled(Button)(({ theme }) => ({
@@ -48,27 +48,27 @@ const LogoButton = styled(Button)(({ theme }) => ({
   letterSpacing: '0.1rem',
   padding: theme.spacing(1),
   '&:hover': {
-    backgroundColor: 'transparent',
-  },
+    backgroundColor: 'transparent'
+  }
 }))
 
 const NavButton = styled(Button, {
-  shouldForwardProp: (prop) => prop !== 'active',
+  shouldForwardProp: prop => prop !== 'active'
 })<{ active?: boolean }>(({ theme, active }) => ({
   color: active ? theme.palette.primary.main : theme.palette.text.secondary,
   fontWeight: active ? 600 : 400,
   '&:hover': {
     color: theme.palette.primary.main,
-    backgroundColor: theme.palette.action.hover,
-  },
+    backgroundColor: theme.palette.action.hover
+  }
 }))
 
 const MobileDrawer = styled(Drawer)(({ theme }) => ({
   '& .MuiDrawer-paper': {
     width: '100%',
     maxWidth: 360,
-    backgroundColor: theme.palette.background.paper,
-  },
+    backgroundColor: theme.palette.background.paper
+  }
 }))
 
 export function Navbar() {
@@ -76,7 +76,7 @@ export function Navbar() {
   const pathname = usePathname()
   const trigger = useScrollTrigger({
     disableHysteresis: true,
-    threshold: 0,
+    threshold: 0
   })
 
   const handleMobileToggle = () => {
@@ -84,37 +84,24 @@ export function Navbar() {
   }
 
   const mobileMenu = (
-    <MobileDrawer
-      anchor="right"
-      open={mobileOpen}
-      onClose={handleMobileToggle}
-      ModalProps={{ keepMounted: true }}
-    >
+    <MobileDrawer anchor="right" open={mobileOpen} onClose={handleMobileToggle} ModalProps={{ keepMounted: true }}>
       <Box sx={{ p: 2, display: 'flex', justifyContent: 'flex-end' }}>
-        <IconButton 
-          edge="end" 
-          color="inherit" 
-          onClick={handleMobileToggle}
-          aria-label="close menu"
-        >
+        <IconButton edge="end" color="inherit" onClick={handleMobileToggle} aria-label="close menu">
           <CloseIcon />
         </IconButton>
       </Box>
-      
+
       <Divider />
-      
+
       <List>
         {navLinks.map(({ href, label }) => (
           <ListItem key={href} disablePadding>
             <NextLink href={href} passHref style={{ width: '100%' }}>
-              <ListItemButton 
-                selected={pathname === href}
-                onClick={handleMobileToggle}
-              >
-                <ListItemText 
+              <ListItemButton selected={pathname === href} onClick={handleMobileToggle}>
+                <ListItemText
                   primary={label}
                   primaryTypographyProps={{
-                    color: pathname === href ? 'primary' : 'textSecondary',
+                    color: pathname === href ? 'primary' : 'textSecondary'
                   }}
                 />
               </ListItemButton>
@@ -123,11 +110,7 @@ export function Navbar() {
         ))}
         <ListItem sx={{ mt: 2 }}>
           <NextLink href="/sign-in" passHref style={{ width: '100%' }}>
-            <Button
-              variant="contained"
-              fullWidth
-              onClick={handleMobileToggle}
-            >
+            <Button variant="contained" fullWidth onClick={handleMobileToggle}>
               Sign In
             </Button>
           </NextLink>
@@ -138,18 +121,13 @@ export function Navbar() {
 
   return (
     <Slide appear={false} direction="down" in={!trigger}>
-      <StyledAppBar 
-        position="sticky"
-        elevation={trigger ? 1 : 0}
-      >
+      <StyledAppBar position="sticky" elevation={trigger ? 1 : 0}>
         <Container maxWidth="xl">
           <StyledToolbar disableGutters>
             {/* Logo */}
             <Box sx={{ flexGrow: 1 }}>
               <NextLink href="/" passHref legacyBehavior>
-                <LogoButton component="a">
-                  HDS
-                </LogoButton>
+                <LogoButton component="a">HDS</LogoButton>
               </NextLink>
             </Box>
 
@@ -163,21 +141,14 @@ export function Navbar() {
             >
               {navLinks.map(({ href, label }) => (
                 <NextLink key={href} href={href} passHref legacyBehavior>
-                  <NavButton
-                    component="a"
-                    active={pathname === href}
-                  >
+                  <NavButton component="a" active={pathname === href}>
                     {label}
                   </NavButton>
                 </NextLink>
               ))}
 
               <NextLink href="/sign-in" passHref legacyBehavior>
-                <Button
-                  component="a"
-                  variant="contained"
-                  sx={{ ml: 2 }}
-                >
+                <Button component="a" variant="contained" sx={{ ml: 2 }}>
                   Sign In
                 </Button>
               </NextLink>

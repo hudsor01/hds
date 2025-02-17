@@ -19,36 +19,16 @@ const StyledBox = styled(Box)(({ theme }) => ({
   padding: theme.spacing(2, 0)
 }))
 
-export function SliderField({
-  label,
-  helperText,
-  error,
-  onChange,
-  value,
-  ...props
-}: SliderFieldProps) {
+export function SliderField({ label, helperText, error, onChange, value, ...props }: SliderFieldProps) {
   const handleChange = (_: Event, value: number | number[]) => {
     onChange?.(value)
   }
 
   return (
     <StyledBox>
-      {label && (
-        <Typography gutterBottom>
-          {label}
-        </Typography>
-      )}
-      <Slider
-        value={value}
-        onChange={handleChange}
-        valueLabelDisplay="auto"
-        {...props}
-      />
-      {helperText && (
-        <FormHelperText error={error}>
-          {helperText}
-        </FormHelperText>
-      )}
+      {label && <Typography gutterBottom>{label}</Typography>}
+      <Slider value={value} onChange={handleChange} valueLabelDisplay="auto" {...props} />
+      {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
     </StyledBox>
   )
 }

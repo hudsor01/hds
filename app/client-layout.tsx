@@ -1,11 +1,12 @@
 'use client'
 
-import { Analytics } from '@vercel/analytics/react'
-import { SpeedInsights } from '@vercel/speed-insights/next'
-import { Toaster } from 'sonner'
 import { Navbar } from '@/components/layouts/navbar'
 import { Providers } from '@/components/providers'
 import { ErrorBoundary } from '@/components/ui/error-boundary'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import React from 'react'
+import { Toaster } from 'sonner'
 
 interface ClientLayoutProps {
   children: React.ReactNode
@@ -36,7 +37,7 @@ export default function RootLayout({ children }: ClientLayoutProps) {
             </div>
             <Toaster position="top-center" expand={true} richColors closeButton />
           </Providers>
-          {process.env.NEXT_PUBLIC_VERCEL_ENV === 'production' && (
+          {process.env['NEXT_PUBLIC_VERCEL_ENV'] === 'production' && (
             <>
               <Analytics />
               <SpeedInsights />

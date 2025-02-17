@@ -21,7 +21,7 @@ const StyledFooter = styled(motion.footer)(({ theme }) => ({
   borderTop: `1px solid ${theme.palette.divider}`,
   marginTop: 'auto',
   padding: theme.spacing(3, 0),
-  backgroundColor: theme.palette.background.paper,
+  backgroundColor: theme.palette.background.paper
 }))
 
 const StyledLink = styled(Link)(({ theme }) => ({
@@ -29,8 +29,8 @@ const StyledLink = styled(Link)(({ theme }) => ({
   textDecoration: 'none',
   fontSize: theme.typography.body2.fontSize,
   '&:hover': {
-    color: theme.palette.text.primary,
-  },
+    color: theme.palette.text.primary
+  }
 }))
 
 const StyledIconButton = styled(IconButton)(({ theme }) => ({
@@ -38,8 +38,8 @@ const StyledIconButton = styled(IconButton)(({ theme }) => ({
   transition: theme.transitions.create(['color', 'background-color']),
   '&:hover': {
     color: theme.palette.primary.main,
-    backgroundColor: theme.palette.primary.main + '10',
-  },
+    backgroundColor: theme.palette.primary.main + '10'
+  }
 }))
 
 const socialLinks = [
@@ -69,42 +69,32 @@ export function Footer() {
   const year = format(new Date(), 'yyyy')
 
   return (
-    <StyledFooter
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 0.3 }}
-    >
+    <StyledFooter initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.3 }}>
       <Container maxWidth="lg">
-        <Box sx={{
-          display: 'flex',
-          flexDirection: { xs: 'column', md: 'row' },
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          gap: 2,
-        }}>
-          <Stack 
-            direction={{ xs: 'column', sm: 'row' }} 
-            spacing={2} 
-            alignItems="center"
-          >
-            <Typography 
-              variant="body2" 
-              color="text.secondary" 
-              sx={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: 0.5 
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: { xs: 'column', md: 'row' },
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            gap: 2
+          }}
+        >
+          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
+            <Typography
+              variant="body2"
+              color="text.secondary"
+              sx={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 0.5
               }}
             >
               <CopyrightIcon fontSize="small" />
               {year} HDS Platform
             </Typography>
 
-            <Divider 
-              orientation="vertical" 
-              flexItem 
-              sx={{ display: { xs: 'none', sm: 'block' } }} 
-            />
+            <Divider orientation="vertical" flexItem sx={{ display: { xs: 'none', sm: 'block' } }} />
 
             <NextLink href="/privacy" passHref legacyBehavior>
               <StyledLink>Privacy Policy</StyledLink>
@@ -117,18 +107,8 @@ export function Footer() {
 
           <Stack direction="row" spacing={1}>
             {socialLinks.map(({ icon: Icon, href, label }) => (
-              <motion.div 
-                key={href}
-                whileHover={{ scale: 1.1 }} 
-                whileTap={{ scale: 0.95 }}
-              >
-                <StyledIconButton
-                  component="a"
-                  href={href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={label}
-                >
+              <motion.div key={href} whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }}>
+                <StyledIconButton component="a" href={href} target="_blank" rel="noopener noreferrer" aria-label={label}>
                   <Icon />
                 </StyledIconButton>
               </motion.div>

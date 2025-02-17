@@ -20,35 +20,15 @@ const StyledFormGroup = styled(FormGroup)(({ theme }) => ({
   }
 }))
 
-export function SwitchField({
-  label,
-  helperText,
-  error,
-  onChange,
-  checked,
-  ...props
-}: SwitchFieldProps) {
+export function SwitchField({ label, helperText, error, onChange, checked, ...props }: SwitchFieldProps) {
   const handleChange = (_: React.ChangeEvent<HTMLInputElement>, checked: boolean) => {
     onChange?.(checked)
   }
 
   return (
     <StyledFormGroup>
-      <FormControlLabel
-        control={
-          <Switch
-            checked={checked}
-            onChange={handleChange}
-            {...props}
-          />
-        }
-        label={label}
-      />
-      {helperText && (
-        <FormHelperText error={error}>
-          {helperText}
-        </FormHelperText>
-      )}
+      <FormControlLabel control={<Switch checked={checked} onChange={handleChange} {...props} />} label={label} />
+      {helperText && <FormHelperText error={error}>{helperText}</FormHelperText>}
     </StyledFormGroup>
   )
 }

@@ -12,9 +12,12 @@ export const useModalStore = create<ModalStore>(set => ({
     }))
     return id
   },
-  closeModal: id =>
+  closeModal: id => {
     set(state => ({
       modals: state.modals.filter(modal => modal.id !== id)
-    })),
-  clearModals: () => set({ modals: [] })
+    }))
+  },
+  clearModals: () => {
+    set({ modals: [] })
+  }
 }))

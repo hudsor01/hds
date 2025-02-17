@@ -24,14 +24,14 @@ export function useForm<T extends z.ZodObject<z.ZodRawShape>>({ schema, defaultV
       try {
         await onSubmit(data)
       } catch (err: unknown) {
-        let error: Error;
+        let error: Error
         if (err instanceof Error) {
-          error = err;
+          error = err
         } else {
-          error = new Error('An error occurred');
+          error = new Error('An error occurred')
         }
-        showToast(error.message, 'error');
-        onError?.(error);
+        showToast(error.message, 'error')
+        onError?.(error)
       }
     },
     [onSubmit, onError, showToast]
