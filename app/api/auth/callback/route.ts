@@ -1,22 +1,23 @@
-import { supabase } from '@/lib/supabase'
-import { AuthError } from '@supabase/supabase-js'
+import { createClient } from '@/lib/supabase/server'
+import { AuthError, type AuthResponse } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
 
 function isAuthError(error: unknown): error is AuthError {
   return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
 }
 
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse> {
   try {
     const requestUrl = new URL(request.url)
-    const code = requestUrl.searchParams.get('code')
-    const next = requestUrl.searchParams.get('next') ?? '/dashboard'
+    const code: string | null = requestUrl.searchParams.get('code')
+    const next: string = requestUrl.searchParams.get('next') ?? '/dashboard'
 
     if (!code) {
       throw new Error('No code provided')
     }
 
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const supabase = createClient()
+    const { error }: AuthResponse = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
       throw error
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
   } catch (error) {
     console.error('Auth callback error:', error)
 
-    const errorMessage = isAuthError(error)
+    const errorMessage: string = isAuthError(error)
       ? error.message
       : error instanceof Error
         ? error.message

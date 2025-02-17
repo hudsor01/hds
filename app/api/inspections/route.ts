@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/auth'
+import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -25,8 +25,12 @@ const inspectionSchema = z.object({
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase()
-    if (!userId) {
+    const supabase = createClient()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -38,7 +42,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     let query = supabase
       .from('inspections')
       .select('*, properties(*)')
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .order('scheduled_date', { ascending: false })
 
     if (property_id) {
@@ -53,11 +57,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       query = query.eq('inspection_type', type)
     }
 
-    const { data: inspections, error } = await query
+    const { data: inspections, error: queryError } = await query
 
-    if (error) {
-      console.error('Error fetching inspections:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (queryError) {
+      console.error('Error fetching inspections:', queryError)
+      return NextResponse.json({ error: queryError.message }, { status: 500 })
     }
 
     return NextResponse.json({ data: inspections })
@@ -69,8 +73,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase()
-    if (!userId) {
+    const supabase = createClient()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -82,28 +90,28 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       .from('properties')
       .select('id')
       .eq('id', validatedData.property_id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (propertyError || !property) {
       return NextResponse.json({ error: 'Property not found or unauthorized' }, { status: 404 })
     }
 
-    const { data: inspection, error } = await supabase
+    const { data: inspection, error: insertError } = await supabase
       .from('inspections')
-      .insert([{ ...validatedData, user_id: userId }])
+      .insert([{ ...validatedData, user_id: user.id }])
       .select()
       .single()
 
-    if (error) {
-      console.error('Error creating inspection:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (insertError) {
+      console.error('Error creating inspection:', insertError)
+      return NextResponse.json({ error: insertError.message }, { status: 500 })
     }
 
     // Create notification for new inspection
     await supabase.from('notifications').insert([
       {
-        user_id: userId,
+        user_id: user.id,
         type: 'SYSTEM',
         title: 'New Inspection Scheduled',
         message: `A new ${validatedData.inspection_type} inspection has been scheduled for ${validatedData.scheduled_date}`,
@@ -127,8 +135,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase()
-    if (!userId) {
+    const supabase = createClient()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -146,7 +158,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
       .from('inspections')
       .select('status')
       .eq('id', id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (inspectionCheckError || !existingInspection) {
@@ -158,24 +170,24 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Cannot update cancelled inspections' }, { status: 400 })
     }
 
-    const { data: inspection, error } = await supabase
+    const { data: inspection, error: updateError } = await supabase
       .from('inspections')
       .update(validatedData)
       .eq('id', id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .select()
       .single()
 
-    if (error) {
-      console.error('Error updating inspection:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (updateError) {
+      console.error('Error updating inspection:', updateError)
+      return NextResponse.json({ error: updateError.message }, { status: 500 })
     }
 
     // Create notification for status update
     if (validatedData.status) {
       await supabase.from('notifications').insert([
         {
-          user_id: userId,
+          user_id: user.id,
           type: 'SYSTEM',
           title: 'Inspection Status Updated',
           message: `Inspection status updated to ${validatedData.status}`,
@@ -200,8 +212,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase()
-    if (!userId) {
+    const supabase = createClient()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -215,7 +231,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       .from('inspections')
       .select('status')
       .eq('id', id)
-      .eq('user_id', userId)
+      .eq('user_id', user.id)
       .single()
 
     if (inspectionCheckError || !inspection) {
@@ -226,11 +242,11 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Cannot delete in-progress or completed inspections' }, { status: 400 })
     }
 
-    const { error } = await supabase.from('inspections').delete().eq('id', id).eq('user_id', userId)
+    const { error: deleteError } = await supabase.from('inspections').delete().eq('id', id).eq('user_id', user.id)
 
-    if (error) {
-      console.error('Error deleting inspection:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (deleteError) {
+      console.error('Error deleting inspection:', deleteError)
+      return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
     return NextResponse.json({ message: 'Inspection deleted successfully' }, { status: 200 })

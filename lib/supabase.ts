@@ -2,10 +2,10 @@ import { createBrowserClient, createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
 import { cookies } from 'next/headers'
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']
+const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
-export const createClient = () => {
+export const createClient = (): ReturnType<typeof createServerClient> | ReturnType<typeof createBrowserClient> => {
   try {
     const cookieStore = cookies() // Only works in Server Components
     return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {

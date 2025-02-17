@@ -2,24 +2,24 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 import type { Database } from '@/types/db.types'
 
-export const createClient = () => {
-  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? ''
+export const createClient = (): ReturnType<typeof createServerClient> => {
+  const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
+  const supabaseAnonKey: string = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? ''
 
   return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
     cookies: {
-      async get(name: string) {
+      async get(name: string): Promise<string | undefined> {
         const cookieStore = await cookies()
         return cookieStore.get(name)?.value
       },
-      async set(name: string, value: string, options: CookieOptions) {
+      async set(name: string, value: string, options: CookieOptions): Promise<void> {
         try {
           ;(await cookies()).set(name, value, options)
         } catch (error) {
           console.error('Error setting cookie:', error)
         }
       },
-      async remove(name: string, options: CookieOptions) {
+      async remove(name: string, options: CookieOptions): Promise<void> {
         try {
           ;(await cookies()).delete({ name, ...options })
         } catch (error) {
@@ -31,7 +31,7 @@ export const createClient = () => {
 }
 
 // Helper function to get the current session
-export async function getSession() {
+export async function getSession(): Promise<ReturnType<typeof createClient>['auth']['getSession']> {
   const supabase = createClient()
   try {
     const {
@@ -47,7 +47,7 @@ export async function getSession() {
 }
 
 // Helper function to get the current user
-export async function getUser() {
+export async function getUser(): Promise<ReturnType<typeof createClient>['auth']['getUser']> {
   const supabase = createClient()
   try {
     const {
@@ -63,7 +63,7 @@ export async function getUser() {
 }
 
 // Helper function to refresh session if needed
-export async function refreshSession() {
+export async function refreshSession(): Promise<ReturnType<typeof createClient>['auth']['refreshSession']> {
   const supabase = createClient()
   try {
     const {

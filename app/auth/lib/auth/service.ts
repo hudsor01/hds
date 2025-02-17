@@ -18,7 +18,7 @@ export class AuthService {
 
   static async setupTwoFactor(userId: string): Promise<{ secret: string; qrCode: string }> {
     try {
-      const user = await prisma.user.findUnique({
+      const user: User | null = await prisma.user.findUnique({
         where: { id: userId }
       })
 
@@ -45,7 +45,7 @@ export class AuthService {
 
   async createSession(userId: string, userAgent: string, ipAddress: string): Promise<AuthSession> {
     try {
-      const session = await prisma.session.create({
+      const session: Session = await prisma.session.create({
         data: {
           userId,
           sessionToken: nanoid(32),
@@ -76,7 +76,7 @@ export class AuthService {
 
   async getSessions(userId: string): Promise<AuthSession[]> {
     try {
-      const sessions = await prisma.session.findMany({
+      const sessions: Session[] = await prisma.session.findMany({
         where: {
           userId,
           expires: { gt: new Date() }

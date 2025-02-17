@@ -1,6 +1,6 @@
 const BASE_URL = process.env.NEXT_PUBLIC_APP_URL
 
-export async function sendVerificationEmail(email: string, token: string) {
+export async function sendVerificationEmail(email: string, token: string): Promise<void> {
   const confirmLink = `${BASE_URL}/auth/verify?token=${token}`
 
   // TODO: Implement your email sending logic here
@@ -8,7 +8,7 @@ export async function sendVerificationEmail(email: string, token: string) {
   console.log('Verification link:', confirmLink)
 }
 
-export async function sendPasswordResetEmail(email: string, token: string) {
+export async function sendPasswordResetEmail(email: string, token: string): Promise<void> {
   const resetLink = `${BASE_URL}/auth/reset-password?token=${token}`
 
   // TODO: Implement your email sending logic here

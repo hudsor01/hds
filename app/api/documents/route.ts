@@ -1,5 +1,4 @@
-import { supabase } from '@/lib/supabase/auth'
-
+import { createClient } from '@/lib/supabase/server'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -15,11 +14,12 @@ const documentSchema = z.object({
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
+    const supabase = createClient()
     const {
-      data: { user }
+      data: { user },
+      error: sessionError
     } = await supabase.auth.getSession()
-    if (!user) {
+    if (sessionError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -58,11 +58,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
+    const supabase = createClient()
     const {
-      data: { user }
+      data: { user },
+      error: sessionError
     } = await supabase.auth.getSession()
-    if (!user) {
+    if (sessionError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -136,11 +137,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
+    const supabase = createClient()
     const {
-      data: { user }
+      data: { user },
+      error: sessionError
     } = await supabase.auth.getSession()
-    if (!user) {
+    if (sessionError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -190,11 +192,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = supabase()
+    const supabase = createClient()
     const {
-      data: { user }
+      data: { user },
+      error: sessionError
     } = await supabase.auth.getSession()
-    if (!user) {
+    if (sessionError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 

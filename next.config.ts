@@ -23,6 +23,13 @@ const nextConfig: NextConfig = {
   eslint: {
     dirs: ['app', 'components', 'lib', 'hooks', 'types', 'utils'],
     ignoreDuringBuilds: false
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      process: false,
+    }
+    return config
   }
 }
 

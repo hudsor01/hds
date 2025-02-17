@@ -2,6 +2,7 @@ import { supabase } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
+import { AuthError, AuthResponse } from '@supabase/supabase-js'
 
 const signUpSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -15,20 +16,24 @@ const signUpSchema = z.object({
   name: z.string().min(2, 'Name must be at least 2 characters').optional()
 })
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()
       const body = signUpSchema.parse(json)
 
       // Check if user already exists
-      const { data: existingUser } = await supabase.from('users').select('id').eq('email', body.email).single()
+      const { data: existingUser, error: existingUserError } = await supabase.from('users').select('id').eq('email', body.email).single()
+
+      if (existingUserError) {
+        throw new AuthError(existingUserError.message)
+      }
 
       if (existingUser) {
         return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 })
       }
 
-      const { data, error: signUpError } = await supabase.auth.signUp({
+      const { data, error: signUpError }: AuthResponse = await supabase.auth.signUp({
         email: body.email,
         password: body.password,
         options: {
@@ -43,7 +48,7 @@ export async function POST(request: Request) {
       if (signUpError) {
         // Handle specific error cases
         if (signUpError.message.includes('rate limit')) {
-          return NextResponse.json({ error: 'Too munknown signup attempts. Please try again later.' }, { status: 429 })
+          return NextResponse.json({ error: 'Too many signup attempts. Please try again later.' }, { status: 429 })
         }
         return NextResponse.json({ error: signUpError.message }, { status: 400 })
       }
@@ -62,6 +67,10 @@ export async function POST(request: Request) {
         }, {})
 
         return NextResponse.json({ error: 'Validation failed', fieldErrors }, { status: 400 })
+      }
+
+      if (error instanceof AuthError) {
+        return NextResponse.json({ error: error.message }, { status: 400 })
       }
 
       console.error('Unexpected error during sign up:', error)
