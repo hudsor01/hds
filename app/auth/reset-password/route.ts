@@ -1,17 +1,53 @@
-import { supabase } from '@/utils/supabase/server'
-import { NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
+import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
+import { AuthError } from '@supabase/supabase-js'
 
 const resetSchema = z.object({
-  email: z.string().email()
+  email: z.string().email('Invalid email address')
 })
 
 const updateSchema = z.object({
-  password: z.string().min(8)
+  password: z.string().min(8, 'Password must be at least 8 characters')
 })
 
-export async function POST(request: Request) {
+function isAuthError(error: unknown): error is AuthError {
+  return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
+}
+
+function handleError(error: unknown) {
+  if (error instanceof z.ZodError) {
+    return NextResponse.json(
+      {
+        error: 'Validation Error',
+        details: error.errors
+      },
+      { status: 400 }
+    )
+  }
+
+  if (isAuthError(error)) {
+    return NextResponse.json(
+      {
+        error: 'Authentication Error',
+        message: error.message
+      },
+      { status: 401 }
+    )
+  }
+
+  console.error('Error:', error)
+  return NextResponse.json(
+    {
+      error: 'Internal server error',
+      message: error instanceof Error ? error.message : 'Unknown error'
+    },
+    { status: 500 }
+  )
+}
+
+export async function POST(request: NextRequest) {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()
@@ -21,24 +57,18 @@ export async function POST(request: Request) {
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/update-password`
       })
 
-      if (error) {
-        return NextResponse.json({ error: error.message }, { status: 400 })
-      }
+      if (error) throw error
 
       return NextResponse.json({
         message: 'Password reset email sent'
       })
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return NextResponse.json({ error: error.issues }, { status: 400 })
-      }
-
-      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+      return handleError(error)
     }
   })
 }
 
-export async function PUT(request: Request) {
+export async function PUT(request: NextRequest) {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()
@@ -48,19 +78,13 @@ export async function PUT(request: Request) {
         password: body.password
       })
 
-      if (error) {
-        return NextResponse.json({ error: error.message }, { status: 400 })
-      }
+      if (error) throw error
 
       return NextResponse.json({
         message: 'Password updated successfully'
       })
     } catch (error) {
-      if (error instanceof z.ZodError) {
-        return NextResponse.json({ error: error.issues }, { status: 400 })
-      }
-
-      return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+      return handleError(error)
     }
   })
 }

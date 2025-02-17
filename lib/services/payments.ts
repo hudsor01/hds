@@ -1,6 +1,5 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
 import { stripe } from '@/lib/stripe'
 import { Database } from '@/types/supabase'
 
@@ -14,20 +13,14 @@ interface CreatePaymentIntent {
   metadata?: Record<string, string>
 }
 
-export async function createPaymentIntent({
-  amount,
-  currency,
-  paymentMethod,
-  description,
-  metadata,
-}: CreatePaymentIntent) {
+export async function createPaymentIntent({ amount, currency, paymentMethod, description, metadata }: CreatePaymentIntent) {
   try {
     const paymentIntent = await stripe.paymentIntents.create({
       amount,
       currency,
       payment_method_types: [paymentMethod],
       description,
-      metadata,
+      metadata
     })
 
     return { data: paymentIntent, error: null }
@@ -41,7 +34,7 @@ export async function getPaymentMethods(customerId: string) {
   try {
     const paymentMethods = await stripe.paymentMethods.list({
       customer: customerId,
-      type: 'card',
+      type: 'card'
     })
 
     return { data: paymentMethods.data, error: null }

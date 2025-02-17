@@ -22,19 +22,17 @@ export interface ProgressProps extends Omit<LinearProgressProps, 'value'> {
   max?: number
 }
 
-export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(
-  ({ className, value = 0, max = 100, ...props }, ref) => {
-    const normalizedValue = (value / max) * 100
+export const Progress = React.forwardRef<HTMLDivElement, ProgressProps>(({ className, value = 0, max = 100, ...props }, ref) => {
+  const normalizedValue = (value / max) * 100
 
-    return (
-      <StyledLinearProgress
-        ref={ref}
-        variant="determinate"
-        value={normalizedValue}
-        className={cn('w-full', className)}
-        {...props}
-      />
-    )
-  }
-)
+  return (
+    <StyledLinearProgress
+      ref={ref}
+      variant="determinate"
+      value={normalizedValue}
+      className={cn('w-full', className)}
+      {...props}
+    />
+  )
+})
 Progress.displayName = 'Progress'

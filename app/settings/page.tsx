@@ -128,37 +128,19 @@ export default function SettingsPage() {
           <CardContent>
             <form onSubmit={handleUserSettingsSubmit}>
               <div className="grid gap-6">
-                <TextField
-                  name="theme"
-                  label="Theme"
-                  select
-                  fullWidth
-                  defaultValue={userSettings?.data?.theme || 'light'}
-                >
+                <TextField name="theme" label="Theme" select fullWidth defaultValue={userSettings?.data?.theme || 'light'}>
                   <MenuItem value="light">Light</MenuItem>
                   <MenuItem value="dark">Dark</MenuItem>
                   <MenuItem value="system">System</MenuItem>
                 </TextField>
 
-                <TextField
-                  name="language"
-                  label="Language"
-                  select
-                  fullWidth
-                  defaultValue={userSettings?.data?.language || 'en'}
-                >
+                <TextField name="language" label="Language" select fullWidth defaultValue={userSettings?.data?.language || 'en'}>
                   <MenuItem value="en">English</MenuItem>
                   <MenuItem value="es">Spanish</MenuItem>
                   <MenuItem value="fr">French</MenuItem>
                 </TextField>
 
-                <TextField
-                  name="currency"
-                  label="Currency"
-                  select
-                  fullWidth
-                  defaultValue={userSettings?.data?.currency || 'USD'}
-                >
+                <TextField name="currency" label="Currency" select fullWidth defaultValue={userSettings?.data?.currency || 'USD'}>
                   <MenuItem value="USD">USD ($)</MenuItem>
                   <MenuItem value="EUR">EUR (€)</MenuItem>
                   <MenuItem value="GBP">GBP (£)</MenuItem>
@@ -190,30 +172,15 @@ export default function SettingsPage() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
-                      control={
-                        <Switch
-                          name="notifications_enabled"
-                          defaultChecked={userSettings?.data?.notifications_enabled}
-                        />
-                      }
+                      control={<Switch name="notifications_enabled" defaultChecked={userSettings?.data?.notifications_enabled} />}
                       label="Enable Notifications"
                     />
                     <FormControlLabel
-                      control={
-                        <Switch
-                          name="email_notifications"
-                          defaultChecked={userSettings?.data?.email_notifications}
-                        />
-                      }
+                      control={<Switch name="email_notifications" defaultChecked={userSettings?.data?.email_notifications} />}
                       label="Email Notifications"
                     />
                     <FormControlLabel
-                      control={
-                        <Switch
-                          name="sms_notifications"
-                          defaultChecked={userSettings?.data?.sms_notifications}
-                        />
-                      }
+                      control={<Switch name="sms_notifications" defaultChecked={userSettings?.data?.sms_notifications} />}
                       label="SMS Notifications"
                     />
                   </FormGroup>
@@ -246,12 +213,7 @@ export default function SettingsPage() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
-                      control={
-                        <Switch
-                          name="two_factor_enabled"
-                          defaultChecked={securitySettings?.data?.two_factor_enabled}
-                        />
-                      }
+                      control={<Switch name="two_factor_enabled" defaultChecked={securitySettings?.data?.two_factor_enabled} />}
                       label="Enable Two-Factor Authentication"
                     />
                   </FormGroup>
@@ -282,12 +244,7 @@ export default function SettingsPage() {
                 <FormControl component="fieldset">
                   <FormGroup>
                     <FormControlLabel
-                      control={
-                        <Switch
-                          name="login_notifications"
-                          defaultChecked={securitySettings?.data?.login_notifications}
-                        />
-                      }
+                      control={<Switch name="login_notifications" defaultChecked={securitySettings?.data?.login_notifications} />}
                       label="Login Notifications"
                     />
                   </FormGroup>

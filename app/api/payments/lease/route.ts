@@ -114,12 +114,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const { searchParams } = new URL(req.url)
     const leaseId: string | null = searchParams.get('leaseId')
     const status: string | null = searchParams.get('status')
-    const startDate: Date | undefined = searchParams.get('startDate')
-      ? new Date(searchParams.get('startDate')!)
-      : undefined
-    const endDate: Date | undefined = searchParams.get('endDate')
-      ? new Date(searchParams.get('endDate')!)
-      : undefined
+    const startDate: Date | undefined = searchParams.get('startDate') ? new Date(searchParams.get('startDate')!) : undefined
+    const endDate: Date | undefined = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : undefined
 
     if (!leaseId) {
       return NextResponse.json({ error: 'Lease ID is required' }, { status: 400 })

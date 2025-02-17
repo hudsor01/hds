@@ -3,10 +3,10 @@
 import { useEffect, useState } from 'react'
 import { Button } from '@/components/button'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/dialog'
-import { PropertyForm, PropertyTable } from '@/components/properties'
+import { PropertyForm, PropertyTable } from '@/components/properties/property-table'
 import { type Property, type CreatePropertyInput } from '@/types/property'
 import { useToast } from '@/hooks/use-toast'
-import { createClient } from '@/utils/supabase/client'
+
 import { Skeleton } from '@mui/material'
 import { Add } from '@mui/icons-material'
 
@@ -135,7 +135,11 @@ export default function PropertiesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Properties</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>
+        <Button
+          onClick={() => {
+            setIsDialogOpen(true)
+          }}
+        >
           <Add fontSize="small" className="mr-2" />
           Add Property
         </Button>
@@ -169,7 +173,9 @@ export default function PropertiesPage() {
           <PropertyForm
             initialData={selectedProperty || undefined}
             onSubmit={selectedProperty ? handleUpdate : handleCreate}
-            onCancel={() => setIsDialogOpen(false)}
+            onCancel={() => {
+              setIsDialogOpen(false)
+            }}
           />
         </DialogContent>
       </Dialog>

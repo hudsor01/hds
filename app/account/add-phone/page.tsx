@@ -1,14 +1,13 @@
 'use client'
 
 import * as React from 'react'
-import { VerificationWrapper } from '@/components/auth/verification-wrapper'
-import { VerificationForm } from '@/components/auth/verification-form'
+import { VerificationWrapper } from '@/components/features/auth/verification-wrapper'
+import { VerificationForm } from '@/components/features/auth/verification-form'
 import { Phone as PhoneIcon } from '@mui/icons-material'
 import { useToast } from '@/hooks/use-toast'
-import { createClient } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase/auth'
 
 export default function PhoneVerificationPage() {
-  const supabase = createClient()
   const { toast } = useToast()
 
   const handleVerification = async (phone: string) => {
@@ -17,7 +16,12 @@ export default function PhoneVerificationPage() {
       options: { channel: 'sms' }
     })
 
-    if (error) throw error
+    if (error) {
+      toast({ title: 'Error', description: error.message, type: 'error' })
+      throw error
+    } else {
+      toast({ title: 'Success', description: 'Verification code sent!', type: 'success' })
+    }
   }
 
   return (

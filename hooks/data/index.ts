@@ -5,13 +5,7 @@ import { useState, useEffect, useCallback, useTransition } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { useMediaQuery, useTheme } from '@mui/material'
-import type {
-  Property,
-  Tenant,
-  Lease,
-  QueryParams
-} from '@/types/types'
+import type { Property, Tenant, QueryParams } from '@/types/types'
 
 export function useProperty(id: string) {
   return useApiQuery<Property>(`/api/properties/${id}`)
@@ -239,9 +233,15 @@ export function useProperties({
 // Additional types for better TypeScript support
 export type UsePropertiesHook = typeof useProperties
 
+export type PropertyCreateInput = Omit<Property, 'id'>
+
+export type PropertyUpdateInput = Partial<Omit<Property, 'id'>>
+
 // Tenants hooks
-export function useTenants(params?: BaseQueryParams) {
-  return useApiQuery<Tenant[]>('/api/tenants', params)
+export function useTenants(
+  params?: Omit<QueryParams, 'filters'> & { filters?: Record<string, string | number | boolean | undefined> }
+) {
+  return useApiQuery<Tenant[]>('/api/tenants', params as any)
 }
 
 export function useTenant(id: string) {
@@ -261,8 +261,16 @@ export function useDeleteTenant() {
 }
 
 // Leases hooks
-export function useLeases(params?: BaseQueryParams) {
-  return useApiQuery<Lease[]>('/api/leases', params)
+export interface Lease {
+  // Define the properties of a Lease here
+  id: string
+  [key: string]: any
+}
+
+export function useLeases(
+  params?: Omit<QueryParams, 'filters'> & { filters?: Record<string, string | number | boolean | undefined> }
+) {
+  return useApiQuery<Lease[]>('/api/leases', params as any)
 }
 
 export function useLease(id: string) {
@@ -280,10 +288,11 @@ export function useUpdateLease() {
 export function useDeleteLease() {
   return useApiDelete<any>('/api/leases')
 }
-}
 
-export function useMaintenanceRequests(params?: QueryParams) {
-  return useApiQuery<any[]>('/api/maintenance', params)
+export function useMaintenanceRequests(
+  params?: Omit<QueryParams, 'filters'> & { filters?: Record<string, string | number | boolean | undefined> }
+) {
+  return useApiQuery<any[]>('/api/maintenance', params as any)
 }
 
 export function useMaintenanceRequest(id: string) {

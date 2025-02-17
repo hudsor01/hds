@@ -1,16 +1,27 @@
-import { supabase } from '@/utils/supabase/server'
+import { supabase } from '@/lib/supabase'
 import { Info } from 'react-feather'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
+import { createServerClient } from '@supabase/ssr'
 
 export default async function ProtectedPage() {
-  const supabase = await supabase()
+  const cookieStore = cookies()
+  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
+    cookies: {
+      get(name: string) {
+        return cookieStore.get(name)?.value
+      }
+    }
+  })
 
   const {
-    data: { session }
+    data: { session },
+    error
   } = await supabase.auth.getSession()
 
-  if (!session?.user) {
-    return redirect('/sign-in')
+  if (error || !session?.user) {
+    console.error('Auth error:', error)
+    return redirect('/auth/sign-in')
   }
 
   return (
@@ -23,9 +34,7 @@ export default async function ProtectedPage() {
       </div>
       <div className="flex flex-col items-start gap-2">
         <h2 className="mb-4 text-2xl font-bold">Your user details</h2>
-        <pre className="max-h-32 overflow-auto rounded border p-3 font-mono text-xs">
-          {JSON.stringify(session?.user, null, 2)}
-        </pre>
+        <pre className="max-h-32 overflow-auto rounded border p-3 font-mono text-xs">{JSON.stringify(session.user, null, 2)}</pre>
       </div>
       <div>
         <h2 className="mb-4 text-2xl font-bold">Next steps</h2>

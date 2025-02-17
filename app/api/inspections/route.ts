@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -223,10 +223,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     }
 
     if (inspection.status === 'IN_PROGRESS' || inspection.status === 'COMPLETED') {
-      return NextResponse.json(
-        { error: 'Cannot delete in-progress or completed inspections' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Cannot delete in-progress or completed inspections' }, { status: 400 })
     }
 
     const { error } = await supabase.from('inspections').delete().eq('id', id).eq('user_id', userId)

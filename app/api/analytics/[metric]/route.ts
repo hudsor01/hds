@@ -1,3 +1,5 @@
+'use server'
+
 import {
   getFinancialMetrics,
   getMaintenanceMetrics,
@@ -5,7 +7,7 @@ import {
   getTenantMetrics,
   getTimeSeries
 } from '@/lib/services/analytics'
-import { supabase } from '@/utils/supabase/server'
+import supabase from '@/lib/supabase/server'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -20,20 +22,14 @@ const timeRangeSchema = z.object({
 
 type MetricType = 'properties' | 'tenants' | 'finances' | 'maintenance' | 'trends'
 
-export async function GET(
-  req: NextRequest,
-  { params }: { params: { metric: string } }
-): Promise<NextResponse> {
+export async function GET(req: NextRequest, { params }: { params: { metric: string } }): Promise<NextResponse> {
   try {
     const {
       data: { user }
     } = await supabase.auth.getUser()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to access analytics' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to access analytics' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
@@ -45,10 +41,7 @@ export async function GET(
 
     const validatedQuery = timeRangeSchema.safeParse(query)
     if (!validatedQuery.success) {
-      return NextResponse.json(
-        { error: 'Invalid date range parameters', details: validatedQuery.error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid date range parameters', details: validatedQuery.error.errors }, { status: 400 })
     }
 
     const metric = params.metric as MetricType
@@ -70,18 +63,11 @@ export async function GET(
       case 'trends': {
         const trendMetric = searchParams.get('trend_metric')
         if (!trendMetric) {
-          return NextResponse.json(
-            { error: 'Trend metric parameter is required for trends analysis' },
-            { status: 400 }
-          )
+          return NextResponse.json({ error: 'Trend metric parameter is required for trends analysis' }, { status: 400 })
         }
 
-        const startDate = validatedQuery.data.start_date
-          ? new Date(validatedQuery.data.start_date)
-          : new Date()
-        const endDate = validatedQuery.data.end_date
-          ? new Date(validatedQuery.data.end_date)
-          : new Date()
+        const startDate = validatedQuery.data.start_date ? new Date(validatedQuery.data.start_date) : new Date()
+        const endDate = validatedQuery.data.end_date ? new Date(validatedQuery.data.end_date) : new Date()
 
         data = await getTimeSeries(user.id, trendMetric, startDate, endDate)
         break
@@ -97,10 +83,7 @@ export async function GET(
     }
 
     if (!data) {
-      return NextResponse.json(
-        { error: `No data available for ${metric} analytics` },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: `No data available for ${metric} analytics` }, { status: 404 })
     }
 
     return NextResponse.json({ data })
@@ -108,25 +91,16 @@ export async function GET(
     console.error(`Error in analytics ${params.metric} GET route:`, error)
 
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Invalid parameters', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Invalid parameters', details: error.errors }, { status: 400 })
     }
 
     // Check for specific error types
     if (error instanceof Error) {
       if (error.message.includes('rate limit')) {
-        return NextResponse.json(
-          { error: 'Too munknown requests. Please try again later.' },
-          { status: 429 }
-        )
+        return NextResponse.json({ error: 'Too munknown requests. Please try again later.' }, { status: 429 })
       }
       if (error.message.includes('permission')) {
-        return NextResponse.json(
-          { error: 'You do not have permission to access this data' },
-          { status: 403 }
-        )
+        return NextResponse.json({ error: 'You do not have permission to access this data' }, { status: 403 })
       }
     }
 

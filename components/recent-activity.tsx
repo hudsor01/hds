@@ -65,9 +65,7 @@ export function RecentActivityList({ activities }: RecentActivityListProps) {
     }
   }
 
-  const filteredActivities = activities.filter(
-    activity => filter === 'ALL' || activity.type === filter
-  )
+  const filteredActivities = activities.filter(activity => filter === 'ALL' || activity.type === filter)
 
   return (
     <Card

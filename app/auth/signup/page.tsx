@@ -4,10 +4,10 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { signUpWithEmail } from '@/lib/auth/auth-utils'
 import { Button } from '@/components/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/core/Card/card'
 import { Input } from '@/components/input'
 import { Label } from '@/components/label'
-import { Alert, AlertDescription } from '@/components/alert'
+import { Alert, AlertDescription } from '@/components/core/alert'
 import Link from 'next/link'
 
 export default function SignUpPage() {
@@ -68,7 +68,9 @@ export default function SignUpPage() {
                 id="email"
                 type="email"
                 value={email}
-                onChange={e => setEmail(e.target.value)}
+                onChange={e => {
+                  setEmail(e.target.value)
+                }}
                 required
                 placeholder="Enter your email"
               />
@@ -79,7 +81,9 @@ export default function SignUpPage() {
                 id="password"
                 type="password"
                 value={password}
-                onChange={e => setPassword(e.target.value)}
+                onChange={e => {
+                  setPassword(e.target.value)
+                }}
                 required
                 placeholder="Enter your password"
               />
@@ -90,7 +94,9 @@ export default function SignUpPage() {
                 id="confirmPassword"
                 type="password"
                 value={confirmPassword}
-                onChange={e => setConfirmPassword(e.target.value)}
+                onChange={e => {
+                  setConfirmPassword(e.target.value)
+                }}
                 required
                 placeholder="Confirm your password"
               />

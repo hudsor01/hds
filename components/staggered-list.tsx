@@ -10,12 +10,7 @@ interface StaggeredListProps {
   className?: string
 }
 
-export function StaggeredList({
-  children,
-  delay = 0.2,
-  duration = 0.5,
-  className = 'space-y-4'
-}: StaggeredListProps) {
+export function StaggeredList({ children, delay = 0.2, duration = 0.5, className = 'space-y-4' }: StaggeredListProps) {
   const controls = useAnimation()
   const ref = useRef(null)
   const isInView = useInView(ref, { once: true, amount: 0.2 })
@@ -50,13 +45,7 @@ export function StaggeredList({
   }, [controls, isInView])
 
   return (
-    <motion.div
-      ref={ref}
-      variants={containerVariants}
-      initial="hidden"
-      animate={controls}
-      className={className}
-    >
+    <motion.div ref={ref} variants={containerVariants} initial="hidden" animate={controls} className={className}>
       {children.map((child, index) => (
         <motion.div key={index} variants={itemVariants}>
           {child}

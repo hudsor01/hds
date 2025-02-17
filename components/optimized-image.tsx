@@ -42,8 +42,12 @@ export const OptimizedImage: React.FC<OptimizedImageProps> = ({
         quality={90}
         sizes={sizes}
         className={`transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'} ${error ? 'hidden' : 'block'} `}
-        onLoadStart={() => setLoading(true)}
-        onLoad={() => setLoading(false)}
+        onLoadStart={() => {
+          setLoading(true)
+        }}
+        onLoad={() => {
+          setLoading(false)
+        }}
         onError={() => {
           setError(true)
           setLoading(false)

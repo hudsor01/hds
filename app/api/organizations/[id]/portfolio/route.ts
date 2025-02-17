@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
@@ -16,12 +16,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 
     // Calculate portfolio metrics
-    const { data: metrics, error: metricsError } = await supabase.rpc(
-      'calculate_portfolio_metrics',
-      {
-        p_organization_id: params.id
-      }
-    )
+    const { data: metrics, error: metricsError } = await supabase.rpc('calculate_portfolio_metrics', {
+      p_organization_id: params.id
+    })
 
     if (metricsError) throw metricsError
 

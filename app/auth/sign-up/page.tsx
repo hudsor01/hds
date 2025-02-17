@@ -1,106 +1,61 @@
 'use client'
 
 import { signUp } from '@/app/auth/actions'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from '@/components/ui/card'
+import { Button } from '@/components/button'
+import { Input } from '@/components/input'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/core/Card/card'
 import Link from 'next/link'
 import { useState } from 'react'
 
-export default function SignUpPage({
-  searchParams,
-}: {
-  searchParams: { error: string; message: string }
-}) {
+export default function SignUpPage({ searchParams }: { searchParams: { error: string; message: string } }) {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
-    <div className="flex min-h-screen items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Create an account</CardTitle>
-          <CardDescription>
-            Enter your details to create your account
-          </CardDescription>
+          <CardDescription>Enter your details to create your account</CardDescription>
         </CardHeader>
-        <form 
-          action={async (formData) => {
+        <form
+          action={async formData => {
             setIsLoading(true)
             await signUp(formData)
             setIsLoading(false)
           }}
         >
           <CardContent className="space-y-4">
-            {searchParams?.error && (
-              <div className="rounded-md bg-destructive/15 p-3">
-                <div className="text-sm text-destructive">
-                  {searchParams.error}
-                </div>
+            {searchParams.error && (
+              <div className="bg-destructive/15 rounded-md p-3">
+                <div className="text-destructive text-sm">{searchParams.error}</div>
               </div>
             )}
             <div className="space-y-2">
-              <label
-                htmlFor="email"
-                className="block text-sm font-medium text-foreground"
-              >
+              <label htmlFor="email" className="text-foreground block text-sm font-medium">
                 Email
               </label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                required
-                placeholder="Enter your email"
-              />
+              <Input id="email" name="email" type="email" required placeholder="Enter your email" />
             </div>
             <div className="space-y-2">
-              <label
-                htmlFor="password"
-                className="block text-sm font-medium text-foreground"
-              >
+              <label htmlFor="password" className="text-foreground block text-sm font-medium">
                 Password
               </label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                required
-                placeholder="Enter your password"
-              />
+              <Input id="password" name="password" type="password" required placeholder="Enter your password" />
             </div>
             <div className="space-y-2">
-              <label
-                htmlFor="confirmPassword"
-                className="block text-sm font-medium text-foreground"
-              >
+              <label htmlFor="confirmPassword" className="text-foreground block text-sm font-medium">
                 Confirm Password
               </label>
-              <Input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                placeholder="Confirm your password"
-              />
+              <Input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Confirm your password" />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading ? 'Creating account...' : 'Create account'}
             </Button>
-            <div className="text-sm text-center">
+            <div className="text-center text-sm">
               Already have an account?{' '}
-              <Link
-                href="/auth/sign-in"
-                className="text-primary hover:text-primary/80"
-              >
+              <Link href="/auth/sign-in" className="text-primary hover:text-primary/80">
                 Sign in
               </Link>
             </div>

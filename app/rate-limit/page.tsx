@@ -51,15 +51,16 @@ export default function RateLimitPage() {
 
         <FadeIn delay={0.8}>
           <Typography variant="body1" color="text.secondary" sx={{ maxWidth: 'sm', mb: 4 }}>
-            You've made too munknown requests in a short period. Please wait a moment before trying
-            again.
+            You've made too munknown requests in a short period. Please wait a moment before trying again.
           </Typography>
         </FadeIn>
 
         <FadeIn delay={1}>
           <Button
             variant="contained"
-            onClick={() => window.location.reload()}
+            onClick={() => {
+              window.location.reload()
+            }}
             sx={{
               background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
               '&:hover': {

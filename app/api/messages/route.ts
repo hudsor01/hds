@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -131,10 +131,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         }
 
         if (!thread.participants.includes(userId)) {
-          return NextResponse.json(
-            { error: 'Not authorized to post in this thread' },
-            { status: 403 }
-          )
+          return NextResponse.json({ error: 'Not authorized to post in this thread' }, { status: 403 })
         }
       }
 
@@ -294,10 +291,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
         .single()
 
       if (lastMessage) {
-        await supabase
-          .from('message_threads')
-          .update({ last_message_id: lastMessage.id })
-          .eq('id', message.thread_id)
+        await supabase.from('message_threads').update({ last_message_id: lastMessage.id }).eq('id', message.thread_id)
       }
     }
 

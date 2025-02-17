@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/button'
-import { Card } from '@/components/card'
+import { Card } from '@/components/core/Card/card'
 import {
   Box,
   Container,

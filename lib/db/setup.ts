@@ -14,12 +14,12 @@ function question(query: string): Promise<string> {
     output: process.stdout
   })
 
-  return new Promise(resolve =>
+  return new Promise(resolve => {
     rl.question(query, ans => {
       rl.close()
       resolve(ans)
     })
-  )
+  })
 }
 
 async function checkStripeCLI() {
@@ -72,9 +72,7 @@ async function getPostgresURL(): Promise<string> {
     await setupLocalPostgres()
     return 'postgres://postgres:postgres@localhost:54322/postgres'
   } else {
-    console.log(
-      'You can find Postgres databases at: https://vercel.com/marketplace?category=databases'
-    )
+    console.log('You can find Postgres databases at: https://vercel.com/marketplace?category=databases')
     return await question('Enter your POSTGRES_URL: ')
   }
 }
@@ -117,9 +115,7 @@ volumes:
     await execAsync('docker compose up -d')
     console.log('Docker container started successfully.')
   } catch (error) {
-    console.error(
-      'Failed to start Docker container. Please check your Docker installation and try again.'
-    )
+    console.error('Failed to start Docker container. Please check your Docker installation and try again.')
     process.exit(1)
   }
 }
@@ -141,9 +137,7 @@ async function createStripeWebhook(): Promise<string> {
     console.log('Stripe webhook created.')
     return match[0]
   } catch (error) {
-    console.error(
-      'Failed to create Stripe webhook. Check your Stripe CLI installation and permissions.'
-    )
+    console.error('Failed to create Stripe webhook. Check your Stripe CLI installation and permissions.')
     if (os.platform() === 'win32') {
       console.log('Note: On Windows, you may need to run this script as an administrator.')
     }

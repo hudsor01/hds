@@ -201,7 +201,7 @@ export interface RealtimePresenceState {
   metadata?: Record<string, unknown>
 }
 
-export interface RealtimeSubscription<T = unknown> {
+export interface RealtimeSubscription {
   channelId: string
   callback: () => void
   errorHandler?: () => void
@@ -439,7 +439,6 @@ export const Payments = {
   }
 } as const
 
-export type PaymentMethod = (typeof Payments.Methods)[keyof typeof Payments.Methods]
 export type PaymentStatus = (typeof Payments.Status)[keyof typeof Payments.Status]
 
 export interface PaymentMethod {
@@ -530,7 +529,7 @@ export interface MetricsSnapshot {
 }
 
 // Form validation patterns
-export interface ValidationRule<T = unknown> {
+export interface ValidationRule {
   validate: () => boolean | Promise<boolean>
   message: string
   params?: Record<string, unknown>
@@ -565,6 +564,20 @@ export interface ValidationSchema {
 }
 
 // Service layer types
+export interface EmailOptions {
+  to: string | string[]
+  cc?: string | string[]
+  bcc?: string | string[]
+  subject: string
+  body: string
+}
+
+export interface EmailTrackingData {
+  id: string
+  message: string
+  status: string
+}
+
 export interface EmailService {
   send: (emailOptions: EmailOptions) => Promise<void>
   template: (templateName: string, data: Record<string, unknown>) => string
@@ -615,32 +628,11 @@ export type DeepReadonly<T> = {
   readonly [P in keyof T]: T[P] extends Record<string, unknown> ? DeepReadonly<T[P]> : T[P]
 }
 
-export type NonNullableRecord<T> = {
-  [P in keyof T]-?: NonNullable<T[P]>
-}
-
-export type RecursivePartial<T> = {
-  [P in keyof T]?: T[P] extends (infer U)[] ? RecursivePartial<U>[] : T[P] extends object ? RecursivePartial<T[P]> : T[P]
-}
-
-// Type guard helpers
-export const TypeGuards = {
-  isNonNullable: <T>(value: T): value is NonNullable<T> => value != null,
-  isRecord: (value: unknown): value is Record<string, unknown> =>
-    typeof value === 'object' && value !== null && !Array.isArray(value)
-} as const
-
 // Export type groups as objects
 export const UI = {
-  Toast,
-  Animation,
-  ComponentProps,
-  ButtonProps,
-  InputBaseProps
-} as const
-
-export const DB = {
-  Config: DBConfig,
-  QueryOptions: DBQueryOptions,
-  RealtimeEvent: DBRealtimeEvent
+  Toast: {} as Toast,
+  Animation: {} as Animation,
+  ComponentProps: {} as ComponentProps,
+  ButtonProps: {} as ButtonProps,
+  InputBaseProps: {} as InputBaseProps
 } as const

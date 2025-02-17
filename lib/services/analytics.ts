@@ -1,6 +1,5 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 
 export async function trackPageView(pageUrl: string, userId?: string) {
@@ -10,7 +9,7 @@ export async function trackPageView(pageUrl: string, userId?: string) {
     const { error } = await supabase.from('page_views').insert({
       url: pageUrl,
       user_id: userId,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     })
 
     if (error) throw error
@@ -21,11 +20,7 @@ export async function trackPageView(pageUrl: string, userId?: string) {
   }
 }
 
-export async function trackEvent(
-  eventName: string,
-  properties?: Record<string, any>,
-  userId?: string
-) {
+export async function trackEvent(eventName: string, properties?: Record<string, any>, userId?: string) {
   const supabase = createClient()
 
   try {
@@ -33,7 +28,7 @@ export async function trackEvent(
       name: eventName,
       properties,
       user_id: userId,
-      timestamp: new Date().toISOString(),
+      timestamp: new Date().toISOString()
     })
 
     if (error) throw error
@@ -66,9 +61,9 @@ export async function getAnalytics(userId: string, startDate: Date, endDate: Dat
 
     if (eventsError) throw eventsError
 
-    return { 
-      data: { pageViews, events }, 
-      error: null 
+    return {
+      data: { pageViews, events },
+      error: null
     }
   } catch (error) {
     console.error('Error fetching analytics:', error)

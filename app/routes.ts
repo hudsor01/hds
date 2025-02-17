@@ -62,8 +62,7 @@ export const routes = {
     new: '/dashboard/documents/new' as Route,
     view: (id: string) => `/dashboard/documents/${id}` as Route,
     edit: (id: string) => `/dashboard/documents/${id}/edit` as Route,
-    category: (category: string, id?: string) =>
-      id ? `/documents/${category}/${id}` : (`/documents/${category}` as Route)
+    category: (category: string, id?: string) => (id ? `/documents/${category}/${id}` : (`/documents/${category}` as Route))
   },
 
   // Financial management

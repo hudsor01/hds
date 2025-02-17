@@ -20,9 +20,7 @@ export async function GET(req: NextRequest) {
     const startDate = searchParams.get('startDate')
       ? new Date(searchParams.get('startDate')!)
       : new Date(new Date().setMonth(new Date().getMonth() - 1))
-    const endDate = searchParams.get('endDate')
-      ? new Date(searchParams.get('endDate')!)
-      : new Date()
+    const endDate = searchParams.get('endDate') ? new Date(searchParams.get('endDate')!) : new Date()
 
     switch (reportType) {
       case 'financial': {
@@ -61,10 +59,7 @@ export async function GET(req: NextRequest) {
           })
         ])
 
-        const totalPotentialIncome = properties.reduce(
-          (sum, prop) => sum + Number(prop.rent_amount),
-          0
-        )
+        const totalPotentialIncome = properties.reduce((sum, prop) => sum + Number(prop.rent_amount), 0)
         const actualIncome = leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0)
         const totalDeposits = leases.reduce((sum, lease) => sum + Number(lease.depositAmount), 0)
         const totalExpenses = expenses.reduce((sum, expense) => sum + Number(expense.amount), 0)
@@ -246,8 +241,7 @@ export async function GET(req: NextRequest) {
           leasesByStatus,
           leasesByType,
           upcomingRenewals,
-          averageLeaseAmount:
-            leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) / leases.length,
+          averageLeaseAmount: leases.reduce((sum, lease) => sum + Number(lease.rent_amount), 0) / leases.length,
           period: { startDate, endDate }
         })
       }

@@ -1,16 +1,9 @@
-import React, { JSX } from 'react'
-import { TextField } from '@mui/material'
-import type { TextFieldProps } from '@mui/material'
+'use client'
 
-interface TextInputProps extends Omit<TextFieldProps, 'variant'> {
-  label: string
-  type?: string
-  value: string
-  required?: boolean
-  disabled?: boolean
-  error?: boolean
-  helperText?: string
-}
+import React from 'react'
+import type { JSX } from 'react'
+import { TextField } from '@mui/material'
+import { type TextInputProps } from '@/types/components'
 
 export function TextInput({
   label,

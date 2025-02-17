@@ -1,7 +1,7 @@
 'use client'
 
 import * as React from 'react'
-import { createClient } from '@/utils/supabase/server'
+
 import { Box, Button, Card, Chip, CardActions, CardContent, Container, Divider, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { AutoAwesome as AutoAwesomeIcon, CheckCircleRounded as CheckCircleRoundedIcon } from '@mui/icons-material'
@@ -179,7 +179,9 @@ export default function PricingPage() {
                       transition={{ duration: 0.2 }}
                     >
                       <Card
-                        onClick={() => handleTierSelect(tier.title)}
+                        onClick={() => {
+                          handleTierSelect(tier.title)
+                        }}
                         sx={[
                           {
                             p: 2,

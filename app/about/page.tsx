@@ -6,7 +6,7 @@ import { motion } from 'framer-motion'
 import { Box, Container, Typography, Card, CardContent, Avatar, useTheme, Stack } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import { Rocket, Groups, Lightbulb, TrendingUp } from '@mui/icons-material'
-import { PublicLayout } from '@/components/public-layout'
+import { PublicLayout } from '@/components/layouts/public-layout'
 import { toast } from 'sonner'
 
 const fadeInUp = {
@@ -108,7 +108,7 @@ export default function AboutPage(): JSX.Element {
         }}
       >
         <Container maxWidth="lg">
-          <Grid container component="div" spacing={4}>
+          <Grid container spacing={4}>
             {values.map((value, index) => {
               const Icon = value.icon
               return (
@@ -167,9 +167,9 @@ export default function AboutPage(): JSX.Element {
             Meet Our Team
           </Typography>
 
-          <Grid container component="div" spacing={4}>
+          <Grid container spacing={4}>
             {team.map((member, index) => (
-              <Grid xs={12} sm={6} md={3} key={index} component="div">
+              <Grid item xs={12} sm={6} md={3} key={index}>
                 <motion.div
                   variants={fadeInUp}
                   initial="initial"

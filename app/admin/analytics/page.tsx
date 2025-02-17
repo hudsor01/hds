@@ -1,17 +1,10 @@
-import { EmailMetricsTable } from '@/components/EmailMetricsTable'
-import { ErrorBoundary } from '@/components/error-boundary'
-import supabase from '@/lib/supabase'
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  CircularProgress,
-  Grid,
-  Typography
-} from '@mui/material'
+import { EmailMetricsTable } from '@/components/core/Data Display/EmailMetricsTable'
+import { ErrorBoundary } from '@/components/ui/error-boundary'
+import { supabase } from '@/lib/supabase/auth'
+import { Box, Card, CardContent, CardHeader, CircularProgress, Typography } from '@mui/material'
 import { BarChart, LineChart } from '@mui/x-charts'
 import { Suspense } from 'react'
+import Grid from '@mui/material/Grid2'
 
 async function getEmailMetrics(type: string) {
   const { data, error } = await supabase.from('email_metrics').select('*').eq('type', type).single()
@@ -127,9 +120,7 @@ export default async function AnalyticsPage() {
   } catch (error) {
     return (
       <Box sx={{ p: 4, textAlign: 'center' }}>
-        <Typography color="error">
-          Error loading analytics: {error instanceof Error ? error.message : 'Unknown error'}
-        </Typography>
+        <Typography color="error">Error loading analytics: {error instanceof Error ? error.message : 'Unknown error'}</Typography>
       </Box>
     )
   }

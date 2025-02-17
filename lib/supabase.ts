@@ -1,8 +1,33 @@
+import { createBrowserClient, createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
-import { SupabaseClient } from '@supabase/supabase-js'
-import supabase from '@/utils/supabase/client'
+import { cookies } from 'next/headers'
 
-export const supabaseClient: SupabaseClient<Database> = supabase
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']
+
+export const createClient = () => {
+  try {
+    const cookieStore = cookies() // Only works in Server Components
+    return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+      cookies: {
+        async getAll() {
+          const parsed = (await cookieStore).getAll().map(cookie => {
+            return { name: cookie.name, value: cookie.value }
+          })
+          return parsed
+        },
+        async setAll(newCookies) {
+          const resolvedCookieStore = await cookieStore
+          newCookies.forEach(cookie => {
+            resolvedCookieStore.set(cookie.name, cookie.value)
+          })
+        }
+      }
+    })
+  } catch {
+    return createBrowserClient<Database>(supabaseUrl, supabaseAnonKey)
+  }
+}
 
 // Enhanced error handling with specific error types
 export class DatabaseError extends Error {
@@ -62,47 +87,4 @@ export async function handleDatabaseError(error: unknown): Promise<never> {
   throw new Error('Unknown error occurred.')
 }
 
-// Enhanced safe query utility with timeout and retry logic
-export async function safeQuery<T>(
-  operation: () => Promise<{ data: T | null; error: unknown }>,
-  options: {
-    timeout?: number
-    retries?: number
-    retryDelay?: number
-  } = {}
-): Promise<T> {
-  const { timeout = 30000, retries = 3, retryDelay = 1000 } = options
-
-  let lastError: unknown
-
-  for (let attempt = 0; attempt < retries; attempt++) {
-    try {
-      const controller = new AbortController()
-      const timeoutId = setTimeout(() => controller.abort(), timeout)
-
-      const { data, error } = await operation()
-      clearTimeout(timeoutId)
-
-      if (error) {
-        lastError = error
-        throw error
-      }
-
-      if (!data) {
-        throw new DatabaseError('No data returned from the database.')
-      }
-
-      return data
-    } catch (error) {
-      lastError = error
-      if (attempt === retries - 1) {
-        await handleDatabaseError(error)
-      }
-      await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt)))
-    }
-  }
-
-  throw lastError
-}
-
-export default supabase
+export default createClient

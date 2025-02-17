@@ -1,17 +1,17 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
-import { MaintenanceRequest } from '@/components/dashboard/maintenance-tracker'
-import { handleDatabaseError } from '@/lib/supabase'
+import { createClient, handleDatabaseError } from '@/lib/supabase'
+import type { MaintenanceRequest } from '@/components/dashboard/maintenance-tracker'
 
 export async function fetchDashboardData() {
   try {
-    const supabase = createClient()
-    
+    const supabase = await createClient()
+
     // Fetch properties with their maintenance requests
     const { data: propertiesData, error: propertiesError } = await supabase
       .from('properties')
-      .select(`
+      .select(
+        `
         id,
         name,
         monthly_rent,
@@ -27,7 +27,8 @@ export async function fetchDashboardData() {
           estimated_cost,
           assigned_to
         )
-      `)
+      `
+      )
       .order('created_at', { ascending: false })
 
     if (propertiesError) {
@@ -41,7 +42,7 @@ export async function fetchDashboardData() {
     // Calculate financial metrics
     const totalRevenue = propertiesData.reduce((sum, p) => sum + (p.monthly_rent || 0), 0)
     const totalExpenses = propertiesData.reduce(
-      (sum, p) => sum + (Object.values(p.expenses || {}).reduce((a, b) => a + (b || 0), 0)),
+      (sum, p) => sum + Object.values(p.expenses || {}).reduce((a, b) => a + (b || 0), 0),
       0
     )
 
@@ -67,7 +68,7 @@ export async function fetchDashboardData() {
 
     // Process maintenance requests
     const maintenanceRequests = propertiesData
-      .flatMap(property => 
+      .flatMap(property =>
         (property.maintenance_requests || []).map(request => ({
           ...request,
           propertyName: property.name
@@ -75,35 +76,54 @@ export async function fetchDashboardData() {
       )
       .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
 
+    interface MonthlyFinancialRecord {
+      month: string
+      revenue: number
+      expenses: number
+      netIncome: number
+    }
+
+    interface DashboardFinancialData {
+      totalRevenue: number
+      totalExpenses: number
+      netIncome: number
+      occupancyRate: number
+      monthlyData: MonthlyFinancialRecord[]
+    }
+
+    interface DashboardResult {
+      financialData: DashboardFinancialData
+      maintenanceRequests: (MaintenanceRequest & { propertyName: string })[]
+    }
+
     return {
       financialData: {
         totalRevenue,
         totalExpenses,
         netIncome: totalRevenue - totalExpenses,
         occupancyRate,
-        monthlyData: historicalData.map(record => ({
-          month: new Date(record.month).toLocaleString('default', { month: 'short' }),
-          revenue: record.revenue,
-          expenses: record.expenses,
-          netIncome: record.revenue - record.expenses
-        })).reverse()
+        monthlyData: historicalData
+          .map(record => ({
+            month: new Date(record.month).toLocaleString('default', { month: 'short' }),
+            revenue: record.revenue,
+            expenses: record.expenses,
+            netIncome: record.revenue - record.expenses
+          }))
+          .reverse()
       },
       maintenanceRequests
-    }
+    } as DashboardResult
   } catch (error) {
     return handleDatabaseError(error)
   }
 }
 
-export async function updateMaintenanceStatus(
-  requestId: string,
-  newStatus: MaintenanceRequest['status']
-) {
+export async function updateMaintenanceStatus(requestId: string, newStatus: MaintenanceRequest['status']) {
   try {
-    const supabase = createClient()
+    const supabase = await createClient()
     const { data, error } = await supabase
       .from('maintenance_requests')
-      .update({ 
+      .update({
         status: newStatus,
         updated_at: new Date().toISOString()
       })

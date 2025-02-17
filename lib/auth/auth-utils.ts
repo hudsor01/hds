@@ -1,11 +1,13 @@
-import { createClient } from '@/utils/supabase/server'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 
 export async function getSession() {
   const supabase = createClient()
   try {
-    const { data: { session }, error } = await supabase.auth.getSession()
+    const {
+      data: { session },
+      error
+    } = await supabase.auth.getSession()
     if (error) throw error
     return session
   } catch (error) {
@@ -17,7 +19,10 @@ export async function getSession() {
 export async function getUserDetails() {
   const supabase = createClient()
   try {
-    const { data: { user }, error } = await supabase.auth.getUser()
+    const {
+      data: { user },
+      error
+    } = await supabase.auth.getUser()
     if (error) throw error
     return user
   } catch (error) {
@@ -37,9 +42,12 @@ export async function requireAuth() {
 export async function checkAuth() {
   const cookieStore = cookies()
   const supabase = createClient()
-  
+
   try {
-    const { data: { session }, error } = await supabase.auth.getSession()
+    const {
+      data: { session },
+      error
+    } = await supabase.auth.getSession()
     if (error) throw error
     return !!session
   } catch (error) {

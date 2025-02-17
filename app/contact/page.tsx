@@ -16,13 +16,14 @@ import {
   CircularProgress,
   alpha
 } from '@mui/material'
-import { Grid2 as Grid } from '@mui/material'
+
 import { Mail, Phone, MapPin, MessageCircle, Clock, Users } from 'react-feather'
-import { PublicLayout } from '@/components/public-layout'
+import { PublicLayout } from '@/components/layouts/public-layout'
 import { toast } from 'sonner'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'
+import Grid from '@mui/system/Grid'
 
 // Form validation schema
 const formSchema = z.object({
@@ -274,7 +275,7 @@ export default function ContactPage(): React.ReactElement {
                           />
                         )}
                       />
-                    </Grid>
+                    </>
 
                     <Grid item xs={12}>
                       <Controller

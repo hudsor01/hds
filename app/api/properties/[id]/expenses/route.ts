@@ -1,11 +1,10 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { searchParams } = new URL(request.url)
-    const startDate =
-      searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString()
+    const startDate = searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString()
     const endDate = searchParams.get('endDate') || new Date().toISOString()
 
     // First verify access to the property
@@ -20,14 +19,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
     }
 
     // Calculate expenses
-    const { data: expenses, error: expensesError } = await supabase.rpc(
-      'calculate_property_expenses',
-      {
-        p_property_id: params.id,
-        p_start_date: startDate,
-        p_end_date: endDate
-      }
-    )
+    const { data: expenses, error: expensesError } = await supabase.rpc('calculate_property_expenses', {
+      p_property_id: params.id,
+      p_start_date: startDate,
+      p_end_date: endDate
+    })
 
     if (expensesError) throw expensesError
 

@@ -2,7 +2,7 @@ import { handleSubscriptionChange, stripe } from '@/lib/payments/stripe'
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
 
-const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
+const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
 export async function POST(request: NextRequest) {
   const payload = await request.text()
@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted':
-        const subscription = event.data.object as Stripe.Subscription
+        const subscription = event.data.object
         await handleSubscriptionChange(subscription)
         break
       default:

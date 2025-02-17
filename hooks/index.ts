@@ -2,16 +2,10 @@
 export * from './use-api'
 
 // Data hooks
-export * from './data'
-
-// UI hooks
-export * from './ui'
+export * from './data/index'
 
 // Analytics hooks
-export { useAnalytics } from './analytics/use-analytics'
+export { useAnalytics } from './use-analytics'
 
 // Auth hooks
-export { useAuth } from '@/lib/auth'
-
-// Performance hooks
-export { usePerformance } from './performance/use-performance'
+export { useAuth } from '@/hooks/use-auth'

@@ -11,12 +11,7 @@ interface UseFormOptions<T extends z.ZodObject<unknown>> {
   onError?: (error: Error) => void
 }
 
-export function useForm<T extends z.ZodObject<unknown>>({
-  schema,
-  defaultValues,
-  onSubmit,
-  onError
-}: UseFormOptions<T>) {
+export function useForm<T extends z.ZodObject<unknown>>({ schema, defaultValues, onSubmit, onError }: UseFormOptions<T>) {
   const { showToast } = useToast()
 
   const form = useReactHookForm({

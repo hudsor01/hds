@@ -1,5 +1,9 @@
-import { apiClient, handleApiError } from '@/lib/api'
-import { useMutation, useQuery, useQueryClient, UseQueryOptions } from '@tanstack/react-query'
+'use client'
+
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import type { UseQueryOptions } from '@tanstack/react-query'
+import { UseMutationResult } from '@tanstack/react-query'
+import { api as apiClient } from '@/lib/api' // Assuming you have an apiClient defined
 
 interface BaseResponse<T> {
   data: T
@@ -16,12 +20,7 @@ interface UseCrudOptions<T> {
   onError?: (error: Error) => void
   queryOptions?: Omit<UseQueryOptions<BaseResponse<T>>, 'queryKey' | 'queryFn'>
 }
-
-export function useApiQuery<T>(
-  endpoint: string,
-  params?: BaseQueryParams,
-  options?: UseCrudOptions<T>
-) {
+export function useApiQuery<T>(endpoint: string, params?: BaseQueryParams, options?: UseCrudOptions<T>) {
   return useQuery({
     queryKey: [endpoint, params],
     queryFn: async () => {
@@ -38,16 +37,16 @@ export function useApiQuery<T>(
   })
 }
 
-export function useApiMutation<T, TVariables = unknown>(
+export function useApiMutation<TData = unknown, TError = Error, TVariables = void, TContext = unknown>(
   endpoint: string,
-  options?: UseCrudOptions<T>
-) {
+  options?: UseCrudOptions<TData>
+): UseMutationResult<BaseResponse<TData>, TError, TVariables, TContext> {
   const queryClient = useQueryClient()
 
-  return useMutation({
+  return useMutation<BaseResponse<TData>, TError, TVariables, TContext>({
     mutationFn: async (variables: TVariables) => {
       try {
-        const response = await apiClient.post<BaseResponse<T>>(endpoint, variables)
+        const response = await apiClient.post<BaseResponse<TData>>(endpoint, variables)
         return response.data
       } catch (error) {
         throw new Error(handleApiError(error))
@@ -57,22 +56,22 @@ export function useApiMutation<T, TVariables = unknown>(
       queryClient.invalidateQueries({ queryKey: [endpoint] })
       options?.onSuccess?.(data.data)
     },
-    onError: (error: Error) => {
+    onError: (error: TError) => {
       options?.onError?.(error)
     }
   })
 }
 
-export function useApiUpdate<T, TVariables = unknown>(
+export function useApiUpdate<TData = unknown, TError = Error, TVariables = void, TContext = unknown>(
   endpoint: string,
-  options?: UseCrudOptions<T>
-) {
+  options?: UseCrudOptions<TData>
+): UseMutationResult<BaseResponse<TData>, TError, TVariables, TContext> {
   const queryClient = useQueryClient()
 
-  return useMutation({
-    mutationFn: async ({ id, ...data }: TVariables & { id: string | number }) => {
+  return useMutation<BaseResponse<TData>, TError, TVariables, TContext>({
+    mutationFn: async (variables: TVariables) => {
       try {
-        const response = await apiClient.put<BaseResponse<T>>(`${endpoint}/${id}`, data)
+        const response = await apiClient.put<BaseResponse<TData>>(endpoint, variables)
         return response.data
       } catch (error) {
         throw new Error(handleApiError(error))
@@ -82,13 +81,16 @@ export function useApiUpdate<T, TVariables = unknown>(
       queryClient.invalidateQueries({ queryKey: [endpoint] })
       options?.onSuccess?.(data.data)
     },
-    onError: (error: Error) => {
+    onError: (error: TError) => {
       options?.onError?.(error)
     }
   })
 }
 
-export function useApiDelete<T>(endpoint: string, options?: UseCrudOptions<T>) {
+export function useApiDelete<TData = unknown, TError = Error, TVariables = void, TContext = unknown>(
+  endpoint: string,
+  options?: UseCrudOptions<TData>
+): UseMutationResult<BaseResponse<TData>, TError, string | number, TContext> {
   const queryClient = useQueryClient()
 
   return useMutation({
@@ -108,4 +110,10 @@ export function useApiDelete<T>(endpoint: string, options?: UseCrudOptions<T>) {
       options?.onError?.(error)
     }
   })
+}
+function handleApiError(error: any): string | undefined {
+  if (error instanceof Error) {
+    return error.message
+  }
+  return 'An unexpected error occurred.'
 }

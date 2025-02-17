@@ -1,17 +1,10 @@
-// components/settings/profile-section.tsx
 'use client'
 
 import { Button } from '@/components/button'
-import { Card } from '@/components/card'
+import { Card } from '@/components/core/Card/card'
 import { Input } from '@/components/input'
 import React, { useState } from 'react'
-import { toast } from 'sonner'
-
-// components/settings/profile-section.tsx
-
-// components/settings/profile-section.tsx
-
-// components/settings/profile-section.tsx
+import { toast } from 'snackbar'
 
 // Define the skeleton component
 function ProfileSectionSkeleton() {
@@ -70,7 +63,9 @@ export function ProfileSection() {
                 name="firstName"
                 type="text"
                 value={formData.firstName}
-                onChange={e => setFormData({ ...formData, firstName: e.target.value })}
+                onChange={e => {
+                  setFormData({ ...formData, firstName: e.target.value })
+                }}
                 disabled={!isEditing}
                 className="mt-1"
               />
@@ -85,7 +80,9 @@ export function ProfileSection() {
                 name="lastName"
                 type="text"
                 value={formData.lastName}
-                onChange={e => setFormData({ ...formData, lastName: e.target.value })}
+                onChange={e => {
+                  setFormData({ ...formData, lastName: e.target.value })
+                }}
                 disabled={!isEditing}
                 className="mt-1"
               />
@@ -103,13 +100,24 @@ export function ProfileSection() {
         <div className="flex justify-end space-x-3">
           {isEditing ? (
             <>
-              <Button type="button" variant="outline" onClick={() => setIsEditing(false)}>
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => {
+                  setIsEditing(false)
+                }}
+              >
                 Cancel
               </Button>
               <Button type="submit">Save Changes</Button>
             </>
           ) : (
-            <Button type="button" onClick={() => setIsEditing(true)}>
+            <Button
+              type="button"
+              onClick={() => {
+                setIsEditing(true)
+              }}
+            >
               Edit Profile
             </Button>
           )}

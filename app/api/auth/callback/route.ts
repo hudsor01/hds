@@ -1,5 +1,10 @@
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/lib/supabase'
+import { AuthError } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
+
+function isAuthError(error: unknown): error is AuthError {
+  return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
+}
 
 export async function GET(request: Request) {
   try {
@@ -11,7 +16,6 @@ export async function GET(request: Request) {
       throw new Error('No code provided')
     }
 
-    const supabase = createClient()
     const { error } = await supabase.auth.exchangeCodeForSession(code)
 
     if (error) {
@@ -21,8 +25,13 @@ export async function GET(request: Request) {
     return NextResponse.redirect(new URL(next, requestUrl))
   } catch (error) {
     console.error('Auth callback error:', error)
-    return NextResponse.redirect(
-      new URL('/auth/sign-in?error=Could not authenticate user', request.url)
-    )
+
+    const errorMessage = isAuthError(error)
+      ? error.message
+      : error instanceof Error
+        ? error.message
+        : 'Could not authenticate user'
+
+    return NextResponse.redirect(new URL(`/auth/sign-in?error=${encodeURIComponent(errorMessage)}`, request.url))
   }
 }

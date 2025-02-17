@@ -1,14 +1,12 @@
 'use client'
 
 import * as React from 'react'
-import { VerificationWrapper } from '@/components/auth/verification-wrapper'
-import { VerificationForm } from '@/components/auth/verification-form'
+import { VerificationWrapper } from '@/components/features/auth/verification-wrapper'
+import { VerificationForm } from '@/components/features/auth/verification-form'
 import { Email as EmailIcon } from '@mui/icons-material'
-import { createClient } from '@/utils/supabase/client'
+import { supabase } from '@/lib/supabase/auth'
 
 export default function EmailAdditionPage() {
-  const supabase = createClient()
-
   const handleVerification = async (email: string) => {
     const { error } = await supabase.auth.updateUser({ email })
     if (error) throw error

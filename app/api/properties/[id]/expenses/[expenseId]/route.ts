@@ -1,10 +1,7 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { NextResponse } from 'next/server'
 
-export async function GET(
-  request: Request,
-  { params }: { params: { id: string; expenseId: string } }
-) {
+export async function GET(request: Request, { params }: { params: { id: string; expenseId: string } }) {
   try {
     const supabase = supabase()
 
@@ -41,10 +38,7 @@ export async function GET(
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: { id: string; expenseId: string } }
-) {
+export async function PATCH(request: Request, { params }: { params: { id: string; expenseId: string } }) {
   try {
     const supabase = supabase()
     const json = await request.json()
@@ -86,18 +80,11 @@ export async function PATCH(
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: { id: string; expenseId: string } }
-) {
+export async function DELETE(request: Request, { params }: { params: { id: string; expenseId: string } }) {
   try {
     const supabase = supabase()
 
-    const { error } = await supabase
-      .from('expenses')
-      .delete()
-      .eq('id', params.expenseId)
-      .eq('property_id', params.id)
+    const { error } = await supabase.from('expenses').delete().eq('id', params.expenseId).eq('property_id', params.id)
 
     if (error) throw error
 

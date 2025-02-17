@@ -23,11 +23,7 @@ export function StatsCard({ icon: Icon, label, value, trend }: StatsCardProps): 
         <p className="text-muted-foreground text-sm">{label}</p>
         <div className="flex items-baseline space-x-2">
           <h3 className="text-2xl font-semibold">{value}</h3>
-          {trend && (
-            <span className={`text-sm ${trend.positive ? 'text-green-600' : 'text-red-600'}`}>
-              {trend.value}
-            </span>
-          )}
+          {trend && <span className={`text-sm ${trend.positive ? 'text-green-600' : 'text-red-600'}`}>{trend.value}</span>}
         </div>
       </div>
     </MuiCard>

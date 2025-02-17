@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { FinancialSummary } from '@/components/dashboard/financial-summary'
 import { MaintenanceTracker } from '@/components/dashboard/maintenance-tracker'
 import { fetchDashboardData } from '@/lib/api/dashboard'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast } from '@/hooks/use-toast'
 
 export default function DashboardPage() {
   const [data, setData] = useState({
@@ -31,7 +31,7 @@ export default function DashboardPage() {
         toast({
           title: 'Error',
           description: 'Failed to load dashboard data. Please try again.',
-          variant: 'destructive',
+          variant: 'destructive'
         })
       } finally {
         setIsLoading(false)
@@ -43,8 +43,8 @@ export default function DashboardPage() {
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-full">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      <div className="flex h-full items-center justify-center">
+        <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
       </div>
     )
   }
@@ -53,9 +53,9 @@ export default function DashboardPage() {
     <div className="space-y-8">
       <h1 className="text-3xl font-bold">Dashboard Overview</h1>
       <FinancialSummary {...data.financialData} />
-      <MaintenanceTracker 
+      <MaintenanceTracker
         requests={data.maintenanceRequests}
-        onViewRequest={(request) => {
+        onViewRequest={request => {
           // Handle view request
         }}
       />

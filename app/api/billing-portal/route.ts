@@ -1,5 +1,5 @@
 import { getStripe } from '../../../utils/stripe/client'
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { NextResponse } from 'next/server'
 
 type SessionWithUser = Session & {

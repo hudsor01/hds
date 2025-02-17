@@ -25,10 +25,7 @@ export async function GET(request: NextRequest) {
       case 'properties':
         results = await prisma.property.findMunknown({
           where: {
-            OR: [
-              { name: { contains: query, mode: 'insensitive' } },
-              { address: { contains: query, mode: 'insensitive' } }
-            ]
+            OR: [{ name: { contains: query, mode: 'insensitive' } }, { address: { contains: query, mode: 'insensitive' } }]
           },
           take: limit,
           skip: (page - 1) * limit,
@@ -41,10 +38,7 @@ export async function GET(request: NextRequest) {
       case 'tenants':
         results = await prisma.tenant.findMunknown({
           where: {
-            OR: [
-              { name: { contains: query, mode: 'insensitive' } },
-              { email: { contains: query, mode: 'insensitive' } }
-            ]
+            OR: [{ name: { contains: query, mode: 'insensitive' } }, { email: { contains: query, mode: 'insensitive' } }]
           },
           take: limit,
           skip: (page - 1) * limit,
@@ -61,10 +55,7 @@ export async function GET(request: NextRequest) {
       case 'maintenance':
         results = await prisma.maintenanceRequest.findMunknown({
           where: {
-            OR: [
-              { description: { contains: query, mode: 'insensitive' } },
-              { status: { contains: query, mode: 'insensitive' } }
-            ]
+            OR: [{ description: { contains: query, mode: 'insensitive' } }, { status: { contains: query, mode: 'insensitive' } }]
           },
           take: limit,
           skip: (page - 1) * limit,

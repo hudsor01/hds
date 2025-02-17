@@ -1,17 +1,6 @@
-export type UserRole =
-  | 'SUPER_ADMIN'
-  | 'ADMIN'
-  | 'PROPERTY_MANAGER'
-  | 'PROPERTY_OWNER'
-  | 'MAINTENANCE'
-  | 'TENANT'
-  | 'USER'
+export type UserRole = 'SUPER_ADMIN' | 'ADMIN' | 'PROPERTY_MANAGER' | 'PROPERTY_OWNER' | 'MAINTENANCE' | 'TENANT' | 'USER'
 
-export function checkRole(
-  userRole: string | null | undefined,
-  requiredRole: string,
-  allowHigherRoles = true
-): boolean {
+export function checkRole(userRole: string | null | undefined, requiredRole: string, allowHigherRoles = true): boolean {
   if (!userRole) return false
 
   const roleHierarchy: Record<string, number> = {

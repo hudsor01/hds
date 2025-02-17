@@ -1,4 +1,3 @@
-import { createClient } from '@/utils/supabase/server'
 import { Database } from '@/types/supabase'
 
 export type { Database }

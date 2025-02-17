@@ -1,13 +1,8 @@
-// components/dashboard/revenue-chart.tsx
 'use client'
 
-import { Card } from '@/components/card'
+import { Card } from '@/components/core/Card/card'
 import { useQuery } from '@tanstack/react-query'
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-
-// components/dashboard/revenue-chart.tsx
-
-// components/dashboard/revenue-chart.tsx
 
 export function RevenueChart() {
   const { data: chartData, isLoading } = useQuery({

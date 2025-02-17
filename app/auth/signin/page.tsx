@@ -1,9 +1,9 @@
 import { signIn } from '@/app/auth/actions'
-import { createClient } from '@/utils/supabase/server'
+
 import { redirect } from 'next/navigation'
 import { Button } from '@/components/button'
 import { Input } from '@/components/input'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/card'
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/core/Card/card'
 import Link from 'next/link'
 
 export default async function SignInPage({ searchParams }: { searchParams: { error: string; message: string } }) {
@@ -25,12 +25,12 @@ export default async function SignInPage({ searchParams }: { searchParams: { err
         </CardHeader>
         <form action={signIn}>
           <CardContent className="space-y-4">
-            {searchParams?.error && (
+            {searchParams.error && (
               <div className="bg-destructive/15 rounded-md p-3">
                 <div className="text-destructive text-sm">{searchParams.error}</div>
               </div>
             )}
-            {searchParams?.message && (
+            {searchParams.message && (
               <div className="bg-primary/15 rounded-md p-3">
                 <div className="text-primary text-sm">{searchParams.message}</div>
               </div>

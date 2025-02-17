@@ -19,7 +19,7 @@ if (process.env.NODE_ENV !== 'production') {
 }
 
 // Supabase Client Initialization
-export const supabase = createClient<Database>(process.env['NEXT_PUBLIC_SUPABASE_URL']!, process.env['NEXT_PUBLIC_SUPABASE_KEY']!)
+export const supabase = createClient<Database>(process.env['NEXT_PUBLIC_SUPABASE_URL'], process.env['NEXT_PUBLIC_SUPABASE_KEY']!)
 
 // Error Handling
 const mapPrismaErrorToHttpStatus = (error: Prisma.PrismaClientKnownRequestError): number => {

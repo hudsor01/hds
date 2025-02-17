@@ -4,33 +4,22 @@ import { createBrowserClient } from '@supabase/ssr'
 import { type SupabaseClient } from '@supabase/supabase-js'
 import { useEffect, useState, useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import type { User, Session, AuthChangeEvent } from '@supabase/supabase-js'
+import { type Profile, type AuthUser } from '@/types/auth'
+import type { Session, AuthChangeEvent } from '@supabase/supabase-js'
 
-interface Profile {
-  role?: string
+declare module '@supabase/supabase-js' {
+  interface User {
+    role?: string
+  }
 }
 
-interface AuthUser extends User {
-  role?: string
-}
-
-interface AuthContextType {
-  user: AuthUser | null
-  loading: boolean
-  signOut: () => Promise<void>
-}
-
-export function useAuth(): AuthContextType {
+export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null)
   const [loading, setLoading] = useState(true)
   const router = useRouter()
 
   const supabaseClient: SupabaseClient = useMemo(
-    () =>
-      createBrowserClient(
-        process.env.NEXT_PUBLIC_SUPABASE_URL!,
-        process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-      ),
+    () => createBrowserClient(process.env['NEXT_PUBLIC_SUPABASE_URL']!, process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!),
     []
   )
 
@@ -41,13 +30,11 @@ export function useAuth(): AuthContextType {
           data: { user }
         } = await supabaseClient.auth.getUser()
         if (user) {
-          const { data: profile } = (await supabaseClient
-            .from('profiles')
-            .select('role')
-            .eq('id', user.id)
-            .single()) as { data: Profile | null }
+          const { data: profile } = (await supabaseClient.from('profiles').select('role').eq('id', user.id).single()) as {
+            data: Profile | null
+          }
 
-          setUser({ ...user, role: profile?.role })
+          setUser({ ...user, role: profile?.role ?? '' })
         }
       } catch (error) {
         console.error('Error getting initial session:', error)
@@ -60,25 +47,25 @@ export function useAuth(): AuthContextType {
 
     const {
       data: { subscription }
-    } = supabaseClient.auth.onAuthStateChange(
-      async (_event: AuthChangeEvent, session: Session | null) => {
-        if (session?.user) {
-          const { data: profile } = (await supabaseClient
-            .from('profiles')
-            .select('role')
-            .eq('id', session.user.id)
-            .single()) as { data: Profile | null }
-
-          setUser({ ...session.user, role: profile?.role })
-        } else {
-          setUser(null)
+    } = supabaseClient.auth.onAuthStateChange(async (_event: AuthChangeEvent, session: Session | null) => {
+      if (session?.user) {
+        const { data: profile } = (await supabaseClient.from('profiles').select('role').eq('id', session.user.id).single()) as {
+          data: Profile | null
         }
-        setLoading(false)
+
+        setUser({ ...session.user, role: profile?.role ?? '' })
+      } else {
+        setUser(null)
       }
-    )
+      setLoading(false)
+    })
 
     return () => {
-      subscription.unsubscribe()
+      if (subscription && typeof subscription.unsubscribe === 'function') {
+        subscription.unsubscribe()
+      } else {
+        console.warn('Subscription does not support unsubscribe.')
+      }
     }
   }, [supabaseClient, router])
 

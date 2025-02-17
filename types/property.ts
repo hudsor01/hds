@@ -33,14 +33,14 @@ export enum PropertyType {
   MULTI_FAMILY = 'MULTI_FAMILY',
   APARTMENT = 'APARTMENT',
   COMMERCIAL = 'COMMERCIAL',
-  INDUSTRIAL = 'INDUSTRIAL',
+  INDUSTRIAL = 'INDUSTRIAL'
 }
 
 export enum PropertyStatus {
   ACTIVE = 'ACTIVE',
   INACTIVE = 'INACTIVE',
   MAINTENANCE = 'MAINTENANCE',
-  VACANT = 'VACANT',
+  VACANT = 'VACANT'
 }
 
 export interface CreatePropertyInput {

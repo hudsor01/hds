@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -29,11 +29,7 @@ export async function GET(req: NextRequest) {
     const status = searchParams.get('status')
     const service = searchParams.get('service')
 
-    let query = supabase
-      .from('vendors')
-      .select('*')
-      .eq('user_id', userId)
-      .order('compunknown_name', { ascending: true })
+    let query = supabase.from('vendors').select('*').eq('user_id', userId).order('compunknown_name', { ascending: true })
 
     if (status) {
       query = query.eq('status', status)
@@ -204,10 +200,7 @@ export async function DELETE(req: NextRequest) {
       .limit(1)
 
     if (activeWorkOrders && activeWorkOrders.length > 0) {
-      return NextResponse.json(
-        { error: 'Cannot delete vendor with active work orders' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Cannot delete vendor with active work orders' }, { status: 400 })
     }
 
     const { error } = await supabase.from('vendors').delete().eq('id', id).eq('user_id', userId)

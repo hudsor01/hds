@@ -116,7 +116,9 @@ export default function VendorsPage() {
         <Button
           variant="contained"
           startIcon={<Plus size={20} />}
-          onClick={() => setOpen(true)}
+          onClick={() => {
+            setOpen(true)
+          }}
           sx={{
             background: 'linear-gradient(45deg, #007FFF 30%, #0059B2 90%)',
             '&:hover': {

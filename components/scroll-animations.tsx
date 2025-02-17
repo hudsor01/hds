@@ -20,13 +20,7 @@ export function ScrollAnimatedSection({ children, className }: ScrollAnimatedSec
   }, [controls, isInView])
 
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={controls}
-      transition={{ duration: 0.5 }}
-      className={className}
-    >
+    <motion.div ref={ref} initial={{ opacity: 0, y: 50 }} animate={controls} transition={{ duration: 0.5 }} className={className}>
       {children}
     </motion.div>
   )

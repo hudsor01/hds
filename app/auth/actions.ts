@@ -1,15 +1,30 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
+import { supabase } from '@/lib/supabase'
 import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
-import { cookies } from 'next/headers'
 import { signInSchema, signUpSchema } from '@/lib/validations/auth'
+import { z } from 'zod'
+
+const emailSchema = z.string().email()
+const passwordSchema = z.string().min(6)
+
+function getFormValue(formData: FormData, key: string, schema: z.ZodType<string>): string {
+  const value = formData.get(key)
+  if (typeof value !== 'string') {
+    return redirect(`/auth/sign-in?error=${encodeURIComponent('Invalid form data')}`)
+  }
+  const result = schema.safeParse(value)
+  if (!result.success) {
+    return redirect(`/auth/sign-in?error=${encodeURIComponent(result.error.errors[0]?.message)}`)
+  }
+  return result.data
+}
 
 export async function signIn(formData: FormData) {
   const validationResult = signInSchema.safeParse({
     email: formData.get('email'),
-    password: formData.get('password'),
+    password: formData.get('password')
   })
 
   if (!validationResult.success) {
@@ -17,11 +32,9 @@ export async function signIn(formData: FormData) {
   }
 
   const { email, password } = validationResult.data
-  const supabase = createClient()
-
   const { error } = await supabase.auth.signInWithPassword({
     email,
-    password,
+    password
   })
 
   if (error) {
@@ -36,7 +49,7 @@ export async function signUp(formData: FormData) {
   const validationResult = signUpSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
-    confirmPassword: formData.get('confirmPassword'),
+    confirmPassword: formData.get('confirmPassword')
   })
 
   if (!validationResult.success) {
@@ -44,14 +57,12 @@ export async function signUp(formData: FormData) {
   }
 
   const { email, password } = validationResult.data
-  const supabase = createClient()
-
   const { error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-    },
+      emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+    }
   })
 
   if (error) {
@@ -62,23 +73,15 @@ export async function signUp(formData: FormData) {
 }
 
 export async function signOut() {
-  const supabase = createClient()
   await supabase.auth.signOut()
-  
   revalidatePath('/', 'layout')
   return redirect('/')
 }
 
 export async function resetPassword(formData: FormData) {
-  const email = formData.get('email') as string
-
-  if (!email) {
-    return redirect('/auth/reset-password?error=Email is required')
-  }
-
-  const supabase = createClient()
+  const email = getFormValue(formData, 'email', emailSchema)
   const { error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`,
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`
   })
 
   if (error) {
@@ -89,14 +92,13 @@ export async function resetPassword(formData: FormData) {
 }
 
 export async function updatePassword(formData: FormData) {
-  const password = formData.get('password') as string
-  const confirmPassword = formData.get('confirmPassword') as string
+  const password = getFormValue(formData, 'password', passwordSchema)
+  const confirmPassword = getFormValue(formData, 'confirmPassword', passwordSchema)
 
   if (password !== confirmPassword) {
     return redirect('/auth/update-password?error=Passwords do not match')
   }
 
-  const supabase = createClient()
   const { error } = await supabase.auth.updateUser({ password })
 
   if (error) {
@@ -104,4 +106,17 @@ export async function updatePassword(formData: FormData) {
   }
 
   return redirect('/auth/sign-in?message=Password updated successfully')
+}
+
+interface RedirectInfo {
+  path: string
+  error?: string
+  message?: string
+}
+
+function createRedirectURL({ path, error, message }: RedirectInfo): string {
+  const url = new URL(path, process.env.NEXT_PUBLIC_SITE_URL)
+  if (error) url.searchParams.set('error', error)
+  if (message) url.searchParams.set('message', message)
+  return url.toString()
 }

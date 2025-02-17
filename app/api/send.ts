@@ -13,7 +13,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
   })
 
   if (error) {
-    return res.status(400).json(error)
+    res.status(400).json(error)
+    return
   }
 
   res.status(200).json(data)

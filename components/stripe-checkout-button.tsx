@@ -4,21 +4,13 @@ import { Button } from '@mui/material'
 import { loadStripe } from '@stripe/stripe-js'
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { useSession } from '../app/auth/lib/auth/config'
+import { type StripeCheckoutButtonProps } from '@/types/stripe'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!)
+const stripePromise = loadStripe(process.env['NEXT_PUBLIC_STRIPE_PUBLIC_KEY']!)
 
-interface StripeCheckoutButtonProps {
-  priceId: string | null
-  variant?: 'text' | 'outlined' | 'contained'
-  size?: 'small' | 'medium' | 'large'
-}
-
-export function StripeCheckoutButton({
-  priceId,
-  variant = 'contained',
-  size = 'large'
-}: StripeCheckoutButtonProps) {
-  const { data: session } = useSession()
+export function StripeCheckoutButton({ priceId, variant = 'contained', size = 'large' }: StripeCheckoutButtonProps) {
+  const session = useSession()
   const [loading, setLoading] = useState(false)
 
   const isDisabled = loading || (!priceId && Boolean(session)) || (Boolean(priceId) && !session)
@@ -73,8 +65,7 @@ export function StripeCheckoutButton({
       onClick={handleCheckout}
       disabled={isDisabled}
       sx={{
-        background:
-          variant === 'contained' ? 'linear-gradient(45deg, #635bff 0%, #a259ff 100%)' : undefined,
+        background: variant === 'contained' ? 'linear-gradient(45deg, #635bff 0%, #a259ff 100%)' : undefined,
         fontWeight: 600,
         '&:hover': {
           opacity: 0.9

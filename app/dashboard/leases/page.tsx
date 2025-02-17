@@ -1,20 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { LeaseForm } from '@/components/leases/lease-form'
+import { LeaseForm } from '@/components/features/leases/lease-form'
 import { LeaseTable } from '@/components/leases/lease-table'
-import { Button } from '@/components/ui/button'
-import { Plus } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Button } from '@/components/button/button'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/core/dialog/dialog'
 import { Lease, CreateLeaseInput } from '@/types/lease'
-import { useToast } from '@/components/ui/use-toast'
-import { createClient } from '@/utils/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 export default function LeasesPage() {
   const [leases, setLeases] = useState<Lease[]>([])
@@ -33,11 +25,13 @@ export default function LeasesPage() {
       setIsLoading(true)
       const { data, error } = await supabase
         .from('leases')
-        .select(`
+        .select(
+          `
           *,
           property:properties(id, name, address),
           tenant:tenants(id, first_name, last_name, email)
-        `)
+        `
+        )
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -48,7 +42,7 @@ export default function LeasesPage() {
       toast({
         title: 'Error',
         description: 'Failed to fetch leases. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setIsLoading(false)
@@ -59,33 +53,37 @@ export default function LeasesPage() {
     try {
       const { data: newLease, error } = await supabase
         .from('leases')
-        .insert([{
-          ...data,
-          status: 'ACTIVE',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }])
-        .select(`
+        .insert([
+          {
+            ...data,
+            status: 'ACTIVE',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          }
+        ])
+        .select(
+          `
           *,
           property:properties(id, name, address),
           tenant:tenants(id, first_name, last_name, email)
-        `)
+        `
+        )
         .single()
 
       if (error) throw error
 
-      setLeases((prev) => [newLease, ...prev])
+      setLeases(prev => [newLease, ...prev])
       setIsDialogOpen(false)
       toast({
         title: 'Success',
-        description: 'Lease created successfully.',
+        description: 'Lease created successfully.'
       })
     } catch (error) {
       console.error('Error creating lease:', error)
       toast({
         title: 'Error',
         description: 'Failed to create lease. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -98,57 +96,54 @@ export default function LeasesPage() {
         .from('leases')
         .update({
           ...data,
-          updated_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         })
         .eq('id', selectedLease.id)
-        .select(`
+        .select(
+          `
           *,
           property:properties(id, name, address),
           tenant:tenants(id, first_name, last_name, email)
-        `)
+        `
+        )
         .single()
 
       if (error) throw error
 
-      setLeases((prev) =>
-        prev.map((lease) => (lease.id === selectedLease.id ? updatedLease : lease))
-      )
+      setLeases(prev => prev.map(lease => (lease.id === selectedLease.id ? updatedLease : lease)))
       setIsDialogOpen(false)
       setSelectedLease(null)
       toast({
         title: 'Success',
-        description: 'Lease updated successfully.',
+        description: 'Lease updated successfully.'
       })
     } catch (error) {
       console.error('Error updating lease:', error)
       toast({
         title: 'Error',
         description: 'Failed to update lease. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
 
   async function handleDelete(leaseId: string) {
     try {
-      const { error } = await supabase
-        .from('leases')
-        .delete()
-        .eq('id', leaseId)
+      const { error } = await supabase.from('leases').delete().eq('id', leaseId)
 
       if (error) throw error
 
-      setLeases((prev) => prev.filter((lease) => lease.id !== leaseId))
+      setLeases(prev => prev.filter(lease => lease.id !== leaseId))
       toast({
         title: 'Success',
-        description: 'Lease deleted successfully.',
+        description: 'Lease deleted successfully.'
       })
     } catch (error) {
       console.error('Error deleting lease:', error)
       toast({
         title: 'Error',
         description: 'Failed to delete lease. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -157,20 +152,24 @@ export default function LeasesPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Leases</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>
+        <Button
+          onClick={() => {
+            setIsDialogOpen(true)
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Lease
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="flex h-64 items-center justify-center">
+          <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
         </div>
       ) : (
         <LeaseTable
           leases={leases}
-          onEdit={(lease) => {
+          onEdit={lease => {
             setSelectedLease(lease)
             setIsDialogOpen(true)
           }}
@@ -178,28 +177,26 @@ export default function LeasesPage() {
         />
       )}
 
-      <Dialog 
-        open={isDialogOpen} 
-        onOpenChange={(open) => {
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={open => {
           setIsDialogOpen(open)
           if (!open) setSelectedLease(null)
         }}
       >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>
-              {selectedLease ? 'Edit Lease' : 'Add Lease'}
-            </DialogTitle>
+            <DialogTitle>{selectedLease ? 'Edit Lease' : 'Add Lease'}</DialogTitle>
             <DialogDescription>
-              {selectedLease 
-                ? 'Update the lease details below.'
-                : 'Fill in the lease details below to add a new lease.'}
+              {selectedLease ? 'Update the lease details below.' : 'Fill in the lease details below to add a new lease.'}
             </DialogDescription>
           </DialogHeader>
           <LeaseForm
             initialData={selectedLease || undefined}
             onSubmit={selectedLease ? handleUpdate : handleCreate}
-            onCancel={() => setIsDialogOpen(false)}
+            onCancel={() => {
+              setIsDialogOpen(false)
+            }}
           />
         </DialogContent>
       </Dialog>

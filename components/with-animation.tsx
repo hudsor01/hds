@@ -2,7 +2,7 @@
 
 import { type ComponentType } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useAnimation } from '@/components/animation-provider'
+import { useAnimation } from '@/components/providers/animation-provider'
 import { fadeInOut, slideDown, modalVariants } from '@/lib/animation-variants'
 
 type AnimationType = 'fade' | 'slide' | 'modal'
@@ -19,10 +19,7 @@ const variantsMap = {
   modal: modalVariants
 }
 
-export function withAnimation<P extends object>(
-  WrappedComponent: ComponentType<P>,
-  defaultType: AnimationType = 'fade'
-) {
+export function withAnimation<P extends object>(WrappedComponent: ComponentType<P>, defaultType: AnimationType = 'fade') {
   return function WithAnimationComponent({
     animationType = defaultType,
     customVariants,
@@ -44,13 +41,7 @@ export function withAnimation<P extends object>(
 
     return (
       <AnimatePresence mode="wait">
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          variants={variants}
-          onAnimationComplete={onAnimationComplete}
-        >
+        <motion.div initial="hidden" animate="visible" exit="exit" variants={variants} onAnimationComplete={onAnimationComplete}>
           <WrappedComponent {...(props as P)} />
         </motion.div>
       </AnimatePresence>

@@ -3,17 +3,11 @@ import { redirect } from 'next/navigation'
 import { Team } from '@/lib/db/schema'
 import { getTeamByStripeCustomerId, getUser, updateTeamSubscription } from '@/lib/db/queries'
 
-export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+export const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2025-01-27.acacia'
 })
 
-export async function createCheckoutSession({
-  team,
-  priceId
-}: {
-  team: Team | null
-  priceId: string
-}) {
+export async function createCheckoutSession({ team, priceId }: { team: Team | null; priceId: string }) {
   const user = await getUser()
 
   if (!team || !user) {
@@ -158,7 +152,6 @@ export async function getStripeProducts() {
     id: product.id,
     name: product.name,
     description: product.description,
-    defaultPriceId:
-      typeof product.default_price === 'string' ? product.default_price : product.default_price?.id
+    defaultPriceId: typeof product.default_price === 'string' ? product.default_price : product.default_price?.id
   }))
 }

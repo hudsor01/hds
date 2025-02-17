@@ -1,4 +1,4 @@
-import { User, Session } from '@supabase/supabase-js'
+import { type User, type Session } from '@supabase/supabase-js'
 
 export interface AuthError {
   message: string
@@ -34,4 +34,17 @@ export interface UpdatePasswordCredentials {
 export interface AuthResponse<T = any> {
   data: T | null
   error: AuthError | null
+}
+
+export interface Profile {
+  role: string
+}
+
+export interface AuthUser extends User {
+  role: string
+}
+
+export interface UseSessionReturn {
+  session: Session | null
+  loading: boolean
 }

@@ -7,7 +7,7 @@ import { cookies } from 'next/headers'
 async function createClient() {
   const cookieStore = await cookies()
 
-  return createServerClient(process.env['NEXT_PUBLIC_SUPABASE_URL']!, process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY']!, {
+  return createServerClient(process.env['NEXT_PUBLIC_SUPABASE_URL'], process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'], {
     cookies: {
       get(name: string) {
         return cookieStore.get(name)?.value
@@ -69,7 +69,7 @@ export async function signup(formData: FormData) {
       throw error
     }
 
-    if (data?.user) {
+    if (data.user) {
       return redirect('/verify')
     }
 

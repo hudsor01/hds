@@ -1,8 +1,7 @@
 'use client'
 
-import React, { ReactElement } from 'react'
-import { theme } from './theme'
-import { Box, CssBaseline, ThemeProvider } from '@mui/material'
+import React from 'react'
+import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 import { Roboto } from 'next/font/google'
 
 const roboto = Roboto({
@@ -11,24 +10,21 @@ const roboto = Roboto({
   display: 'swap'
 })
 
+const theme = createTheme()
+
 export const metadata = {
   title: 'Page Not Found - Hudson Digital Solutions',
   description: 'The requested page could not be found'
 }
 
-export default function ErrorLayout({
-  children
-}: {
-  children: React.ReactNode
-}): React.ReactElement {
+export default function ErrorLayout({ children }: { children: React.ReactNode }): React.ReactElement {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Box
         sx={{
           minHeight: '100vh',
-          background:
-            'linear-gradient(180deg, rgba(0, 127, 255, 0.05) 0%, rgba(0, 89, 178, 0.05) 100%)',
+          background: 'linear-gradient(180deg, rgba(0, 127, 255, 0.05) 0%, rgba(0, 89, 178, 0.05) 100%)',
           display: 'flex',
           flexDirection: 'column'
         }}

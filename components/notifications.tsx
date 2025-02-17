@@ -1,14 +1,6 @@
 'use client'
 
-import {
-  Box,
-  FormControl,
-  FormControlLabel,
-  FormGroup,
-  FormHelperText,
-  Switch,
-  Typography
-} from '@mui/material'
+import { Box, FormControl, FormControlLabel, FormGroup, FormHelperText, Switch, Typography } from '@mui/material'
 import { useState } from 'react'
 
 export function NotificationSettings() {
@@ -29,17 +21,15 @@ export function NotificationSettings() {
     }
   })
 
-  const handleChange =
-    (category: keyof typeof settings, setting: string) =>
-    (event: React.ChangeEvent<HTMLInputElement>) => {
-      setSettings(prev => ({
-        ...prev,
-        [category]: {
-          ...prev[category],
-          [setting]: event.target.checked
-        }
-      }))
-    }
+  const handleChange = (category: keyof typeof settings, setting: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSettings(prev => ({
+      ...prev,
+      [category]: {
+        ...prev[category],
+        [setting]: event.target.checked
+      }
+    }))
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -58,30 +48,15 @@ export function NotificationSettings() {
           <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.email.marketing}
-                    onChange={handleChange('email', 'marketing')}
-                  />
-                }
+                control={<Switch checked={settings.email.marketing} onChange={handleChange('email', 'marketing')} />}
                 label="Marketing emails"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.email.security}
-                    onChange={handleChange('email', 'security')}
-                  />
-                }
+                control={<Switch checked={settings.email.security} onChange={handleChange('email', 'security')} />}
                 label="Security alerts"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.email.updates}
-                    onChange={handleChange('email', 'updates')}
-                  />
-                }
+                control={<Switch checked={settings.email.updates} onChange={handleChange('email', 'updates')} />}
                 label="Product updates"
               />
             </FormGroup>
@@ -96,30 +71,15 @@ export function NotificationSettings() {
           <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.push.newMessages}
-                    onChange={handleChange('push', 'newMessages')}
-                  />
-                }
+                control={<Switch checked={settings.push.newMessages} onChange={handleChange('push', 'newMessages')} />}
                 label="New messages"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.push.newActivity}
-                    onChange={handleChange('push', 'newActivity')}
-                  />
-                }
+                control={<Switch checked={settings.push.newActivity} onChange={handleChange('push', 'newActivity')} />}
                 label="Activity updates"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.push.reminders}
-                    onChange={handleChange('push', 'reminders')}
-                  />
-                }
+                control={<Switch checked={settings.push.reminders} onChange={handleChange('push', 'reminders')} />}
                 label="Reminders"
               />
             </FormGroup>
@@ -134,21 +94,11 @@ export function NotificationSettings() {
           <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.desktop.alerts}
-                    onChange={handleChange('desktop', 'alerts')}
-                  />
-                }
+                control={<Switch checked={settings.desktop.alerts} onChange={handleChange('desktop', 'alerts')} />}
                 label="Desktop alerts"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.desktop.sounds}
-                    onChange={handleChange('desktop', 'sounds')}
-                  />
-                }
+                control={<Switch checked={settings.desktop.sounds} onChange={handleChange('desktop', 'sounds')} />}
                 label="Notification sounds"
               />
             </FormGroup>

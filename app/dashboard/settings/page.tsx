@@ -1,14 +1,13 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/core/Card/card'
+import { Button } from '@/components/button'
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
 import { Switch } from '@/components/ui/switch'
-import { useToast } from '@/components/ui/use-toast'
+import { useToast } from '@/hooks/use-toast'
 import { Settings, NotificationsSetting } from '@mui/icons-material'
-import { createClient } from '@/utils/supabase/client'
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false)
@@ -18,7 +17,7 @@ export default function SettingsPage() {
   const [settings, setSettings] = useState({
     emailNotifications: true,
     pushNotifications: false,
-    marketingEmails: false,
+    marketingEmails: false
   })
 
   async function handleSettingsUpdate(event: React.FormEvent<HTMLFormElement>) {
@@ -26,28 +25,26 @@ export default function SettingsPage() {
     setIsLoading(true)
 
     try {
-      const { error } = await supabase
-        .from('user_settings')
-        .upsert([
-          {
-            user_id: (await supabase.auth.getUser()).data.user?.id,
-            ...settings,
-            updated_at: new Date().toISOString(),
-          }
-        ])
+      const { error } = await supabase.from('user_settings').upsert([
+        {
+          user_id: (await supabase.auth.getUser()).data.user?.id,
+          ...settings,
+          updated_at: new Date().toISOString()
+        }
+      ])
 
       if (error) throw error
 
       toast({
         title: 'Settings updated',
-        description: 'Your settings have been saved successfully.',
+        description: 'Your settings have been saved successfully.'
       })
     } catch (error) {
       console.error('Error updating settings:', error)
       toast({
         title: 'Error',
         description: 'Failed to update settings. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setIsLoading(false)
@@ -67,9 +64,7 @@ export default function SettingsPage() {
               <Settings className="h-5 w-5" />
               <CardTitle>Account Settings</CardTitle>
             </div>
-            <CardDescription>
-              Manage your account settings and preferences
-            </CardDescription>
+            <CardDescription>Manage your account settings and preferences</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSettingsUpdate} className="space-y-6">
@@ -82,14 +77,12 @@ export default function SettingsPage() {
                   <Switch
                     id="emailNotifications"
                     checked={settings.emailNotifications}
-                    onCheckedChange={(checked) =>
-                      setSettings((prev) => ({ ...prev, emailNotifications: checked }))
-                    }
+                    onCheckedChange={checked => {
+                      setSettings(prev => ({ ...prev, emailNotifications: checked }))
+                    }}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Receive email notifications about your account activity
-                </p>
+                <p className="text-muted-foreground text-sm">Receive email notifications about your account activity</p>
               </div>
 
               <div className="space-y-2">
@@ -101,14 +94,12 @@ export default function SettingsPage() {
                   <Switch
                     id="pushNotifications"
                     checked={settings.pushNotifications}
-                    onCheckedChange={(checked) =>
-                      setSettings((prev) => ({ ...prev, pushNotifications: checked }))
-                    }
+                    onCheckedChange={checked => {
+                      setSettings(prev => ({ ...prev, pushNotifications: checked }))
+                    }}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Receive push notifications about important updates
-                </p>
+                <p className="text-muted-foreground text-sm">Receive push notifications about important updates</p>
               </div>
 
               <div className="space-y-2">
@@ -120,14 +111,12 @@ export default function SettingsPage() {
                   <Switch
                     id="marketingEmails"
                     checked={settings.marketingEmails}
-                    onCheckedChange={(checked) =>
-                      setSettings((prev) => ({ ...prev, marketingEmails: checked }))
-                    }
+                    onCheckedChange={checked => {
+                      setSettings(prev => ({ ...prev, marketingEmails: checked }))
+                    }}
                   />
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  Receive emails about new features and updates
-                </p>
+                <p className="text-muted-foreground text-sm">Receive emails about new features and updates</p>
               </div>
 
               <Button type="submit" disabled={isLoading}>

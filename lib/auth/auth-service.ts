@@ -1,6 +1,5 @@
 'use client'
 
-import { createClient } from '@/utils/supabase/client'
 import { AuthError, User, Session } from '@supabase/supabase-js'
 
 export class AuthenticationError extends Error {
@@ -36,15 +35,15 @@ export class AuthService {
     try {
       const { data, error } = await this.supabase.auth.signInWithPassword({
         email,
-        password,
+        password
       })
 
       if (error) throw error
 
       return { data: data.user, error: null }
     } catch (error) {
-      return { 
-        data: null, 
+      return {
+        data: null,
         error: this.handleAuthError(error as AuthError)
       }
     }
@@ -56,16 +55,16 @@ export class AuthService {
         email,
         password,
         options: {
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
-        },
+          emailRedirectTo: `${window.location.origin}/auth/callback`
+        }
       })
 
       if (error) throw error
 
       return { data: data.user, error: null }
     } catch (error) {
-      return { 
-        data: null, 
+      return {
+        data: null,
         error: this.handleAuthError(error as AuthError)
       }
     }
@@ -78,8 +77,8 @@ export class AuthService {
 
       return { data: null, error: null }
     } catch (error) {
-      return { 
-        data: null, 
+      return {
+        data: null,
         error: this.handleAuthError(error as AuthError)
       }
     }
@@ -87,13 +86,16 @@ export class AuthService {
 
   async getSession(): Promise<AuthResponse<Session>> {
     try {
-      const { data: { session }, error } = await this.supabase.auth.getSession()
+      const {
+        data: { session },
+        error
+      } = await this.supabase.auth.getSession()
       if (error) throw error
 
       return { data: session, error: null }
     } catch (error) {
-      return { 
-        data: null, 
+      return {
+        data: null,
         error: this.handleAuthError(error as AuthError)
       }
     }
@@ -108,7 +110,7 @@ export class AuthService {
       'auth/user-not-found': 'Invalid login credentials.',
       'auth/email-already-in-use': 'An account with this email already exists.',
       'auth/weak-password': 'Password should be at least 6 characters.',
-      'auth/too-many-requests': 'Too many attempts. Please try again later.',
+      'auth/too-many-requests': 'Too many attempts. Please try again later.'
     }
 
     return {

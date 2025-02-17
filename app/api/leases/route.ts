@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -90,12 +90,11 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     }
 
     // Check for existing active leases for this property
-    const { data: existingLeases, error: leaseCheckError }: { data: any; error: any } =
-      await supabase
-        .from('leases')
-        .select('id')
-        .eq('property_id', validatedData.property_id)
-        .eq('lease_status', 'Active')
+    const { data: existingLeases, error: leaseCheckError }: { data: any; error: any } = await supabase
+      .from('leases')
+      .select('id')
+      .eq('property_id', validatedData.property_id)
+      .eq('lease_status', 'Active')
 
     if (leaseCheckError) {
       return NextResponse.json({ error: 'Error checking existing leases' }, { status: 500 })
@@ -153,8 +152,12 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     const validatedData = leaseSchema.partial().parse(updateData)
 
     // Verify lease ownership
-    const { data: existingLease, error: leaseCheckError }: { data: any; error: any } =
-      await supabase.from('leases').select('id').eq('id', id).eq('user_id', userId).single()
+    const { data: existingLease, error: leaseCheckError }: { data: any; error: any } = await supabase
+      .from('leases')
+      .select('id')
+      .eq('id', id)
+      .eq('user_id', userId)
+      .single()
 
     if (leaseCheckError || !existingLease) {
       return NextResponse.json({ error: 'Lease not found or unauthorized' }, { status: 404 })
@@ -223,11 +226,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Cannot delete an active lease' }, { status: 400 })
     }
 
-    const { error }: { error: any } = await supabase
-      .from('leases')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', userId)
+    const { error }: { error: any } = await supabase.from('leases').delete().eq('id', id).eq('user_id', userId)
 
     if (error) {
       console.error('Error deleting lease:', error)

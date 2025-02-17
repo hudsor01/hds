@@ -1,5 +1,5 @@
 import { createPaymentIntent } from '@/lib/services/payments'
-
+import { supabase } from '@/lib/supabase'
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
 
@@ -13,8 +13,12 @@ const paymentIntentSchema = z.object({
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId }: { userId: string } = await supabase.auth()
-    if (!userId) {
+    const {
+      data: { user },
+      error: authError
+    } = await supabase.auth.getUser()
+
+    if (authError || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -25,7 +29,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       ...validatedData,
       metadata: {
         ...validatedData.metadata,
-        userId
+        userId: user.id
       }
     })
 
@@ -33,11 +37,16 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       clientSecret: paymentIntent.client_secret,
       id: paymentIntent.id
     })
-  } catch (error: unknown) {
+  } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
     }
     console.error('Error creating payment intent:', error)
-    return NextResponse.json({ error: 'Failed to create payment intent' }, { status: 500 })
+    return NextResponse.json(
+      {
+        error: error instanceof Error ? error.message : 'Failed to create payment intent'
+      },
+      { status: 500 }
+    )
   }
 }

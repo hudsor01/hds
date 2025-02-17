@@ -1,61 +1,78 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
-import { checkRole } from '@/utils/roles'
-import { MESSAGES } from '@/lib/messages'
+import { createClient } from '@/lib/supabase/server'
+import { revalidatePath } from 'next/cache'
 import { z } from 'zod'
 
 const roleSchema = z.object({
-  role: z.enum(['admin', 'user', 'manager']).nullable(),
+  role: z.enum(['admin', 'moderator', 'user']).nullable(),
   userId: z.string().uuid()
 })
 
-async function validateAdmin(supabase: ReturnType<typeof createClient>) {
+async function validateAdmin() {
+  const supabase = createClient()
   const {
-    data: { user }
-  } = await supabase.auth.getSession()
-  if (!checkRole(user?.email, 'admin')) {
-    throw new Error(MESSAGES.ERRORS.UNAUTHORIZED)
+    data: { user },
+    error
+  } = await supabase.auth.getUser()
+
+  if (error) {
+    throw new Error('Authentication failed')
   }
+
+  if (!user || user.user_metadata['role'] !== 'admin') {
+    throw new Error('Unauthorized access')
+  }
+
   return user
 }
 
-export async function setRole(formData: FormData): Promise<void> {
-  const supabase = createClient()
-
-  const validated = roleSchema.safeParse({
+export async function setRole(formData: FormData) {
+  const validatedFields = roleSchema.safeParse({
     role: formData.get('role'),
     userId: formData.get('id')
   })
 
-  if (!validated.success) {
-    throw new Error(MESSAGES.ERRORS.INVALID_INPUT)
+  if (!validatedFields.success) {
+    throw new Error('Invalid input data')
   }
 
-  await validateAdmin(supabase)
+  await validateAdmin()
+  const supabase = createClient()
 
   try {
-    const { error: updateError } = await supabase
+    const { error } = await supabase
       .from('users')
-      .update({ role: formData.get('role') })
-      .eq('id', formData.get('id'))
+      .update({ role: validatedFields.data.role })
+      .eq('id', validatedFields.data.userId)
+      .single()
 
-    if (updateError) throw updateError
-  } catch {
-    throw new Error('Failed to set role')
+    if (error) throw error
+
+    revalidatePath('/admin')
+  } catch (error) {
+    console.error('Failed to set role:', error)
+    throw new Error('Failed to update user role')
   }
 }
 
-export async function removeRole(formData: FormData): Promise<void> {
+export async function removeRole(formData: FormData) {
+  const userId = formData.get('id')
+  if (!userId || typeof userId !== 'string') {
+    throw new Error('Invalid user ID')
+  }
+
+  await validateAdmin()
   const supabase = createClient()
 
-  await validateAdmin(supabase)
-
   try {
-    const { error: updateError } = await supabase.from('users').update({ role: null }).eq('id', formData.get('id'))
+    const { error } = await supabase.from('users').update({ role: null }).eq('id', userId).single()
 
-    if (updateError) throw updateError
-  } catch {
-    throw new Error(MESSAGES.ERRORS.SERVER_ERROR)
+    if (error) throw error
+
+    revalidatePath('/admin')
+  } catch (error) {
+    console.error('Failed to remove role:', error)
+    throw new Error('Failed to remove user role')
   }
 }

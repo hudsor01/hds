@@ -1,9 +1,9 @@
 'use server'
 
-import { createClient } from '@/utils/supabase/server'
 import { revalidatePath } from 'next/cache'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
+import { supabase } from '@/lib/supabase/auth'
 
 const profileSchema = z.object({
   fullName: z.string().min(1).max(100),
@@ -26,13 +26,15 @@ export async function updateUserProfile(formData: FormData) {
     throw new Error('Invalid form data')
   }
 
-  const supabase = createClient()
-
   const {
     data: { user },
     error: userError
   } = await supabase.auth.getUser()
   if (userError) throw userError
+
+  if (!user) {
+    throw new Error('User not found')
+  }
 
   const updates = {
     full_name: formData.get('fullName'),
@@ -59,13 +61,15 @@ export async function updateAccountSettings(formData: FormData) {
     throw new Error('Invalid form data')
   }
 
-  const supabase = createClient()
-
   const {
     data: { user },
     error: userError
   } = await supabase.auth.getUser()
   if (userError) throw userError
+
+  if (!user) {
+    throw new Error('User not found')
+  }
 
   const updates = {
     email_notifications: formData.get('emailNotifications') === 'on',
@@ -84,14 +88,12 @@ export async function updateAccountSettings(formData: FormData) {
 
 export async function deleteAccount() {
   try {
-    const supabase = createClient()
-
     const { error: deleteError } = await supabase.auth.admin.deleteUser((await supabase.auth.getUser()).data.user?.id ?? '')
 
     if (deleteError) throw deleteError
 
     redirect('/sign-in')
-  } catch (error) {
+  } catch {
     throw new Error('Failed to delete account. Please try again.')
   }
 }

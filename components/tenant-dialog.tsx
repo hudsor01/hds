@@ -1,198 +1,206 @@
-'use client'
-
-import { Loader2 } from '-react'
-import { Button } from '@/components/button'
-import { zodResolver } from '@hookform/resolvers/zod'
-import type { SelectChangeEvent } from '@mui/material'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from 'components/form'
-import { Input } from '@/components/input'
-import { Select, SelectItem } from '@/components/select'
 import { useState } from 'react'
-import { useForm } from 'react-hook-form'
-import { toast } from 'sonner'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Stack,
+  MenuItem,
+  FormControl,
+  InputLabel,
+  Select
+} from '@mui/material'
+import { useForm, Controller } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 
-const tenantFormSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+const tenantSchema = z.object({
+  firstName: z.string().min(1, 'First name is required'),
+  lastName: z.string().min(1, 'Last name is required'),
   email: z.string().email('Invalid email address'),
   phone: z.string().min(10, 'Phone number must be at least 10 digits'),
-  property: z.string().min(1, 'Please select a property'),
-  unit: z.string().min(1, 'Unit number is required'),
-  leaseEnd: z.string().min(1, 'Lease end date is required')
+  leaseStart: z.string().min(1, 'Lease start date is required'),
+  leaseEnd: z.string().min(1, 'Lease end date is required'),
+  rentAmount: z.number().min(0, 'Rent amount must be positive'),
+  status: z.enum(['active', 'pending', 'inactive'])
 })
 
-type TenantFormValues = z.infer<typeof tenantFormSchema>
+type TenantFormData = z.infer<typeof tenantSchema>
 
 interface TenantDialogProps {
   open: boolean
-  onOpenChangeAction: (open: boolean) => void
-  tenant?: {
-    id: string
-    name: string
-    email: string
-    phone: string
-    property: string
-    unit: string
-    leaseEnd: string
-  }
-  properties: { id: string; name: string; units: string[] }[]
-  onSubmitAction: (data: TenantFormValues) => Promise<void>
+  onClose: () => void
+  onSubmit: (data: TenantFormData) => Promise<void>
+  initialData?: Partial<TenantFormData>
+  title?: string
 }
 
-export function TenantDialog({ open, onOpenChangeAction, tenant, properties, onSubmitAction }: TenantDialogProps) {
+export function TenantDialog({ open, onClose, onSubmit, initialData, title = 'Add New Tenant' }: TenantDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [selectedProperty, setSelectedProperty] = useState(tenant?.property || '')
 
-  const form = useForm<TenantFormValues>({
-    resolver: zodResolver(tenantFormSchema),
-    defaultValues: tenant || {
-      name: '',
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { errors }
+  } = useForm<TenantFormData>({
+    resolver: zodResolver(tenantSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
       email: '',
       phone: '',
-      property: '',
-      unit: '',
-      leaseEnd: ''
+      leaseStart: '',
+      leaseEnd: '',
+      rentAmount: 0,
+      status: 'pending',
+      ...initialData
     }
   })
 
-  const handleSubmit = async (data: TenantFormValues) => {
-    setIsSubmitting(true)
+  const handleClose = () => {
+    reset()
+    onClose()
+  }
+
+  const handleFormSubmit = async (data: TenantFormData) => {
     try {
-      await onSubmitAction(data)
-      onOpenChangeAction(false)
-      form.reset()
+      setIsSubmitting(true)
+      await onSubmit(data)
+      handleClose()
     } catch (error) {
-      toast.error(`Failed to ${tenant ? 'update' : 'add'} tenant: ${error instanceof Error ? error.message : 'Unknown error'}`)
+      console.error('Error submitting tenant form:', error)
     } finally {
       setIsSubmitting(false)
     }
   }
 
-  const selectedPropertyUnits = properties.find(p => p.id === selectedProperty)?.units || []
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChangeAction}>
-      <DialogContent className="sm:max-w-[425px]">
-        <DialogHeader>
-          <DialogTitle>{tenant ? 'Edit Tenant' : 'Add Tenant'}</DialogTitle>
-          <DialogDescription>
-            {tenant ? 'Update tenant information and lease details' : 'Add a new tenant to your property'}
-          </DialogDescription>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="John Doe" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
+    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+      <DialogTitle>{title}</DialogTitle>
+      <form onSubmit={handleSubmit(handleFormSubmit)}>
+        <DialogContent>
+          <Stack spacing={2} sx={{ mt: 1 }}>
+            <Stack direction="row" spacing={2}>
+              <Controller
+                name="firstName"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="First Name"
+                    error={!!errors.firstName}
+                    helperText={errors.firstName?.message}
+                    fullWidth
+                  />
+                )}
+              />
+              <Controller
+                name="lastName"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Last Name"
+                    error={!!errors.lastName}
+                    helperText={errors.lastName?.message}
+                    fullWidth
+                  />
+                )}
+              />
+            </Stack>
+
+            <Controller
               name="email"
+              control={control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input placeholder="john@example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <TextField {...field} label="Email" type="email" error={!!errors.email} helperText={errors.email?.message} />
               )}
             />
-            <FormField
-              control={form.control}
+
+            <Controller
               name="phone"
+              control={control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Phone</FormLabel>
-                  <FormControl>
-                    <Input placeholder="(123) 456-7890" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <TextField {...field} label="Phone" error={!!errors.phone} helperText={errors.phone?.message} />
               )}
             />
-            <FormField
-              control={form.control}
-              name="property"
+
+            <Stack direction="row" spacing={2}>
+              <Controller
+                name="leaseStart"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Lease Start"
+                    type="date"
+                    error={!!errors.leaseStart}
+                    helperText={errors.leaseStart?.message}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                  />
+                )}
+              />
+              <Controller
+                name="leaseEnd"
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    label="Lease End"
+                    type="date"
+                    error={!!errors.leaseEnd}
+                    helperText={errors.leaseEnd?.message}
+                    InputLabelProps={{ shrink: true }}
+                    fullWidth
+                  />
+                )}
+              />
+            </Stack>
+
+            <Controller
+              name="rentAmount"
+              control={control}
               render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Property</FormLabel>
-                  <Select
-                    onChange={(event: SelectChangeEvent<unknown>) => {
-                      const value = event.target.value as string
-                      field.onChange(value)
-                      setSelectedProperty(value)
-                      form.setValue('unit', '') // Reset unit when property changes
-                    }}
-                    defaultValue={field.value}
-                    placeholder="Select a property"
-                  >
-                    {properties.map(property => (
-                      <SelectItem key={property.id} value={property.id}>
-                        {property.name}
-                      </SelectItem>
-                    ))}
+                <TextField
+                  {...field}
+                  label="Rent Amount"
+                  type="number"
+                  error={!!errors.rentAmount}
+                  helperText={errors.rentAmount?.message}
+                  InputProps={{
+                    startAdornment: '$'
+                  }}
+                />
+              )}
+            />
+
+            <Controller
+              name="status"
+              control={control}
+              render={({ field }) => (
+                <FormControl fullWidth>
+                  <InputLabel>Status</InputLabel>
+                  <Select {...field} label="Status">
+                    <MenuItem value="active">Active</MenuItem>
+                    <MenuItem value="pending">Pending</MenuItem>
+                    <MenuItem value="inactive">Inactive</MenuItem>
                   </Select>
-                  <FormMessage />
-                </FormItem>
+                </FormControl>
               )}
             />
-            <FormField
-              control={form.control}
-              name="unit"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Unit</FormLabel>
-                  <Select
-                    onChange={(event: SelectChangeEvent<unknown>) => {
-                      field.onChange(event.target.value as string)
-                    }}
-                    defaultValue={field.value}
-                    disabled={!selectedProperty}
-                    placeholder="Select a unit"
-                  >
-                    {selectedPropertyUnits.map(unit => (
-                      <SelectItem key={unit} value={unit}>
-                        {unit}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="leaseEnd"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Lease End Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                {tenant ? 'Update Tenant' : 'Add Tenant'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
-      </DialogContent>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Cancel</Button>
+          <Button type="submit" variant="contained" disabled={isSubmitting}>
+            {isSubmitting ? 'Saving...' : 'Save'}
+          </Button>
+        </DialogActions>
+      </form>
     </Dialog>
   )
 }

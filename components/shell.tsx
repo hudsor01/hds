@@ -1,10 +1,7 @@
-// components/layout/shell.tsx
 'use client'
 
 import { useScrollTop } from '@/hooks/use-scroll'
 import { cn } from '@/lib/utils'
-
-// components/layout/shell.tsx
 
 export function Shell({ children }: { children: React.ReactNode }) {
   const scrolled = useScrollTop()

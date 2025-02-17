@@ -1,16 +1,4 @@
-import {
-  Body,
-  Button,
-  Container,
-  Head,
-  Heading,
-  Hr,
-  Html,
-  Link,
-  Preview,
-  Section,
-  Text
-} from '@react-email/components'
+import { Body, Button, Container, Head, Heading, Hr, Html, Link, Preview, Section, Text } from '@react-email/components'
 
 interface VerificationEmailProps {
   verificationUrl: string
@@ -26,8 +14,7 @@ export default function VerificationEmail({ verificationUrl, expiresIn }: Verifi
         <Container style={container}>
           <Heading style={h1}>Verify your email address</Heading>
           <Text style={text}>
-            Thank you for joining the Property Manager waitlist! Please verify your email address by
-            clicking the button below:
+            Thank you for joining the Property Manager waitlist! Please verify your email address by clicking the button below:
           </Text>
           <Section style={buttonContainer}>
             <Button style={button} href={verificationUrl}>
@@ -42,9 +29,7 @@ export default function VerificationEmail({ verificationUrl, expiresIn }: Verifi
           </Text>
           <Text style={text}>This verification link will expire in {expiresIn}.</Text>
           <Hr style={hr} />
-          <Text style={footer}>
-            If you didn't request this verification, you can safely ignore this email.
-          </Text>
+          <Text style={footer}>If you didn't request this verification, you can safely ignore this email.</Text>
         </Container>
       </Body>
     </Html>
@@ -53,8 +38,7 @@ export default function VerificationEmail({ verificationUrl, expiresIn }: Verifi
 
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
+  fontFamily: '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif'
 }
 
 const container = {

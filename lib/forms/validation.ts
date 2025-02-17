@@ -8,10 +8,7 @@ export function createFormSchema<T extends z.ZodType>(schema: T) {
   return schema
 }
 
-export function useZodForm<T extends z.ZodType>(
-  schema: T,
-  options: Omit<UseFormProps<z.infer<T>>, 'resolver'> = {}
-) {
+export function useZodForm<T extends z.ZodType>(schema: T, options: Omit<UseFormProps<z.infer<T>>, 'resolver'> = {}) {
   const form = useForm<z.infer<T>>({
     ...options,
     resolver: zodResolver(schema)
@@ -59,10 +56,7 @@ interface UseFormSubmitOptions<T> {
   errorMessage?: string
 }
 
-export function useFormSubmit<T>(
-  submitFn: (data: T) => Promise<void>,
-  options: UseFormSubmitOptions<T> = {}
-) {
+export function useFormSubmit<T>(submitFn: (data: T) => Promise<void>, options: UseFormSubmitOptions<T> = {}) {
   const { showToast } = useToast()
 
   return async (data: T) => {
@@ -79,9 +73,7 @@ export function useFormSubmit<T>(
 
       await options.onSuccess?.(data)
     } catch (error) {
-      const message =
-        options.errorMessage ||
-        (error instanceof Error ? error.message : 'An unexpected error occurred')
+      const message = options.errorMessage || (error instanceof Error ? error.message : 'An unexpected error occurred')
 
       showToast({
         title: 'Error',

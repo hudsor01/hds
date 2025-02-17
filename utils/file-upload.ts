@@ -1,8 +1,4 @@
-import supabase from '@/utils/supabase/client'
-
-if (!supabaseUrl || !supabaseKey) {
-  throw new Error('Missing Supabase environment variables')
-}
+import { supabase } from '@/lib/supabase/auth'
 
 export async function uploadFile(file: File, bucket: string, path: string): Promise<string> {
   const { data, error } = await supabase.storage.from(bucket).upload(`${path}/${file.name}`, file)

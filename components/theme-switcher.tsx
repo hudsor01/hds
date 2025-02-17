@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from './button'
-import { DropdownMenu, DropdownMenuItem } from './dropdown-menu'
+import { DropdownMenu, DropdownMenuItem } from './ui/dropdown-menu'
 import { Monitor, Moon, Sun } from 'react-feather'
 import { useTheme } from 'next-themes'
 import { useEffect, useState } from 'react'
@@ -24,13 +24,25 @@ export function ThemeSwitcher() {
         <span className="sr-only">Toggle theme</span>
       </Button>
       <div className="dropdown-menu-content" data-align="end">
-        <DropdownMenuItem onSelect={() => setTheme('light')}>
+        <DropdownMenuItem
+          onSelect={() => {
+            setTheme('light')
+          }}
+        >
           <Sun className="mr-2 h-4 w-4" /> Light
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => setTheme('dark')}>
+        <DropdownMenuItem
+          onSelect={() => {
+            setTheme('dark')
+          }}
+        >
           <Moon className="mr-2 h-4 w-4" /> Dark
         </DropdownMenuItem>
-        <DropdownMenuItem onSelect={() => setTheme('system')}>
+        <DropdownMenuItem
+          onSelect={() => {
+            setTheme('system')
+          }}
+        >
           <Monitor className="mr-2 h-4 w-4" /> System
         </DropdownMenuItem>
       </div>

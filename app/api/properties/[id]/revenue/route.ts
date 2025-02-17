@@ -5,8 +5,7 @@ import { NextResponse } from 'next/server'
 export async function GET(request: Request, { params }: { params: { id: string } }) {
   try {
     const { searchParams } = new URL(request.url)
-    const startDate =
-      searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString()
+    const startDate = searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString()
     const endDate = searchParams.get('endDate') || new Date().toISOString()
 
     const supabase = createRouteHandlerClient({ cookies })
@@ -33,14 +32,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
     // Get financial report for current month
     const currentDate = new Date()
-    const { data: financialReport, error: reportError } = await supabase.rpc(
-      'generate_property_financial_report',
-      {
-        p_property_id: params.id,
-        p_year: currentDate.getFullYear(),
-        p_month: currentDate.getMonth() + 1
-      }
-    )
+    const { data: financialReport, error: reportError } = await supabase.rpc('generate_property_financial_report', {
+      p_property_id: params.id,
+      p_year: currentDate.getFullYear(),
+      p_month: currentDate.getMonth() + 1
+    })
 
     if (reportError) throw reportError
 

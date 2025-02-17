@@ -7,9 +7,9 @@ export async function getHeaders() {
     has: (name: string) => headersList.has(name),
     entries: () => {
       const entries: [string, string][] = []
-      for (const [key, value] of headersList.entries()) {
+      headersList.forEach((value, key) => {
         entries.push([key, value])
-      }
+      })
       return entries
     }
   }

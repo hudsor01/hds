@@ -11,8 +11,7 @@ export default function UnauthorizedPage() {
           Access Denied
         </Typography>
         <Typography variant="body1" color="text.secondary" paragraph>
-          You don't have permission to access this page. Please contact your administrator if you
-          believe this is a mistake.
+          You don't have permission to access this page. Please contact your administrator if you believe this is a mistake.
         </Typography>
         <Button component={Link} href="/" variant="contained" color="primary" sx={{ mt: 2 }}>
           Return to Home

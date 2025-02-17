@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -28,11 +28,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const lease_id: string | null = searchParams.get('lease_id')
     const type: string | null = searchParams.get('type')
 
-    let query = supabase
-      .from('documents')
-      .select('*')
-      .eq('uploaded_by', user.id)
-      .order('created_at', { ascending: false })
+    let query = supabase.from('documents').select('*').eq('uploaded_by', user.id).order('created_at', { ascending: false })
 
     if (property_id) {
       query = query.eq('property_id', property_id)
@@ -229,11 +225,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       // Continue with database deletion even if storage deletion fails
     }
 
-    const { error } = await supabase
-      .from('documents')
-      .delete()
-      .eq('id', id)
-      .eq('uploaded_by', user.id)
+    const { error } = await supabase.from('documents').delete().eq('id', id).eq('uploaded_by', user.id)
 
     if (error) {
       console.error('Error deleting document:', error)

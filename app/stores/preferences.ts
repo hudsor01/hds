@@ -21,9 +21,15 @@ export const usePreferences = create<UserPreferences>()(
       animations: true,
       reducedMotion: false,
 
-      setFontSize: size => set({ fontSize: size }),
-      setAnimations: enabled => set({ animations: enabled }),
-      setReducedMotion: enabled => set({ reducedMotion: enabled }),
+      setFontSize: size => {
+        set({ fontSize: size })
+      },
+      setAnimations: enabled => {
+        set({ animations: enabled })
+      },
+      setReducedMotion: enabled => {
+        set({ reducedMotion: enabled })
+      },
 
       sync: async () => {
         try {

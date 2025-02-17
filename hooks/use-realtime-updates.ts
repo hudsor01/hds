@@ -1,5 +1,5 @@
 // lib/hooks/use-realtime-updates.ts
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import { useQueryClient } from '@tanstack/react-query'
 import { useEffect } from 'react'
 import { toast } from 'sonner'

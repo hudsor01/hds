@@ -22,17 +22,10 @@ export async function POST(request: Request) {
       const body = signUpSchema.parse(json)
 
       // Check if user already exists
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id')
-        .eq('email', body.email)
-        .single()
+      const { data: existingUser } = await supabase.from('users').select('id').eq('email', body.email).single()
 
       if (existingUser) {
-        return NextResponse.json(
-          { error: 'An account with this email already exists' },
-          { status: 409 }
-        )
+        return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 })
       }
 
       const { data, error: signUpError } = await supabase.auth.signUp({
@@ -50,10 +43,7 @@ export async function POST(request: Request) {
       if (signUpError) {
         // Handle specific error cases
         if (signUpError.message.includes('rate limit')) {
-          return NextResponse.json(
-            { error: 'Too munknown signup attempts. Please try again later.' },
-            { status: 429 }
-          )
+          return NextResponse.json({ error: 'Too munknown signup attempts. Please try again later.' }, { status: 429 })
         }
         return NextResponse.json({ error: signUpError.message }, { status: 400 })
       }
@@ -65,23 +55,17 @@ export async function POST(request: Request) {
       })
     } catch (error) {
       if (error instanceof z.ZodError) {
-        const fieldErrors = error.issues.reduce(
-          (acc, issue) => {
-            const field = issue.path[0]
-            acc[field] = issue.message
-            return acc
-          },
-          {} as Record<string, string>
-        )
+        const fieldErrors = error.issues.reduce<Record<string, string>>((acc, issue) => {
+          const field = issue.path[0]
+          acc[field] = issue.message
+          return acc
+        }, {})
 
         return NextResponse.json({ error: 'Validation failed', fieldErrors }, { status: 400 })
       }
 
       console.error('Unexpected error during sign up:', error)
-      return NextResponse.json(
-        { error: 'An unexpected error occurred during sign up' },
-        { status: 500 }
-      )
+      return NextResponse.json({ error: 'An unexpected error occurred during sign up' }, { status: 500 })
     }
   })
 }

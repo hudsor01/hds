@@ -1,20 +1,9 @@
-import { createClient, type Session, type User } from '@supabase/supabase-js'
+'use client'
+
+import { type Session, type User } from '@supabase/supabase-js'
 import { useEffect, useState } from 'react'
-
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-// Create a singleton Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
-
-interface UseSessionReturn {
-  session: Session | null
-  loading: boolean
-}
+import { supabase } from '@/lib/supabase/auth'
+import { type UseSessionReturn } from '@/types/auth'
 
 export function useSession(): UseSessionReturn {
   const [session, setSession] = useState<Session | null>(null)
@@ -22,22 +11,27 @@ export function useSession(): UseSessionReturn {
 
   useEffect(() => {
     // Get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session)
-      setLoading(false)
-    }).catch(error => {
-      console.error('Error getting session:', error)
-      setLoading(false)
-    })
+    supabase.auth
+      .getSession()
+      .then(({ data }) => {
+        setSession(data.session)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error getting session:', error)
+        setLoading(false)
+      })
 
     // Listen for auth changes
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      subscription.unsubscribe()
+    }
   }, [])
 
   return { session, loading }
@@ -54,33 +48,41 @@ export function useUser(): UseUserReturn {
 
   useEffect(() => {
     // Get initial user
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      setUser(user)
-      setLoading(false)
-    }).catch(error => {
-      console.error('Error getting user:', error)
-      setLoading(false)
-    })
+    supabase.auth
+      .getUser()
+      .then(({ data }) => {
+        setUser(data.user)
+        setLoading(false)
+      })
+      .catch(error => {
+        console.error('Error getting user:', error)
+        setLoading(false)
+      })
 
     // Listen for auth changes
     const {
       data: { subscription }
-    } = supabase.auth.onAuthStateChange((_event, session) => {
+    } = supabase.auth.onAuthStateChange((event: any, session) => {
       setUser(session?.user ?? null)
     })
 
-    return () => subscription.unsubscribe()
+    return () => {
+      interface Subscription {
+        unsubscribe?: () => void
+      }
+
+      if (subscription.unsubscribe) {
+        subscription.unsubscribe()
+      } else {
+        console.warn('Subscription cancellation method is not available.', subscription)
+      }
+    }
   }, [])
 
   return { user, loading }
 }
 
-export const protectedRoutes = [
-  '/dashboard',
-  '/settings',
-  '/properties',
-  '/tenants'
-] as const
+export const protectedRoutes = ['/dashboard', '/settings', '/properties', '/tenants'] as const
 
 export const authConfig = {
   redirects: {

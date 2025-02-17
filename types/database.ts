@@ -19,9 +19,7 @@ export type DbQueryOptions = {
 
 // Prisma specific types
 export type PrismaTransaction = Prisma.TransactionClient
-export type PrismaError =
-  | Prisma.PrismaClientKnownRequestError
-  | Prisma.PrismaClientUnknownRequestError
+export type PrismaError = Prisma.PrismaClientKnownRequestError | Prisma.PrismaClientUnknownRequestError
 
 // Supabase specific types
 export type SupabaseConfig = {

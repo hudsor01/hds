@@ -4,7 +4,7 @@ import { Alert, AlertTitle, Stack } from '@mui/material'
 import { motion, AnimatePresence } from 'framer-motion'
 import type { Toast } from '@/types/animation'
 import { useToast } from '@/hooks/use-toast'
-import { useAnimation } from '@/components/animation-provider'
+import { useAnimation } from '@/components/providers/animation-provider'
 
 const MotionAlert = motion(Alert)
 

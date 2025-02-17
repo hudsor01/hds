@@ -1,14 +1,15 @@
-import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 import { z } from 'zod'
 import { PropertyType, PropertyStatus } from '@/types/property'
+import type { PostgrestError } from '@supabase/supabase-js'
 
 const propertyQuerySchema = z.object({
   limit: z.string().optional(),
   offset: z.string().optional(),
   status: z.string().optional(),
   type: z.string().optional(),
-  search: z.string().optional(),
+  search: z.string().optional()
 })
 
 const createPropertySchema = z.object({
@@ -30,19 +31,20 @@ const createPropertySchema = z.object({
     propertyTax: z.number().min(0, 'Property tax is required'),
     utilities: z.number().min(0, 'Utilities amount is required'),
     maintenance: z.number().min(0, 'Maintenance amount is required'),
-    other: z.number().min(0, 'Other expenses amount is required'),
-  }),
+    other: z.number().min(0, 'Other expenses amount is required')
+  })
 })
+
+function isPostgrestError(error: unknown): error is PostgrestError {
+  return typeof error === 'object' && error !== null && 'code' in error && 'message' in error && 'details' in error
+}
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const validatedParams = propertyQuerySchema.parse(Object.fromEntries(searchParams))
-    
-    const supabase = createClient()
-    let query = supabase
-      .from('properties')
-      .select('*, maintenance_requests(*)', { count: 'exact' })
+
+    let query = supabase.from('properties').select('*, maintenance_requests(*)', { count: 'exact' })
 
     if (validatedParams.status) {
       query = query.eq('status', validatedParams.status)
@@ -71,8 +73,23 @@ export async function GET(request: Request) {
     return NextResponse.json({ data, count })
   } catch (error) {
     console.error('Error fetching properties:', error)
+
+    if (isPostgrestError(error)) {
+      return NextResponse.json(
+        {
+          error: 'Database Error',
+          message: error.message,
+          details: error.details
+        },
+        { status: 400 }
+      )
+    }
+
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      {
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
@@ -83,7 +100,6 @@ export async function POST(request: Request) {
     const json = await request.json()
     const validatedData = createPropertySchema.parse(json)
 
-    const supabase = createClient()
     const { data, error } = await supabase
       .from('properties')
       .insert([
@@ -91,7 +107,7 @@ export async function POST(request: Request) {
           ...validatedData,
           status: PropertyStatus.ACTIVE,
           created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
         }
       ])
       .select()
@@ -103,14 +119,31 @@ export async function POST(request: Request) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Validation Error', details: error.errors },
+        {
+          error: 'Validation Error',
+          details: error.errors
+        },
+        { status: 400 }
+      )
+    }
+
+    if (isPostgrestError(error)) {
+      return NextResponse.json(
+        {
+          error: 'Database Error',
+          message: error.message,
+          details: error.details
+        },
         { status: 400 }
       )
     }
 
     console.error('Error creating property:', error)
     return NextResponse.json(
-      { error: 'Internal Server Error' },
+      {
+        error: 'Internal Server Error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

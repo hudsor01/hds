@@ -24,7 +24,7 @@ export async function POST(request: Request) {
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted': {
-        const subscription = event.data.object as Stripe.Subscription
+        const subscription = event.data.object
         const customerId = subscription.customer as string
         const subscriptionId = subscription.id
         const status = subscription.status
@@ -46,7 +46,7 @@ export async function POST(request: Request) {
       }
 
       case 'customer.deleted': {
-        const customer = event.data.object as Stripe.Customer
+        const customer = event.data.object
 
         // Remove customer data from subscriptions
         await prisma.subscriptions.updateMunknown({
@@ -64,7 +64,7 @@ export async function POST(request: Request) {
 
       case 'invoice.payment_succeeded':
       case 'invoice.payment_failed': {
-        const invoice = event.data.object as Stripe.Invoice
+        const invoice = event.data.object
         const status = event.type === 'invoice.payment_succeeded' ? 'active' : 'past_due'
 
         if (invoice.subscription) {
@@ -84,9 +84,6 @@ export async function POST(request: Request) {
     return new NextResponse(null, { status: 200 })
   } catch (error) {
     console.error('Error handling Stripe webhook:', error)
-    return new NextResponse(
-      'Webhook error: ' + (error instanceof Error ? error.message : 'Unknown error'),
-      { status: 400 }
-    )
+    return new NextResponse('Webhook error: ' + (error instanceof Error ? error.message : 'Unknown error'), { status: 400 })
   }
 }

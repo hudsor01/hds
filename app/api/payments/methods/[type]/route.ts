@@ -1,5 +1,5 @@
 import { stripe } from '@/lib/payments/stripe'
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import type { PaymentMethodType } from '@/types/payments'
 
 import { NextRequest, NextResponse } from 'next/server'
@@ -162,10 +162,7 @@ export async function POST(req: NextRequest, { params }: { params: { type: Payme
   }
 }
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: { type: PaymentMethodType } }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: { type: PaymentMethodType } }) {
   try {
     const { userId } = await supabase.auth()
     if (!userId) {
@@ -197,11 +194,7 @@ export async function DELETE(
     }
 
     // Delete from database
-    const { error } = await supabase
-      .from('payment_methods')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', userId)
+    const { error } = await supabase.from('payment_methods').delete().eq('id', id).eq('user_id', userId)
 
     if (error) {
       console.error('Error deleting payment method:', error)

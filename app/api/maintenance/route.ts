@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -11,10 +11,7 @@ export const revalidate = 0
 // Validation schema for maintenance request creation/updates
 const maintenanceRequestSchema = z.object({
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  description: z
-    .string()
-    .min(1, 'Description is required')
-    .max(1000, 'Description must be less than 1000 characters'),
+  description: z.string().min(1, 'Description is required').max(1000, 'Description must be less than 1000 characters'),
   property_id: z.string().uuid('Invalid property ID'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']).default('LOW'),
   status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).default('PENDING'),
@@ -30,10 +27,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to access maintenance requests' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to access maintenance requests' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
@@ -89,10 +83,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to create maintenance requests' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to create maintenance requests' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -109,8 +100,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (propertyError || !property) {
       return NextResponse.json(
         {
-          error:
-            'Property not found or you do not have permission to create maintenance requests for it'
+          error: 'Property not found or you do not have permission to create maintenance requests for it'
         },
         { status: 404 }
       )
@@ -130,11 +120,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Failed to validate request limit' }, { status: 500 })
     }
 
-    if ((recentRequests?.length || 0) >= 5) {
-      return NextResponse.json(
-        { error: 'Maximum request limit reached for this property in the last 24 hours' },
-        { status: 429 }
-      )
+    if ((recentRequests.length || 0) >= 5) {
+      return NextResponse.json({ error: 'Maximum request limit reached for this property in the last 24 hours' }, { status: 429 })
     }
 
     const { data: request, error } = await supabase
@@ -171,10 +158,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ data: request }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 })
     }
     console.error('Error in maintenance request POST route:', error)
     return NextResponse.json({ error: 'Failed to create maintenance request' }, { status: 500 })
@@ -188,10 +172,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to update maintenance requests' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to update maintenance requests' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -218,10 +199,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
     // Prevent updates to completed or cancelled requests
     if (existingRequest.status === 'COMPLETED' || existingRequest.status === 'CANCELLED') {
-      return NextResponse.json(
-        { error: 'Cannot update completed or cancelled maintenance requests' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Cannot update completed or cancelled maintenance requests' }, { status: 400 })
     }
 
     const validatedData = maintenanceRequestSchema.partial().parse(updateData)
@@ -265,10 +243,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ data: request })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 })
     }
     console.error('Error in maintenance request PUT route:', error)
     return NextResponse.json({ error: 'Failed to update maintenance request' }, { status: 500 })
@@ -282,10 +257,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to delete maintenance requests' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to delete maintenance requests' }, { status: 401 })
     }
 
     const id = req.nextUrl.searchParams.get('id')
@@ -309,17 +281,10 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     }
 
     if (request.status === 'IN_PROGRESS') {
-      return NextResponse.json(
-        { error: 'Cannot delete a maintenance request that is in progress' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Cannot delete a maintenance request that is in progress' }, { status: 400 })
     }
 
-    const { error } = await supabase
-      .from('maintenance_requests')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id)
+    const { error } = await supabase.from('maintenance_requests').delete().eq('id', id).eq('user_id', user.id)
 
     if (error) {
       console.error('Error deleting maintenance request:', error)
@@ -346,10 +311,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       // Don't fail the request if notification creation fails
     }
 
-    return NextResponse.json(
-      { message: 'Maintenance request deleted successfully' },
-      { status: 200 }
-    )
+    return NextResponse.json({ message: 'Maintenance request deleted successfully' }, { status: 200 })
   } catch (error) {
     console.error('Error in maintenance request DELETE route:', error)
     return NextResponse.json({ error: 'Failed to delete maintenance request' }, { status: 500 })

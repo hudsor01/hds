@@ -1,18 +1,39 @@
-import { supabase } from '@/utils/supabase/server'
+import { supabase } from '@/lib/supabase'
 import { NextResponse } from 'next/server'
+import { AuthError } from '@supabase/supabase-js'
+
+function isAuthError(error: unknown): error is AuthError {
+  return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
+}
 
 export async function POST() {
   try {
     const { error } = await supabase.auth.signOut()
 
-    if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
-    }
+    if (error) throw error
 
     return NextResponse.json({
       message: 'Signed out successfully'
     })
   } catch (error) {
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
+    console.error('Sign out error:', error)
+
+    if (isAuthError(error)) {
+      return NextResponse.json(
+        {
+          error: 'Authentication Error',
+          message: error.message
+        },
+        { status: 401 }
+      )
+    }
+
+    return NextResponse.json(
+      {
+        error: 'Internal server error',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
+    )
   }
 }

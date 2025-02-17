@@ -1,158 +1,75 @@
 'use client'
 
-import { cn } from '@/lib/utils'
-import { Error as ErrorIcon, Info as InfoIcon, Warning as WarningIcon } from '@mui/icons-material'
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import type { ToastProps as SonnerToastProps } from 'sonner'
-import { Toaster as SonnerToaster, toast } from 'sonner'
+import React, { createContext, useContext, useState, useCallback } from 'react'
+import { Alert, Snackbar, AlertTitle } from '@mui/material'
+import type { AlertColor } from '@mui/material'
+import { type Toast, type ToastContextType, type ToastType } from '@/types/components'
 
-// Define toast types
-export type ToastType = 'success' | 'error' | 'warning' | 'info'
+const ToastContext = createContext<ToastContextType | undefined>(undefined)
 
-// Define toast placement
-export type ToastPlacement = 'top-left' | 'top-right' | 'bottom-left' | 'bottom-right' | 'top-center' | 'bottom-center'
-
-// Define toast data
-export interface ToastData {
-  title?: string
-  message: string
-  type?: ToastType
-  duration?: number
-  action?: {
-    label: string
-    onClick: () => void
-  }
-  onDismiss?: () => void
-  icon?: React.ReactNode
-  id?: string
+const severityMap: Record<ToastType | 'default', AlertColor> = {
+  success: 'success',
+  error: 'error',
+  warning: 'warning',
+  info: 'info',
+  default: 'info'
 }
 
-// Define toast options
-export interface ToastOptions extends Omit<SonnerToastProps, 'message'> {
-  preserveOnUnmount?: boolean
-}
+export function ToastProvider({ children }: { children: React.ReactNode }) {
+  const [toasts, setToasts] = useState<Toast[]>([])
 
-// Define toast styles based on type
-const toastStyles: Record<ToastType, { icon: React.ReactNode; style: React.CSSProperties }> = {
-  success: {
-    icon: <CheckCircleIcon className="h-5 w-5 text-success" />,
-    style: {
-      borderLeft: '4px solid var(--color-success)',
-    }
-  },
-  error: {
-    icon: <ErrorIcon className="h-5 w-5 text-error" />,
-    style: {
-      borderLeft: '4px solid var(--color-error)',
-    }
-  },
-  warning: {
-    icon: <WarningIcon className="h-5 w-5 text-warning" />,
-    style: {
-      borderLeft: '4px solid var(--color-warning)',
-    }
-  },
-  info: {
-    icon: <InfoIcon className="h-5 w-5 text-info" />,
-    style: {
-      borderLeft: '4px solid var(--color-info)',
-    }
-  }
-}
+  const addToast = useCallback(({ title, description, duration = 5000, type }: Omit<Toast, 'id'>) => {
+    const id = Math.random().toString(36).slice(2, 9)
+    const newToast: Toast = { id, title: title || '', description, duration, type: type || 'info' }
 
-// Base toast styles
-const baseToastStyles: React.CSSProperties = {
-  background: 'var(--color-background)',
-  border: '1px solid var(--color-border)',
-  color: 'var(--color-foreground)',
-  padding: '1rem',
-  borderRadius: '0.5rem',
-  fontSize: '0.875rem',
-  boxShadow: 'var(--shadow-sm)',
-}
+    setToasts(current => [...current, newToast])
 
-// Create toast function
-export function showToast({
-  title,
-  message,
-  type = 'info',
-  duration = 5000,
-  action,
-  onDismiss,
-  icon,
-  id,
-  ...options
-}: ToastData & ToastOptions): string {
-  const toastId = id || Math.random().toString(36).substr(2, 9)
-  
-  const toastConfig = {
-    id: toastId,
-    duration,
-    className: cn(
-      'group',
-      options.className
-    ),
-    style: {
-      ...baseToastStyles,
-      ...toastStyles[type].style,
-      ...options.style,
-    },
-    onDismiss: () => {
-      onDismiss?.()
-      options.onDismiss?.()
-    },
-    icon: icon || toastStyles[type].icon,
-    action: action && {
-      label: action.label,
-      onClick: () => {
-        action.onClick()
-        toast.dismiss(toastId)
-      },
-    },
-  }
+    // Auto-dismiss after duration
+    setTimeout(() => {
+      setToasts(current => current.filter(t => t.id !== id))
+    }, duration)
 
-  switch (type) {
-    case 'success':
-      toast.success(title ? `${title}\n${message}` : message, toastConfig)
-      break
-    case 'error':
-      toast.error(title ? `${title}\n${message}` : message, toastConfig)
-      break
-    case 'warning':
-      toast(title ? `${title}\n${message}` : message, { ...toastConfig, icon: toastStyles.warning.icon })
-      break
-    case 'info':
-    default:
-      toast(title ? `${title}\n${message}` : message, { ...toastConfig, icon: toastStyles.info.icon })
-  }
+    return id
+  }, [])
 
-  return toastId
-}
+  const removeToast = useCallback((id: string) => {
+    setToasts(current => current.filter(toast => toast.id !== id))
+  }, [])
 
-// Toaster component with custom styles
-export function Toaster({
-  position = 'bottom-right',
-  ...props
-}: {
-  position?: ToastPlacement
-  [key: string]: any
-}): JSX.Element {
   return (
-    <SonnerToaster
-      position={position}
-      toastOptions={{
-        style: baseToastStyles,
-        className: 'group',
-      }}
-      {...props}
-    />
+    <ToastContext.Provider value={{ toasts, toast: addToast, removeToast }}>
+      {children}
+      {toasts.map(toast => (
+        <Snackbar
+          key={toast.id}
+          open={true}
+          autoHideDuration={toast.duration ?? null}
+          onClose={() => {
+            removeToast(toast.id)
+          }}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        >
+          <Alert
+            onClose={() => {
+              removeToast(toast.id)
+            }}
+            severity={severityMap[toast.type || 'default']}
+            variant="filled"
+            sx={{ width: '100%' }}
+          >
+            {toast.title && <AlertTitle>{toast.title}</AlertTitle>}
+            {toast.description}
+          </Alert>
+        </Snackbar>
+      ))}
+    </ToastContext.Provider>
   )
 }
 
-// Export helper functions
-export const dismissToast = toast.dismiss
-export const clearToasts = toast.dismiss
-export const promiseToast = toast.promise
-
-// Export types
-export type { SonnerToastProps }
+export function useToast() {
+  const context = useContext(ToastContext)
+  if (!context) {
+    throw new Error('useToast must be used within a ToastProvider')
+  }
+  return context
+}

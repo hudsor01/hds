@@ -12,9 +12,7 @@ export async function GET(): Promise<Response> {
           }
         } catch (error) {
           isControllerClosed = true
-          console.error(
-            `Controller error: ${error instanceof Error ? error.message : 'Unknown error'}`
-          )
+          console.error(`Controller error: ${error instanceof Error ? error.message : 'Unknown error'}`)
         }
       }
 

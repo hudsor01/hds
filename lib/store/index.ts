@@ -16,9 +16,15 @@ export const useUIStore = create<UIState>()(
       set => ({
         theme: 'system',
         sidebarOpen: false,
-        setTheme: theme => set({ theme }),
-        toggleSidebar: () => set(state => ({ sidebarOpen: !state.sidebarOpen })),
-        setSidebarOpen: open => set({ sidebarOpen: open })
+        setTheme: theme => {
+          set({ theme })
+        },
+        toggleSidebar: () => {
+          set(state => ({ sidebarOpen: !state.sidebarOpen }))
+        },
+        setSidebarOpen: open => {
+          set({ sidebarOpen: open })
+        }
       }),
       { name: 'ui-store' }
     )
@@ -55,11 +61,12 @@ export const usePreferencesStore = create<PreferencesState>()(
           language: 'en',
           timezone: Intl.DateTimeFormat().resolvedOptions().timeZone
         },
-        setPreference: (key, value) =>
+        setPreference: (key, value) => {
           set(state => ({
             preferences: { ...state.preferences, [key]: value }
-          })),
-        setNotificationPreference: (type, enabled) =>
+          }))
+        },
+        setNotificationPreference: (type, enabled) => {
           set(state => ({
             preferences: {
               ...state.preferences,
@@ -69,6 +76,7 @@ export const usePreferencesStore = create<PreferencesState>()(
               }
             }
           }))
+        }
       }),
       { name: 'preferences-store' }
     )
@@ -99,13 +107,18 @@ export const useDashboardStore = create<DashboardState>()(
       type: [],
       dateRange: [null, null]
     },
-    setSelectedProperty: id => set({ selectedPropertyId: id }),
-    setSelectedTenant: id => set({ selectedTenantId: id }),
-    setFilter: (key, value) =>
+    setSelectedProperty: id => {
+      set({ selectedPropertyId: id })
+    },
+    setSelectedTenant: id => {
+      set({ selectedTenantId: id })
+    },
+    setFilter: (key, value) => {
       set(state => ({
         filters: { ...state.filters, [key]: value }
-      })),
-    resetFilters: () =>
+      }))
+    },
+    resetFilters: () => {
       set({
         filters: {
           status: [],
@@ -113,5 +126,6 @@ export const useDashboardStore = create<DashboardState>()(
           dateRange: [null, null]
         }
       })
+    }
   }))
 )

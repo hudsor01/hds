@@ -1,37 +1,29 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
-import { useToast } from '@/components/ui/use-toast'
+import { useState, useEffect, useCallback } from 'react'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/core/Card/card'
+import { Button } from '@/components/button'
+import { Input } from '@/components/input'
+import { Label } from '@/components/label'
+import { useToast } from '@/hooks/use-toast'
 import { AccountCircle, Email, Phone } from '@mui/icons-material'
-import { createClient } from '@/utils/supabase/client'
-import { useAuth } from '@/lib/auth/auth-provider'
+import { supabase } from '@/lib/supabase/auth'
+
+import { useAuth } from '@/components/providers/auth-provider'
 
 export default function AccountPage() {
   const { user } = useAuth()
   const [isLoading, setIsLoading] = useState(false)
-  const [profile, setProfile] = useState({
+  const [profile, setProfile] = useState<{ fullName: string; phone: string; avatarUrl: string }>({
     fullName: '',
     phone: '',
-    avatarUrl: '',
+    avatarUrl: ''
   })
   const { toast } = useToast()
-  const supabase = createClient()
 
-  useEffect(() => {
-    fetchProfile()
-  }, [])
-
-  async function fetchProfile() {
+  const fetchProfile = useCallback(async () => {
     try {
-      const { data: profile, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user?.id)
-        .single()
+      const { data: profile, error } = await supabase.from('profiles').select('*').eq('id', user?.id).single()
 
       if (error) throw error
 
@@ -39,7 +31,7 @@ export default function AccountPage() {
         setProfile({
           fullName: profile.full_name || '',
           phone: profile.phone || '',
-          avatarUrl: profile.avatar_url || '',
+          avatarUrl: profile.avatar_url || ''
         })
       }
     } catch (error) {
@@ -47,40 +39,42 @@ export default function AccountPage() {
       toast({
         title: 'Error',
         description: 'Failed to fetch profile. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
-  }
+  }, [user?.id, toast])
+
+  useEffect(() => {
+    fetchProfile()
+  }, [fetchProfile])
 
   async function handleProfileUpdate(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    event.preventDefault()
     setIsLoading(true)
-
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .upsert([
-          {
-            id: user?.id,
-            full_name: profile.fullName,
-            phone: profile.phone,
-            avatar_url: profile.avatarUrl,
-            updated_at: new Date().toISOString(),
-          }
-        ])
+      const { error } = await supabase.from('profiles').upsert([
+        {
+          id: user?.id,
+          full_name: profile.fullName,
+          phone: profile.phone,
+          avatar_url: profile.avatarUrl,
+          updated_at: new Date().toISOString()
+        }
+      ])
 
       if (error) throw error
 
       toast({
         title: 'Profile updated',
-        description: 'Your profile has been saved successfully.',
+        description: 'Your profile has been saved successfully.'
       })
     } catch (error) {
       console.error('Error updating profile:', error)
       toast({
         title: 'Error',
         description: 'Failed to update profile. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setIsLoading(false)
@@ -98,23 +92,16 @@ export default function AccountPage() {
               <AccountCircle className="h-5 w-5" />
               <CardTitle>Profile Information</CardTitle>
             </div>
-            <CardDescription>
-              Update your account profile and contact information
-            </CardDescription>
+            <CardDescription>Update your account profile and contact information</CardDescription>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleProfileUpdate} className="space-y-6">
-              <div className="grid gap-4">
+              <div className="gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
                   <div className="flex items-center space-x-2">
-                    <Email className="h-5 w-5 text-muted-foreground" />
-                    <Input
-                      id="email"
-                      type="email"
-                      value={user?.email}
-                      disabled
-                    />
+                    <Email className="text-muted-foreground h-5 w-5" />
+                    <Input id="email" type="email" value={user?.email} disabled />
                   </div>
                 </div>
 
@@ -123,7 +110,9 @@ export default function AccountPage() {
                   <Input
                     id="fullName"
                     value={profile.fullName}
-                    onChange={(e) => setProfile(prev => ({ ...prev, fullName: e.target.value }))}
+                    onChange={e => {
+                      setProfile(prev => ({ ...prev, fullName: e.target.value }))
+                    }}
                     placeholder="Enter your full name"
                   />
                 </div>
@@ -131,12 +120,14 @@ export default function AccountPage() {
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone Number</Label>
                   <div className="flex items-center space-x-2">
-                    <Phone className="h-5 w-5 text-muted-foreground" />
+                    <Phone className="text-muted-foreground h-5 w-5" />
                     <Input
                       id="phone"
                       type="tel"
                       value={profile.phone}
-                      onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
+                      onChange={e => {
+                        setProfile(prev => ({ ...prev, phone: e.target.value }))
+                      }}
                       placeholder="Enter your phone number"
                     />
                   </div>

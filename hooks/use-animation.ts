@@ -1,11 +1,11 @@
 'use client'
 
-import { useAnimation as useFramerAnimation, AnimationControls } from 'framer-motion'
+import { useAnimation as useFramerAnimation } from 'framer-motion'
 import { useCallback } from 'react'
-import { useAnimation } from '@/components/animation-provider'
+import { useAnimationContext } from '@/components/providers/animation-provider'
 import type { AnimationVariant } from '@/types/animation'
 import type { ComponentType } from 'react'
-import { type Animations } from '@/types'
+import type { Animations } from '@/types/types'
 
 interface AnimationOptions {
   duration?: number
@@ -28,14 +28,14 @@ interface AnimationStep {
 }
 
 type UseAnimationReturn = {
-  animate: (config: Animations.AnimationConfig) => void
+  animate: (config: Animations.AnimationConfig) => Promise<void>
   isAnimating: boolean
   stop: () => void
 }
 
 export function useAnimationControl(): UseAnimationReturn {
   const controls = useFramerAnimation()
-  const { reduceMotion, duration: defaultDuration } = useAnimation()
+  const { reduceMotion, duration: defaultDuration } = useAnimationContext()
 
   const animate = useCallback(
     async (steps: AnimationStep | AnimationStep[]) => {

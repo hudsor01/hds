@@ -1,3 +1,5 @@
+'use client'
+
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney'
 import BuildIcon from '@mui/icons-material/Build'
 import GroupIcon from '@mui/icons-material/Group'
@@ -6,21 +8,14 @@ import TrendingDownIcon from '@mui/icons-material/TrendingDown'
 import TrendingUpIcon from '@mui/icons-material/TrendingUp'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material/styles'
+import type { StatCardProps } from '@/types/components'
 
-interface StatCardProps {
-  title: string
-  value: string
-  trend: number
-  icon: React.ReactNode
-  trendLabel: string
-}
+const iconStyle = { fontSize: 40, color: 'primary.main', opacity: 0.7 }
 
-function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
-  const theme = useTheme()
-  const isPositive = trend >= 0
+function StatCard({ title, value, trend, icon: Icon, trendLabel }: StatCardProps) {
+  const isPositive = Number(trend) >= 0
 
   return (
     <Card sx={{ height: '100%' }}>
@@ -43,13 +38,13 @@ function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
               }}
             >
               {isPositive ? <TrendingUpIcon /> : <TrendingDownIcon />}
-              <span style={{ marginLeft: theme.spacing(0.5) }}>
+              <span style={{ marginLeft: 4 }}>
                 {trend}% {trendLabel}
               </span>
             </Typography>
           </Grid>
-          <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            {icon}
+          <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end', '& svg': iconStyle }}>
+            <Icon />
           </Grid>
         </Grid>
       </CardContent>
@@ -58,39 +53,40 @@ function StatCard({ title, value, trend, icon, trendLabel }: StatCardProps) {
 }
 
 export function StatsOverview() {
-  const iconStyle = { fontSize: 40, color: 'primary.main', opacity: 0.7 }
-
   const stats = [
     {
       title: 'Total Properties',
       value: '12',
-      trend: 8.5,
-      icon: <HomeIcon sx={iconStyle} />,
-      trendLabel: 'vs last month'
+      trend: '8.5',
+      icon: HomeIcon,
+      trendLabel: 'vs last month',
+      trendDirection: 'up'
     },
     {
-      title: 'Monthly Revenue',
+      title: 'Total Revenue',
       value: '$24,500',
-      trend: 12.3,
-      icon: <AttachMoneyIcon sx={iconStyle} />,
-      trendLabel: 'vs last month'
+      trend: '12.3',
+      icon: AttachMoneyIcon,
+      trendLabel: 'vs last month',
+      trendDirection: 'up'
     },
     {
-      title: 'Active Tenants',
+      title: 'Total Users',
       value: '28',
-      trend: 5.2,
-      icon: <GroupIcon sx={iconStyle} />,
-      trendLabel: 'vs last month'
+      trend: '5.2',
+      icon: GroupIcon,
+      trendLabel: 'vs last month',
+      trendDirection: 'up'
     },
     {
-      title: 'Maintenance Requests',
+      title: 'Total Issues',
       value: '5',
-      trend: -2.4,
-      icon: <BuildIcon sx={iconStyle} />,
-      trendLabel: 'vs last month'
+      trend: '-2.4',
+      icon: BuildIcon,
+      trendLabel: 'vs last month',
+      trendDirection: 'down'
     }
   ]
-
   return (
     <Grid container spacing={3}>
       {stats.map(stat => (

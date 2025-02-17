@@ -17,10 +17,7 @@ interface UseDataFetchingResult<T> {
   refetch: () => Promise<void>
 }
 
-export function useDataFetching<T>(
-  fetchFn: () => Promise<T>,
-  options: UseDataFetchingOptions<T> = {}
-): UseDataFetchingResult<T> {
+export function useDataFetching<T>(fetchFn: () => Promise<T>, options: UseDataFetchingOptions<T> = {}): UseDataFetchingResult<T> {
   const [data, setData] = useState<T | null>(null)
   const [error, setError] = useState<Error | null>(null)
   const [isLoading, setIsLoading] = useState(true)
@@ -39,10 +36,7 @@ export function useDataFetching<T>(
       } catch (err) {
         const error = err instanceof Error ? err : new Error('An unknown error occurred')
 
-        if (
-          attempt < retries &&
-          !(error instanceof DatabaseError && error.code === 'AUTHORIZATION_ERROR')
-        ) {
+        if (attempt < retries && !(error instanceof DatabaseError && error.code === 'AUTHORIZATION_ERROR')) {
           await new Promise(resolve => setTimeout(resolve, retryDelay * Math.pow(2, attempt)))
           return fetchWithRetry(attempt + 1)
         }

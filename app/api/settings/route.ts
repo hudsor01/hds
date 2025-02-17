@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -142,9 +142,7 @@ export async function PUT(req: NextRequest) {
           user_id: userId,
           type: 'SYSTEM',
           title: 'Security Settings Updated',
-          message: `Two-factor authentication has been ${
-            validatedData.two_factor_enabled ? 'enabled' : 'disabled'
-          }`,
+          message: `Two-factor authentication has been ${validatedData.two_factor_enabled ? 'enabled' : 'disabled'}`,
           data: {
             setting_type: 'security',
             two_factor_enabled: validatedData.two_factor_enabled
@@ -178,11 +176,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Check if user is admin
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', userId)
-      .single()
+    const { data: user, error: userError } = await supabase.from('users').select('role').eq('id', userId).single()
 
     if (userError || !user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })
@@ -229,11 +223,7 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Check if user is admin
-    const { data: user, error: userError } = await supabase
-      .from('users')
-      .select('role')
-      .eq('id', userId)
-      .single()
+    const { data: user, error: userError } = await supabase.from('users').select('role').eq('id', userId).single()
 
     if (userError || !user || user.role !== 'ADMIN') {
       return NextResponse.json({ error: 'Unauthorized - Admin access required' }, { status: 403 })

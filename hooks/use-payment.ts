@@ -1,3 +1,5 @@
+'use client'
+
 import { api } from '@/lib/api'
 import type { PaymentMethod, PaymentIntent } from '@stripe/stripe-js'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -208,14 +210,8 @@ export function useSetupRecurringPayment() {
   })
 }
 
-export function useRecurringPayments(filters?: {
-  tenant_id?: string
-  property_id?: string
-  status?: string
-}) {
-  const queryString = filters
-    ? `?${new URLSearchParams(filters as Record<string, string>).toString()}`
-    : ''
+export function useRecurringPayments(filters?: { tenant_id?: string; property_id?: string; status?: string }) {
+  const queryString = filters ? `?${new URLSearchParams(filters as Record<string, string>).toString()}` : ''
 
   return useQuery<ApiResponse<Payment[]>>({
     queryKey: ['recurring-payments', filters],

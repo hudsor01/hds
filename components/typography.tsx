@@ -2,17 +2,11 @@
 
 import React, { type JSX } from 'react'
 import { cn } from '@/lib/utils'
-
-interface TypographyProps extends React.HTMLAttributes<HTMLElement> {
-  children: React.ReactNode
-}
+import { type TypographyProps } from '@/types/components'
 
 export function TypographyH1({ children, className, ...props }: TypographyProps): JSX.Element {
   return (
-    <h1
-      className={cn('scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl', className)}
-      {...props}
-    >
+    <h1 className={cn('scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl', className)} {...props}>
       {children}
     </h1>
   )
@@ -20,13 +14,7 @@ export function TypographyH1({ children, className, ...props }: TypographyProps)
 
 export function TypographyH2({ children, className, ...props }: TypographyProps): JSX.Element {
   return (
-    <h2
-      className={cn(
-        'scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0',
-        className
-      )}
-      {...props}
-    >
+    <h2 className={cn('scroll-m-20 border-b pb-2 text-3xl font-semibold tracking-tight first:mt-0', className)} {...props}>
       {children}
     </h2>
   )
@@ -56,16 +44,9 @@ export function TypographyP({ children, className, ...props }: TypographyProps):
   )
 }
 
-export function TypographyBlockquote({
-  children,
-  className,
-  ...props
-}: TypographyProps): JSX.Element {
+export function TypographyBlockquote({ children, className, ...props }: TypographyProps): JSX.Element {
   return (
-    <blockquote
-      className={cn('text-muted-foreground mt-6 border-l-2 border-blue-500 pl-6 italic', className)}
-      {...props}
-    >
+    <blockquote className={cn('text-muted-foreground mt-6 border-l-2 border-blue-500 pl-6 italic', className)} {...props}>
       {children}
     </blockquote>
   )
@@ -103,17 +84,10 @@ export function TypographyMuted({ children, className, ...props }: TypographyPro
   )
 }
 
-export function TypographyInlineCode({
-  children,
-  className,
-  ...props
-}: TypographyProps): JSX.Element {
+export function TypographyInlineCode({ children, className, ...props }: TypographyProps): JSX.Element {
   return (
     <code
-      className={cn(
-        'bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold',
-        className
-      )}
+      className={cn('bg-muted relative rounded px-[0.3rem] py-[0.2rem] font-mono text-sm font-semibold', className)}
       {...props}
     >
       {children}

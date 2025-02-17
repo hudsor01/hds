@@ -22,24 +22,22 @@ export function SecuritySettings() {
     deviceHistory: true
   })
 
-  const handleSwitchChange =
-    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSwitchChange = (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSettings(prev => ({
+      ...prev,
+      [field]: event.target.checked
+    }))
+  }
+
+  const handleNumberChange = (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(event.target.value, 10)
+    if (!isNaN(value)) {
       setSettings(prev => ({
         ...prev,
-        [field]: event.target.checked
+        [field]: value
       }))
     }
-
-  const handleNumberChange =
-    (field: keyof typeof settings) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value = parseInt(event.target.value, 10)
-      if (!isNaN(value)) {
-        setSettings(prev => ({
-          ...prev,
-          [field]: value
-        }))
-      }
-    }
+  }
 
   return (
     <Box sx={{ p: 3 }}>
@@ -58,9 +56,7 @@ export function SecuritySettings() {
           <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Switch checked={settings.twoFactor} onChange={handleSwitchChange('twoFactor')} />
-                }
+                control={<Switch checked={settings.twoFactor} onChange={handleSwitchChange('twoFactor')} />}
                 label="Enable two-factor authentication"
               />
             </FormGroup>
@@ -104,27 +100,15 @@ export function SecuritySettings() {
           <FormControl component="fieldset">
             <FormGroup>
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.loginNotifications}
-                    onChange={handleSwitchChange('loginNotifications')}
-                  />
-                }
+                control={<Switch checked={settings.loginNotifications} onChange={handleSwitchChange('loginNotifications')} />}
                 label="Notify me of new login attempts"
               />
               <FormControlLabel
-                control={
-                  <Switch
-                    checked={settings.deviceHistory}
-                    onChange={handleSwitchChange('deviceHistory')}
-                  />
-                }
+                control={<Switch checked={settings.deviceHistory} onChange={handleSwitchChange('deviceHistory')} />}
                 label="Keep device login history"
               />
             </FormGroup>
-            <FormHelperText>
-              Get notified about account access and maintain device history
-            </FormHelperText>
+            <FormHelperText>Get notified about account access and maintain device history</FormHelperText>
           </FormControl>
         </Box>
 

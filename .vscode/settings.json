@@ -1,21 +1,4 @@
 {
-  "deno.enablePaths": ["supabase/functions"],
-  "deno.lint": true,
-  "deno.unstable": [
-    "bare-node-builtins",
-    "byonm",
-    "sloppy-imports",
-    "unsafe-proto",
-    "webgpu",
-    "broadcast-channel",
-    "worker-options",
-    "cron",
-    "kv",
-    "ffi",
-    "fs",
-    "http",
-    "net"
-  ],
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -27,21 +10,18 @@
   },
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
-  "editor.formatOnSaveTimeout": 5000,
   "editor.wordWrap": "on",
   "editor.tabSize": 2,
   "editor.insertSpaces": true,
   "editor.detectIndentation": false,
   "editor.renderWhitespace": "all",
   "editor.renderControlCharacters": true,
-  "editor.renderIndentGuides": true,
   "editor.renderLineHighlight": "all",
   "editor.minimap.enabled": false,
   "editor.cursorBlinking": "solid",
   "editor.cursorSmoothCaretAnimation": "explicit",
   "editor.cursorStyle": "line",
   "editor.cursorWidth": 2,
-  "i18n-ally.localesPaths": ["app/api/messages"],
   "typescript.tsdk": "node_modules/typescript/lib",
   "editor.quickSuggestions": {
     "other": true,
@@ -49,5 +29,7 @@
     "strings": true
   },
   "editor.suggestOnTriggerCharacters": true,
-  "editor.snippetSuggestions": "top"
+  "editor.snippetSuggestions": "top",
+  "editor.guides.indentation": true,
+  "i18n-ally.localesPaths": ["app/api/messages"]
 }

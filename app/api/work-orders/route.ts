@@ -13,10 +13,7 @@ const workOrderSchema = z.object({
   property_id: z.string().uuid('Invalid property ID'),
   maintenance_id: z.string().uuid('Invalid maintenance request ID').optional(),
   title: z.string().min(1, 'Title is required').max(100, 'Title must be less than 100 characters'),
-  description: z
-    .string()
-    .min(1, 'Description is required')
-    .max(1000, 'Description must be less than 1000 characters'),
+  description: z.string().min(1, 'Description is required').max(1000, 'Description must be less than 1000 characters'),
   priority: z.enum(['LOW', 'MEDIUM', 'HIGH', 'EMERGENCY']).default('LOW'),
   status: z.enum(['PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED']).default('PENDING'),
   scheduled_date: z.string().datetime(),
@@ -34,10 +31,7 @@ export async function GET(req: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to access work orders' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to access work orders' }, { status: 401 })
     }
 
     const searchParams = req.nextUrl.searchParams
@@ -105,10 +99,7 @@ export async function POST(req: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to create work orders' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to create work orders' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -138,10 +129,7 @@ export async function POST(req: NextRequest) {
       .single()
 
     if (vendorError || !vendor) {
-      return NextResponse.json(
-        { error: 'Vendor not found or you do not have permission to assign them' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Vendor not found or you do not have permission to assign them' }, { status: 404 })
     }
 
     // Check for rate limiting (max 10 work orders per vendor per day)
@@ -201,10 +189,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ data: workOrder }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 })
     }
     console.error('Error in work orders POST route:', error)
     return NextResponse.json({ error: 'Failed to create work order' }, { status: 500 })
@@ -218,10 +203,7 @@ export async function PUT(req: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to update work orders' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to update work orders' }, { status: 401 })
     }
 
     const body = await req.json()
@@ -240,10 +222,7 @@ export async function PUT(req: NextRequest) {
       .single()
 
     if (workOrderCheckError || !existingWorkOrder) {
-      return NextResponse.json(
-        { error: 'Work order not found or you do not have permission to update it' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Work order not found or you do not have permission to update it' }, { status: 404 })
     }
 
     // Prevent updates to cancelled work orders
@@ -263,10 +242,7 @@ export async function PUT(req: NextRequest) {
         .single()
 
       if (vendorError || !vendor) {
-        return NextResponse.json(
-          { error: 'New vendor not found or you do not have permission to assign them' },
-          { status: 404 }
-        )
+        return NextResponse.json({ error: 'New vendor not found or you do not have permission to assign them' }, { status: 404 })
       }
     }
 
@@ -310,10 +286,7 @@ export async function PUT(req: NextRequest) {
     return NextResponse.json({ data: workOrder })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        { error: 'Validation failed', details: error.errors },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Validation failed', details: error.errors }, { status: 400 })
     }
     console.error('Error in work orders PUT route:', error)
     return NextResponse.json({ error: 'Failed to update work order' }, { status: 500 })
@@ -327,10 +300,7 @@ export async function DELETE(req: NextRequest) {
     } = await supabase.auth.getUser()
 
     if (!user?.id) {
-      return NextResponse.json(
-        { error: 'You must be logged in to delete work orders' },
-        { status: 401 }
-      )
+      return NextResponse.json({ error: 'You must be logged in to delete work orders' }, { status: 401 })
     }
 
     const id = req.nextUrl.searchParams.get('id')
@@ -347,21 +317,14 @@ export async function DELETE(req: NextRequest) {
       .single()
 
     if (workOrderCheckError || !workOrder) {
-      return NextResponse.json(
-        { error: 'Work order not found or you do not have permission to delete it' },
-        { status: 404 }
-      )
+      return NextResponse.json({ error: 'Work order not found or you do not have permission to delete it' }, { status: 404 })
     }
 
     if (workOrder.status === 'IN_PROGRESS') {
       return NextResponse.json({ error: 'Cannot delete in-progress work orders' }, { status: 400 })
     }
 
-    const { error } = await supabase
-      .from('work_orders')
-      .delete()
-      .eq('id', id)
-      .eq('user_id', user.id)
+    const { error } = await supabase.from('work_orders').delete().eq('id', id).eq('user_id', user.id)
 
     if (error) {
       console.error('Error deleting work order:', error)

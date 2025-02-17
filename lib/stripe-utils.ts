@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 import type { Stripe } from 'stripe'
 
 async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
@@ -61,10 +61,10 @@ export async function handleStripeWebhook(event: Stripe.Event, signature: string
     // Handle specific event types
     switch (event.type) {
       case 'customer.subscription.updated':
-        await handleSubscriptionUpdate(event.data.object as Stripe.Subscription)
+        await handleSubscriptionUpdate(event.data.object)
         break
       case 'invoice.paid':
-        await handleInvoicePaid(event.data.object as Stripe.Invoice)
+        await handleInvoicePaid(event.data.object)
         break
     }
   } catch (error) {

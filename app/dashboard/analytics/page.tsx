@@ -1,45 +1,53 @@
 'use client'
 
-import { MOCK_ANALYTICS_DATA } from '@/auth/lib/constants'
 import Box from '@mui/material/Box'
 import Container from '@mui/material/Container'
-import Grid from '@mui/material/Grid'
+import Grid from '@mui/material/Grid2'
 import Paper from '@mui/material/Paper'
 import Typography from '@mui/material/Typography'
 import { motion } from 'framer-motion'
 import dynamic from 'next/dynamic'
 
-const PerformanceChart = dynamic(
-  () => import('@/components/performance-chart').then(mod => mod.PerformanceChart),
-  {
-    ssr: false
+const PerformanceChart = dynamic(() => import('@/components/performance-chart').then(mod => mod.PerformanceChart), {
+  ssr: false
+})
+
+const BarChart = dynamic(() => import('@/components/core/Data Display/bar-chart').then(mod => mod.BarChart), {
+  ssr: false
+})
+
+const financialPerformance = {
+  monthlyTrend: [
+    { month: 'Jan', revenue: 50000, expenses: 30000 },
+    { month: 'Feb', revenue: 55000, expenses: 32000 },
+    { month: 'Mar', revenue: 60000, expenses: 35000 }
+  ]
+}
+
+const propertyOccupancy = {
+  BuildingA: 95,
+  BuildingB: 88,
+  BuildingC: 92
+}
+
+const tenantInsights = {
+  satisfaction: {
+    current: 4.5
+  },
+  maintenance: {
+    avgResolutionTime: {
+      completed: 3
+    }
+  },
+  retention: {
+    '2024': 85
   }
-)
-
-const DonutChart = dynamic(() => import('@/components/donut-chart').then(mod => mod.DonutChart), {
-  ssr: false
-})
-
-const BarChart = dynamic(() => import('@/components/bar-chart').then(mod => mod.BarChart), {
-  ssr: false
-})
+}
 
 export default function AnalyticsPage() {
-  const {
-    financialPerformance,
-    tenantActivity,
-    propertyOccupancy,
-    revenueDistribution,
-    tenantInsights
-  } = MOCK_ANALYTICS_DATA
-
   return (
     <Container maxWidth="xl" sx={{ py: 4 }}>
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
         <Typography variant="h4" gutterBottom fontWeight="bold">
           Analytics Dashboard
         </Typography>
@@ -67,13 +75,6 @@ export default function AnalyticsPage() {
               <Typography variant="h6" gutterBottom>
                 Tenant Activity
               </Typography>
-              <DonutChart
-                data={[
-                  { name: 'New Leases', value: tenantActivity.newLeases },
-                  { name: 'Renewals', value: tenantActivity.renewals },
-                  { name: 'Move-outs', value: tenantActivity.moveOuts }
-                ]}
-              />
             </Paper>
           </Grid>
 
@@ -83,12 +84,6 @@ export default function AnalyticsPage() {
               <Typography variant="h6" gutterBottom>
                 Revenue Distribution
               </Typography>
-              <DonutChart
-                data={Object.entries(revenueDistribution).map(([name, value]) => ({
-                  name,
-                  value
-                }))}
-              />
             </Paper>
           </Grid>
 

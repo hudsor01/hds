@@ -48,11 +48,7 @@ export async function getCurrentUserProfile() {
   }
 }
 
-export async function updateUserProfile(updates: {
-  email?: string
-  password?: string
-  data?: Record<string, unknown>
-}) {
+export async function updateUserProfile(updates: { email?: string; password?: string; data?: Record<string, unknown> }) {
   const session = await getSession()
   if (!session) throw new Error('Not authenticated')
 

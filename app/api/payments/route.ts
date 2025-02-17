@@ -1,4 +1,4 @@
-import supabase from '@/lib/supabase'
+import { supabase } from '@/lib/supabase/auth'
 
 import { NextRequest, NextResponse } from 'next/server'
 import Stripe from 'stripe'
@@ -21,9 +21,7 @@ const paymentSchema = z.object({
   payment_method: z.enum(['CASH', 'CHECK', 'CREDIT_CARD', 'BANK_TRANSFER', 'OTHER']),
   payment_date: z.string().datetime(),
   payment_notes: z.string().optional(),
-  payment_status: z
-    .enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED'])
-    .default('PENDING')
+  payment_status: z.enum(['PENDING', 'COMPLETED', 'FAILED', 'REFUNDED', 'CANCELLED']).default('PENDING')
 })
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
@@ -41,10 +39,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const status: string | null = searchParams.get('status')
     const type: string | null = searchParams.get('type')
 
-    let query = supabase
-      .from('payments')
-      .select('*, tenants(*), properties(*)')
-      .order('payment_date', { ascending: false })
+    let query = supabase.from('payments').select('*, tenants(*), properties(*)').order('payment_date', { ascending: false })
 
     if (property_id) {
       query = query.eq('property_id', property_id)
@@ -59,14 +54,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     }
 
     if (type) {
-      const allowedPaymentTypes = [
-        'RENT',
-        'DEPOSIT',
-        'LATE_FEE',
-        'MAINTENANCE',
-        'UTILITIES',
-        'OTHER'
-      ]
+      const allowedPaymentTypes = ['RENT', 'DEPOSIT', 'LATE_FEE', 'MAINTENANCE', 'UTILITIES', 'OTHER']
       if (allowedPaymentTypes.includes(type)) {
         query = query.eq('payment_type', type)
       } else {
@@ -231,14 +219,8 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     }
 
     // Prevent updates to completed or refunded payments
-    if (
-      existingPayment.payment_status === 'COMPLETED' ||
-      existingPayment.payment_status === 'REFUNDED'
-    ) {
-      return NextResponse.json(
-        { error: 'Cannot update completed or refunded payments' },
-        { status: 400 }
-      )
+    if (existingPayment.payment_status === 'COMPLETED' || existingPayment.payment_status === 'REFUNDED') {
+      return NextResponse.json({ error: 'Cannot update completed or refunded payments' }, { status: 400 })
     }
 
     // Handle Stripe payment status updates if necessary
@@ -248,12 +230,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
       })
     }
 
-    const { data: payment, error } = await supabase
-      .from('payments')
-      .update(validatedData)
-      .eq('id', id)
-      .select()
-      .single()
+    const { data: payment, error } = await supabase.from('payments').update(validatedData).eq('id', id).select().single()
 
     if (error) {
       console.error('Error updating payment:', error)
@@ -314,10 +291,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
 
     // Prevent deletion of completed or refunded payments
     if (payment.payment_status === 'COMPLETED' || payment.payment_status === 'REFUNDED') {
-      return NextResponse.json(
-        { error: 'Cannot delete completed or refunded payments' },
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Cannot delete completed or refunded payments' }, { status: 400 })
     }
 
     // Cancel Stripe payment intent if it exists

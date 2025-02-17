@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect } from 'react'
-import { Button } from '@/components/button'
-import { Alert, AlertDescription, AlertTitle } from '@/components/alert'
+import { Alert, AlertDescription, AlertTitle } from '@/components/core/Alert/alert'
+import { Button } from '@/components/core/Button/button'
 import { ErrorOutline } from '@mui/icons-material'
+import { useEffect } from 'react'
 
 export default function Error({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function Error({ error, reset }: { error: Error & { digest?: stri
         </Alert>
         <div className="flex justify-center gap-4">
           <Button onClick={reset}>Try again</Button>
-          <Button variant="outline" onClick={() => (window.location.href = '/')}>
+          <Button variant="outlined" onClick={() => (window.location.href = '/')}>
             Go home
           </Button>
         </div>

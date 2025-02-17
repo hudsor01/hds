@@ -1,34 +1,41 @@
-import { createClient } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
+import { supabase } from '@/lib/supabase'
 import { z } from 'zod'
+import { AuthError } from '@supabase/supabase-js'
 
 const authRequestSchema = z.object({
   email: z.string().email('Invalid email address'),
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
 })
 
 const passwordResetSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email: z.string().email('Invalid email address')
 })
 
 const passwordUpdateSchema = z.object({
-  password: z.string().min(8, 'Password must be at least 8 characters'),
+  password: z.string().min(8, 'Password must be at least 8 characters')
 })
+
+const authTypeSchema = z.enum(['signin', 'signup', 'reset-password', 'update-password'])
+
+function isAuthError(error: unknown): error is AuthError {
+  return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
+}
 
 export async function POST(request: Request) {
   try {
     const json = await request.json()
     const { type, ...data } = json
 
-    const supabase = createClient()
+    const validatedType = authTypeSchema.parse(type)
 
-    switch (type) {
+    switch (validatedType) {
       case 'signin': {
         const validatedData = authRequestSchema.parse(data)
         const { error } = await supabase.auth.signInWithPassword(validatedData)
-        
+
         if (error) throw error
-        
+
         return NextResponse.json({ message: 'Successfully signed in' })
       }
 
@@ -37,71 +44,83 @@ export async function POST(request: Request) {
         const { error } = await supabase.auth.signUp({
           ...validatedData,
           options: {
-            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`,
-          },
+            emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback`
+          }
         })
-        
+
         if (error) throw error
-        
+
         return NextResponse.json({ message: 'Please check your email to confirm your account' })
       }
 
       case 'reset-password': {
         const validatedData = passwordResetSchema.parse(data)
         const { error } = await supabase.auth.resetPasswordForEmail(validatedData.email, {
-          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`,
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`
         })
-        
+
         if (error) throw error
-        
+
         return NextResponse.json({ message: 'Password reset instructions sent to your email' })
       }
 
       case 'update-password': {
         const validatedData = passwordUpdateSchema.parse(data)
         const { error } = await supabase.auth.updateUser({
-          password: validatedData.password,
+          password: validatedData.password
         })
-        
+
         if (error) throw error
-        
+
         return NextResponse.json({ message: 'Password updated successfully' })
       }
-
-      default:
-        return NextResponse.json(
-          { error: 'Invalid auth type' },
-          { status: 400 }
-        )
     }
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: 'Validation Error', details: error.errors },
+        {
+          error: 'Validation Error',
+          details: error.errors
+        },
         { status: 400 }
+      )
+    }
+
+    if (isAuthError(error)) {
+      return NextResponse.json(
+        {
+          error: 'Authentication Error',
+          message: error.message
+        },
+        { status: 401 }
       )
     }
 
     console.error('Auth error:', error)
     return NextResponse.json(
-      { error: 'Authentication failed' },
-      { status: 401 }
+      {
+        error: 'Authentication failed',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
+      { status: 500 }
     )
   }
 }
 
-export async function DELETE(request: Request) {
+export async function DELETE() {
   try {
-    const supabase = createClient()
     const { error } = await supabase.auth.signOut()
-    
+
     if (error) throw error
-    
+
     return NextResponse.json({ message: 'Successfully signed out' })
   } catch (error) {
     console.error('Sign out error:', error)
     return NextResponse.json(
-      { error: 'Failed to sign out' },
+      {
+        error: 'Failed to sign out',
+        message: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

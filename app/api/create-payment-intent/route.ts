@@ -1,21 +1,38 @@
 import { NextResponse } from 'next/server'
-import supabase from '@/lib/supabase'
+import { z } from 'zod'
 import Stripe from 'stripe'
+import { withAuth, withRateLimit } from '../lib/middleware'
+import { handleError } from '../lib/error-handler'
+import { validateRequest } from '../lib/validation'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
-export async function POST(req: Request): Promise<NextResponse> {
-  const supabase = supabase()
-  const {
-    data: { user }
-  } = await supabase.auth.getSession()
-  const { amount, propertyId }: { amount: number; propertyId: string } = await req.json()
+const PaymentIntentSchema = z.object({
+  amount: z.number().positive(),
+  propertyId: z.string().uuid()
+})
 
-  const paymentIntent = await stripe.paymentIntents.create({
-    amount: amount * 100,
-    currency: 'usd',
-    metadata: { propertyId, userId: user.id }
-  })
+export async function POST(request: Request) {
+  try {
+    return await withRateLimit(async (req: Request) => {
+      return await withAuth(req, async user => {
+        const validatedData = await validateRequest(PaymentIntentSchema, req)
 
-  return NextResponse.json({ clientSecret: paymentIntent.client_secret })
+        const paymentIntent = await stripe.paymentIntents.create({
+          amount: validatedData.amount * 100,
+          currency: 'usd',
+          metadata: {
+            propertyId: validatedData.propertyId,
+            userId: user.id
+          }
+        })
+
+        return NextResponse.json({
+          clientSecret: paymentIntent.client_secret
+        })
+      })
+    })(request)
+  } catch (error) {
+    return handleError(error)
+  }
 }

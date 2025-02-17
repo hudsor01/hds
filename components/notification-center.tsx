@@ -1,4 +1,5 @@
-// components/notifications/notification-center.tsx
+'use client'
+
 import CheckCircleIcon from '@mui/icons-material/CheckCircle'
 import CloseIcon from '@mui/icons-material/Close'
 import ErrorIcon from '@mui/icons-material/Error'
@@ -98,7 +99,13 @@ export function NotificationCenter() {
             bgcolor: notification.read ? 'inherit' : 'action.hover'
           }}
           secondaryAction={
-            <IconButton edge="end" size="small" onClick={() => handleMarkAsRead(notification.id)}>
+            <IconButton
+              edge="end"
+              size="small"
+              onClick={() => {
+                handleMarkAsRead(notification.id)
+              }}
+            >
               <MoreVertIcon />
             </IconButton>
           }
@@ -131,7 +138,12 @@ export function NotificationCenter() {
   return (
     <>
       <Tooltip title="Notifications">
-        <IconButton color="inherit" onClick={() => setOpen(true)}>
+        <IconButton
+          color="inherit"
+          onClick={() => {
+            setOpen(true)
+          }}
+        >
           <Badge badgeContent={unreadCount} color="error">
             <NotificationsIcon />
           </Badge>
@@ -141,7 +153,9 @@ export function NotificationCenter() {
       <Drawer
         anchor="right"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false)
+        }}
         PaperProps={{
           sx: { width: { xs: '100%', sm: 400 } }
         }}
@@ -158,14 +172,20 @@ export function NotificationCenter() {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Notifications
           </Typography>
-          <IconButton onClick={() => setOpen(false)}>
+          <IconButton
+            onClick={() => {
+              setOpen(false)
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Box>
 
         <Tabs
           value={currentTab}
-          onChange={(_, newValue) => setCurrentTab(newValue)}
+          onChange={(_, newValue) => {
+            setCurrentTab(newValue)
+          }}
           variant="fullWidth"
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
@@ -174,9 +194,7 @@ export function NotificationCenter() {
         </Tabs>
 
         <Box sx={{ overflow: 'auto' }}>
-          <NotificationList
-            notifications={currentTab === 0 ? notifications : notifications.filter(n => !n.read)}
-          />
+          <NotificationList notifications={currentTab === 0 ? notifications : notifications.filter(n => !n.read)} />
 
           {notifications.length === 0 && (
             <Box sx={{ p: 3, textAlign: 'center' }}>

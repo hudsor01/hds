@@ -3,18 +3,11 @@
 import { useEffect, useState } from 'react'
 import { TenantForm } from '@/components/tenants/tenant-form'
 import { TenantTable } from '@/components/tenants/tenant-table'
-import { Button } from '@/components/ui/button'
+import { Button } from '@/components/button'
 import { Plus } from 'lucide-react'
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Tenant, CreateTenantInput } from '@/types/tenant'
-import { useToast } from '@/components/ui/use-toast'
-import { createClient } from '@/utils/supabase/client'
+import { useToast } from '@/hooks/use-toast'
 
 export default function TenantsPage() {
   const [tenants, setTenants] = useState<Tenant[]>([])
@@ -31,10 +24,7 @@ export default function TenantsPage() {
   async function fetchTenants() {
     try {
       setIsLoading(true)
-      const { data, error } = await supabase
-        .from('tenants')
-        .select('*, leases(*)')
-        .order('created_at', { ascending: false })
+      const { data, error } = await supabase.from('tenants').select('*, leases(*)').order('created_at', { ascending: false })
 
       if (error) throw error
 
@@ -44,7 +34,7 @@ export default function TenantsPage() {
       toast({
         title: 'Error',
         description: 'Failed to fetch tenants. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     } finally {
       setIsLoading(false)
@@ -53,26 +43,22 @@ export default function TenantsPage() {
 
   async function handleCreate(data: CreateTenantInput) {
     try {
-      const { data: newTenant, error } = await supabase
-        .from('tenants')
-        .insert([data])
-        .select()
-        .single()
+      const { data: newTenant, error } = await supabase.from('tenants').insert([data]).select().single()
 
       if (error) throw error
 
-      setTenants((prev) => [newTenant, ...prev])
+      setTenants(prev => [newTenant, ...prev])
       setIsDialogOpen(false)
       toast({
         title: 'Success',
-        description: 'Tenant created successfully.',
+        description: 'Tenant created successfully.'
       })
     } catch (error) {
       console.error('Error creating tenant:', error)
       toast({
         title: 'Error',
         description: 'Failed to create tenant. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -90,45 +76,40 @@ export default function TenantsPage() {
 
       if (error) throw error
 
-      setTenants((prev) =>
-        prev.map((t) => (t.id === selectedTenant.id ? updatedTenant : t))
-      )
+      setTenants(prev => prev.map(t => (t.id === selectedTenant.id ? updatedTenant : t)))
       setIsDialogOpen(false)
       setSelectedTenant(null)
       toast({
         title: 'Success',
-        description: 'Tenant updated successfully.',
+        description: 'Tenant updated successfully.'
       })
     } catch (error) {
       console.error('Error updating tenant:', error)
       toast({
         title: 'Error',
         description: 'Failed to update tenant. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
 
   async function handleDelete(tenantId: string) {
     try {
-      const { error } = await supabase
-        .from('tenants')
-        .delete()
-        .eq('id', tenantId)
+      const { error } = await supabase.from('tenants').delete().eq('id', tenantId)
 
       if (error) throw error
 
-      setTenants((prev) => prev.filter((t) => t.id !== tenantId))
+      setTenants(prev => prev.filter(t => t.id !== tenantId))
       toast({
         title: 'Success',
-        description: 'Tenant deleted successfully.',
+        description: 'Tenant deleted successfully.'
       })
     } catch (error) {
       console.error('Error deleting tenant:', error)
       toast({
         title: 'Error',
         description: 'Failed to delete tenant. Please try again.',
-        variant: 'destructive',
+        variant: 'destructive'
       })
     }
   }
@@ -137,20 +118,24 @@ export default function TenantsPage() {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Tenants</h1>
-        <Button onClick={() => setIsDialogOpen(true)}>
+        <Button
+          onClick={() => {
+            setIsDialogOpen(true)
+          }}
+        >
           <Plus className="mr-2 h-4 w-4" />
           Add Tenant
         </Button>
       </div>
 
       {isLoading ? (
-        <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="flex h-64 items-center justify-center">
+          <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
         </div>
       ) : (
         <TenantTable
           tenants={tenants}
-          onEdit={(tenant) => {
+          onEdit={tenant => {
             setSelectedTenant(tenant)
             setIsDialogOpen(true)
           }}
@@ -158,28 +143,26 @@ export default function TenantsPage() {
         />
       )}
 
-      <Dialog 
-        open={isDialogOpen} 
-        onOpenChange={(open) => {
+      <Dialog
+        open={isDialogOpen}
+        onOpenChange={open => {
           setIsDialogOpen(open)
           if (!open) setSelectedTenant(null)
         }}
       >
         <DialogContent className="max-w-3xl">
           <DialogHeader>
-            <DialogTitle>
-              {selectedTenant ? 'Edit Tenant' : 'Add Tenant'}
-            </DialogTitle>
+            <DialogTitle>{selectedTenant ? 'Edit Tenant' : 'Add Tenant'}</DialogTitle>
             <DialogDescription>
-              {selectedTenant 
-                ? 'Update the tenant details below.'
-                : 'Fill in the tenant details below to add a new tenant.'}
+              {selectedTenant ? 'Update the tenant details below.' : 'Fill in the tenant details below to add a new tenant.'}
             </DialogDescription>
           </DialogHeader>
           <TenantForm
             initialData={selectedTenant || undefined}
             onSubmit={selectedTenant ? handleUpdate : handleCreate}
-            onCancel={() => setIsDialogOpen(false)}
+            onCancel={() => {
+              setIsDialogOpen(false)
+            }}
           />
         </DialogContent>
       </Dialog>
