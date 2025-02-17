@@ -1,75 +1,52 @@
 'use client'
 
-import CheckCircleIcon from '@mui/icons-material/CheckCircle'
-import CloseIcon from '@mui/icons-material/Close'
-import ErrorIcon from '@mui/icons-material/Error'
-import InfoIcon from '@mui/icons-material/Info'
-import MoreVertIcon from '@mui/icons-material/MoreVert'
-import NotificationsIcon from '@mui/icons-material/Notifications'
-import WarningIcon from '@mui/icons-material/Warning'
-import Badge from '@mui/material/Badge'
-import Box from '@mui/material/Box'
-import Drawer from '@mui/material/Drawer'
-import IconButton from '@mui/material/IconButton'
-import List from '@mui/material/List'
-import ListItem from '@mui/material/ListItem'
-import ListItemIcon from '@mui/material/ListItemIcon'
-import ListItemText from '@mui/material/ListItemText'
-import Tab from '@mui/material/Tab'
-import Tabs from '@mui/material/Tabs'
-import Tooltip from '@mui/material/Tooltip'
-import Typography from '@mui/material/Typography'
+import {
+  CheckCircle as CheckCircleIcon,
+  Close as CloseIcon,
+  Error as ErrorIcon,
+  Info as InfoIcon,
+  MoreVert as MoreVertIcon,
+  Notifications as NotificationsIcon,
+  Warning as WarningIcon
+} from '@mui/icons-material'
+import {
+  Badge,
+  Box,
+  Drawer,
+  IconButton,
+  List,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tab,
+  Tabs,
+  Tooltip,
+  Typography,
+  type Theme
+} from '@mui/material'
 import { formatDistanceToNow } from 'date-fns'
-import { useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 
-interface Notification {
+export type NotificationType = 'alert' | 'info' | 'warning' | 'success'
+export type NotificationCategory = 'maintenance' | 'payment' | 'lease' | 'system'
+
+export interface Notification {
   id: string
-  type: 'alert' | 'info' | 'warning' | 'success'
+  type: NotificationType
   title: string
   message: string
   timestamp: Date
   read: boolean
-  category: 'maintenance' | 'payment' | 'lease' | 'system'
+  category: NotificationCategory
 }
 
-export function NotificationCenter() {
-  const [open, setOpen] = useState(false)
-  const [currentTab, setCurrentTab] = useState(0)
+interface NotificationListProps {
+  notifications: Notification[]
+  onMarkAsRead: (id: string) => void
+}
 
-  // Mock notifications - would come from your notification service
-  const notifications: Notification[] = [
-    {
-      id: '1',
-      type: 'alert',
-      title: 'Urgent Maintenance Request',
-      message: 'Water leak reported at 123 Main St.',
-      timestamp: new Date(),
-      read: false,
-      category: 'maintenance'
-    },
-    {
-      id: '2',
-      type: 'success',
-      title: 'Payment Received',
-      message: 'Rent payment received for 456 Oak Ave.',
-      timestamp: new Date(Date.now() - 30 * 60 * 1000),
-      read: false,
-      category: 'payment'
-    },
-    {
-      id: '3',
-      type: 'warning',
-      title: 'Lease Expiring Soon',
-      message: 'Lease for 789 Pine St expires in 30 days.',
-      timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      read: false,
-      category: 'lease'
-    }
-  ]
-
-  const unreadCount = notifications.filter(n => !n.read).length
-
-  const getIcon = (type: Notification['type']) => {
+const NotificationList = ({ notifications, onMarkAsRead }: NotificationListProps) => {
+  const getIcon = useCallback((type: NotificationType) => {
     switch (type) {
       case 'alert':
         return <ErrorIcon color="error" />
@@ -80,32 +57,25 @@ export function NotificationCenter() {
       default:
         return <InfoIcon color="info" />
     }
-  }
+  }, [])
 
-  const handleMarkAsRead = (id: string) => {
-    // Implement mark as read functionality
-    console.log('Marking notification as read:', id)
-  }
-
-  const NotificationList = ({ notifications }: { notifications: Notification[] }) => (
+  return (
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {notifications.map(notification => (
         <ListItem
           key={notification.id}
           alignItems="flex-start"
-          sx={{
-            borderBottom: '1px solid',
+          sx={(theme: Theme) => ({
+            borderBottom: 1,
             borderColor: 'divider',
-            bgcolor: notification.read ? 'inherit' : 'action.hover'
-          }}
+            bgcolor: notification.read ? 'inherit' : theme.palette.action.hover,
+            transition: theme.transitions.create('background-color'),
+            '&:hover': {
+              bgcolor: theme.palette.action.hover
+            }
+          })}
           secondaryAction={
-            <IconButton
-              edge="end"
-              size="small"
-              onClick={() => {
-                handleMarkAsRead(notification.id)
-              }}
-            >
+            <IconButton edge="end" size="small" onClick={() => onMarkAsRead(notification.id)}>
               <MoreVertIcon />
             </IconButton>
           }
@@ -118,32 +88,82 @@ export function NotificationCenter() {
               </Typography>
             }
             secondary={
-              <>
+              <Box component="span" sx={{ display: 'flex', flexDirection: 'column', gap: 0.5 }}>
                 <Typography variant="body2" color="text.secondary">
                   {notification.message}
                 </Typography>
                 <Typography variant="caption" color="text.secondary">
-                  {formatDistanceToNow(notification.timestamp, {
-                    addSuffix: true
-                  })}
+                  {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
                 </Typography>
-              </>
+              </Box>
             }
           />
         </ListItem>
       ))}
     </List>
   )
+}
+
+export const NotificationCenter = () => {
+  const [open, setOpen] = useState(false)
+  const [currentTab, setCurrentTab] = useState(0)
+
+  // Mock notifications - would come from your notification service/context
+  const notifications = useMemo<Notification[]>(
+    () => [
+      {
+        id: '1',
+        type: 'alert',
+        title: 'Urgent Maintenance Request',
+        message: 'Water leak reported at 123 Main St.',
+        timestamp: new Date(),
+        read: false,
+        category: 'maintenance'
+      },
+      {
+        id: '2',
+        type: 'success',
+        title: 'Payment Received',
+        message: 'Rent payment received for 456 Oak Ave.',
+        timestamp: new Date(Date.now() - 30 * 60 * 1000),
+        read: false,
+        category: 'payment'
+      },
+      {
+        id: '3',
+        type: 'warning',
+        title: 'Lease Expiring Soon',
+        message: 'Lease for 789 Pine St expires in 30 days.',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000),
+        read: false,
+        category: 'lease'
+      }
+    ],
+    []
+  )
+
+  const unreadCount = useMemo(() => notifications.filter(n => !n.read).length, [notifications])
+
+  const handleMarkAsRead = useCallback((id: string) => {
+    // Implement mark as read functionality
+    console.log('Marking notification as read:', id)
+  }, [])
+
+  const handleClose = useCallback(() => setOpen(false), [])
+  const handleOpen = useCallback(() => setOpen(true), [])
+  const handleTabChange = useCallback((event: React.SyntheticEvent, newValue: number) => {
+    setCurrentTab(newValue)
+  }, [])
+
+  const filteredNotifications = useMemo(
+    () => (currentTab === 0 ? notifications : notifications.filter(n => !n.read)),
+    [currentTab, notifications]
+  )
 
   return (
     <>
       <Tooltip title="Notifications">
-        <IconButton
-          color="inherit"
-          onClick={() => {
-            setOpen(true)
-          }}
-        >
+        <IconButton color="inherit" onClick={handleOpen}>
           <Badge badgeContent={unreadCount} color="error">
             <NotificationsIcon />
           </Badge>
@@ -153,11 +173,12 @@ export function NotificationCenter() {
       <Drawer
         anchor="right"
         open={open}
-        onClose={() => {
-          setOpen(false)
-        }}
+        onClose={handleClose}
         PaperProps={{
-          sx: { width: { xs: '100%', sm: 400 } }
+          sx: {
+            width: { xs: '100%', sm: 400 },
+            overflow: 'hidden'
+          }
         }}
       >
         <Box
@@ -172,20 +193,14 @@ export function NotificationCenter() {
           <Typography variant="h6" sx={{ flexGrow: 1 }}>
             Notifications
           </Typography>
-          <IconButton
-            onClick={() => {
-              setOpen(false)
-            }}
-          >
+          <IconButton onClick={handleClose} edge="end">
             <CloseIcon />
           </IconButton>
         </Box>
 
         <Tabs
           value={currentTab}
-          onChange={(_, newValue) => {
-            setCurrentTab(newValue)
-          }}
+          onChange={handleTabChange}
           variant="fullWidth"
           sx={{ borderBottom: 1, borderColor: 'divider' }}
         >
@@ -193,17 +208,24 @@ export function NotificationCenter() {
           <Tab label="Unread" />
         </Tabs>
 
-        <Box sx={{ overflow: 'auto' }}>
-          <NotificationList notifications={currentTab === 0 ? notifications : notifications.filter(n => !n.read)} />
-
-          {notifications.length === 0 && (
+        <Box sx={{ overflow: 'auto', flexGrow: 1 }}>
+          {notifications.length > 0 ? (
+            <NotificationList notifications={filteredNotifications} onMarkAsRead={handleMarkAsRead} />
+          ) : (
             <Box sx={{ p: 3, textAlign: 'center' }}>
               <Typography color="text.secondary">No notifications</Typography>
             </Box>
           )}
         </Box>
 
-        <Box sx={{ p: 2, borderTop: 1, borderColor: 'divider' }}>
+        <Box
+          sx={{
+            p: 2,
+            borderTop: 1,
+            borderColor: 'divider',
+            bgcolor: 'background.paper'
+          }}
+        >
           <Typography
             variant="body2"
             color="text.secondary"

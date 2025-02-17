@@ -33,14 +33,14 @@ export class AuthService {
 
   async signIn(email: string, password: string): Promise<AuthResponse<User>> {
     try {
-      const { data, error } = await this.supabase.auth.signInWithPassword({
+      const result = await this.supabase.auth.signInWithPassword({
         email,
         password
       })
 
-      if (error) throw error
+      if (result.error) throw result.error as AuthError
 
-      return { data: data.user, error: null }
+      return { data: result.data.user, error: null }
     } catch (error) {
       return {
         data: null,
