@@ -3,32 +3,33 @@
 import { redirect } from 'next/navigation'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { cookies } from 'next/headers'
+import { AuthError, SupabaseClient } from '@supabase/supabase-js'
 
-async function createClient() {
+async function createClient(): Promise<SupabaseClient> {
   const cookieStore = await cookies()
 
   return createServerClient(process.env['NEXT_PUBLIC_SUPABASE_URL'], process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'], {
     cookies: {
-      get(name: string) {
+      get(name: string): string | undefined {
         return cookieStore.get(name)?.value
       },
-      set(name: string, value: string, options: CookieOptions) {
+      set(name: string, value: string, options: CookieOptions): void {
         cookieStore.set({ name: name, value: value, ...options })
       },
-      remove(name: string, options: CookieOptions) {
+      remove(name: string, options: CookieOptions): void {
         cookieStore.delete({ name, ...options })
       }
     }
   })
 }
 
-export async function login(formData: FormData) {
+export async function login(formData: FormData): Promise<void> {
   try {
     const supabase = await createClient()
     const email = formData.get('email') as string
     const password = formData.get('password') as string
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { error }: { error: AuthError | null } = await supabase.auth.signInWithPassword({
       email,
       password
     })
@@ -42,7 +43,7 @@ export async function login(formData: FormData) {
   }
 }
 
-export async function signup(formData: FormData) {
+export async function signup(formData: FormData): Promise<void> {
   try {
     const supabase = await createClient()
     const email = formData.get('email') as string
@@ -54,7 +55,7 @@ export async function signup(formData: FormData) {
       throw new Error('reCAPTCHA token is required')
     }
 
-    const { error, data } = await supabase.auth.signUp({
+    const { error, data }: { error: AuthError | null; data: { user: { id: string } | null } } = await supabase.auth.signUp({
       email,
       password,
       options: {

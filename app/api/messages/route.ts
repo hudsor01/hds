@@ -19,8 +19,8 @@ const threadSchema = z.object({
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
-    if (!userId) {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       query = supabase
         .from('message_threads')
         .select('*, last_message:last_message_id(*)')
-        .contains('participants', [userId])
+        .contains('participants', [user.id])
         .order('updated_at', { ascending: false })
         .range(offset, offset + limit - 1)
 
@@ -53,11 +53,11 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       }
     }
 
-    const { data, error } = await query
+    const { data, error: queryError } = await query
 
-    if (error) {
-      console.error('Error fetching messages:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (queryError) {
+      console.error('Error fetching messages:', queryError)
+      return NextResponse.json({ error: queryError.message }, { status: 500 })
     }
 
     return NextResponse.json({ data })
@@ -69,8 +69,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
-    if (!userId) {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -82,8 +82,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       const validatedData = threadSchema.parse(messageData)
 
       // Ensure the sender is included in participants
-      if (!validatedData.participants.includes(userId)) {
-        validatedData.participants.push(userId)
+      if (!validatedData.participants.includes(user.id)) {
+        validatedData.participants.push(user.id)
       }
 
       const { data: thread, error: threadError } = await supabase
@@ -130,25 +130,25 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           return NextResponse.json({ error: 'Thread not found' }, { status: 404 })
         }
 
-        if (!thread.participants.includes(userId)) {
+        if (!thread.participants.includes(user.id)) {
           return NextResponse.json({ error: 'Not authorized to post in this thread' }, { status: 403 })
         }
       }
 
-      const { data: message, error } = await supabase
+      const { data: message, error: messageError } = await supabase
         .from('messages')
         .insert([
           {
             ...validatedData,
-            sender_id: userId
+            sender_id: user.id
           }
         ])
         .select()
         .single()
 
-      if (error) {
-        console.error('Error creating message:', error)
-        return NextResponse.json({ error: error.message }, { status: 500 })
+      if (messageError) {
+        console.error('Error creating message:', messageError)
+        return NextResponse.json({ error: messageError.message }, { status: 500 })
       }
 
       // Update thread's last_message_id if this is a thread message
@@ -172,7 +172,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           data: {
             message_id: message.id,
             thread_id: validatedData.thread_id,
-            sender_id: userId
+            sender_id: user.id
           }
         }
       ])
@@ -190,8 +190,8 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
-    if (!userId) {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -204,17 +204,17 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
     // For marking messages as read
     if (mark_as_read) {
-      const { data: message, error } = await supabase
+      const { data: message, error: messageError } = await supabase
         .from('messages')
         .update({ read_at: new Date().toISOString() })
         .eq('id', id)
-        .eq('recipient_id', userId)
+        .eq('recipient_id', user.id)
         .select()
         .single()
 
-      if (error) {
-        console.error('Error marking message as read:', error)
-        return NextResponse.json({ error: error.message }, { status: 500 })
+      if (messageError) {
+        console.error('Error marking message as read:', messageError)
+        return NextResponse.json({ error: messageError.message }, { status: 500 })
       }
 
       return NextResponse.json({ data: message })
@@ -223,17 +223,17 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     // For other message updates
     const validatedData = messageSchema.partial().parse(updateData)
 
-    const { data: message, error } = await supabase
+    const { data: message, error: messageError } = await supabase
       .from('messages')
       .update(validatedData)
       .eq('id', id)
-      .eq('sender_id', userId) // Only allow sender to update message
+      .eq('sender_id', user.id) // Only allow sender to update message
       .select()
       .single()
 
-    if (error) {
-      console.error('Error updating message:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (messageError) {
+      console.error('Error updating message:', messageError)
+      return NextResponse.json({ error: messageError.message }, { status: 500 })
     }
 
     return NextResponse.json({ data: message })
@@ -248,8 +248,8 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const { userId } = await supabase.auth()
-    if (!userId) {
+    const { data: { user }, error } = await supabase.auth.getUser()
+    if (error || !user) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
@@ -269,15 +269,15 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Message not found' }, { status: 404 })
     }
 
-    if (message.sender_id !== userId) {
+    if (message.sender_id !== user.id) {
       return NextResponse.json({ error: 'Not authorized to delete this message' }, { status: 403 })
     }
 
-    const { error } = await supabase.from('messages').delete().eq('id', id).eq('sender_id', userId)
+    const { error: deleteError } = await supabase.from('messages').delete().eq('id', id).eq('sender_id', user.id)
 
-    if (error) {
-      console.error('Error deleting message:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
+    if (deleteError) {
+      console.error('Error deleting message:', deleteError)
+      return NextResponse.json({ error: deleteError.message }, { status: 500 })
     }
 
     // If this was the last message in a thread, update the thread's last_message_id

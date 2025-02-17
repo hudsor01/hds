@@ -47,7 +47,7 @@ function handleError(error: unknown) {
   )
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
   })
 }
 
-export async function PUT(request: NextRequest) {
+export async function PUT(request: NextRequest): Promise<NextResponse> {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()

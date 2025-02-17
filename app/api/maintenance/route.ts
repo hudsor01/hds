@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase/auth'
+import { createClient } from '@/lib/supabase/server'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
@@ -22,6 +22,7 @@ const maintenanceRequestSchema = z.object({
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -78,6 +79,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -167,6 +169,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -252,6 +255,7 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
 
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
+    const supabase = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()

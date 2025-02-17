@@ -37,7 +37,19 @@ const eslintConfig = [
       ...importPlugin.configs.recommended.rules,
       '@typescript-eslint/explicit-function-return-type': 'error',
       '@typescript-eslint/explicit-module-boundary-types': 'error',
-      '@typescript-eslint/no-explicit-any': 'error'
+      '@typescript-eslint/no-explicit-any': 'error',
+      '@typescript-eslint/typedef': [
+        'error',
+        {
+          arrowParameter: true,
+          variableDeclaration: true,
+          memberVariableDeclaration: true,
+          propertyDeclaration: true,
+          parameter: true,
+          objectDestructuring: true,
+          arrayDestructuring: true
+        }
+      ]
     },
     languageOptions: {
       sourceType: 'module',

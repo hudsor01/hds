@@ -5,7 +5,7 @@ interface AnalyticsChartProps {
   data: Array<{ date: string; value: number }>
   title: string
   timeRange: 'day' | 'week' | 'month' | 'year'
-  onTimeRangeChange?: (range: string) => void
+  onTimeRangeChange?: (range: 'day' | 'week' | 'month' | 'year') => void
 }
 
 export function AnalyticsChart({ data, title, timeRange, onTimeRangeChange }: AnalyticsChartProps) {
@@ -20,7 +20,7 @@ export function AnalyticsChart({ data, title, timeRange, onTimeRangeChange }: An
       <CardHeader
         title={title}
         action={
-          <Select value={timeRange} onChange={e => onTimeRangeChange?.(e.target.value)} size="small">
+          <Select value={timeRange} onChange={e => onTimeRangeChange?.(e.target.value as 'day' | 'week' | 'month' | 'year')} size="small">
             <MenuItem value="day">Last 24 hours</MenuItem>
             <MenuItem value="week">Last 7 days</MenuItem>
             <MenuItem value="month">Last 30 days</MenuItem>

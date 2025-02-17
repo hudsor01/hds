@@ -6,7 +6,7 @@ function isAuthError(error: unknown): error is AuthError {
   return typeof error === 'object' && error !== null && 'message' in error && 'status' in error
 }
 
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
     const { error } = await supabase.auth.signOut()
 

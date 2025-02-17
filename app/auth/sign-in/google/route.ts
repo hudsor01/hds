@@ -1,9 +1,10 @@
 import { supabase } from '@/utils/supabase/server'
 import { NextResponse } from 'next/server'
+import { AuthResponse, AuthError } from '@supabase/supabase-js'
 
-export async function POST() {
+export async function POST(): Promise<NextResponse> {
   try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { data, error }: AuthResponse = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback`,
@@ -15,7 +16,7 @@ export async function POST() {
     })
 
     if (error) {
-      return NextResponse.json({ error: error.message }, { status: 400 })
+      return NextResponse.json({ error: (error as AuthError).message }, { status: 400 })
     }
 
     return NextResponse.json({ url: data.url })

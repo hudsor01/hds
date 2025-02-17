@@ -1,13 +1,20 @@
 'use client'
 
 import { signIn } from '@/app/auth/actions'
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
+import { Button } from '@mui/material'
+import { TextField } from '@mui/material'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/core/Card/card'
 import Link from 'next/link'
 import { useState } from 'react'
 
-export default function SignInPage({ searchParams }: { searchParams: { error: string; message: string } }) {
+interface SignInPageProps {
+  searchParams: {
+    error: string
+    message: string
+  }
+}
+
+export default function SignInPage({ searchParams }: SignInPageProps) {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
@@ -39,13 +46,13 @@ export default function SignInPage({ searchParams }: { searchParams: { error: st
               <label htmlFor="email" className="text-foreground block text-sm font-medium">
                 Email
               </label>
-              <Input id="email" name="email" type="email" required placeholder="Enter your email" />
+              <TextField id="email" name="email" type="email" required placeholder="Enter your email" fullWidth />
             </div>
             <div className="space-y-2">
               <label htmlFor="password" className="text-foreground block text-sm font-medium">
                 Password
               </label>
-              <Input id="password" name="password" type="password" required placeholder="Enter your password" />
+              <TextField id="password" name="password" type="password" required placeholder="Enter your password" fullWidth />
             </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">

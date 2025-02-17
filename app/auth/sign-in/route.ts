@@ -1,4 +1,4 @@
-import { supabase } from '@/lib/supabase'
+import { createClient } from '@/lib/supabase/server'
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
 import { withRateLimit } from '@/lib/rate-limit'
@@ -44,12 +44,13 @@ function handleError(error: unknown) {
   )
 }
 
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest): Promise<NextResponse> {
   return withRateLimit(request, async () => {
     try {
       const json = await request.json()
       const body = signInSchema.parse(json)
 
+      const supabase = createClient()
       const { data, error } = await supabase.auth.signInWithPassword({
         email: body.email,
         password: body.password

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 import type { MenuItemProps, MenuProps } from '@mui/material'
 import { Divider, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, styled } from '@mui/material'
 import * as React from 'react'
-import { Check, ChevronRight } from 'react-feather'
+import { Check, ChevronRight } from '@mui/icons-material'
 
 const StyledMenu = styled(Menu)(({ theme }) => ({
   '& .MuiPaper-root': {

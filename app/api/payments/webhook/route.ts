@@ -47,7 +47,7 @@ function isPaymentMethod(obj: Stripe.Event.Data.Object): obj is Stripe.PaymentMe
   return (obj as Stripe.PaymentMethod).object === 'payment_method'
 }
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET
 
   try {
@@ -139,7 +139,10 @@ async function handlePaymentIntentSucceeded(
     }
   }
 
-  await supabase.from('notifications').insert([notification])
+  const { error } = await supabase.from('notifications').insert([notification])
+  if (error) {
+    console.error('Error inserting notification:', error)
+  }
 }
 
 async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
@@ -162,7 +165,10 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
     }
   }
 
-  await supabase.from('notifications').insert([notification])
+  const { error: supabaseError } = await supabase.from('notifications').insert([notification])
+  if (supabaseError) {
+    console.error('Error inserting notification:', supabaseError)
+  }
 }
 
 async function handleChargeRefunded(charge: Stripe.Charge) {
@@ -184,12 +190,15 @@ async function handleChargeRefunded(charge: Stripe.Charge) {
       }
     }
 
-    await supabase.from('notifications').insert([notification])
+    const { error } = await supabase.from('notifications').insert([notification])
+    if (error) {
+      console.error('Error inserting notification:', error)
+    }
   }
 }
 
 async function handleDisputeCreated(dispute: Stripe.Dispute) {
-  const { data: payment } = await supabase
+  const { data: payment, error } = await supabase
     .from('payments')
     .update({
       dispute_status: 'pending',
@@ -199,6 +208,11 @@ async function handleDisputeCreated(dispute: Stripe.Dispute) {
     .eq('payment_intent_id', dispute.payment_intent)
     .select()
     .single()
+
+  if (error) {
+    console.error('Error updating payment:', error)
+    return
+  }
 
   const notification: PaymentNotification = {
     user_id: payment.user_id,
@@ -211,11 +225,14 @@ async function handleDisputeCreated(dispute: Stripe.Dispute) {
     }
   }
 
-  await supabase.from('notifications').insert([notification])
+  const { error: supabaseError } = await supabase.from('notifications').insert([notification])
+  if (supabaseError) {
+    console.error('Error inserting notification:', supabaseError)
+  }
 }
 
 async function handleDisputeClosed(dispute: Stripe.Dispute) {
-  const { data: payment } = await supabase
+  const { data: payment, error } = await supabase
     .from('payments')
     .update({
       dispute_status: dispute.status,
@@ -224,6 +241,11 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
     .eq('payment_intent_id', dispute.payment_intent)
     .select()
     .single()
+
+  if (error) {
+    console.error('Error updating payment:', error)
+    return
+  }
 
   const notification: PaymentNotification = {
     user_id: payment.user_id,
@@ -236,27 +258,38 @@ async function handleDisputeClosed(dispute: Stripe.Dispute) {
     }
   }
 
-  await supabase.from('notifications').insert([notification])
+  const { error: supabaseError } = await supabase.from('notifications').insert([notification])
+  if (supabaseError) {
+    console.error('Error inserting notification:', supabaseError)
+  }
 }
 
 async function handlePaymentMethodAttached(paymentMethod: Stripe.PaymentMethod) {
-  await supabase
+  const { error } = await supabase
     .from('payment_methods')
     .update({
       status: 'active',
       updated_at: new Date().toISOString()
     })
     .eq('stripe_payment_method_id', paymentMethod.id)
+
+  if (error) {
+    console.error('Error updating payment method:', error)
+  }
 }
 
 async function handlePaymentMethodDetached(paymentMethod: Stripe.PaymentMethod) {
-  await supabase
+  const { error } = await supabase
     .from('payment_methods')
     .update({
       status: 'inactive',
       updated_at: new Date().toISOString()
     })
     .eq('stripe_payment_method_id', paymentMethod.id)
+
+  if (error) {
+    console.error('Error updating payment method:', error)
+  }
 }
 
 // Disable body parsing, we need the raw body for webhook signature verification

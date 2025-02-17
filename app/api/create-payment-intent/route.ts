@@ -5,17 +5,19 @@ import { withAuth, withRateLimit } from '../lib/middleware'
 import { handleError } from '../lib/error-handler'
 import { validateRequest } from '../lib/validation'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
+  apiVersion: '2020-08-27',
+})
 
 const PaymentIntentSchema = z.object({
   amount: z.number().positive(),
   propertyId: z.string().uuid()
 })
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse> {
   try {
     return await withRateLimit(async (req: Request) => {
-      return await withAuth(req, async user => {
+      return await withAuth(req, async (user: { id: string }) => {
         const validatedData = await validateRequest(PaymentIntentSchema, req)
 
         const paymentIntent = await stripe.paymentIntents.create({

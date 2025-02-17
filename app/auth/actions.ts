@@ -5,6 +5,7 @@ import { redirect } from 'next/navigation'
 import { revalidatePath } from 'next/cache'
 import { signInSchema, signUpSchema } from '@/lib/validations/auth'
 import { z } from 'zod'
+import { AuthError, Session, User } from '@supabase/supabase-js'
 
 const emailSchema = z.string().email()
 const passwordSchema = z.string().min(6)
@@ -21,7 +22,7 @@ function getFormValue(formData: FormData, key: string, schema: z.ZodType<string>
   return result.data
 }
 
-export async function signIn(formData: FormData) {
+export async function signIn(formData: FormData): Promise<void> {
   const validationResult = signInSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password')
@@ -32,7 +33,7 @@ export async function signIn(formData: FormData) {
   }
 
   const { email, password } = validationResult.data
-  const { error } = await supabase.auth.signInWithPassword({
+  const { error }: { error: AuthError | null } = await supabase.auth.signInWithPassword({
     email,
     password
   })
@@ -45,7 +46,7 @@ export async function signIn(formData: FormData) {
   return redirect('/dashboard')
 }
 
-export async function signUp(formData: FormData) {
+export async function signUp(formData: FormData): Promise<void> {
   const validationResult = signUpSchema.safeParse({
     email: formData.get('email'),
     password: formData.get('password'),
@@ -57,7 +58,7 @@ export async function signUp(formData: FormData) {
   }
 
   const { email, password } = validationResult.data
-  const { error } = await supabase.auth.signUp({
+  const { error }: { error: AuthError | null } = await supabase.auth.signUp({
     email,
     password,
     options: {
@@ -72,15 +73,15 @@ export async function signUp(formData: FormData) {
   return redirect('/auth/verify-email')
 }
 
-export async function signOut() {
+export async function signOut(): Promise<void> {
   await supabase.auth.signOut()
   revalidatePath('/', 'layout')
   return redirect('/')
 }
 
-export async function resetPassword(formData: FormData) {
+export async function resetPassword(formData: FormData): Promise<void> {
   const email = getFormValue(formData, 'email', emailSchema)
-  const { error } = await supabase.auth.resetPasswordForEmail(email, {
+  const { error }: { error: AuthError | null } = await supabase.auth.resetPasswordForEmail(email, {
     redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/auth/callback?next=/auth/update-password`
   })
 
@@ -91,7 +92,7 @@ export async function resetPassword(formData: FormData) {
   return redirect('/auth/reset-password?message=Check your email for a password reset link')
 }
 
-export async function updatePassword(formData: FormData) {
+export async function updatePassword(formData: FormData): Promise<void> {
   const password = getFormValue(formData, 'password', passwordSchema)
   const confirmPassword = getFormValue(formData, 'confirmPassword', passwordSchema)
 
@@ -99,7 +100,7 @@ export async function updatePassword(formData: FormData) {
     return redirect('/auth/update-password?error=Passwords do not match')
   }
 
-  const { error } = await supabase.auth.updateUser({ password })
+  const { error }: { error: AuthError | null } = await supabase.auth.updateUser({ password })
 
   if (error) {
     return redirect('/auth/update-password?error=' + encodeURIComponent(error.message))
