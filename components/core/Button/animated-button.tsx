@@ -1,8 +1,8 @@
 'use client'
 
-import { Button } from '@/components/button'
+import { Button } from '@/components/core/Button/button'
 import { motion } from 'framer-motion'
-import { forwardRef } from 'react'
+import React, { forwardRef } from 'react'
 
 const buttonVariants = {
   tap: { scale: 0.98 },

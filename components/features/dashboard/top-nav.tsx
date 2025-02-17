@@ -3,25 +3,48 @@
 import { UserNav } from '@/components/dashboard/user-nav'
 import Link from 'next/link'
 import { ModeToggle } from '@/components/mode-toggle'
-import { cn } from '@/lib/utils'
+import { AppBar, Toolbar, Typography, Box, useTheme } from '@mui/material'
+import { Apartment as BuildingIcon } from '@mui/icons-material'
 import { Breadcrumbs } from './breadcrumbs'
 
 export function TopNav() {
+  const theme = useTheme()
+
   return (
-    <div className="border-b">
-      <div className="flex h-16 items-center px-4">
-        <Link href="/dashboard" className={cn('hover:text-primary flex items-center text-lg font-semibold')}>
-          <Building2 className="mr-2 h-6 w-6" />
-          <span>HDS Platform</span>
+    <AppBar
+      position="fixed"
+      color="default"
+      elevation={0}
+      sx={{
+        borderBottom: `1px solid ${theme.palette.divider}`,
+        zIndex: theme.zIndex.drawer + 1
+      }}
+    >
+      <Toolbar sx={{ height: 64 }}>
+        <Link
+          href="/dashboard"
+          style={{
+            textDecoration: 'none',
+            color: 'inherit',
+            display: 'flex',
+            alignItems: 'center'
+          }}
+        >
+          <BuildingIcon sx={{ mr: 1, fontSize: 28 }} />
+          <Typography variant="h6" component="span" sx={{ fontWeight: 600 }}>
+            HDS Platform
+          </Typography>
         </Link>
-        <div className="ml-4 flex-1">
+
+        <Box sx={{ ml: 2, flex: 1 }}>
           <Breadcrumbs />
-        </div>
-        <div className="ml-auto flex items-center space-x-4">
+        </Box>
+
+        <Box sx={{ ml: 'auto', display: 'flex', alignItems: 'center', gap: 2 }}>
           <ModeToggle />
           <UserNav />
-        </div>
-      </div>
-    </div>
+        </Box>
+      </Toolbar>
+    </AppBar>
   )
 }

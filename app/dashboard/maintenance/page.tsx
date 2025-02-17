@@ -1,13 +1,14 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { Button } from '@/components/core/Button/button'
 import { MaintenanceRequestForm } from '@/components/maintenance/maintenance-request-form'
-import { MaintenanceRequestTable } from '@/components/maintenance/maintenance-request-table'
-import { Button } from '@/components/button'
-import { Plus } from 'lucide-react'
+import { MaintenanceRequestTable } from '@/components/maintenance/MaintenanceRequestTable'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { MaintenanceRequest, CreateMaintenanceRequestInput } from '@/types/maintenance'
 import { useToast } from '@/hooks/use-toast'
+import supabase from '@/lib/supabase/client'
+import { CreateMaintenanceRequestInput, MaintenanceRequest } from '@/types/maintenance-requests'
+import { useEffect, useState } from 'react'
+import { Plus } from 'react-feather'
 
 export default function MaintenancePage() {
   const [requests, setRequests] = useState<MaintenanceRequest[]>([])
@@ -15,7 +16,6 @@ export default function MaintenancePage() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null)
   const { toast } = useToast()
-  const supabase = createClient()
 
   useEffect(() => {
     fetchMaintenanceRequests()

@@ -24,7 +24,7 @@ export function usePermissions() {
           console.error('Error fetching permissions:', error)
           setPermissions([])
         } else {
-          setPermissions(data?.permissions || [])
+          setPermissions(data.permissions || [])
         }
       } catch (error) {
         console.error('Error fetching permissions:', error)

@@ -1,16 +1,26 @@
 'use client'
 
-import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/auth/lib/constants'
-import { Button } from '@/components/button'
+import { useState } from 'react'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  Box,
+  Typography,
+  MenuItem,
+  useTheme,
+  FormControl,
+  InputLabel,
+  Select,
+  FormHelperText
+} from '@mui/material'
+import type { SelectChangeEvent } from '@mui/material'
+import { PRIORITY_LABELS, PRIORITY_LEVELS } from '@/lib/constants'
 import type { MaintenanceRequest, NewMaintenanceRequest, UpdateMaintenanceRequest } from '@/types/maintenance_requests'
 import type { Property } from '@/types/property'
-import type { SelectChangeEvent } from '@mui/material'
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/dialog'
-import { Input } from '@/components/input'
-import { Label } from '@/components/label'
-import { Select, SelectItem } from '@/components/core/select'
-import Textarea from '@/components/core/textarea'
-import { useState } from 'react'
 
 interface MaintenanceRequestDialogProps {
   open: boolean
@@ -26,6 +36,7 @@ interface MaintenanceRequestEditDialogProps extends Omit<MaintenanceRequestDialo
 }
 
 export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | MaintenanceRequestEditDialogProps) {
+  const theme = useTheme()
   const [isLoading, setIsLoading] = useState(false)
   const [selectedProperty, setSelectedProperty] = useState(props.request?.propertyId || '')
 
@@ -61,74 +72,102 @@ export function MaintenanceRequestDialog(props: MaintenanceRequestDialogProps | 
   const selectedPropertyUnits = props.properties.find(p => p.id === selectedProperty)?.units || []
 
   return (
-    <Dialog open={props.open} onOpenChange={props.onOpenChangeAction}>
+    <Dialog
+      open={props.open}
+      onClose={() => {
+        props.onOpenChangeAction(false)
+      }}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          borderRadius: theme.shape.borderRadius,
+          border: `1px solid ${theme.palette.divider}`
+        }
+      }}
+    >
+      <DialogTitle>{props.request ? 'Edit Maintenance Request' : 'New Maintenance Request'}</DialogTitle>
       <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{props.request ? 'Edit Maintenance Request' : 'New Maintenance Request'}</DialogTitle>
-          <DialogDescription>
-            {props.request ? 'Update the maintenance request details below.' : 'Submit a new maintenance request.'}
-          </DialogDescription>
-        </DialogHeader>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="propertyId">Property</Label>
-              <Select
-                name="propertyId"
-                defaultValue={props.request?.propertyId}
-                onChange={(event: SelectChangeEvent<unknown>) => {
-                  setSelectedProperty(event.target.value as string)
-                }}
-                placeholder="Select a property"
-              >
-                {props.properties.map(property => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.name}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
+          {props.request ? 'Update the maintenance request details below.' : 'Submit a new maintenance request.'}
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <FormControl fullWidth size="small">
+            <InputLabel id="property-label">Property</InputLabel>
+            <Select
+              labelId="property-label"
+              name="propertyId"
+              label="Property"
+              defaultValue={props.request?.propertyId}
+              onChange={(event: SelectChangeEvent) => {
+                setSelectedProperty(event.target.value)
+              }}
+            >
+              {props.properties.map(property => (
+                <MenuItem key={property.id} value={property.id}>
+                  {property.name}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
 
-            <div className="space-y-2">
-              <Label htmlFor="unitId">Unit</Label>
-              <Select name="unitId" defaultValue={props.request?.unitId} disabled={!selectedProperty} placeholder="Select a unit">
-                {selectedPropertyUnits.map(unit => (
-                  <SelectItem key={unit.id} value={unit.id}>
-                    Unit {unit.number}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
+          <FormControl fullWidth size="small">
+            <InputLabel id="unit-label">Unit</InputLabel>
+            <Select
+              labelId="unit-label"
+              name="unitId"
+              label="Unit"
+              defaultValue={props.request?.unitId}
+              disabled={!selectedProperty}
+            >
+              {selectedPropertyUnits.map(unit => (
+                <MenuItem key={unit.id} value={unit.id}>
+                  Unit {unit.number}
+                </MenuItem>
+              ))}
+            </Select>
+            {!selectedProperty && <FormHelperText>Select a property first</FormHelperText>}
+          </FormControl>
 
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input id="title" name="title" defaultValue={props.request?.title} required />
-            </div>
+          <TextField name="title" label="Title" defaultValue={props.request?.title} required size="small" fullWidth />
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea id="description" name="description" defaultValue={props.request?.description} required />
-            </div>
+          <TextField
+            name="description"
+            label="Description"
+            defaultValue={props.request?.description}
+            required
+            multiline
+            rows={4}
+            size="small"
+            fullWidth
+          />
 
-            <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select name="priority" defaultValue={props.request?.priority} placeholder="Select priority level">
-                {Object.entries(PRIORITY_LEVELS).map(([key, value]) => (
-                  <SelectItem key={key} value={key}>
-                    {PRIORITY_LABELS[key as keyof typeof PRIORITY_LEVELS]}
-                  </SelectItem>
-                ))}
-              </Select>
-            </div>
-          </div>
-
-          <DialogFooter>
-            <Button type="submit" disabled={isLoading}>
-              {isLoading ? 'Saving...' : props.request ? 'Save Changes' : 'Submit Request'}
-            </Button>
-          </DialogFooter>
-        </form>
+          <FormControl fullWidth size="small">
+            <InputLabel id="priority-label">Priority</InputLabel>
+            <Select labelId="priority-label" name="priority" label="Priority" defaultValue={props.request?.priority}>
+              {Object.entries(PRIORITY_LEVELS).map(([key, value]) => (
+                <MenuItem key={key} value={key}>
+                  {PRIORITY_LABELS[key as keyof typeof PRIORITY_LEVELS]}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+        </Box>
       </DialogContent>
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button
+          onClick={() => {
+            props.onOpenChangeAction(false)
+          }}
+          variant="outlined"
+        >
+          Cancel
+        </Button>
+        <Button type="submit" variant="contained" disabled={isLoading}>
+          {isLoading ? 'Saving...' : props.request ? 'Save Changes' : 'Submit Request'}
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

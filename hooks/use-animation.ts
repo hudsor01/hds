@@ -53,8 +53,8 @@ export function useAnimationControl(): UseAnimationReturn {
                 delay: step.options?.delay || 0,
                 type: step.options?.type || 'tween',
                 ...(step.options?.type === 'spring' && {
-                  stiffness: step.options?.stiffness || 300,
-                  damping: step.options?.damping || 25
+                  stiffness: step.options.stiffness || 300,
+                  damping: step.options.damping || 25
                 })
               }
             }

@@ -1,35 +1,77 @@
 'use client'
 
-import * as React from 'react'
-import { cn } from '@/lib/utils'
-import { JSX, forwardRef } from 'react'
+import { forwardRef } from 'react'
+import type { ContainerProps as MuiContainerProps } from '@mui/material/Container'
 import MuiContainer from '@mui/material/Container'
-import { type BaseProps } from '@/types/components'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import { styled } from '@mui/material/styles'
 
-interface ContainerProps {
-  children: React.ReactNode
-  className?: string
+export interface ContainerProps extends MuiContainerProps {
+  component?: React.ElementType
 }
 
-export const Container = forwardRef<HTMLDivElement, BaseProps>(({ children, className }, ref) => (
-  <div ref={ref} className={cn('mx-auto max-w-7xl px-4 sm:px-6 lg:px-8', className)}>
+export const Container = forwardRef<HTMLDivElement, ContainerProps>(({ children, ...props }, ref) => (
+  <MuiContainer ref={ref} maxWidth="lg" {...props}>
     {children}
-  </div>
+  </MuiContainer>
 ))
 
 Container.displayName = 'Container'
 
-export function Section({ children, className }: ContainerProps): JSX.Element {
-  return <section className={cn('py-12 md:py-16 lg:py-20', className)}>{children}</section>
-}
-export function PageHeader({ children, className }: ContainerProps): JSX.Element {
-  return <div className={cn('mx-auto max-w-2xl text-center', className)}>{children}</div>
+const StyledSection = styled('section')(({ theme }) => ({
+  padding: theme.spacing(6),
+  [theme.breakpoints.up('md')]: {
+    padding: theme.spacing(8)
+  },
+  [theme.breakpoints.up('lg')]: {
+    padding: theme.spacing(10)
+  }
+}))
+
+export function Section({ children, ...props }: ContainerProps) {
+  return <StyledSection {...props}>{children}</StyledSection>
 }
 
-export function PageTitle({ children, className }: ContainerProps): JSX.Element {
-  return <h1 className={cn('text-text-primary text-4xl font-bold tracking-tight sm:text-6xl', className)}>{children}</h1>
+const StyledPageHeader = styled(Box)(({ theme }) => ({
+  maxWidth: '42rem', // equivalent to max-w-2xl
+  margin: '0 auto',
+  textAlign: 'center'
+}))
+
+export function PageHeader({ children, ...props }: ContainerProps) {
+  return <StyledPageHeader {...props}>{children}</StyledPageHeader>
 }
 
-export function PageDescription({ children, className }: ContainerProps): JSX.Element {
-  return <p className={cn('text-text-secondary mt-6 text-lg leading-8', className)}>{children}</p>
+const StyledPageTitle = styled(Typography)(({ theme }) => ({
+  fontSize: theme.typography.h2.fontSize,
+  fontWeight: theme.typography.h2.fontWeight,
+  letterSpacing: '-0.025em',
+  color: theme.palette.text.primary,
+  [theme.breakpoints.up('sm')]: {
+    fontSize: theme.typography.h1.fontSize
+  }
+}))
+
+export function PageTitle({ children, ...props }: ContainerProps) {
+  return (
+    <StyledPageTitle variant="h1" component="h1" {...props}>
+      {children}
+    </StyledPageTitle>
+  )
+}
+
+const StyledPageDescription = styled(Typography)(({ theme }) => ({
+  marginTop: theme.spacing(3),
+  fontSize: theme.typography.h6.fontSize,
+  lineHeight: 1.75,
+  color: theme.palette.text.secondary
+}))
+
+export function PageDescription({ children, ...props }: ContainerProps) {
+  return (
+    <StyledPageDescription variant="body1" {...props}>
+      {children}
+    </StyledPageDescription>
+  )
 }

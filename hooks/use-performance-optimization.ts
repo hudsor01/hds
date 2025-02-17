@@ -48,10 +48,14 @@ export function usePerformanceOptimization() {
 
     // Listen for reduced motion preference changes
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    const handler = () => detectCapabilities()
+    const handler = () => {
+      detectCapabilities()
+    }
     mediaQuery.addEventListener('change', handler)
 
-    return () => mediaQuery.removeEventListener('change', handler)
+    return () => {
+      mediaQuery.removeEventListener('change', handler)
+    }
   }, [detectCapabilities])
 
   return {

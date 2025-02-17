@@ -1,32 +1,37 @@
-import { useToast } from '@/hooks/ui'
+import { useToast } from '@/hooks/use-toast'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useCallback } from 'react'
 import { useForm as useReactHookForm } from 'react-hook-form'
 import { z } from 'zod'
 
-interface UseFormOptions<T extends z.ZodObject<unknown>> {
+interface UseFormOptions<T extends z.ZodObject<z.ZodRawShape>> {
   schema: T
   defaultValues?: Partial<z.infer<T>>
   onSubmit: (data: z.infer<T>) => Promise<void> | void
   onError?: (error: Error) => void
 }
 
-export function useForm<T extends z.ZodObject<unknown>>({ schema, defaultValues, onSubmit, onError }: UseFormOptions<T>) {
+export function useForm<T extends z.ZodObject<z.ZodRawShape>>({ schema, defaultValues, onSubmit, onError }: UseFormOptions<T>) {
   const { showToast } = useToast()
 
-  const form = useReactHookForm({
+  const form = useReactHookForm<z.infer<T>>({
     resolver: zodResolver(schema),
-    defaultValues: defaultValues as unknown
+    defaultValues
   })
 
   const handleSubmit = useCallback(
     async (data: z.infer<T>) => {
       try {
         await onSubmit(data)
-      } catch (error) {
-        const message = error instanceof Error ? error.message : 'An error occurred'
-        showToast(message, 'error')
-        onError?.(error instanceof Error ? error : new Error(message))
+      } catch (err: unknown) {
+        let error: Error
+        if (err instanceof Error) {
+          error = err
+        } else {
+          error = new Error('An error occurred')
+        }
+        showToast(error.message, 'error')
+        onError?.(error)
       }
     },
     [onSubmit, onError, showToast]
@@ -44,14 +49,14 @@ export function getFieldError(fieldName: string, errors: Record<string, unknown>
   return error?.message as string | undefined
 }
 
-export function isFieldRequired(schema: z.ZodObject<unknown>, fieldName: string): boolean {
+export function isFieldRequired(schema: z.ZodObject<z.ZodRawShape>, fieldName: string): boolean {
   const shape = schema.shape as Record<string, z.ZodTypeunknown>
   const field = shape[fieldName]
   return !field.isOptional()
 }
 
 // Form validation utilities
-export function validateField<T extends z.ZodObject<unknown>>(
+export function validateField<T extends z.ZodObject<z.ZodRawShape>>(
   schema: T,
   fieldName: keyof z.infer<T>,
   value: unknown
@@ -68,7 +73,7 @@ export function validateField<T extends z.ZodObject<unknown>>(
 }
 
 // Form field props generator
-export function createFormField<T extends z.ZodObject<unknown>>(schema: T) {
+export function createFormField<T extends z.ZodObject<z.ZodRawShape>>(schema: T) {
   return {
     getFieldProps: (name: keyof z.infer<T>) => ({
       name,

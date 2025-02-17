@@ -1,33 +1,39 @@
 'use client'
 
-import { Button } from '@/components/button'
 import type {
-  MaintenanceStatus,
+  Comment,
   MaintenanceRequestWithRelations,
-  UpdateMaintenanceRequest,
-  Comment
-} from '@/types/maintenance_requests'
+  MaintenanceStatus,
+  UpdateMaintenanceRequest
+} from '@/types/maintenance-requests'
+import { MaintenanceTicketDetailsProps } from '@/types/maintenance-requests'
+import { Schedule as ClockIcon, Message as MessageIcon, Send as SendIcon } from '@mui/icons-material'
 import type { SelectChangeEvent } from '@mui/material'
-import { Dialog, DialogContent, DialogTitle } from '@mui/material'
-import { Label } from '@/components/label'
-import { Select, SelectItem } from '@/components/core/select'
-import Textarea from '@/components/core/textarea'
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Paper,
+  Select,
+  Stack,
+  TextField,
+  Typography,
+  useTheme
+} from '@mui/material'
 import { useState } from 'react'
-import { Clock, MessageSquare } from 'react-feather'
-
-interface MaintenanceTicketDetailsProps {
-  open: boolean
-  onOpenChangeAction: (open: boolean) => void
-  ticket: MaintenanceRequestWithRelations
-  onUpdateAction: (data: UpdateMaintenanceRequest) => Promise<void>
-}
 
 export function MaintenanceTicketDetails({ open, onOpenChangeAction, ticket, onUpdateAction }: MaintenanceTicketDetailsProps) {
+  const theme = useTheme()
   const [isLoading, setIsLoading] = useState(false)
   const [status, setStatus] = useState<MaintenanceStatus>(ticket.status)
   const [comment, setComment] = useState('')
 
-  const handleStatusChange = async (event: SelectChangeEvent<unknown>) => {
+  const handleStatusChange = async (event: SelectChangeEvent) => {
     const newStatus = event.target.value as MaintenanceStatus
     setStatus(newStatus)
     setIsLoading(true)
@@ -70,73 +76,108 @@ export function MaintenanceTicketDetails({ open, onOpenChangeAction, ticket, onU
       }}
       maxWidth="md"
       fullWidth
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          borderRadius: theme.shape.borderRadius,
+          border: `1px solid ${theme.palette.divider}`
+        }
+      }}
     >
       <DialogTitle>Maintenance Ticket Details</DialogTitle>
       <DialogContent>
-        <div className="space-y-6">
+        <Stack spacing={3} sx={{ mt: 2 }}>
           {/* Status */}
-          <div className="space-y-2">
-            <Label>Status</Label>
-            <Select value={status} onChange={handleStatusChange} disabled={isLoading}>
-              <SelectItem value="pending">Pending</SelectItem>
-              <SelectItem value="in_progress">In Progress</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
-              <SelectItem value="cancelled">Cancelled</SelectItem>
+          <FormControl fullWidth size="small">
+            <InputLabel id="status-label">Status</InputLabel>
+            <Select labelId="status-label" value={status} onChange={handleStatusChange} disabled={isLoading} label="Status">
+              <MenuItem value="pending">Pending</MenuItem>
+              <MenuItem value="in_progress">In Progress</MenuItem>
+              <MenuItem value="completed">Completed</MenuItem>
+              <MenuItem value="cancelled">Cancelled</MenuItem>
             </Select>
-          </div>
+          </FormControl>
 
           {/* Ticket Info */}
-          <div className="space-y-2">
-            <h3 className="font-medium">{ticket.title}</h3>
-            <p className="text-sm text-gray-500">
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              {ticket.title}
+            </Typography>
+            <Typography variant="body2" color="text.secondary" gutterBottom>
               {ticket.property?.name} - Unit {ticket.unit?.number}
-            </p>
-            <p className="text-sm">{ticket.description}</p>
-            <div className="flex items-center space-x-2 text-sm text-gray-500">
-              <Clock className="h-4 w-4" />
-              <span>
+            </Typography>
+            <Typography variant="body1" paragraph>
+              {ticket.description}
+            </Typography>
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <ClockIcon fontSize="small" color="action" />
+              <Typography variant="body2" color="text.secondary">
                 Created on{' '}
                 {new Date(ticket.created_at).toLocaleDateString(undefined, {
                   year: 'numeric',
                   month: 'long',
                   day: 'numeric'
                 })}
-              </span>
-            </div>
-          </div>
+              </Typography>
+            </Box>
+          </Box>
 
           {/* Comments */}
-          <div className="space-y-4">
-            <h4 className="font-medium">Comments</h4>
-            <div className="space-y-4">
+          <Box>
+            <Typography variant="h6" gutterBottom>
+              Comments
+            </Typography>
+            <Stack spacing={2}>
               {ticket.comments?.map((comment: Comment, index: number) => (
-                <div key={index} className="rounded-lg bg-gray-50 p-3">
-                  <p className="text-sm">{comment.content}</p>
-                  <p className="mt-1 text-xs text-gray-500">{new Date(comment.created_at).toLocaleString()}</p>
-                </div>
+                <Paper
+                  key={index}
+                  variant="outlined"
+                  sx={{
+                    p: 2,
+                    backgroundColor: theme.palette.mode === 'light' ? theme.palette.grey[50] : theme.palette.grey[900]
+                  }}
+                >
+                  <Typography variant="body2" gutterBottom>
+                    {comment.content}
+                  </Typography>
+                  <Typography variant="caption" color="text.secondary">
+                    {new Date(comment.created_at).toLocaleString()}
+                  </Typography>
+                </Paper>
               ))}
-            </div>
+            </Stack>
 
             {/* Add Comment */}
-            <div className="space-y-2">
-              <Label>Add Comment</Label>
-              <div className="flex space-x-2">
-                <Textarea
+            <Box sx={{ mt: 2 }}>
+              <Typography variant="subtitle2" gutterBottom>
+                Add Comment
+              </Typography>
+              <Box sx={{ display: 'flex', gap: 1 }}>
+                <TextField
                   value={comment}
                   onChange={e => {
                     setComment(e.target.value)
                   }}
                   placeholder="Type your comment..."
                   disabled={isLoading}
+                  size="small"
+                  fullWidth
+                  multiline
+                  rows={2}
                 />
-                <Button onClick={handleAddComment} disabled={isLoading || !comment.trim()}>
-                  <MessageSquare className="mr-2 h-4 w-4" />
+                <Button
+                  onClick={handleAddComment}
+                  disabled={isLoading || !comment.trim()}
+                  variant="contained"
+                  startIcon={<SendIcon />}
+                  sx={{ minWidth: 100 }}
+                >
                   Add
                 </Button>
-              </div>
-            </div>
-          </div>
-        </div>
+              </Box>
+            </Box>
+          </Box>
+        </Stack>
       </DialogContent>
     </Dialog>
   )

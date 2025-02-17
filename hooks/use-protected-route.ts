@@ -15,8 +15,12 @@ export function useProtectedRoute() {
       .then(({ data: { session } }) => {
         setSession(session)
       })
-      .catch(error => console.error('Error fetching session:', error))
-      .finally(() => setLoading(false))
+      .catch(error => {
+        console.error('Error fetching session:', error)
+      })
+      .finally(() => {
+        setLoading(false)
+      })
   }, [])
 
   const user = session?.user

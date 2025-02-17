@@ -1,16 +1,26 @@
 'use client'
 
-import { Button } from '@/components/button'
-import { type Property, MaintenancePriority, type NewMaintenanceRequest, type PropertyUnit } from '@/types'
-import { Dialog, DialogContent, DialogTitle } from '@mui/material'
-import { Label } from '@/components/label'
-import { Select, SelectItem } from '@/components/core/select'
-import Textarea from '@/components/core/textarea'
-import { Input } from '@/components/input'
 import { useState } from 'react'
-import { z } from 'zod'
-import { useForm } from 'react-hook-form'
+import {
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Button,
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Box,
+  Stack,
+  FormHelperText,
+  useTheme
+} from '@mui/material'
+import { type Property, MaintenancePriority, type NewMaintenanceRequest, type PropertyUnit } from '@/types'
+import { useForm, Controller } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
 
 const maintenanceSchema = z.object({
   property_id: z.string().min(1, 'Property is required'),
@@ -30,10 +40,11 @@ interface MaintenanceTicketDialogProps {
 }
 
 export function MaintenanceTicketDialog({ open, onOpenChangeAction, onSubmitAction, properties }: MaintenanceTicketDialogProps) {
+  const theme = useTheme()
   const [selectedProperty, setSelectedProperty] = useState('')
 
   const {
-    register,
+    control,
     handleSubmit,
     formState: { errors, isSubmitting },
     watch,
@@ -55,108 +66,133 @@ export function MaintenanceTicketDialog({ open, onOpenChangeAction, onSubmitActi
     }
   }
 
-  const handleSelectProperty = (value: string) => {
-    setSelectedProperty(value)
+  const handleClose = () => {
+    reset()
+    onOpenChangeAction(false)
   }
 
   return (
     <Dialog
       open={open}
-      onClose={() => {
-        onOpenChangeAction(false)
-      }}
-      maxWidth="md"
+      onClose={handleClose}
+      maxWidth="sm"
       fullWidth
+      PaperProps={{
+        elevation: 0,
+        sx: {
+          borderRadius: theme.shape.borderRadius,
+          border: `1px solid ${theme.palette.divider}`
+        }
+      }}
     >
       <DialogTitle>New Maintenance Request</DialogTitle>
       <DialogContent>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 pt-4">
-          <div className="grid gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="property_id">Property</Label>
-              <Select
-                {...register('property_id')}
-                value={selectedProperty}
-                onChange={e => {
-                  const value = e.target.value
-                  handleSelectProperty(value)
-                }}
-                error={!!errors.property_id}
-              >
-                <SelectItem value="">Select a property</SelectItem>
-                {properties.map(property => (
-                  <SelectItem key={property.id} value={property.id}>
-                    {property.name}
-                  </SelectItem>
-                ))}
-              </Select>
-              {errors.property_id && <p className="text-sm text-red-500">{errors.property_id.message}</p>}
-            </div>
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ mt: 2 }}>
+          <Stack spacing={2}>
+            <Controller
+              name="property_id"
+              control={control}
+              render={({ field }) => (
+                <FormControl error={!!errors.property_id} size="small">
+                  <InputLabel>Property</InputLabel>
+                  <Select
+                    {...field}
+                    label="Property"
+                    onChange={e => {
+                      field.onChange(e)
+                      setSelectedProperty(e.target.value)
+                    }}
+                  >
+                    {properties.map(property => (
+                      <MenuItem key={property.id} value={property.id}>
+                        {property.name}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.property_id && <FormHelperText>{errors.property_id.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="unit_id">Unit</Label>
-              <Select {...register('unit_id')} disabled={!watchPropertyId} error={!!errors.unit_id}>
-                <SelectItem value="">Select a unit</SelectItem>
-                {selectedPropertyUnits.map(unit => (
-                  <SelectItem key={unit.id} value={unit.id}>
-                    Unit {unit.number}
-                  </SelectItem>
-                ))}
-              </Select>
-              {errors.unit_id && <p className="text-sm text-red-500">{errors.unit_id.message}</p>}
-            </div>
+            <Controller
+              name="unit_id"
+              control={control}
+              render={({ field }) => (
+                <FormControl error={!!errors.unit_id} size="small">
+                  <InputLabel>Unit</InputLabel>
+                  <Select {...field} label="Unit" disabled={!watchPropertyId}>
+                    {selectedPropertyUnits.map(unit => (
+                      <MenuItem key={unit.id} value={unit.id}>
+                        Unit {unit.number}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  {errors.unit_id && <FormHelperText>{errors.unit_id.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="title">Title</Label>
-              <Input
-                {...register('title')}
-                placeholder="Brief description of the issue"
-                className={errors.title ? 'border-red-500' : ''}
-              />
-              {errors.title && <p className="text-sm text-red-500">{errors.title.message}</p>}
-            </div>
+            <Controller
+              name="title"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Title"
+                  placeholder="Brief description of the issue"
+                  error={!!errors.title}
+                  helperText={errors.title?.message}
+                  size="small"
+                  fullWidth
+                />
+              )}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                {...register('description')}
-                placeholder="Detailed description of the maintenance issue"
-                className={errors.description ? 'border-red-500' : ''}
-              />
-              {errors.description && <p className="text-sm text-red-500">{errors.description.message}</p>}
-            </div>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  label="Description"
+                  placeholder="Detailed description of the maintenance issue"
+                  multiline
+                  rows={4}
+                  error={!!errors.description}
+                  helperText={errors.description?.message}
+                  size="small"
+                  fullWidth
+                />
+              )}
+            />
 
-            <div className="space-y-2">
-              <Label htmlFor="priority">Priority</Label>
-              <Select {...register('priority')} error={!!errors.priority}>
-                <SelectItem value="">Select priority level</SelectItem>
-                <SelectItem value="low">Low</SelectItem>
-                <SelectItem value="medium">Medium</SelectItem>
-                <SelectItem value="high">High</SelectItem>
-                <SelectItem value="urgent">Urgent</SelectItem>
-              </Select>
-              {errors.priority && <p className="text-sm text-red-500">{errors.priority.message}</p>}
-            </div>
-          </div>
-
-          <div className="flex justify-end space-x-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => {
-                reset()
-                onOpenChangeAction(false)
-              }}
-              disabled={isSubmitting}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? 'Creating...' : 'Create Request'}
-            </Button>
-          </div>
-        </form>
+            <Controller
+              name="priority"
+              control={control}
+              render={({ field }) => (
+                <FormControl error={!!errors.priority} size="small">
+                  <InputLabel>Priority</InputLabel>
+                  <Select {...field} label="Priority">
+                    <MenuItem value="low">Low</MenuItem>
+                    <MenuItem value="medium">Medium</MenuItem>
+                    <MenuItem value="high">High</MenuItem>
+                    <MenuItem value="urgent">Urgent</MenuItem>
+                  </Select>
+                  {errors.priority && <FormHelperText>{errors.priority.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
+          </Stack>
+        </Box>
       </DialogContent>
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={handleClose} variant="outlined" disabled={isSubmitting}>
+          Cancel
+        </Button>
+        <Button onClick={handleSubmit(onSubmit)} variant="contained" disabled={isSubmitting}>
+          {isSubmitting ? 'Creating...' : 'Create Request'}
+        </Button>
+      </DialogActions>
     </Dialog>
   )
 }

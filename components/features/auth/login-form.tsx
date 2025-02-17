@@ -3,12 +3,14 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { useForm, Controller } from 'react-hook-form'
 import * as z from 'zod'
 import { supabase } from '@/lib/supabase/client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import Button from '@mui/material/Button'
+import TextField from '@mui/material/TextField'
+import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
+import FormHelperText from '@mui/material/FormHelperText'
 import { toast } from 'sonner'
 
 const loginSchema = z.object({
@@ -22,7 +24,11 @@ export function LoginForm() {
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
-  const form = useForm<LoginValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<LoginValues>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: '',
@@ -54,38 +60,44 @@ export function LoginForm() {
   }
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <Input placeholder="your@email.com" type="email" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your password" type="password" disabled={isLoading} {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? 'Signing in...' : 'Sign in'}
-        </Button>
-      </form>
-    </Form>
+    <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+      <Controller
+        control={control}
+        name="email"
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Email"
+            type="email"
+            disabled={isLoading}
+            error={!!errors.email}
+            helperText={errors.email?.message}
+            placeholder="your@email.com"
+            fullWidth
+          />
+        )}
+      />
+
+      <Controller
+        control={control}
+        name="password"
+        render={({ field }) => (
+          <TextField
+            {...field}
+            label="Password"
+            type="password"
+            disabled={isLoading}
+            error={!!errors.password}
+            helperText={errors.password?.message}
+            placeholder="Enter your password"
+            fullWidth
+          />
+        )}
+      />
+
+      <Button type="submit" variant="contained" disabled={isLoading} fullWidth>
+        {isLoading ? 'Signing in...' : 'Sign in'}
+      </Button>
+    </Box>
   )
 }

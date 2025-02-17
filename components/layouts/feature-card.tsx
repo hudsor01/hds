@@ -1,10 +1,64 @@
 'use client'
 
-import type { FeatureCardProps } from '@/types/feature-card'
-import { Tooltip } from '@mui/material'
-import MuiCard from '@mui/material/Card'
+import { useRef, useEffect } from 'react'
 import { motion, useInView } from 'framer-motion'
-import { useEffect, useRef } from 'react'
+import Card from '@mui/material/Card'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import Tooltip from '@mui/material/Tooltip'
+import { styled } from '@mui/material/styles'
+import type { SvgIconProps } from '@mui/material/SvgIcon'
+
+export interface FeatureCardProps {
+  title: string
+  description: string
+  icon: React.ComponentType<SvgIconProps>
+  delay?: number
+  onView?: () => void
+}
+
+const StyledCard = styled(Card)(({ theme }) => ({
+  padding: theme.spacing(3),
+  position: 'relative',
+  overflow: 'hidden',
+  transition: 'all 0.3s ease-in-out',
+  '&:hover': {
+    backgroundColor: theme.palette.action.hover,
+    '& .iconWrapper': {
+      backgroundColor: theme.palette.primary.main + '33', // 20% opacity
+      '& svg': {
+        transform: 'scale(1.1)',
+        color: theme.palette.primary.main
+      }
+    }
+  },
+  '&::after': {
+    content: '""',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '1px',
+    background: `linear-gradient(to right, transparent, ${theme.palette.primary.main}33, transparent)`
+  }
+}))
+
+const IconWrapper = styled(Box)(({ theme }) => ({
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  width: 48,
+  height: 48,
+  borderRadius: theme.shape.borderRadius,
+  backgroundColor: theme.palette.primary.main + '1A', // 10% opacity
+  marginBottom: theme.spacing(2),
+  '& svg': {
+    width: 24,
+    height: 24,
+    transition: 'all 0.3s ease-in-out',
+    color: theme.palette.primary.main
+  }
+}))
 
 export function FeatureCard({ title, description, icon: Icon, delay = 0, onView }: FeatureCardProps) {
   const ref = useRef<HTMLDivElement>(null)
@@ -26,16 +80,17 @@ export function FeatureCard({ title, description, icon: Icon, delay = 0, onView 
         viewport={{ once: true }}
         style={{ display: 'block' }}
       >
-        <MuiCard className="hover:bg-accent group relative overflow-hidden p-6 transition-colors">
-          <div className="space-y-4">
-            <div className="bg-primary/10 group-hover:bg-primary/20 inline-flex h-12 w-12 items-center justify-center rounded-lg transition-colors">
-              <Icon className="text-primary h-6 w-6 transition-transform group-hover:scale-110" aria-hidden="true" />
-            </div>
-            <h3 className="text-xl font-bold">{title}</h3>
-            <p className="text-muted-foreground">{description}</p>
-          </div>
-          <div className="via-primary/20 absolute inset-x-0 bottom-0 h-px bg-linear-to-r from-transparent to-transparent" />
-        </MuiCard>
+        <StyledCard elevation={0}>
+          <IconWrapper className="iconWrapper">
+            <Icon />
+          </IconWrapper>
+          <Typography variant="h6" component="h3" gutterBottom>
+            {title}
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            {description}
+          </Typography>
+        </StyledCard>
       </motion.div>
     </Tooltip>
   )

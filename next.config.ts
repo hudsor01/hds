@@ -1,4 +1,5 @@
 import type { NextConfig } from 'next'
+import type { Configuration } from 'webpack'
 
 const nextConfig: NextConfig = {
   experimental: {
@@ -21,7 +22,7 @@ const nextConfig: NextConfig = {
     ignoreBuildErrors: false
   },
   eslint: {
-    dirs: ['app', 'components', 'lib', 'hooks', 'types', 'utils'],
+    dirs: ['app', 'components', 'emails', 'middleware', 'prisma', 'supabase', 'lib', 'hooks', 'types', 'utils'],
     ignoreDuringBuilds: false
   },
   webpack: (config) => {

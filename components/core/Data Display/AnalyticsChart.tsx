@@ -1,8 +1,8 @@
 import { Card, CardContent, CardHeader, MenuItem, Select, Box, useTheme } from '@mui/material'
-import { ResponsiveContainer, LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid } from 'recharts'
+import { LineChart } from '@mui/x-charts'
 
 interface AnalyticsChartProps {
-  data: { date: string; value: number }[]
+  data: Array<{ date: string; value: number }>
   title: string
   timeRange: 'day' | 'week' | 'month' | 'year'
   onTimeRangeChange?: (range: 'day' | 'week' | 'month' | 'year') => void
@@ -10,6 +10,10 @@ interface AnalyticsChartProps {
 
 export function AnalyticsChart({ data, title, timeRange, onTimeRangeChange }: AnalyticsChartProps) {
   const theme = useTheme()
+
+  // Transform data for MUI X-Charts
+  const xAxisData = data.map(item => item.date)
+  const seriesData = data.map(item => item.value)
 
   return (
     <Card>
@@ -26,21 +30,17 @@ export function AnalyticsChart({ data, title, timeRange, onTimeRangeChange }: An
       />
       <CardContent>
         <Box sx={{ width: '100%', height: 300 }}>
-          <ResponsiveContainer>
-            <LineChart data={data} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke={theme.palette.divider} />
-              <XAxis dataKey="date" stroke={theme.palette.text.secondary} style={{ fontSize: '12px' }} />
-              <YAxis stroke={theme.palette.text.secondary} style={{ fontSize: '12px' }} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: theme.palette.background.paper,
-                  border: `1px solid ${theme.palette.divider}`,
-                  borderRadius: theme.shape.borderRadius
-                }}
-              />
-              <Line type="monotone" dataKey="value" stroke={theme.palette.primary.main} dot={false} strokeWidth={2} />
-            </LineChart>
-          </ResponsiveContainer>
+          <LineChart
+            xAxis={[{ data: xAxisData, scaleType: 'point' }]}
+            series={[
+              {
+                data: seriesData,
+                area: true,
+                color: theme.palette.primary.main
+              }
+            ]}
+            height={300}
+          />
         </Box>
       </CardContent>
     </Card>
