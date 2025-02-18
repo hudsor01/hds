@@ -5,7 +5,7 @@ import { cookies } from 'next/headers'
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
 const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
-export const createClient = (): ReturnType<typeof createServerClient> | ReturnType<typeof createBrowserClient> => {
+export const createClient = (): ReturnType<typeof createServerClient>   => {
   try {
     const cookieStore = cookies() // Only works in Server Components
     return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {

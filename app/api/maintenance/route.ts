@@ -3,8 +3,6 @@ import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
-declare const console: Console
-
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
 
@@ -296,19 +294,28 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     }
 
     // Create notification for deletion
-    const { error: notificationError } = await supabase.from('notifications').insert([
-      {
-        user_id: user.id,
-        type: 'MAINTENANCE',
-        title: 'Maintenance Request Deleted',
-        message: 'A maintenance request has been deleted',
-        data: {
-          request_id: id,
-          property_id: request.property_id,
-          status: request.status
-        }
+    const notificationData: {
+      user_id: string
+      type: string
+      title: string
+      message: string
+      data: {
+        request_id: string
+        property_id: string
+        status: string
       }
-    ])
+    } = {
+      user_id: (user as { id: string }).id,
+      type: 'MAINTENANCE',
+      title: 'Maintenance Request Deleted',
+      message: 'A maintenance request has been deleted',
+      data: {
+        request_id: id,
+        property_id: (request as { property_id: string }).property_id,
+        status: (request as { status: string }).status,
+      }
+    }
+    const { error: notificationError } = await supabase.from('notifications').insert([notificationData])
 
     if (notificationError) {
       console.error('Error creating notification:', notificationError)
