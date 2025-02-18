@@ -1,6 +1,10 @@
 import { createClient } from '@/lib/supabase/server'
+import { SupabaseClient } from '@supabase/supabase-js'
+import type { id } from 'date-fns/locale'
+import type { request } from 'http'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
+import type { from } from 'svix/dist/openapi/rxjsStub'
 import { z } from 'zod'
 
 export const dynamic = 'force-dynamic'
@@ -20,21 +24,19 @@ const maintenanceRequestSchema = z.object({
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createClient()
-    const {
-      data: { user }
-    } = await supabase.auth.getSession()
+    const supabase = createClient() as unknown as SupabaseClient
+    const { data: sessionData } = await supabase.auth.getSession()
+    const user = sessionData?.session?.user
 
-    if (!user?.id) {
-      return NextResponse.json({ error: 'You must be logged in to access maintenance requests' }, { status: 401 })
+    if (!user || !user.id) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
-
-    const searchParams = req.nextUrl.searchParams
-    const property_id: string | null = searchParams.get('property_id')
-    const status: string | null = searchParams.get('status')
-    const priority: string | null = searchParams.get('priority')
+    const { searchParams } = req.nextUrl;
     const page: number = parseInt(searchParams.get('page') || '1')
     const limit: number = parseInt(searchParams.get('limit') || '10')
+    const property_id = searchParams.get('property_id')
+    const status = searchParams.get('status')
+    const priority = searchParams.get('priority')
 
     let query = supabase
       .from('maintenance_requests')
@@ -77,20 +79,21 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
 export async function POST(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createClient()
+    const supabase: SupabaseClient = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
-      return NextResponse.json({ error: 'You must be logged in to create maintenance requests' }, { status: 401 })
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
+export async function POST(req: NextRequest): Promise<NextResponse> {
+  try {
+    const supabase = createClient() as unknown as SupabaseClient
+    const { data: sessionData } = await supabase.auth.getSession()
+    const user = sessionData?.session?.user
 
-    const body = await req.json()
-    const validatedData = maintenanceRequestSchema.parse(body)
-
-    // Verify property ownership
-    const { data: property, error: propertyError } = await supabase
+    if (!user || !user.id) {
       .from('properties')
       .select('id')
       .eq('id', validatedData.property_id)
@@ -167,21 +170,20 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
 export async function PUT(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createClient()
+    const supabase: SupabaseClient = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
 
     if (!user?.id) {
       return NextResponse.json({ error: 'You must be logged in to update maintenance requests' }, { status: 401 })
-    }
+export async function PUT(req: NextRequest): Promise<NextResponse> {
+  try {
+    const supabase = createClient() as unknown as SupabaseClient
+    const { data: sessionData } = await supabase.auth.getSession()
+    const user = sessionData?.session?.user
 
-    const body = await req.json()
-    const { id, ...updateData } = body
-
-    if (!id) {
-      return NextResponse.json({ error: 'Maintenance request ID is required' }, { status: 400 })
-    }
+    if (!user || !user.id) {
 
     // Verify request ownership and current status
     const { data: existingRequest, error: requestCheckError } = await supabase
@@ -251,9 +253,21 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
   }
 }
 
+interface NotificationData {
+  user_id: string
+  type: string
+  title: string
+  message: string
+  data: {
+    request_id: string
+    property_id: string
+    status: string
+  }
+}
+
 export async function DELETE(req: NextRequest): Promise<NextResponse> {
   try {
-    const supabase = createClient()
+    const supabase: SupabaseClient = createClient()
     const {
       data: { user }
     } = await supabase.auth.getSession()
@@ -261,14 +275,13 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
     if (!user?.id) {
       return NextResponse.json({ error: 'You must be logged in to delete maintenance requests' }, { status: 401 })
     }
+export async function DELETE(req: NextRequest): Promise<NextResponse> {
+  try {
+    const supabase = createClient() as unknown as SupabaseClient
+    const { data: sessionData } = await supabase.auth.getSession()
+    const user = sessionData?.session?.user
 
-    const id = req.nextUrl.searchParams.get('id')
-    if (!id) {
-      return NextResponse.json({ error: 'Maintenance request ID is required' }, { status: 400 })
-    }
-
-    // Verify request ownership and status
-    const { data: request, error: requestCheckError } = await supabase
+    if (!user || !user.id) {
       .from('maintenance_requests')
       .select('status, property_id')
       .eq('id', id)
@@ -281,30 +294,7 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
         { status: 404 }
       )
     }
-
-    if (request.status === 'IN_PROGRESS') {
-      return NextResponse.json({ error: 'Cannot delete a maintenance request that is in progress' }, { status: 400 })
-    }
-
-    const { error } = await supabase.from('maintenance_requests').delete().eq('id', id).eq('user_id', user.id)
-
-    if (error) {
-      console.error('Error deleting maintenance request:', error)
-      return NextResponse.json({ error: error.message }, { status: 500 })
-    }
-
-    // Create notification for deletion
-    const notificationData: {
-      user_id: string
-      type: string
-      title: string
-      message: string
-      data: {
-        request_id: string
-        property_id: string
-        status: string
-      }
-    } = {
+    const notificationData: NotificationData = {
       user_id: (user as { id: string }).id,
       type: 'MAINTENANCE',
       title: 'Maintenance Request Deleted',
@@ -312,10 +302,10 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
       data: {
         request_id: id,
         property_id: (request as { property_id: string }).property_id,
-        status: (request as { status: string }).status,
+        status: (request as { status: string }).status
       }
     }
-    const { error: notificationError } = await supabase.from('notifications').insert([notificationData])
+    const { error: notificationError } = await supabase.from<NotificationData>('notifications').insert([notificationData])
 
     if (notificationError) {
       console.error('Error creating notification:', notificationError)
@@ -324,7 +314,5 @@ export async function DELETE(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ message: 'Maintenance request deleted successfully' }, { status: 200 })
   } catch (error) {
-    console.error('Error in maintenance request DELETE route:', error)
-    return NextResponse.json({ error: 'Failed to delete maintenance request' }, { status: 500 })
-  }
+    const { error: notificationError } = await supabase.from('notifications').insert([notificationData])
 }

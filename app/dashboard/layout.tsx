@@ -1,8 +1,5 @@
 'use client'
 
-import { useAuth } from '@/components/providers/auth-provider'
-import { SideNav } from '@/components/dashboard/side-nav'
-import { TopNav } from '@/components/dashboard/top-nav'
 import { useRouter } from 'next/navigation'
 import { useEffect } from 'react'
 

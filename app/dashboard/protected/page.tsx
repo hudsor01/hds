@@ -1,5 +1,4 @@
 import { supabase } from '@/lib/supabase'
-import { Info } from 'react-feather'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { createServerClient } from '@supabase/ssr'

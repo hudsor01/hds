@@ -1,7 +1,6 @@
 'use client'
 
-import { useAnimation } from '@/components/providers/animation-provider'
-import { usePropertyAnimationMetrics } from '@/hooks/use-property-animation-metrics'
+import { useAnimation } from 'framer-motion'
 import { useCallback } from 'react'
 
 export function usePropertyAnimations() {

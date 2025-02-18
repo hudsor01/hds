@@ -1,13 +1,13 @@
-import { createBrowserClient, createServerClient } from '@supabase/ssr'
 import type { Database } from '@/types/db.types'
+import { createBrowserClient, createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
 
 const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
 const supabaseAnonKey: string = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
 
-export const createClient = (): ReturnType<typeof createServerClient>   => {
+export const createClient = (): ReturnType<typeof createServerClient> => {
   try {
-    const cookieStore = cookies() // Only works in Server Components
+    const cookieStore = cookies()
     return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
       cookies: {
         async getAll() {

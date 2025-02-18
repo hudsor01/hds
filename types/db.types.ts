@@ -1,3 +1,5 @@
+import type { MaintenanceRequest } from './maintenance-requests'
+
 // Base types
 export type Json = string | number | boolean | null | { [key: string]: Json | undefined } | Json[]
 export type Timestamp = string
@@ -320,7 +322,7 @@ export type Database = {
           stripe_charge_id: string | null
           description: string | null
           created_at: Timestamp
-          processed_at: Timestamp | null
+          created_at: Timestamp | null
           metadata: Json | null
         }
         Insert: {
@@ -335,7 +337,7 @@ export type Database = {
           stripe_charge_id?: string | null
           description?: string | null
           created_at?: Timestamp
-          processed_at?: Timestamp | null
+          created_at?: Timestamp | null
           metadata?: Json | null
         }
         Update: {
@@ -344,7 +346,7 @@ export type Database = {
           payment_intent_id?: string | null
           stripe_charge_id?: string | null
           description?: string | null
-          processed_at?: Timestamp | null
+          created_at?: Timestamp | null
           metadata?: Json | null
         }
       }

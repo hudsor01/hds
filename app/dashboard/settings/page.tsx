@@ -1,13 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/core/Card/card'
-import { Button } from '@/components/button'
-import { Input } from '@/components/input'
-import { Label } from '@/components/label'
-import { Switch } from '@/components/ui/switch'
 import { useToast } from '@/hooks/use-toast'
-import { Settings, NotificationsSetting } from '@mui/icons-material'
+import { NotificationsSetting, Settings } from '@mui/icons-material'
+import { createClient } from '@supabase/supabase-js'
 
 export default function SettingsPage() {
   const [isLoading, setIsLoading] = useState(false)

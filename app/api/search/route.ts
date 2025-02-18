@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
 
     switch (type) {
       case 'properties':
-        results = await prisma.property.findMunknown({
+        results = await prisma.property.findMany({
           where: {
             OR: [{ name: { contains: query, mode: 'insensitive' } }, { address: { contains: query, mode: 'insensitive' } }]
           },
@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
         break
 
       case 'tenants':
-        results = await prisma.tenant.findMunknown({
+        results = await prisma.tenant.findMany({
           where: {
             OR: [{ name: { contains: query, mode: 'insensitive' } }, { email: { contains: query, mode: 'insensitive' } }]
           },
@@ -53,7 +53,7 @@ export async function GET(request: NextRequest) {
         break
 
       case 'maintenance':
-        results = await prisma.maintenanceRequest.findMunknown({
+        results = await prisma.maintenanceRequest.findMany({
           where: {
             OR: [{ description: { contains: query, mode: 'insensitive' } }, { status: { contains: query, mode: 'insensitive' } }]
           },
@@ -72,19 +72,19 @@ export async function GET(request: NextRequest) {
       default:
         // Search across all relevant tables
         const [properties, tenants, maintenance] = await Promise.all([
-          prisma.property.findMunknown({
+          prisma.property.findMany({
             where: {
               name: { contains: query, mode: 'insensitive' }
             },
             take: limit
           }),
-          prisma.tenant.findMunknown({
+          prisma.tenant.findMany({
             where: {
               name: { contains: query, mode: 'insensitive' }
             },
             take: limit
           }),
-          prisma.maintenanceRequest.findMunknown({
+          prisma.maintenanceRequest.findMany({
             where: {
               description: { contains: query, mode: 'insensitive' }
             },

@@ -12,7 +12,7 @@ const PerformanceChart = dynamic(() => import('@/components/performance-chart').
   ssr: false
 })
 
-const BarChart = dynamic(() => import('@/components/core/Data Display/bar-chart').then(mod => mod.BarChart), {
+const BarChart = dynamic(() => import(/Data Display/bar-chart').then(mod => mod.BarChart), {
   ssr: false
 })
 

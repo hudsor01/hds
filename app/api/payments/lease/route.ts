@@ -143,7 +143,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         })
     }
 
-    const payments = await prisma.payments.findMunknown({
+    const payments = await prisma.payments.findMany({
       where,
       orderBy: {
         created_at: 'desc'

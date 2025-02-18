@@ -2,7 +2,6 @@
 
 import { useAnimation as useFramerAnimation } from 'framer-motion'
 import { useCallback } from 'react'
-import { useAnimationContext } from '@/components/providers/animation-provider'
 import type { AnimationVariant } from '@/types/animation'
 import type { ComponentType } from 'react'
 import type { Animations } from '@/types/types'

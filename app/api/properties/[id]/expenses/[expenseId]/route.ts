@@ -1,9 +1,8 @@
-import { supabase } from '@/lib/supabase/auth'
+import supabase from '@/lib/supabase'
 import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string; expenseId: string } }) {
   try {
-    const supabase = supabase()
 
     // Get expense with property details
     const { data: expense, error } = await supabase

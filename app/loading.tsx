@@ -1,9 +1,5 @@
 'use client'
 
-import { Card } from '@/components/core/Card/card'
-import { Skeleton } from '@/components/skeleton'
-import { Container } from '@/components/layouts/container'
-
 export default function Loading() {
   return (
     <Container className="py-8">

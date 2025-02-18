@@ -1,6 +1,6 @@
 import { prisma } from '@/lib/prisma/prisma'
 import { PaymentStatus, PaymentType } from '@prisma/client'
-import { NextRequest, NextResponse } from 'next/server'
+import { NextRequest, NextRequest, NextResponse } from 'next/server'
 
 export async function GET(request: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     }
 
     // Calculate lease financials
-    const payments = await prisma.payments.findMunknown({
+    const payments = await prisma.payments.findMany({
       where: {
         tenant_id: lease.tenant_id,
         payment_type: {
@@ -47,12 +47,18 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         payment_amount: true,
         payment_type: true,
         payment_status: true,
-        created_at: true,
-        processed_at: true
+        created_at: true
       }
     })
 
-    const totalPaid = payments.reduce((sum, payment) => sum + payment.payment_amount, 0)
+    interface Payment {
+      payment_amount: number
+      payment_type: PaymentType
+      payment_status: PaymentStatus
+      created_at: Date
+    }
+
+    const totalPaid: number = payments.reduce((sum: number, payment: Payment) => sum + Number(payment.payment_amount), 0)
     const totalDue = Number(lease.rent_amount) * 12 // Assuming yearly calculation
     const balance = totalDue - totalPaid
 
@@ -61,7 +67,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
         property_id: lease.property_id,
         start_date: lease.start_date,
         end_date: lease.end_date,
-        status: lease.status
+        status: lease.lease_status
       },
       financials: {
         total_paid: totalPaid,
@@ -73,4 +79,9 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
   } catch (error) {
     return NextResponse.json({ error: 'Error calculating lease financials' }, { status: 500 })
   }
+}
+async function getAuth (request: NextRequest): Promise<{ userId: string | null }>
+{
+  const token = await getToken({ req: request })
+  return { userId: token?.sub ?? null }
 }

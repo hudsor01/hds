@@ -82,7 +82,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
-    const body: InspectionRequest = await req.json()
+    const body: z.infer<typeof inspectionSchema> = await req.json()
     const validatedData = inspectionSchema.parse(body)
 
     // Verify property ownership
@@ -124,9 +124,13 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     ])
 
     return NextResponse.json({ data: inspection }, { status: 201 })
-  } catch (error) {
+  } catch (error: any) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
+      if (error.errors && error.errors.length > 0) {
+        return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
+      } else {
+        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 })
+      }
     }
     console.error('Error in inspection POST route:', error)
     return NextResponse.json({ error: 'Failed to create inspection' }, { status: 500 })

@@ -1,208 +1,235 @@
 'use client'
 
-import { Button } from '@/components/core/Button/button'
-import { MaintenanceRequestForm } from '@/components/maintenance/maintenance-request-form'
-import { MaintenanceRequestTable } from '@/components/maintenance/MaintenanceRequestTable'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { useToast } from '@/hooks/use-toast'
-import supabase from '@/lib/supabase/client'
-import { CreateMaintenanceRequestInput, MaintenanceRequest } from '@/types/maintenance-requests'
-import { useEffect, useState } from 'react'
-import { Plus } from 'react-feather'
+import {
+  Box,
+  Button,
+  Container,
+  Paper,
+  Stack,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Tabs,
+  Typography
+} from '@mui/material'
+import { useState } from 'react'
+
+// Mock data for testing
+const mockTickets = [
+  {
+    id: '1',
+    title: 'Leaking Faucet',
+    property: 'Sunset Heights',
+    unit: '203',
+    tenant: 'John Doe',
+    priority: 'Medium',
+    status: 'PENDING',
+    createdAt: '2024-01-15T10:30:00Z',
+    description: 'Kitchen sink faucet is leaking continuously.'
+  },
+  {
+    id: '2',
+    title: 'AC Not Working',
+    property: 'Ocean View Apartments',
+    unit: '305',
+    tenant: 'Sarah Smith',
+    priority: 'High',
+    status: 'IN_PROGRESS',
+    createdAt: '2024-01-14T15:45:00Z',
+    description: 'Air conditioning unit is not cooling properly.'
+  },
+  {
+    id: '3',
+    title: 'Broken Window',
+    property: 'Mountain Lodge',
+    unit: '101',
+    tenant: 'Michael Johnson',
+    priority: 'High',
+    status: 'COMPLETED',
+    createdAt: '2024-01-13T09:15:00Z',
+    description: 'Window in living room is cracked and needs replacement.'
+  }
+]
 
 export default function MaintenancePage() {
-  const [requests, setRequests] = useState<MaintenanceRequest[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [isDialogOpen, setIsDialogOpen] = useState(false)
-  const [selectedRequest, setSelectedRequest] = useState<MaintenanceRequest | null>(null)
-  const { toast } = useToast()
+  const [tabValue, setTabValue] = useState(0)
 
-  useEffect(() => {
-    fetchMaintenanceRequests()
-  }, [])
+  const handleTabChange = (_: React.SyntheticEvent, newValue: number) => {
+    setTabValue(newValue)
+  }
 
-  async function fetchMaintenanceRequests() {
-    try {
-      setIsLoading(true)
-      const { data, error } = await supabase
-        .from('maintenance_requests')
-        .select(
-          `
-          *,
-          property:properties(id, name, address),
-          assigned_to:users(id, first_name, last_name, email)
-        `
-        )
-        .order('created_at', { ascending: false })
-
-      if (error) throw error
-
-      setRequests(data || [])
-    } catch (error) {
-      console.error('Error fetching maintenance requests:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to fetch maintenance requests. Please try again.',
-        variant: 'destructive'
-      })
-    } finally {
-      setIsLoading(false)
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'PENDING':
+        return {
+          bg: 'warning.light',
+          color: 'warning.dark'
+        }
+      case 'IN_PROGRESS':
+        return {
+          bg: 'info.light',
+          color: 'info.dark'
+        }
+      case 'COMPLETED':
+        return {
+          bg: 'success.light',
+          color: 'success.dark'
+        }
+      default:
+        return {
+          bg: 'grey.200',
+          color: 'grey.700'
+        }
     }
   }
 
-  async function handleCreate(data: CreateMaintenanceRequestInput) {
-    try {
-      const { data: newRequest, error } = await supabase
-        .from('maintenance_requests')
-        .insert([
-          {
-            ...data,
-            status: 'PENDING',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          }
-        ])
-        .select(
-          `
-          *,
-          property:properties(id, name, address),
-          assigned_to:users(id, first_name, last_name, email)
-        `
-        )
-        .single()
-
-      if (error) throw error
-
-      setRequests(prev => [newRequest, ...prev])
-      setIsDialogOpen(false)
-      toast({
-        title: 'Success',
-        description: 'Maintenance request created successfully.'
-      })
-    } catch (error) {
-      console.error('Error creating maintenance request:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to create maintenance request. Please try again.',
-        variant: 'destructive'
-      })
-    }
-  }
-
-  async function handleUpdate(data: CreateMaintenanceRequestInput) {
-    if (!selectedRequest) return
-
-    try {
-      const { data: updatedRequest, error } = await supabase
-        .from('maintenance_requests')
-        .update({
-          ...data,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', selectedRequest.id)
-        .select(
-          `
-          *,
-          property:properties(id, name, address),
-          assigned_to:users(id, first_name, last_name, email)
-        `
-        )
-        .single()
-
-      if (error) throw error
-
-      setRequests(prev => prev.map(request => (request.id === selectedRequest.id ? updatedRequest : request)))
-      setIsDialogOpen(false)
-      setSelectedRequest(null)
-      toast({
-        title: 'Success',
-        description: 'Maintenance request updated successfully.'
-      })
-    } catch (error) {
-      console.error('Error updating maintenance request:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to update maintenance request. Please try again.',
-        variant: 'destructive'
-      })
-    }
-  }
-
-  async function handleDelete(requestId: string) {
-    try {
-      const { error } = await supabase.from('maintenance_requests').delete().eq('id', requestId)
-
-      if (error) throw error
-
-      setRequests(prev => prev.filter(request => request.id !== requestId))
-      toast({
-        title: 'Success',
-        description: 'Maintenance request deleted successfully.'
-      })
-    } catch (error) {
-      console.error('Error deleting maintenance request:', error)
-      toast({
-        title: 'Error',
-        description: 'Failed to delete maintenance request. Please try again.',
-        variant: 'destructive'
-      })
+  const getPriorityColor = (priority: string) => {
+    switch (priority.toLowerCase()) {
+      case 'high':
+        return {
+          bg: 'error.light',
+          color: 'error.dark'
+        }
+      case 'medium':
+        return {
+          bg: 'warning.light',
+          color: 'warning.dark'
+        }
+      case 'low':
+        return {
+          bg: 'success.light',
+          color: 'success.dark'
+        }
+      default:
+        return {
+          bg: 'grey.200',
+          color: 'grey.700'
+        }
     }
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold">Maintenance Requests</h1>
-        <Button
-          onClick={() => {
-            setIsDialogOpen(true)
-          }}
-        >
-          <Plus className="mr-2 h-4 w-4" />
-          Add Request
-        </Button>
-      </div>
-
-      {isLoading ? (
-        <div className="flex h-64 items-center justify-center">
-          <div className="border-primary h-8 w-8 animate-spin rounded-full border-b-2" />
-        </div>
-      ) : (
-        <MaintenanceRequestTable
-          requests={requests}
-          onEdit={request => {
-            setSelectedRequest(request)
-            setIsDialogOpen(true)
-          }}
-          onDelete={handleDelete}
-        />
-      )}
-
-      <Dialog
-        open={isDialogOpen}
-        onOpenChange={open => {
-          setIsDialogOpen(open)
-          if (!open) setSelectedRequest(null)
-        }}
-      >
-        <DialogContent className="max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{selectedRequest ? 'Edit Maintenance Request' : 'Add Maintenance Request'}</DialogTitle>
-            <DialogDescription>
-              {selectedRequest
-                ? 'Update the maintenance request details below.'
-                : 'Fill in the maintenance request details below.'}
-            </DialogDescription>
-          </DialogHeader>
-          <MaintenanceRequestForm
-            initialData={selectedRequest || undefined}
-            onSubmit={selectedRequest ? handleUpdate : handleCreate}
-            onCancel={() => {
-              setIsDialogOpen(false)
+    <Box>
+      <Container maxWidth="xl">
+        {/* Header */}
+        <Stack direction="row" justifyContent="space-between" alignItems="center" mb={4}>
+          <Box>
+            <Typography variant="h4" fontWeight={600} gutterBottom>
+              Maintenance
+            </Typography>
+            <Typography variant="body1" color="text.secondary">
+              Track and manage maintenance requests
+            </Typography>
+          </Box>
+          <Button
+            variant="contained"
+            startIcon={<Plus size={20} />}
+            sx={{
+              bgcolor: 'primary.main',
+              color: 'white',
+              px: 3,
+              py: 1,
+              fontSize: '1rem',
+              fontWeight: 500,
+              textTransform: 'none',
+              borderRadius: 2,
+              '&:hover': {
+                bgcolor: 'primary.dark'
+              }
             }}
-          />
-        </DialogContent>
-      </Dialog>
-    </div>
+          >
+            New Request
+          </Button>
+        </Stack>
+
+        {/* Status Tabs */}
+        <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 4 }}>
+          <Tabs value={tabValue} onChange={handleTabChange}>
+            <Tab label="All Requests" />
+            <Tab label="Pending" />
+            <Tab label="In Progress" />
+            <Tab label="Completed" />
+          </Tabs>
+        </Box>
+
+        {/* Tickets Table */}
+        <TableContainer component={Paper} sx={{ borderRadius: 2, boxShadow: 1 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Title</TableCell>
+                <TableCell>Property</TableCell>
+                <TableCell>Unit</TableCell>
+                <TableCell>Tenant</TableCell>
+                <TableCell>Priority</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Created</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {mockTickets.map(ticket => (
+                <TableRow
+                  key={ticket.id}
+                  hover
+                  sx={{
+                    cursor: 'pointer',
+                    '&:last-child td, &:last-child th': { border: 0 }
+                  }}
+                >
+                  <TableCell>
+                    <Box>
+                      <Typography variant="body2" fontWeight={500}>
+                        {ticket.title}
+                      </Typography>
+                      <Typography variant="caption" color="text.secondary">
+                        {ticket.description}
+                      </Typography>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{ticket.property}</TableCell>
+                  <TableCell>{ticket.unit}</TableCell>
+                  <TableCell>{ticket.tenant}</TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: 1,
+                        bgcolor: getPriorityColor(ticket.priority).bg,
+                        color: getPriorityColor(ticket.priority).color,
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      {ticket.priority}
+                    </Box>
+                  </TableCell>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        display: 'inline-block',
+                        px: 2,
+                        py: 0.5,
+                        borderRadius: 1,
+                        bgcolor: getStatusColor(ticket.status).bg,
+                        color: getStatusColor(ticket.status).color,
+                        fontSize: '0.875rem'
+                      }}
+                    >
+                      {ticket.status.replace('_', ' ')}
+                    </Box>
+                  </TableCell>
+                  <TableCell>{new Date(ticket.createdAt).toLocaleDateString()}</TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Container>
+    </Box>
   )
 }

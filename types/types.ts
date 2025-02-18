@@ -1,5 +1,4 @@
 import { type ReactNode, type CSSProperties } from 'react'
-import type { IconType } from 'react-icons'
 import type { Variants } from 'framer-motion'
 import type { ButtonProps as MuiButtonProps } from '@mui/material'
 

@@ -1,7 +1,6 @@
 'use server'
 
 import { createClient, handleDatabaseError } from '@/lib/supabase'
-import type { MaintenanceRequest } from '@/components/dashboard/maintenance-tracker'
 
 export async function fetchDashboardData() {
   try {

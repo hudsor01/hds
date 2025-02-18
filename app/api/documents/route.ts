@@ -128,10 +128,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ data: document }, { status: 201 })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
+      if (error.errors.length > 0) {
+        return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+      } else {
+        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 });
+      }
     }
-    console.error('Error in document POST route:', error)
-    return NextResponse.json({ error: 'Failed to create document' }, { status: 500 })
   }
 }
 
@@ -183,7 +185,11 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
     return NextResponse.json({ data: document })
   } catch (error) {
     if (error instanceof z.ZodError) {
-      return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
+      if (error.errors.length > 0) {
+        return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+      } else {
+        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 });
+      }
     }
     console.error('Error in document PUT route:', error)
     return NextResponse.json({ error: 'Failed to update document' }, { status: 500 })

@@ -1,12 +1,11 @@
 'use client'
 
-import * as React from 'react'
-
-import { Box, Button, Card, Chip, CardActions, CardContent, Container, Divider, Typography, useTheme } from '@mui/material'
-import Grid from '@mui/material/Grid2'
 import { AutoAwesome as AutoAwesomeIcon, CheckCircleRounded as CheckCircleRoundedIcon } from '@mui/icons-material'
-import { PublicLayout } from '@/components/public-layout'
+import { Box, Button, Card, CardActions, CardContent, Chip, Container, Divider, Typography, useTheme } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import { createClient } from '@supabase/supabase-js'
 import { motion } from 'framer-motion'
+import * as React from 'react'
 
 const tiers = [
   {

@@ -1,14 +1,12 @@
 'use client'
 
-import React from 'react'
-import { motion } from 'framer-motion'
-import { Box, Container, Typography, Card, CardContent, Button, useTheme, Stack } from '@mui/material'
-import Grid from '@mui/material/Grid2'
-import { Home, Users, FileText, Settings, BarChart, Clock, Shield, Smartphone, DollarSign } from 'react-feather'
-import { PublicLayout } from '@/components/public-layout'
-import { toast } from 'sonner'
-import Image from 'next/image'
 import AutoAwesomeIcon from '@mui/icons-material/AutoAwesome'
+import { Box, Button, Card, CardContent, Container, Stack, Typography, useTheme } from '@mui/material'
+import Grid from '@mui/material/Grid2'
+import { motion } from 'framer-motion'
+import Image from 'next/image'
+import React from 'react'
+
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },

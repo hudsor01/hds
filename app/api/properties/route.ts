@@ -1,8 +1,8 @@
-import { NextResponse } from 'next/server'
-import { supabase } from '@/lib/supabase'
-import { z } from 'zod'
-import { PropertyType, PropertyStatus } from '@/types/property'
+import supabase from '@/lib/supabase'
+import { PropertyStatus, PropertyType } from '@/types/property'
 import type { PostgrestError } from '@supabase/supabase-js'
+import { NextResponse } from 'next/server'
+import { z } from 'zod'
 
 const propertyQuerySchema = z.object({
   limit: z.string().optional(),

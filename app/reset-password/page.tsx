@@ -1,26 +1,23 @@
 'use client'
 
-import { signUp } from '@/app/auth/actions'
-import type { Card, CardContent, CardHeader } from '@mui/material'
+import { resetPassword } from '@/app/auth/actions'
 import Link from 'next/link'
-import type { Input } from 'postcss'
 import { useState } from 'react'
-import type { Button } from 'react-day-picker'
 
-export default function SignUpPage({ searchParams }: { searchParams: { error: string; message: string } }) {
+export default function ResetPasswordPage({ searchParams }: { searchParams: { error: string; message: string } }) {
   const [isLoading, setIsLoading] = useState(false)
 
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
       <Card className="w-full max-w-md">
         <CardHeader>
-          <CardTitle>Create an account</CardTitle>
-          <CardDescription>Enter your details to create your account</CardDescription>
+          <CardTitle>Reset your password</CardTitle>
+          <CardDescription>Enter your email address and we&apos;ll send you a password reset link</CardDescription>
         </CardHeader>
         <form
           action={async formData => {
             setIsLoading(true)
-            await signUp(formData)
+            await resetPassword(formData)
             setIsLoading(false)
           }}
         >
@@ -30,31 +27,24 @@ export default function SignUpPage({ searchParams }: { searchParams: { error: st
                 <div className="text-destructive text-sm">{searchParams.error}</div>
               </div>
             )}
+            {searchParams.message && (
+              <div className="bg-primary/15 rounded-md p-3">
+                <div className="text-primary text-sm">{searchParams.message}</div>
+              </div>
+            )}
             <div className="space-y-2">
               <label htmlFor="email" className="text-foreground block text-sm font-medium">
                 Email
               </label>
               <Input id="email" name="email" type="email" required placeholder="Enter your email" />
             </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-foreground block text-sm font-medium">
-                Password
-              </label>
-              <Input id="password" name="password" type="password" required placeholder="Enter your password" />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-foreground block text-sm font-medium">
-                Confirm Password
-              </label>
-              <Input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Confirm your password" />
-            </div>
           </CardContent>
           <CardFooter className="flex flex-col space-y-4">
             <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Create account'}
+              {isLoading ? 'Sending link...' : 'Send reset link'}
             </Button>
             <div className="text-center text-sm">
-              Already have an account?{' '}
+              Remember your password?{' '}
               <Link href="/auth/sign-in" className="text-primary hover:text-primary/80">
                 Sign in
               </Link>

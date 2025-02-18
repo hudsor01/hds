@@ -1,9 +1,9 @@
 'use client'
 
 import { api } from '@/lib/api'
-import type { PaymentMethod, PaymentIntent } from '@stripe/stripe-js'
+import type { ApiResponse } from '@/types'
+import type { PaymentIntent } from '@stripe/stripe-js'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 
 interface Payment {
   id: string

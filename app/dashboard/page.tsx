@@ -1,8 +1,6 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { FinancialSummary } from '@/components/dashboard/financial-summary'
-import { MaintenanceTracker } from '@/components/dashboard/maintenance-tracker'
 import { fetchDashboardData } from '@/lib/api/dashboard'
 import { useToast } from '@/hooks/use-toast'
 

@@ -1,13 +1,14 @@
 'use server'
 
-import {
-  getFinancialMetrics,
-  getMaintenanceMetrics,
-  getPropertyMetrics,
-  getTenantMetrics,
-  getTimeSeries
-} from '@/lib/services/analytics'
-import supabase from '@/lib/supabase/server'
+import
+  {
+    getFinancialMetrics,
+    getMaintenanceMetrics,
+    getPropertyMetrics,
+    getTenantMetrics,
+    getTimeSeries
+  } from '@/lib/services/analytics'
+import supabase from '@/lib/supabase'
 import type { NextRequest } from 'next/server'
 import { NextResponse } from 'next/server'
 import { z } from 'zod'

@@ -16,10 +16,6 @@ import {
   CircularProgress,
   alpha
 } from '@mui/material'
-
-import { Mail, Phone, MapPin, MessageCircle, Clock, Users } from 'react-feather'
-import { PublicLayout } from '@/components/layouts/public-layout'
-import { toast } from 'sonner'
 import { z } from 'zod'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm, Controller } from 'react-hook-form'

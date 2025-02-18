@@ -1,8 +1,8 @@
+'use client'
+
 import { resetPasswordAction } from '@/app/actions'
-import { FormMessage, Message } from '@/components/form-message'
-import { SubmitButton } from '@/components/submit-button'
-import { Input } from '@/components/input'
-import { Label } from '@/components/label'
+import type { Input, Message } from 'postcss'
+import type { Label } from 'recharts'
 
 export default async function ResetPassword(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams

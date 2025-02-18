@@ -1,12 +1,10 @@
 'use client'
 
-import { Navbar } from '@/components/layouts/navbar'
-import { Providers } from '@/components/providers'
-import { ErrorBoundary } from '@/components/ui/error-boundary'
 import { Analytics } from '@vercel/analytics/react'
 import { SpeedInsights } from '@vercel/speed-insights/next'
 import React from 'react'
-import { Toaster } from 'sonner'
+import type { ErrorBoundary } from 'react-error-boundary'
+
 
 interface ClientLayoutProps {
   children: React.ReactNode

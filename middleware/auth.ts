@@ -1,8 +1,8 @@
-import { createServerClient } from '@supabase/ssr'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
 import type { Database } from '@/types/db.types'
 import type { CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
+import type { NextRequest } from 'next/server'
+import { NextResponse } from 'next/server'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
@@ -11,54 +11,23 @@ export async function middleware(req: NextRequest) {
     process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'],
     {
       cookies: {
-        get: (name: string) => {
-          return req.cookies.get(name)?.value
+        getAll: () => {
+          return req.cookies.getAll()
         },
-        set: (name: string, value: string, options: CookieOptions) => {
-          req.cookies.set({
-            name,
-            value,
-            ...options,
-            // Convert Supabase cookie options to Next.js cookie options
-            sameSite: options.sameSite as 'strict' | 'lax' | 'none' | undefined,
-            secure: options.secure,
-            maxAge: options.maxAge,
-            httpOnly: options.httpOnly,
-            path: options.path,
-            domain: options.domain
-          })
-          res.cookies.set({
-            name,
-            value,
-            ...options,
-            sameSite: options.sameSite as 'strict' | 'lax' | 'none' | undefined,
-            secure: options.secure,
-            maxAge: options.maxAge,
-            httpOnly: options.httpOnly,
-            path: options.path,
-            domain: options.domain
-          })
-        },
-        remove: (name: string, options: CookieOptions) => {
-          req.cookies.delete({
-            name,
-            ...options,
-            sameSite: options.sameSite as 'strict' | 'lax' | 'none' | undefined,
-            secure: options.secure,
-            maxAge: options.maxAge,
-            httpOnly: options.httpOnly,
-            path: options.path,
-            domain: options.domain
-          })
-          res.cookies.delete({
-            name,
-            ...options,
-            sameSite: options.sameSite as 'strict' | 'lax' | 'none' | undefined,
-            secure: options.secure,
-            maxAge: options.maxAge,
-            httpOnly: options.httpOnly,
-            path: options.path,
-            domain: options.domain
+        setAll: (cookies: { name: string; value: string; options: CookieOptions }[]) => {
+          cookies.forEach(cookie => {
+            req.cookies.set({
+              name: cookie.name,
+              value: cookie.value,
+              ...cookie.options
+            })
+            res.cookies.set({
+              name: cookie.name,
+              value: cookie.value,
+              ...cookie.options,
+              sameSite: cookie.options.sameSite as 'strict' | 'lax' | 'none' | undefined,
+              secure: cookie.options.secure
+            })
           })
         }
       }
@@ -68,16 +37,12 @@ export async function middleware(req: NextRequest) {
   const {
     data: { session }
   } = await supabase.auth.getSession()
-
   const isAuthPage = req.nextUrl.pathname.startsWith('/auth')
-  const isApiRoute = req.nextUrl.pathname.startsWith('/api')
-  const isPublicRoute = ['/'] as const
-  const isPublicPage = isPublicRoute.includes(req.nextUrl.pathname as '/')
 
   // Handle authentication routes
   if (!session) {
     // If not authenticated and trying to access protected route
-    if (!isAuthPage && !isPublicPage && !isApiRoute) {
+    if (!isAuthPage) {
       const redirectUrl = new URL('/auth/signin', req.url)
       redirectUrl.searchParams.set('redirect', req.nextUrl.pathname)
       return NextResponse.redirect(redirectUrl)
@@ -88,9 +53,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.redirect(new URL('/dashboard', req.url))
     }
   }
-
-  // Update session
-  await supabase.auth.getSession()
 
   return res
 }

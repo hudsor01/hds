@@ -1,7 +1,7 @@
-import { getStripe } from '../../../utils/stripe/client'
 import { createClient } from '@/lib/supabase/server'
+import type { Session } from '@supabase/supabase-js'
 import { NextResponse } from 'next/server'
-import { Session } from '@supabase/supabase-js'
+import { getStripe } from '../../../utils/stripe/client'
 
 type SessionWithUser = Session & {
   user: {

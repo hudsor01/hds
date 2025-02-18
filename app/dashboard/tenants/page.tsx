@@ -1,13 +1,10 @@
 'use client'
 
-import { useEffect, useState } from 'react'
-import { TenantForm } from '@/components/tenants/tenant-form'
-import { TenantTable } from '@/components/tenants/tenant-table'
-import { Button } from '@/components/button'
-import { Plus } from 'lucide-react'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
-import { Tenant, CreateTenantInput } from '@/types/tenant'
 import { useToast } from '@/hooks/use-toast'
+import { CreateTenantInput, Tenant } from '@/types/tenant'
+import type { Dialog, DialogContent, DialogTitle } from '@mui/material'
+import { createClient } from '@supabase/supabase-js'
+import { useEffect, useState } from 'react'
 
 export default function TenantsPage() {
   const [tenants, setTenants] = useState<Tenant[]>([])

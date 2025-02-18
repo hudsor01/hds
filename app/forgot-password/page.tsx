@@ -1,11 +1,11 @@
+'use client'
+
 import { forgotPasswordAction } from '@/app/actions'
-import { FormMessage, Message } from '@/components/form-message'
-import { SubmitButton } from '@/components/submit-button'
-import { Input } from '@/components/input'
-import { Label } from '@/components/label'
 import Link from 'next/link'
-import { SmtpMessage } from '../smtp-message'
+import { type Message, Input } from 'postcss'
 import { JSX } from 'react'
+import type { Label } from 'recharts'
+import { SmtpMessage } from '../smtp-message'
 
 /**
  * ForgotPassword component renders a form for users to reset their password.

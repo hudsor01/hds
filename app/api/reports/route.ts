@@ -26,11 +26,11 @@ export async function GET(req: NextRequest) {
       case 'financial': {
         // Get financial metrics
         const [properties, leases, expenses] = await Promise.all([
-          prisma.properties.findMunknown({
+          prisma.properties.findMany({
             where: { user_id: userId },
             select: { rent_amount: true }
           }),
-          prisma.leases.findMunknown({
+          prisma.leases.findMany({
             where: {
               user_id: userId,
               status: 'Active',
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
               depositAmount: true
             }
           }),
-          prisma.expenses.findMunknown({
+          prisma.expenses.findMany({
             where: {
               created_by: userId,
               date: {
@@ -89,7 +89,7 @@ export async function GET(req: NextRequest) {
       case 'occupancy': {
         // Get occupancy metrics
         const [properties, activeLeases] = await Promise.all([
-          prisma.properties.findMunknown({
+          prisma.properties.findMany({
             where: { user_id: userId },
             include: {
               leases: {
@@ -99,7 +99,7 @@ export async function GET(req: NextRequest) {
               }
             }
           }),
-          prisma.leases.findMunknown({
+          prisma.leases.findMany({
             where: {
               user_id: userId,
               status: 'Active'
@@ -139,7 +139,7 @@ export async function GET(req: NextRequest) {
 
       case 'maintenance': {
         // Get maintenance metrics
-        const maintenanceRequests = await prisma.maintenance_requests.findMunknown({
+        const maintenanceRequests = await prisma.maintenance_requests.findMany({
           where: {
             user_id: userId,
             created_at: {
@@ -192,7 +192,7 @@ export async function GET(req: NextRequest) {
 
       case 'leases': {
         // Get lease metrics
-        const leases = await prisma.leases.findMunknown({
+        const leases = await prisma.leases.findMany({
           where: {
             user_id: userId,
             created_at: {

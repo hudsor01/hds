@@ -1,10 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { LeaseForm } from '@/components/features/leases/lease-form'
-import { LeaseTable } from '@/components/leases/lease-table'
-import { Button } from '@/components/button/button'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/core/dialog/dialog'
 import { Lease, CreateLeaseInput } from '@/types/lease'
 import { useToast } from '@/hooks/use-toast'
 

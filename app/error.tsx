@@ -1,7 +1,5 @@
 'use client'
 
-import { Alert, AlertDescription, AlertTitle } from '@/components/core/Alert/alert'
-import { Button } from '@/components/core/Button/button'
 import { ErrorOutline } from '@mui/icons-material'
 import { useEffect } from 'react'
 

@@ -1,9 +1,8 @@
 'use client'
 
-import { Button } from '@/components/button'
-import { Card } from '@/components/core/Card/card'
 import {
   Box,
+  Button,
   Container,
   FormControl,
   FormHelperText,
@@ -19,7 +18,7 @@ import {
 } from '@mui/material'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { toast } from 'sonner'
+import { useUser } from '../auth/lib/auth/config'
 
 const steps = ['Personal Information', 'Property Details', 'Preferences']
 

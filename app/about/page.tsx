@@ -1,13 +1,11 @@
 'use client'
 
-import React from 'react'
-import type { JSX } from 'react'
-import { motion } from 'framer-motion'
-import { Box, Container, Typography, Card, CardContent, Avatar, useTheme, Stack } from '@mui/material'
+import { Groups, Lightbulb, Rocket, TrendingUp } from '@mui/icons-material'
+import { Avatar, Box, Card, CardContent, Container, Stack, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
-import { Rocket, Groups, Lightbulb, TrendingUp } from '@mui/icons-material'
-import { PublicLayout } from '@/components/layouts/public-layout'
-import { toast } from 'sonner'
+import { motion } from 'framer-motion'
+import type { JSX } from 'react'
+import React from 'react'
 
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },

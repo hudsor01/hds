@@ -1,12 +1,11 @@
 import { NextResponse } from 'next/server'
-import { z } from 'zod'
 import Stripe from 'stripe'
-import { withAuth, withRateLimit } from '../lib/middleware'
+import { z } from 'zod'
 import { handleError } from '../lib/error-handler'
+import { withAuth, withRateLimit } from '../lib/middleware'
 import { validateRequest } from '../lib/validation'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  apiVersion: '2020-08-27',
 })
 
 const PaymentIntentSchema = z.object({

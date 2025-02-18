@@ -1,11 +1,12 @@
 /// <reference lib="dom" />
 
 import { useApiDelete, useApiMutation, useApiQuery, useApiUpdate } from '@/hooks/use-api'
-import { useState, useEffect, useCallback, useTransition } from 'react'
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
-import { toast } from 'sonner'
-import type { Property, Tenant, QueryParams } from '@/types/types'
+import { useCallback, useEffect, useState, useTransition } from 'react'
+import { snackbar } from '@mui/material'
+
+import type { Property, QueryParams, Tenant } from '@/types/types'
 
 export function useProperty(id: string) {
   return useApiQuery<Property>(`/api/properties/${id}`)
@@ -22,7 +23,7 @@ export function useUpdateProperty() {
 interface UsePropertiesOptions {
   onSuccess?: (data: Property | undefined, action: 'create' | 'update' | 'delete') => void | Promise<void>
   onError?: (error: Error, action: 'create' | 'update' | 'delete') => void | Promise<void>
-  showToasts?: boolean
+  showsnackbars?: boolean
   initialData?: Property[]
 }
 
@@ -59,7 +60,7 @@ const PROPERTIES_QUERY_KEY = ['properties']
 export function useProperties({
   onSuccess,
   onError,
-  showToasts = true,
+  showsnackbars = true,
   initialData
 }: UsePropertiesOptions = {}): UsePropertiesReturn {
   const queryClient = useQueryClient()
@@ -88,15 +89,15 @@ export function useProperties({
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: PROPERTIES_QUERY_KEY })
-      if (showToasts) {
-        toast.success('Property created successfully')
+      if (showsnackbars) {
+        snackbar.success('Property created successfully')
       }
       onSuccess?.(data, 'create')
     },
     onError: (err: PropertyError) => {
       setError(err)
-      if (showToasts) {
-        toast.error('Failed to create property')
+      if (showsnackbars) {
+        snackbar.error('Failed to create property')
       }
       onError?.(err, 'create')
     }
@@ -110,15 +111,15 @@ export function useProperties({
     },
     onSuccess: data => {
       queryClient.invalidateQueries({ queryKey: PROPERTIES_QUERY_KEY })
-      if (showToasts) {
-        toast.success('Property updated successfully')
+      if (showsnackbars) {
+        snackbar.success('Property updated successfully')
       }
       onSuccess?.(data, 'update')
     },
     onError: (err: PropertyError) => {
       setError(err)
-      if (showToasts) {
-        toast.error('Failed to update property')
+      if (showsnackbars) {
+        snackbar.error('Failed to update property')
       }
       onError?.(err, 'update')
     }
@@ -131,15 +132,15 @@ export function useProperties({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: PROPERTIES_QUERY_KEY })
-      if (showToasts) {
-        toast.success('Property deleted successfully')
+      if (showsnackbars) {
+        snackbar.success('Property deleted successfully')
       }
       onSuccess?.(undefined, 'delete')
     },
     onError: (err: PropertyError) => {
       setError(err)
-      if (showToasts) {
-        toast.error('Failed to delete property')
+      if (showsnackbars) {
+        snackbar.error('Failed to delete property')
       }
       onError?.(err, 'delete')
     }
@@ -155,7 +156,7 @@ export function useProperties({
       } catch (err) {
         const error = err as PropertyError
         if (error.status === 422) {
-          toast.error('Please check the property details and try again')
+          snackbar.error('Please check the property details and try again')
         }
         throw error
       }
@@ -173,7 +174,7 @@ export function useProperties({
       } catch (err) {
         const error = err as PropertyError
         if (error.status === 422) {
-          toast.error('Please check the property details and try again')
+          snackbar.error('Please check the property details and try again')
         }
         throw error
       }
@@ -190,7 +191,7 @@ export function useProperties({
         } catch (err) {
           const error = err as PropertyError
           if (error.status === 404) {
-            toast.error('Property not found')
+            snackbar.error('Property not found')
           }
           throw error
         }
@@ -333,9 +334,9 @@ export function useScroll(threshold = 100) {
   return { scrolled, scrollToTop }
 }
 
-// Toast notifications hook
-export function useToast() {
-  const [toast, setToast] = useState<{
+// snackbar notifications hook
+export function usesnackbar() {
+  const [snackbar, setsnackbar] = useState<{
     message: string
     type: 'success' | 'error' | 'info' | 'warning'
     open: boolean
@@ -345,15 +346,15 @@ export function useToast() {
     open: false
   })
 
-  const showToast = useCallback((message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') => {
-    setToast({ message, type, open: true })
+  const showsnackbar = useCallback((message: string, type: 'success' | 'error' | 'info' | 'warning' = 'info') => {
+    setsnackbar({ message, type, open: true })
   }, [])
 
-  const hideToast = useCallback(() => {
-    setToast(prev => ({ ...prev, open: false }))
+  const hidesnackbar = useCallback(() => {
+    setsnackbar(prev => ({ ...prev, open: false }))
   }, [])
 
-  return { toast, showToast, hideToast }
+  return { snackbar, showsnackbar, hidesnackbar }
 }
 
 // User preferences hook
