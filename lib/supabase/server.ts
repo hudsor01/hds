@@ -1,79 +1,35 @@
-import { createServerClient, type CookieOptions } from '@supabase/ssr'
+import { createServerClient } from '@supabase/ssr'
 import { cookies } from 'next/headers'
-import type { Database } from '@/types/db.types'
 
-export const createClient = (): ReturnType<typeof createServerClient> => {
-  const supabaseUrl: string = process.env.NEXT_PUBLIC_SUPABASE_URL ?? ''
-  const supabaseAnonKey: string = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? ''
+export function createClient() {
+  const cookieStore = cookies()
 
-  return createServerClient<Database>(supabaseUrl, supabaseAnonKey, {
+  return createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY, {
     cookies: {
-      async get(name: string): Promise<string | undefined> {
-        const cookieStore = await cookies()
-        return cookieStore.get(name)?.value
-      },
-      async set(name: string, value: string, options: CookieOptions): Promise<void> {
+      getAll() {
         try {
-          ;(await cookies()).set(name, value, options)
-        } catch (error) {
-          console.error('Error setting cookie:', error)
+          const getAllFn = cookieStore.getAll as () => any[]
+          const cookiesArray =
+            typeof getAllFn === 'function'
+              ? (getAllFn() as ReadonlyArray<{ name: string; value: string }> | undefined)
+              : undefined
+          return Array.isArray(cookiesArray) && cookiesArray.length > 0
+            ? cookiesArray.map((cookie: { name: string; value: string }) => ({ name: cookie.name, value: cookie.value }))
+            : []
+        } catch (e) {
+          console.error('Failed to getAll cookies', e)
+          return []
         }
       },
-      async remove(name: string, options: CookieOptions): Promise<void> {
-        try {
-          ;(await cookies()).delete({ name, ...options })
-        } catch (error) {
-          console.error('Error removing cookie:', error)
-        }
+      setAll(newCookies: { name: string; value: string }[]) {
+        newCookies.forEach(cookie => {
+          try {
+            ;(cookieStore.set as (name: string, value: string) => void)(cookie.name, cookie.value)
+          } catch (e) {
+            console.error(`Failed to set cookie ${cookie.name}=${cookie.value}`, e)
+          }
+        })
       }
     }
   })
-}
-
-// Helper function to get the current session
-export async function getSession(): Promise<ReturnType<typeof createClient>['auth']['getSession']> {
-  const supabase = createClient()
-  try {
-    const {
-      data: { session },
-      error
-    } = await supabase.auth.getSession()
-    if (error) throw error
-    return session
-  } catch (error) {
-    console.error('Error getting session:', error)
-    return null
-  }
-}
-
-// Helper function to get the current user
-export async function getUser(): Promise<ReturnType<typeof createClient>['auth']['getUser']> {
-  const supabase = createClient()
-  try {
-    const {
-      data: { user },
-      error
-    } = await supabase.auth.getUser()
-    if (error) throw error
-    return user
-  } catch (error) {
-    console.error('Error getting user:', error)
-    return null
-  }
-}
-
-// Helper function to refresh session if needed
-export async function refreshSession(): Promise<ReturnType<typeof createClient>['auth']['refreshSession']> {
-  const supabase = createClient()
-  try {
-    const {
-      data: { session },
-      error
-    } = await supabase.auth.refreshSession()
-    if (error) throw error
-    return session
-  } catch (error) {
-    console.error('Error refreshing session:', error)
-    return null
-  }
 }

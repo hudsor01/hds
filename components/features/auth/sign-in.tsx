@@ -15,8 +15,7 @@ import {
   IconButton,
   InputAdornment,
   Snackbar,
-  Alert,
-  useTheme
+  Alert
 } from '@mui/material'
 import {
   Email as EmailIcon,
@@ -34,22 +33,25 @@ const signInSchema = z.object({
 type SignInValues = z.infer<typeof signInSchema>
 
 export function SignIn() {
-  const theme = useTheme()
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isLoading, setIsLoading] = useState(false)
   const [showPassword, setShowPassword] = useState(false)
   const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error' | 'info' | 'warning';
+    open: boolean
+    message: string
+    severity: 'success' | 'error' | 'info' | 'warning'
   }>({
     open: false,
     message: '',
     severity: 'info'
   })
 
-  const { control, handleSubmit, formState: { errors } } = useForm<SignInValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<SignInValues>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
       email: '',
@@ -115,11 +117,7 @@ export function SignIn() {
           Sign In
         </Typography>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
-        >
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
           <Controller
             name="email"
             control={control}
@@ -132,12 +130,26 @@ export function SignIn() {
                 helperText={errors.email?.message}
                 disabled={isLoading}
                 fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon color="action" />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={() => {
+                            setShowPassword(!showPassword)
+                          }}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }
                 }}
               />
             )}
@@ -150,38 +162,38 @@ export function SignIn() {
               <TextField
                 {...field}
                 label="Password"
-                type={showPassword ? 'text' : 'password'}
+                type="password"
                 error={!!errors.password}
                 helperText={errors.password?.message}
                 disabled={isLoading}
                 fullWidth
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <LockIcon color="action" />
-                    </InputAdornment>
-                  ),
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={() => { setShowPassword(!showPassword); }}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <LockIcon color="action" />
+                      </InputAdornment>
+                    ),
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          aria-label="toggle password visibility"
+                          onClick={() => {
+                            setShowPassword(!showPassword)
+                          }}
+                          edge="end"
+                        >
+                          {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }
                 }}
               />
             )}
           />
 
-          <Button
-            type="submit"
-            variant="contained"
-            disabled={isLoading}
-            sx={{ mt: 2 }}
-          >
+          <Button type="submit" variant="contained" disabled={isLoading} sx={{ mt: 2 }}>
             {isLoading ? (
               <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                 <CircularProgress size={20} color="inherit" />
@@ -200,12 +212,7 @@ export function SignIn() {
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

@@ -1,29 +1,57 @@
-'use client'
-import React from 'react'
-import { Roboto } from 'next/font/google'
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter'
-import { ThemeProvider } from '@mui/material/styles'
-import CssBaseline from '@mui/material/CssBaseline'
-import { theme } from '@/lib/theme'
+import { Suspense } from 'react';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v14-appRouter';
+import { ThemeProvider } from '@mui/material/styles';
+import CssBaseline from '@mui/material/CssBaseline';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+import { theme } from '@/lib/theme';
+import Navbar from '@/components/layouts/Navbar';
 
-const roboto = Roboto({
-  weight: ['300', '400', '500', '700'],
-  style: ['normal', 'italic'],
-  subsets: ['latin'],
-  display: 'swap'
-})
+// Fonts
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/400.css';
+import '@fontsource/roboto/500.css';
+import '@fontsource/roboto/700.css';
+import '@fontsource/playfair-display';
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+// Global styles
+import './globals.css';
+
+export const metadata = {
+  title: 'HDS - Property Management System',
+  description: 'Modern property management system for real estate professionals',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0',
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html lang="en">
-      <body className={roboto.className}>
+      <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
             <CssBaseline />
-            {children}
+            
+            {/* Main Navigation */}
+            <Suspense fallback={<div>Loading...</div>}>
+              <Navbar />
+            </Suspense>
+
+            {/* Main Content */}
+            <main>
+              {children}
+            </main>
+
+            {/* Analytics */}
+            <Analytics />
+            <SpeedInsights />
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
     </html>
-  )
+  );
 }

@@ -7,7 +7,6 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import React from 'react'
 
-
 const fadeInUp = {
   initial: { opacity: 0, y: 40 },
   animate: { opacity: 1, y: 0 }

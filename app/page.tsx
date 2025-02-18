@@ -1,15 +1,7 @@
 'use client'
 
 import { useRouter } from 'next/navigation'
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Button,
-  Paper,
-  useTheme,
-  alpha
-} from '@mui/material'
+import { Box, Container, Typography, Button, Paper, useTheme, alpha } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import {
   Home as HomeIcon,
@@ -99,7 +91,7 @@ export default function Home() {
                     fontWeight: 800,
                     fontSize: { xs: '2.5rem', md: '3.5rem' },
                     lineHeight: 1.2,
-                    mb: 2,
+                    mb: 2
                   }}
                 >
                   Transform Your Property Management
@@ -118,7 +110,9 @@ export default function Home() {
                   <Button
                     variant="contained"
                     size="large"
-                    onClick={() => router.push('/sign-up')}
+                    onClick={() => {
+                      router.push('/sign-up')
+                    }}
                     sx={{
                       bgcolor: 'background.paper',
                       color: 'primary.main',
@@ -134,7 +128,9 @@ export default function Home() {
                   <Button
                     variant="outlined"
                     size="large"
-                    onClick={() => router.push('/demo')}
+                    onClick={() => {
+                      router.push('/demo')
+                    }}
                     sx={{
                       borderColor: 'primary.contrastText',
                       color: 'primary.contrastText',
@@ -227,19 +223,10 @@ export default function Home() {
                 >
                   {feature.icon}
                 </Box>
-                <Typography
-                  variant="h6"
-                  component="h3"
-                  gutterBottom
-                  sx={{ fontWeight: 600, mb: 1 }}
-                >
+                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
                   {feature.title}
                 </Typography>
-                <Typography
-                  variant="body1"
-                  color="text.secondary"
-                  sx={{ lineHeight: 1.6 }}
-                >
+                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
                   {feature.description}
                 </Typography>
               </Paper>
@@ -277,17 +264,15 @@ export default function Home() {
             >
               Ready to Transform Your Property Management?
             </Typography>
-            <Typography
-              variant="h6"
-              color="text.secondary"
-              sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}
-            >
+            <Typography variant="h6" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
               Join thousands of property managers who are already streamlining their operations with our platform.
             </Typography>
             <Button
               variant="contained"
               size="large"
-              onClick={() => router.push('/sign-up')}
+              onClick={() => {
+                router.push('/sign-up')
+              }}
               sx={{
                 px: 4,
                 py: 1.5,

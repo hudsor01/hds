@@ -25,10 +25,10 @@ const nextConfig: NextConfig = {
     dirs: ['app', 'components', 'emails', 'middleware', 'prisma', 'supabase', 'lib', 'hooks', 'types', 'utils'],
     ignoreDuringBuilds: false
   },
-  webpack: (config) => {
+  webpack: config => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
-      process: false,
+      process: false
     }
     return config
   }

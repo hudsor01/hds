@@ -1,10 +1,9 @@
-import type { Database } from '@/types/db.types'
+import type {} from '@/types/db.types'
 import { PaymentStatus, PaymentType, Prisma, PrismaClient } from '@prisma/client'
-import { createClient } from '@supabase/supabase-js'
 
 // Prisma Client Initialization
 declare global {
-  var prisma: PrismaClient | undefined
+  let prisma: PrismaClient | undefined
 }
 
 const prismaClientOptions: Prisma.PrismaClientOptions = {
@@ -17,9 +16,6 @@ export const prisma = globalThis.prisma || new PrismaClient(prismaClientOptions)
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prisma = prisma
 }
-
-// Supabase Client Initialization
-export const supabase = createClient<Database>(process.env['NEXT_PUBLIC_SUPABASE_URL'], process.env['NEXT_PUBLIC_SUPABASE_KEY']!)
 
 // Error Handling
 const mapPrismaErrorToHttpStatus = (error: Prisma.PrismaClientKnownRequestError): number => {
@@ -112,7 +108,7 @@ export const payments = {
       startDate?: Date
       endDate?: Date
     }
-  ): Promise<PaginatedResult<Prisma.paymentsGetPayload<{}>>> => {
+  ): Promise<PaginatedResult<Prisma.paymentsGetPayload<object>>> => {
     const where: Prisma.paymentsWhereInput = {
       tenant_id: tenantId,
       ...(params.status && { payment_status: params.status }),
@@ -142,7 +138,7 @@ export const payments = {
 
 // Lease Queries
 export const leases = {
-  getWithDetails: async (leaseId: string): Promise<Prisma.leasesGetPayload<{}> | null> => {
+  getWithDetails: async (leaseId: string): Promise<Prisma.leasesGetPayload<object> | null> => {
     return prisma.leases.findUnique({
       where: { user_id: leaseId },
       select: {
@@ -162,7 +158,7 @@ export const leases = {
     })
   },
 
-  getActiveByProperty: async (propertyId: string): Promise<Prisma.leasesGetPayload<{}>[]> => {
+  getActiveByProperty: async (propertyId: string): Promise<Prisma.leasesGetPayload<object>[]> => {
     return prisma.leases.findMany({
       where: {
         property_id: propertyId,
@@ -190,7 +186,7 @@ export const leases = {
 
 // Property Queries
 export const properties = {
-  getWithDetails: async (propertyId: string): Promise<Prisma.propertiesGetPayload<{}> | null> => {
+  getWithDetails: async (propertyId: string): Promise<Prisma.propertiesGetPayload<object> | null> => {
     return prisma.properties.findUnique({
       where: { id: propertyId },
       select: {
@@ -241,7 +237,7 @@ export const properties = {
       type?: string
       search?: string
     }
-  ): Promise<PaginatedResult<Prisma.propertiesGetPayload<{}>>> => {
+  ): Promise<PaginatedResult<Prisma.propertiesGetPayload<{ object }>>> => {
     const where: Prisma.propertiesWhereInput = {
       user_id: userId,
       ...(params.status && { status: params.status }),

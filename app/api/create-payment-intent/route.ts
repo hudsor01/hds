@@ -5,8 +5,7 @@ import { handleError } from '../lib/error-handler'
 import { withAuth, withRateLimit } from '../lib/middleware'
 import { validateRequest } from '../lib/validation'
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-})
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {})
 
 const PaymentIntentSchema = z.object({
   amount: z.number().positive(),

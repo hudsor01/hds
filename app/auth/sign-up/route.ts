@@ -23,7 +23,11 @@ export async function POST(request: Request): Promise<NextResponse> {
       const body = signUpSchema.parse(json)
 
       // Check if user already exists
-      const { data: existingUser, error: existingUserError } = await supabase.from('users').select('id').eq('email', body.email).single()
+      const { data: existingUser, error: existingUserError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('email', body.email)
+        .single()
 
       if (existingUserError) {
         throw new AuthError(existingUserError.message)

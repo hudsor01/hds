@@ -52,15 +52,3 @@ vercel.json.local
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-
-# Stripe
-.stripe/
-.stripe
-
-# Supabase
-.supabase/
-.supabase
-
-# Prisma
-.prisma/
-.prisma

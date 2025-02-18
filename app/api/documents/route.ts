@@ -129,9 +129,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   } catch (error) {
     if (error instanceof z.ZodError) {
       if (error.errors.length > 0) {
-        return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+        return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
       } else {
-        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 });
+        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 })
       }
     }
   }
@@ -186,9 +186,9 @@ export async function PUT(req: NextRequest): Promise<NextResponse> {
   } catch (error) {
     if (error instanceof z.ZodError) {
       if (error.errors.length > 0) {
-        return NextResponse.json({ error: error.errors[0].message }, { status: 400 });
+        return NextResponse.json({ error: error.errors[0].message }, { status: 400 })
       } else {
-        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 });
+        return NextResponse.json({ error: 'Validation error occurred' }, { status: 400 })
       }
     }
     console.error('Error in document PUT route:', error)

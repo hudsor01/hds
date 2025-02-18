@@ -5,7 +5,6 @@ import { SpeedInsights } from '@vercel/speed-insights/next'
 import React from 'react'
 import type { ErrorBoundary } from 'react-error-boundary'
 
-
 interface ClientLayoutProps {
   children: React.ReactNode
 }

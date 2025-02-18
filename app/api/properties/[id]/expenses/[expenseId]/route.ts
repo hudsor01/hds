@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server'
 
 export async function GET(request: Request, { params }: { params: { id: string; expenseId: string } }) {
   try {
-
     // Get expense with property details
     const { data: expense, error } = await supabase
       .from('expenses')

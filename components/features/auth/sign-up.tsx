@@ -30,24 +30,23 @@ import {
 } from '@mui/icons-material'
 import { signUp } from '@/lib/supabase/auth'
 
-const signUpSchema = z.object({
-  fullName: z.string()
-    .min(2, 'Full name must be at least 2 characters')
-    .max(50, 'Full name must be less than 50 characters'),
-  email: z.string()
-    .min(1, 'Email is required')
-    .email('Invalid email address'),
-  password: z.string()
-    .min(8, 'Password must be at least 8 characters')
-    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
-    .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
-    .regex(/[0-9]/, 'Password must contain at least one number')
-    .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
-  confirmPassword: z.string()
-}).refine((data) => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const signUpSchema = z
+  .object({
+    fullName: z.string().min(2, 'Full name must be at least 2 characters').max(50, 'Full name must be less than 50 characters'),
+    email: z.string().min(1, 'Email is required').email('Invalid email address'),
+    password: z
+      .string()
+      .min(8, 'Password must be at least 8 characters')
+      .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
+      .regex(/[a-z]/, 'Password must contain at least one lowercase letter')
+      .regex(/[0-9]/, 'Password must contain at least one number')
+      .regex(/[^A-Za-z0-9]/, 'Password must contain at least one special character'),
+    confirmPassword: z.string()
+  })
+  .refine(data => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ['confirmPassword']
+  })
 
 type SignUpValues = z.infer<typeof signUpSchema>
 
@@ -58,16 +57,20 @@ export function SignUp() {
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
   const [snackbar, setSnackbar] = useState<{
-    open: boolean;
-    message: string;
-    severity: 'success' | 'error' | 'info' | 'warning';
+    open: boolean
+    message: string
+    severity: 'success' | 'error' | 'info' | 'warning'
   }>({
     open: false,
     message: '',
     severity: 'info'
   })
 
-  const { control, handleSubmit, formState: { errors } } = useForm<SignUpValues>({
+  const {
+    control,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<SignUpValues>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       fullName: '',
@@ -144,7 +147,9 @@ export function SignUp() {
           variant="outlined"
           fullWidth
           startIcon={<GoogleIcon />}
-          onClick={() => {/* Handle Google Sign Up */}}
+          onClick={() => {
+            /* Handle Google Sign Up */
+          }}
           sx={{
             py: 1.5,
             textTransform: 'none',
@@ -165,11 +170,7 @@ export function SignUp() {
           <Divider sx={{ flex: 1 }} />
         </Box>
 
-        <Box
-          component="form"
-          onSubmit={handleSubmit(onSubmit)}
-          sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}
-        >
+        <Box component="form" onSubmit={handleSubmit(onSubmit)} sx={{ display: 'flex', flexDirection: 'column', gap: 2.5 }}>
           <Controller
             name="fullName"
             control={control}
@@ -182,12 +183,14 @@ export function SignUp() {
                 disabled={isLoading}
                 fullWidth
                 size="medium"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <PersonIcon color="action" />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <PersonIcon color="action" />
+                      </InputAdornment>
+                    )
+                  }
                 }}
               />
             )}
@@ -206,12 +209,14 @@ export function SignUp() {
                 disabled={isLoading}
                 fullWidth
                 size="medium"
-                InputProps={{
-                  startAdornment: (
-                    <InputAdornment position="start">
-                      <EmailIcon color="action" />
-                    </InputAdornment>
-                  ),
+                slotProps={{
+                  input: {
+                    startAdornment: (
+                      <InputAdornment position="start">
+                        <EmailIcon color="action" />
+                      </InputAdornment>
+                    )
+                  }
                 }}
               />
             )}
@@ -226,13 +231,10 @@ export function SignUp() {
                   <TextField
                     {...field}
                     label="Password"
-                    type={showPassword ? 'text' : 'password'}
-                    error={!!errors.password}
-                    helperText={errors.password?.message}
-                    disabled={isLoading}
                     fullWidth
                     size="medium"
-                    InputProps={{
+                    type={showPassword ? 'text' : 'password'}
+                    slotProps={{
                       startAdornment: (
                         <InputAdornment position="start">
                           <LockIcon color="action" />
@@ -241,13 +243,15 @@ export function SignUp() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => setShowPassword(!showPassword)}
+                            onClick={() => {
+                              setShowPassword(!showPassword)
+                            }}
                             edge="end"
                           >
                             {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                           </IconButton>
                         </InputAdornment>
-                      ),
+                      )
                     }}
                   />
                 )}
@@ -262,13 +266,10 @@ export function SignUp() {
                   <TextField
                     {...field}
                     label="Confirm Password"
-                    type={showConfirmPassword ? 'text' : 'password'}
-                    error={!!errors.confirmPassword}
-                    helperText={errors.confirmPassword?.message}
-                    disabled={isLoading}
                     fullWidth
                     size="medium"
-                    InputProps={{
+                    type={showConfirmPassword ? 'text' : 'password'}
+                    slotProps={{
                       startAdornment: (
                         <InputAdornment position="start">
                           <LockIcon color="action" />
@@ -277,13 +278,15 @@ export function SignUp() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            onClick={() => {
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }}
                             edge="end"
                           >
                             {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                           </IconButton>
                         </InputAdornment>
-                      ),
+                      )
                     }}
                   />
                 )}
@@ -317,7 +320,9 @@ export function SignUp() {
               Already have an account?{' '}
               <Button
                 variant="text"
-                onClick={() => router.push('/sign-in')}
+                onClick={() => {
+                  router.push('/sign-in')
+                }}
                 sx={{ textTransform: 'none' }}
               >
                 Sign in
@@ -333,12 +338,7 @@ export function SignUp() {
         onClose={handleSnackbarClose}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Alert
-          onClose={handleSnackbarClose}
-          severity={snackbar.severity}
-          variant="filled"
-          sx={{ width: '100%' }}
-        >
+        <Alert onClose={handleSnackbarClose} severity={snackbar.severity} variant="filled" sx={{ width: '100%' }}>
           {snackbar.message}
         </Alert>
       </Snackbar>

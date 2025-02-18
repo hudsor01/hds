@@ -57,7 +57,11 @@ export async function getCurrentUserProfile(): Promise<NextResponse> {
   }
 }
 
-export async function updateUserProfile(updates: { email?: string; password?: string; data?: Record<string, unknown> }): Promise<NextResponse> {
+export async function updateUserProfile(updates: {
+  email?: string
+  password?: string
+  data?: Record<string, unknown>
+}): Promise<NextResponse> {
   try {
     const supabase = createClient()
     const {

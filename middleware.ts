@@ -1,17 +1,17 @@
+import { NextResponse } from 'next/server'
+import { type NextRequest } from 'next/server'
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
-import { NextResponse, type NextRequest } from 'next/server'
 
-export async function middleware(request: NextRequest): Promise<NextResponse> {
-  const response = NextResponse.next({
+import { DEFAULT_LOGIN_REDIRECT, authRoutes, publicRoutes, isPublicRoute, isAuthRoute } from '@/app/routes'
+
+export async function middleware(request: NextRequest) {
+  let response = NextResponse.next({
     request: {
       headers: request.headers
     }
   })
 
-  const supabaseUrl = process.env['NEXT_PUBLIC_SUPABASE_URL'] ?? ''
-  const supabaseAnonKey = process.env['NEXT_PUBLIC_SUPABASE_ANON_KEY'] ?? ''
-
-  const supabase = createServerClient(supabaseUrl, supabaseAnonKey, {
+  const supabase = createServerClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, {
     cookies: {
       get(name: string) {
         return request.cookies.get(name)?.value
@@ -37,40 +37,38 @@ export async function middleware(request: NextRequest): Promise<NextResponse> {
     data: { session }
   } = await supabase.auth.getSession()
 
-  // Protected routes that require authentication
-  const protectedPaths = ['/dashboard', '/properties', '/tenants', '/maintenance', '/settings', '/account']
+  const { pathname } = request.nextUrl
 
-  // Check if the current path is protected
-  const isProtectedPath = protectedPaths.some(path => request.nextUrl.pathname.startsWith(path))
-
-  // If the path is protected but user is not authenticated, redirect to sign-in
-  if (isProtectedPath && !session) {
-    const redirectUrl = new URL('/sign-in', request.url)
-    redirectUrl.searchParams.set('returnTo', request.nextUrl.pathname)
-    return NextResponse.redirect(redirectUrl)
+  // Allow static files and API routes
+  if (pathname.startsWith('/_next') || pathname.startsWith('/static') || pathname.startsWith('/api')) {
+    return response
   }
 
-  // If user is authenticated and tries to access auth pages, redirect to dashboard
-  const authPaths = ['/sign-in', '/sign-up', '/forgot-password']
-  const isAuthPath = authPaths.some(path => request.nextUrl.pathname.startsWith(path))
-
-  if (isAuthPath && session) {
-    return NextResponse.redirect(new URL('/dashboard', request.url))
+  // Handle public routes
+  if (isPublicRoute(pathname)) {
+    return response
   }
 
+  // Handle auth routes (login, register, etc.)
+  if (isAuthRoute(pathname)) {
+    if (session) {
+      // If user is already logged in, redirect to dashboard
+      return NextResponse.redirect(new URL(DEFAULT_LOGIN_REDIRECT, request.url))
+    }
+    return response
+  }
+
+  // Protected routes
+  if (!session) {
+    const returnTo = encodeURIComponent(pathname)
+    return NextResponse.redirect(new URL(`/sign-in?returnTo=${returnTo}`, request.url))
+  }
+
+  // User is authenticated, allow access to protected routes
   return response
 }
 
+// Configure which routes to run middleware on
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (public files)
-     * - api (API routes)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|public|api).*)'
-  ]
+  matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api|trpc)(.*)']
 }

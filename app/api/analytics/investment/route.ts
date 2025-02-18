@@ -15,10 +15,10 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     if (propertyId) {
       // Get property-specific ROI metrics
-      const { data: roiMetrics, error: roiError } = await supabase.rpc('calculate_property_roi', {
+      const { data: roiMetrics, error: roiError } = (await supabase.rpc('calculate_property_roi', {
         p_property_id: propertyId,
         p_year: year
-      }) as { data: any; error: any }
+      })) as { data: any; error: any }
 
       if (roiError) throw roiError
 
@@ -27,24 +27,18 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     if (organizationId) {
       // Get organization-wide investment metrics
-      const { data: portfolioMetrics, error: portfolioError } = await supabase.rpc(
-        'calculate_portfolio_investment_metrics',
-        {
-          p_organization_id: organizationId,
-          p_year: year
-        }
-      ) as { data: any; error: any }
+      const { data: portfolioMetrics, error: portfolioError } = (await supabase.rpc('calculate_portfolio_investment_metrics', {
+        p_organization_id: organizationId,
+        p_year: year
+      })) as { data: any; error: any }
 
       if (portfolioError) throw portfolioError
 
       // Get investment performance report
-      const { data: performanceReport, error: reportError } = await supabase.rpc(
-        'generate_investment_performance_report',
-        {
-          p_organization_id: organizationId,
-          p_year: year
-        }
-      ) as { data: any; error: any }
+      const { data: performanceReport, error: reportError } = (await supabase.rpc('generate_investment_performance_report', {
+        p_organization_id: organizationId,
+        p_year: year
+      })) as { data: any; error: any }
 
       if (reportError) throw reportError
 

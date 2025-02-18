@@ -16,7 +16,7 @@ export async function POST(): Promise<NextResponse> {
     })
 
     if (error) {
-      return NextResponse.json({ error: (error).message }, { status: 400 })
+      return NextResponse.json({ error: error.message }, { status: 400 })
     }
 
     return NextResponse.json({ url: data.url })

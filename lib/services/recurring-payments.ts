@@ -1,6 +1,7 @@
 'use server'
 
 import { stripe } from '@/lib/stripe'
+import supabase from '@/lib/supabase'
 
 interface CreateSubscription {
   customerId: string
@@ -18,17 +19,23 @@ export async function createSubscription({ customerId, priceId, metadata }: Crea
       payment_settings: { save_default_payment_method: 'on_subscription' },
       expand: ['latest_invoice.payment_intent']
     })
+    const createResponse = await supabase
+      .from('subscriptions')
+      .insert<{ id: string; customer_id: string; price_id: string; status: string; metadata: Record<string, string> }>({
+        id: subscription.id,
+        customer_id: customerId,
+        price_id: priceId,
+        status: subscription.status,
+        metadata: subscription.metadata
+      })
+      .select()
+    const { data, error: insertError } = createResponse
+    if (insertError !== null) {
+      console.error('Error inserting subscription:', insertError)
+      return { data: null, error: insertError }
+    }
 
-    const supabase = createClient()
-    await supabase.from('subscriptions').insert({
-      id: subscription.id,
-      customer_id: customerId,
-      price_id: priceId,
-      status: subscription.status,
-      metadata: subscription.metadata
-    })
-
-    return { data: subscription, error: null }
+    return { data: data[0] || null, error: null }
   } catch (error) {
     console.error('Error creating subscription:', error)
     return { data: null, error }
@@ -38,42 +45,21 @@ export async function createSubscription({ customerId, priceId, metadata }: Crea
 export async function cancelSubscription(subscriptionId: string) {
   try {
     const subscription = await stripe.subscriptions.cancel(subscriptionId)
+    const updateResponse = await supabase
+      .from('subscriptions')
+      .update({ status: subscription.status })
+      .eq('id', subscriptionId)
+      .select()
+    const { data: updatedData, error: updateError } = updateResponse
+    if (updateError !== null) {
+      console.error('Error updating subscription:', updateError)
+      return { data: null, error: updateError }
+    }
 
-    const supabase = createClient()
-    await supabase.from('subscriptions').update({ status: subscription.status }).eq('id', subscriptionId)
-
-    return { data: subscription, error: null }
+    return { data: updatedData, error: null }
+    return { data: updateResult.data, error: null }
   } catch (error) {
     console.error('Error canceling subscription:', error)
-    return { data: null, error }
-  }
-}
-
-export async function updateSubscription(subscriptionId: string, priceId: string) {
-  try {
-    const subscription = await stripe.subscriptions.retrieve(subscriptionId)
-
-    const updatedSubscription = await stripe.subscriptions.update(subscriptionId, {
-      items: [
-        {
-          id: subscription.items.data[0].id,
-          price: priceId
-        }
-      ]
-    })
-
-    const supabase = createClient()
-    await supabase
-      .from('subscriptions')
-      .update({
-        price_id: priceId,
-        status: updatedSubscription.status
-      })
-      .eq('id', subscriptionId)
-
-    return { data: updatedSubscription, error: null }
-  } catch (error) {
-    console.error('Error updating subscription:', error)
     return { data: null, error }
   }
 }

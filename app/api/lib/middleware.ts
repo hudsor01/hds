@@ -3,7 +3,10 @@ import { createClient, SupabaseClient, Session, User } from '@supabase/supabase-
 import { rateLimit } from 'express-rate-limit'
 import { ApiError } from './error-handler'
 
-const supabase: SupabaseClient = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL ?? '', process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? '')
+const supabase: SupabaseClient = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? '',
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? ''
+)
 
 export async function withAuth(request: Request, handler: (user: User) => Promise<NextResponse>): Promise<NextResponse> {
   try {

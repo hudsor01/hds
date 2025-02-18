@@ -34,6 +34,7 @@
       "@mui/system": ["node_modules/@mui/system/esm"]
     },
     "typeRoots": ["./node_modules/@types", "./types"],
+    "types": ["@mui/material"],
     "noUncheckedIndexedAccess": true,
     "exactOptionalPropertyTypes": true,
     "noPropertyAccessFromIndexSignature": true,

@@ -8,8 +8,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
     const startDate = searchParams.get('startDate') || new Date(new Date().getFullYear(), 0, 1).toISOString()
     const endDate = searchParams.get('endDate') || new Date().toISOString()
 
-    const cookieStore = cookies();
-    const supabase = createServerClient({ cookies: cookieStore });
+    const cookieStore = cookies()
+    const supabase = createServerClient({ cookies: cookieStore })
 
     // First verify access to the property
     const { data: property, error: propertyError } = await supabase

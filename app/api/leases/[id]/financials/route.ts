@@ -80,8 +80,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
     return NextResponse.json({ error: 'Error calculating lease financials' }, { status: 500 })
   }
 }
-async function getAuth (request: NextRequest): Promise<{ userId: string | null }>
-{
+async function getAuth(request: NextRequest): Promise<{ userId: string | null }> {
   const token = await getToken({ req: request })
   return { userId: token?.sub ?? null }
 }

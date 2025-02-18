@@ -15,7 +15,7 @@ export async function POST(): Promise<NextResponse> {
     data: { session }
   } = await supabase.auth.getSession()
 
-  if (!session?.user?.stripe_customer_id) {
+  if (!session?.user.stripe_customer_id) {
     return NextResponse.json({ error: 'No Stripe customer ID found' }, { status: 400 })
   }
 
