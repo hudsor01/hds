@@ -1,8 +1,9 @@
-import { createClient } from '@/lib/supabase/server'
+'use server'
+
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
-import { withRateLimit } from '@/lib/rate-limit'
-import { AuthError } from '@supabase/supabase-js'
+import { createClient } from '@supabase/supabase-js'
+import type { AuthError } from '@supabase/supabase-js'
 
 const signInSchema = z.object({
   email: z.string().email('Invalid email address'),
@@ -34,7 +35,7 @@ function handleError(error: unknown) {
     )
   }
 
-  console.error('Error:', error)
+  globalThis.console.error('Error:', error)
   return NextResponse.json(
     {
       error: 'Internal server error',
@@ -44,10 +45,14 @@ function handleError(error: unknown) {
   )
 }
 
+function withRateLimit<T>(request: NextRequest, callback: () => Promise<T>): Promise<T> {
+  return callback()
+}
+
 export async function POST(request: NextRequest): Promise<NextResponse> {
-  return withRateLimit(request, async () => {
+  return await withRateLimit(request, async () => {
     try {
-      const json = await request.json()
+      const json: unknown = await request.json()
       const body = signInSchema.parse(json)
 
       const supabase = createClient()

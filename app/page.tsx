@@ -1,8 +1,9 @@
 'use client'
 
+import React from 'react'
 import { useRouter } from 'next/navigation'
+import { Navbar } from '@/components/layouts/navbar'
 import { Box, Container, Typography, Button, Paper, useTheme, alpha } from '@mui/material'
-import Grid from '@mui/material/Grid2'
 import {
   Home as HomeIcon,
   ArrowForward as ArrowForwardIcon,
@@ -13,46 +14,62 @@ import {
   Speed as SpeedIcon,
   DeviceHub as IntegrationIcon
 } from '@mui/icons-material'
+import Grid from '@mui/material/Grid2'
 
-export default function Home() {
-  const router = useRouter()
+interface Feature {
+  icon: React.ReactNode
+  title: string
+  description: string
+  color: string
+}
+
+const features: Feature[] = [
+  {
+    icon: <ApartmentIcon />,
+    title: 'Property Management',
+    description: 'Efficiently manage your properties, units, and tenants all in one place.',
+    color: '#2563EB'
+  },
+  {
+    icon: <SecurityIcon />,
+    title: 'Enterprise Security',
+    description: 'Bank-level security with end-to-end encryption, two-factor authentication, and automated backups.',
+    color: '#7C3AED'
+  },
+  {
+    icon: <TrendingUpIcon />,
+    title: 'Advanced Analytics',
+    description: 'Make data-driven decisions with real-time insights, custom reports, and predictive analytics.',
+    color: '#059669'
+  },
+  {
+    icon: <SupportIcon />,
+    title: '24/7 Support',
+    description: 'Dedicated support team ready to assist you around the clock for any questions or issues.',
+    color: '#DC2626'
+  },
+  {
+    icon: <SpeedIcon />,
+    title: 'High Performance',
+    description: 'Lightning-fast performance optimized for managing large property portfolios efficiently.',
+    color: '#0891B2'
+  },
+  {
+    icon: <IntegrationIcon />,
+    title: 'Smart Integrations',
+    description: 'Seamlessly integrate with your existing tools and workflows for maximum productivity.',
+    color: '#C026D3'
+  }
+]
+
+export default function HomePage() {
   const theme = useTheme()
-
-  const features = [
-    {
-      icon: <ApartmentIcon />,
-      title: 'Property Management',
-      description: 'Efficiently manage your properties, units, and tenants all in one place.'
-    },
-    {
-      icon: <SecurityIcon />,
-      title: 'Secure Platform',
-      description: 'Enterprise-grade security ensuring your data is always protected.'
-    },
-    {
-      icon: <TrendingUpIcon />,
-      title: 'Advanced Analytics',
-      description: 'Make data-driven decisions with real-time insights and reporting.'
-    },
-    {
-      icon: <SupportIcon />,
-      title: '24/7 Support',
-      description: 'Dedicated support team ready to assist you around the clock.'
-    },
-    {
-      icon: <SpeedIcon />,
-      title: 'Performance',
-      description: 'Lightning-fast performance optimized for large property portfolios.'
-    },
-    {
-      icon: <IntegrationIcon />,
-      title: 'Integrations',
-      description: 'Seamlessly integrate with your existing tools and workflows.'
-    }
-  ]
+  const router = useRouter()
 
   return (
-    <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box>
+      <Navbar />
+
       {/* Hero Section */}
       <Box
         sx={{
@@ -60,8 +77,8 @@ export default function Home() {
           overflow: 'hidden',
           bgcolor: 'primary.main',
           color: 'primary.contrastText',
-          pt: { xs: 8, md: 12 },
-          pb: { xs: 12, md: 16 }
+          pt: { xs: 12, md: 16 },
+          pb: { xs: 16, md: 20 }
         }}
       >
         {/* Background Pattern */}
@@ -73,35 +90,40 @@ export default function Home() {
             right: 0,
             bottom: 0,
             opacity: 0.1,
-            background: `linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark}), 
+            background: `linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark}),
                         linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark})`,
             backgroundSize: '60px 60px',
             backgroundPosition: '0 0, 30px 30px'
           }}
         />
 
-        <Container maxWidth="lg" sx={{ position: 'relative' }}>
+        <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             <Grid xs={12} md={6}>
               <Box sx={{ maxWidth: 600 }}>
                 <Typography
-                  variant="h2"
-                  component="h1"
+                  variant="h1"
                   sx={{
-                    fontWeight: 800,
                     fontSize: { xs: '2.5rem', md: '3.5rem' },
-                    lineHeight: 1.2,
-                    mb: 2
+                    fontWeight: 800,
+                    mb: 3,
+                    lineHeight: 1.2
                   }}
                 >
-                  Transform Your Property Management
+                  Transform Your
+                  <Box component="span" sx={{ color: '#60A5FA' }}>
+                    {' '}
+                    Property{' '}
+                  </Box>
+                  Management
                 </Typography>
                 <Typography
                   variant="h5"
                   sx={{
                     mb: 4,
                     opacity: 0.9,
-                    fontWeight: 400
+                    lineHeight: 1.6,
+                    maxWidth: 600
                   }}
                 >
                   Streamline operations, boost efficiency, and enhance tenant satisfaction with our comprehensive solution.
@@ -111,17 +133,19 @@ export default function Home() {
                     variant="contained"
                     size="large"
                     onClick={() => {
-                      router.push('/sign-up')
+                      router.push('/pricing')
                     }}
                     sx={{
-                      bgcolor: 'background.paper',
+                      bgcolor: 'white',
                       color: 'primary.main',
                       px: 4,
                       py: 1.5,
+                      fontSize: '1.1rem',
                       '&:hover': {
-                        bgcolor: alpha(theme.palette.background.paper, 0.9)
+                        bgcolor: alpha(theme.palette.common.white, 0.9)
                       }
                     }}
+                    endIcon={<ArrowForwardIcon />}
                   >
                     Get Started
                   </Button>
@@ -129,20 +153,21 @@ export default function Home() {
                     variant="outlined"
                     size="large"
                     onClick={() => {
-                      router.push('/demo')
+                      router.push('/pricing')
                     }}
                     sx={{
-                      borderColor: 'primary.contrastText',
-                      color: 'primary.contrastText',
+                      borderColor: 'white',
+                      color: 'white',
                       px: 4,
                       py: 1.5,
+                      fontSize: '1.1rem',
                       '&:hover': {
-                        borderColor: 'primary.contrastText',
-                        bgcolor: alpha(theme.palette.primary.contrastText, 0.1)
+                        borderColor: 'white',
+                        bgcolor: alpha(theme.palette.common.white, 0.1)
                       }
                     }}
                   >
-                    View Demo
+                    View Pricing
                   </Button>
                 </Box>
               </Box>
@@ -160,7 +185,8 @@ export default function Home() {
                   sx={{
                     fontSize: { xs: 200, md: 300 },
                     opacity: 0.9,
-                    filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.2))'
+                    filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.2))',
+                    color: 'white'
                   }}
                 />
               </Box>
@@ -172,16 +198,21 @@ export default function Home() {
       {/* Features Section */}
       <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
         <Typography
-          variant="h3"
+          variant="h2"
           align="center"
           sx={{
-            fontWeight: 700,
+            fontWeight: 800,
             mb: { xs: 6, md: 8 },
             fontSize: { xs: '2rem', md: '2.5rem' }
           }}
         >
-          Powerful Features for Modern Property Management
+          Powerful Features for Modern
+          <Box component="span" sx={{ color: 'primary.main' }}>
+            {' '}
+            Property Management
+          </Box>
         </Typography>
+
         <Grid container spacing={4}>
           {features.map((feature, index) => (
             <Grid xs={12} sm={6} md={4} key={index}>
@@ -195,14 +226,14 @@ export default function Home() {
                   alignItems: 'center',
                   textAlign: 'center',
                   borderRadius: 4,
-                  bgcolor: alpha(theme.palette.primary.main, 0.03),
+                  bgcolor: alpha(feature.color, 0.03),
                   transition: 'all 0.3s ease-in-out',
                   '&:hover': {
                     transform: 'translateY(-8px)',
-                    bgcolor: alpha(theme.palette.primary.main, 0.05),
+                    bgcolor: alpha(feature.color, 0.05),
                     '& .feature-icon': {
                       transform: 'scale(1.1)',
-                      color: 'primary.main'
+                      color: feature.color
                     }
                   }
                 }}
@@ -213,8 +244,8 @@ export default function Home() {
                     mb: 3,
                     p: 2,
                     borderRadius: '50%',
-                    bgcolor: alpha(theme.palette.primary.main, 0.1),
-                    color: 'primary.main',
+                    bgcolor: alpha(feature.color, 0.1),
+                    color: feature.color,
                     transition: 'all 0.3s ease-in-out',
                     '& > svg': {
                       fontSize: 40
@@ -223,10 +254,10 @@ export default function Home() {
                 >
                   {feature.icon}
                 </Box>
-                <Typography variant="h6" component="h3" gutterBottom sx={{ fontWeight: 600, mb: 1 }}>
+                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
                   {feature.title}
                 </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.6 }}>
+                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7 }}>
                   {feature.description}
                 </Typography>
               </Paper>
@@ -238,12 +269,30 @@ export default function Home() {
       {/* CTA Section */}
       <Box
         sx={{
-          bgcolor: alpha(theme.palette.primary.main, 0.03),
+          bgcolor: 'primary.main',
+          color: 'white',
           py: { xs: 8, md: 12 },
+          mt: 8,
           position: 'relative',
           overflow: 'hidden'
         }}
       >
+        {/* Background Pattern */}
+        <Box
+          sx={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            opacity: 0.1,
+            background: `linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark}),
+                        linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark})`,
+            backgroundSize: '60px 60px',
+            backgroundPosition: '0 0, 30px 30px'
+          }}
+        />
+
         <Container maxWidth="md">
           <Box
             sx={{
@@ -254,33 +303,36 @@ export default function Home() {
           >
             <Typography
               variant="h3"
-              component="h2"
-              gutterBottom
               sx={{
-                fontWeight: 700,
-                fontSize: { xs: '2rem', md: '2.5rem' },
-                mb: 3
+                fontWeight: 800,
+                mb: 3,
+                fontSize: { xs: '2rem', md: '2.5rem' }
               }}
             >
               Ready to Transform Your Property Management?
             </Typography>
-            <Typography variant="h6" color="text.secondary" sx={{ mb: 4, maxWidth: 600, mx: 'auto' }}>
+            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: 600, mx: 'auto' }}>
               Join thousands of property managers who are already streamlining their operations with our platform.
             </Typography>
             <Button
               variant="contained"
               size="large"
               onClick={() => {
-                router.push('/sign-up')
+                router.push('/pricing')
               }}
               sx={{
-                px: 4,
-                py: 1.5,
-                fontSize: '1.1rem'
+                bgcolor: 'white',
+                color: 'primary.main',
+                px: 6,
+                py: 2,
+                fontSize: '1.1rem',
+                '&:hover': {
+                  bgcolor: alpha(theme.palette.common.white, 0.9)
+                }
               }}
               endIcon={<ArrowForwardIcon />}
             >
-              Start Your Free Trial
+              View Pricing Plans
             </Button>
           </Box>
         </Container>

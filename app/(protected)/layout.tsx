@@ -1,28 +1,18 @@
-import { headers } from 'next/headers'
-import { createClient } from '@/lib/supabase/server'
-import { redirect } from 'next/navigation'
-import { getIronSession } from 'iron-session'
-import { sessionOptions } from '@/lib/session'
-import { DashboardLayout } from '@/components/layouts/dashboard-layout'
+'use client';
 
-export default async function ProtectedLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createClient()
-  const {
-    data: { session }
-  } = await supabase.auth.getSession()
+import { ProtectedRoute } from '@/components/features/auth/protected-route';
+import { Box } from '@mui/material';
 
-  if (!session) {
-    redirect('/sign-in')
-  }
-
-  // Get iron session
-  const headersList = headers()
-  const ironSession = await getIronSession(headersList, sessionOptions)
-
-  // Validate iron session matches Supabase session
-  if (!ironSession.user || ironSession.user.id !== session.user.id) {
-    redirect('/sign-in')
-  }
-
-  return <DashboardLayout>{children}</DashboardLayout>
+export default function ProtectedLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  return (
+    <ProtectedRoute>
+      <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
+        {children}
+      </Box>
+    </ProtectedRoute>
+  );
 }

@@ -1,9 +1,7 @@
-'use client'
-
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { AppBar, Box, Button, Container, IconButton, Menu, MenuItem, Toolbar, useMediaQuery, alpha } from '@mui/material'
-import { Theme } from '@mui/material/styles'
+import type { Theme } from '@mui/material/styles'
 import { useTheme } from '@mui/material/styles'
 import { Menu as MenuIcon, Close as CloseIcon } from '@mui/icons-material'
 
@@ -18,7 +16,7 @@ const navigationLinks = [
 export function PublicNav() {
   const theme = useTheme()
   const router = useRouter()
-  const isMobile = useMediaQuery((theme: Theme) => theme.breakpoints.down('md'))
+  const isMobile: boolean = useMediaQuery((theme: Theme) => theme.breakpoints.down('md')) // Correct type assignment
   const [mobileMenuAnchor, setMobileMenuAnchor] = useState<null | HTMLElement>(null)
 
   const handleMobileMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
@@ -86,7 +84,7 @@ export function PublicNav() {
                     fontSize: '0.95rem',
                     px: 2,
                     '&:hover': {
-                      backgroundColor: alpha(String(theme.palette.primary.main), 0.08)
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08) // Removed unnecessary type assertion
                     }
                   }}
                 >
@@ -113,8 +111,7 @@ export function PublicNav() {
                     px: 3,
                     '&:hover': {
                       borderColor: 'primary.dark',
-                      backgroundColor:
-                        typeof theme.palette.primary.main === 'string' ? alpha(theme.palette.primary.main, 0.08) : undefined
+                      backgroundColor: alpha(theme.palette.primary.main, 0.08) // Removed unnecessary type assertion
                     }
                   }}
                 >

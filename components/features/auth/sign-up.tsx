@@ -28,7 +28,7 @@ import {
   VisibilityOff as VisibilityOffIcon,
   Google as GoogleIcon
 } from '@mui/icons-material'
-import { signUp } from '@/lib/supabase/auth'
+import { createClient } from '@/utils/supabase/client'
 
 const signUpSchema = z
   .object({
@@ -84,14 +84,53 @@ export function SignUp() {
     setSnackbar(prev => ({ ...prev, open: false }))
   }
 
+  const handleGoogleSignUp = async () => {
+    try {
+      setIsLoading(true)
+      const supabase = createClient()
+      
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: 'google',
+        options: {
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          },
+        },
+      })
+
+      if (error) throw error
+
+    } catch (error) {
+      console.error('Google sign up error:', error)
+      setSnackbar({
+        open: true,
+        message: error instanceof Error ? error.message : 'Failed to sign up with Google',
+        severity: 'error'
+      })
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const onSubmit = async (values: SignUpValues) => {
     try {
       setIsLoading(true)
-      const { success, message } = await signUp(values.email, values.password, values.fullName)
+      const supabase = createClient()
 
-      if (!success) {
-        throw new Error(message)
-      }
+      const { error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          data: {
+            full_name: values.fullName,
+          }
+        }
+      })
+
+      if (error) throw error
 
       setSnackbar({
         open: true,
@@ -147,9 +186,8 @@ export function SignUp() {
           variant="outlined"
           fullWidth
           startIcon={<GoogleIcon />}
-          onClick={() => {
-            /* Handle Google Sign Up */
-          }}
+          onClick={handleGoogleSignUp}
+          disabled={isLoading}
           sx={{
             py: 1.5,
             textTransform: 'none',
@@ -159,7 +197,14 @@ export function SignUp() {
             }
           }}
         >
-          Sign up with Google
+          {isLoading ? (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <CircularProgress size={20} color="inherit" />
+              <span>Connecting to Google...</span>
+            </Box>
+          ) : (
+            'Sign up with Google'
+          )}
         </Button>
 
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
@@ -183,14 +228,12 @@ export function SignUp() {
                 disabled={isLoading}
                 fullWidth
                 size="medium"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <PersonIcon color="action" />
-                      </InputAdornment>
-                    )
-                  }
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <PersonIcon color="action" />
+                    </InputAdornment>
+                  )
                 }}
               />
             )}
@@ -209,14 +252,12 @@ export function SignUp() {
                 disabled={isLoading}
                 fullWidth
                 size="medium"
-                slotProps={{
-                  input: {
-                    startAdornment: (
-                      <InputAdornment position="start">
-                        <EmailIcon color="action" />
-                      </InputAdornment>
-                    )
-                  }
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start">
+                      <EmailIcon color="action" />
+                    </InputAdornment>
+                  )
                 }}
               />
             )}
@@ -231,10 +272,13 @@ export function SignUp() {
                   <TextField
                     {...field}
                     label="Password"
+                    error={!!errors.password}
+                    helperText={errors.password?.message}
                     fullWidth
                     size="medium"
                     type={showPassword ? 'text' : 'password'}
-                    slotProps={{
+                    disabled={isLoading}
+                    InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
                           <LockIcon color="action" />
@@ -243,10 +287,9 @@ export function SignUp() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => {
-                              setShowPassword(!showPassword)
-                            }}
+                            onClick={() => setShowPassword(!showPassword)}
                             edge="end"
+                            disabled={isLoading}
                           >
                             {showPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                           </IconButton>
@@ -266,10 +309,13 @@ export function SignUp() {
                   <TextField
                     {...field}
                     label="Confirm Password"
+                    error={!!errors.confirmPassword}
+                    helperText={errors.confirmPassword?.message}
                     fullWidth
                     size="medium"
                     type={showConfirmPassword ? 'text' : 'password'}
-                    slotProps={{
+                    disabled={isLoading}
+                    InputProps={{
                       startAdornment: (
                         <InputAdornment position="start">
                           <LockIcon color="action" />
@@ -278,10 +324,9 @@ export function SignUp() {
                       endAdornment: (
                         <InputAdornment position="end">
                           <IconButton
-                            onClick={() => {
-                              setShowConfirmPassword(!showConfirmPassword)
-                            }}
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                             edge="end"
+                            disabled={isLoading}
                           >
                             {showConfirmPassword ? <VisibilityOffIcon /> : <VisibilityIcon />}
                           </IconButton>
@@ -320,9 +365,8 @@ export function SignUp() {
               Already have an account?{' '}
               <Button
                 variant="text"
-                onClick={() => {
-                  router.push('/sign-in')
-                }}
+                onClick={() => router.push('/auth/sign-in')}
+                disabled={isLoading}
                 sx={{ textTransform: 'none' }}
               >
                 Sign in

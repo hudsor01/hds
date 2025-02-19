@@ -4,7 +4,7 @@
   },
   "WillLuke.nextjs.addTypesOnSave": true,
   "WillLuke.nextjs.hasPrompted": true,
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit"
   },
@@ -31,5 +31,10 @@
   "editor.suggestOnTriggerCharacters": true,
   "editor.snippetSuggestions": "top",
   "editor.guides.indentation": true,
-  "i18n-ally.localesPaths": ["app/api/messages"]
+  "i18n-ally.localesPaths": [
+    "app/api/messages"
+  ],
+  "JSON-zain.json.autorefresh": true,
+  "github.copilot.workspace.implementPlanAfterRegeneration": false,
+  "github.copilot.workspace.implementPlanAfterGeneration": false
 }

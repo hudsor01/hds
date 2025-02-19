@@ -1,4 +1,5 @@
 import { type User, type Session } from '@supabase/supabase-js'
+import type { ReactNode } from 'react'
 
 export interface AuthError {
   message: string
@@ -31,7 +32,7 @@ export interface UpdatePasswordCredentials {
   confirmPassword: string
 }
 
-export interface AuthResponse<T = any> {
+export interface AuthResponse<T = unknown> {
   data: T | null
   error: AuthError | null
 }
@@ -47,4 +48,9 @@ export interface AuthUser extends User {
 export interface UseSessionReturn {
   session: Session | null
   loading: boolean
+}
+
+export interface AuthFormProps {
+  children: ReactNode
+  title: string
 }

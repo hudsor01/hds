@@ -1,67 +1,167 @@
 'use client'
 
-import { signUp } from '@/app/auth/actions'
-import type { Card, CardContent, CardHeader } from '@mui/material'
+import React, { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import type { Input } from 'postcss'
-import { useState } from 'react'
-import type { Button } from 'react-day-picker'
+import { Box, TextField, Button, Divider, Alert, CircularProgress, Typography, FormControlLabel, Checkbox } from '@mui/material'
+import { AuthForm } from '@/components/auth/AuthForm'
+import supabase from '@/lib/supabase'
 
-export default function SignUpPage({ searchParams }: { searchParams: { error: string; message: string } }) {
-  const [isLoading, setIsLoading] = useState(false)
+export default function SignUp() {
+  const router = useRouter()
+
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: '',
+    name: '',
+    agreeToTerms: false
+  })
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value, checked } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: name === 'agreeToTerms' ? checked : value
+    }))
+  }
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+
+    // Validation
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords don't match")
+      return
+    }
+
+    if (!formData.agreeToTerms) {
+      setError('Please agree to the terms and conditions')
+      return
+    }
+
+    setLoading(true)
+
+    try {
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: formData.email,
+        password: formData.password,
+        options: {
+          data: {
+            name: formData.name
+          }
+        }
+      })
+      if (signUpError) throw new Error(signUpError?.message ?? 'An unexpected error occurred')
+    } catch (caughtError) {
+      if (caughtError instanceof Error) {
+        setError(caughtError.message)
+      } else {
+        setError('An unexpected error occurred')
+      }
+    } finally {
+      setError('An unexpected error occurred')
+      setLoading(false)
+    }
+  }
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12 sm:px-6 lg:px-8">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Create an account</CardTitle>
-          <CardDescription>Enter your details to create your account</CardDescription>
-        </CardHeader>
-        <form
-          action={async formData => {
-            setIsLoading(true)
-            await signUp(formData)
-            setIsLoading(false)
-          }}
-        >
-          <CardContent className="space-y-4">
-            {searchParams.error && (
-              <div className="bg-destructive/15 rounded-md p-3">
-                <div className="text-destructive text-sm">{searchParams.error}</div>
-              </div>
-            )}
-            <div className="space-y-2">
-              <label htmlFor="email" className="text-foreground block text-sm font-medium">
-                Email
-              </label>
-              <Input id="email" name="email" type="email" required placeholder="Enter your email" />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="password" className="text-foreground block text-sm font-medium">
-                Password
-              </label>
-              <Input id="password" name="password" type="password" required placeholder="Enter your password" />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="confirmPassword" className="text-foreground block text-sm font-medium">
-                Confirm Password
-              </label>
-              <Input id="confirmPassword" name="confirmPassword" type="password" required placeholder="Confirm your password" />
-            </div>
-          </CardContent>
-          <CardFooter className="flex flex-col space-y-4">
-            <Button type="submit" className="w-full" disabled={isLoading}>
-              {isLoading ? 'Creating account...' : 'Create account'}
-            </Button>
-            <div className="text-center text-sm">
-              Already have an account?{' '}
-              <Link href="/auth/sign-in" className="text-primary hover:text-primary/80">
-                Sign in
+    <AuthForm title="Create an Account">
+      {error && (
+        <Alert severity="error" sx={{ mb: 2 }}>
+          {error}
+        </Alert>
+      )}
+
+      <Box component="form" onSubmit={handleSignUp} sx={{ mt: 1 }}>
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="name"
+          label="Full Name"
+          name="name"
+          autoComplete="name"
+          autoFocus
+          value={formData.name}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="email"
+          label="Email Address"
+          name="email"
+          autoComplete="email"
+          value={formData.email}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="password"
+          label="Password"
+          type="password"
+          id="password"
+          autoComplete="new-password"
+          value={formData.password}
+          onChange={handleChange}
+        />
+        <TextField
+          margin="normal"
+          required
+          fullWidth
+          name="confirmPassword"
+          label="Confirm Password"
+          type="password"
+          id="confirmPassword"
+          value={formData.confirmPassword}
+          onChange={handleChange}
+        />
+
+        <FormControlLabel
+          control={<Checkbox name="agreeToTerms" checked={formData.agreeToTerms} onChange={handleChange} color="primary" />}
+          label={
+            <Typography variant="body2">
+              I agree to the{' '}
+              <Link href="/terms" style={{ textDecoration: 'none', color: 'primary.main' }}>
+                Terms of Service
+              </Link>{' '}
+              and{' '}
+              <Link href="/privacy" style={{ textDecoration: 'none', color: 'primary.main' }}>
+                Privacy Policy
               </Link>
-            </div>
-          </CardFooter>
-        </form>
-      </Card>
-    </div>
+            </Typography>
+          }
+          sx={{ mt: 2 }}
+        />
+
+        <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} disabled={loading}>
+          {loading ? <CircularProgress size={24} /> : 'Sign Up'}
+        </Button>
+
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Divider sx={{ my: 2 }}>
+            <Typography color="text.secondary" variant="body2">
+              OR
+            </Typography>
+          </Divider>
+
+          <Typography variant="body2">
+            Already have an account?{' '}
+            <Link href="/auth/sign-in" style={{ textDecoration: 'none' }}>
+              <Typography component="span" color="primary" sx={{ cursor: 'pointer' }}>
+                Sign In
+              </Typography>
+            </Link>
+          </Typography>
+        </Box>
+      </Box>
+    </AuthForm>
   )
 }

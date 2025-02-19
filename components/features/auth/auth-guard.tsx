@@ -1,27 +1,57 @@
-'use client'
+'use client';
 
-import { useEffect } from 'react'
-import { useRouter, usePathname } from 'next/navigation'
-import { Box, CircularProgress, useTheme } from '@mui/material'
-import { useSupabase } from '@/lib/supabase/provider'
+import React, { useEffect, useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { Box, CircularProgress, useTheme } from '@mui/material';
+import { type Session } from '@supabase/supabase-js';
+import { createClient } from '@/utils/supabase/client';
 
 interface AuthGuardProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const router = useRouter()
-  const pathname = usePathname()
-  const theme = useTheme()
-  const { session, isLoading } = useSupabase()
+  const router = useRouter();
+  const pathname = usePathname();
+  const theme = useTheme();
+
+  const [session, setSession] = useState<Session | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isLoading && !session) {
-      // Store the intended destination for post-login redirect
-      router.push(`/sign-in?returnTo=${encodeURIComponent(pathname)}`)
-    }
-  }, [session, isLoading, router, pathname])
+    const supabase = createClient();
 
+    async function getSession() {
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        if (error) throw error;
+        setSession(session);
+      } catch (error) {
+        console.error('Error fetching session:', error);
+        setSession(null);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    void getSession();
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      if (!session) {
+        const returnTo = encodeURIComponent(pathname);
+        router.push(`/auth/sign-in?returnTo=${returnTo}`);
+      }
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [router, pathname]);
+
+  // Show loading screen while checking auth
   if (isLoading) {
     return (
       <Box
@@ -30,43 +60,37 @@ export function AuthGuard({ children }: AuthGuardProps) {
           justifyContent: 'center',
           alignItems: 'center',
           minHeight: '100vh',
-          backgroundColor: theme.palette.background.default
+          backgroundColor: theme.palette.background.default,
         }}
       >
-        <CircularProgress size={40} />
+        <CircularProgress
+          size={40}
+          sx={{
+            color: theme.palette.primary.main,
+          }}
+        />
       </Box>
-    )
+    );
   }
 
+  // If not authenticated and not loading, redirect (handled in useEffect)
   if (!session) {
-    return null
+    return null;
   }
 
-  return <>{children}</>
+  // If authenticated, render children
+  return <>{children}</>;
 }
 
-// HOC to wrap protected components
-export function withAuth<P extends object>(WrappedComponent: React.ComponentType<P>) {
+// HOC (Higher Order Component) to wrap protected components
+export function withAuth<P extends object>(
+  WrappedComponent: React.ComponentType<P>
+): React.FC<P> {
   return function WithAuthComponent(props: P) {
     return (
       <AuthGuard>
         <WrappedComponent {...props} />
       </AuthGuard>
-    )
-  }
+    );
+  };
 }
-
-// Usage example:
-/*
-// Method 1: Direct usage
-function ProtectedPage() {
-  return (
-    <AuthGuard>
-      <YourComponent />
-    </AuthGuard>
-  )
-}
-
-// Method 2: HOC usage
-const ProtectedComponent = withAuth(YourComponent)
-*/

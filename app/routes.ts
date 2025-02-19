@@ -3,12 +3,12 @@ export const publicRoutes = ['/', '/about', '/features', '/pricing', '/contact',
 
 // Auth Routes
 export const authRoutes = [
-  '/sign-in',
-  '/sign-up',
-  '/forgot-password',
-  '/reset-password',
-  '/verify-email',
-  '/new-verification'
+  '/auth/sign-in',
+  '/auth/sign-up',
+  '/auth/forgot-password',
+  '/auth/reset-password',
+  '/auth/verify-email',
+  '/auth/new-verification'
 ] as const
 
 export const DEFAULT_LOGIN_REDIRECT = '/dashboard'
@@ -90,7 +90,7 @@ export const protectedRoutes = {
 
 // Route Utilities
 export function isPublicRoute(path: string): boolean {
-  return publicRoutes.includes(path)
+  return publicRoutes.includes(path as PublicRoute)
 }
 
 export function isAuthRoute(path: string): boolean {

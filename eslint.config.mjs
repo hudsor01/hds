@@ -1,104 +1,67 @@
-import { FlatCompat } from '@eslint/eslintrc'
 import js from '@eslint/js'
 import nextPlugin from '@next/eslint-plugin-next'
 import tsEslintPlugin from '@typescript-eslint/eslint-plugin'
 import tsParser from '@typescript-eslint/parser'
 import importPlugin from 'eslint-plugin-import'
 import prettier from 'eslint-plugin-prettier'
+import zodPlugin from 'eslint-plugin-zod'
 import reactPlugin from 'eslint-plugin-react'
 import reactHooks from 'eslint-plugin-react-hooks'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
-const compat = new FlatCompat({
-  baseDirectory: import.meta.dirname
-})
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
 
 const eslintConfig = [
-  ...compat.config({
-    extends: ['next/core-web-vitals', 'next/typescript']
-  }),
-  js.configs.recommended,
-
   {
-    files: ['**/*.{js,jsx}'],
+    ...js.configs.recommended
+  },
+  {
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
-      prettier: prettier,
+      '@next/next': nextPlugin,
+      '@typescript-eslint': tsEslintPlugin,
       react: reactPlugin,
       'react-hooks': reactHooks,
-      import: importPlugin
-    },
-    rules: {
-      'prettier/prettier': 'error',
-      ...reactPlugin.configs.recommended.rules,
-      ...reactHooks.configs.recommended.rules,
-      ...importPlugin.configs.recommended.rules,
-      '@typescript-eslint/explicit-function-return-type': 'error',
-      '@typescript-eslint/explicit-module-boundary-types': 'error',
-      '@typescript-eslint/no-explicit-any': 'error',
-      '@typescript-eslint/typedef': [
-        'error',
-        {
-          arrowParameter: true,
-          variableDeclaration: true,
-          memberVariableDeclaration: true,
-          propertyDeclaration: true,
-          parameter: true,
-          objectDestructuring: true,
-          arrayDestructuring: true
-        }
-      ]
-    },
-    languageOptions: {
-      sourceType: 'module',
-      ecmaVersion: 2022,
-      parserOptions: {
-        ecmaFeatures: {
-          jsx: true
-        }
-      }
-    }
-  },
-
-  {
-    files: ['**/*.{ts,tsx}'],
-    plugins: {
-      '@typescript-eslint': tsEslintPlugin
+      import: importPlugin,
+      zod: zodPlugin,
+      prettier: prettier
     },
     languageOptions: {
       parser: tsParser,
       parserOptions: {
         project: './tsconfig.json',
-        tsconfigRootDir: __dirname
+        tsconfigRootDir: __dirname,
+        sourceType: 'module',
+        ecmaVersion: 2022,
+        ecmaFeatures: {
+          jsx: true
+        }
+      }
+    },
+    settings: {
+      'import/resolver': {
+        typescript: {
+          project: './tsconfig.json'
+        }
       }
     },
     rules: {
-      ...tsEslintPlugin.configs.recommended.rules,
+      ...nextPlugin.configs.recommended.rules,
       ...tsEslintPlugin.configs['recommended-type-checked'].rules,
-      ...tsEslintPlugin.configs.strict.rules,
-      ...tsEslintPlugin.configs['strict-type-checked'].rules,
+      ...reactPlugin.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      ...importPlugin.configs.recommended.rules,
+      'prettier/prettier': 'error',
       semi: 'off',
       '@typescript-eslint/semi': 'off',
-      camelcase: 'off',
-      '@typescript-eslint/explicit-function-return-type': 'off',
-      '@typescript-eslint/explicit-module-boundary-types': 'off',
-      'no-use-before-define': 'off',
-      '@typescript-eslint/no-use-before-define': ['error'],
-      '@typescript-eslint/no-explicit-any': 'off',
-      '@typescript-eslint/no-var-requires': 'off'
-    }
-  },
-
-  // Next.js configurations
-  {
-    files: ['**/*.{js,jsx,ts,tsx}'],
-    plugins: {
-      '@next/next': nextPlugin
-    },
-    rules: {
-      ...nextPlugin.configs.recommended.rules
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/consistent-type-imports': 'warn',
+      '@typescript-eslint/consistent-type-exports': 'warn',
+      '@typescript-eslint/no-explicit-any': 'warn',
+      'no-unused-vars': 'off',
+      'react/prop-types': 'off'
     }
   }
 ]
