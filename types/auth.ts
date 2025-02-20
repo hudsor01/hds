@@ -2,55 +2,55 @@ import { type User, type Session } from '@supabase/supabase-js'
 import type { ReactNode } from 'react'
 
 export interface AuthError {
-  message: string
-  code?: string
-  status?: number
+    message: string
+    code?: string
+    status?: number
 }
 
 export interface AuthState {
-  user: User | null
-  session: Session | null
-  isLoading: boolean
-  error: AuthError | null
+    user: User | null
+    session: Session | null
+    isLoading: boolean
+    error: AuthError | null
 }
 
 export interface SignInCredentials {
-  email: string
-  password: string
+    email: string
+    password: string
 }
 
 export interface SignUpCredentials extends SignInCredentials {
-  confirmPassword: string
+    confirmPassword: string
 }
 
 export interface ResetPasswordCredentials {
-  email: string
+    email: string
 }
 
 export interface UpdatePasswordCredentials {
-  password: string
-  confirmPassword: string
+    password: string
+    confirmPassword: string
 }
 
 export interface AuthResponse<T = unknown> {
-  data: T | null
-  error: AuthError | null
+    data: T | null
+    error: AuthError | null
 }
 
 export interface Profile {
-  role: string
+    role: string
 }
 
 export interface AuthUser extends User {
-  role: string
+    role: string
 }
 
 export interface UseSessionReturn {
-  session: Session | null
-  loading: boolean
+    session: Session | null
+    loading: boolean
 }
 
 export interface AuthFormProps {
-  children: ReactNode
-  title: string
+    children: ReactNode
+    title: string
 }

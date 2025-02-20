@@ -1,31 +1,16 @@
-'use client';
-
-import { Box } from '@mui/material';
-import { motion } from 'framer-motion';
+import { Box } from '@mui/material'
 
 export default function AuthLayout({
-  children,
+  children
 }: {
-  children: React.ReactNode;
+  children: React.ReactNode
 }) {
   return (
-    <Box
-      sx={{
-        minHeight: '100vh',
-        display: 'flex',
-        flexDirection: 'column',
-        bgcolor: 'background.default',
-        pt: 4,
-        pb: 8,
-      }}
+    <Box 
+      component="main" 
+      className="flex min-h-screen flex-col items-center justify-center bg-gray-50 px-4 py-12 sm:px-6 lg:px-8"
     >
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        {children}
-      </motion.div>
+      {children}
     </Box>
-  );
+  )
 }

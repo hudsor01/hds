@@ -5,146 +5,169 @@ import { NextResponse } from 'next/server'
 import { z } from 'zod'
 
 const propertyQuerySchema = z.object({
-  limit: z.string().optional(),
-  offset: z.string().optional(),
-  status: z.string().optional(),
-  type: z.string().optional(),
-  search: z.string().optional()
+    limit: z.string().optional(),
+    offset: z.string().optional(),
+    status: z.string().optional(),
+    type: z.string().optional(),
+    search: z.string().optional()
 })
 
 const createPropertySchema = z.object({
-  name: z.string().min(1, 'Property name is required'),
-  address: z.string().min(1, 'Address is required'),
-  city: z.string().min(1, 'City is required'),
-  state: z.string().min(1, 'State is required'),
-  zipCode: z.string().min(5, 'Valid ZIP code is required'),
-  propertyType: z.nativeEnum(PropertyType),
-  units: z.number().min(1, 'Number of units is required'),
-  squareFootage: z.number().min(1, 'Square footage is required'),
-  yearBuilt: z.number().min(1800, 'Valid year is required'),
-  purchasePrice: z.number().min(0, 'Purchase price is required'),
-  currentValue: z.number().min(0, 'Current value is required'),
-  monthlyRent: z.number().min(0, 'Monthly rent is required'),
-  expenses: z.object({
-    mortgage: z.number().optional(),
-    insurance: z.number().min(0, 'Insurance amount is required'),
-    propertyTax: z.number().min(0, 'Property tax is required'),
-    utilities: z.number().min(0, 'Utilities amount is required'),
-    maintenance: z.number().min(0, 'Maintenance amount is required'),
-    other: z.number().min(0, 'Other expenses amount is required')
-  })
+    name: z.string().min(1, 'Property name is required'),
+    address: z.string().min(1, 'Address is required'),
+    city: z.string().min(1, 'City is required'),
+    state: z.string().min(1, 'State is required'),
+    zipCode: z.string().min(5, 'Valid ZIP code is required'),
+    propertyType: z.nativeEnum(PropertyType),
+    units: z.number().min(1, 'Number of units is required'),
+    squareFootage: z.number().min(1, 'Square footage is required'),
+    yearBuilt: z.number().min(1800, 'Valid year is required'),
+    purchasePrice: z.number().min(0, 'Purchase price is required'),
+    currentValue: z.number().min(0, 'Current value is required'),
+    monthlyRent: z.number().min(0, 'Monthly rent is required'),
+    expenses: z.object({
+        mortgage: z.number().optional(),
+        insurance: z.number().min(0, 'Insurance amount is required'),
+        propertyTax: z.number().min(0, 'Property tax is required'),
+        utilities: z.number().min(0, 'Utilities amount is required'),
+        maintenance: z
+            .number()
+            .min(0, 'Maintenance amount is required'),
+        other: z.number().min(0, 'Other expenses amount is required')
+    })
 })
 
 function isPostgrestError(error: unknown): error is PostgrestError {
-  return typeof error === 'object' && error !== null && 'code' in error && 'message' in error && 'details' in error
+    return (
+        typeof error === 'object' &&
+        error !== null &&
+        'code' in error &&
+        'message' in error &&
+        'details' in error
+    )
 }
 
 export async function GET(request: Request) {
-  try {
-    const { searchParams } = new URL(request.url)
-    const validatedParams = propertyQuerySchema.parse(Object.fromEntries(searchParams))
+    try {
+        const { searchParams } = new URL(request.url)
+        const validatedParams = propertyQuerySchema.parse(
+            Object.fromEntries(searchParams)
+        )
 
-    let query = supabase.from('properties').select('*, maintenance_requests(*)', { count: 'exact' })
+        let query = supabase
+            .from('properties')
+            .select('*, maintenance_requests(*)', { count: 'exact' })
 
-    if (validatedParams.status) {
-      query = query.eq('status', validatedParams.status)
+        if (validatedParams.status) {
+            query = query.eq('status', validatedParams.status)
+        }
+
+        if (validatedParams.type) {
+            query = query.eq('property_type', validatedParams.type)
+        }
+
+        if (validatedParams.search) {
+            query = query.or(
+                `name.ilike.%${validatedParams.search}%,address.ilike.%${validatedParams.search}%`
+            )
+        }
+
+        if (validatedParams.limit) {
+            query = query.limit(parseInt(validatedParams.limit))
+        }
+
+        if (validatedParams.offset) {
+            query = query.offset(parseInt(validatedParams.offset))
+        }
+
+        const { data, error, count } = await query.order(
+            'created_at',
+            { ascending: false }
+        )
+
+        if (error) throw error
+
+        return NextResponse.json({ data, count })
+    } catch (error) {
+        console.error('Error fetching properties:', error)
+
+        if (isPostgrestError(error)) {
+            return NextResponse.json(
+                {
+                    error: 'Database Error',
+                    message: error.message,
+                    details: error.details
+                },
+                { status: 400 }
+            )
+        }
+
+        return NextResponse.json(
+            {
+                error: 'Internal Server Error',
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : 'Unknown error'
+            },
+            { status: 500 }
+        )
     }
-
-    if (validatedParams.type) {
-      query = query.eq('property_type', validatedParams.type)
-    }
-
-    if (validatedParams.search) {
-      query = query.or(`name.ilike.%${validatedParams.search}%,address.ilike.%${validatedParams.search}%`)
-    }
-
-    if (validatedParams.limit) {
-      query = query.limit(parseInt(validatedParams.limit))
-    }
-
-    if (validatedParams.offset) {
-      query = query.offset(parseInt(validatedParams.offset))
-    }
-
-    const { data, error, count } = await query.order('created_at', { ascending: false })
-
-    if (error) throw error
-
-    return NextResponse.json({ data, count })
-  } catch (error) {
-    console.error('Error fetching properties:', error)
-
-    if (isPostgrestError(error)) {
-      return NextResponse.json(
-        {
-          error: 'Database Error',
-          message: error.message,
-          details: error.details
-        },
-        { status: 400 }
-      )
-    }
-
-    return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    )
-  }
 }
 
 export async function POST(request: Request) {
-  try {
-    const json = await request.json()
-    const validatedData = createPropertySchema.parse(json)
+    try {
+        const json = await request.json()
+        const validatedData = createPropertySchema.parse(json)
 
-    const { data, error } = await supabase
-      .from('properties')
-      .insert([
-        {
-          ...validatedData,
-          status: PropertyStatus.ACTIVE,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
+        const { data, error } = await supabase
+            .from('properties')
+            .insert([
+                {
+                    ...validatedData,
+                    status: PropertyStatus.ACTIVE,
+                    created_at: new Date().toISOString(),
+                    updated_at: new Date().toISOString()
+                }
+            ])
+            .select()
+            .single()
+
+        if (error) throw error
+
+        return NextResponse.json(data)
+    } catch (error) {
+        if (error instanceof z.ZodError) {
+            return NextResponse.json(
+                {
+                    error: 'Validation Error',
+                    details: error.errors
+                },
+                { status: 400 }
+            )
         }
-      ])
-      .select()
-      .single()
 
-    if (error) throw error
+        if (isPostgrestError(error)) {
+            return NextResponse.json(
+                {
+                    error: 'Database Error',
+                    message: error.message,
+                    details: error.details
+                },
+                { status: 400 }
+            )
+        }
 
-    return NextResponse.json(data)
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      return NextResponse.json(
-        {
-          error: 'Validation Error',
-          details: error.errors
-        },
-        { status: 400 }
-      )
+        console.error('Error creating property:', error)
+        return NextResponse.json(
+            {
+                error: 'Internal Server Error',
+                message:
+                    error instanceof Error
+                        ? error.message
+                        : 'Unknown error'
+            },
+            { status: 500 }
+        )
     }
-
-    if (isPostgrestError(error)) {
-      return NextResponse.json(
-        {
-          error: 'Database Error',
-          message: error.message,
-          details: error.details
-        },
-        { status: 400 }
-      )
-    }
-
-    console.error('Error creating property:', error)
-    return NextResponse.json(
-      {
-        error: 'Internal Server Error',
-        message: error instanceof Error ? error.message : 'Unknown error'
-      },
-      { status: 500 }
-    )
-  }
 }

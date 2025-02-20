@@ -1,21 +1,22 @@
 'use client'
 
 export default function Loading() {
-  return (
-    <Container className="py-8">
-      <Skeleton className="mb-8 h-10 w-[200px]" />
-      <div className="md:-cols-2 lg:-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="space-y-4 p-6">
-            <Skeleton className="h-4 w-24" />
-            <div className="space-y-2">
-              <Skeleton className="h-3 w-full" />
-              <Skeleton className="h-3 w-4/5" />
+    return (
+        <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+            <div className="animate-pulse">
+                {/* Loading placeholder for header */}
+                <div className="mb-8 h-10 w-[200px] rounded bg-gray-200 dark:bg-gray-700" />
+
+                {/* Loading placeholders for content */}
+                <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+                    {Array.from({ length: 6 }).map((_, i) => (
+                        <div
+                            key={i}
+                            className="h-48 rounded-lg bg-gray-200 dark:bg-gray-700"
+                        />
+                    ))}
+                </div>
             </div>
-            <Skeleton className="h-8 w-full" />
-          </Card>
-        ))}
-      </div>
-    </Container>
-  )
+        </div>
+    )
 }

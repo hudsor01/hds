@@ -11,13 +11,13 @@ import { Auth, UI, Forms, Hooks } from '@/types'
 
 // Use namespaced types
 const user: Auth.User = {
-  id: '123',
-  email: 'user@example.com'
+    id: '123',
+    email: 'user@example.com'
 }
 
 // Component props
 interface MyComponentProps extends UI.ComponentProps {
-  title: string
+    title: string
 }
 
 // Hook usage
@@ -44,11 +44,16 @@ const { showToast }: Hooks.UseToastReturn = useToast()
 Common utility types are available directly from the root export:
 
 ```typescript
-import { WithChildren, WithClassName, Nullable, Optional } from '@/types'
+import {
+    WithChildren,
+    WithClassName,
+    Nullable,
+    Optional
+} from '@/types'
 
 interface Props extends WithChildren, WithClassName {
-  data: Nullable<string>
-  config?: Optional<Config>
+    data: Nullable<string>
+    config?: Optional<Config>
 }
 ```
 

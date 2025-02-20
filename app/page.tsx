@@ -2,341 +2,259 @@
 
 import React from 'react'
 import { useRouter } from 'next/navigation'
-import { Navbar } from '@/components/layouts/navbar'
-import { Box, Container, Typography, Button, Paper, useTheme, alpha } from '@mui/material'
+import { Navbar } from '../components/layouts/navbar'
+import { Container, Button } from '@mui/material'
 import {
-  Home as HomeIcon,
-  ArrowForward as ArrowForwardIcon,
-  Security as SecurityIcon,
-  Apartment as ApartmentIcon,
-  TrendingUp as TrendingUpIcon,
-  SupportAgent as SupportIcon,
-  Speed as SpeedIcon,
-  DeviceHub as IntegrationIcon
+    Home as HomeIcon,
+    Security as SecurityIcon,
+    Payment as PaymentIcon
 } from '@mui/icons-material'
-import Grid from '@mui/material/Grid2'
+import { motion } from 'framer-motion'
 
-interface Feature {
-  icon: React.ReactNode
-  title: string
-  description: string
-  color: string
-}
-
-const features: Feature[] = [
-  {
-    icon: <ApartmentIcon />,
-    title: 'Property Management',
-    description: 'Efficiently manage your properties, units, and tenants all in one place.',
-    color: '#2563EB'
-  },
-  {
-    icon: <SecurityIcon />,
-    title: 'Enterprise Security',
-    description: 'Bank-level security with end-to-end encryption, two-factor authentication, and automated backups.',
-    color: '#7C3AED'
-  },
-  {
-    icon: <TrendingUpIcon />,
-    title: 'Advanced Analytics',
-    description: 'Make data-driven decisions with real-time insights, custom reports, and predictive analytics.',
-    color: '#059669'
-  },
-  {
-    icon: <SupportIcon />,
-    title: '24/7 Support',
-    description: 'Dedicated support team ready to assist you around the clock for any questions or issues.',
-    color: '#DC2626'
-  },
-  {
-    icon: <SpeedIcon />,
-    title: 'High Performance',
-    description: 'Lightning-fast performance optimized for managing large property portfolios efficiently.',
-    color: '#0891B2'
-  },
-  {
-    icon: <IntegrationIcon />,
-    title: 'Smart Integrations',
-    description: 'Seamlessly integrate with your existing tools and workflows for maximum productivity.',
-    color: '#C026D3'
-  }
+const features = [
+    {
+        icon: <HomeIcon className="h-8 w-8 text-sky-500" />,
+        title: 'Property Management',
+        description:
+            'Efficiently manage your properties, units, and leases all in one place.'
+    },
+    {
+        icon: <SecurityIcon className="h-8 w-8 text-sky-500" />,
+        title: 'Tenant Screening',
+        description:
+            'Comprehensive tenant screening and application management'
+    },
+    {
+        icon: <PaymentIcon className="h-8 w-8 text-sky-500" />,
+        title: 'Online Payments',
+        description:
+            'Secure online rent collection and payment processing'
+    }
 ]
 
 export default function HomePage() {
-  const theme = useTheme()
-  const router = useRouter()
+    const router = useRouter()
 
-  return (
-    <Box>
-      <Navbar />
+    return (
+        <div className="min-h-screen bg-gray-50">
+            <Navbar />
 
-      {/* Hero Section */}
-      <Box
-        sx={{
-          position: 'relative',
-          overflow: 'hidden',
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
-          pt: { xs: 12, md: 16 },
-          pb: { xs: 16, md: 20 }
-        }}
-      >
-        {/* Background Pattern */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 0.1,
-            background: `linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark}),
-                        linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark})`,
-            backgroundSize: '60px 60px',
-            backgroundPosition: '0 0, 30px 30px'
-          }}
-        />
+            {/* Hero Section with subtle pattern background */}
+            <div className="relative overflow-hidden">
+                {/* Decorative background elements */}
+                <div className="absolute inset-0 -z-10">
+                    <div
+                        className="absolute inset-0"
+                        style={{
+                            backgroundImage:
+                                'radial-gradient(circle at 1px 1px, #e5e7eb 1px, transparent 0)',
+                            backgroundSize: '40px 40px'
+                        }}
+                    />
+                    <div className="animate-blob absolute top-0 -left-4 h-72 w-72 rounded-full bg-sky-400 opacity-10 mix-blend-multiply blur filter" />
+                    <div className="animate-blob animation-delay-2000 absolute top-0 -right-4 h-72 w-72 rounded-full bg-sky-400 opacity-10 mix-blend-multiply blur-3xl filter" />
+                    <div className="animate-blob animation-delay-4000 absolute -bottom-8 left-20 h-72 w-72 rounded-full bg-sky-300 opacity-10 mix-blend-multiply blur-3xl filter" />
+                </div>
 
-        <Container maxWidth="lg">
-          <Grid container spacing={4} alignItems="center">
-            <Grid xs={12} md={6}>
-              <Box sx={{ maxWidth: 600 }}>
-                <Typography
-                  variant="h1"
-                  sx={{
-                    fontSize: { xs: '2.5rem', md: '3.5rem' },
-                    fontWeight: 800,
-                    mb: 3,
-                    lineHeight: 1.2
-                  }}
-                >
-                  Transform Your
-                  <Box component="span" sx={{ color: '#60A5FA' }}>
-                    {' '}
-                    Property{' '}
-                  </Box>
-                  Management
-                </Typography>
-                <Typography
-                  variant="h5"
-                  sx={{
-                    mb: 4,
-                    opacity: 0.9,
-                    lineHeight: 1.6,
-                    maxWidth: 600
-                  }}
-                >
-                  Streamline operations, boost efficiency, and enhance tenant satisfaction with our comprehensive solution.
-                </Typography>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <Button
-                    variant="contained"
-                    size="large"
-                    onClick={() => {
-                      router.push('/pricing')
-                    }}
-                    sx={{
-                      bgcolor: 'white',
-                      color: 'primary.main',
-                      px: 4,
-                      py: 1.5,
-                      fontSize: '1.1rem',
-                      '&:hover': {
-                        bgcolor: alpha(theme.palette.common.white, 0.9)
-                      }
-                    }}
-                    endIcon={<ArrowForwardIcon />}
-                  >
-                    Get Started
-                  </Button>
-                  <Button
-                    variant="outlined"
-                    size="large"
-                    onClick={() => {
-                      router.push('/pricing')
-                    }}
-                    sx={{
-                      borderColor: 'white',
-                      color: 'white',
-                      px: 4,
-                      py: 1.5,
-                      fontSize: '1.1rem',
-                      '&:hover': {
-                        borderColor: 'white',
-                        bgcolor: alpha(theme.palette.common.white, 0.1)
-                      }
-                    }}
-                  >
-                    View Pricing
-                  </Button>
-                </Box>
-              </Box>
-            </Grid>
-            <Grid xs={12} md={6}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  position: 'relative'
-                }}
-              >
-                <HomeIcon
-                  sx={{
-                    fontSize: { xs: 200, md: 300 },
-                    opacity: 0.9,
-                    filter: 'drop-shadow(0px 4px 20px rgba(0, 0, 0, 0.2))',
-                    color: 'white'
-                  }}
-                />
-              </Box>
-            </Grid>
-          </Grid>
-        </Container>
-      </Box>
+                <section className="py-32 pb-16 sm:pt-40 sm:pb-20">
+                    <Container maxWidth="lg">
+                        <div className="text-center">
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ duration: 0.5 }}
+                                className="mb-6 inline-flex items-center rounded-full border border-sky-100 bg-sky-50 px-4 py-1.5"
+                            >
+                                <span className="text-sm font-medium text-sky-500">
+                                    Modern Property Management
+                                </span>
+                            </motion.div>
 
-      {/* Features Section */}
-      <Container maxWidth="lg" sx={{ py: { xs: 8, md: 12 } }}>
-        <Typography
-          variant="h2"
-          align="center"
-          sx={{
-            fontWeight: 800,
-            mb: { xs: 6, md: 8 },
-            fontSize: { xs: '2rem', md: '2.5rem' }
-          }}
-        >
-          Powerful Features for Modern
-          <Box component="span" sx={{ color: 'primary.main' }}>
-            {' '}
-            Property Management
-          </Box>
-        </Typography>
+                            <motion.h1
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.1
+                                }}
+                                className="mb-6 text-5xl font-bold text-sky-500 sm:text-6xl"
+                            >
+                                Property Management Made Simple
+                            </motion.h1>
 
-        <Grid container spacing={4}>
-          {features.map((feature, index) => (
-            <Grid xs={12} sm={6} md={4} key={index}>
-              <Paper
-                elevation={0}
-                sx={{
-                  p: 4,
-                  height: '100%',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  textAlign: 'center',
-                  borderRadius: 4,
-                  bgcolor: alpha(feature.color, 0.03),
-                  transition: 'all 0.3s ease-in-out',
-                  '&:hover': {
-                    transform: 'translateY(-8px)',
-                    bgcolor: alpha(feature.color, 0.05),
-                    '& .feature-icon': {
-                      transform: 'scale(1.1)',
-                      color: feature.color
-                    }
-                  }
-                }}
-              >
-                <Box
-                  className="feature-icon"
-                  sx={{
-                    mb: 3,
-                    p: 2,
-                    borderRadius: '50%',
-                    bgcolor: alpha(feature.color, 0.1),
-                    color: feature.color,
-                    transition: 'all 0.3s ease-in-out',
-                    '& > svg': {
-                      fontSize: 40
-                    }
-                  }}
-                >
-                  {feature.icon}
-                </Box>
-                <Typography variant="h5" gutterBottom sx={{ fontWeight: 700, mb: 2 }}>
-                  {feature.title}
-                </Typography>
-                <Typography variant="body1" color="text.secondary" sx={{ lineHeight: 1.7 }}>
-                  {feature.description}
-                </Typography>
-              </Paper>
-            </Grid>
-          ))}
-        </Grid>
-      </Container>
+                            <motion.p
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.2
+                                }}
+                                className="mx-auto mb-10 max-w-2xl text-lg text-gray-600 sm:text-xl"
+                            >
+                                Streamline your property management
+                                <br />
+                                with our comprehensive solution. From
+                                tenant screening
+                                <br />
+                                to maintenance requests, we&apos;ve
+                                got you covered.
+                            </motion.p>
 
-      {/* CTA Section */}
-      <Box
-        sx={{
-          bgcolor: 'primary.main',
-          color: 'white',
-          py: { xs: 8, md: 12 },
-          mt: 8,
-          position: 'relative',
-          overflow: 'hidden'
-        }}
-      >
-        {/* Background Pattern */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            opacity: 0.1,
-            background: `linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark}),
-                        linear-gradient(45deg, ${theme.palette.primary.dark} 25%, transparent 25%, transparent 75%, ${theme.palette.primary.dark} 75%, ${theme.palette.primary.dark})`,
-            backgroundSize: '60px 60px',
-            backgroundPosition: '0 0, 30px 30px'
-          }}
-        />
+                            <motion.div
+                                initial={{ opacity: 0, y: 20 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.3
+                                }}
+                                className="flex flex-col justify-center gap-4 sm:flex-row"
+                            >
+                                <Button
+                                    variant="contained"
+                                    onClick={() =>
+                                        router.push('/signup')
+                                    }
+                                    className="transform rounded-full bg-sky-500 px-8 py-3 text-base font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-sky-600 hover:shadow-lg"
+                                >
+                                    GET STARTED FREE
+                                </Button>
+                                <Button
+                                    variant="outlined"
+                                    onClick={() =>
+                                        router.push('/demo')
+                                    }
+                                    className="rounded-full border-2 border-sky-500 px-8 py-3 text-base font-medium text-sky-500 hover:bg-sky-50"
+                                >
+                                    WATCH DEMO
+                                </Button>
+                            </motion.div>
 
-        <Container maxWidth="md">
-          <Box
-            sx={{
-              textAlign: 'center',
-              position: 'relative',
-              zIndex: 1
-            }}
-          >
-            <Typography
-              variant="h3"
-              sx={{
-                fontWeight: 800,
-                mb: 3,
-                fontSize: { xs: '2rem', md: '2.5rem' }
-              }}
-            >
-              Ready to Transform Your Property Management?
-            </Typography>
-            <Typography variant="h6" sx={{ mb: 4, opacity: 0.9, maxWidth: 600, mx: 'auto' }}>
-              Join thousands of property managers who are already streamlining their operations with our platform.
-            </Typography>
-            <Button
-              variant="contained"
-              size="large"
-              onClick={() => {
-                router.push('/pricing')
-              }}
-              sx={{
-                bgcolor: 'white',
-                color: 'primary.main',
-                px: 6,
-                py: 2,
-                fontSize: '1.1rem',
-                '&:hover': {
-                  bgcolor: alpha(theme.palette.common.white, 0.9)
-                }
-              }}
-              endIcon={<ArrowForwardIcon />}
-            >
-              View Pricing Plans
-            </Button>
-          </Box>
-        </Container>
-      </Box>
-    </Box>
-  )
+                            <motion.p
+                                initial={{ opacity: 0 }}
+                                animate={{ opacity: 1 }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: 0.4
+                                }}
+                                className="mt-4 text-sm text-gray-500"
+                            >
+                                No credit card required • 14-day free
+                                trial
+                            </motion.p>
+                        </div>
+
+                        {/* Stats Section */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{
+                                duration: 0.5,
+                                delay: 0.5
+                            }}
+                            className="mt-20 grid gap-8 sm:grid-cols-3"
+                        >
+                            {[
+                                {
+                                    value: '10,000+',
+                                    label: 'Active Properties'
+                                },
+                                {
+                                    value: '5,000+',
+                                    label: 'Happy Landlords'
+                                },
+                                {
+                                    value: '40 hrs/mo',
+                                    label: 'Time Saved'
+                                }
+                            ].map(stat => (
+                                <div
+                                    key={stat.label}
+                                    className="group relative rounded-2xl bg-white p-6 shadow-sm transition-all duration-200 hover:shadow-md"
+                                >
+                                    <div className="absolute inset-0 rounded-2xl bg-sky-50 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                                    <div className="relative">
+                                        <div className="mb-1 text-3xl font-bold text-gray-900">
+                                            {stat.value}
+                                        </div>
+                                        <div className="text-sm text-gray-500">
+                                            {stat.label}
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </motion.div>
+                    </Container>
+                </section>
+            </div>
+
+            {/* Features Section */}
+            <section className="bg-white py-20">
+                <Container maxWidth="lg">
+                    <div className="mb-16 text-center">
+                        <h2 className="mb-4 text-3xl font-bold text-gray-900">
+                            Everything you need to manage properties
+                        </h2>
+                        <p className="mx-auto mb-10 max-w-2xl text-lg text-gray-600 sm:text-xl">
+                            Our comprehensive platform provides all
+                            the tools you need to streamline your
+                            property management workflow.
+                        </p>
+                    </div>
+
+                    <div className="grid gap-8 md:grid-cols-3">
+                        {features.map((feature, index) => (
+                            <motion.div
+                                key={index}
+                                initial={{ opacity: 0, y: 20 }}
+                                whileInView={{ opacity: 1, y: 0 }}
+                                viewport={{ once: true }}
+                                transition={{
+                                    duration: 0.5,
+                                    delay: index * 0.1
+                                }}
+                                className="group rounded-2xl bg-white p-8 shadow-sm transition-all duration-200 hover:shadow-md"
+                            >
+                                <div className="mb-4 inline-flex items-center justify-center rounded-full bg-sky-50 p-3 transition-colors duration-200 group-hover:bg-sky-100">
+                                    {feature.icon}
+                                </div>
+                                <h3 className="mb-2 text-lg font-semibold text-gray-900">
+                                    {feature.title}
+                                </h3>
+                                <p className="text-gray-600">
+                                    {feature.description}
+                                </p>
+                            </motion.div>
+                        ))}
+                    </div>
+                </Container>
+            </section>
+
+            {/* CTA Section */}
+            <section className="bg-sky-50 py-20">
+                <Container maxWidth="lg">
+                    <div className="mx-auto max-w-3xl text-center">
+                        <h2 className="mb-6 text-3xl font-bold text-gray-900">
+                            Ready to transform your property
+                            management?
+                        </h2>
+                        <p className="mb-8 text-lg text-gray-600">
+                            Join thousands of property managers who
+                            are already saving time and growing their
+                            business with our platform.
+                        </p>
+                        <Button
+                            variant="contained"
+                            onClick={() => router.push('/signup')}
+                            className="transform rounded-full bg-sky-500 px-8 py-3 text-base font-medium text-white transition-all duration-200 hover:scale-105 hover:bg-sky-600 hover:shadow-lg"
+                        >
+                            Start Your Free Trial
+                        </Button>
+                        <p className="mt-4 text-sm text-gray-500">
+                            No credit card required • Cancel anytime
+                        </p>
+                    </div>
+                </Container>
+            </section>
+        </div>
+    )
 }

@@ -5,70 +5,70 @@ import type { Session, User } from '@prisma/client'
 const authService = new AuthService()
 
 export async function getSession(): Promise<Session | null> {
-  try {
-    const sessions = await prisma.session.findMany({
-      where: {
-        expires: { gt: new Date() }
-      },
-      orderBy: { expires: 'desc' },
-      take: 1
-    })
-    return sessions[0] || null
-  } catch (error) {
-    console.error('Error getting session:', error)
-    return null
-  }
+    try {
+        const sessions = await prisma.session.findMany({
+            where: {
+                expires: { gt: new Date() }
+            },
+            orderBy: { expires: 'desc' },
+            take: 1
+        })
+        return sessions[0] || null
+    } catch (error) {
+        console.error('Error getting session:', error)
+        return null
+    }
 }
 
 export async function signOut(): Promise<void> {
-  try {
-    const session = await getSession()
-    if (session) {
-      await authService.revokeSession(session.id)
+    try {
+        const session = await getSession()
+        if (session) {
+            await authService.revokeSession(session.id)
+        }
+        window.location.href = '/login'
+    } catch (error) {
+        console.error('Error signing out:', error)
+        throw error
     }
-    window.location.href = '/login'
-  } catch (error) {
-    console.error('Error signing out:', error)
-    throw error
-  }
 }
 
 export async function getCurrentUserProfile(): Promise<User | null> {
-  const session = await getSession()
-  if (!session) return null
+    const session = await getSession()
+    if (!session) return null
 
-  try {
-    const user = await prisma.users.findUnique({
-      where: { id: session.user_id }
-    })
-    return user
-  } catch (error) {
-    console.error('Error getting user:', error)
-    return null
-  }
+    try {
+        const user = await prisma.users.findUnique({
+            where: { id: session.user_id }
+        })
+        return user
+    } catch (error) {
+        console.error('Error getting user:', error)
+        return null
+    }
 }
 
 export async function updateUserProfile(updates: {
-  email?: string
-  password?: string
-  data?: Record<string, unknown>
+    email?: string
+    password?: string
+    data?: Record<string, unknown>
 }): Promise<User> {
-  const session = await getSession()
-  if (!session) throw new Error('Not authenticated')
+    const session = await getSession()
+    if (!session) throw new Error('Not authenticated')
 
-  try {
-    const user = await prisma.users.update({
-      where: { id: session.user_id },
-      data: updates
-    })
-    return user
-  } catch (error) {
-    console.error('Error updating user:', error)
-    throw error
-  }
+    try {
+        const user = await prisma.users.update({
+            where: { id: session.user_id },
+            data: updates
+        })
+        return user
+    } catch (error) {
+        console.error('Error updating user:', error)
+        throw error
+    }
 }
 
 export async function isAuthenticated(): Promise<boolean> {
-  const session = await getSession()
-  return !!session
+    const session = await getSession()
+    return !!session
 }

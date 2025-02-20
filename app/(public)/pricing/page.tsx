@@ -1,14 +1,15 @@
 'use client'
 
-import { Box, Container, Typography, useTheme } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import { Container } from '@mui/material'
+import { Navbar } from '@/components/layouts/navbar'
 import { motion } from 'framer-motion'
-import { PricingCard } from '@/components/pricing/pricing-card'
+import { CheckCircle } from '@mui/icons-material'
 
-const pricingPlans = [
+const plans = [
   {
-    title: 'Free',
-    price: 0,
+    name: 'Free',
+    price: '0',
+    period: '/mo',
     features: [
       '1 property included',
       'Basic reporting',
@@ -21,10 +22,11 @@ const pricingPlans = [
     buttonVariant: 'outlined'
   },
   {
-    title: 'Basic',
-    price: 29,
+    name: 'Basic',
+    price: '29',
+    period: '/mo',
     features: [
-      'Up to 3 properties',
+      'Up to 5 properties',
       'Basic reporting',
       'Tenant portal access',
       'Document storage',
@@ -35,9 +37,9 @@ const pricingPlans = [
     buttonVariant: 'outlined'
   },
   {
-    title: 'Professional',
-    price: 79,
-    recommended: true,
+    name: 'Professional',
+    price: '79',
+    period: '/mo',
     features: [
       'Up to 8 properties',
       'Advanced analytics',
@@ -48,10 +50,11 @@ const pricingPlans = [
       'API access'
     ],
     buttonText: 'Start now',
-    buttonVariant: 'contained'
+    buttonVariant: 'contained',
+    popular: true
   },
   {
-    title: 'Enterprise',
+    name: 'Enterprise',
     price: 'Custom',
     features: [
       'Unlimited properties',
@@ -66,79 +69,96 @@ const pricingPlans = [
   }
 ]
 
-// Animation variants
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-}
-
-const cardVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.4, 0, 0.2, 1]
-    }
-  }
-}
-
 export default function PricingPage() {
-  const theme = useTheme()
-
   return (
-    <Box
-      component="main"
-      sx={{
-        flexGrow: 1,
-        py: { xs: 8, sm: 12, md: 16 },
-        bgcolor: 'background.default'
-      }}
-    >
-      <Container maxWidth="lg">
-        <Box sx={{ textAlign: 'center', mb: { xs: 6, sm: 8, md: 10 } }}>
-          <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
-            <Typography
-              component="h1"
-              variant="h2"
-              sx={{
-                mb: 2,
-                background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.info.main})`,
-                backgroundClip: 'text',
-                textFillColor: 'transparent',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent'
-              }}
+    <div className="min-h-screen bg-white">
+      <Navbar />
+      
+      <motion.div 
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="pt-32 pb-20"
+      >
+        <Container maxWidth="lg">
+          <div className="text-center mb-16">
+            <motion.h1 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="text-4xl font-semibold mb-4"
             >
               Simple, Transparent Pricing
-            </Typography>
-          </motion.div>
+            </motion.h1>
+            <motion.p 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="text-gray-600"
+            >
+              Choose the perfect plan for your property management needs.
+              <br />All plans include a 14-day free trial.
+            </motion.p>
+          </div>
 
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.2, duration: 0.5 }}>
-            <Typography variant="h5" color="text.secondary" sx={{ maxWidth: 600, mx: 'auto' }}>
-              Choose the perfect plan for your property management needs. All plans include a 14-day free trial.
-            </Typography>
-          </motion.div>
-        </Box>
+          <div className="grid md:grid-cols-4 gap-6">
+            {plans.map((plan, index) => (
+              <motion.div
+                key={plan.name}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                className={`relative bg-white rounded-lg border ${
+                  plan.popular 
+                    ? 'border-blue-500 shadow-lg' 
+                    : 'border-gray-200'
+                }`}
+              >
+                {plan.popular && (
+                  <div className="absolute top-0 right-6 transform -translate-y-1/2">
+                    <span className="bg-blue-500 text-white text-sm px-3 py-1 rounded-full">
+                      Popular
+                    </span>
+                  </div>
+                )}
+                
+                <div className="p-6">
+                  <h3 className="text-lg font-medium text-gray-900">
+                    {plan.name}
+                  </h3>
+                  <div className="mt-4 flex items-baseline">
+                    {plan.price !== 'Custom' && '$'}
+                    <span className="text-4xl font-semibold">{plan.price}</span>
+                    {plan.period && (
+                      <span className="ml-1 text-gray-500">{plan.period}</span>
+                    )}
+                  </div>
 
-        <motion.div variants={containerVariants} initial="hidden" animate="visible">
-          <Grid container spacing={3} alignItems="stretch">
-            {pricingPlans.map((plan, index) => (
-              <Grid xs={12} sm={6} lg={3} key={plan.title}>
-                <motion.div variants={cardVariants}>
-                  <PricingCard plan={plan} isRecommended={plan.recommended} sx={{ height: '100%' }} />
-                </motion.div>
-              </Grid>
+                  <ul className="mt-6 space-y-4">
+                    {plan.features.map((feature) => (
+                      <li key={feature} className="flex">
+                        <CheckCircle 
+                          className="flex-shrink-0 h-5 w-5 text-blue-500" 
+                          style={{ marginRight: '0.5rem' }}
+                        />
+                        <span className="text-gray-600">{feature}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <button
+                    className={`mt-8 w-full py-2 px-4 rounded-md transition-all duration-200 ${
+                      plan.buttonVariant === 'contained'
+                        ? 'bg-blue-500 text-white hover:bg-blue-600'
+                        : 'border border-blue-500 text-blue-500 hover:bg-blue-50'
+                    }`}
+                  >
+                    {plan.buttonText}
+                  </button>
+                </div>
+              </motion.div>
             ))}
-          </Grid>
-        </motion.div>
-      </Container>
-    </Box>
+          </div>
+        </Container>
+      </motion.div>
+    </div>
   )
 }

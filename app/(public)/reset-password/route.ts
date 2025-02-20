@@ -1,8 +1,8 @@
-import { supabase } from '@/lib/supabase'
+import supabase from '../../../lib/supabase'
 import { NextResponse, type NextRequest } from 'next/server'
 import { z } from 'zod'
-import { withRateLimit } from '@/lib/rate-limit'
-import { AuthError } from '@supabase/supabase-js'
+import type { AuthError } from '@supabase/supabase-js'
+import process from 'process'
 
 const resetSchema = z.object({
   email: z.string().email('Invalid email address')
@@ -47,39 +47,47 @@ function handleError(error: unknown) {
   )
 }
 
-export async function POST(request: NextRequest): Promise<NextResponse> {
+function withRateLimit(
   return withRateLimit(request, async () => {
     try {
-      const json = await request.json()
+      const json = await request.json() as { email: string }
       const body = resetSchema.parse(json)
 
-      const { error } = await supabase.auth.resetPasswordForEmail(body.email, {
+      const { data, error: authError } = await supabase.auth.resetPasswordForEmail(body.email, {
         redirectTo: `${process.env.NEXT_PUBLIC_APP_URL}/auth/callback?next=/update-password`
       })
 
-      if (error) throw error
+      if (authError) throw authError
 
       return NextResponse.json({
         message: 'Password reset email sent'
       })
-    } catch (error) {
-      return handleError(error)
+    } catch (err) {
+      return handleError(err)
     }
   })
-}
 
+      return NextResponse.json({
 export async function PUT(request: NextRequest): Promise<NextResponse> {
   return withRateLimit(request, async () => {
     try {
-      const json = await request.json()
+      const json = await request.json() as { password: string }
       const body = updateSchema.parse(json)
 
-      const { error } = await supabase.auth.updateUser({
+      const { data, error: authError } = await supabase.auth.updateUser({
         password: body.password
       })
 
-      if (error) throw error
+      if (authError) throw authError
 
+      return NextResponse.json({
+        message: 'Password updated successfully'
+      })
+    } catch (err) {
+      return handleError(err)
+    }
+  })
+}
       return NextResponse.json({
         message: 'Password updated successfully'
       })

@@ -1,11 +1,4 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
-:root {
-  --foreground-rgb: 31, 41, 55;
-  --background-rgb: 255, 255, 255;
-}
+@import 'tailwindcss';
 
 /* Dark mode preferences */
 @media (prefers-color-scheme: dark) {
@@ -32,7 +25,7 @@ html {
 
 /* Keep focus outline for keyboard navigation */
 :focus-visible {
-  outline: 2px solid #2563EB;
+  outline: 2px solid #2563eb;
   outline-offset: 2px;
 }
 
@@ -64,9 +57,9 @@ html {
 
 /* Improved button and input tap targets on mobile */
 @media (max-width: 640px) {
-  button, 
-  input, 
-  select, 
+  button,
+  input,
+  select,
   textarea {
     font-size: 16px !important;
   }
@@ -80,4 +73,271 @@ html {
 /* Remove tap highlight on mobile */
 * {
   -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --color-primary-base: #3b82f6;
+  --color-primary-border: #e2e8f0;
+  --color-text-primary: #1a202c;
+  --color-neutral-50: #f9fafb;
+
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-xl: 1.25rem;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-5xl: 3rem;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  --mui-primary-main: #6096ba;
+  --mui-font-family:
+    var(--font-roboto), var(--font-playfair-display), sans-serif;
+  --mui-h1-font-family: var(--font-playfair-display);
+  --mui-h1-font-weight: 700;
+  --mui-h2-font-family: var(--font-playfair-display);
+  --mui-h2-font-weight: 700;
+  --mui-h3-font-family: var(--font-playfair-display);
+  --mui-h3-font-weight: 700;
+  --mui-h4-font-family: var(--font-playfair-display);
+  --mui-h4-font-weight: 700;
+  --mui-h5-font-family: var(--font-playfair-display);
+  --mui-h5-font-weight: 700;
+  --mui-h6-font-family: var(--font-playfair-display);
+  --mui-h6-font-weight: 700;
+}
+@import 'tailwindcss';
+@import 'tailwindcss';
+
+:root {
+  --foreground-rgb: 31, 41, 55;
+  --background-rgb: 255, 255, 255;
+}
+
+/* Dark mode preferences */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 17, 24, 39;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove focus outline for mouse users, but keep it for keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Keep focus outline for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Better text rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(243, 244, 246);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(156, 163, 175);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(107, 114, 128);
+}
+
+/* Improved button and input tap targets on mobile */
+@media (max-width: 640px) {
+  button,
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --color-primary-base: #3b82f6;
+  --color-primary-border: #e2e8f0;
+  --color-text-primary: #1a202c;
+  --color-neutral-50: #f9fafb;
+
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-xl: 1.25rem;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-5xl: 3rem;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+
+  --mui-primary-main: #6096ba;
+  --mui-font-family:
+    var(--font-roboto), var(--font-playfair-display), sans-serif;
+  --mui-h1-font-family: var(--font-playfair-display);
+  --mui-h1-font-weight: 700;
+  --mui-h2-font-family: var(--font-playfair-display);
+  --mui-h2-font-weight: 700;
+  --mui-h3-font-family: var(--font-playfair-display);
+  --mui-h3-font-weight: 700;
+  --mui-h4-font-family: var(--font-playfair-display);
+  --mui-h4-font-weight: 700;
+  --mui-h5-font-family: var(--font-playfair-display);
+  --mui-h5-font-weight: 700;
+  --mui-h6-font-family: var(--font-playfair-display);
+  --mui-h6-font-weight: 700;
+}
+@import 'tailwindcss';
+
+:root {
+  --foreground-rgb: 31, 41, 55;
+  --background-rgb: 255, 255, 255;
+}
+
+/* Dark mode preferences */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-rgb: 17, 24, 39;
+  }
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Remove focus outline for mouse users, but keep it for keyboard navigation */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Keep focus outline for keyboard navigation */
+:focus-visible {
+  outline: 2px solid #2563eb;
+  outline-offset: 2px;
+}
+
+/* Better text rendering */
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgb(243, 244, 246);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgb(156, 163, 175);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgb(107, 114, 128);
+}
+
+/* Improved button and input tap targets on mobile */
+@media (max-width: 640px) {
+  button,
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
+}
+
+/* Prevent text size adjustment on orientation change */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Remove tap highlight on mobile */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+:root {
+  --color-primary-base: #3b82f6;
+  --color-primary-border: #e2e8f0;
+  --color-text-primary: #1a202c;
+  --color-neutral-50: #f9fafb;
+
+  --font-size-base: 1rem;
+  --font-size-sm: 0.875rem;
+  --font-size-xl: 1.25rem;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 0.75rem;
+  --spacing-lg: 1rem;
+  --spacing-5xl: 3rem;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
 }

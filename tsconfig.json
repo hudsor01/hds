@@ -1,54 +1,61 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
-  "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["esnext", "dom", "dom.iterable"],
-    "skipLibCheck": true,
-    "strict": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "module": "ESNext",
-    "moduleResolution": "Bundler",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "react-jsx",
-    "incremental": true,
-    "allowImportingTsExtensions": true,
-    "verbatimModuleSyntax": true,
-    "forceConsistentCasingInFileNames": true,
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"],
-      "@/components/*": ["components/*"],
-      "@/app/*": ["app/*"],
-      "@/hooks/*": ["hooks/*"],
-      "@/lib/*": ["lib/*"],
-      "@/styles/*": ["styles/*"],
-      "@/types/*": ["types/*"],
-      "@/emails/*": ["emails/*"],
-      "@/utils/*": ["utils/*"],
-      "@/middleware/*": ["middleware/*"],
-      "@/supabase/*": ["supabase/*"],
-      "@mui/system": ["node_modules/@mui/system/esm"],
-      "@/server/*": ["server/*"],
-      "@/contexts": ["contexts/*"]
+    "$schema": "https://json.schemastore.org/tsconfig",
+    "compilerOptions": {
+        "target": "ES2022",
+        "lib": ["esnext", "dom", "dom.iterable"],
+        "skipLibCheck": true,
+        "strict": true,
+        "noEmit": true,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "isolatedModules": true,
+        "jsx": "preserve",
+        "incremental": true,
+        "allowImportingTsExtensions": true,
+        "verbatimModuleSyntax": true,
+        "forceConsistentCasingInFileNames": true,
+        "baseUrl": ".",
+        "paths": {
+            "@/*": ["./*"],
+            "@/components/*": ["components/*"],
+            "@/app/*": ["app/*"],
+            "@/hooks/*": ["hooks/*"],
+            "@/lib/*": ["lib/*"],
+            "@/styles/*": ["styles/*"],
+            "@/types/*": ["types/*"],
+            "@/tests/*": ["tests/*"],
+            "@/utils/*": ["utils/*"],
+            "@/middleware/*": ["middleware/*"],
+            "@/supabase/*": ["supabase/*"],
+            "@mui/system": ["node_modules/@mui/system/esm"],
+            "@/server/*": ["server/*"],
+            "@/contexts/*": ["contexts/*"],
+            "@/constants/*": ["constants/*"]
+        },
+        "typeRoots": ["./node_modules/@types", "./types"],
+        "noUncheckedIndexedAccess": true,
+        "exactOptionalPropertyTypes": true,
+        "noPropertyAccessFromIndexSignature": true,
+        "allowJs": true,
+        "plugins": [
+            {
+                "name": "next"
+            }
+        ]
     },
-    "typeRoots": ["./node_modules/@types", "./types"],
-    "noUncheckedIndexedAccess": true,
-    "exactOptionalPropertyTypes": true,
-    "noPropertyAccessFromIndexSignature": true,
-    "allowJs": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ]
-  },
-  "include": ["**/*.ts", "**/*.tsx", "next-env.d.ts", "types/**/*.ts", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", ".next", "out", "dist"],
-  "ts-node": {
-    "esm": true,
-    "experimentalSpecifierResolution": "node"
-  }
+    "include": [
+        "**/*.ts",
+        "**/*.tsx",
+        "next-env.d.ts",
+        "types/**/*.ts",
+        ".next/types/**/*.ts"
+    ],
+    "exclude": ["node_modules", ".next", "out", "dist"],
+    "ts-node": {
+        "esm": true,
+        "experimentalSpecifierResolution": "node"
+    }
 }
